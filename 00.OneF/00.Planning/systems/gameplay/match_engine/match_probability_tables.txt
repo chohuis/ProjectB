@@ -1,0 +1,28 @@
+﻿[Match Engine Probability Tables]
+
+목적
+- PitchQuality → 결과 매핑을 CompetitionLevel별 밴드(PitchOutcomeBands)로 관리.
+- 현재 WPF 프로토타입/향후 Godot4 모두 동일 데이터를 사용하여 밸런스 조정.
+
+품질 밴드 정의 (단위: 품질 점수)
+Level        | 삼진 | 스트라이크 | 약한타구 | 단타 | 2루타 | 3루타 | 볼
+-------------|------|------------|---------|------|-------|-------|----
+High School  | 72   | 60         | 52      | 45   | 38    | 32    | 26
+University   | 74   | 62         | 54      | 47   | 40    | 34    | 27
+Independent  | 76   | 64         | 55      | 48   | 41    | 35    | 28
+Pro KBO      | 78   | 66         | 57      | 50   | 43    | 37    | 30
+Pro MLB      | 80   | 68         | 58      | 51   | 44    | 38    | 32
+
+적용 방식
+- MatchBalanceProfile에 PitchOutcomeBands를 포함, ResolvePitch가 밴드를 기반으로 결과를 결정.
+- 난이도 상승 시(프로) 동일 품질이라도 더 많은 볼/장타가 발생하도록 임계치를 상향.
+- 난수 보정(QualityBonus, RandomSwingRange)과 함께 사용해 리그별 체감 난이도 조절.
+
+향후 TODO
+- 밴드 값들을 JSON (data/base/match_probability.json)로 추출해 밸런싱 툴에서 편집.
+- 애니메이션/사운드 연계 이벤트(삼진/장타/볼넷)에 밴드 레벨을 직접 참조.
+- Godot4 포팅 시, Core DLL에서 밴드와 MatchBalanceProfile을 그대로 사용하도록 노출.
+
+Manager Hook/Coach Event 연동
+- Coach Hook 조건(실점/볼넷/투구수)은 MatchBalanceProfile의 Hook 파라미터로 유지.
+- 향후 감독 성향 데이터(신뢰도, 인내심)를 Stage_Rules/HighSchool_Rosters에 추가해 자동 세팅.

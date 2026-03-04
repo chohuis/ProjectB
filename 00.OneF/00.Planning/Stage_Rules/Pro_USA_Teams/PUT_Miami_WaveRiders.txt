@@ -1,0 +1,31 @@
+[MLB 팀 개요]
+- 팀명: Miami Wave Riders (American League)
+- 연고지: 마이애미
+
+[재정/예산]
+- 운영예산_USD백만: 260
+- MLB급여_USD백만: 175
+- 마이너투자_USD백만: 34
+
+[팬덤/브랜드]
+- 평균관중: 31000
+- 팬충성도(1~100): 83
+- 응원특징: 살사 응원
+
+[조직 철학]
+- 스피드/컨택
+
+[홈구장]
+- Atlantic Breeze Park
+
+[AAA 제휴]
+- TBD
+
+[AA 제휴]
+- TBD
+
+[우승 & 역사]
+- 우승 1회(2020)
+
+[시스템 메모]
+- Environment Tag: ENV[PUT_Miami_WaveRiders]

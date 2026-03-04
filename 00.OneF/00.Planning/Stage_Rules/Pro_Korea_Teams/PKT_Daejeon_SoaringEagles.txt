@@ -1,0 +1,28 @@
+[팀 개요]
+- 팀명: Daejeon Soaring Eagles
+- 연고지: 대전
+- 마스코트: 독수리
+- 홈구장: Sky Ascend Stadium
+
+[재정/예산]
+- 운영예산_KRW억: 1250
+- 선수단총연봉_KRW억: 950
+- 육성투자_KRW억: 110
+
+[팬덤/브랜드]
+- 평균관중: 21000
+- 팬충성도(1~100): 82
+- 응원특징: 스카이 드론쇼
+
+[조직 철학]
+- 장거리 타구+멘탈 케어
+
+[우승 & 역사]
+- 우승 1회(2006)
+
+[라이벌 & 스토리 훅]
+- 주요 라이벌: Suwon Arc Foxes
+- 핵심 이벤트: TBD
+
+[시스템 메모]
+- Environment Tag: ENV[PKT_Daejeon_SoaringEagles]

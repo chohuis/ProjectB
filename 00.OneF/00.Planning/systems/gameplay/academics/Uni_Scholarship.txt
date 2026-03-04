@@ -1,0 +1,6 @@
+﻿[University Scholarships]
+- Athletic: 성적 75+, 출전 50%+, 규율 위반 없음 → 체력 회복 +5%, 생활비, 훈련 슬롯 무료.
+- Academic: 성적 90+, 연구/튜터링 2회 → Fan Rep +1, 지식 상한 +10, Dean_List 후보.
+- Need-Based: 가정형편 플래그 On, 성적 65+ → 생활비·멘토 세션 지원.
+- 박탈 시 Advisor 평판 -2, 장학 포인트 감소.
+

@@ -1,0 +1,31 @@
+[MLB 팀 개요]
+- 팀명: Denver Mountain Peaks (National League)
+- 연고지: 덴버
+
+[재정/예산]
+- 운영예산_USD백만: 280
+- MLB급여_USD백만: 190
+- 마이너투자_USD백만: 33
+
+[팬덤/브랜드]
+- 평균관중: 33000
+- 팬충성도(1~100): 84
+- 응원특징: 산악 응원
+
+[조직 철학]
+- 고지대 파워
+
+[홈구장]
+- Summit Ridge Field
+
+[AAA 제휴]
+- TBD
+
+[AA 제휴]
+- TBD
+
+[우승 & 역사]
+- 우승 2회(2013,2020)
+
+[시스템 메모]
+- Environment Tag: ENV[PUT_Denver_MountainPeaks]

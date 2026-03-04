@@ -1,0 +1,65 @@
+[Manager Template]
+
+※ 모든 능력치는 1~100 점수 + 간단 메모 형식을 사용한다. (예: 78 / "강한 지구력")
+※ Stage Tag에 따라 입력 가능한 최대치가 다르다: 고교 30, 대학/독립 50, 프로 100.
+
+기본 정보
+- Name:
+- Role: (Manager / Assistant Manager / Coach 등)
+- Stage Tag: (예: STAGE[HighSchool], STAGE[Pro_KOR])
+- Environment Tag: (예: ENV[Seoul_Prestige])
+
+Physical Attributes(신체) — Score(1~100) / Note
+- Strength(근력):
+- Endurance(지구력):
+- Agility(민첩성):
+- Acceleration(순간 가속):
+- Balance(균형감):
+- Recovery(회복력):
+
+Mental Attributes(정신)
+- Focus(집중력):
+- Composure(침착성):
+- Decision Making(판단력):
+- Tactical IQ(전술 이해도):
+- Leadership(리더십):
+- Determination(투지):
+- Teamwork(팀워크):
+- Vision(시야):
+
+Manager Specific Attributes
+- Strategy(전술 운용):
+- Development(육성):
+- Motivation(동기 부여):
+- Discipline(규율):
+- Communication(커뮤니케이션):
+- Talent Evaluation(재능 평가):
+- Analytics(데이터 분석):
+- Media Handling(미디어 대응):
+
+Style Tags
+- 예) [Aggressive][PlayerFriendly][DataDriven]
+
+Impact Points
+- Season Loop Impact: (출전 결정, 훈련 보정 등)
+- Event Hooks: (멘탈 면담, 라이벌전 트리거 등)
+
+Relationships / Notes
+- Key Relationships:
+- Notes:
+
+Stage Modifiers
+- 예: HighSchool → 학년별 투입 제한 규칙
+- 예: Pro → 계약/연봉 협상 개입 여부
+
+Hidden Attributes (Internal Use Only)
+- Professionalism(프로페셔널리즘):
+- Ambition(야망):
+- Loyalty(충성):
+- Pressure Handling(중압감 대처):
+- Consistency(기복):
+- Temperament(기질):
+- Adaptability(적응력):
+- Injury Proneness(부상 성향):
+- Important Matches(큰 경기 대응력):
+- Work Rate(노력 지수):

@@ -1,0 +1,84 @@
+{
+  "team_id": "HS_Daegu_Spirit",
+  "team_name": "대구 스피릿 고",
+  "tier": "developing",
+  "region": "대구",
+  "keywords": [
+    "근성",
+    "투혼"
+  ],
+  "facility": "지역 밀착 멘탈·체력 트랙",
+  "manager": {
+    "name": "한우현",
+    "role": "감독",
+    "style": "강한 기초·수비 중심",
+    "philosophy": "실수 최소화와 멘탈 유지",
+    "ratings": {
+      "leadership": 68,
+      "tactics": 71,
+      "development": 71,
+      "motivation": 65,
+      "discipline": 71
+    }
+  },
+  "coaches": [
+    {
+      "name": "조유율",
+      "role": "투수 코치",
+      "specialty": "피칭",
+      "ratings": {
+        "leadership": 57,
+        "teaching": 63,
+        "tactics": 66
+      }
+    },
+    {
+      "name": "조온준",
+      "role": "타격 코치",
+      "specialty": "컨택",
+      "ratings": {
+        "leadership": 65,
+        "teaching": 61,
+        "tactics": 65
+      }
+    },
+    {
+      "name": "장수경",
+      "role": "전략 코치",
+      "specialty": "전술",
+      "ratings": {
+        "leadership": 57,
+        "teaching": 60,
+        "tactics": 66
+      }
+    },
+    {
+      "name": "강채빈",
+      "role": "수비 코치",
+      "specialty": "글러브",
+      "ratings": {
+        "leadership": 63,
+        "teaching": 58,
+        "tactics": 64
+      }
+    },
+    {
+      "name": "류시빈",
+      "role": "체력 코치",
+      "specialty": "피지컬",
+      "ratings": {
+        "leadership": 59,
+        "teaching": 64,
+        "tactics": 60
+      }
+    }
+  ],
+  "headcounts": {
+    "varsity": 19,
+    "junior": 12
+  },
+  "metrics": {
+    "avg_overall_varsity": 59.5,
+    "avg_overall_junior": 52.7
+  }
+}

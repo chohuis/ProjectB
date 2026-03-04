@@ -1,0 +1,115 @@
+[Player Template]
+
+※ 모든 능력치는 1~100 점수 + 간단 메모/태그를 병기한다.
+※ Stage Tag에 따라 최대치가 다르다: 고교 30, 대학/독립 50, 프로 100.
+
+기본 정보
+- Name:
+- Stage Tag:
+- Environment Tag:
+- Grade/Year:
+- Position: Pitcher / Catcher / IF / OF / Two-way 등
+
+Physical Attributes(신체)
+- Strength(근력):
+- Endurance(지구력):
+- Agility(민첩성):
+- Acceleration(순간 가속):
+- Balance(균형감):
+- Recovery(회복력):
+
+Mental Attributes(정신)
+- Focus(집중력):
+- Composure(침착성):
+- Decision Making(판단력):
+- Tactical IQ(전술 이해도):
+- Leadership(리더십):
+- Determination(투지):
+- Teamwork(팀워크):
+- Vision(시야):
+- Resilience(회복탄력성):
+
+Pitcher Metrics (투수)
+- Fastball Velo(패스트볼 구속):
+- Fastball Life(라이프):
+- Breaking Quality(브레이킹볼 품질):
+- Changeup Quality(체인지업):
+- Release Consistency(릴리즈 일관성):
+- Spin Efficiency(회전 효율):
+- Control(볼넷 억제):
+- Command(제구 정확성):
+- Pitch Sequencing(투구 배치):
+- Hold Runners(견제):
+- Stamina(이닝 소화):
+- Pitchability(운용 능력):
+- Fielding(수비):
+
+Catcher Metrics (포수)
+- Receiving(프레이밍):
+- Blocking(블로킹):
+- GameCall(게임 콜링):
+- Throwing Mechanics(송구 메커니즘):
+- Pitcher Rapport(배터리 호흡):
+
+Batter Contact & Approach (타격 접근)
+- Contact vs RHP:
+- Contact vs LHP:
+- Gap Power(갭 파워):
+- HomeRun Power(홈런 파워):
+- Plate Discipline(선구안):
+- Bat Control/Small Ball(배트 컨트롤/번트):
+- Contact Under Pressure(클러치 컨택):
+
+Baserunning & Speed (주루)
+- Speed(주력):
+- Acceleration(가속):
+- Base Steal Instinct(도루 센스):
+- Aggression(주루 공격성):
+
+Infielder Metrics (내야수)
+- Reaction Time(반응속도):
+- First Step(첫 스텝):
+- Range(수비 범위):
+- Hands(글러브 핸들링):
+- Arm Strength(어깨):
+- Arm Accuracy(송구 정확도):
+- Transfer Speed(송구 전환):
+- DoublePlay(병살 처리):
+- Footwork(풋워크):
+
+Outfielder Metrics (외야수)
+- Reaction Time(반응):
+- First Step/Jump:
+- Routes(타구 판단):
+- Arm Strength:
+- Arm Accuracy:
+- Closing Speed:
+
+Situational IQ / Defense
+- Baseball IQ(야구 지능):
+- Clutch Hitting(클러치 타격):
+- Defensive Awareness(수비 인지도):
+- Versatility(멀티포지션):
+- Hands/Glove(필요 시):
+
+Playstyle Tags
+- 예) [Clutch][PowerPitcher][ContactHitter]
+
+Relationships / Narrative Hooks
+- Relationships:
+- Narrative Hooks:
+
+Stage Modifiers
+- Stage별 특수 규칙/보정:
+
+Hidden Attributes (Internal Use Only)
+- Professionalism(프로페셔널리즘):
+- Ambition(야망):
+- Loyalty(충성):
+- Pressure Handling(중압감 대처):
+- Consistency(기복):
+- Temperament(기질):
+- Adaptability(적응력):
+- Injury Proneness(부상 성향):
+- Important Matches(큰 경기 대응력):
+- Work Rate(노력 지수):

@@ -1,0 +1,31 @@
+[MLB 팀 개요]
+- 팀명: Detroit Motor Wolves (American League)
+- 연고지: 디트로이트
+
+[재정/예산]
+- 운영예산_USD백만: 240
+- MLB급여_USD백만: 165
+- 마이너투자_USD백만: 32
+
+[팬덤/브랜드]
+- 평균관중: 29000
+- 팬충성도(1~100): 85
+- 응원특징: 메탈 응원
+
+[조직 철학]
+- 파워 피칭
+
+[홈구장]
+- Motor City Field
+
+[AAA 제휴]
+- TBD
+
+[AA 제휴]
+- TBD
+
+[우승 & 역사]
+- 우승 3회(2008,2019,2022)
+
+[시스템 메모]
+- Environment Tag: ENV[PUT_Detroit_MotorWolves]

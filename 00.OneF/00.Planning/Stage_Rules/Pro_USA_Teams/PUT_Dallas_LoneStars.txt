@@ -1,0 +1,31 @@
+[MLB 팀 개요]
+- 팀명: Dallas Lone Stars (American League)
+- 연고지: 댈러스
+
+[재정/예산]
+- 운영예산_USD백만: 310
+- MLB급여_USD백만: 210
+- 마이너투자_USD백만: 35
+
+[팬덤/브랜드]
+- 평균관중: 36000
+- 팬충성도(1~100): 89
+- 응원특징: 카우보이 응원
+
+[조직 철학]
+- 장타/빠른 주루
+
+[홈구장]
+- Republic Field
+
+[AAA 제휴]
+- TBD
+
+[AA 제휴]
+- TBD
+
+[우승 & 역사]
+- 우승 4회(2012,2018,2020,2023)
+
+[시스템 메모]
+- Environment Tag: ENV[PUT_Dallas_LoneStars]

@@ -1,0 +1,28 @@
+[팀 개요]
+- 팀명: Changwon Steel Dinos
+- 연고지: 창원
+- 마스코트: 공룡
+- 홈구장: Steel Ridge Park
+
+[재정/예산]
+- 운영예산_KRW억: 1300
+- 선수단총연봉_KRW억: 1050
+- 육성투자_KRW억: 170
+
+[팬덤/브랜드]
+- 평균관중: 24000
+- 팬충성도(1~100): 88
+- 응원특징: Steel Stampede
+
+[조직 철학]
+- 데이터+육성, 불펜 강화
+
+[우승 & 역사]
+- 우승 1회(2020)
+
+[라이벌 & 스토리 훅]
+- 주요 라이벌: Busan Giant Whales
+- 핵심 이벤트: TBD
+
+[시스템 메모]
+- Environment Tag: ENV[PKT_Changwon_SteelDinos]

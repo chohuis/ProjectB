@@ -1,0 +1,31 @@
+[MLB 팀 개요]
+- 팀명: Pittsburgh Steel Guardians (National League)
+- 연고지: 피츠버그
+
+[재정/예산]
+- 운영예산_USD백만: 230
+- MLB급여_USD백만: 155
+- 마이너투자_USD백만: 27
+
+[팬덤/브랜드]
+- 평균관중: 26000
+- 팬충성도(1~100): 80
+- 응원특징: 공장 사이렌
+
+[조직 철학]
+- 수비/불펜
+
+[홈구장]
+- Riverside Forge Park
+
+[AAA 제휴]
+- TBD
+
+[AA 제휴]
+- TBD
+
+[우승 & 역사]
+- 우승 2회(2011,2019)
+
+[시스템 메모]
+- Environment Tag: ENV[PUT_Pittsburgh_SteelGuardians]

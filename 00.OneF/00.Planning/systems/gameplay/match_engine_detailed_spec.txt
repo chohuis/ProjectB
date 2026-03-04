@@ -1,0 +1,58 @@
+﻿[Match Engine Detailed Specification]
+
+1) 모드/흐름 구조
+1-1. 인터랙티브 모드
+- 사용자 입력: 구종(TEC_VEL/TEC_CMD 영향), 위치 지정(9구역), 전략(공격적/안정적), 교체 요청 대응.
+- UI 흐름: 투구 준비 → 선택 → 결과 애니메이션/텍스트 → 스탯 업데이트 → 다음 투구.
+- 경기 날 루프: 오전 준비(체력/멘탈 조정) → 오후 경기(엔진) → 저녁 평가/인터뷰. 경기 중 이벤트는 추가 슬롯 사용.
+
+1-2. 시뮬레이션 모드
+- 전략 프리셋(감독 스타일, 선수 성향) 기반 자동 결정.
+- 이닝별 주요 장면과 스탯 변동만 출력.
+
+1-3. 텍스트 하이라이트 모드
+- 로그 중심 인터페이스: 투구결과 문자열, 핵심 파라미터 변화만 표기.
+- 모바일/저사양 지원.
+
+2) 스탯 매핑 (stats_framework.txt 연동)
+- Physical → 파라미터: STR(힘), EXP(폭발력), PRE(정교함), END(체력), SPD(스피드), AGI(민첩), BAL(밸런스), FLE(유연성), DUR(내구성), REC(회복) 각각 StageDiv로 나눠 사용.
+  * 예: StaminaParam = END / StageDiv, PrecisionParam = PRE / StageDiv, ExplodeParam = EXP / StageDiv.
+- Technical: VEL(구속), CMD(제구), MOV(무브먼트), STM(투구 스태미나), PITVAR(구종 다양성), CNT(컨택), PWR(파워), PAT(선구안), SPL(상황 타격), DEF(수비력), ARM(송구력), POS(포지션 감각), RUN(주루 능력).
+- Hidden/Private 보정: HEART(강심장)/ICE(돌부처)/NERV(새가슴)/LEAD(리더십)/WORK(근성)/SOC(팀 케미), GENIUS(천재성)/GRIT(끈기)/PERSONA(인성)/COACH(코치 적응력)/MEDIA(언론 대응).
+- 엔진은 Physical/Technical 파라미터를 기본으로 사용하고, Hidden/Private은 상황별 버프로 적용.
+
+3) 이벤트 훅 조건 (샘플)
+- ManagerHook: 투구수>80 또는 실점 3회 이상. 확률 = min(1, (투구수-70)/30). 선택: 수락→효과 없음, 거절→멘탈Param -0.1, 감독 신뢰 -1~+0.
+- ScoutObservation: 경기 중요도≥권역 결승 & 퍼포먼스평점>6.5. 인터뷰 답변으로 Draft_Tag, Private MEDIA 변동.
+- RivalBuff: Rivalry_Level≥2 & 맞대결. Focus +0.1×레벨, NERV ±0.05×레벨.
+- StaminaDrain: PHY_END Param<2.0 & 연속 15구 이상 → 추가 -0.2.
+- PostGameInterview: 평점>7 또는 <4. 사회/팬 수치 ±, Private PERSONA/COACH 드러날 수 있음.
+
+4) 경기 진행 로직
+- 이닝/투구 루프: 초/말, 아웃 3개. 투구결과 = f(Technical Params, 전략, 랜덤).
+- 예시 공식: HitChance = Base + (타자 TEC_PWR - 투수 TEC_CMD)/(20*StageDivFactor) + 전략보정 + 운(±0.05).
+- 체력 감소: 기본 -0.05/투구, 강속구/위험 전략 시 -0.02 추가. 휴식(END 회복 +0.5/일).
+- 멘탈 변화: HEART/ICE/NERV 반영. 위기 성공 +0.1, 실패 -0.1, Hidden 보정 적용.
+- UI: 체력 게이지(Physical), 멘탈 아이콘(Hidden), 전략 패널, 하이라이트 로그.
+
+5) AI/감독 판단
+- 교체 조건: StaminaParam<1.5, 실점 4+, 특정 Hidden(NERV high) 등. 확률로 플레이어에게 선택지 제공.
+- 전략: 번트/스틸/장타 지시. 조건(점수, 이닝, 선수 Technical) 기반.
+- 수비 배치: DEF/ARM/POS/RUN을 고려한 자동 포지셔닝.
+
+6) 결과/로그
+- 경기 결과 JSON/CSV: 점수, 승패, 투구수, ERA, 주요 이벤트 ID, 스탯 변화.
+- 히스토리 연동: ManagerHook, RivalBuff 등 이벤트 ID를 07_History_Log에 기록.
+- 스카우트 리포트: ScoutObservation → 팀 DB, Draft 평가 데이터로 전달.
+
+7) 테스트/밸런싱 툴
+- 평균 경기 시뮬레이터: 스탯/전략 입력→100경기→승률/ERA/체력곡선.
+- 디버그 HUD: 투구별 파라미터, 난수, Hidden 보정 값 표시.
+- 로그 분석 스크립트: csv→그래프(체력/멘탈 추이, 이벤트 빈도).
+
+TODO
+- HitOutcome/PitchOutcome 상세 공식과 데이터 시트 작성.
+- 이벤트 훅 확률표(ManagerHook, ScoutObservation 등) 및 Hidden/Private 변화 규칙.
+- UI 와이어프레임: 인터랙티브 모드, 하이라이트 패널, 인터뷰.
+
+

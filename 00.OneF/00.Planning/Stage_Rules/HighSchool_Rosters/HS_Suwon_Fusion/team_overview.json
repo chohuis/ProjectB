@@ -1,0 +1,84 @@
+{
+  "team_id": "HS_Suwon_Fusion",
+  "team_name": "수원 퓨전 고",
+  "tier": "mid",
+  "region": "수원",
+  "keywords": [
+    "공수 밸런스",
+    "신흥 강호"
+  ],
+  "facility": "퓨전 데이터·비디오 센터",
+  "manager": {
+    "name": "신우용",
+    "role": "감독",
+    "style": "투수 육성 전문",
+    "philosophy": "피칭 프로그램과 피지컬 강화",
+    "ratings": {
+      "leadership": 77,
+      "tactics": 70,
+      "development": 71,
+      "motivation": 77,
+      "discipline": 71
+    }
+  },
+  "coaches": [
+    {
+      "name": "임주율",
+      "role": "투수 코치",
+      "specialty": "피칭",
+      "ratings": {
+        "leadership": 62,
+        "teaching": 70,
+        "tactics": 64
+      }
+    },
+    {
+      "name": "이유별",
+      "role": "타격 코치",
+      "specialty": "컨택",
+      "ratings": {
+        "leadership": 61,
+        "teaching": 63,
+        "tactics": 63
+      }
+    },
+    {
+      "name": "강시우",
+      "role": "전략 코치",
+      "specialty": "전술",
+      "ratings": {
+        "leadership": 69,
+        "teaching": 68,
+        "tactics": 66
+      }
+    },
+    {
+      "name": "한연서",
+      "role": "수비 코치",
+      "specialty": "글러브",
+      "ratings": {
+        "leadership": 68,
+        "teaching": 68,
+        "tactics": 71
+      }
+    },
+    {
+      "name": "박시솔",
+      "role": "체력 코치",
+      "specialty": "피지컬",
+      "ratings": {
+        "leadership": 62,
+        "teaching": 63,
+        "tactics": 66
+      }
+    }
+  ],
+  "headcounts": {
+    "varsity": 21,
+    "junior": 13
+  },
+  "metrics": {
+    "avg_overall_varsity": 68.7,
+    "avg_overall_junior": 62.5
+  }
+}

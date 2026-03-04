@@ -1,0 +1,84 @@
+{
+  "team_id": "HS_Gangneung_Wave",
+  "team_name": "강릉 웨이브 고",
+  "tier": "developing",
+  "region": "강릉",
+  "keywords": [
+    "투지",
+    "한파 적응"
+  ],
+  "facility": "동해 한랭 환경 적응 돔",
+  "manager": {
+    "name": "한우우",
+    "role": "감독",
+    "style": "공격적 주루",
+    "philosophy": "상황별 기동력을 끌어올리는 운영",
+    "ratings": {
+      "leadership": 66,
+      "tactics": 72,
+      "development": 69,
+      "motivation": 67,
+      "discipline": 67
+    }
+  },
+  "coaches": [
+    {
+      "name": "권주용",
+      "role": "투수 코치",
+      "specialty": "피칭",
+      "ratings": {
+        "leadership": 55,
+        "teaching": 61,
+        "tactics": 59
+      }
+    },
+    {
+      "name": "오하서",
+      "role": "타격 코치",
+      "specialty": "컨택",
+      "ratings": {
+        "leadership": 56,
+        "teaching": 58,
+        "tactics": 65
+      }
+    },
+    {
+      "name": "서지빈",
+      "role": "전략 코치",
+      "specialty": "전술",
+      "ratings": {
+        "leadership": 58,
+        "teaching": 58,
+        "tactics": 64
+      }
+    },
+    {
+      "name": "조서별",
+      "role": "수비 코치",
+      "specialty": "글러브",
+      "ratings": {
+        "leadership": 58,
+        "teaching": 61,
+        "tactics": 58
+      }
+    },
+    {
+      "name": "윤민린",
+      "role": "체력 코치",
+      "specialty": "피지컬",
+      "ratings": {
+        "leadership": 62,
+        "teaching": 66,
+        "tactics": 65
+      }
+    }
+  ],
+  "headcounts": {
+    "varsity": 19,
+    "junior": 12
+  },
+  "metrics": {
+    "avg_overall_varsity": 59.1,
+    "avg_overall_junior": 53.5
+  }
+}

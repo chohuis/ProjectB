@@ -1,0 +1,5 @@
+﻿[High School Warning & Probation]
+- Warning: 평균 60 미만 또는 출석률 80% 미만 → 수업/자습 1회 강제, 감독 신뢰 -3, 팀 케미 -1, 경고 배너.
+- Probation: 평균 40 미만 또는 Warning 2회 → 공식 경기 2주 제한, 독립 훈련만 가능, 학부모 호출. 보충수업 4회+다음 시험 60 이상으로 회복.
+- Probation 유지 시 드래프트 평가 -1, 로그는 히스토리 Academic 탭에 누적.
+

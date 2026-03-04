@@ -1,0 +1,19 @@
+﻿[Shared Core / DLL Preparation]
+
+목표
+- 게임 로직(스탯, 루프, 매치 엔진)을 CareerSim.Core DLL로 분리해 WPF 프로토와 Godot4 클라이언트가 동일 코드 사용.
+
+마이그레이션 단계
+1) Core 폴더 분리: PlayerProfile, DailyAction, HighSchoolYearManager, MatchSimulationState 등을 새 Class Library 프로젝트로 이동.
+2) 공용 모델 계약서 작성 (docs/data_contracts.md): 세이브 파일, 로그 스냅샷, 이벤트 구조를 JSON Schema로 정의.
+3) WPF 프로젝트 → Core DLL 참조. Godot C# 프로젝트도 동일 DLL 참조(또는 소스 포함)로 빌드.
+4) 스크립트/데이터는 /data/base/*.json 으로 통일, Core DLL은 IDataProvider 인터페이스를 통해 로딩.
+
+단기 To-do
+- Core DLL 스켈레톤 프로젝트 생성 (src/CareerSim.Core/CareerSim.Core.csproj).
+- 현재 Core/GameModels.cs 내 클래스를 partial로 분할 → 곧바로 이동 가능하게 정리.
+- Shared DLL 단위 테스트 프로젝트 추가, YearManager/MatchEngine 확률 검증 스크립트 작성.
+
+의존성 관리
+- .NET 9 Class Library, nullable context on.
+- Godot 4 C# 프로젝트는 .NET 7/8 호환 필요 → Multi-targeting(net8.0, net9.0) 검토.

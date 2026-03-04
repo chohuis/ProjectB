@@ -1,0 +1,31 @@
+[MLB 팀 개요]
+- 팀명: Chicago Wind Bears (National League)
+- 연고지: 시카고
+
+[재정/예산]
+- 운영예산_USD백만: 320
+- MLB급여_USD백만: 215
+- 마이너투자_USD백만: 36
+
+[팬덤/브랜드]
+- 평균관중: 37000
+- 팬충성도(1~100): 92
+- 응원특징: 전통 깃발 세리머니
+
+[조직 철학]
+- 수비·불펜 중심
+
+[홈구장]
+- Wind City Field
+
+[AAA 제휴]
+- TBD
+
+[AA 제휴]
+- TBD
+
+[우승 & 역사]
+- 우승 5회(2006,2010,2015,2018,2022)
+
+[시스템 메모]
+- Environment Tag: ENV[PUT_Chicago_WindBears]

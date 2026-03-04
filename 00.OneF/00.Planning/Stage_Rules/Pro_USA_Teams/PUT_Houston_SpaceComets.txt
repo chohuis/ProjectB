@@ -1,0 +1,31 @@
+[MLB 팀 개요]
+- 팀명: Houston Space Comets (National League)
+- 연고지: 휴스턴
+
+[재정/예산]
+- 운영예산_USD백만: 320
+- MLB급여_USD백만: 210
+- 마이너투자_USD백만: 40
+
+[팬덤/브랜드]
+- 평균관중: 34000
+- 팬충성도(1~100): 89
+- 응원특징: 우주복 응원
+
+[조직 철학]
+- 데이터 혁신
+
+[홈구장]
+- Cosmos Stadium
+
+[AAA 제휴]
+- TBD
+
+[AA 제휴]
+- TBD
+
+[우승 & 역사]
+- 우승 4회(2011,2015,2019,2023)
+
+[시스템 메모]
+- Environment Tag: ENV[PUT_Houston_SpaceComets]

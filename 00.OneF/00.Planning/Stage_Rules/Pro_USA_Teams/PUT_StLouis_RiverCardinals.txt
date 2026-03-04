@@ -1,0 +1,31 @@
+[MLB 팀 개요]
+- 팀명: St. Louis River Cardinals (National League)
+- 연고지: 세인트루이스
+
+[재정/예산]
+- 운영예산_USD백만: 280
+- MLB급여_USD백만: 185
+- 마이너투자_USD백만: 34
+
+[팬덤/브랜드]
+- 평균관중: 35000
+- 팬충성도(1~100): 91
+- 응원특징: 붉은 물결
+
+[조직 철학]
+- 기본기·홈그로운
+
+[홈구장]
+- Rivergate Stadium
+
+[AAA 제휴]
+- TBD
+
+[AA 제휴]
+- TBD
+
+[우승 & 역사]
+- 우승 7회(2007,2010,2012,2016,2020,2022,2024)
+
+[시스템 메모]
+- Environment Tag: ENV[PUT_StLouis_RiverCardinals]

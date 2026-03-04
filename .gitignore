@@ -1,0 +1,12 @@
+﻿.vs/
+.vscode/
+bin/
+obj/
+out/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.log
+*.tmp
+*.cache

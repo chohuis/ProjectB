@@ -1,0 +1,84 @@
+{
+  "team_id": "HS_Incheon_Sky",
+  "team_name": "인천 스카이 고",
+  "tier": "mid",
+  "region": "인천",
+  "keywords": [
+    "기동력",
+    "스몰볼"
+  ],
+  "facility": "전국급 주루 전용 드릴존",
+  "manager": {
+    "name": "임연우",
+    "role": "감독",
+    "style": "강한 기초·수비 중심",
+    "philosophy": "실수 최소화와 멘탈 유지",
+    "ratings": {
+      "leadership": 70,
+      "tactics": 74,
+      "development": 76,
+      "motivation": 78,
+      "discipline": 70
+    }
+  },
+  "coaches": [
+    {
+      "name": "오가현",
+      "role": "투수 코치",
+      "specialty": "피칭",
+      "ratings": {
+        "leadership": 67,
+        "teaching": 66,
+        "tactics": 71
+      }
+    },
+    {
+      "name": "장연혁",
+      "role": "타격 코치",
+      "specialty": "컨택",
+      "ratings": {
+        "leadership": 62,
+        "teaching": 70,
+        "tactics": 63
+      }
+    },
+    {
+      "name": "정가경",
+      "role": "전략 코치",
+      "specialty": "전술",
+      "ratings": {
+        "leadership": 62,
+        "teaching": 64,
+        "tactics": 66
+      }
+    },
+    {
+      "name": "신승혁",
+      "role": "수비 코치",
+      "specialty": "글러브",
+      "ratings": {
+        "leadership": 66,
+        "teaching": 70,
+        "tactics": 63
+      }
+    },
+    {
+      "name": "송세용",
+      "role": "체력 코치",
+      "specialty": "피지컬",
+      "ratings": {
+        "leadership": 69,
+        "teaching": 69,
+        "tactics": 68
+      }
+    }
+  ],
+  "headcounts": {
+    "varsity": 21,
+    "junior": 13
+  },
+  "metrics": {
+    "avg_overall_varsity": 68.5,
+    "avg_overall_junior": 62.8
+  }
+}

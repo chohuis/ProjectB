@@ -1,0 +1,31 @@
+[MLB 팀 개요]
+- 팀명: Kansas Prairie Kings (American League)
+- 연고지: 캔자스시티
+
+[재정/예산]
+- 운영예산_USD백만: 235
+- MLB급여_USD백만: 160
+- 마이너투자_USD백만: 30
+
+[팬덤/브랜드]
+- 평균관중: 28000
+- 팬충성도(1~100): 86
+- 응원특징: 왕관 응원
+
+[조직 철학]
+- 불펜 매치업
+
+[홈구장]
+- Prairie Crown Park
+
+[AAA 제휴]
+- TBD
+
+[AA 제휴]
+- TBD
+
+[우승 & 역사]
+- 우승 2회(2014,2024)
+
+[시스템 메모]
+- Environment Tag: ENV[PUT_Kansas_PrairieKings]

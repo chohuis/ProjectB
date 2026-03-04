@@ -1,0 +1,121 @@
+[공통 능력치 가이드]
+
+0) 수치 체계(Score Scale)
+- 모든 능력치는 1~100 사이 정수로 기록한다.
+- 40 이하는 약점, 50~60은 평균, 70 이상은 강점으로 간단히 구분한다.
+- 필요 시 서술형 메모와 태그를 병기해 해석을 돕는다. (예: 82 [강점], 태그 PHY[Durable])
+- Stage별 수치 상한
+  - HighSchool: 1~30 범위 권장 (신체/정신/세부 능력 모두)
+  - University & IndependentLeague: 1~50 범위
+  - Professional(국내/미국): 1~100 범위
+  - 동일 템플릿을 사용하되, Stage Tag에 따라 상한을 초과하지 않도록 관리한다.
+
+1) 가시 능력(Visible Attributes) — 전 인물 공통
+- Physical Attributes(신체)
+  1. Strength(근력)
+  2. Endurance(지구력)
+  3. Agility(민첩성)
+  4. Acceleration(순간 가속)
+  5. Balance(균형감)
+  6. Recovery(회복력)
+- Mental Attributes(정신)
+  1. Focus(집중력)
+  2. Composure(침착성)
+  3. Decision Making(판단력)
+  4. Tactical IQ(전술 이해도)
+  5. Leadership(리더십)
+  6. Determination(투지)
+  7. Teamwork(팀워크)
+  8. Vision(시야)
+- Technical / Role Attributes
+  - Manager 공통: Strategy, Development, Motivation, Discipline, Communication, Talent Evaluation, Analytics, Media Handling
+  - Player 공통/포지션별: Pitcher/Batter/Fielding 섹션 참고
+- 태그 예: PHY[Strength], MNT[Focus], TEC[Strategy]
+
+2) Manager 전용 세부 능력치
+- Strategy(전술 운용)
+- Development(육성/훈련 설계)
+- Motivation(동기 부여/멘탈 케어)
+- Discipline(규율/관리)
+- Communication(커뮤니케이션)
+- Talent Evaluation(재능 평가)
+- Analytics(데이터 분석)
+- Media Handling(미디어 대응)
+
+3) Player 전용 세부 능력치 (세분화)
+- Pitcher Mechanics & Arsenal
+  - Fastball Velo(패스트볼 구속)
+  - Fastball Life(라이프/무브먼트)
+  - Breaking Quality(브레이킹볼 품질)
+  - Changeup Quality(체인지업/오프스피드)
+  - Release Consistency(릴리즈 일관성)
+  - Spin Efficiency(회전 효율)
+- Pitcher Control & Situational
+  - Control(볼넷 억제)
+  - Command(존 내 목표 지점 타격)
+  - Pitch Sequencing(투구 배치)
+  - Hold Runners(주자 견제)
+  - Stamina(이닝 소화)
+  - Pitchability(상황 운용)
+- Batter Contact & Approach
+  - Contact vs RHP
+  - Contact vs LHP
+  - Gap Power(갭 파워)
+  - HomeRun Power(순수 장타)
+  - Plate Discipline(볼/스트라이크 식별)
+  - Bat Control(배트 컨트롤/번트)
+  - Contact Under Pressure(클러치 컨택)
+- Baserunning & Speed
+  - Speed(순수 주력)
+  - Acceleration(가속)
+  - Base Steal Instinct(도루 센스)
+  - Aggression(주루 공격성)
+
+- Defensive Fielding Layers
+  - Reaction Time(반응속도)
+  - First Step/Jump(첫 스텝)
+  - Range(수비 범위)
+  - Hands(글러브 핸들링)
+  - Arm Strength(어깨)
+  - Arm Accuracy(송구 정확도)
+  - Transfer Speed(송구 전환)
+  - DoublePlay(병살 처리)
+  - Footwork(풋워크)
+  - Routes(외야 타구 판단)
+
+- Catcher 특화
+  - Receiving(프레이밍)
+  - Blocking(블로킹)
+  - GameCall(게임 콜링)
+  - Throwing Mechanics(송구 메커니즘)
+  - Pitcher Rapport(배터리 호흡)
+
+- Situational IQ
+  - Baseball IQ(야구 지능)
+  - Clutch Hitting(클러치 타격)
+  - Defensive Awareness(수비 인지도)
+  - Versatility(멀티포지션 적응)
+
+4) Hidden Attributes(비공개 능력치)
+- Professionalism(프로페셔널리즘)
+- Ambition(야망)
+- Loyalty(충성)
+- Pressure Handling(중압감 대처)
+- Consistency(기복)
+- Temperament(기질)
+- Adaptability(적응력)
+- Injury Proneness(부상 성향)
+- Important Matches(큰 경기 성과)
+- Work Rate(노력 수치)
+- Hidden 값도 1~100으로 기록하며, 기본적으로 사용자에게 노출되지 않는다.
+- 템플릿 하단 "Hidden Attributes" 섹션에서 관리한다.
+
+5) Stage Modifiers 태그 예시
+- STAGE[HighSchool], STAGE[University], STAGE[Pro_KOR], STAGE[Pro_USA]
+- ENV[Seoul_Prestige], ENV[Busan_Marine] 등 환경/학교 태그는 Stage 문서와 일치하게 유지
+
+6) 표기 규칙
+- "능력치명(한글) : 점수 / 메모" 형식을 권장한다. (예: "Velocity(구속): 78 — 서두르지 않는 폼")
+- 수치 옆에 태그를 추가해 검색/필터링 용도로 사용한다. (예: MNT[Focus:85])
+
+필요 시 새로운 능력치/태그를 정의하고 이 문서를 먼저 업데이트할 것.

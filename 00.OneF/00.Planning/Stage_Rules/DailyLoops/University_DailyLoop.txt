@@ -1,0 +1,11 @@
+[University Daily Loop]
+
+Sections
+1) Morning Conditioning / Rehab
+2) Lectures & Credit Management
+3) Team Training & Bullpen/Side Work
+4) Events / Campus Life / Scouting Meetings
+5) Games (리그/토너먼트)
+6) Recovery / Study Hall / Sleep
+
+추후 세부 규칙 채워 넣을 예정.

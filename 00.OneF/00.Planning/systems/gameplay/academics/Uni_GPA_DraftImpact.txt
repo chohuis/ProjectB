@@ -1,0 +1,5 @@
+﻿[University GPA & Draft Impact]
+- 학점 → 4.5 스케일 평균, 누적 GPA = ΣGPA/학기수.
+- 졸업 요건: GPA 2.5+, 6학기 이상. GPA 3.5+ Dean_List, 지능 특성 해금.
+- 드래프트: GPA 3.0+ 면담 보너스, 2.0 미만 Academic Concern.
+

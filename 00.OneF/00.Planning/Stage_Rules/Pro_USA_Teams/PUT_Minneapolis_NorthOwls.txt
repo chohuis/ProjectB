@@ -1,0 +1,31 @@
+[MLB 팀 개요]
+- 팀명: Minneapolis North Owls (National League)
+- 연고지: 미니애폴리스
+
+[재정/예산]
+- 운영예산_USD백만: 240
+- MLB급여_USD백만: 160
+- 마이너투자_USD백만: 28
+
+[팬덤/브랜드]
+- 평균관중: 28000
+- 팬충성도(1~100): 83
+- 응원특징: 스노우 응원
+
+[조직 철학]
+- 투수 중심
+
+[홈구장]
+- Northwind Park
+
+[AAA 제휴]
+- TBD
+
+[AA 제휴]
+- TBD
+
+[우승 & 역사]
+- 우승 1회(2017)
+
+[시스템 메모]
+- Environment Tag: ENV[PUT_Minneapolis_NorthOwls]

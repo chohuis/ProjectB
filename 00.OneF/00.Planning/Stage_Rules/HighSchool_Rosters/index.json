@@ -1,0 +1,432 @@
+{
+  "generated_at": "2026-03-04T01:57:34Z",
+  "teams": [
+    {
+      "team_id": "HS_Seoul_Innovation",
+      "team_name": "서울 이노베이션 고",
+      "tier": "powerhouse",
+      "region": "서울",
+      "keywords": [
+        "데이터랩",
+        "피칭랩",
+        "과학 트레이닝"
+      ],
+      "facility": "AR·웨어러블 기반 분석 센터",
+      "summary": {
+        "varsity_count": 23,
+        "junior_count": 15,
+        "avg_overall": 78.7,
+        "top_players": [
+          {
+            "name": "신소호",
+            "position": "CP",
+            "overall": 85,
+            "tags": [
+              "핵심",
+              "강심장"
+            ]
+          },
+          {
+            "name": "정서겸",
+            "position": "SP",
+            "overall": 84,
+            "tags": [
+              "핵심",
+              "멘탈관리"
+            ]
+          },
+          {
+            "name": "정소솔",
+            "position": "SP",
+            "overall": 84,
+            "tags": [
+              "핵심",
+              "슈퍼유망주"
+            ]
+          },
+          {
+            "name": "조온주",
+            "position": "RP",
+            "overall": 84,
+            "tags": [
+              "핵심",
+              "클러치"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "team_id": "HS_Seoul_Prestige",
+      "team_name": "서울 프레스티지 고",
+      "tier": "powerhouse",
+      "region": "서울",
+      "keywords": [
+        "엘리트 육성",
+        "전통 강호"
+      ],
+      "facility": "실내 돔·블루칩 아카데미",
+      "summary": {
+        "varsity_count": 23,
+        "junior_count": 15,
+        "avg_overall": 78.5,
+        "top_players": [
+          {
+            "name": "강현연",
+            "position": "SP",
+            "overall": 85,
+            "tags": [
+              "핵심",
+              "스피드러너"
+            ]
+          },
+          {
+            "name": "정주혁",
+            "position": "SP",
+            "overall": 85,
+            "tags": [
+              "핵심",
+              "슈퍼유망주",
+              "클러치"
+            ]
+          },
+          {
+            "name": "박예빈",
+            "position": "CP",
+            "overall": 85,
+            "tags": [
+              "핵심",
+              "팀리더"
+            ]
+          },
+          {
+            "name": "류시준",
+            "position": "SP",
+            "overall": 84,
+            "tags": [
+              "핵심",
+              "클러치"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "team_id": "HS_Busan_Marine",
+      "team_name": "부산 마린 고",
+      "tier": "powerhouse",
+      "region": "부산",
+      "keywords": [
+        "강한 피지컬",
+        "바다 도시 정신"
+      ],
+      "facility": "해양 기후 적응 트레이닝",
+      "summary": {
+        "varsity_count": 23,
+        "junior_count": 15,
+        "avg_overall": 78.7,
+        "top_players": [
+          {
+            "name": "서민겸",
+            "position": "SP",
+            "overall": 85,
+            "tags": [
+              "핵심",
+              "프로젝트"
+            ]
+          },
+          {
+            "name": "황하윤",
+            "position": "SP",
+            "overall": 85,
+            "tags": [
+              "핵심",
+              "팀리더"
+            ]
+          },
+          {
+            "name": "송예현",
+            "position": "C",
+            "overall": 85,
+            "tags": [
+              "핵심",
+              "강심장"
+            ]
+          },
+          {
+            "name": "오우경",
+            "position": "SP",
+            "overall": 84,
+            "tags": [
+              "핵심",
+              "프로젝트",
+              "팀리더"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "team_id": "HS_Suwon_Fusion",
+      "team_name": "수원 퓨전 고",
+      "tier": "mid",
+      "region": "수원",
+      "keywords": [
+        "공수 밸런스",
+        "신흥 강호"
+      ],
+      "facility": "퓨전 데이터·비디오 센터",
+      "summary": {
+        "varsity_count": 21,
+        "junior_count": 13,
+        "avg_overall": 66.4,
+        "top_players": [
+          {
+            "name": "신승주",
+            "position": "SP",
+            "overall": 72,
+            "tags": [
+              "유망주",
+              "프로젝트"
+            ]
+          },
+          {
+            "name": "송태율",
+            "position": "RP",
+            "overall": 72,
+            "tags": [
+              "클러치"
+            ]
+          },
+          {
+            "name": "송도원",
+            "position": "RP",
+            "overall": 71,
+            "tags": [
+              "슈퍼유망주"
+            ]
+          },
+          {
+            "name": "박세윤",
+            "position": "RP",
+            "overall": 71,
+            "tags": [
+              "클러치",
+              "프로젝트"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "team_id": "HS_Incheon_Sky",
+      "team_name": "인천 스카이 고",
+      "tier": "mid",
+      "region": "인천",
+      "keywords": [
+        "기동력",
+        "스몰볼"
+      ],
+      "facility": "전국급 주루 전용 드릴존",
+      "summary": {
+        "varsity_count": 21,
+        "junior_count": 13,
+        "avg_overall": 66.4,
+        "top_players": [
+          {
+            "name": "홍예하",
+            "position": "SP",
+            "overall": 72,
+            "tags": [
+              "유망주",
+              "프로젝트",
+              "클러치"
+            ]
+          },
+          {
+            "name": "서예준",
+            "position": "SS",
+            "overall": 71,
+            "tags": [
+              "유망주",
+              "슈퍼유망주"
+            ]
+          },
+          {
+            "name": "송우라",
+            "position": "C",
+            "overall": 70,
+            "tags": [
+              "유망주",
+              "클러치"
+            ]
+          },
+          {
+            "name": "안수윤",
+            "position": "1B",
+            "overall": 70,
+            "tags": [
+              "클러치"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "team_id": "HS_Gwangju_Power",
+      "team_name": "광주 파워 고",
+      "tier": "mid",
+      "region": "광주",
+      "keywords": [
+        "장타",
+        "열정"
+      ],
+      "facility": "비거리 특화 슬러거 케이지",
+      "summary": {
+        "varsity_count": 21,
+        "junior_count": 13,
+        "avg_overall": 66.0,
+        "top_players": [
+          {
+            "name": "박도라",
+            "position": "C",
+            "overall": 73,
+            "tags": [
+              "슈퍼유망주"
+            ]
+          },
+          {
+            "name": "장채용",
+            "position": "SP",
+            "overall": 71,
+            "tags": [
+              "유망주",
+              "클러치",
+              "슈퍼유망주"
+            ]
+          },
+          {
+            "name": "황도서",
+            "position": "SS",
+            "overall": 71,
+            "tags": [
+              "스피드러너"
+            ]
+          },
+          {
+            "name": "서세호",
+            "position": "LF",
+            "overall": 71,
+            "tags": [
+              "팀리더"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "team_id": "HS_Daegu_Spirit",
+      "team_name": "대구 스피릿 고",
+      "tier": "developing",
+      "region": "대구",
+      "keywords": [
+        "근성",
+        "투혼"
+      ],
+      "facility": "지역 밀착 멘탈·체력 트랙",
+      "summary": {
+        "varsity_count": 19,
+        "junior_count": 12,
+        "avg_overall": 56.9,
+        "top_players": [
+          {
+            "name": "장도하",
+            "position": "SP",
+            "overall": 66,
+            "tags": [
+              "팀리더"
+            ]
+          },
+          {
+            "name": "송시라",
+            "position": "SP",
+            "overall": 62,
+            "tags": [
+              "스피드러너"
+            ]
+          },
+          {
+            "name": "신승별",
+            "position": "RP",
+            "overall": 62,
+            "tags": [
+              "유망주",
+              "슈퍼유망주",
+              "프로젝트"
+            ]
+          },
+          {
+            "name": "황유별",
+            "position": "C",
+            "overall": 62,
+            "tags": [
+              "프로젝트",
+              "멘탈관리"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "team_id": "HS_Gangneung_Wave",
+      "team_name": "강릉 웨이브 고",
+      "tier": "developing",
+      "region": "강릉",
+      "keywords": [
+        "투지",
+        "한파 적응"
+      ],
+      "facility": "동해 한랭 환경 적응 돔",
+      "summary": {
+        "varsity_count": 19,
+        "junior_count": 12,
+        "avg_overall": 56.9,
+        "top_players": [
+          {
+            "name": "이태라",
+            "position": "RP",
+            "overall": 62,
+            "tags": [
+              "강심장"
+            ]
+          },
+          {
+            "name": "권우하",
+            "position": "DH",
+            "overall": 62,
+            "tags": [
+              "유망주",
+              "슈퍼유망주"
+            ]
+          },
+          {
+            "name": "안도혁",
+            "position": "SP",
+            "overall": 61,
+            "tags": [
+              "스피드러너"
+            ]
+          },
+          {
+            "name": "권유솔",
+            "position": "RP",
+            "overall": 61,
+            "tags": [
+              "멘탈관리"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

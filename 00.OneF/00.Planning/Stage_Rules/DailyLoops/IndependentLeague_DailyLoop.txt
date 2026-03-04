@@ -1,0 +1,11 @@
+[Independent League Daily Loop]
+
+Sections
+1) Morning Conditioning / Personal Training
+2) Team Meetings / Strategy Review
+3) Practice Block (투수/야수 분리)
+4) Media / Contract / Agent Interactions
+5) Games (정규 시즌)
+6) Recovery / Travel / Sleep
+
+상세 규칙은 Stage_Rules/IndependentLeague와 연결 예정.

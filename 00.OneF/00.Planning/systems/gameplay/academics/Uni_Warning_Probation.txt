@@ -1,0 +1,5 @@
+﻿[University Warning & Probation]
+- Warning: 평균 65 미만, 출석 <85%, 장학 의무 불이행 → 수업 강제 1회, 경기 확률 -10%.
+- Probation: 평균 50 미만 혹은 Warning 2회 → 경기 30% 제한, 드래프트 평가 -1, 특별 과제. 보충수업 3회+다음 시험 70 이상으로 회복.
+- 2학기 연속 Probation 시 Dismissal 이벤트.
+

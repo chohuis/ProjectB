@@ -1,0 +1,60 @@
+﻿[Player Attribute Framework]
+
+0) 개요
+- 능력치를 신체(Physical) / 기술(Technical) / 히든(Hidden) / 비공개(Private) 4그룹으로 관리.
+- 각 스탯은 레벨(1~100) + XP 구조. 단계별 유효 범위:
+  * 고등학교: 초기 20~45, 상한 60.
+  * 대학/독립: 30~70, 상한 85.
+  * 프로(KBO/USA): 40~90(해외 100까지), 상한 100.
+- 레벨업 XP: 고교 50xp, 대학 70xp, 프로 100xp.
+
+1) 신체(Physical) 세부 항목
+| 코드 | 이름(한글/영문) | 설명/영향 | 활용 예 |
+| PHY_STR | 힘 Strength | 스윙 파워, 구속 상한, 충돌 저항 | 장타력, 파워 피칭 |
+| PHY_EXP | 폭발력 Explosiveness | 스타트 반응, 투구 첫 걸음, 시동 속도 | 주루 스타트, 투구 폼 |
+| PHY_PRE | 정교함 Precision | 미세 컨트롤, 손끝 감각 | 제구, 컨택 타격 |
+| PHY_END | 체력 Endurance | 장시간 투구/훈련 지속, 회복 속도 | StaminaParam = END/StageDiv |
+| PHY_SPD | 스피드 Speed | 직선 주력, 베이스 러닝 | 도루, 외야 커버 |
+| PHY_AGI | 민첩 Agility | 방향 전환, 타구 반응 | 내야 수비, 피칭 밸런스 |
+| PHY_BAL | 밸런스 Balance | 투구 안정성, 스윙 균형, 부상 방지 | 변화구, 타격 정확도 |
+| PHY_FLE | 유연성 Flexibility | 관절 가동 범위, 부상 위험 감소 | 변화구 무브, 재활 |
+| PHY_DUR | 내구성 Durability | 부상 내성, 시즌 체력 유지 | 혹사 시 버티기 |
+| PHY_REC | 회복 Recovery | 경기/훈련 후 체력 회복률 | 연투 가능 여부 |
+
+2) 기술(Technical)
+- 투수 Pitching
+  * TEC_VEL (구속 Velocity)
+  * TEC_CMD (제구 Command)
+  * TEC_MOV (무브먼트 Movement)
+  * TEC_STM (투구 스태미나 Stamina)
+  * TEC_PITVAR (구종 다양성 Pitch Variety)
+- 타자 Batting
+  * TEC_CNT (컨택 Contact)
+  * TEC_PWR (파워 Power)
+  * TEC_PAT (선구안 Patience)
+  * TEC_SPL (상황 타격 Situational Hitting)
+- 수비/주루 Defense/Running
+  * TEC_DEF (수비력 Defense)
+  * TEC_ARM (송구력 Arm)
+  * TEC_POS (포지션 감각 Position Sense)
+  * TEC_RUN (주루 능력 Baserunning)
+
+3) 히든(Hidden)
+| 코드 | 이름(한글/영문) | 효과 |
+| HID_HEART | 강심장 Big-Heart | 위기 멘탈 감소량 -50%, 클러치 보너스 |
+| HID_ICE | 돌부처 Ice-Cold | 관중/라이벌 영향 -50% |
+| HID_NERV | 새가슴 Nervous | 위기 시 멘탈 -0.2 추가 |
+| HID_LEAD | 리더십 Leadership | 주장단 이벤트, 팀 버프 크기 |
+| HID_WORK | 근성 Work Rate | 훈련/재활 경험치 +10% |
+| HID_SOC | 팀 케미 Social | 팀 분위기, 사회 활동 효과 증폭 |
+
+4) 비공개(Private)
+| 코드 | 이름(한글/영문) | 설명 | 공개 조건 |
+| PRV_GENIUS | 천재성 Genius | 기술 성장 캡 +10, 특수 이벤트 해금 | 코치/멘토 코멘트로 암시 |
+| PRV_GRIT | 끈기 Grit | 재활 속도 +20%, 장기 프로젝트 성공률↑ | 재활/캠프 이벤트 |
+| PRV_PERSONA | 인성 Persona | 감독/팀 케미, 인터뷰 반응 | 스토리 이벤트 |
+| PRV_COACH | 코치 적응력 Coachability | 팀/전략 전환 속도 | 트레이드/전학 시 공개 |
+| PRV_MEDIA | 언론 대응 Media Handling | 팬/미디어 반응, 광고 이벤트 | 대회/프로 진출 시 드러남 |
+
+5) 데이터 구조 예시
+...

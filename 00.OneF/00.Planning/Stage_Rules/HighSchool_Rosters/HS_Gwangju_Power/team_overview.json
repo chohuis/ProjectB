@@ -1,0 +1,84 @@
+{
+  "team_id": "HS_Gwangju_Power",
+  "team_name": "광주 파워 고",
+  "tier": "mid",
+  "region": "광주",
+  "keywords": [
+    "장타",
+    "열정"
+  ],
+  "facility": "비거리 특화 슬러거 케이지",
+  "manager": {
+    "name": "김수율",
+    "role": "감독",
+    "style": "데이터 기반 전술",
+    "philosophy": "분석과 리스크 관리를 중시",
+    "ratings": {
+      "leadership": 72,
+      "tactics": 70,
+      "development": 75,
+      "motivation": 72,
+      "discipline": 71
+    }
+  },
+  "coaches": [
+    {
+      "name": "강지린",
+      "role": "투수 코치",
+      "specialty": "피칭",
+      "ratings": {
+        "leadership": 60,
+        "teaching": 63,
+        "tactics": 71
+      }
+    },
+    {
+      "name": "김채경",
+      "role": "타격 코치",
+      "specialty": "컨택",
+      "ratings": {
+        "leadership": 66,
+        "teaching": 66,
+        "tactics": 71
+      }
+    },
+    {
+      "name": "신주하",
+      "role": "전략 코치",
+      "specialty": "전술",
+      "ratings": {
+        "leadership": 66,
+        "teaching": 66,
+        "tactics": 70
+      }
+    },
+    {
+      "name": "임예준",
+      "role": "수비 코치",
+      "specialty": "글러브",
+      "ratings": {
+        "leadership": 60,
+        "teaching": 64,
+        "tactics": 63
+      }
+    },
+    {
+      "name": "이도윤",
+      "role": "체력 코치",
+      "specialty": "피지컬",
+      "ratings": {
+        "leadership": 65,
+        "teaching": 64,
+        "tactics": 69
+      }
+    }
+  ],
+  "headcounts": {
+    "varsity": 21,
+    "junior": 13
+  },
+  "metrics": {
+    "avg_overall_varsity": 68.2,
+    "avg_overall_junior": 62.4
+  }
+}

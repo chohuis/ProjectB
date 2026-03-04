@@ -1,0 +1,37 @@
+[Godot 4 / WPF 프로토 타입 기술 정리]
+
+목표
+- 현재 WPF 텍스트 프로토 타입에서 검증한 시스템(스케줄, 로그, 경기, UI 흐름)을 Godot 4 게임 클라이언트로 이식할 때의 데이터 규약과 작업 순서를 정의한다.
+- 1인 개발 기준으로 “텍스트 프로토 → Godot UI → 콘텐츠 확장”의 파이프라인을 단순화하고, 대용량 데이터 관리에 필요한 툴을 사전에 준비한다.
+
+1. 역할 분리
+- WPF(Text Demo): 룰/수치 검증, UX 와이어프레임, 시뮬레이션 로그 생산. Core/GameModels.cs = 룰 레퍼런스.
+- Godot 4(Main Game): 최종 렌더링, 애니메이션, 입력/패드 대응, 세이브/로드 시스템. GDScript + C# 하이브리드 허용.
+- 공용 자산: JSON/CSV 데이터, Scriptable Config(코치/학교/팀/능력치 템플릿), 이벤트 시나리오.
+
+2. 데이터 포맷/경로
+- UTF-8 고정. EUC-KR 자산은 스크립트(`scripts/encoding_fix.py`)로 일괄 변환 후 커밋.
+- `/data/base/` : 템플릿(학교, 팀, 코치, 선수), 경기 규칙, 드래프트 규칙. JSON lines 또는 CSV.
+- `/data/runtime/` : 세이브 파일. WPF/ Godot 공용 직렬화 모델 (`PlayerProfile`, `HighSchoolProfile`, `DailyLogBlock`)을 nuget 공유 프로젝트로 추출 예정.
+- `/data/logs/` : 하루 단위 로그(`[{"header":"Day 12","entries":["..."]}]`)와 경기 로그(`[{"pitch":1,"zone":4,...}]`) 보관. Godot는 해당 JSON을 그대로 UI에 매핑.
+
+3. 시스템 매핑
+- 스케줄러/YearManager: C# 라이브러리로 유지, Godot에서는 C# script 로더를 통해 동일 DLL 참조.
+- 매치 엔진: 확률 테이블/상태머신을 `match_engine_detailed_spec.txt` → `match_rules.json` 으로 변환. Godot에서는 NativeScript(C#)에서 로직 실행, UI만 GDScript.
+- 로그/기록: `_game.LogEntries` → `log_snapshot.json` → Godot `RecordsPanel`. 팝업(`DailyLogOverlay`) UX를 그대로 구현.
+- 훈련/세션: Combo → Session Template → Weekly Assignment 구조 그대로 유지. Godot UI만 재구성.
+
+4. 툴/파이프라인
+- `scripts/` 폴더에 데이터 생성 스크립트 집중(예: `gen_rosters.py` → JSON). 실행 시 Output은 `/data/base/`.
+- WPF 프로토에서 export 버튼 추가 예정: “현재 시즌 상태 저장(JSON)” → Godot에서 import하여 동일 시점 재현.
+- 테스트: PowerShell + dotnet test 대신, 간단한 `scenario_runner.py` 로 특정 주차까지 자동 시뮬.
+
+5. 향후 과제
+- 공용 Core 로직을 `CareerSim.Core` DLL로 분리 (현재 WPF 프로젝트에서 추출). Godot C# 프로젝트에서 참조 검증.
+- Godot 4 프로젝트 시드 생성, 리소스 구조(`/scenes`, `/ui`, `/scripts`) 초안 작성.
+- WPF와 Godot 간 데이터 계약서 작성(클래스/필드/타입). `docs/data_contracts.md` 예정.
+- UI/UX 차이 분석: 텍스트 기반 모듈 그대로 vs 애니메이션 요구 모듈 분리.
+
+참고
+- Godot 4는 싱글 플레이·로컬 저장에 충분. 대용량 JSON 로딩은 `FileAccess` + `Json` API 사용. 필요 시 `gdextension` 없이 C#으로 처리 가능.
+- 데이터 수정 시 반드시 UTF-8 유지, 편집기/OS 혼용 시 `git config core.autocrlf false` 권장.

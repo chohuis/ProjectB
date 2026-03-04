@@ -1,0 +1,59 @@
+﻿[High School Detailed Spec]
+
+1) 스탯 구조 & 범위
+- 스탯 그룹: 신체(Physical), 기술(Technical), 히든(Hidden), 비공개(Private). 상세 정의는 stats_framework.txt 참조.
+- 범위: 고교 단계는 1~60 (초기 20~45). 레벨+XP 구조로 50xp마다 +1레벨.
+- 변화량: 일상 행동당 ±0.1~±0.3레벨, 이벤트/캠프 등 특수 상황만 +1 이상.
+- 대표 스탯 매핑
+  * 신체: STR(힘), EXP(폭발력), PRE(정교함), END(체력), SPD(스피드), AGI(민첩), BAL(밸런스), FLE(유연성), DUR(내구성), REC(회복).
+  * 기술(투/타/수비): VEL(구속), CMD(제구), MOV(무브먼트), STM(투구 스태미나), PITVAR(구종 다양성), CNT(컨택), PWR(파워), PAT(선구안), SPL(상황 타격), DEF(수비력), ARM(송구력), POS(포지션 감각), RUN(주루 능력).
+  * 히든: HEART(강심장), ICE(돌부처), NERV(새가슴), LEAD(리더십), WORK(근성), SOC(팀 케미).
+  * 비공개: GENIUS(천재성), GRIT(끈기), PERSONA(인성), COACH(코치 적응력), MEDIA(언론 대응).
+
+2) 일일/주간 루프
+- 하루 슬롯: 아침/점심/저녁 기본 행동 + 이벤트 슬롯(발생 시 4번째 행동).
+- 행동 예시
+  * 수업: 지식(KNW) +0.2레벨, END -0.1.
+  * 자습: KNW +0.2, 집중(Focus=MENTAL 하위) +0.1, END -0.1.
+  * 오전 훈련: END -0.2, 기술 XP +0.3 (포지션별 VEL/CNT/DEF 등).
+  * 오후 훈련: END -0.2, 기술 +0.3, 멘탈 +0.1 (코치 품질 보정).
+  * 저녁 휴식: END +0.3, 멘탈 +0.1 (END<20이면 +0.5).
+  * 사회활동: Social(히든/사회 파라미터) +0.1, END -0.1.
+- 주간 패턴: 월~금 수업 중심, 토 경기(준비/경기/회복), 일 휴식/자율.
+- 월간 이벤트: 시험 대비(4/7월), 주장단 평가(2학년 6월, 3학년 3월), 캠프(7말, 12말).
+
+3) 행동 → 스탯 매핑 표 (예시)
+| 행동 | Physical | Technical | Hidden | Private |
+| 수업 | END -0.1, PRE +0.05 | - | - | KNW +0.2 |
+| 자습 | END -0.1 | - | Focus(+0.1) | KNW +0.2 |
+| 오전 훈련 | END -0.2, STR +0.05, EXP +0.05 | Pitching/Hitting XP +0.3 | WORK +0.05 | - |
+| 오후 훈련 | END -0.2, BAL +0.05 | 해당 기술 +0.3 | HEART +0.05 (성공 시), NERV -0.05 | - |
+| 저녁 휴식 | REC +0.2, DUR +0.1 | - | NERV -0.05 | GRIT +0.05 (연속 휴식 시) |
+| 사회활동 | SPD -0.05, AGI +0.05 | - | LEAD/SOC +0.1 | PERSONA ± |
+
+4) 이벤트 트리거 & 영향
+- Mentor Session: 월 1회, Mentor_Trust≥5. 기술 스탯 +0.5, 멘탈 +0.2, WORK +0.1, LEAD +0.1.
+- Rival Event: Rivalry_Level≥1, 특정 경기에서 40% 확률. HEART/ICE ±0.1, Focus ±0.1.
+- Captaincy: 리더십(LEAD) > 1.8, 감독 신뢰 >20. 주장 승격 시 LEAD +0.5, 팀 케미 +0.2.
+- Scout Interview: 전국대회/캠프 MVP. VISIBLE 스탯 변화 없음, Social +0.1, Draft_Tag 업데이트, Private MEDIA +/-.
+- Draft Intent: 3학년 6월. GENIUS/GRIT/PERSONA 기반 대화 분기, 이후 루트 조건에 반영.
+
+5) 학업 연계
+- 지식(KNW), 집중(Focus), GPA, Warning/Probation 상태.
+- Warning: 평균 <60 또는 출석 <80%. 다음 5일 중 수업/자습 3회 강제.
+- Probation: 평균 <40 또는 Warning 2회. 공식 경기 불가 2주, Mentor/Rival 이벤트 제한.
+- 장학: 평균 85+, 출석 95%+. KNW MaxCap +2, LEAD +0.2, 경기 엔트리 우선권 +10%.
+
+6) 데이터 훅
+- StatChanges: {date, statCode, xpDelta, reason} 기록.
+- EventFlags: Mentor_Trust, Rivalry_Level, Draft_Intent, Captaincy_Status, Hidden/Private 스택.
+- ScheduleNodes: 날짜별 기본 행동/이벤트.
+- History 기록: 주요 이벤트 ID와 Hidden/Private 변화는 히스토리 및 07_History_Log에 간접 표현.
+
+7) TODO
+- 학교별 템플릿 JSON: Physical/Technical 초기값, 히든/프라이빗 분포, 감독 스타일.
+- 행동 확률/수치 CSV 작성.
+- 히든/비공개 스탯 발현 이벤트 정의(예: 돌부처 획득 조건, 새가슴 제거 이벤트).
+
+
+

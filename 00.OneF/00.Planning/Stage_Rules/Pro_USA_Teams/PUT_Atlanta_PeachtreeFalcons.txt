@@ -1,0 +1,31 @@
+[MLB 팀 개요]
+- 팀명: Atlanta Peachtree Falcons (American League)
+- 연고지: 애틀랜타
+
+[재정/예산]
+- 운영예산_USD백만: 280
+- MLB급여_USD백만: 185
+- 마이너투자_USD백만: 33
+
+[팬덤/브랜드]
+- 평균관중: 35000
+- 팬충성도(1~100): 88
+- 응원특징: 피치 응원봉
+
+[조직 철학]
+- 강한 팜 시스템
+
+[홈구장]
+- Peachtree Flight Stadium
+
+[AAA 제휴]
+- TBD
+
+[AA 제휴]
+- TBD
+
+[우승 & 역사]
+- 우승 5회(2005,2011,2016,2019,2024)
+
+[시스템 메모]
+- Environment Tag: ENV[PUT_Atlanta_PeachtreeFalcons]

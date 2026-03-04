@@ -1,0 +1,84 @@
+{
+  "team_id": "HS_Busan_Marine",
+  "team_name": "부산 마린 고",
+  "tier": "powerhouse",
+  "region": "부산",
+  "keywords": [
+    "강한 피지컬",
+    "바다 도시 정신"
+  ],
+  "facility": "해양 기후 적응 트레이닝",
+  "manager": {
+    "name": "김주주",
+    "role": "감독",
+    "style": "투수 육성 전문",
+    "philosophy": "피칭 프로그램과 피지컬 강화",
+    "ratings": {
+      "leadership": 83,
+      "tactics": 78,
+      "development": 76,
+      "motivation": 85,
+      "discipline": 82
+    }
+  },
+  "coaches": [
+    {
+      "name": "강온원",
+      "role": "투수 코치",
+      "specialty": "피칭",
+      "ratings": {
+        "leadership": 74,
+        "teaching": 77,
+        "tactics": 71
+      }
+    },
+    {
+      "name": "임예혁",
+      "role": "타격 코치",
+      "specialty": "컨택",
+      "ratings": {
+        "leadership": 70,
+        "teaching": 76,
+        "tactics": 71
+      }
+    },
+    {
+      "name": "홍세호",
+      "role": "전략 코치",
+      "specialty": "전술",
+      "ratings": {
+        "leadership": 77,
+        "teaching": 78,
+        "tactics": 76
+      }
+    },
+    {
+      "name": "황가혁",
+      "role": "수비 코치",
+      "specialty": "글러브",
+      "ratings": {
+        "leadership": 77,
+        "teaching": 73,
+        "tactics": 78
+      }
+    },
+    {
+      "name": "장하원",
+      "role": "체력 코치",
+      "specialty": "피지컬",
+      "ratings": {
+        "leadership": 75,
+        "teaching": 73,
+        "tactics": 71
+      }
+    }
+  ],
+  "headcounts": {
+    "varsity": 23,
+    "junior": 15
+  },
+  "metrics": {
+    "avg_overall_varsity": 82.1,
+    "avg_overall_junior": 73.5
+  }
+}

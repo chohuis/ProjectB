@@ -1,0 +1,31 @@
+[MLB 팀 개요]
+- 팀명: Los Angeles Sun Dragons (National League)
+- 연고지: 로스앤젤레스
+
+[재정/예산]
+- 운영예산_USD백만: 350
+- MLB급여_USD백만: 240
+- 마이너투자_USD백만: 50
+
+[팬덤/브랜드]
+- 평균관중: 40000
+- 팬충성도(1~100): 95
+- 응원특징: 레드카펫 이벤트
+
+[조직 철학]
+- 슈퍼스타 영입
+
+[홈구장]
+- Suncrest Coliseum
+
+[AAA 제휴]
+- TBD
+
+[AA 제휴]
+- TBD
+
+[우승 & 역사]
+- 우승 6회(2003,2008,2013,2017,2021,2023)
+
+[시스템 메모]
+- Environment Tag: ENV[PUT_LosAngeles_SunDragons]

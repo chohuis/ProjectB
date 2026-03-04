@@ -1,0 +1,85 @@
+{
+  "team_id": "HS_Seoul_Innovation",
+  "team_name": "서울 이노베이션 고",
+  "tier": "powerhouse",
+  "region": "서울",
+  "keywords": [
+    "데이터랩",
+    "피칭랩",
+    "과학 트레이닝"
+  ],
+  "facility": "AR·웨어러블 기반 분석 센터",
+  "manager": {
+    "name": "임우현",
+    "role": "감독",
+    "style": "공격적 주루",
+    "philosophy": "상황별 기동력을 끌어올리는 운영",
+    "ratings": {
+      "leadership": 82,
+      "tactics": 82,
+      "development": 79,
+      "motivation": 82,
+      "discipline": 81
+    }
+  },
+  "coaches": [
+    {
+      "name": "오지경",
+      "role": "투수 코치",
+      "specialty": "피칭",
+      "ratings": {
+        "leadership": 69,
+        "teaching": 70,
+        "tactics": 74
+      }
+    },
+    {
+      "name": "서태연",
+      "role": "타격 코치",
+      "specialty": "컨택",
+      "ratings": {
+        "leadership": 73,
+        "teaching": 77,
+        "tactics": 76
+      }
+    },
+    {
+      "name": "송수빈",
+      "role": "전략 코치",
+      "specialty": "전술",
+      "ratings": {
+        "leadership": 74,
+        "teaching": 75,
+        "tactics": 74
+      }
+    },
+    {
+      "name": "강채주",
+      "role": "수비 코치",
+      "specialty": "글러브",
+      "ratings": {
+        "leadership": 75,
+        "teaching": 74,
+        "tactics": 77
+      }
+    },
+    {
+      "name": "조수겸",
+      "role": "체력 코치",
+      "specialty": "피지컬",
+      "ratings": {
+        "leadership": 71,
+        "teaching": 78,
+        "tactics": 72
+      }
+    }
+  ],
+  "headcounts": {
+    "varsity": 23,
+    "junior": 15
+  },
+  "metrics": {
+    "avg_overall_varsity": 82.5,
+    "avg_overall_junior": 72.9
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "team_id": "HS_Seoul_Prestige",
+  "team_name": "서울 프레스티지 고",
+  "tier": "powerhouse",
+  "region": "서울",
+  "keywords": [
+    "엘리트 육성",
+    "전통 강호"
+  ],
+  "facility": "실내 돔·블루칩 아카데미",
+  "manager": {
+    "name": "김주원",
+    "role": "감독",
+    "style": "데이터 기반 전술",
+    "philosophy": "분석과 리스크 관리를 중시",
+    "ratings": {
+      "leadership": 83,
+      "tactics": 78,
+      "development": 75,
+      "motivation": 83,
+      "discipline": 76
+    }
+  },
+  "coaches": [
+    {
+      "name": "박세원",
+      "role": "투수 코치",
+      "specialty": "피칭",
+      "ratings": {
+        "leadership": 75,
+        "teaching": 72,
+        "tactics": 77
+      }
+    },
+    {
+      "name": "송우윤",
+      "role": "타격 코치",
+      "specialty": "컨택",
+      "ratings": {
+        "leadership": 67,
+        "teaching": 70,
+        "tactics": 75
+      }
+    },
+    {
+      "name": "오채주",
+      "role": "전략 코치",
+      "specialty": "전술",
+      "ratings": {
+        "leadership": 77,
+        "teaching": 75,
+        "tactics": 78
+      }
+    },
+    {
+      "name": "신수연",
+      "role": "수비 코치",
+      "specialty": "글러브",
+      "ratings": {
+        "leadership": 69,
+        "teaching": 72,
+        "tactics": 70
+      }
+    },
+    {
+      "name": "송시하",
+      "role": "체력 코치",
+      "specialty": "피지컬",
+      "ratings": {
+        "leadership": 76,
+        "teaching": 73,
+        "tactics": 76
+      }
+    }
+  ],
+  "headcounts": {
+    "varsity": 23,
+    "junior": 15
+  },
+  "metrics": {
+    "avg_overall_varsity": 82.1,
+    "avg_overall_junior": 72.9
+  }
+}

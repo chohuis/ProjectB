@@ -1,0 +1,31 @@
+[MLB 팀 개요]
+- 팀명: Boston Harbor Hawks (American League)
+- 연고지: 보스턴
+
+[재정/예산]
+- 운영예산_USD백만: 300
+- MLB급여_USD백만: 200
+- 마이너투자_USD백만: 40
+
+[팬덤/브랜드]
+- 평균관중: 34000
+- 팬충성도(1~100): 92
+- 응원특징: 항구 응원가
+
+[조직 철학]
+- 선구안/투수 운용
+
+[홈구장]
+- Harborline Stadium
+
+[AAA 제휴]
+- TBD
+
+[AA 제휴]
+- TBD
+
+[우승 & 역사]
+- 우승 7회(2010,2016,2022)
+
+[시스템 메모]
+- Environment Tag: ENV[PUT_Boston_HarborHawks]

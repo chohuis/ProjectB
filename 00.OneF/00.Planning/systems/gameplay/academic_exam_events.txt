@@ -1,0 +1,5 @@
+﻿[Academic Event Index]
+- HS_Exam_Prep/Day/Scholarship/Warning/GPA: 고교 학업 루프 상세.
+- Uni_Exam_Prep/Day/Scholarship/Warning/GPA: 대학 학업 루프 상세.
+- 세부 내용은 systems/gameplay/academics 폴더의 개별 문서 참조.
+

@@ -1,0 +1,5 @@
+﻿[University Exam Prep]
+- 중간/기말 10일 전 Advisor 호출, 장학 보유 시 튜터링 필수.
+- 선택지 A 연구 몰입(지식+10, 체력-8), B 균형, C 실전 우선, D 튜터링.
+- prep_choice_uni를 저장해 Dean_List 조건과 장학 유지 체크에 활용.
+
