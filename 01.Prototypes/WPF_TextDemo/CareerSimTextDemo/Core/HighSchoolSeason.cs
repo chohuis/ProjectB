@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,12 +9,12 @@ public sealed class HighSchoolYearManager
     private const int TotalDays = 360;
     private static readonly string[] FriendlyOpponents =
     {
-        "Seoul Bukseong HS", "Seoul Hyoam HS", "Incheon Namdo HS", "Suwon Gangnam HS", "Gwangju Daehwa HS", "Busan Younghae HS"
+        "서울 이노베이션 고", "인천 스카이 고", "수원 퓨전 고", "광주 파워 고"
     };
 
     private static readonly string[] TournamentOpponents =
     {
-        "Gangneung Minsol HS", "Daegu Hanse HS", "Daejeon Dongcheong HS", "Changwon Hyeopseong HS", "Jeju Songnim HS", "Ulsan Myeongryun HS"
+        "서울 프레스티지 고", "대구 스피릿 고", "강릉 웨이브 고", "부산 마린 고"
     };
 
     private readonly List<ScheduledEvent> _events = new();
@@ -139,18 +139,19 @@ public sealed class HighSchoolYearManager
             });
 
         AddRecurringEvent(
-            startDay: 12,
-            interval: 28,
-            continueCondition: day => day <= 200,
+            startDay: 10,
+            interval: 15,
+            continueCondition: day => day <= 100,
             category: "청백전",
             title: "월간 청백전",
-            preview: "월 1회 이상 팀 청백전에 출전합니다.",
+            preview: "연습 경기/청백전에 정기적으로 출전합니다.",
             (p, r, m) =>
             {
                 var command = p.GetStatValue("SKL_COMMAND");
-                var rating = command + r.NextDouble() * 10;
-                var good = rating > 30;
-                if (good) m.IncreaseCoachTrust(4);
+                var rating = command + r.NextDouble() * 8;
+                var good = rating > 26;
+                if (good) m.IncreaseCoachTrust(2);
+                else m.IncreaseCoachTrust(-2);
                 m.SetMatchOpportunity("청백전", r);
                 return new[]
                 {
@@ -161,12 +162,12 @@ public sealed class HighSchoolYearManager
             });
 
         AddRecurringEvent(
-            startDay: 90,
-            interval: 45,
-            continueCondition: day => day <= 250,
+            startDay: 30,
+            interval: 15,
+            continueCondition: day => day <= 60,
             category: "공식 경기",
             title: "공식 경기 출전",
-            preview: "월 1~2회 공식 경기 투입, 성적에 따라 신뢰도/스카우트 관심도 변화.",
+            preview: "공식 경기 체험 기회가 주어집니다.",
             (p, r, m) =>
             {
                 var threshold = 40;
@@ -176,9 +177,9 @@ public sealed class HighSchoolYearManager
                 }
 
                 var velo = p.GetStatValue("SKL_FOURSEAM");
-                var outingScore = velo + r.NextDouble() * 15;
-                m.IncreaseCoachTrust(2);
-                m.IncreaseScoutInterest(outingScore > 40 ? 5 : 2);
+                var outingScore = velo + r.NextDouble() * 10;
+                m.IncreaseCoachTrust(1);
+                m.IncreaseScoutInterest(outingScore > 30 ? 3 : 1);
                 m.SetMatchOpportunity("공식 경기", r);
                 return new[]
                 {
@@ -197,31 +198,31 @@ public sealed class HighSchoolYearManager
             {
                 var knowledge = p.GetStatValue("MNT_ACADEMIC");
                 var focus = p.GetStatValue("MNT_FOCUS");
-                var score = knowledge * 1.2 + focus;
+                var score = knowledge * 0.7 + focus * 0.3;
                 var tier = score > 55 ? "A" : score > 35 ? "B" : "C";
                 return new[] { $"[학업] 1학기 중간고사 결과: {tier} 등급." };
             });
 
         AddOneShotEvent(
-            day: 150,
+            day: 60,
             category: "스카우트",
             title: "주말 리그 관전",
             preview: "스카우트가 벤치에서 선수들을 체크합니다.",
             (p, r, m) =>
             {
-                m.IncreaseScoutInterest(3);
+                m.IncreaseScoutInterest(2);
                 return new[] { "[스카우트] 주말 리그에서 스카우트가 성장을 체크했습니다." };
             });
 
         AddOneShotEvent(
-            day: 180,
+            day: 150,
             category: "합숙",
             title: "여름 합숙 캠프",
             preview: "체력 집중 합숙으로 체력/체인지업 상승.",
             (p, r, m) =>
             {
-                p.ApplyDelta("PHY_STAMINA", 0.6);
-                p.ApplyDelta("SKL_CHANGEUP", 0.4);
+                p.ApplyDelta("PHY_STAMINA", 0.4);
+                p.ApplyDelta("SKL_CHANGEUP", 0.3);
                 return new[] { "[합숙] 체력과 체인지업 구사가 향상되었습니다." };
             });
 
@@ -236,7 +237,7 @@ public sealed class HighSchoolYearManager
             {
                 if (r.NextDouble() < 0.2)
                 {
-                    p.ApplyDelta("PHY_ARM_HEALTH", -0.6);
+                    p.ApplyDelta("PHY_ARM_HEALTH", -0.4);
                     return new[] { "[컨디션] 팔꿈치에 미세 통증이 감지되어 회복력이 소모되었습니다." };
                 }
 
@@ -251,21 +252,21 @@ public sealed class HighSchoolYearManager
             (p, r, m) =>
             {
                 var knowledge = p.GetStatValue("MNT_ACADEMIC");
-                var morale = p.GetStatValue("MNT_MORALE");
-                var score = (knowledge + morale) / 2 + r.Next(0, 10);
+                var focus = p.GetStatValue("MNT_FOCUS");
+                var score = knowledge * 0.7 + focus * 0.3 + r.Next(0, 6);
                 var tier = score > 60 ? "A+" : score > 45 ? "B+" : "C";
                 return new[] { $"[학업] 기말고사 결과: {tier} 등급. 대학 진학 자료에 반영됩니다." };
             });
 
         AddOneShotEvent(
-            day: 300,
+            day: 230,
             category: "합숙",
             title: "겨울 합숙 캠프",
             preview: "폼 안정성과 멘탈 루틴을 정비합니다.",
             (p, r, m) =>
             {
-                p.ApplyDelta("SKL_COMMAND", 0.4);
-                p.ApplyDelta("MNT_MORALE", 0.5);
+                p.ApplyDelta("SKL_COMMAND", 0.3);
+                p.ApplyDelta("MNT_MORALE", 0.3);
                 return new[] { "[합숙] 커맨드와 멘탈 루틴을 개선했습니다." };
             });
 
@@ -793,3 +794,4 @@ public sealed class HighSchoolPlannedEvent
 
     public string DateLabel => $"{Month}월 {DayOfMonth}일 (W{WeekOfYear})";
 }
+

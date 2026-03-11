@@ -156,6 +156,47 @@ internal static class HighSchoolRosterRepository
         }
     }
 
+    public static HighSchoolRoster? LoadByTeamName(string teamName)
+    {
+        if (string.IsNullOrWhiteSpace(teamName))
+        {
+            return null;
+        }
+
+        var dir = DataPathResolver.HighSchoolRosterDirectory;
+        if (!Directory.Exists(dir))
+        {
+            return null;
+        }
+
+        var files = Directory.GetFiles(dir, "*.json", SearchOption.TopDirectoryOnly)
+            .Where(path => !string.Equals(Path.GetFileNameWithoutExtension(path), "index", StringComparison.OrdinalIgnoreCase));
+
+        foreach (var file in files)
+        {
+            try
+            {
+                var json = File.ReadAllText(file);
+                var dto = JsonSerializer.Deserialize<HighSchoolRosterFileDto>(json, Options);
+                if (dto is null)
+                {
+                    continue;
+                }
+
+                if (string.Equals(dto.TeamName, teamName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return dto.ToDomain();
+                }
+            }
+            catch
+            {
+                // Ignore malformed roster file and continue scanning.
+            }
+        }
+
+        return null;
+    }
+
     private sealed class HighSchoolRosterFileDto
     {
         [JsonPropertyName("team_id")]

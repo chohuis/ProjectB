@@ -1,14 +1,18 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Shapes;
 using System.Windows.Threading;
 using CareerSimTextDemo.Core;
 using CareerSimTextDemo.Core.HighSchool;
@@ -34,9 +38,9 @@ public partial class MainWindow : Window
 
     private readonly string[] _targetZones =
     {
-        "상단-인코스","상단-중앙","상단-아웃코스",
-        "중단-인코스","중단-중앙","중단-아웃코스",
-        "하단-인코스","하단-중앙","하단-아웃코스"
+        "상단-인코스", "상단-중앙", "상단-아웃코스",
+        "중단-인코스", "중단-중앙", "중단-아웃코스",
+        "하단-인코스", "하단-중앙", "하단-아웃코스"
     };
 
     private readonly Random _simRandom = new();
@@ -44,20 +48,25 @@ public partial class MainWindow : Window
 
     private GameState? _game;
     private HighSchoolProfile? _selectedSchool;
-    private bool _suppressActionEvents;
+    private bool _suppressAcademicEvents;
 
     private readonly ObservableCollection<StatEntry> _physicalStats = new();
     private readonly ObservableCollection<StatEntry> _technicalStats = new();
     private readonly ObservableCollection<StatEntry> _mentalStats = new();
-    private readonly ObservableCollection<TrainingSession> _trainingSessions = new();
     private readonly ObservableCollection<SchoolSelectionView> _playableSchools = new();
-    private readonly ObservableCollection<WeeklyPlanView> _weeklyPlanViews = new();
+    private readonly ObservableCollection<RoutineCardView> _routineCards = new();
+    private readonly ObservableCollection<RoutineDayView> _routineDayViews = new();
     private readonly ObservableCollection<ScheduleEntryView> _scheduleEntries = new();
     private readonly ObservableCollection<CalendarMonthView> _calendarMonths = new();
     private readonly ObservableCollection<CalendarDayView> _currentCalendarDays = new();
     private readonly ObservableCollection<DayLogBlock> _logBlocks = new();
     private readonly ObservableCollection<PitchMarkerViewModel> _pitchMarkers = new();
     private readonly ObservableCollection<string> _recentMatchSummaries = new();
+    private readonly ObservableCollection<MatchInningView> _matchInnings = new();
+    private readonly ObservableCollection<MatchLineupView> _matchHomeLineup = new();
+    private readonly ObservableCollection<MatchLineupView> _matchGuestLineup = new();
+    private readonly ObservableCollection<MatchRosterView> _matchHomeRoster = new();
+    private readonly ObservableCollection<MatchRosterView> _matchGuestRoster = new();
     private readonly ObservableCollection<RosterMemberView> _rosterMembers = new();
     private readonly ObservableCollection<RosterStaffView> _rosterStaffMembers = new();
     private readonly ObservableCollection<RosterStatView> _rosterPhysicalStats = new();
@@ -66,15 +75,21 @@ public partial class MainWindow : Window
     private readonly ObservableCollection<RosterStatView> _rosterMentalStats = new();
     private readonly ObservableCollection<RosterStatView> _rosterHiddenStats = new();
     private readonly ObservableCollection<LoopPreviewItem> _loopPreviewItems = new();
+    private readonly ObservableCollection<string> _academicLogs = new();
+    private readonly ObservableCollection<AcademicOption> _academicLectureOptions = new();
+    private readonly ObservableCollection<AcademicOption> _academicSupportOptions = new();
+    private readonly ObservableCollection<AcademicOption> _academicStudyOptions = new();
     private readonly StringBuilder _matchOverlayLogBuilder = new();
     private readonly Dictionary<string, (int Column, int Row)> _zoneGridLookup;
 
     private readonly List<SectionItem> _sections =
     [
         new SectionItem("홈", SectionType.Home),
-        new SectionItem("내 정보", SectionType.Info),
+        new SectionItem("메시지", SectionType.Messages),
+        new SectionItem("정보", SectionType.Info),
         new SectionItem("로스터", SectionType.Roster),
         new SectionItem("훈련", SectionType.Training),
+        new SectionItem("학업", SectionType.Academics),
         new SectionItem("일정", SectionType.Schedule),
         new SectionItem("기록", SectionType.Records)
     ];
@@ -82,6 +97,11 @@ public partial class MainWindow : Window
     private SectionType _currentSection = SectionType.Home;
     private RosterMemberView? _currentRosterSelection;
     private int _pitchMarkerSequence;
+    private RoutineDayView? _selectedRoutineDay;
+    private int _routineWeekCursor = 1;
+    private string? _editingRoutineId;
+    private bool _isCreatingRoutine;
+    private bool _matchPanelInitialized;
 
     public MainWindow()
     {
@@ -95,19 +115,25 @@ public partial class MainWindow : Window
         PhysicalStatsList.ItemsSource = _physicalStats;
         TechnicalStatsList.ItemsSource = _technicalStats;
         MentalStatsList.ItemsSource = _mentalStats;
-        TrainingSessionList.ItemsSource = _trainingSessions;
-        WeeklyPlanList.ItemsSource = _weeklyPlanViews;
-        WeeklyPlanWeekCombo.ItemsSource = _weeklyPlanViews;
-        WeeklyPlanSessionCombo.ItemsSource = _trainingSessions;
+        RoutineCardList.ItemsSource = _routineCards;
+        RoutineWeekGrid.ItemsSource = _routineDayViews;
         ScheduleList.ItemsSource = _scheduleEntries;
         CalendarDayGrid.ItemsSource = _currentCalendarDays;
         MatchTargetZoneCombo.ItemsSource = _targetZones;
         MatchTargetZoneCombo.SelectedIndex = 4;
         MatchPitchIntentCombo.SelectedIndex = 0;
         LogBlockList.ItemsSource = _logBlocks;
+        MessageLogList.ItemsSource = _logBlocks;
         PitchMarkerItems.ItemsSource = _pitchMarkers;
         PitchResultList.ItemsSource = _pitchMarkers;
         RecentMatchList.ItemsSource = _recentMatchSummaries;
+        MatchInningHeaderList.ItemsSource = _matchInnings;
+        MatchInningHomeList.ItemsSource = _matchInnings;
+        MatchInningGuestList.ItemsSource = _matchInnings;
+        LineupHomeList.ItemsSource = _matchHomeLineup;
+        LineupGuestList.ItemsSource = _matchGuestLineup;
+        RosterHomeList.ItemsSource = _matchHomeRoster;
+        RosterGuestList.ItemsSource = _matchGuestRoster;
         RosterList.ItemsSource = _rosterMembers;
         RosterStaffList.ItemsSource = _rosterStaffMembers;
         RosterPhysicalList.ItemsSource = _rosterPhysicalStats;
@@ -117,6 +143,10 @@ public partial class MainWindow : Window
         RosterHiddenList.ItemsSource = _rosterHiddenStats;
         HomeUpcomingList.ItemsSource = _loopPreviewItems;
         InfoLoopList.ItemsSource = _loopPreviewItems;
+        AcademicLogList.ItemsSource = _academicLogs;
+        AcademicLectureCombo.ItemsSource = _academicLectureOptions;
+        AcademicSupportCombo.ItemsSource = _academicSupportOptions;
+        AcademicStudyCombo.ItemsSource = _academicStudyOptions;
 
         SectionList.ItemsSource = _sections;
         SectionList.SelectedIndex = 0;
@@ -206,41 +236,308 @@ public partial class MainWindow : Window
         }
     }
 
-    private void InitializeGame(HighSchoolProfile school, int academicYear)
+    private void RefreshRoutinePanel()
     {
-        _game = GameState.CreateHighSchoolSeason(school, academicYear);
-        _game.LogEntries.CollectionChanged += GameLogEntries_CollectionChanged;
-        BindActions();
-        RefreshSummary();
-        RefreshStats();
-        InitializeWeeklyPlanViews();
-        RefreshScheduleEntries();
-        RefreshCalendarMonths();
-        SyncActionSelectionWithGame();
-        UpdateDayLabel();
-        UpdateMatchStatus();
-        RebuildLogBlocks();
-        SchoolSelectionOverlay.Visibility = Visibility.Collapsed;
+        RefreshRoutineCards();
+        RefreshRoutineWeek();
     }
 
-    private void BindActions()
+    private void RoutineAddButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (_game is null) return;
+        _isCreatingRoutine = true;
+        _editingRoutineId = null;
+        OpenRoutineEditor(null);
+    }
+
+    private void RoutineEditButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (_game is null) return;
+        if (sender is not Button { Tag: string routineId }) return;
+        _isCreatingRoutine = false;
+        _editingRoutineId = routineId;
+        OpenRoutineEditor(routineId);
+    }
+
+    private void RoutineDeleteButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (_game is null) return;
+        if (sender is not Button { Tag: string routineId }) return;
+        if (MessageBox.Show(this, "선택한 커스텀 루틴을 삭제할까요?", "루틴 삭제", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        if (!_game.RemoveRoutineTemplate(routineId))
+        {
+            MessageBox.Show(this, "루틴을 삭제할 수 없습니다.", "오류", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
+
+        RefreshRoutinePanel();
+    }
+
+    private void RoutineResetButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (_game is null) return;
+        if (sender is not Button { Tag: string routineId }) return;
+        if (!_game.ResetRoutineTemplate(routineId))
+        {
+            MessageBox.Show(this, "루틴을 복원할 수 없습니다.", "오류", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
+
+        RefreshRoutinePanel();
+    }
+
+    private void OpenRoutineEditor(string? routineId)
     {
         if (_game is null) return;
 
+        RoutineEditorErrorText.Text = string.Empty;
+        RoutineEditorOverlay.Visibility = Visibility.Visible;
+        RoutineEditorTitleText.Text = _isCreatingRoutine ? "커스텀 루틴 추가" : "루틴 편집";
+
         var actions = _game.AvailableActions;
-        MorningActionCombo.ItemsSource = actions;
-        AfternoonActionCombo.ItemsSource = actions;
-        EveningActionCombo.ItemsSource = actions;
+        RoutineEditorMorningCombo.ItemsSource = actions;
+        RoutineEditorAfternoonCombo.ItemsSource = actions;
+        RoutineEditorEveningCombo.ItemsSource = actions;
 
-        _suppressActionEvents = true;
-        MorningActionCombo.SelectedIndex = 0;
-        AfternoonActionCombo.SelectedIndex = actions.Count > 1 ? 1 : 0;
-        EveningActionCombo.SelectedIndex = actions.Count > 2 ? 2 : 0;
-        _suppressActionEvents = false;
+        if (_isCreatingRoutine || string.IsNullOrWhiteSpace(routineId))
+        {
+            RoutineEditorNameText.Text = string.Empty;
+            RoutineEditorMorningCombo.SelectedIndex = actions.Count > 0 ? 0 : -1;
+            RoutineEditorAfternoonCombo.SelectedIndex = actions.Count > 1 ? 1 : 0;
+            RoutineEditorEveningCombo.SelectedIndex = actions.Count > 2 ? 2 : 0;
+            return;
+        }
 
-        MorningDescription.Text = (MorningActionCombo.SelectedItem as DailyAction)?.Description;
-        AfternoonDescription.Text = (AfternoonActionCombo.SelectedItem as DailyAction)?.Description;
-        EveningDescription.Text = (EveningActionCombo.SelectedItem as DailyAction)?.Description;
+        var template = _game.GetRoutineTemplate(routineId);
+        if (template is null)
+        {
+            RoutineEditorErrorText.Text = "루틴 데이터를 찾을 수 없습니다.";
+            return;
+        }
+
+        RoutineEditorNameText.Text = template.Name;
+        RoutineEditorMorningCombo.SelectedItem = template.Morning;
+        RoutineEditorAfternoonCombo.SelectedItem = template.Afternoon;
+        RoutineEditorEveningCombo.SelectedItem = template.Evening;
+    }
+
+    private void CloseRoutineEditor()
+    {
+        RoutineEditorOverlay.Visibility = Visibility.Collapsed;
+        RoutineEditorErrorText.Text = string.Empty;
+        _editingRoutineId = null;
+        _isCreatingRoutine = false;
+    }
+
+    private void RefreshRoutineCards()
+    {
+        _routineCards.Clear();
+        if (_game is null) return;
+        var stateMap = _game.RoutineStates.ToDictionary(s => s.Template.Id, s => s.Mastery, StringComparer.OrdinalIgnoreCase);
+        foreach (var template in _game.RoutineTemplates)
+        {
+            var mastery = stateMap.TryGetValue(template.Id, out var value) ? value : 0;
+            _routineCards.Add(new RoutineCardView(template, mastery));
+        }
+    }
+
+    private void RefreshAcademicSummary()
+    {
+        _academicLogs.Clear();
+        if (_game is null)
+        {
+            AcademicKnowledgeText.Text = "-";
+            AcademicFocusText.Text = "-";
+            AcademicGradeText.Text = "-";
+            AcademicScholarshipText.Text = "-";
+            AcademicWarningText.Text = "-";
+            return;
+        }
+
+        var snapshot = _game.BuildAcademicSnapshot();
+        AcademicKnowledgeText.Text = $"{snapshot.Knowledge:F1}";
+        AcademicFocusText.Text = $"{snapshot.Focus:F1}";
+        AcademicGradeText.Text = snapshot.CompletedTerms > 0 ? $"{snapshot.AverageGrade:F1}등급" : "미산정";
+        AcademicScholarshipText.Text = snapshot.Scholarship.ToString("F1");
+        AcademicWarningText.Text = snapshot.Warning.ToString("F1");
+
+        foreach (var entry in _game.LogEntries
+                     .Where(line => line.StartsWith("[학업]", StringComparison.Ordinal))
+                     .TakeLast(20))
+        {
+            _academicLogs.Add(entry);
+        }
+
+        RefreshAcademicOptions();
+    }
+
+    private void RefreshAcademicOptions()
+    {
+        if (_game is null) return;
+        UpdateAcademicOptionCollection(_academicLectureOptions, _game.GetAcademicOptions(AcademicSlot.Lecture));
+        UpdateAcademicOptionCollection(_academicSupportOptions, _game.GetAcademicOptions(AcademicSlot.Support));
+        UpdateAcademicOptionCollection(_academicStudyOptions, _game.GetAcademicOptions(AcademicSlot.Study));
+
+        _suppressAcademicEvents = true;
+        AcademicLectureCombo.SelectedItem = FindAcademicSelection(_academicLectureOptions, _game.GetAcademicPlan(AcademicSlot.Lecture));
+        AcademicSupportCombo.SelectedItem = FindAcademicSelection(_academicSupportOptions, _game.GetAcademicPlan(AcademicSlot.Support));
+        AcademicStudyCombo.SelectedItem = FindAcademicSelection(_academicStudyOptions, _game.GetAcademicPlan(AcademicSlot.Study));
+        _suppressAcademicEvents = false;
+        UpdateAcademicDescriptions();
+    }
+
+    private static AcademicOption? FindAcademicSelection(IEnumerable<AcademicOption> options, EducationAction? action)
+        => action is null
+            ? options.FirstOrDefault()
+            : options.FirstOrDefault(o => o.Action == action) ?? options.FirstOrDefault();
+
+    private static void UpdateAcademicOptionCollection(ObservableCollection<AcademicOption> target, IReadOnlyList<AcademicOption> source)
+    {
+        target.Clear();
+        foreach (var option in source)
+        {
+            target.Add(option);
+        }
+    }
+
+    private void RefreshRoutineWeek()
+    {
+        var selectedDayNumber = _selectedRoutineDay?.Day;
+        _routineDayViews.Clear();
+        if (_game is null) return;
+        _routineWeekCursor = Math.Clamp(_routineWeekCursor, 1, _game.TotalWeeks);
+        var blocks = _game.GetWeekRoutineBlocks(_routineWeekCursor);
+        foreach (var block in blocks)
+        {
+            var template = _game.RoutineTemplates.FirstOrDefault(t => t.Id.Equals(block.RoutineId, StringComparison.OrdinalIgnoreCase));
+            _routineDayViews.Add(new RoutineDayView(block, template?.Name ?? block.RoutineId));
+        }
+
+        RoutineWeekLabel.Text = $"주차 {_routineWeekCursor}";
+        if (_routineDayViews.Count > 0)
+        {
+            var matched = _routineDayViews.FirstOrDefault(v => v.Day == selectedDayNumber);
+            if (matched is not null)
+            {
+                SetSelectedRoutineDay(matched);
+            }
+            else
+            {
+                SetSelectedRoutineDay(_routineDayViews.FirstOrDefault(v => !v.IsLocked) ?? _routineDayViews.First());
+            }
+        }
+        else
+        {
+            SetSelectedRoutineDay(null);
+        }
+    }
+
+    private void SetSelectedRoutineDay(RoutineDayView? view)
+    {
+        _selectedRoutineDay = view;
+        UpdateRoutineDaySelection();
+    }
+
+    private void UpdateRoutineDaySelection()
+    {
+        foreach (var day in _routineDayViews)
+        {
+            day.IsSelected = _selectedRoutineDay == day;
+        }
+
+        SelectedRoutineDayText.Text = _selectedRoutineDay is null
+            ? "날짜를 선택하세요"
+            : $"{_selectedRoutineDay.Label} · {_selectedRoutineDay.RoutineName}";
+    }
+
+    private void InitializeGame(HighSchoolProfile school, int academicYear)
+    {
+        if (_game is not null)
+        {
+            _game.LogEntries.CollectionChanged -= GameLogEntries_CollectionChanged;
+            _game.PendingMessages.CollectionChanged -= PendingMessages_CollectionChanged;
+        }
+
+        _game = GameState.CreateHighSchoolSeason(school, academicYear);
+        _game.LogEntries.CollectionChanged += GameLogEntries_CollectionChanged;
+        _game.PendingMessages.CollectionChanged += PendingMessages_CollectionChanged;
+        RefreshSummary();
+        BindAcademicActions();
+        RefreshStats();
+        _routineWeekCursor = _game.CurrentWeek;
+        _selectedRoutineDay = null;
+        RefreshRoutinePanel();
+        RefreshScheduleEntries();
+        RefreshCalendarMonths();
+        UpdateDayLabel();
+        UpdateMatchStatus();
+        RebuildLogBlocks();
+        RefreshAcademicSummary();
+        BindPendingMessages();
+        SchoolSelectionOverlay.Visibility = Visibility.Collapsed;
+    }
+
+    private void BindAcademicActions()
+    {
+        RefreshAcademicOptions();
+    }
+
+    private void BindPendingMessages()
+    {
+        if (_game is null)
+        {
+            HomeMessageList.ItemsSource = null;
+            MessagesList.ItemsSource = null;
+            UpdateMessageSummary();
+            return;
+        }
+
+        HomeMessageList.ItemsSource = _game.PendingMessages;
+        MessagesList.ItemsSource = _game.PendingMessages;
+        UpdateMessageSummary();
+    }
+
+    private void PendingMessages_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        => UpdateMessageSummary();
+
+    private void UpdateMessageSummary()
+    {
+        if (_game is null)
+        {
+            HomeMessageCountText.Text = "-";
+            HomeMessageEmptyText.Visibility = Visibility.Visible;
+            MessagesEmptyText.Visibility = Visibility.Visible;
+            return;
+        }
+
+        var count = _game.PendingMessages.Count;
+        HomeMessageCountText.Text = $"대기 메시지 {count}건";
+        HomeMessageEmptyText.Visibility = count == 0 ? Visibility.Visible : Visibility.Collapsed;
+        MessagesEmptyText.Visibility = count == 0 ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private void SwitchToSection(SectionType section)
+    {
+        var target = _sections.FirstOrDefault(item => item.Type == section);
+        if (target is null)
+        {
+            _currentSection = section;
+            UpdateSectionPanels();
+            return;
+        }
+
+        SectionList.SelectedItem = target;
+    }
+
+    private void UpdateAcademicDescriptions()
+    {
+        AcademicLectureDescription.Text = (AcademicLectureCombo.SelectedItem as AcademicOption)?.Description ?? string.Empty;
+        AcademicSupportDescription.Text = (AcademicSupportCombo.SelectedItem as AcademicOption)?.Description ?? string.Empty;
+        AcademicStudyDescription.Text = (AcademicStudyCombo.SelectedItem as AcademicOption)?.Description ?? string.Empty;
     }
 
     private void RefreshSummary()
@@ -265,7 +562,7 @@ public partial class MainWindow : Window
 
         var player = _game.Player;
         PlayerSummaryText.Text = $"{player.School} · {player.AcademicYear}학년 {player.Position} | {player.Name}";
-        PitchInfoText.Text = $"투구 스타일: {player.PitchStyle} / 구종: {string.Join(", ", player.PitchArsenal)}";
+        PitchInfoText.Text = $"투구 스타일 {player.PitchStyle} / 구종: {string.Join(", ", player.PitchArsenal)}";
         InfoSchoolText.Text = $"{player.School} / {player.Position}";
         InfoPitchStyleText.Text = player.PitchStyle;
         PitchList.ItemsSource = player.PitchArsenal;
@@ -353,79 +650,130 @@ public partial class MainWindow : Window
         CalendarMonthCombo.SelectedIndex = _calendarMonths.Count > 0 ? 0 : -1;
     }
 
-    private void InitializeWeeklyPlanViews()
-    {
-        _weeklyPlanViews.Clear();
-        if (_game is null) return;
-
-        for (var week = 1; week <= _game.TotalWeeks; week++)
-        {
-            var plan = _game.GetWeeklyPlan(week);
-            _weeklyPlanViews.Add(new WeeklyPlanView(week, plan));
-        }
-
-        WeeklyPlanWeekCombo.SelectedIndex = _weeklyPlanViews.Count > 0 ? 0 : -1;
-    }
-
-    private void UpdateWeeklyPlanView(int weekNumber)
-    {
-        if (_game is null) return;
-        var plan = _game.GetWeeklyPlan(weekNumber);
-        var view = _weeklyPlanViews.FirstOrDefault(v => v.WeekNumber == weekNumber);
-        view?.Apply(plan);
-    }
-
-    private void SyncActionSelectionWithGame()
-    {
-        if (_game is null) return;
-        var selected = _game.SelectedActions;
-
-        _suppressActionEvents = true;
-        MorningActionCombo.SelectedItem = selected[ActionSlot.Morning];
-        AfternoonActionCombo.SelectedItem = selected[ActionSlot.Afternoon];
-        EveningActionCombo.SelectedItem = selected[ActionSlot.Evening];
-        _suppressActionEvents = false;
-
-        MorningDescription.Text = selected[ActionSlot.Morning].Description;
-        AfternoonDescription.Text = selected[ActionSlot.Afternoon].Description;
-        EveningDescription.Text = selected[ActionSlot.Evening].Description;
-    }
-
     private void AdvanceButton_OnClick(object sender, RoutedEventArgs e)
     {
         if (_game is null) return;
-        if (MatchOverlay.Visibility == Visibility.Visible)
+
+        var card = _game.PrepareTodayChoiceCard();
+        if (card is not null && card.Options.Count > 0)
         {
-            MessageBox.Show(this, "경기 화면을 닫은 뒤에 하루를 진행할 수 있습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Information);
+            if (!_game.PendingMessages.Any(m => m.CardId.Equals(card.Id, StringComparison.OrdinalIgnoreCase)))
+            {
+                var messageId = $"{card.Id}_daily_{DateTime.Now:yyyyMMddHHmmssfff}";
+                _game.PendingMessages.Add(new PendingChoiceMessage(messageId, card));
+            }
+
+            SwitchToSection(SectionType.Messages);
             return;
         }
 
+        CompleteDayAdvance();
+    }
+
+    private void CompleteDayAdvance()
+    {
+        if (_game is null) return;
         _game.AdvanceDay();
         RefreshStats();
         RefreshSummary();
-        SyncActionSelectionWithGame();
         UpdateDayLabel();
-        UpdateWeeklyPlanView(_game.CurrentWeek);
+        RefreshRoutinePanel();
+        RefreshAcademicSummary();
         UpdateMatchStatus();
 
         var snapshot = BuildLogBlocksSnapshot();
-        var latestBlock = RebuildLogBlocks(snapshot);
-        if (latestBlock is not null && latestBlock.Entries.Count > 0)
-        {
-            ShowDailyLogPopup(latestBlock);
-        }
+        RebuildLogBlocks(snapshot);
     }
 
-    private void ShowDailyLogPopup(DayLogBlock? block)
+    private void MessageOptionButton_OnClick(object sender, RoutedEventArgs e)
     {
-        if (block is null || block.Entries.Count == 0) return;
-        DailyLogTitleText.Text = block.Title;
-        DailyLogEntriesList.ItemsSource = block.Entries;
-        DailyLogOverlay.Visibility = Visibility.Visible;
+        if (_game is null) return;
+        if (sender is not Button button) return;
+        if (button.DataContext is not DailyChoiceOption option) return;
+        if (button.Tag is not string messageId) return;
+
+        _game.ResolveMessageChoice(messageId, option.Id);
+        UpdateMessageSummary();
     }
 
-    private void DailyLogCloseButton_OnClick(object sender, RoutedEventArgs e)
-        => DailyLogOverlay.Visibility = Visibility.Collapsed;
+    private void MessageDefaultButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (_game is null) return;
+        if (sender is not Button { DataContext: PendingChoiceMessage message }) return;
+
+        _game.ResolveMessageChoice(message.Id, null);
+        UpdateMessageSummary();
+    }
+
+    private void MainWindow_OnPreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key != Key.Space) return;
+        if (IsFocusInTextInputOrButton())
+        {
+            return;
+        }
+
+        AdvanceButton_OnClick(AdvanceButton, new RoutedEventArgs());
+        e.Handled = true;
+    }
+
+    private static bool IsFocusInTextInputOrButton()
+    {
+        var focused = Keyboard.FocusedElement as DependencyObject;
+        while (focused is not null)
+        {
+            if (focused is TextBox || focused is ComboBox || focused is Button || focused is TextBoxBase)
+            {
+                return true;
+            }
+
+            focused = VisualTreeHelper.GetParent(focused);
+        }
+
+        return false;
+    }
+
+    private void RoutineEditorSaveButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (_game is null) return;
+        if (RoutineEditorMorningCombo.SelectedItem is not DailyAction morning ||
+            RoutineEditorAfternoonCombo.SelectedItem is not DailyAction afternoon ||
+            RoutineEditorEveningCombo.SelectedItem is not DailyAction evening)
+        {
+            RoutineEditorErrorText.Text = "모든 활동을 선택하세요.";
+            return;
+        }
+
+        var name = RoutineEditorNameText.Text;
+
+        bool success;
+        if (_isCreatingRoutine)
+        {
+            _game.CreateCustomRoutine(name, morning, afternoon, evening);
+            success = true;
+        }
+        else
+        {
+            if (string.IsNullOrWhiteSpace(_editingRoutineId))
+            {
+                RoutineEditorErrorText.Text = "편집할 루틴을 찾지 못했습니다.";
+                return;
+            }
+            success = _game.UpdateRoutineTemplate(_editingRoutineId, name, morning, afternoon, evening);
+        }
+
+        if (!success)
+        {
+            RoutineEditorErrorText.Text = "루틴을 저장할 수 없습니다.";
+            return;
+        }
+
+        CloseRoutineEditor();
+        RefreshRoutinePanel();
+    }
+
+    private void RoutineEditorCancelButton_OnClick(object sender, RoutedEventArgs e)
+        => CloseRoutineEditor();
 
     private void UpdateDayLabel()
     {
@@ -445,6 +793,12 @@ public partial class MainWindow : Window
 
         CurrentDayText.Text = $"Day {_game.DayIndex}";
         RefreshLoopStatePanel();
+
+        if (_routineWeekCursor != _game.CurrentWeek)
+        {
+            _routineWeekCursor = _game.CurrentWeek;
+            RefreshRoutineWeek();
+        }
     }
 
     private void RefreshLoopStatePanel()
@@ -453,13 +807,13 @@ public partial class MainWindow : Window
         var snapshot = _game.BuildLoopSnapshot();
         LoopAcademicYearText.Text = $"{snapshot.AcademicYear}학년";
         LoopCalendarText.Text = $"{snapshot.Month}월 {snapshot.DayOfMonth}일 (Day {snapshot.DayOfYear})";
-        LoopWeekText.Text = $"연간 W{snapshot.WeekOfYear} · 이번 달 {snapshot.WeekOfMonth}주차";
+        LoopWeekText.Text = $"기간 W{snapshot.WeekOfYear} · 이번 달 {snapshot.WeekOfMonth}주차";
         LoopPhaseText.Text = snapshot.PhaseLabel;
         LoopMoodText.Text = snapshot.SeasonMood;
-        LoopTrainingText.Text = $"피로 {snapshot.Fatigue:F0} / 집중 {snapshot.Focus:F0} | 훈련 부하 {snapshot.TrainingLoad:F0}";
+        LoopTrainingText.Text = $"일과 {snapshot.Fatigue:F0} / 집중 {snapshot.Focus:F0} | 훈련 부하 {snapshot.TrainingLoad:F0}";
         if (snapshot.UpcomingEvent is null)
         {
-            LoopUpcomingText.Text = "예정된 이벤트 없음";
+            LoopUpcomingText.Text = "예정 이벤트 없음";
         }
         else
         {
@@ -470,36 +824,6 @@ public partial class MainWindow : Window
         UpdateLoopPreviewFromGame(snapshot.DayOfYear);
     }
 
-    private void MorningActionCombo_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (_suppressActionEvents || _game is null) return;
-        if (MorningActionCombo.SelectedItem is DailyAction action)
-        {
-            _game.SetAction(ActionSlot.Morning, action);
-            MorningDescription.Text = action.Description;
-        }
-    }
-
-    private void AfternoonActionCombo_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (_suppressActionEvents || _game is null) return;
-        if (AfternoonActionCombo.SelectedItem is DailyAction action)
-        {
-            _game.SetAction(ActionSlot.Afternoon, action);
-            AfternoonDescription.Text = action.Description;
-        }
-    }
-
-    private void EveningActionCombo_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (_suppressActionEvents || _game is null) return;
-        if (EveningActionCombo.SelectedItem is DailyAction action)
-        {
-            _game.SetAction(ActionSlot.Evening, action);
-            EveningDescription.Text = action.Description;
-        }
-    }
-
     private void SectionList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (SectionList.SelectedItem is SectionItem item)
@@ -507,6 +831,65 @@ public partial class MainWindow : Window
             _currentSection = item.Type;
             UpdateSectionPanels();
         }
+    }
+
+    private void RoutineDayButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if ((sender as Button)?.DataContext is not RoutineDayView view)
+        {
+            return;
+        }
+
+        if (view.IsLocked)
+        {
+            MessageBox.Show(this, view.LockReason ?? "잠금된 날짜입니다.", "루틴 잠금", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
+        SetSelectedRoutineDay(view);
+    }
+
+    private void RoutineCardApplyButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (_game is null) return;
+        if (_selectedRoutineDay is null)
+        {
+            MessageBox.Show(this, "먼저 날짜를 선택하세요", "안내", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
+        if (sender is not Button { Tag: string routineId }) return;
+        if (!_game.TryAssignRoutineToDay(_selectedRoutineDay.Day, routineId, out var message))
+        {
+            MessageBox.Show(this, message ?? "루틴을 변경할 수 없습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
+        RefreshRoutineWeek();
+    }
+
+    private void CoachRecommendationButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (_game is null) return;
+        if (sender is not Button { Tag: string tag }) return;
+        _game.ApplyCoachRecommendation(tag);
+        RefreshRoutineWeek();
+    }
+
+    private void RoutineWeekPrevButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (_game is null) return;
+        if (_routineWeekCursor <= 1) return;
+        _routineWeekCursor--;
+        RefreshRoutineWeek();
+    }
+
+    private void RoutineWeekNextButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (_game is null) return;
+        if (_routineWeekCursor >= _game.TotalWeeks) return;
+        _routineWeekCursor++;
+        RefreshRoutineWeek();
     }
 
     private void RosterList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -520,70 +903,13 @@ public partial class MainWindow : Window
     private void UpdateSectionPanels()
     {
         HomePanel.Visibility = _currentSection == SectionType.Home ? Visibility.Visible : Visibility.Collapsed;
+        MessagesPanel.Visibility = _currentSection == SectionType.Messages ? Visibility.Visible : Visibility.Collapsed;
         InfoPanel.Visibility = _currentSection == SectionType.Info ? Visibility.Visible : Visibility.Collapsed;
         RosterPanel.Visibility = _currentSection == SectionType.Roster ? Visibility.Visible : Visibility.Collapsed;
         TrainingPanel.Visibility = _currentSection == SectionType.Training ? Visibility.Visible : Visibility.Collapsed;
+        AcademicPanel.Visibility = _currentSection == SectionType.Academics ? Visibility.Visible : Visibility.Collapsed;
         SchedulePanel.Visibility = _currentSection == SectionType.Schedule ? Visibility.Visible : Visibility.Collapsed;
         RecordsPanel.Visibility = _currentSection == SectionType.Records ? Visibility.Visible : Visibility.Collapsed;
-    }
-
-    private void AddSessionButton_OnClick(object sender, RoutedEventArgs e)
-    {
-        if (_game is null) return;
-
-        if (MorningActionCombo.SelectedItem is not DailyAction morning ||
-            AfternoonActionCombo.SelectedItem is not DailyAction afternoon ||
-            EveningActionCombo.SelectedItem is not DailyAction evening)
-        {
-            return;
-        }
-
-        var name = string.IsNullOrWhiteSpace(SessionNameText.Text)
-            ? $"세션 {_trainingSessions.Count + 1}"
-            : SessionNameText.Text.Trim();
-
-        _trainingSessions.Add(new TrainingSession(name, morning, afternoon, evening));
-        SessionNameText.Text = string.Empty;
-    }
-
-    private void RemoveSessionButton_OnClick(object sender, RoutedEventArgs e)
-    {
-        if (TrainingSessionList.SelectedItem is TrainingSession session)
-        {
-            _trainingSessions.Remove(session);
-        }
-    }
-
-    private void ApplyWeeklyPlanButton_OnClick(object sender, RoutedEventArgs e)
-    {
-        if (_game is null) return;
-        if (WeeklyPlanWeekCombo.SelectedItem is not WeeklyPlanView weekView)
-        {
-            MessageBox.Show(this, "주차를 선택하세요.", "안내", MessageBoxButton.OK, MessageBoxImage.Information);
-            return;
-        }
-        if (WeeklyPlanSessionCombo.SelectedItem is not TrainingSession session)
-        {
-            MessageBox.Show(this, "적용할 세션을 선택하세요.", "안내", MessageBoxButton.OK, MessageBoxImage.Information);
-            return;
-        }
-
-        if (_game.FindActionById(session.MorningId) is not { } morning ||
-            _game.FindActionById(session.AfternoonId) is not { } afternoon ||
-            _game.FindActionById(session.EveningId) is not { } evening)
-        {
-            MessageBox.Show(this, "세션 정보를 읽을 수 없습니다.", "오류", MessageBoxButton.OK, MessageBoxImage.Error);
-            return;
-        }
-
-        var assignment = new WeeklyPlanAssignment(weekView.WeekNumber, session.Name, morning, afternoon, evening);
-        _game.AssignWeeklyPlan(assignment);
-        weekView.Apply(assignment);
-
-        if (_game.CurrentWeek == weekView.WeekNumber)
-        {
-            SyncActionSelectionWithGame();
-        }
     }
 
     private void CalendarMonthCombo_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -596,15 +922,13 @@ public partial class MainWindow : Window
         }
     }
 
-    private void ShowMatchOverlay()
+    private void InitializeMatchPanel(MatchSnapshot snapshot)
     {
         if (_game is null) return;
         HideCoachPrompt();
-        var snapshot = _game.PrepareMatchSnapshot();
         ResetMatchOverlayLog($"--- {snapshot.MatchLabel} vs {snapshot.Opponent} 시작 ---");
         ResetPitchMarkers();
 
-        MatchOverlay.Visibility = Visibility.Visible;
         MatchPitchTypeCombo.ItemsSource = _game.Player.PitchArsenal;
         MatchPitchTypeCombo.SelectedIndex = _game.Player.PitchArsenal.Count > 0 ? 0 : -1;
         if (_targetZones.Length > 0)
@@ -614,17 +938,6 @@ public partial class MainWindow : Window
         MatchPitchIntentCombo.SelectedIndex = 0;
         MatchSimulateButton.IsEnabled = true;
         UpdateMatchOverlay(snapshot);
-    }
-
-    private void HideMatchOverlay()
-    {
-        MatchOverlay.Visibility = Visibility.Collapsed;
-        MatchSimulateButton.IsEnabled = false;
-        MatchCloseButton.IsEnabled = false;
-        _matchOverlayLogBuilder.Clear();
-        UpdateMatchOverlayLogText();
-        ResetPitchMarkers();
-        HideCoachPrompt();
     }
 
     private void UpdateMatchOverlay(MatchSnapshot snapshot)
@@ -645,10 +958,146 @@ public partial class MainWindow : Window
 
         MatchBatterNameText.Text = snapshot.BatterName;
         MatchBatterTraitsText.Text = $"{snapshot.BatterHandedness} · {snapshot.BatterArchetype}";
-        MatchBatterThreatText.Text = $"위협도: {snapshot.BatterThreatLabel}";
+        MatchBatterThreatText.Text = $"위협도 {snapshot.BatterThreatLabel}";
         MatchBatterContactText.Text = $"{snapshot.BatterContact:F1}";
         MatchBatterPowerText.Text = $"{snapshot.BatterPower:F1}";
         MatchBatterEyeText.Text = $"{snapshot.BatterEye:F1}";
+
+        UpdateMatchSummaryPanel(snapshot);
+    }
+
+    private void UpdateMatchSummaryPanel(MatchSnapshot snapshot)
+    {
+        if (_game is null)
+        {
+            SetMatchPageVisibility(false);
+            return;
+        }
+
+        SetMatchPageVisibility(_game.MatchPending);
+        if (!_game.MatchPending)
+        {
+            return;
+        }
+
+        BaseFirst.Fill = snapshot.OnFirst ? new SolidColorBrush(Color.FromRgb(255, 214, 110)) : new SolidColorBrush(Color.FromRgb(42, 47, 66));
+        BaseSecond.Fill = snapshot.OnSecond ? new SolidColorBrush(Color.FromRgb(94, 214, 184)) : new SolidColorBrush(Color.FromRgb(42, 47, 66));
+        BaseThird.Fill = snapshot.OnThird ? new SolidColorBrush(Color.FromRgb(255, 122, 96)) : new SolidColorBrush(Color.FromRgb(42, 47, 66));
+
+        UpdateCountLights(snapshot.CountText);
+        UpdateScoreboard();
+        UpdateLineups();
+        UpdateRosters();
+    }
+
+    private void UpdateCountLights(string countText)
+    {
+        var balls = 0;
+        var strikes = 0;
+        var outs = 0;
+
+        var parts = countText.Split('/');
+        if (parts.Length > 0)
+        {
+            var bs = parts[0].Trim();
+            var bIndex = bs.IndexOf('B');
+            var sIndex = bs.IndexOf('S');
+            if (bIndex >= 0 && sIndex > bIndex)
+            {
+                int.TryParse(bs.Substring(bIndex + 1, sIndex - bIndex - 1), out balls);
+            }
+            if (sIndex >= 0)
+            {
+                var sPart = bs.Substring(sIndex + 1);
+                int.TryParse(sPart, out strikes);
+            }
+        }
+        if (parts.Length > 1)
+        {
+            var outText = parts[1].Trim();
+            var digits = new string(outText.Where(char.IsDigit).ToArray());
+            int.TryParse(digits, out outs);
+        }
+
+        SetLight(MatchBall1, balls >= 1, BallBrush);
+        SetLight(MatchBall2, balls >= 2, BallBrush);
+        SetLight(MatchBall3, balls >= 3, BallBrush);
+        SetLight(MatchStrike1, strikes >= 1, StrikeBrush);
+        SetLight(MatchStrike2, strikes >= 2, StrikeBrush);
+        SetLight(MatchOut1, outs >= 1, OutBrush);
+        SetLight(MatchOut2, outs >= 2, OutBrush);
+    }
+
+    private static void SetLight(Ellipse ellipse, bool isOn, Brush onBrush)
+    {
+        ellipse.Fill = isOn ? onBrush : new SolidColorBrush(Color.FromRgb(42, 47, 66));
+    }
+
+    private void UpdateScoreboard()
+    {
+        _matchInnings.Clear();
+        if (_game is null) return;
+        var board = _game.GetMatchScoreboardSnapshot();
+        if (board is null) return;
+
+        MatchHomeLabelText.Text = board.HomeLabel;
+        MatchGuestLabelText.Text = board.GuestLabel;
+        MatchHomeRunsText.Text = board.HomeRuns.ToString();
+        MatchHomeHitsText.Text = board.HomeHits.ToString();
+        MatchHomeErrorsText.Text = board.HomeErrors.ToString();
+        MatchGuestRunsText.Text = board.GuestRuns.ToString();
+        MatchGuestHitsText.Text = board.GuestHits.ToString();
+        MatchGuestErrorsText.Text = board.GuestErrors.ToString();
+
+        foreach (var inning in board.Innings)
+        {
+            _matchInnings.Add(new MatchInningView(
+                inning.Inning.ToString(),
+                inning.HomeRuns?.ToString() ?? string.Empty,
+                inning.GuestRuns?.ToString() ?? string.Empty));
+        }
+    }
+
+    private void UpdateLineups()
+    {
+        _matchHomeLineup.Clear();
+        _matchGuestLineup.Clear();
+        if (_game is null) return;
+        var lineup = _game.GetMatchLineupSnapshot();
+        if (lineup is null) return;
+
+        LineupHomeLabelText.Text = lineup.HomeLabel;
+        LineupGuestLabelText.Text = lineup.GuestLabel;
+
+        foreach (var entry in lineup.Home)
+        {
+            _matchHomeLineup.Add(new MatchLineupView(entry.Order, entry.Name, entry.Bats, entry.Rating));
+        }
+        foreach (var entry in lineup.Guest)
+        {
+            _matchGuestLineup.Add(new MatchLineupView(entry.Order, entry.Name, entry.Bats, entry.Rating));
+        }
+    }
+
+    private void UpdateRosters()
+    {
+        _matchHomeRoster.Clear();
+        _matchGuestRoster.Clear();
+        if (_game is null) return;
+        var roster = _game.GetMatchRosterSnapshot();
+        if (roster is null) return;
+
+        RosterHomeLabelText.Text = roster.HomeLabel;
+        RosterGuestLabelText.Text = roster.GuestLabel;
+
+        foreach (var entry in roster.Home)
+        {
+            _matchHomeRoster.Add(new MatchRosterView(entry.Name, entry.Year, entry.Position));
+        }
+        foreach (var entry in roster.Guest)
+        {
+            _matchGuestRoster.Add(new MatchRosterView(entry.Name, entry.Year, entry.Position));
+        }
     }
 
     private void MatchSimulateButton_OnClick(object sender, RoutedEventArgs e)
@@ -693,11 +1142,18 @@ public partial class MainWindow : Window
     {
         if (_game is null || !_game.MatchPending)
         {
-            HideMatchOverlay();
+            SetMatchPageVisibility(false);
+            _matchPanelInitialized = false;
             return;
         }
 
         MessageBox.Show(this, "경기를 모두 진행한 뒤에 종료할 수 있습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void SetMatchPageVisibility(bool isVisible)
+    {
+        MatchPagePanel.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
+        MainLayout.Visibility = isVisible ? Visibility.Collapsed : Visibility.Visible;
     }
 
     private void ResetMatchOverlayLog(string header)
@@ -794,7 +1250,7 @@ public partial class MainWindow : Window
         PitchEventType.Ball => "볼",
         PitchEventType.Walk => "볼넷",
         PitchEventType.BallInPlayOut => "인플레이 아웃",
-        PitchEventType.BallInPlayHit => "피안타",
+        PitchEventType.BallInPlayHit => "안타",
         _ => "투구"
     };
 
@@ -812,7 +1268,7 @@ public partial class MainWindow : Window
         }
 
         if (normalized.Contains("스트라이크", StringComparison.Ordinal) ||
-            normalized.Contains("선점합니다", StringComparison.Ordinal))
+            normalized.Contains("실점했습니다", StringComparison.Ordinal))
         {
             return PitchEventType.CalledStrike;
         }
@@ -824,13 +1280,13 @@ public partial class MainWindow : Window
 
         if (normalized.Contains("볼 판정", StringComparison.Ordinal) ||
             normalized.Contains("볼 판정", StringComparison.CurrentCulture) ||
-            normalized.Contains("볼 허용", StringComparison.Ordinal))
+            normalized.Contains("볼 내용", StringComparison.Ordinal))
         {
             return PitchEventType.Ball;
         }
 
-        if (normalized.Contains("안타", StringComparison.Ordinal) ||
-            normalized.Contains("장타", StringComparison.Ordinal))
+        if (normalized.Contains("히트", StringComparison.Ordinal) ||
+            normalized.Contains("홈런", StringComparison.Ordinal))
         {
             return PitchEventType.BallInPlayHit;
         }
@@ -912,6 +1368,10 @@ public partial class MainWindow : Window
 
         var blocks = snapshot ?? BuildLogBlocksSnapshot();
         var latestBlock = blocks.Count > 0 ? blocks[^1] : null;
+        for (var i = 0; i < blocks.Count; i++)
+        {
+            blocks[i].IsLatest = i == blocks.Count - 1;
+        }
 
         Dispatcher.BeginInvoke(new Action(() =>
         {
@@ -1022,7 +1482,7 @@ public partial class MainWindow : Window
         SelectedSchoolRegion.Text = string.Empty;
         SelectedSchoolKeywords.Text = string.Empty;
         SelectedSchoolStrength.Text = string.Empty;
-        SelectedSchoolPhilosophy.Text = "학교를 선택하세요.";
+        SelectedSchoolPhilosophy.Text = "학교를 선택하세요";
         SelectedSchoolStats.Text = string.Empty;
         SelectedSchoolRosterStats.Text = string.Empty;
         SelectedSchoolTopPlayerSummary.Text = string.Empty;
@@ -1035,7 +1495,7 @@ public partial class MainWindow : Window
     {
         if (_selectedSchool is null)
         {
-            MessageBox.Show(this, "입학할 학교를 선택하세요.", "안내", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(this, "입학할 학교를 선택하세요", "안내", MessageBoxButton.OK, MessageBoxImage.Information);
             return;
         }
 
@@ -1064,9 +1524,11 @@ public partial class MainWindow : Window
     private enum SectionType
     {
         Home,
+        Messages,
         Info,
         Roster,
         Training,
+        Academics,
         Schedule,
         Records
     }
@@ -1113,7 +1575,7 @@ public partial class MainWindow : Window
                 : "로스터 준비 중";
             RosterMetaLine = VarsityCount + JuniorCount > 0
                 ? $"{RosterCountLine} | 평균 OVR {AvgOverallText}"
-                : "로스터 세부 데이터가 필요합니다.";
+                : "로스터 데이터가 필요합니다.";
             TopPlayerSummary = TopPlayers.Count > 0
                 ? string.Join(" · ", TopPlayers.Select(p => p.ListLabel))
                 : "주요 선수 데이터 준비 중";
@@ -1132,7 +1594,7 @@ public partial class MainWindow : Window
         public string RosterCountLine { get; }
         public string RosterMetaLine { get; }
         public string TopPlayerSummary { get; }
-        public string LoopPreviewSummary { get; private set; } = "연간 루프 데이터 준비 중";
+        public string LoopPreviewSummary { get; private set; } = "기간 루프 데이터 준비 중";
         public IReadOnlyList<TopPlayerView> TopPlayers { get; }
         public IReadOnlyList<LoopPreviewItem> LoopPreview { get; private set; } = Array.Empty<LoopPreviewItem>();
         public int VarsityCount { get; }
@@ -1142,24 +1604,24 @@ public partial class MainWindow : Window
         private static string BuildStatsLine(HighSchoolProfile profile)
         {
             static string FormatNumber(int value) => value <= 0 ? "-" : string.Format(Culture, "{0:N0}", value);
-            return $"예산 {FormatNumber(profile.Budget)}억 | 재학생 {FormatNumber(profile.Enrollment)}명 | 평균 관중 {FormatNumber(profile.AverageAttendance)}명 | 팬 충성 {profile.FanLoyalty}";
+            return $"예산 {FormatNumber(profile.Budget)}원 | 학생수 {FormatNumber(profile.Enrollment)}명 | 평균 관중 {FormatNumber(profile.AverageAttendance)}명 | 충성도 {profile.FanLoyalty}";
         }
 
         private static string TranslateTier(string tier) => tier switch
         {
-            "powerhouse" => "전국구 강호",
+            "powerhouse" => "최강급",
             "mid" => "상위권",
-            "developing" => "육성형",
-            _ => "전력 정보 없음"
+            "developing" => "성장형",
+            _ => "하위권"
         };
 
         private static string BuildStrengthLabel(double avg) => avg switch
         {
-            >= 80 => "전국구 우승 후보",
+            >= 80 => "최강급 후보",
             >= 74 => "상위권 컨텐더",
-            >= 68 => "중상위 경쟁팀",
-            >= 60 => "잠재력 있는 육성팀",
-            _ => "재건이 필요한 팀"
+            >= 68 => "중상위 경쟁력",
+            >= 60 => "잠재력 있는 성장형",
+            _ => "하위권"
         };
 
         public void ApplyLoopPreview(IReadOnlyList<LoopPreviewItem> preview)
@@ -1167,7 +1629,7 @@ public partial class MainWindow : Window
             LoopPreview = preview;
             LoopPreviewSummary = preview.Count > 0
                 ? string.Join(" / ", preview.Select(p => $"{p.Label} {p.Category}"))
-                : "연간 루프 데이터 준비 중";
+                : "기간 루프 데이터 준비 중";
         }
     }
 
@@ -1203,7 +1665,9 @@ public partial class MainWindow : Window
             Day = plannedEvent.DayOfMonth;
             Category = plannedEvent.Category;
             Title = plannedEvent.Title;
-            Preview = string.IsNullOrWhiteSpace(plannedEvent.Description) ? "세부 정보 준비 중" : plannedEvent.Description;
+            Preview = string.IsNullOrWhiteSpace(plannedEvent.Description)
+                ? "추가 정보 준비 중"
+                : plannedEvent.Description;
             DaysUntil = Math.Max(0, plannedEvent.Day - referenceDay);
         }
 
@@ -1216,29 +1680,6 @@ public partial class MainWindow : Window
         public string Label => $"{Month}월 {Day}일";
         public string Summary => $"{Category} · {Title}";
         public string CountdownLabel => DaysUntil == 0 ? "D-DAY" : $"D-{DaysUntil}";
-    }
-
-    private sealed class TrainingSession
-    {
-        public TrainingSession(string name, DailyAction morning, DailyAction afternoon, DailyAction evening)
-        {
-            Name = name;
-            Morning = morning.Name;
-            Afternoon = afternoon.Name;
-            Evening = evening.Name;
-            MorningId = morning.Id;
-            AfternoonId = afternoon.Id;
-            EveningId = evening.Id;
-        }
-
-        public string Name { get; }
-        public string Morning { get; }
-        public string Afternoon { get; }
-        public string Evening { get; }
-        public string MorningId { get; }
-        public string AfternoonId { get; }
-        public string EveningId { get; }
-        public string DisplayText => $"{Name} | 아:{Morning} / 점:{Afternoon} / 저:{Evening}";
     }
 
     private static SolidColorBrush CreateBrush(byte r, byte g, byte b)
@@ -1269,36 +1710,79 @@ public partial class MainWindow : Window
 
         public string Title { get; }
         public ObservableCollection<string> Entries { get; } = new();
+        public bool IsLatest { get; set; }
     }
 
-    private sealed class WeeklyPlanView
+    private sealed class RoutineCardView
     {
-        public WeeklyPlanView(int weekNumber, WeeklyPlanAssignment? assignment)
+        public RoutineCardView(TrainingRoutineTemplate template, double mastery)
         {
-            WeekNumber = weekNumber;
-            Apply(assignment);
+            Id = template.Id;
+            Name = template.Name;
+            Subtitle = template.Subtitle;
+            Focus = template.Focus;
+            Description = template.Description;
+            Mastery = mastery;
+            TierLabel = mastery switch
+            {
+                >= 75 => "훈련 Lv3",
+                >= 50 => "훈련 Lv2",
+                >= 25 => "훈련 Lv1",
+                _ => "훈련 준비"
+            };
+            MorningName = $"오전 · {template.Morning.Name}";
+            AfternoonName = $"오후 · {template.Afternoon.Name}";
+            EveningName = $"저녁 · {template.Evening.Name}";
+            IsCustom = template.IsCustom || template.Id.StartsWith("custom_", StringComparison.OrdinalIgnoreCase);
+            CanReset = !template.IsCustom && template.IsModified;
         }
 
-        public int WeekNumber { get; }
-        public string WeekLabel => $"W{WeekNumber}";
-        public string Morning { get; private set; } = "-";
-        public string Afternoon { get; private set; } = "-";
-        public string Evening { get; private set; } = "-";
-        public string SessionName { get; private set; } = "-";
+        public string Id { get; }
+        public string Name { get; }
+        public string Subtitle { get; }
+        public string Focus { get; }
+        public string Description { get; }
+        public double Mastery { get; }
+        public string TierLabel { get; }
+        public string MorningName { get; }
+        public string AfternoonName { get; }
+        public string EveningName { get; }
+        public bool IsCustom { get; }
+        public bool CanReset { get; }
+    }
 
-        public void Apply(WeeklyPlanAssignment? assignment)
+    private sealed class RoutineDayView : INotifyPropertyChanged
+    {
+        public RoutineDayView(RoutineDayBlock block, string routineName)
         {
-            if (assignment is null)
-            {
-                Morning = Afternoon = Evening = SessionName = "-";
-            }
-            else
-            {
-                Morning = assignment.Morning.Name;
-                Afternoon = assignment.Afternoon.Name;
-                Evening = assignment.Evening.Name;
-                SessionName = assignment.SessionName;
-            }
+            Day = block.DayIndex;
+            Label = block.Label;
+            RoutineName = routineName;
+            IsLocked = block.IsLocked;
+            LockReason = block.LockReason;
+        }
+
+        public int Day { get; }
+        public string Label { get; }
+        public string RoutineName { get; }
+        public bool IsLocked { get; }
+        public string? LockReason { get; }
+
+        private bool _isSelected;
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set => SetProperty(ref _isSelected, value);
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string? propertyName = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(storage, value)) return false;
+            storage = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            return true;
         }
     }
 
@@ -1357,13 +1841,55 @@ public partial class MainWindow : Window
     {
         if (_game is null)
         {
-            HideMatchOverlay();
+            SetMatchPageVisibility(false);
+            _matchPanelInitialized = false;
             return;
         }
 
-        if (_game.MatchPending && MatchOverlay.Visibility != Visibility.Visible)
+        if (_game.MatchPending)
         {
-            ShowMatchOverlay();
+            var snapshot = _game.PrepareMatchSnapshot();
+            if (!_matchPanelInitialized)
+            {
+                InitializeMatchPanel(snapshot);
+                _matchPanelInitialized = true;
+            }
+            SetMatchPageVisibility(true);
+            UpdateMatchSummaryPanel(snapshot);
+            UpdateMatchOverlay(snapshot);
+        }
+        else
+        {
+            SetMatchPageVisibility(false);
+            _matchPanelInitialized = false;
+        }
+    }
+
+    private void MatchLeftToggleButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (MatchLeftPanel.Visibility == Visibility.Visible)
+        {
+            MatchLeftPanel.Visibility = Visibility.Collapsed;
+            MatchLeftColumn.Width = new GridLength(0);
+        }
+        else
+        {
+            MatchLeftPanel.Visibility = Visibility.Visible;
+            MatchLeftColumn.Width = new GridLength(360);
+        }
+    }
+
+    private void MatchRightToggleButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (MatchRightPanel.Visibility == Visibility.Visible)
+        {
+            MatchRightPanel.Visibility = Visibility.Collapsed;
+            MatchRightColumn.Width = new GridLength(0);
+        }
+        else
+        {
+            MatchRightPanel.Visibility = Visibility.Visible;
+            MatchRightColumn.Width = new GridLength(360);
         }
     }
 
@@ -1455,7 +1981,7 @@ public partial class MainWindow : Window
         RosterDetailPlaceholder.Visibility = Visibility.Collapsed;
         RosterDetailNameText.Text = player.Name;
         var statusLabel = $"{player.AcademicYear}학년 · {(player.Status.Equals("varsity", StringComparison.OrdinalIgnoreCase) ? "1군" : "2군")}";
-        RosterDetailMetaText.Text = $"{statusLabel} · 포지션 {player.Position} · 투/타 {player.Throws}/{player.Bats}";
+        RosterDetailMetaText.Text = $"{statusLabel} · 포지션 {player.Position} · 투타 {player.Throws}/{player.Bats}";
         RosterDetailArchetypeText.Text = $"{player.RoleLabel} · {player.Archetype}";
         RosterDetailTagsText.Text = view.Tags;
         RosterDetailOverallText.Text = $"OVR {player.Overall} / POT {player.Potential}";
@@ -1534,6 +2060,12 @@ public partial class MainWindow : Window
 
     private sealed record RosterStatView(string Label, int Value);
 
+    private sealed record MatchInningView(string InningLabel, string HomeRunsText, string GuestRunsText);
+
+    private sealed record MatchLineupView(int Order, string Name, string Bats, double Rating);
+
+    private sealed record MatchRosterView(string Name, int Year, string Position);
+
     private static readonly Dictionary<string, string> StatLabelMap = new(StringComparer.OrdinalIgnoreCase)
     {
         ["PHY_POWER"] = "근력",
@@ -1549,26 +2081,26 @@ public partial class MainWindow : Window
         ["PIT_BREAK"] = "무브먼트",
         ["PIT_BREAK_CMD"] = "변화구 제구",
         ["PIT_CHANGEUP"] = "체인지업",
-        ["PIT_SECONDARY"] = "세컨드",
+        ["PIT_SECONDARY"] = "슬라이더",
         ["PIT_FIELDING"] = "투수 수비",
         ["PIT_HOLD"] = "견제",
         ["BAT_CONTACT"] = "컨택",
-        ["BAT_POWER"] = "장타력",
-        ["BAT_DISCIPLINE"] = "선구안",
+        ["BAT_POWER"] = "파워",
+        ["BAT_DISCIPLINE"] = "선구",
         ["BAT_DEFENSE"] = "수비력",
         ["BAT_ARM"] = "송구",
         ["BAT_SPEED"] = "주루",
         ["BAT_BUNT"] = "번트",
         ["BAT_VERSATILITY"] = "포지션",
         ["MNT_FOCUS"] = "집중력",
-        ["MNT_MORALE"] = "동기부여",
+        ["MNT_MORALE"] = "사기",
         ["MNT_TOUGHNESS"] = "멘탈",
-        ["HID_BIG_GAME"] = "큰 경기",
-        ["HID_NERVES"] = "강심장",
+        ["HID_BIG_GAME"] = "빅게임",
+        ["HID_NERVES"] = "근성",
         ["HID_RESILIENCE"] = "회복력",
         ["PVT_TALENT"] = "재능",
-        ["PVT_WORK_ETHIC"] = "성실성",
-        ["PVT_CHARACTER"] = "리더십"
+        ["PVT_WORK_ETHIC"] = "근면",
+        ["PVT_CHARACTER"] = "인성"
     };
 
     internal static string ResolveStatLabel(string key)
@@ -1587,4 +2119,36 @@ public partial class MainWindow : Window
             target.Add(new RosterStatView(ResolveStatLabel(key), value));
         }
     }
+
+    private void AcademicLectureCombo_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_suppressAcademicEvents || _game is null) return;
+        if (AcademicLectureCombo.SelectedItem is AcademicOption option)
+        {
+            _game.SetAcademicAction(AcademicSlot.Lecture, option.Action);
+            AcademicLectureDescription.Text = option.Description;
+        }
+    }
+
+    private void AcademicSupportCombo_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_suppressAcademicEvents || _game is null) return;
+        if (AcademicSupportCombo.SelectedItem is AcademicOption option)
+        {
+            _game.SetAcademicAction(AcademicSlot.Support, option.Action);
+            AcademicSupportDescription.Text = option.Description;
+        }
+    }
+
+    private void AcademicStudyCombo_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_suppressAcademicEvents || _game is null) return;
+        if (AcademicStudyCombo.SelectedItem is AcademicOption option)
+        {
+            _game.SetAcademicAction(AcademicSlot.Study, option.Action);
+            AcademicStudyDescription.Text = option.Description;
+        }
+    }
+
 }
+

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using CareerSimTextDemo.Core.HighSchool;
@@ -17,9 +17,9 @@ public partial class PlayerDetailWindow : Window
     {
         public PlayerDetailView(HighSchoolRosterPlayer player)
         {
-            Header = $"{player.Name} ¡¤ {player.Position}";
+            Header = $"{player.Name} Â· {player.Position}";
             MetaLine = $"{player.RoleLabel} | Throws {player.Throws} / Bats {player.Bats} | OVR {player.Overall} / POT {player.Potential}";
-            Tags = player.Tags.Count > 0 ? string.Join(", ", player.Tags) : "ÅÂ±× ¾øÀ½";
+            Tags = player.Tags.Count > 0 ? string.Join(", ", player.Tags) : "íƒœê·¸ ì—†ìŒ";
             PhysicalStats = BuildList(player.Stats.Physical);
             PitchingStats = BuildList(player.Stats.Pitching);
             BattingStats = BuildList(player.Stats.Batting);
