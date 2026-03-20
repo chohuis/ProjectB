@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.IO;
 using CareerSimTextDemo.Core.HighSchool;
 
 namespace CareerSimTextDemo.Core;
@@ -134,6 +135,86 @@ public sealed class PendingChoiceMessage
     public string Description { get; }
     public IReadOnlyList<DailyChoiceOption> Options { get; }
     public string? DefaultOptionId { get; }
+}
+
+public sealed class DraftOutcome
+{
+    public DraftOutcome(bool drafted, int? round, string? teamName, double score)
+    {
+        Drafted = drafted;
+        Round = round;
+        TeamName = teamName;
+        Score = score;
+    }
+
+    public bool Drafted { get; }
+    public int? Round { get; }
+    public string? TeamName { get; }
+    public double Score { get; }
+}
+
+public sealed class DraftCandidate
+{
+    public DraftCandidate(string id, string name, string position, string source, double score)
+    {
+        Id = id;
+        Name = name;
+        Position = position;
+        Source = source;
+        Score = score;
+    }
+
+    public string Id { get; }
+    public string Name { get; }
+    public string Position { get; }
+    public string Source { get; }
+    public double Score { get; }
+}
+
+public sealed class DraftTeamNeed
+{
+    public DraftTeamNeed(string teamName, string need)
+    {
+        TeamName = teamName;
+        Need = need;
+    }
+
+    public string TeamName { get; }
+    public string Need { get; }
+}
+
+public sealed class DraftMockPick
+{
+    public DraftMockPick(int round, string teamName, string candidateId, string candidateName)
+    {
+        Round = round;
+        TeamName = teamName;
+        CandidateId = candidateId;
+        CandidateName = candidateName;
+    }
+
+    public int Round { get; }
+    public string TeamName { get; }
+    public string CandidateId { get; }
+    public string CandidateName { get; }
+}
+
+public sealed class DraftContractOffer
+{
+    public DraftContractOffer(string teamName, int round, double bonus, double salary, int years)
+    {
+        TeamName = teamName;
+        Round = round;
+        Bonus = bonus;
+        Salary = salary;
+        Years = years;
+    }
+
+    public string TeamName { get; }
+    public int Round { get; }
+    public double Bonus { get; }
+    public double Salary { get; }
+    public int Years { get; }
 }
 
 public sealed class StatEntry
@@ -496,12 +577,38 @@ public sealed class GameState
     private string _rivalName = "미정";
     private double _mentorTrust;
     private double _rivalryLevel = 0;
+    private bool _draftApplied;
+    private DraftOutcome? _draftOutcome;
+    private string? _postDraftRoute;
+    private List<DraftCandidate>? _draftPool;
+    private int _draftPoolGeneratedDay = -1;
+    private List<DraftTeamNeed>? _draftTeamNeeds;
+    private List<DraftMockPick>? _draftMockPicks;
+    private DraftContractOffer? _draftContractOffer;
+    private string? _draftPlayerCandidateId;
+    private List<string>? _draftSummaryLines;
+    private int _draftSummaryDay = -1;
     private readonly HashSet<string> _resolvedChoiceIds = new(StringComparer.OrdinalIgnoreCase);
     private static readonly string[] MentorNames = { "강도현", "윤태호", "이시우", "박지훈", "조민성" };
     private static readonly string[] RivalNames = { "최준혁", "정우빈", "김도현", "한지성", "오세찬" };
+    private static readonly string[] DraftTeams =
+    {
+        "서울 베어즈", "서울 피닉스", "수원 아크폭스", "대전 소어링스",
+        "대구 로열스", "광주 엠버스", "인천 스카이즈", "부산 마리너스",
+        "강릉 웨이브스", "제주 오션스"
+    };
+    private static readonly string[] DraftNeeds =
+    {
+        "투수", "좌완", "우완", "타자", "포수", "내야", "외야"
+    };
+    private static readonly string[] DraftSources =
+    {
+        "고교", "대학", "독립", "재수", "해외파"
+    };
     private readonly List<TrainingRoutineTemplate> _routineTemplates = new();
     private readonly List<RoutineState> _routineStates = new();
     private readonly Dictionary<int, string> _routineAssignments = new();
+    private readonly HighSchoolSeasonTracker _seasonTracker;
 
     private GameState(PlayerProfile player, HighSchoolProfile school, IReadOnlyList<DailyAction> actions, HighSchoolYearManager yearManager, CompetitionLevel competitionLevel, CoachProfile coach)
     {
@@ -512,6 +619,7 @@ public sealed class GameState
         _yearManager = yearManager;
         _competitionLevel = competitionLevel;
         _coach = coach;
+        _seasonTracker = new HighSchoolSeasonTracker(school, player.AcademicYear);
 
         foreach (ActionSlot slot in Enum.GetValues(typeof(ActionSlot)))
         {
@@ -530,6 +638,12 @@ public sealed class GameState
     public bool MatchPending => _yearManager.MatchPending;
     public string MatchLabel => _yearManager.MatchType ?? "현재 경기 없음";
     public string MatchOpponent => _yearManager.MatchOpponent ?? "상대 미정";
+    public string? MatchOpponentId => _yearManager.MatchOpponentId;
+    public bool MatchIsHome => _yearManager.MatchIsHome;
+    public bool MatchIsRivalry => _yearManager.MatchIsRivalry;
+    public HighSchoolMatchKind MatchKind => _yearManager.MatchKind;
+    public string? MatchStageLabel => _yearManager.MatchStageLabel;
+    public string? MatchTournamentMatchId => _yearManager.MatchTournamentMatchId;
     public ReadOnlyDictionary<ActionSlot, DailyAction> SelectedActions => new(_selected);
     public IReadOnlyList<DailyAction> AvailableActions => _actions;
     public ObservableCollection<string> LogEntries { get; } = new();
@@ -540,6 +654,9 @@ public sealed class GameState
     public double RivalryLevel => _rivalryLevel;
     public IReadOnlyList<TrainingRoutineTemplate> RoutineTemplates => _routineTemplates;
     public IReadOnlyList<RoutineState> RoutineStates => _routineStates;
+    public HighSchoolSeasonTracker SeasonTracker => _seasonTracker;
+    public HighSchoolLeagueSchedule? LeagueSchedule => _yearManager.LeagueSchedule;
+    public HighSchoolTournamentBracket? TournamentBracket => _yearManager.TournamentBracket;
 
     public static GameState CreateHighSchoolSeason(HighSchoolProfile school, int academicYear = 1)
     {
@@ -824,6 +941,7 @@ public sealed class GameState
         var result = EnsureMatchState().ResolvePitch(pitch, zone, intent);
         if (result.Snapshot.Completed)
         {
+            FinalizeMatch(result.Snapshot, playerPulled: false);
             _yearManager.CompleteMatchOpportunity();
             _activeMatch = null;
             LogEntries.Add($"[{result.Snapshot.MatchLabel}] 경기 종료 - 실점 {result.Snapshot.RunsAllowed} / 투구수 {result.Snapshot.PitchCount}");
@@ -853,6 +971,7 @@ public sealed class GameState
 
         if (decision.MatchEnded && decision.Snapshot is { } snapshot)
         {
+            FinalizeMatch(snapshot, decision.PlayerPulled);
             _yearManager.CompleteMatchOpportunity();
             _activeMatch = null;
             if (decision.PlayerPulled)
@@ -866,6 +985,157 @@ public sealed class GameState
         }
 
         return decision;
+    }
+
+    private void FinalizeMatch(MatchSnapshot snapshot, bool playerPulled)
+    {
+        if (_activeMatch is null)
+        {
+            return;
+        }
+
+        var scoreboard = _activeMatch.BuildScoreboardSnapshot();
+        if (scoreboard is null)
+        {
+            return;
+        }
+
+        var opponentId = MatchOpponentId ?? MatchOpponent;
+        var homeTeamId = MatchIsHome ? School.Id : opponentId;
+        var awayTeamId = MatchIsHome ? opponentId : School.Id;
+        var homeTeamName = MatchIsHome ? School.Name : MatchOpponent;
+        var awayTeamName = MatchIsHome ? MatchOpponent : School.Name;
+
+        if (MatchKind == HighSchoolMatchKind.Scrimmage)
+        {
+            homeTeamId = $"{School.Id}_HOME";
+            awayTeamId = $"{School.Id}_AWAY";
+            homeTeamName = scoreboard.HomeLabel;
+            awayTeamName = scoreboard.GuestLabel;
+        }
+
+        var homeRuns = scoreboard.HomeRuns;
+        var guestRuns = scoreboard.GuestRuns;
+        var homeHits = scoreboard.HomeHits;
+        var guestHits = scoreboard.GuestHits;
+        var homeErrors = scoreboard.HomeErrors;
+        var guestErrors = scoreboard.GuestErrors;
+
+        var homeWin = homeRuns > guestRuns;
+        if (homeRuns == guestRuns)
+        {
+            homeWin = _random.NextDouble() >= 0.5;
+            if (homeWin)
+            {
+                homeRuns += 1;
+            }
+            else
+            {
+                guestRuns += 1;
+            }
+            LogEntries.Add($"[{snapshot.MatchLabel}] 연장 승부로 {(homeWin ? scoreboard.HomeLabel : scoreboard.GuestLabel)}이(가) 승리했습니다.");
+        }
+
+        var playerWin = MatchIsHome ? homeWin : !homeWin;
+
+        _seasonTracker.RecordMatch(new HighSchoolMatchRecord(
+            DayIndex,
+            MatchKind,
+            homeTeamId,
+            homeTeamName,
+            awayTeamId,
+            awayTeamName,
+            homeRuns,
+            guestRuns,
+            homeHits,
+            guestHits,
+            homeErrors,
+            guestErrors,
+            MatchIsRivalry,
+            MatchStageLabel ?? string.Empty));
+
+        if (MatchKind is HighSchoolMatchKind.WeekendLeague or HighSchoolMatchKind.Official or HighSchoolMatchKind.Tournament)
+        {
+            var homeRecord = _seasonTracker.EnsureTeam(homeTeamId, homeTeamName);
+            var awayRecord = _seasonTracker.EnsureTeam(awayTeamId, awayTeamName);
+            homeRecord.RecordGame(true, homeRuns, guestRuns, homeHits, guestHits, homeErrors, guestErrors);
+            awayRecord.RecordGame(false, guestRuns, homeRuns, guestHits, homeHits, guestErrors, homeErrors);
+
+            var line = _activeMatch.BuildPitchingLine();
+            _seasonTracker.PlayerPitching.RecordGame(
+                line.OutsRecorded,
+                line.RunsAllowed,
+                line.HitsAllowed,
+                line.WalksAllowed,
+                line.Strikeouts,
+                line.Pitches,
+                playerWin);
+        }
+
+        if (MatchKind == HighSchoolMatchKind.Tournament &&
+            !string.IsNullOrWhiteSpace(MatchTournamentMatchId) &&
+            TournamentBracket is not null)
+        {
+            var winnerId = homeWin ? homeTeamId : awayTeamId;
+            var winnerName = homeWin ? homeTeamName : awayTeamName;
+            TournamentBracket.RecordResult(MatchTournamentMatchId!, new HighSchoolTournamentTeam(winnerId, winnerName));
+        }
+
+        ApplyMatchOutcomeAdjustments(playerWin, playerPulled, homeRuns, guestRuns);
+    }
+
+    private void ApplyMatchOutcomeAdjustments(bool playerWin, bool playerPulled, int homeRuns, int guestRuns)
+    {
+        var runDiff = MatchIsHome ? homeRuns - guestRuns : guestRuns - homeRuns;
+        var coachBase = MatchKind switch
+        {
+            HighSchoolMatchKind.Tournament => 3.0,
+            HighSchoolMatchKind.WeekendLeague => 2.0,
+            HighSchoolMatchKind.Official => 2.0,
+            HighSchoolMatchKind.Friendly => 1.0,
+            HighSchoolMatchKind.Scrimmage => 0.5,
+            _ => 1.0
+        };
+
+        var scoutBase = MatchKind switch
+        {
+            HighSchoolMatchKind.Tournament => 3.0,
+            HighSchoolMatchKind.WeekendLeague => 2.0,
+            HighSchoolMatchKind.Official => 2.0,
+            _ => 0.0
+        };
+
+        if (!playerWin)
+        {
+            coachBase *= -1;
+            scoutBase = scoutBase <= 0 ? 0 : -Math.Max(1, scoutBase - 1);
+        }
+
+        if (MatchIsRivalry)
+        {
+            coachBase += playerWin ? 0.8 : -0.8;
+        }
+
+        if (Math.Abs(runDiff) >= 4)
+        {
+            coachBase += Math.Sign(runDiff) * 0.6;
+            scoutBase += Math.Sign(runDiff) * 0.5;
+        }
+
+        if (playerPulled)
+        {
+            coachBase -= 0.6;
+        }
+
+        if (Math.Abs(coachBase) > 0.01)
+        {
+            AdjustCoachTrust(coachBase);
+        }
+
+        if (Math.Abs(scoutBase) > 0.01)
+        {
+            AdjustScoutInterest(scoutBase);
+        }
     }
 
     public void SetAction(ActionSlot slot, DailyAction action)
@@ -1093,7 +1363,16 @@ public sealed class GameState
 
     private DailyChoiceCard? BuildChoiceForDay(int academicYear, int day)
     {
-        if (academicYear != 1) return null;
+        return academicYear switch
+        {
+            1 => BuildYearOneChoice(day),
+            3 => BuildYearThreeChoice(day),
+            _ => null
+        };
+    }
+
+    private DailyChoiceCard? BuildYearOneChoice(int day)
+    {
 
         if (day == 1)
         {
@@ -1127,6 +1406,35 @@ public sealed class GameState
                     })
                 },
                 "orientation_coach");
+        }
+
+        if (day == 5)
+        {
+            return new DailyChoiceCard(
+                "year1_baseline_test",
+                "기초 체력·멘탈 테스트",
+                "테스트 결과에 따라 루틴 방향을 잡습니다.",
+                new List<DailyChoiceOption>
+                {
+                    new("baseline_push", "적극 대응", "공격적으로 테스트에 임합니다.", (s, r, logs) =>
+                    {
+                        s.Player.ApplyDelta("PHY_STAMINA", 0.3);
+                        s.Player.ApplyDelta("MNT_MORALE", 0.2);
+                        logs.Add("[선택] 적극적으로 테스트에 임해 컨디션과 멘탈이 상승했습니다.");
+                    }),
+                    new("baseline_balance", "밸런스 유지", "무리하지 않고 균형을 맞춥니다.", (s, r, logs) =>
+                    {
+                        s.Player.ApplyDelta("MNT_FOCUS", 0.2);
+                        s._fatigueLevel = Math.Clamp(s._fatigueLevel - 0.6, 0, 100);
+                        logs.Add("[선택] 밸런스를 유지하며 컨디션을 관리했습니다.");
+                    }),
+                    new("baseline_safe", "안전하게 진행", "부상 위험을 최소화합니다.", (s, r, logs) =>
+                    {
+                        s.Player.ApplyDelta("PHY_ARM_HEALTH", 0.2);
+                        logs.Add("[선택] 안전하게 진행해 팔 컨디션을 보호했습니다.");
+                    })
+                },
+                "baseline_balance");
         }
 
         if (day == 15)
@@ -1170,6 +1478,39 @@ public sealed class GameState
                 "mentor_pick_1");
         }
 
+        if (day == 23)
+        {
+            return BuildRoutineReviewCard();
+        }
+
+        if (day == 30)
+        {
+            return new DailyChoiceCard(
+                "year1_official_debut",
+                "공식 경기 체험",
+                "공식 경기 출전에 맞춰 어떤 태도로 임할지 선택합니다.",
+                new List<DailyChoiceOption>
+                {
+                    new("official_interview", "인터뷰 응답", "짧은 인터뷰로 각오를 전합니다.", (s, r, logs) =>
+                    {
+                        s.AdjustScoutInterest(2);
+                        s.Player.ApplyDelta("MNT_MORALE", 0.3);
+                        logs.Add("[선택] 인터뷰로 스카우트 주목도가 상승했습니다.");
+                    }),
+                    new("official_analysis", "경기 분석 집중", "경기 분석에 집중합니다.", (s, r, logs) =>
+                    {
+                        s.Player.ApplyDelta("MNT_FOCUS", 0.3);
+                        logs.Add("[선택] 경기 분석에 집중해 준비도를 높였습니다.");
+                    }),
+                    new("official_rest", "컨디션 관리", "루틴을 단순화해 컨디션을 유지합니다.", (s, r, logs) =>
+                    {
+                        s._fatigueLevel = Math.Clamp(s._fatigueLevel - 1.0, 0, 100);
+                        logs.Add("[선택] 컨디션 관리에 집중했습니다.");
+                    })
+                },
+                "official_analysis");
+        }
+
         if (day == 60)
         {
             return new DailyChoiceCard(
@@ -1194,9 +1535,24 @@ public sealed class GameState
                 "scout_note");
         }
 
+        if (day == 90)
+        {
+            return BuildMentorFeedbackCard();
+        }
+
+        if (day == 95)
+        {
+            return BuildRivalChallengeCard();
+        }
+
         if (day == 150)
         {
             return BuildCampCard("year1_camp_summer", "여름 합숙 캠프");
+        }
+
+        if (day == 180)
+        {
+            return BuildMentalSessionCard();
         }
 
         if (day == 230)
@@ -1219,12 +1575,484 @@ public sealed class GameState
             return BuildScrimmageChoiceCard(day);
         }
 
+        if (day >= 42 && (day - 42) % 20 == 0 && day <= 340)
+        {
+            return BuildAcademicLoopCard(day);
+        }
+
         if (day >= 120 && _fatigueLevel >= 40 && _random.NextDouble() < 0.12)
         {
             return BuildInjuryChoiceCard(day);
         }
 
         return null;
+    }
+
+    private DailyChoiceCard? BuildYearThreeChoice(int day)
+    {
+        if (day == 215)
+        {
+            return new DailyChoiceCard(
+                "year3_draft_preview",
+                "드래프트 프리뷰 주간",
+                "스카우트 리포트와 팀 Needs를 확인합니다.",
+                new List<DailyChoiceOption>
+                {
+                    new("draft_preview_review", "리포트 확인", "모의 드래프트와 팀 Needs를 확인합니다.", (s, r, logs) =>
+                    {
+                        foreach (var line in s.BuildDraftPreview())
+                        {
+                            logs.Add(line);
+                        }
+                    }),
+                    new("draft_preview_focus", "개인 루틴 집중", "개인 루틴에 집중해 지명 확률을 올립니다.", (s, r, logs) =>
+                    {
+                        s.Player.ApplyDelta("MNT_FOCUS", 0.3);
+                        logs.Add("[드래프트] 루틴 집중으로 집중력이 상승했습니다.");
+                    })
+                },
+                "draft_preview_review");
+        }
+
+        if (day == 220)
+        {
+            return new DailyChoiceCard(
+                "year3_draft_apply",
+                "드래프트 신청",
+                "드래프트에 참가할지 결정합니다.",
+                new List<DailyChoiceOption>
+                {
+                    new("draft_apply_now", "즉시 신청", "드래프트 참가 서류를 접수합니다.", (s, r, logs) =>
+                    {
+                        s._draftApplied = true;
+                        s.AdjustScoutInterest(4);
+                        logs.Add("[드래프트] 신청서가 접수되었습니다. 스카우트 면담이 시작됩니다.");
+                    }),
+                    new("draft_apply_delay", "보류", "진로를 조금 더 고민합니다.", (s, r, logs) =>
+                    {
+                        s._draftApplied = false;
+                        logs.Add("[드래프트] 신청을 보류했습니다. 진로 상담 로그가 남습니다.");
+                    })
+                },
+                "draft_apply_now");
+        }
+
+        if (day == 330)
+        {
+            var outcome = EnsureDraftOutcome();
+            if (!outcome.Drafted)
+            {
+                return new DailyChoiceCard(
+                    "year3_draft_result_undrafted",
+                    "드래프트 결과: 미지명",
+                    "미지명 처리되었습니다. 다음 진로를 선택하세요.",
+                    new List<DailyChoiceOption>
+                    {
+                        new("draft_route_university", "대학 진학", "대학 루트를 준비합니다.", (s, r, logs) =>
+                        {
+                            s._postDraftRoute = "대학";
+                            logs.Add("[진로] 대학 진학 루트를 선택했습니다.");
+                        }),
+                        new("draft_route_independent", "독립리그", "독립리그 트라이아웃을 준비합니다.", (s, r, logs) =>
+                        {
+                            s._postDraftRoute = "독립리그";
+                            logs.Add("[진로] 독립리그 트라이아웃을 준비합니다.");
+                        }),
+                        new("draft_route_military", "군 복무", "군 복무 후 재도전을 준비합니다.", (s, r, logs) =>
+                        {
+                            s._postDraftRoute = "군 복무";
+                            logs.Add("[진로] 군 복무 루트를 선택했습니다.");
+                        })
+                    },
+                    "draft_route_university");
+            }
+
+            return new DailyChoiceCard(
+                "year3_draft_result_selected",
+                "드래프트 결과: 지명",
+                $"지명 라운드 {outcome.Round}R / {outcome.TeamName} 지명",
+                new List<DailyChoiceOption>
+                {
+                    new("draft_accept", "계약 수락", "프로 계약을 수락합니다.", (s, r, logs) =>
+                    {
+                        var offer = s.CreateDraftContractOffer(outcome.TeamName!, outcome.Round ?? 1);
+                        logs.Add($"[계약] 보너스 {offer.Bonus:0.0} / 연봉 {offer.Salary:0.0} ({offer.Years}년) 제안을 수락했습니다.");
+                        s._postDraftRoute = "프로";
+                        logs.Add($"[드래프트] {outcome.TeamName} 입단을 확정했습니다.");
+                    }),
+                    new("draft_negotiation", "조건 조정", "계약 조건을 조정합니다.", (s, r, logs) =>
+                    {
+                        var negotiation = s.NegotiateDraftContract();
+                        foreach (var line in negotiation)
+                        {
+                            logs.Add(line);
+                        }
+                    }),
+                    new("draft_decline_university", "대학 진학", "드래프트를 거절하고 대학 진학을 선택합니다.", (s, r, logs) =>
+                    {
+                        s._postDraftRoute = "대학";
+                        logs.Add("[드래프트] 지명을 거절하고 대학 진학을 선택했습니다.");
+                    }),
+                    new("draft_decline_independent", "독립리그", "독립리그 트라이아웃으로 전환합니다.", (s, r, logs) =>
+                    {
+                        s._postDraftRoute = "독립리그";
+                        logs.Add("[드래프트] 독립리그 루트로 전환했습니다.");
+                    })
+                },
+                "draft_accept");
+        }
+
+        return null;
+    }
+
+    private DraftOutcome EnsureDraftOutcome()
+    {
+        if (_draftOutcome is not null)
+        {
+            return _draftOutcome;
+        }
+
+        var pool = EnsureDraftPool();
+        EnsureDraftMock(pool);
+
+        var playerCandidateId = _draftPlayerCandidateId;
+        var playerCandidate = pool.FirstOrDefault(c => c.Id.Equals(playerCandidateId ?? string.Empty, StringComparison.OrdinalIgnoreCase));
+        var score = playerCandidate?.Score ?? 0;
+
+        if (!_draftApplied || playerCandidateId is null)
+        {
+            _draftOutcome = new DraftOutcome(false, null, null, score);
+            return _draftOutcome;
+        }
+
+        var pick = _draftMockPicks?.FirstOrDefault(p => p.CandidateId.Equals(playerCandidateId, StringComparison.OrdinalIgnoreCase));
+        if (pick is null)
+        {
+            _draftOutcome = new DraftOutcome(false, null, null, score);
+            return _draftOutcome;
+        }
+
+        _draftOutcome = new DraftOutcome(true, pick.Round, pick.TeamName, score);
+        return _draftOutcome;
+    }
+
+    private List<DraftCandidate> EnsureDraftPool()
+    {
+        if (_draftPool is not null && _draftPoolGeneratedDay == DayIndex)
+        {
+            return _draftPool;
+        }
+
+        var pool = new List<DraftCandidate>();
+        var rosterCandidates = BuildDraftCandidatesFromHighSchoolRosters();
+
+        foreach (var candidate in rosterCandidates)
+        {
+            pool.Add(candidate);
+        }
+
+        if (pool.Count == 0)
+        {
+            pool.Add(new DraftCandidate("draft_fallback_00", "임시 선수", "투수", "고교", 40));
+        }
+
+        var playerScore = CalculateDraftScore();
+        _draftPlayerCandidateId = "draft_player";
+        pool.Add(new DraftCandidate(_draftPlayerCandidateId, Player.Name, "투수", "고교", playerScore));
+
+        _draftPool = pool.OrderByDescending(c => c.Score).ToList();
+        _draftPoolGeneratedDay = DayIndex;
+        _draftTeamNeeds = null;
+        _draftMockPicks = null;
+        return _draftPool;
+    }
+
+    private List<DraftCandidate> BuildDraftCandidatesFromHighSchoolRosters()
+    {
+        var candidates = new List<DraftCandidate>();
+        var rosterDir = DataPathResolver.HighSchoolRosterDirectory;
+        if (!Directory.Exists(rosterDir))
+        {
+            return candidates;
+        }
+
+        var files = Directory.GetFiles(rosterDir, "*.json");
+        foreach (var file in files)
+        {
+            var teamId = Path.GetFileNameWithoutExtension(file);
+            var roster = HighSchoolRosterRepository.Load(teamId);
+            if (roster is null) continue;
+
+            var allPlayers = roster.Varsity.Concat(roster.Junior).ToList();
+            foreach (var player in allPlayers)
+            {
+                if (player.AcademicYear != 3)
+                {
+                    continue;
+                }
+
+                if (player.Name.Equals(Player.Name, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                var position = ResolveDraftPosition(player.Position);
+                var score = EstimateRosterPlayerScore(player, position);
+                var id = $"draft_{teamId}_{player.Name}";
+                var source = _random.NextDouble() < 0.08 ? "재수생" : "고교";
+                candidates.Add(new DraftCandidate(id, player.Name, position, source, score));
+            }
+        }
+
+        return candidates;
+    }
+
+    private double EstimateRosterPlayerScore(HighSchoolRosterPlayer player, string position)
+    {
+        double score;
+        if (position == "투수")
+        {
+            var pitching = GetAverageFromDict(player.Stats.Pitching);
+            var physical = GetAverageFromDict(player.Stats.Physical);
+            score = (pitching * 0.7 + physical * 0.3 + player.Overall * 0.6) / 2.0 + 10;
+        }
+        else
+        {
+            var batting = GetAverageFromDict(player.Stats.Batting);
+            var physical = GetAverageFromDict(player.Stats.Physical);
+            score = (batting * 0.7 + physical * 0.3 + player.Overall * 0.6) / 2.0 + 8;
+        }
+
+        return Math.Clamp(Math.Round(score, 1), 10, 90);
+    }
+
+    private static double GetAverageFromDict(IReadOnlyDictionary<string, int> dict)
+        => dict.Count == 0 ? 25 : dict.Values.Average();
+
+    private static string ResolveDraftPosition(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+        {
+            return "타자";
+        }
+
+        var token = raw.Trim().ToUpperInvariant();
+        if (token.Contains("SP") || token.Contains("RP") || token.Contains("P"))
+        {
+            return "투수";
+        }
+
+        if (token.Contains("C"))
+        {
+            return "포수";
+        }
+
+        if (token.Contains("IF"))
+        {
+            return "내야";
+        }
+
+        if (token.Contains("OF"))
+        {
+            return "외야";
+        }
+
+        return "타자";
+    }
+
+    private void EnsureDraftMock(List<DraftCandidate> pool)
+    {
+        if (_draftMockPicks is not null)
+        {
+            return;
+        }
+
+        _draftTeamNeeds = BuildDraftTeamNeeds(pool);
+
+        var remaining = new List<DraftCandidate>(pool);
+        var picks = new List<DraftMockPick>();
+        for (var round = 1; round <= 10; round++)
+        {
+            foreach (var teamNeed in _draftTeamNeeds)
+            {
+                var pick = ChooseDraftPick(teamNeed, remaining);
+                remaining.Remove(pick);
+                picks.Add(new DraftMockPick(round, teamNeed.TeamName, pick.Id, pick.Name));
+            }
+        }
+
+        _draftMockPicks = picks;
+    }
+
+    private DraftCandidate ChooseDraftPick(DraftTeamNeed need, List<DraftCandidate> remaining)
+    {
+        var weighted = remaining
+            .Select(candidate =>
+            {
+                var weight = candidate.Score;
+                if (need.Need == "투수" && candidate.Position == "투수") weight += 6;
+                if (need.Need == "타자" && candidate.Position is "타자" or "내야" or "외야" or "포수") weight += 5;
+                if (need.Need == "포수" && candidate.Position == "포수") weight += 5;
+                if (need.Need == "내야" && candidate.Position == "내야") weight += 5;
+                if (need.Need == "외야" && candidate.Position == "외야") weight += 5;
+                return new { Candidate = candidate, Weight = weight };
+            })
+            .OrderByDescending(entry => entry.Weight)
+            .Take(8)
+            .ToList();
+
+        return weighted[_random.Next(weighted.Count)].Candidate;
+    }
+
+    private List<DraftTeamNeed> BuildDraftTeamNeeds(IReadOnlyList<DraftCandidate> pool)
+    {
+        var counts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["투수"] = pool.Count(c => c.Position == "투수"),
+            ["포수"] = pool.Count(c => c.Position == "포수"),
+            ["내야"] = pool.Count(c => c.Position == "내야"),
+            ["외야"] = pool.Count(c => c.Position == "외야"),
+            ["타자"] = pool.Count(c => c.Position == "타자")
+        };
+
+        var needs = new List<DraftTeamNeed>();
+        foreach (var team in DraftTeams)
+        {
+            var need = ResolveTeamNeed(team, counts);
+            needs.Add(new DraftTeamNeed(team, need));
+        }
+
+        return needs;
+    }
+
+    private string ResolveTeamNeed(string teamName, IReadOnlyDictionary<string, int> counts)
+    {
+        var scarcity = counts
+            .Select(pair => new { Need = pair.Key, Score = 1.0 / (pair.Value + 1) })
+            .OrderByDescending(entry => entry.Score)
+            .ToList();
+
+        var hash = Math.Abs(teamName.GetHashCode());
+        var prefersPitching = (hash % 3) == 0;
+        var prefersDefense = (hash % 3) == 1;
+
+        foreach (var entry in scarcity)
+        {
+            if (prefersPitching && entry.Need == "투수") return entry.Need;
+            if (prefersDefense && (entry.Need == "포수" || entry.Need == "내야")) return entry.Need;
+        }
+
+        return scarcity.First().Need;
+    }
+
+    private double CalculateDraftScore()
+    {
+        var velo = Player.GetStatValue("SKL_FOURSEAM");
+        var command = Player.GetStatValue("SKL_COMMAND");
+        var changeup = Player.GetStatValue("SKL_CHANGEUP");
+        var focus = Player.GetStatValue("MNT_FOCUS");
+        var stamina = Player.GetStatValue("PHY_STAMINA");
+        var scout = _yearManager.ScoutInterest;
+        var score = velo * 0.35 + command * 0.3 + changeup * 0.2 + focus * 0.15 + stamina * 0.1 + scout * 0.5;
+        score += _random.Next(-6, 7);
+        return Math.Clamp(Math.Round(score, 1), 0, 100);
+    }
+
+    private IReadOnlyList<string> BuildDraftPreview()
+    {
+        var lines = new List<string>();
+        var pool = EnsureDraftPool();
+        EnsureDraftMock(pool);
+
+        lines.Add("[드래프트] 모의 드래프트 Top5");
+        foreach (var pick in _draftMockPicks!.Where(p => p.Round == 1).Take(5))
+        {
+            lines.Add($"- {pick.TeamName} 1R: {pick.CandidateName}");
+        }
+
+        lines.Add("[드래프트] 팀 Needs 요약");
+        foreach (var need in _draftTeamNeeds!.Take(5))
+        {
+            lines.Add($"- {need.TeamName}: {need.Need}");
+        }
+
+        var rank = pool.FindIndex(c => c.Id == _draftPlayerCandidateId) + 1;
+        if (rank > 0)
+        {
+            lines.Add($"[드래프트] 내 스카우트 랭킹 예상: {rank}위");
+        }
+
+        _draftSummaryLines = lines.ToList();
+        _draftSummaryDay = DayIndex;
+        return lines;
+    }
+
+    public string GetDraftSummaryText()
+    {
+        if (_draftSummaryLines is null || _draftSummaryDay <= 0)
+        {
+            return "드래프트 프리뷰가 아직 없습니다.";
+        }
+
+        return $"Day {_draftSummaryDay}\n" + string.Join('\n', _draftSummaryLines);
+    }
+
+    public IReadOnlyList<DraftCandidate> GetDraftPool()
+        => EnsureDraftPool();
+
+    public IReadOnlyList<DraftTeamNeed> GetDraftTeamNeeds()
+    {
+        EnsureDraftMock(EnsureDraftPool());
+        return _draftTeamNeeds ?? new List<DraftTeamNeed>();
+    }
+
+    public IReadOnlyList<DraftMockPick> GetDraftMockPicks()
+    {
+        EnsureDraftMock(EnsureDraftPool());
+        return _draftMockPicks ?? new List<DraftMockPick>();
+    }
+
+    private IReadOnlyList<string> NegotiateDraftContract()
+    {
+        var lines = new List<string>();
+        var outcome = EnsureDraftOutcome();
+        if (!outcome.Drafted || outcome.Round is null || outcome.TeamName is null)
+        {
+            lines.Add("[드래프트] 지명 결과가 없어 협상을 진행할 수 없습니다.");
+            return lines;
+        }
+
+        var offer = _draftContractOffer ?? CreateDraftContractOffer(outcome.TeamName, outcome.Round.Value);
+        var success = _random.NextDouble() < 0.6;
+        if (success)
+        {
+            offer = new DraftContractOffer(offer.TeamName, offer.Round, offer.Bonus * 1.1, offer.Salary * 1.05, offer.Years);
+            _draftContractOffer = offer;
+            lines.Add($"[계약] 조건 조정 성공. 보너스 {offer.Bonus:0.0} / 연봉 {offer.Salary:0.0} ({offer.Years}년)");
+        }
+        else
+        {
+            lines.Add("[계약] 조건 조정이 받아들여지지 않았습니다. 기본 제안을 유지합니다.");
+        }
+
+        return lines;
+    }
+
+    private DraftContractOffer CreateDraftContractOffer(string teamName, int round)
+    {
+        var baseBonus = Math.Max(1, 12 - round) * 8.0 + _random.NextDouble() * 4.0;
+        var baseSalary = 2.0 + (10 - round) * 0.6 + _random.NextDouble() * 0.8;
+        var years = 3 + (round <= 3 ? 1 : 0);
+        var offer = new DraftContractOffer(teamName, round, Math.Round(baseBonus, 1), Math.Round(baseSalary, 1), years);
+        _draftContractOffer = offer;
+        return offer;
+    }
+
+    private string BuildRandomKoreanName()
+    {
+        var family = new[] { "김", "이", "박", "최", "정", "강", "한", "윤", "조", "임" };
+        var given = new[] { "준", "도", "현", "우", "서", "민", "성", "진", "태", "호" };
+        return $"{family[_random.Next(family.Length)]}{given[_random.Next(given.Length)]}{given[_random.Next(given.Length)]}";
     }
 
     private DailyChoiceCard BuildScrimmageChoiceCard(int day)
@@ -1260,6 +2088,187 @@ public sealed class GameState
                 })
             },
             "scrimmage_mentor");
+    }
+
+    private DailyChoiceCard BuildRoutineReviewCard()
+    {
+        return new DailyChoiceCard(
+            "year1_routine_review",
+            "루틴 점검 미팅",
+            "첫 루틴 리뷰에서 방향을 선택합니다.",
+            new List<DailyChoiceOption>
+            {
+                new("routine_review_balance","밸런스 유지","기본 루틴을 유지합니다.", (s, r, logs) =>
+                {
+                    s.Player.ApplyDelta("MNT_FOCUS", 0.2);
+                    s.AdjustCoachTrust(1);
+                    logs.Add("[선택] 기본 루틴을 유지하며 균형을 지켰습니다.");
+                }),
+                new("routine_review_skill","스킬 강화","커맨드/변화구에 집중합니다.", (s, r, logs) =>
+                {
+                    s.Player.ApplyDelta("SKL_COMMAND", 0.3);
+                    s.Player.ApplyDelta("SKL_CHANGEUP", 0.2);
+                    logs.Add("[선택] 스킬 강화 루틴으로 투구 감각을 끌어올립니다.");
+                }),
+                new("routine_review_rest","회복 우선","피로를 줄여 컨디션을 정비합니다.", (s, r, logs) =>
+                {
+                    s._fatigueLevel = Math.Clamp(s._fatigueLevel - 2.0, 0, 100);
+                    s.Player.ApplyDelta("MNT_MORALE", 0.2);
+                    logs.Add("[선택] 회복을 우선해 컨디션을 정비했습니다.");
+                })
+            },
+            "routine_review_balance");
+    }
+
+    private DailyChoiceCard BuildAcademicLoopCard(int day)
+    {
+        var id = $"year1_academic_{day}";
+        return new DailyChoiceCard(
+            id,
+            "학업 루프",
+            "수업/튜터링/과제 중 집중할 항목을 선택합니다.",
+            new List<DailyChoiceOption>
+            {
+                new("academic_class_focus","수업을 듣는다","수업 집중으로 이해도를 올립니다.", (s, r, logs) =>
+                {
+                    s.Player.ApplyDelta("MNT_ACADEMIC", 0.3);
+                    s.Player.ApplyDelta("MNT_FOCUS", 0.1);
+                    logs.Add("[선택] 수업 집중으로 이해도가 상승했습니다.");
+                }),
+                new("academic_class_slack","수업을 대충 듣는다","피로를 아끼면서 수업을 소화합니다.", (s, r, logs) =>
+                {
+                    s.Player.ApplyDelta("MNT_ACADEMIC", 0.1);
+                    s.Player.ApplyDelta("MNT_MORALE", 0.1);
+                    logs.Add("[선택] 수업을 무리 없이 소화했습니다.");
+                }),
+                new("academic_class_sleep","잔다(수업)","수업 시간에 잠을 잡니다.", (s, r, logs) =>
+                {
+                    s._fatigueLevel = Math.Clamp(s._fatigueLevel - 0.8, 0, 100);
+                    s.Player.ApplyDelta("MNT_FOCUS", -0.1);
+                    logs.Add("[선택] 수업 시간에 잠을 청했습니다.");
+                }),
+                new("academic_tutor_study","추가 학습을 한다","추가 학습으로 실력을 끌어올립니다.", (s, r, logs) =>
+                {
+                    s.Player.ApplyDelta("MNT_ACADEMIC", 0.4);
+                    s._fatigueLevel = Math.Clamp(s._fatigueLevel + 0.4, 0, 100);
+                    logs.Add("[선택] 추가 학습으로 이해도를 끌어올렸습니다.");
+                }),
+                new("academic_tutor_english","영어 회화를 한다","교양 학습으로 집중을 전환합니다.", (s, r, logs) =>
+                {
+                    s.Player.ApplyDelta("MNT_ACADEMIC", 0.2);
+                    s.Player.ApplyDelta("MNT_MORALE", 0.2);
+                    logs.Add("[선택] 영어 회화 세션으로 리듬을 잡았습니다.");
+                }),
+                new("academic_tutor_sleep","잔다(튜터링)","튜터링 시간에 휴식합니다.", (s, r, logs) =>
+                {
+                    s._fatigueLevel = Math.Clamp(s._fatigueLevel - 0.6, 0, 100);
+                    logs.Add("[선택] 튜터링 대신 휴식을 택했습니다.");
+                }),
+                new("academic_hw_done","과제를 한다","과제를 마무리합니다.", (s, r, logs) =>
+                {
+                    s.Player.ApplyDelta("MNT_ACADEMIC", 0.3);
+                    s.Player.ApplyDelta("MNT_FOCUS", 0.2);
+                    s._fatigueLevel = Math.Clamp(s._fatigueLevel + 0.3, 0, 100);
+                    logs.Add("[선택] 과제를 정리하며 집중도를 높였습니다.");
+                }),
+                new("academic_hw_slack","과제를 대충한다","과제를 간단히 처리합니다.", (s, r, logs) =>
+                {
+                    s.Player.ApplyDelta("MNT_ACADEMIC", 0.1);
+                    s.Player.ApplyDelta("MNT_MORALE", 0.1);
+                    logs.Add("[선택] 과제를 가볍게 처리했습니다.");
+                }),
+                new("academic_hw_sleep","잔다(과제)","과제 대신 잠을 택합니다.", (s, r, logs) =>
+                {
+                    s._fatigueLevel = Math.Clamp(s._fatigueLevel - 0.5, 0, 100);
+                    logs.Add("[선택] 과제 대신 휴식을 선택했습니다.");
+                })
+            },
+            "academic_class_focus");
+    }
+
+    private DailyChoiceCard BuildMentorFeedbackCard()
+    {
+        return new DailyChoiceCard(
+            "year1_mentor_feedback",
+            "멘토 피드백 세션",
+            "멘토 피드백의 방향을 선택합니다.",
+            new List<DailyChoiceOption>
+            {
+                new("mentor_feedback_bullpen","불펜 피드백","불펜 피드백에 집중합니다.", (s, r, logs) =>
+                {
+                    s.Player.ApplyDelta("SKL_COMMAND", 0.3);
+                    s._mentorTrust = Math.Clamp(s._mentorTrust + 4, 0, 100);
+                    logs.Add("[선택] 불펜 피드백으로 제구 루틴을 정비했습니다.");
+                }),
+                new("mentor_feedback_video","영상 분석","영상 분석으로 투구 패턴을 점검합니다.", (s, r, logs) =>
+                {
+                    s.Player.ApplyDelta("MNT_FOCUS", 0.3);
+                    logs.Add("[선택] 영상 분석으로 투구 패턴을 정리했습니다.");
+                }),
+                new("mentor_feedback_rest","컨디션 조절","피로를 조절하며 리듬을 회복합니다.", (s, r, logs) =>
+                {
+                    s._fatigueLevel = Math.Clamp(s._fatigueLevel - 1.0, 0, 100);
+                    s.Player.ApplyDelta("MNT_MORALE", 0.2);
+                    logs.Add("[선택] 컨디션 조절을 우선했습니다.");
+                })
+            },
+            "mentor_feedback_bullpen");
+    }
+
+    private DailyChoiceCard BuildRivalChallengeCard()
+    {
+        return new DailyChoiceCard(
+            "year1_rival_challenge",
+            "라이벌 도전전",
+            "라이벌 매치에 어떤 자세로 임할지 결정합니다.",
+            new List<DailyChoiceOption>
+            {
+                new("rival_attack","정면 승부","정면 승부로 기세를 올립니다.", (s, r, logs) =>
+                {
+                    s._rivalryLevel = Math.Clamp(s._rivalryLevel + 4, 0, 100);
+                    s.Player.ApplyDelta("MNT_MORALE", 0.3);
+                    logs.Add("[선택] 정면 승부로 경쟁심을 끌어올렸습니다.");
+                }),
+                new("rival_adjust","전략 조정","상황 판단을 우선합니다.", (s, r, logs) =>
+                {
+                    s.Player.ApplyDelta("MNT_FOCUS", 0.3);
+                    logs.Add("[선택] 전략 조정으로 집중도를 높였습니다.");
+                }),
+                new("rival_provoke","가벼운 도발","가볍게 도발해 긴장감을 높입니다.", (s, r, logs) =>
+                {
+                    s._rivalryLevel = Math.Clamp(s._rivalryLevel + 2, 0, 100);
+                    s.AdjustCoachTrust(-1);
+                    logs.Add("[선택] 가벼운 도발로 라이벌의 긴장을 유도했습니다.");
+                })
+            },
+            "rival_attack");
+    }
+
+    private DailyChoiceCard BuildMentalSessionCard()
+    {
+        return new DailyChoiceCard(
+            "year1_mental_session",
+            "멘탈 컨디셔닝",
+            "멘탈 세션에서 선택할 루틴을 결정합니다.",
+            new List<DailyChoiceOption>
+            {
+                new("mental_breath","호흡 훈련","호흡 훈련으로 안정감을 높입니다.", (s, r, logs) =>
+                {
+                    s.Player.ApplyDelta("MNT_MORALE", 0.4);
+                    logs.Add("[선택] 호흡 훈련으로 멘탈을 안정시켰습니다.");
+                }),
+                new("mental_consult","상담 세션","멘탈 상담으로 집중을 회복합니다.", (s, r, logs) =>
+                {
+                    s.Player.ApplyDelta("MNT_FOCUS", 0.3);
+                    logs.Add("[선택] 상담 세션으로 집중력을 회복했습니다.");
+                }),
+                new("mental_rest","휴식 선택","컨디션 회복을 우선합니다.", (s, r, logs) =>
+                {
+                    s._fatigueLevel = Math.Clamp(s._fatigueLevel - 1.2, 0, 100);
+                    logs.Add("[선택] 휴식으로 컨디션을 회복했습니다.");
+                })
+            },
+            "mental_breath");
     }
 
     private DailyChoiceCard BuildCampCard(string id, string title)
@@ -1358,7 +2367,8 @@ public sealed class GameState
             _coachTrust,
             _random,
             School.Roster,
-            ResolveOpponentRoster(MatchLabel, MatchOpponent));
+            ResolveOpponentRoster(MatchLabel, MatchOpponent),
+            _yearManager.MatchIsHome);
         return _activeMatch;
     }
 
@@ -1369,7 +2379,7 @@ public sealed class GameState
             return School.Roster;
         }
 
-        return HighSchoolRosterRepository.LoadByTeamName(opponentName);
+        return HighSchoolRosterRepository.LoadByTeamName(opponentName) ?? School.Roster;
     }
 
     private static IReadOnlyList<DailyAction> BuildDefaultActions()
@@ -1526,6 +2536,14 @@ public sealed record MatchScoreboardSnapshot(
     int GuestHits,
     int GuestErrors);
 
+public sealed record MatchPitchingLine(
+    int OutsRecorded,
+    int RunsAllowed,
+    int HitsAllowed,
+    int WalksAllowed,
+    int Strikeouts,
+    int Pitches);
+
 public sealed record ScoreboardInning(int Inning, int? HomeRuns, int? GuestRuns);
 
 public sealed record MatchLineupSnapshot(
@@ -1564,6 +2582,7 @@ public enum PitchEventType
     CalledStrike,
     SwingingStrike,
     Strikeout,
+    Foul,
     Ball,
     Walk,
     BallInPlayOut,
@@ -1613,6 +2632,14 @@ internal sealed class MatchSimulationState
         HomeRun
     }
 
+    private enum ContactType
+    {
+        GroundBall,
+        LineDrive,
+        FlyBall,
+        PopUp
+    }
+
     private readonly PlayerProfile _player;
     private readonly string _pitcherName;
     private readonly string _matchLabel;
@@ -1628,6 +2655,8 @@ internal sealed class MatchSimulationState
     private readonly HighSchoolRoster? _teamRoster;
     private readonly HighSchoolRoster? _opponentRoster;
     private readonly bool _isScrimmage;
+    private readonly bool _isHomeTeam;
+    private readonly HalfInning _playerPitchingHalf;
     private readonly List<HighSchoolRosterPlayer> _scrimmageHome = new();
     private readonly List<HighSchoolRosterPlayer> _scrimmageAway = new();
     private readonly List<LineupPlayer> _teamLineup = new();
@@ -1639,13 +2668,16 @@ internal sealed class MatchSimulationState
     private readonly List<int> _opponentRunsByInning = new();
     private int _teamHits;
     private int _opponentHits;
+    private int _teamErrors;
+    private int _opponentErrors;
     private double _coachTrust;
     private readonly double _stageScale;
 
     private int _inning = 1;
-    private HalfInning _half = HalfInning.Top;
+    private HalfInning _half;
     private int _outsInHalf;
     private int _totalOuts;
+    private int _pitcherOutsRecorded;
     private int _balls;
     private int _strikes;
     private int _runsAllowed;
@@ -1654,6 +2686,7 @@ internal sealed class MatchSimulationState
     private BatterProfile? _currentBatter;
     private int _playerRuns;
     private int _walksAllowed;
+    private int _strikeouts;
     private bool _awaitingHookDecision;
     private string? _pendingHookReason;
 
@@ -1666,7 +2699,8 @@ internal sealed class MatchSimulationState
         double coachTrust,
         Random random,
         HighSchoolRoster? teamRoster,
-        HighSchoolRoster? opponentRoster)
+        HighSchoolRoster? opponentRoster,
+        bool isHomeTeam)
     {
         _player = player;
         _pitcherName = player.Name;
@@ -1685,6 +2719,9 @@ internal sealed class MatchSimulationState
         _stageScale = GetStageScale(level);
         _teamRoster = teamRoster;
         _opponentRoster = opponentRoster;
+        _isHomeTeam = isHomeTeam;
+        _playerPitchingHalf = _isHomeTeam ? HalfInning.Top : HalfInning.Bottom;
+        _half = _playerPitchingHalf;
         _isScrimmage = matchLabel.Contains("청백전", StringComparison.Ordinal);
         if (_isScrimmage && _teamRoster is not null)
         {
@@ -1696,6 +2733,11 @@ internal sealed class MatchSimulationState
         {
             _teamRunsByInning.Add(0);
             _opponentRunsByInning.Add(0);
+        }
+
+        if (!_isHomeTeam)
+        {
+            SimulateTeamOffense();
         }
     }
 
@@ -1840,59 +2882,140 @@ internal sealed class MatchSimulationState
 
     private PitchOutcome ApplyOutcome(double quality, string pitch, string zone, string intent)
     {
+        var batter = _currentBatter;
+        if (batter is null)
+        {
+            return new PitchOutcome("타자 정보가 없어 투구를 처리할 수 없습니다.", false, PitchEventType.Unknown);
+        }
+
         string prefix = $"[{pitch}/{zone}/{intent}]";
-        var bands = _balance.Bands;
-        if (quality >= bands.StrikeoutBand)
+        var normalizedContact = NormalizeTo100(batter.Contact);
+        var normalizedPower = NormalizeTo100(batter.Power);
+        var normalizedEye = NormalizeTo100(batter.Eye);
+
+        var zoneBias = 0.0;
+        if (!string.IsNullOrWhiteSpace(zone))
         {
-            RegisterStrikeout();
-            return new PitchOutcome($"{prefix} 루킹 삼진! 완벽한 결정구입니다.", true);
+            if (zone.Contains("코너", StringComparison.Ordinal) || zone.Contains("인코스", StringComparison.Ordinal) || zone.Contains("아웃코스", StringComparison.Ordinal))
+            {
+                zoneBias -= 0.06;
+            }
+            else if (zone.Contains("중앙", StringComparison.Ordinal))
+            {
+                zoneBias += 0.05;
+            }
         }
 
-        if (quality >= bands.StrikeBand)
+        if (!string.IsNullOrWhiteSpace(intent))
         {
+            if (intent.Contains("승부", StringComparison.Ordinal))
+            {
+                zoneBias += 0.05;
+            }
+            else if (intent.Contains("유인", StringComparison.Ordinal))
+            {
+                zoneBias -= 0.08;
+            }
+        }
+
+        var zoneChance = 0.5 + (quality - 50) / 110.0 + zoneBias + _balance.ZoneBias;
+        zoneChance = Math.Clamp(zoneChance, 0.2, 0.85);
+        var inZone = _random.NextDouble() < zoneChance;
+
+        var swingChance = inZone
+            ? 0.6 + (50 - normalizedEye) / 220.0 + (quality - 50) / 280.0
+            : 0.22 - (normalizedEye - 50) / 220.0 + (quality - 50) / 600.0;
+        swingChance += _balance.SwingBias;
+        swingChance = Math.Clamp(swingChance, 0.12, 0.75);
+        var swung = _random.NextDouble() < swingChance;
+
+        if (!swung)
+        {
+            if (inZone)
+            {
+                var wasTwoStrikes = _strikes >= 2;
+                RegisterStrike();
+                if (wasTwoStrikes)
+                {
+                    return new PitchOutcome($"{prefix} 루킹 삼진! 완벽한 결정구입니다.", true, PitchEventType.Strikeout);
+                }
+
+                return new PitchOutcome($"{prefix} 루킹 스트라이크! 카운트를 선점합니다.", false, PitchEventType.CalledStrike);
+            }
+
+            if (RegisterBall())
+            {
+                return new PitchOutcome($"{prefix} 볼넷 허용, 주자가 밀려 나갑니다.", true, PitchEventType.Walk);
+            }
+
+            return new PitchOutcome($"{prefix} 볼 판정. 카운트가 불리해집니다.", false, PitchEventType.Ball);
+        }
+
+        var contactChance = 0.52 + (normalizedContact - quality) / 170.0 + (normalizedEye - 50) / 450.0;
+        contactChance += _balance.ContactBias;
+        contactChance = Math.Clamp(contactChance, 0.2, 0.88);
+        if (_random.NextDouble() > contactChance)
+        {
+            var wasTwoStrikes = _strikes >= 2;
             RegisterStrike();
-            return new PitchOutcome($"{prefix} 스트라이크로 카운트를 선점합니다.", false);
+            if (wasTwoStrikes)
+            {
+                return new PitchOutcome($"{prefix} 헛스윙 삼진! 타자가 속았습니다.", true, PitchEventType.Strikeout);
+            }
+
+            return new PitchOutcome($"{prefix} 헛스윙! 스트라이크를 추가합니다.", false, PitchEventType.SwingingStrike);
         }
 
-        if (quality >= bands.WeakContactBand)
+        var foulChance = 0.14 + (quality - normalizedContact) / 260.0 + _balance.FoulBias;
+        foulChance = Math.Clamp(foulChance, 0.04, 0.24);
+        if (_random.NextDouble() < foulChance)
         {
-            RegisterBallInPlay(outIsRecorded: true);
-            return new PitchOutcome($"{prefix} 땅볼 처리로 아웃 하나 추가.", true);
+            RegisterFoul();
+            return new PitchOutcome($"{prefix} 파울. 승부가 길어집니다.", false, PitchEventType.Foul);
         }
 
-        if (quality >= bands.SingleBand)
+        var inPlayScore = normalizedContact + normalizedPower * 0.6;
+        var hitChance = 0.24 + (inPlayScore - quality) / 210.0 + _balance.HitBias;
+        hitChance = Math.Clamp(hitChance, 0.12, 0.42);
+
+        if (_random.NextDouble() < hitChance)
         {
-            RegisterBallInPlay(outIsRecorded: false);
+            var extraBaseChance = 0.09 + (normalizedPower - 50) / 300.0 + _balance.ExtraBaseBias;
+            extraBaseChance = Math.Clamp(extraBaseChance, 0.04, 0.2);
+            var homerChance = 0.012 + (normalizedPower - 60) / 420.0 + _balance.HomerBias;
+            homerChance = Math.Clamp(homerChance, 0.008, 0.06);
+            var roll = _random.NextDouble();
+            int bases;
+            string label;
+            if (roll < homerChance)
+            {
+                bases = 4;
+                label = "홈런";
+            }
+            else if (roll < homerChance + extraBaseChance * 0.2)
+            {
+                bases = 3;
+                label = "3루타";
+            }
+            else if (roll < homerChance + extraBaseChance * 0.7)
+            {
+                bases = 2;
+                label = "2루타";
+            }
+            else
+            {
+                bases = 1;
+                label = "안타";
+            }
+
             _opponentHits++;
-            AdvanceRunners(1);
+            AdvanceRunnersOnHit(bases);
             ResetCount();
-            return new PitchOutcome($"{prefix} 내야 안타 허용. 주자가 출루합니다.", true);
+            return new PitchOutcome($"{prefix} {label} 허용! 주자가 출루합니다.", true, PitchEventType.BallInPlayHit);
         }
 
-        if (quality >= bands.DoubleBand)
-        {
-            _opponentHits++;
-            AdvanceRunners(2);
-            ResetCount();
-            return new PitchOutcome($"{prefix} 2루타 허용! 장타로 위기가 커집니다.", true);
-        }
-
-        if (quality >= bands.TripleBand)
-        {
-            _opponentHits++;
-            AdvanceRunners(3);
-            ResetCount();
-            return new PitchOutcome($"{prefix} 3루타. 결정타를 맞았습니다.", true);
-        }
-
-        if (quality >= bands.BallBand)
-        {
-            RegisterBall();
-            return new PitchOutcome($"{prefix} 볼 판정. 카운트가 불리해집니다.", false);
-        }
-
-        RegisterWalk();
-        return new PitchOutcome($"{prefix} 볼넷 허용, 주자가 밀려 나갑니다.", true);
+        var contactType = RollContactType();
+        return ResolveBallInPlayOut(contactType, prefix);
     }
 
     private void RegisterStrike()
@@ -1908,12 +3031,28 @@ internal sealed class MatchSimulationState
     {
         _balls = 0;
         _strikes = 0;
+        _strikeouts++;
         RegisterOut();
     }
 
-    private void RegisterBall()
+    private void RegisterFoul()
+    {
+        if (_strikes < 2)
+        {
+            _strikes++;
+        }
+    }
+
+    private bool RegisterBall()
     {
         _balls++;
+        if (_balls >= 4)
+        {
+            RegisterWalk();
+            return true;
+        }
+
+        return false;
     }
 
     private CoachHookPrompt? EvaluateHookRequest()
@@ -1996,23 +3135,108 @@ internal sealed class MatchSimulationState
     {
         _outsInHalf++;
         _totalOuts++;
+        _pitcherOutsRecorded++;
         if (_outsInHalf >= 3)
         {
             _outsInHalf = 0;
+            ResetCount();
             Array.Clear(_bases, 0, _bases.Length);
-            if (_half == HalfInning.Top)
+            if (_half == _playerPitchingHalf)
             {
-                _half = HalfInning.Bottom;
-                SimulateTeamOffense();
-                _half = HalfInning.Top;
-                _inning++;
-            }
-            else
-            {
-                _half = HalfInning.Top;
-                _inning++;
+                if (_playerPitchingHalf == HalfInning.Top)
+                {
+                    _half = HalfInning.Bottom;
+                    SimulateTeamOffense();
+                    _half = HalfInning.Top;
+                    _inning++;
+                }
+                else
+                {
+                    _half = HalfInning.Top;
+                    _inning++;
+                    SimulateTeamOffense();
+                    _half = HalfInning.Bottom;
+                }
             }
         }
+    }
+
+    private void RegisterOuts(int outs)
+    {
+        var remaining = Math.Max(0, Math.Min(outs, 3 - _outsInHalf));
+        for (var i = 0; i < remaining; i++)
+        {
+            var inningBefore = _inning;
+            var halfBefore = _half;
+            RegisterOut();
+            if (_inning != inningBefore || _half != halfBefore)
+            {
+                break;
+            }
+        }
+    }
+
+    private ContactType RollContactType()
+    {
+        var roll = _random.NextDouble();
+        if (roll < 0.45)
+        {
+            return ContactType.GroundBall;
+        }
+
+        if (roll < 0.75)
+        {
+            return ContactType.FlyBall;
+        }
+
+        if (roll < 0.92)
+        {
+            return ContactType.LineDrive;
+        }
+
+        return ContactType.PopUp;
+    }
+
+    private PitchOutcome ResolveBallInPlayOut(ContactType type, string prefix)
+    {
+        ResetCount();
+        if (_random.NextDouble() < _balance.ErrorRate)
+        {
+            _teamErrors++;
+            AdvanceRunners(1);
+            return new PitchOutcome($"{prefix} 수비 실책! 타자가 살아나갑니다.", true, PitchEventType.BallInPlayHit);
+        }
+
+        if (type == ContactType.GroundBall && _bases[0] && _outsInHalf < 2)
+        {
+            var doublePlayChance = _balance.DoublePlayRate + (_bases[1] ? 0.05 : 0);
+            if (_random.NextDouble() < doublePlayChance)
+            {
+                _bases[0] = false;
+                RegisterOuts(2);
+                return new PitchOutcome($"{prefix} 병살타! 아웃 카운트가 빠르게 늘어납니다.", true, PitchEventType.BallInPlayOut);
+            }
+        }
+
+        if ((type == ContactType.FlyBall || type == ContactType.LineDrive) && _bases[2] && _outsInHalf < 2)
+        {
+            if (_random.NextDouble() < _balance.SacFlyRate)
+            {
+                _bases[2] = false;
+                AddOpponentRun(1);
+                RegisterOuts(1);
+                return new PitchOutcome($"{prefix} 희생플라이로 1점을 내줍니다.", true, PitchEventType.BallInPlayOut);
+            }
+        }
+
+        if (type == ContactType.GroundBall && _bases[1] && !_bases[2] && _random.NextDouble() < 0.25)
+        {
+            _bases[1] = false;
+            _bases[2] = true;
+        }
+
+        RegisterOuts(1);
+        return new PitchOutcome($"{prefix} 인플레이 아웃으로 마무리합니다.", true, PitchEventType.BallInPlayOut);
     }
 
     private void AdvanceRunners(int bases)
@@ -2041,6 +3265,19 @@ internal sealed class MatchSimulationState
         {
             _bases[batterIndex] = true;
         }
+    }
+
+    private void AdvanceRunnersOnHit(int bases)
+    {
+        if (bases >= 4)
+        {
+            var runs = 1 + _bases.Count(b => b);
+            Array.Clear(_bases, 0, _bases.Length);
+            AddOpponentRun(runs);
+            return;
+        }
+
+        AdvanceRunners(bases);
     }
 
     private void AddOpponentRun(int runs)
@@ -2113,8 +3350,38 @@ internal sealed class MatchSimulationState
                     Array.Clear(bases, 0, bases.Length);
                     break;
                 case AtBatResult.Strikeout:
+                    outs++;
+                    break;
                 case AtBatResult.Out:
                 default:
+                    if (_random.NextDouble() < _balance.ErrorRate)
+                    {
+                        _opponentErrors++;
+                        AdvanceRunners(bases, 1, ref runs);
+                        break;
+                    }
+
+                    if (outs < 2 && bases[0] && _random.NextDouble() < _balance.DoublePlayRate)
+                    {
+                        bases[0] = false;
+                        outs += Math.Min(2, 3 - outs);
+                        break;
+                    }
+
+                    if (outs < 2 && bases[2] && _random.NextDouble() < _balance.SacFlyRate)
+                    {
+                        bases[2] = false;
+                        runs++;
+                        outs++;
+                        break;
+                    }
+
+                    if (bases[1] && !bases[2] && _random.NextDouble() < 0.25)
+                    {
+                        bases[1] = false;
+                        bases[2] = true;
+                    }
+
                     outs++;
                     break;
             }
@@ -2136,12 +3403,12 @@ internal sealed class MatchSimulationState
 
         var walkChance = 0.06 + (normalizedEye - normalizedPitch) / 350.0;
         var strikeoutChance = 0.18 + (normalizedPitch - normalizedContact) / 280.0;
-        var hitChance = 0.20 + (normalizedContact - normalizedPitch) / 240.0;
-        var extraChance = 0.08 + (normalizedPower - normalizedPitch) / 320.0;
+        var hitChance = 0.20 + (normalizedContact - normalizedPitch) / 240.0 + _balance.HitBias;
+        var extraChance = 0.08 + (normalizedPower - normalizedPitch) / 320.0 + _balance.ExtraBaseBias;
 
         walkChance = Math.Clamp(walkChance, 0.03, 0.15);
         strikeoutChance = Math.Clamp(strikeoutChance, 0.08, 0.32);
-        hitChance = Math.Clamp(hitChance, 0.15, 0.35);
+        hitChance = Math.Clamp(hitChance, 0.12, 0.38);
         extraChance = Math.Clamp(extraChance, 0.04, 0.22);
 
         var roll = _random.NextDouble();
@@ -2160,7 +3427,7 @@ internal sealed class MatchSimulationState
         if (roll < hitChance)
         {
             var extraRoll = _random.NextDouble();
-            if (extraRoll < extraChance * 0.2)
+            if (extraRoll < extraChance * (0.18 + _balance.HomerBias))
             {
                 return AtBatResult.HomeRun;
             }
@@ -2250,6 +3517,7 @@ internal sealed class MatchSimulationState
             : GetRosterPlayers(_opponentRoster);
 
         _teamLineup.AddRange(BuildLineupFromRoster(teamCandidates));
+        EnsureTeamLineupContainsPlayer();
         _opponentLineup.AddRange(BuildLineupFromRoster(opponentCandidates));
     }
 
@@ -2295,6 +3563,56 @@ internal sealed class MatchSimulationState
             .Take(9)
             .ToList();
     }
+
+    private void EnsureTeamLineupContainsPlayer()
+    {
+        if (_teamLineup.Any(p => p.Name.Equals(_player.Name, StringComparison.OrdinalIgnoreCase)))
+        {
+            return;
+        }
+
+        var playerEntry = BuildLineupPlayerFromProfile();
+        _teamLineup.Add(playerEntry);
+
+        var ordered = _teamLineup
+            .OrderByDescending(c => c.BattingRating)
+            .ThenBy(c => c.Name, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        if (ordered.Count > 9)
+        {
+            if (!ordered.Take(9).Any(p => p.Name.Equals(_player.Name, StringComparison.OrdinalIgnoreCase)))
+            {
+                ordered = ordered.Take(8).Concat(new[] { playerEntry }).ToList();
+            }
+            else
+            {
+                ordered = ordered.Take(9).ToList();
+            }
+        }
+
+        _teamLineup.Clear();
+        _teamLineup.AddRange(ordered);
+    }
+
+    private LineupPlayer BuildLineupPlayerFromProfile()
+    {
+        var contact = ClampBattingValue((_player.GetStatValue("MNT_FOCUS") + _player.GetStatValue("PHY_MOBILITY")) / 2.0);
+        var power = ClampBattingValue((_player.GetStatValue("PHY_POWER") + _player.GetStatValue("PHY_LEG_DRIVE")) / 2.0);
+        var eye = ClampBattingValue(_player.GetStatValue("MNT_FOCUS") * 0.6 + _player.GetStatValue("MNT_MORALE") * 0.4);
+        var rating = contact * 0.5 + power * 0.3 + eye * 0.2;
+
+        var archetype = power >= contact + 3
+            ? "거포"
+            : eye >= contact + 2
+                ? "선구안"
+                : "교타자";
+
+        return new LineupPlayer(_player.Name, "우타", archetype, _player.AcademicYear, contact, power, eye, rating);
+    }
+
+    private double ClampBattingValue(double value)
+        => Math.Clamp(value, 5, 35);
 
     private double GetOpponentPitchingRating()
     {
@@ -2361,43 +3679,74 @@ internal sealed class MatchSimulationState
         var innings = new List<ScoreboardInning>();
         for (var i = 0; i < _totalInnings; i++)
         {
-            var opponentComplete = i < _inning - 1 || (i == _inning - 1 && _half == HalfInning.Bottom);
-            var teamComplete = i < _inning - 1;
+            bool opponentComplete;
+            bool teamComplete;
 
-            var guestRuns = opponentComplete ? _opponentRunsByInning[i] : (int?)null;
-            var homeRuns = teamComplete ? _teamRunsByInning[i] : (int?)null;
+            if (_playerPitchingHalf == HalfInning.Top)
+            {
+                opponentComplete = i < _inning - 1 || (i == _inning - 1 && _half == HalfInning.Bottom);
+                teamComplete = i < _inning - 1;
+            }
+            else
+            {
+                opponentComplete = i < _inning - 1 || (i == _inning - 1 && _half == HalfInning.Top);
+                teamComplete = i < _inning - 1 || (i == _inning - 1 && _half == HalfInning.Bottom);
+            }
+
+            var teamRuns = teamComplete ? _teamRunsByInning[i] : (int?)null;
+            var opponentRuns = opponentComplete ? _opponentRunsByInning[i] : (int?)null;
+
+            var homeRuns = _isHomeTeam ? teamRuns : opponentRuns;
+            var guestRuns = _isHomeTeam ? opponentRuns : teamRuns;
 
             innings.Add(new ScoreboardInning(i + 1, homeRuns, guestRuns));
         }
+
+        var homeRunsTotal = _isHomeTeam ? _playerRuns : _runsAllowed;
+        var guestRunsTotal = _isHomeTeam ? _runsAllowed : _playerRuns;
+        var homeHits = _isHomeTeam ? _teamHits : _opponentHits;
+        var guestHits = _isHomeTeam ? _opponentHits : _teamHits;
+        var homeErrors = _isHomeTeam ? _teamErrors : _opponentErrors;
+        var guestErrors = _isHomeTeam ? _opponentErrors : _teamErrors;
 
         return new MatchScoreboardSnapshot(
             GetHomeLabel(),
             GetGuestLabel(),
             innings,
-            _playerRuns,
-            _teamHits,
-            0,
-            _runsAllowed,
-            _opponentHits,
-            0);
+            homeRunsTotal,
+            homeHits,
+            homeErrors,
+            guestRunsTotal,
+            guestHits,
+            guestErrors);
     }
+
+    public MatchPitchingLine BuildPitchingLine()
+        => new(_pitcherOutsRecorded, _runsAllowed, _opponentHits, _walksAllowed, _strikeouts, _pitchCount);
 
     public MatchLineupSnapshot BuildLineupSnapshot()
     {
-        var home = _teamLineup
+        var teamLineup = _teamLineup
             .Select((p, idx) => new MatchLineupEntry(idx + 1, p.Name, p.Bats, p.Archetype, p.Contact, p.Power, p.Eye, p.BattingRating))
             .ToList();
-        var guest = _opponentLineup
+        var opponentLineup = _opponentLineup
             .Select((p, idx) => new MatchLineupEntry(idx + 1, p.Name, p.Bats, p.Archetype, p.Contact, p.Power, p.Eye, p.BattingRating))
             .ToList();
+
+        var home = _isHomeTeam ? teamLineup : opponentLineup;
+        var guest = _isHomeTeam ? opponentLineup : teamLineup;
 
         return new MatchLineupSnapshot(GetHomeLabel(), GetGuestLabel(), home, guest);
     }
 
     public MatchRosterSnapshot BuildRosterSnapshot()
     {
-        var homeRoster = BuildRosterEntries(_isScrimmage ? _scrimmageHome : GetRosterPlayers(_teamRoster));
-        var guestRoster = BuildRosterEntries(_isScrimmage ? _scrimmageAway : GetRosterPlayers(_opponentRoster));
+        var teamRoster = BuildRosterEntries(_isScrimmage ? _scrimmageHome : GetRosterPlayers(_teamRoster));
+        var opponentRoster = BuildRosterEntries(_isScrimmage ? _scrimmageAway : GetRosterPlayers(_opponentRoster));
+        EnsurePlayerInRosterEntries(teamRoster);
+
+        var homeRoster = _isHomeTeam ? teamRoster : opponentRoster;
+        var guestRoster = _isHomeTeam ? opponentRoster : teamRoster;
         return new MatchRosterSnapshot(GetHomeLabel(), GetGuestLabel(), homeRoster, guestRoster);
     }
 
@@ -2412,6 +3761,33 @@ internal sealed class MatchSimulationState
                 string.IsNullOrWhiteSpace(p.Throws) ? "-" : p.Throws))
             .ToList();
 
+    private void EnsurePlayerInRosterEntries(ICollection<MatchRosterEntry> homeRoster)
+    {
+        if (homeRoster.Any(e => e.Name.Equals(_player.Name, StringComparison.OrdinalIgnoreCase)))
+        {
+            return;
+        }
+
+        homeRoster.Add(BuildRosterEntryFromProfile());
+    }
+
+    private MatchRosterEntry BuildRosterEntryFromProfile()
+    {
+        var throwsHand = _player.Position.Contains("좌완", StringComparison.OrdinalIgnoreCase)
+            ? "좌투"
+            : _player.Position.Contains("우완", StringComparison.OrdinalIgnoreCase)
+                ? "우투"
+                : "-";
+
+        return new MatchRosterEntry(
+            _player.Name,
+            _player.AcademicYear,
+            _player.Position,
+            _player.PreferredRole,
+            "우타",
+            throwsHand);
+    }
+
     private string GetHomeLabel()
     {
         if (_isScrimmage)
@@ -2419,7 +3795,12 @@ internal sealed class MatchSimulationState
             return $"{_teamRoster?.TeamName ?? "홈"} 청팀";
         }
 
-        return _teamRoster?.TeamName ?? "HOME";
+        if (_isHomeTeam)
+        {
+            return _teamRoster?.TeamName ?? "HOME";
+        }
+
+        return string.IsNullOrWhiteSpace(_opponent) ? "HOME" : _opponent;
     }
 
     private string GetGuestLabel()
@@ -2429,11 +3810,18 @@ internal sealed class MatchSimulationState
             return $"{_teamRoster?.TeamName ?? "어웨이"} 백팀";
         }
 
-        return string.IsNullOrWhiteSpace(_opponent) ? "GUEST" : _opponent;
+        if (_isHomeTeam)
+        {
+            return string.IsNullOrWhiteSpace(_opponent) ? "GUEST" : _opponent;
+        }
+
+        return _teamRoster?.TeamName ?? "GUEST";
     }
 
     private void BuildScrimmagePools(HighSchoolRoster roster)
     {
+        _scrimmageHome.Clear();
+        _scrimmageAway.Clear();
         var allPlayers = roster.Varsity
             .Concat(roster.Junior)
             .Where(p => p is not null)
@@ -2447,18 +3835,100 @@ internal sealed class MatchSimulationState
         {
             var list = group.ToList();
             Shuffle(list);
-            for (var i = 0; i < list.Count; i++)
+            DistributeScrimmageGroup(list);
+        }
+
+        EnsureScrimmageMinimum(allPlayers);
+        EnsureScrimmagePitchers(allPlayers);
+    }
+
+    private void DistributeScrimmageGroup(IReadOnlyList<HighSchoolRosterPlayer> players)
+    {
+        if (players.Count == 0)
+        {
+            return;
+        }
+
+        var giveExtraToHome = _scrimmageHome.Count <= _scrimmageAway.Count;
+        var homeTarget = players.Count / 2 + (giveExtraToHome && players.Count % 2 == 1 ? 1 : 0);
+
+        for (var i = 0; i < players.Count; i++)
+        {
+            if (i < homeTarget)
             {
-                if (i % 2 == 0)
-                {
-                    _scrimmageHome.Add(list[i]);
-                }
-                else
-                {
-                    _scrimmageAway.Add(list[i]);
-                }
+                _scrimmageHome.Add(players[i]);
+            }
+            else
+            {
+                _scrimmageAway.Add(players[i]);
             }
         }
+    }
+
+    private void EnsureScrimmageMinimum(IReadOnlyList<HighSchoolRosterPlayer> allPlayers)
+    {
+        if (_scrimmageHome.Count >= 9 && _scrimmageAway.Count >= 9)
+        {
+            return;
+        }
+
+        var pooled = allPlayers.ToList();
+        Shuffle(pooled);
+        _scrimmageHome.Clear();
+        _scrimmageAway.Clear();
+
+        var giveExtraToHome = true;
+        var homeTarget = pooled.Count / 2 + (pooled.Count % 2 == 1 && giveExtraToHome ? 1 : 0);
+        for (var i = 0; i < pooled.Count; i++)
+        {
+            if (i < homeTarget)
+            {
+                _scrimmageHome.Add(pooled[i]);
+            }
+            else
+            {
+                _scrimmageAway.Add(pooled[i]);
+            }
+        }
+    }
+
+    private void EnsureScrimmagePitchers(IReadOnlyList<HighSchoolRosterPlayer> allPlayers)
+    {
+        if (allPlayers.Count(p => IsPitcher(p)) < 2)
+        {
+            return;
+        }
+
+        if (CountPitchers(_scrimmageHome) == 0)
+        {
+            SwapPitcher(_scrimmageAway, _scrimmageHome);
+        }
+
+        if (CountPitchers(_scrimmageAway) == 0)
+        {
+            SwapPitcher(_scrimmageHome, _scrimmageAway);
+        }
+    }
+
+    private static bool IsPitcher(HighSchoolRosterPlayer player)
+        => player.Position.Contains("P", StringComparison.OrdinalIgnoreCase);
+
+    private static int CountPitchers(IReadOnlyList<HighSchoolRosterPlayer> players)
+        => players.Count(IsPitcher);
+
+    private static void SwapPitcher(ICollection<HighSchoolRosterPlayer> from, ICollection<HighSchoolRosterPlayer> to)
+    {
+        var pitcher = from.FirstOrDefault(IsPitcher);
+        var nonPitcher = to.FirstOrDefault(p => !IsPitcher(p));
+        if (pitcher is null || nonPitcher is null)
+        {
+            return;
+        }
+
+        from.Remove(pitcher);
+        to.Add(pitcher);
+        to.Remove(nonPitcher);
+        from.Add(nonPitcher);
     }
 
     private void Shuffle<T>(IList<T> list)
@@ -2554,6 +4024,16 @@ internal sealed class MatchSimulationState
             int baseHookRuns,
             int baseHookWalks,
             int baseHookPitchCount,
+            double zoneBias,
+            double swingBias,
+            double contactBias,
+            double hitBias,
+            double foulBias,
+            double errorRate,
+            double doublePlayRate,
+            double sacFlyRate,
+            double extraBaseBias,
+            double homerBias,
             PitchOutcomeBands bands)
         {
             QualityBonus = qualityBonus;
@@ -2561,6 +4041,16 @@ internal sealed class MatchSimulationState
             BaseHookRuns = baseHookRuns;
             BaseHookWalks = baseHookWalks;
             BaseHookPitchCount = baseHookPitchCount;
+            ZoneBias = zoneBias;
+            SwingBias = swingBias;
+            ContactBias = contactBias;
+            HitBias = hitBias;
+            FoulBias = foulBias;
+            ErrorRate = errorRate;
+            DoublePlayRate = doublePlayRate;
+            SacFlyRate = sacFlyRate;
+            ExtraBaseBias = extraBaseBias;
+            HomerBias = homerBias;
             Bands = bands;
         }
 
@@ -2569,16 +4059,50 @@ internal sealed class MatchSimulationState
         public int BaseHookRuns { get; }
         public int BaseHookWalks { get; }
         public int BaseHookPitchCount { get; }
+        public double ZoneBias { get; }
+        public double SwingBias { get; }
+        public double ContactBias { get; }
+        public double HitBias { get; }
+        public double FoulBias { get; }
+        public double ErrorRate { get; }
+        public double DoublePlayRate { get; }
+        public double SacFlyRate { get; }
+        public double ExtraBaseBias { get; }
+        public double HomerBias { get; }
         public PitchOutcomeBands Bands { get; }
 
         public static MatchBalanceProfile For(CompetitionLevel level) => level switch
         {
-            CompetitionLevel.HighSchool => new MatchBalanceProfile(10, 18, 2, 3, 55, PitchOutcomeBands.HighSchool),
-            CompetitionLevel.University => new MatchBalanceProfile(7, 15, 3, 3, 70, PitchOutcomeBands.University),
-            CompetitionLevel.Independent => new MatchBalanceProfile(4, 13, 3, 4, 80, PitchOutcomeBands.Independent),
-            CompetitionLevel.ProKbo => new MatchBalanceProfile(2, 11, 4, 4, 95, PitchOutcomeBands.ProKbo),
-            CompetitionLevel.ProMlb => new MatchBalanceProfile(0, 9, 4, 4, 105, PitchOutcomeBands.ProMlb),
-            _ => new MatchBalanceProfile(0, 12, 3, 3, 80, PitchOutcomeBands.University)
+            CompetitionLevel.HighSchool => new MatchBalanceProfile(
+                10, 18, 2, 3, 55,
+                -0.03, -0.02, -0.04, -0.03, 0.02,
+                0.05, 0.18, 0.32, -0.02, -0.01,
+                PitchOutcomeBands.HighSchool),
+            CompetitionLevel.University => new MatchBalanceProfile(
+                7, 15, 3, 3, 70,
+                -0.01, 0.0, -0.02, -0.01, 0.01,
+                0.04, 0.2, 0.35, -0.01, -0.005,
+                PitchOutcomeBands.University),
+            CompetitionLevel.Independent => new MatchBalanceProfile(
+                4, 13, 3, 4, 80,
+                0.0, 0.01, 0.0, 0.0, 0.0,
+                0.03, 0.22, 0.38, 0.0, 0.0,
+                PitchOutcomeBands.Independent),
+            CompetitionLevel.ProKbo => new MatchBalanceProfile(
+                2, 11, 4, 4, 95,
+                0.01, 0.02, 0.02, 0.02, -0.01,
+                0.02, 0.24, 0.4, 0.01, 0.005,
+                PitchOutcomeBands.ProKbo),
+            CompetitionLevel.ProMlb => new MatchBalanceProfile(
+                0, 9, 4, 4, 105,
+                0.02, 0.03, 0.03, 0.03, -0.015,
+                0.015, 0.26, 0.42, 0.02, 0.01,
+                PitchOutcomeBands.ProMlb),
+            _ => new MatchBalanceProfile(
+                0, 12, 3, 3, 80,
+                0.0, 0.0, -0.01, -0.01, 0.0,
+                0.03, 0.2, 0.36, 0.0, 0.0,
+                PitchOutcomeBands.University)
         };
     }
 
@@ -2627,6 +4151,307 @@ internal sealed class MatchSimulationState
         public string Log { get; }
         public bool BatterCompleted { get; }
         public PitchEventType EventType { get; }
+    }
+}
+
+public enum HighSchoolMatchKind
+{
+    Scrimmage,
+    Friendly,
+    WeekendLeague,
+    Official,
+    Tournament
+}
+
+public sealed class HighSchoolSeasonTracker
+{
+    private readonly Dictionary<string, TeamSeasonRecord> _teamRecords = new(StringComparer.OrdinalIgnoreCase);
+    private readonly List<HighSchoolMatchRecord> _matchHistory = new();
+
+    public HighSchoolSeasonTracker(HighSchoolProfile playerSchool, int academicYear)
+    {
+        PlayerSchoolId = playerSchool.Id;
+        PlayerSchoolName = playerSchool.Name;
+        AcademicYear = academicYear;
+    }
+
+    public int AcademicYear { get; }
+    public string PlayerSchoolId { get; }
+    public string PlayerSchoolName { get; }
+    public IReadOnlyDictionary<string, TeamSeasonRecord> TeamRecords => _teamRecords;
+    public IReadOnlyList<HighSchoolMatchRecord> MatchHistory => _matchHistory;
+    public PlayerSeasonPitchingStats PlayerPitching { get; } = new();
+
+    public TeamSeasonRecord EnsureTeam(string teamId, string teamName)
+    {
+        if (_teamRecords.TryGetValue(teamId, out var record))
+        {
+            return record;
+        }
+
+        record = new TeamSeasonRecord(teamId, teamName);
+        _teamRecords[teamId] = record;
+        return record;
+    }
+
+    public void RecordMatch(HighSchoolMatchRecord record)
+    {
+        _matchHistory.Add(record);
+    }
+}
+
+public sealed class TeamSeasonRecord
+{
+    public TeamSeasonRecord(string teamId, string teamName)
+    {
+        TeamId = teamId;
+        TeamName = teamName;
+    }
+
+    public string TeamId { get; }
+    public string TeamName { get; }
+    public int Wins { get; private set; }
+    public int Losses { get; private set; }
+    public int HomeWins { get; private set; }
+    public int AwayWins { get; private set; }
+    public int RunsFor { get; private set; }
+    public int RunsAgainst { get; private set; }
+    public int HitsFor { get; private set; }
+    public int HitsAgainst { get; private set; }
+    public int ErrorsFor { get; private set; }
+    public int ErrorsAgainst { get; private set; }
+
+    public int Games => Wins + Losses;
+    public int RunDiff => RunsFor - RunsAgainst;
+    public double WinRate => Games == 0 ? 0 : (double)Wins / Games;
+
+    public void RecordGame(bool isHome, int runsFor, int runsAgainst, int hitsFor, int hitsAgainst, int errorsFor, int errorsAgainst)
+    {
+        if (runsFor > runsAgainst)
+        {
+            Wins++;
+            if (isHome) HomeWins++;
+            else AwayWins++;
+        }
+        else
+        {
+            Losses++;
+        }
+
+        RunsFor += runsFor;
+        RunsAgainst += runsAgainst;
+        HitsFor += hitsFor;
+        HitsAgainst += hitsAgainst;
+        ErrorsFor += errorsFor;
+        ErrorsAgainst += errorsAgainst;
+    }
+}
+
+public sealed class PlayerSeasonPitchingStats
+{
+    public int Games { get; private set; }
+    public int Starts { get; private set; }
+    public int OutsRecorded { get; private set; }
+    public int RunsAllowed { get; private set; }
+    public int HitsAllowed { get; private set; }
+    public int WalksAllowed { get; private set; }
+    public int Strikeouts { get; private set; }
+    public int Pitches { get; private set; }
+    public int Wins { get; private set; }
+    public int Losses { get; private set; }
+
+    public double InningsPitched => OutsRecorded / 3.0;
+    public double Era => OutsRecorded == 0 ? 0 : RunsAllowed * 27.0 / OutsRecorded;
+    public double Whip => OutsRecorded == 0 ? 0 : (HitsAllowed + WalksAllowed) * 3.0 / OutsRecorded;
+
+    public void RecordGame(int outs, int runs, int hits, int walks, int strikeouts, int pitches, bool isWin)
+    {
+        Games++;
+        Starts++;
+        OutsRecorded += outs;
+        RunsAllowed += runs;
+        HitsAllowed += hits;
+        WalksAllowed += walks;
+        Strikeouts += strikeouts;
+        Pitches += pitches;
+        if (isWin) Wins++;
+        else Losses++;
+    }
+}
+
+public sealed record HighSchoolMatchRecord(
+    int Day,
+    HighSchoolMatchKind Kind,
+    string HomeTeamId,
+    string HomeTeamName,
+    string AwayTeamId,
+    string AwayTeamName,
+    int HomeRuns,
+    int AwayRuns,
+    int HomeHits,
+    int AwayHits,
+    int HomeErrors,
+    int AwayErrors,
+    bool IsRivalry,
+    string StageLabel);
+
+public sealed record HighSchoolLeagueMatch(
+    int Day,
+    int Round,
+    string HomeTeamId,
+    string HomeTeamName,
+    string AwayTeamId,
+    string AwayTeamName,
+    bool IsRivalry);
+
+public sealed class HighSchoolLeagueSchedule
+{
+    public HighSchoolLeagueSchedule(IReadOnlyList<HighSchoolLeagueMatch> matches)
+    {
+        Matches = matches;
+    }
+
+    public IReadOnlyList<HighSchoolLeagueMatch> Matches { get; }
+
+    public IReadOnlyList<HighSchoolLeagueMatch> GetMatchesForTeam(string teamId)
+        => Matches.Where(m =>
+                m.HomeTeamId.Equals(teamId, StringComparison.OrdinalIgnoreCase) ||
+                m.AwayTeamId.Equals(teamId, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(m => m.Day)
+            .ToList();
+
+    public IReadOnlyList<HighSchoolLeagueMatch> GetMatchesForDay(int day)
+        => Matches.Where(m => m.Day == day).ToList();
+
+    public HighSchoolLeagueMatch? GetMatchForTeamOnDay(string teamId, int day)
+        => Matches.FirstOrDefault(m => m.Day == day &&
+                                      (m.HomeTeamId.Equals(teamId, StringComparison.OrdinalIgnoreCase) ||
+                                       m.AwayTeamId.Equals(teamId, StringComparison.OrdinalIgnoreCase)));
+}
+
+public sealed record HighSchoolTournamentTeam(string TeamId, string TeamName);
+
+public sealed class HighSchoolTournamentMatch
+{
+    public HighSchoolTournamentMatch(
+        string matchId,
+        int day,
+        string roundLabel,
+        HighSchoolTournamentTeam? home,
+        HighSchoolTournamentTeam? away,
+        string? homeSourceMatchId,
+        string? awaySourceMatchId)
+    {
+        MatchId = matchId;
+        Day = day;
+        RoundLabel = roundLabel;
+        Home = home;
+        Away = away;
+        HomeSourceMatchId = homeSourceMatchId;
+        AwaySourceMatchId = awaySourceMatchId;
+    }
+
+    public string MatchId { get; }
+    public int Day { get; }
+    public string RoundLabel { get; }
+    public HighSchoolTournamentTeam? Home { get; private set; }
+    public HighSchoolTournamentTeam? Away { get; private set; }
+    public string? HomeSourceMatchId { get; }
+    public string? AwaySourceMatchId { get; }
+    public HighSchoolTournamentTeam? Winner { get; private set; }
+
+    public bool IsCompleted => Winner is not null;
+
+    public bool HasTeam(string teamId)
+        => (Home?.TeamId.Equals(teamId, StringComparison.OrdinalIgnoreCase) ?? false) ||
+           (Away?.TeamId.Equals(teamId, StringComparison.OrdinalIgnoreCase) ?? false);
+
+    public HighSchoolTournamentTeam? GetOpponent(string teamId)
+    {
+        if (Home?.TeamId.Equals(teamId, StringComparison.OrdinalIgnoreCase) ?? false)
+        {
+            return Away;
+        }
+
+        if (Away?.TeamId.Equals(teamId, StringComparison.OrdinalIgnoreCase) ?? false)
+        {
+            return Home;
+        }
+
+        return null;
+    }
+
+    public void SetHome(HighSchoolTournamentTeam team) => Home = team;
+    public void SetAway(HighSchoolTournamentTeam team) => Away = team;
+    public void SetWinner(HighSchoolTournamentTeam team) => Winner = team;
+}
+
+public sealed class HighSchoolTournamentRound
+{
+    public HighSchoolTournamentRound(string label, int day, IReadOnlyList<HighSchoolTournamentMatch> matches)
+    {
+        Label = label;
+        Day = day;
+        Matches = matches.ToList();
+    }
+
+    public string Label { get; }
+    public int Day { get; }
+    public List<HighSchoolTournamentMatch> Matches { get; }
+}
+
+public sealed class HighSchoolTournamentBracket
+{
+    private readonly List<HighSchoolTournamentRound> _rounds = new();
+
+    public HighSchoolTournamentBracket(string id, string name, IEnumerable<HighSchoolTournamentRound> rounds)
+    {
+        Id = id;
+        Name = name;
+        _rounds.AddRange(rounds);
+    }
+
+    public string Id { get; }
+    public string Name { get; }
+    public IReadOnlyList<HighSchoolTournamentRound> Rounds => _rounds;
+
+    public HighSchoolTournamentMatch? GetMatchForTeamOnDay(string teamId, int day)
+    {
+        return _rounds
+            .SelectMany(r => r.Matches)
+            .FirstOrDefault(m => m.Day == day && m.HasTeam(teamId));
+    }
+
+    public bool IsTeamEliminated(string teamId)
+    {
+        return _rounds
+            .SelectMany(r => r.Matches)
+            .Where(m => m.IsCompleted && m.HasTeam(teamId))
+            .Any(m => m.Winner is not null && !m.Winner.TeamId.Equals(teamId, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public void RecordResult(string matchId, HighSchoolTournamentTeam winner)
+    {
+        var match = _rounds.SelectMany(r => r.Matches).FirstOrDefault(m => m.MatchId == matchId);
+        if (match is null || match.IsCompleted)
+        {
+            return;
+        }
+
+        match.SetWinner(winner);
+
+        foreach (var next in _rounds.SelectMany(r => r.Matches))
+        {
+            if (next.HomeSourceMatchId == matchId)
+            {
+                next.SetHome(winner);
+            }
+
+            if (next.AwaySourceMatchId == matchId)
+            {
+                next.SetAway(winner);
+            }
+        }
     }
 }
 

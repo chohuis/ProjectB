@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using CareerSimTextDemo.Core.HighSchool;
 
 namespace CareerSimTextDemo.Core;
 
@@ -21,6 +23,9 @@ public sealed class HighSchoolYearManager
     private readonly List<HighSchoolPlannedEvent> _plannedEvents = new();
     private readonly HighSchoolProfile _school;
     private readonly int _academicYear;
+    private HighSchoolLeagueSchedule? _leagueSchedule;
+    private string? _rivalTeamId;
+    private HighSchoolTournamentBracket? _tournamentBracket;
 
     private bool _seasonCompletedLogged;
     private double _coachTrust = 35;
@@ -29,6 +34,17 @@ public sealed class HighSchoolYearManager
     public bool MatchPending { get; private set; }
     public string? MatchType { get; private set; }
     public string? MatchOpponent { get; private set; }
+    public string? MatchOpponentId { get; private set; }
+    public bool MatchIsHome { get; private set; } = true;
+    public bool MatchIsRivalry { get; private set; }
+    public HighSchoolMatchKind MatchKind { get; private set; } = HighSchoolMatchKind.Friendly;
+    public string? MatchStageLabel { get; private set; }
+    public string? MatchTournamentMatchId { get; private set; }
+    public HighSchoolLeagueSchedule? LeagueSchedule => _leagueSchedule;
+    public HighSchoolTournamentBracket? TournamentBracket => _tournamentBracket;
+    public string? RivalTeamId => _rivalTeamId;
+    public double CoachTrust => _coachTrust;
+    public double ScoutInterest => _scoutInterest;
 
     private HighSchoolYearManager(HighSchoolProfile school, int academicYear)
     {
@@ -138,6 +154,18 @@ public sealed class HighSchoolYearManager
                 "[이벤트] 상급생 멘토와 라이벌 후보가 정해졌습니다. 전용 로그가 열립니다."
             });
 
+        AddOneShotEvent(
+            day: 23,
+            category: "루틴",
+            title: "루틴 점검 미팅",
+            preview: "코치와 첫 루틴 리뷰를 진행합니다.",
+            (p, r, m) =>
+            {
+                p.ApplyDelta("SKL_COMMAND", 0.2);
+                p.ApplyDelta("MNT_FOCUS", 0.2);
+                return new[] { "[루틴] 코치와 루틴 점검을 마쳤습니다. 집중과 제구가 소폭 상승했습니다." };
+            });
+
         AddRecurringEvent(
             startDay: 10,
             interval: 15,
@@ -159,6 +187,32 @@ public sealed class HighSchoolYearManager
                         ? "[청백전] 안정적인 제구로 장타를 억제했습니다. 감독 신뢰도 상승."
                         : "[청백전] 제구 난조로 조기 강판. 감독 신뢰도를 잃었습니다."
                 };
+            });
+
+        AddRecurringEvent(
+            startDay: 42,
+            interval: 20,
+            continueCondition: day => day <= 340,
+            category: "학업",
+            title: "수업/튜터링/과제 루틴",
+            preview: "학업 루틴을 소화하며 집중력과 이해도를 관리합니다.",
+            (p, r, m) =>
+            {
+                var roll = r.NextDouble();
+                if (roll < 0.45)
+                {
+                    p.ApplyDelta("MNT_ACADEMIC", 0.2);
+                    return new[] { "[학업] 수업 집중도가 높아 이해도가 상승했습니다." };
+                }
+
+                if (roll < 0.8)
+                {
+                    p.ApplyDelta("MNT_FOCUS", 0.2);
+                    return new[] { "[학업] 튜터링으로 약점을 보완했습니다. 집중력이 개선됩니다." };
+                }
+
+                p.ApplyDelta("MNT_MORALE", 0.1);
+                return new[] { "[학업] 피로 누적으로 휴식 시간을 확보했습니다." };
             });
 
         AddRecurringEvent(
@@ -190,6 +244,29 @@ public sealed class HighSchoolYearManager
             });
 
         AddOneShotEvent(
+            day: 90,
+            category: "멘토",
+            title: "멘토 피드백 세션",
+            preview: "멘토가 경기 리포트를 공유합니다.",
+            (p, r, m) =>
+            {
+                p.ApplyDelta("MNT_MORALE", 0.3);
+                p.ApplyDelta("SKL_COMMAND", 0.2);
+                return new[] { "[멘토] 멘토가 제구 루틴을 정리해주었습니다. 멘탈이 안정됩니다." };
+            });
+
+        AddOneShotEvent(
+            day: 95,
+            category: "라이벌",
+            title: "라이벌 도전전",
+            preview: "라이벌과의 미니 대결이 잡혔습니다.",
+            (p, r, m) =>
+            {
+                p.ApplyDelta("MNT_FOCUS", 0.3);
+                return new[] { "[라이벌] 라이벌과의 경쟁으로 집중력이 올라갔습니다." };
+            });
+
+        AddOneShotEvent(
             day: 120,
             category: "학업",
             title: "1학기 중간고사",
@@ -212,6 +289,18 @@ public sealed class HighSchoolYearManager
             {
                 m.IncreaseScoutInterest(2);
                 return new[] { "[스카우트] 주말 리그에서 스카우트가 성장을 체크했습니다." };
+            });
+
+        AddOneShotEvent(
+            day: 180,
+            category: "멘탈",
+            title: "멘탈 컨디셔닝 세션",
+            preview: "멘탈 코칭으로 부담을 정리합니다.",
+            (p, r, m) =>
+            {
+                p.ApplyDelta("MNT_MORALE", 0.4);
+                p.ApplyDelta("MNT_FOCUS", 0.2);
+                return new[] { "[멘탈] 집중 루틴을 재정비했습니다. 자신감이 회복됩니다." };
             });
 
         AddOneShotEvent(
@@ -315,27 +404,11 @@ public sealed class HighSchoolYearManager
                 };
             });
 
-        AddRecurringEvent(
-            startDay: 65,
-            interval: 21,
-            continueCondition: day => day <= 235,
-            category: "주말리그",
-            title: "주말리그 등판",
-            preview: "주말 경기 대부분에 실전 등판합니다.",
-            (p, r, m) =>
-            {
-                m.SetMatchOpportunity("주말 리그", r);
-                var command = p.GetStatValue("SKL_COMMAND") + r.NextDouble() * 8;
-                if (command > 45)
-                {
-                    m.IncreaseCoachTrust(4);
-                    m.IncreaseScoutInterest(2);
-                    return new[] { "[주말리그] 5이닝 1실점 호투, 스카우트 노트를 받았습니다." };
-                }
-
-                m.IncreaseCoachTrust(-2);
-                return new[] { "[주말리그] 제구 난조로 조기 강판. 다음 등판 준비가 필요합니다." };
-            });
+        _leagueSchedule = BuildWeekendLeagueSchedule();
+        if (_leagueSchedule is not null)
+        {
+            ScheduleWeekendLeagueMatches();
+        }
 
         AddOneShotEvent(
             day: 140,
@@ -351,28 +424,15 @@ public sealed class HighSchoolYearManager
                 };
             });
 
-        AddOneShotEvent(
-            day: 150,
-            category: "대회",
-            title: "전국대회 예선",
-            preview: "예선 등판으로 역할 배정.",
-            (p, r, m) =>
-            {
-                m.SetMatchOpportunity("전국대회 예선", r);
-                return new[] { "[대회] 전국대회 예선 선발 등판 기회를 얻었습니다." };
-            });
-
-        AddOneShotEvent(
-            day: 170,
-            category: "대회",
-            title: "전국대회 본선",
-            preview: "본선 진출 시 언론/스카우트 이벤트.",
-            (p, r, m) =>
-            {
-                m.SetMatchOpportunity("전국대회 본선", r);
-                m.IncreaseScoutInterest(4);
-                return new[] { "[대회] 본선 무대에서 전국 방송 인터뷰를 진행했습니다." };
-            });
+        _tournamentBracket = BuildTournamentBracket(
+            "year2_tournament",
+            "전국대회",
+            new[] { 150, 170, 185 },
+            playerStartsInQualifier: true);
+        if (_tournamentBracket is not null)
+        {
+            ScheduleTournamentMatches();
+        }
 
         AddOneShotEvent(
             day: 190,
@@ -552,16 +612,15 @@ public sealed class HighSchoolYearManager
                 return new[] { "[쇼케이스] 모든 투구 데이터를 측정했습니다. 스카우트 관심도가 급상승합니다." };
             });
 
-        AddOneShotEvent(
-            day: 150,
-            category: "대회",
-            title: "전국대회 피날레",
-            preview: "봉황대기/전국체전 클라이맥스.",
-            (p, r, m) =>
-            {
-                m.SetMatchOpportunity("전국대회 결승", r);
-                return new[] { "[대회] 마지막 전국대회 결승 무대에 올랐습니다." };
-            });
+        _tournamentBracket = BuildTournamentBracket(
+            "year3_tournament",
+            "전국대회",
+            new[] { 150 },
+            playerStartsInQualifier: false);
+        if (_tournamentBracket is not null)
+        {
+            ScheduleTournamentMatches();
+        }
 
         AddOneShotEvent(
             day: 120,
@@ -669,6 +728,376 @@ public sealed class HighSchoolYearManager
             });
     }
 
+    private void ScheduleWeekendLeagueMatches()
+    {
+        if (_leagueSchedule is null)
+        {
+            return;
+        }
+
+        foreach (var match in _leagueSchedule.GetMatchesForTeam(_school.Id))
+        {
+            var isHome = match.HomeTeamId.Equals(_school.Id, StringComparison.OrdinalIgnoreCase);
+            var opponentName = isHome ? match.AwayTeamName : match.HomeTeamName;
+            var opponentId = isHome ? match.AwayTeamId : match.HomeTeamId;
+            var title = match.IsRivalry ? "주말리그 라이벌전" : "주말리그 등판";
+            var preview = match.IsRivalry
+                ? "라이벌과의 주말리그 맞대결이 예정되었습니다."
+                : "주말리그 일정이 배정되었습니다.";
+
+            AddOneShotEvent(
+                day: match.Day,
+                category: "주말리그",
+                title: title,
+                preview: preview,
+                (p, r, m) =>
+                {
+                    m.SetMatchOpportunity(
+                        "주말 리그",
+                        r,
+                        opponentName,
+                        opponentId,
+                        isHome,
+                        match.IsRivalry,
+                        HighSchoolMatchKind.WeekendLeague,
+                        $"주말리그 {match.Round}R",
+                        null);
+                    return new[] { $"[주말리그] {opponentName}전 등판을 준비합니다." };
+                });
+        }
+    }
+
+    private HighSchoolLeagueSchedule BuildWeekendLeagueSchedule()
+    {
+        var teams = BuildLeagueTeamPool();
+        if (teams.Count < 4)
+        {
+            return new HighSchoolLeagueSchedule(Array.Empty<HighSchoolLeagueMatch>());
+        }
+
+        var matchDays = BuildLeagueMatchDays(65, 21, 235);
+        var matches = BuildRoundRobinMatches(teams, matchDays);
+        return new HighSchoolLeagueSchedule(matches);
+    }
+
+    private List<HighSchoolTeamEntry> BuildLeagueTeamPool()
+    {
+        var teams = new List<HighSchoolTeamEntry>();
+        var rosterDir = DataPathResolver.HighSchoolRosterDirectory;
+        if (Directory.Exists(rosterDir))
+        {
+            var rosterFiles = Directory.GetFiles(rosterDir, "*.json", SearchOption.TopDirectoryOnly)
+                .Where(path => !string.Equals(Path.GetFileNameWithoutExtension(path), "index", StringComparison.OrdinalIgnoreCase));
+
+            foreach (var file in rosterFiles)
+            {
+                var teamId = Path.GetFileNameWithoutExtension(file);
+                var roster = HighSchoolRosterRepository.Load(teamId);
+                var name = roster?.TeamName ?? teamId;
+                teams.Add(new HighSchoolTeamEntry(teamId, name));
+            }
+        }
+
+        if (teams.All(t => !t.TeamId.Equals(_school.Id, StringComparison.OrdinalIgnoreCase)))
+        {
+            teams.Add(new HighSchoolTeamEntry(_school.Id, _school.Name));
+        }
+
+        var playerTeam = teams.First(t => t.TeamId.Equals(_school.Id, StringComparison.OrdinalIgnoreCase));
+        var others = teams.Where(t => !t.TeamId.Equals(_school.Id, StringComparison.OrdinalIgnoreCase)).ToList();
+        if (others.Count == 0)
+        {
+            others.AddRange(new[]
+            {
+                new HighSchoolTeamEntry("NPC_A", "가온 고"),
+                new HighSchoolTeamEntry("NPC_B", "해오름 고"),
+                new HighSchoolTeamEntry("NPC_C", "가람 고"),
+                new HighSchoolTeamEntry("NPC_D", "한빛 고"),
+                new HighSchoolTeamEntry("NPC_E", "새움 고"),
+                new HighSchoolTeamEntry("NPC_F", "드림 고"),
+                new HighSchoolTeamEntry("NPC_G", "센트럴 고")
+            });
+        }
+
+        var seed = Math.Abs(_school.Id.GetHashCode());
+        var rng = new Random(seed);
+        var selectedOthers = others.OrderBy(_ => rng.Next()).Take(7).ToList();
+        var pool = new List<HighSchoolTeamEntry> { playerTeam };
+        pool.AddRange(selectedOthers);
+
+        _rivalTeamId ??= selectedOthers.FirstOrDefault()?.TeamId;
+        return pool;
+    }
+
+    private static List<int> BuildLeagueMatchDays(int startDay, int interval, int endDay)
+    {
+        var days = new List<int>();
+        for (var day = startDay; day <= endDay; day += interval)
+        {
+            days.Add(day);
+        }
+
+        return days;
+    }
+
+    private List<HighSchoolLeagueMatch> BuildRoundRobinMatches(IReadOnlyList<HighSchoolTeamEntry> teams, IReadOnlyList<int> matchDays)
+    {
+        var teamList = teams.ToList();
+        if (teamList.Count % 2 == 1)
+        {
+            teamList.Add(new HighSchoolTeamEntry("BYE", "BYE"));
+        }
+
+        var rounds = teamList.Count - 1;
+        var matches = new List<HighSchoolLeagueMatch>();
+        var dayIndex = 0;
+
+        for (var round = 0; round < rounds; round++)
+        {
+            var day = matchDays[Math.Min(dayIndex, matchDays.Count - 1)];
+            for (var i = 0; i < teamList.Count / 2; i++)
+            {
+                var home = teamList[i];
+                var away = teamList[teamList.Count - 1 - i];
+                if (home.TeamId == "BYE" || away.TeamId == "BYE")
+                {
+                    continue;
+                }
+
+                var swap = round % 2 == 1;
+                var homeTeam = swap ? away : home;
+                var awayTeam = swap ? home : away;
+                var isRivalry = _rivalTeamId is not null &&
+                                ((homeTeam.TeamId.Equals(_school.Id, StringComparison.OrdinalIgnoreCase) && awayTeam.TeamId.Equals(_rivalTeamId, StringComparison.OrdinalIgnoreCase)) ||
+                                 (awayTeam.TeamId.Equals(_school.Id, StringComparison.OrdinalIgnoreCase) && homeTeam.TeamId.Equals(_rivalTeamId, StringComparison.OrdinalIgnoreCase)));
+
+                matches.Add(new HighSchoolLeagueMatch(
+                    day,
+                    round + 1,
+                    homeTeam.TeamId,
+                    homeTeam.TeamName,
+                    awayTeam.TeamId,
+                    awayTeam.TeamName,
+                    isRivalry));
+            }
+
+            dayIndex++;
+            RotateTeams(teamList);
+        }
+
+        if (matchDays.Count > rounds)
+        {
+            var extraRounds = matchDays.Count - rounds;
+            var baseRounds = matches.GroupBy(m => m.Round).OrderBy(g => g.Key).ToList();
+            for (var extra = 0; extra < extraRounds; extra++)
+            {
+                var day = matchDays[rounds + extra];
+                var sourceRound = baseRounds[extra % baseRounds.Count].ToList();
+                foreach (var match in sourceRound)
+                {
+                    matches.Add(new HighSchoolLeagueMatch(
+                        day,
+                        rounds + extra + 1,
+                        match.AwayTeamId,
+                        match.AwayTeamName,
+                        match.HomeTeamId,
+                        match.HomeTeamName,
+                        match.IsRivalry));
+                }
+            }
+        }
+
+        return matches;
+    }
+
+    private static void RotateTeams(IList<HighSchoolTeamEntry> teams)
+    {
+        if (teams.Count <= 2)
+        {
+            return;
+        }
+
+        var last = teams[^1];
+        for (var i = teams.Count - 1; i > 1; i--)
+        {
+            teams[i] = teams[i - 1];
+        }
+
+        teams[1] = last;
+    }
+
+    private sealed record HighSchoolTeamEntry(string TeamId, string TeamName);
+
+    private void ScheduleTournamentMatches()
+    {
+        if (_tournamentBracket is null)
+        {
+            return;
+        }
+
+        foreach (var round in _tournamentBracket.Rounds)
+        {
+            AddOneShotEvent(
+                day: round.Day,
+                category: "대회",
+                title: $"{_tournamentBracket.Name} {round.Label}",
+                preview: $"{round.Label} 일정이 예정되었습니다.",
+                (p, r, m) =>
+                {
+                    if (_tournamentBracket.IsTeamEliminated(_school.Id))
+                    {
+                        return new[] { "[대회] 탈락으로 대회 일정이 종료되었습니다." };
+                    }
+
+                    var match = _tournamentBracket.GetMatchForTeamOnDay(_school.Id, round.Day);
+                    if (match is null)
+                    {
+                        return new[] { "[대회] 해당 라운드에 출전하지 않습니다." };
+                    }
+
+                    var opponent = match.GetOpponent(_school.Id);
+                    var opponentName = opponent?.TeamName ?? "상대 미정";
+                    var opponentId = opponent?.TeamId ?? "TBD";
+                    var isHome = match.Home?.TeamId.Equals(_school.Id, StringComparison.OrdinalIgnoreCase) ?? false;
+
+                    m.SetMatchOpportunity(
+                        $"{_tournamentBracket.Name} {round.Label}",
+                        r,
+                        opponentName,
+                        opponentId,
+                        isHome,
+                        false,
+                        HighSchoolMatchKind.Tournament,
+                        round.Label,
+                        match.MatchId);
+
+                    return new[] { $"[대회] {round.Label} 상대: {opponentName}" };
+                });
+        }
+    }
+
+    private HighSchoolTournamentBracket BuildTournamentBracket(string id, string name, IReadOnlyList<int> roundDays, bool playerStartsInQualifier)
+    {
+        if (roundDays.Count == 0)
+        {
+            return new HighSchoolTournamentBracket(id, name, Array.Empty<HighSchoolTournamentRound>());
+        }
+
+        var teams = BuildTournamentTeamPool(Math.Max(4, playerStartsInQualifier ? 6 : 4));
+        var playerTeam = teams.First(t => t.TeamId.Equals(_school.Id, StringComparison.OrdinalIgnoreCase));
+        var others = teams.Where(t => !t.TeamId.Equals(_school.Id, StringComparison.OrdinalIgnoreCase)).ToList();
+
+        if (roundDays.Count == 1)
+        {
+            var opponent = others.FirstOrDefault() ?? new HighSchoolTeamEntry("NPC_T", "라이벌 고");
+            var finalMatch = new HighSchoolTournamentMatch(
+                "F1",
+                roundDays[0],
+                "결승",
+                new HighSchoolTournamentTeam(playerTeam.TeamId, playerTeam.TeamName),
+                new HighSchoolTournamentTeam(opponent.TeamId, opponent.TeamName),
+                null,
+                null);
+
+            var finalRound = new HighSchoolTournamentRound("결승", roundDays[0], new[] { finalMatch });
+            return new HighSchoolTournamentBracket(id, name, new[] { finalRound });
+        }
+
+        var roundLabels = new[] { "예선", "본선", "결승" };
+        var days = roundDays.Count >= 3 ? roundDays.Take(3).ToArray() : new[] { roundDays[0], roundDays[^1], roundDays[^1] + 10 };
+
+        var qualifierTeams = new List<HighSchoolTeamEntry>();
+        var seededTeams = new List<HighSchoolTeamEntry>();
+
+        if (playerStartsInQualifier)
+        {
+            qualifierTeams.Add(playerTeam);
+            qualifierTeams.Add(others.ElementAtOrDefault(0) ?? new HighSchoolTeamEntry("NPC_Q1", "청명 고"));
+            qualifierTeams.Add(others.ElementAtOrDefault(1) ?? new HighSchoolTeamEntry("NPC_Q2", "세원 고"));
+            qualifierTeams.Add(others.ElementAtOrDefault(2) ?? new HighSchoolTeamEntry("NPC_Q3", "광명 고"));
+            seededTeams.Add(others.ElementAtOrDefault(3) ?? new HighSchoolTeamEntry("NPC_S1", "동진 고"));
+            seededTeams.Add(others.ElementAtOrDefault(4) ?? new HighSchoolTeamEntry("NPC_S2", "중앙 고"));
+        }
+        else
+        {
+            qualifierTeams.AddRange(others.Take(4));
+            seededTeams.Add(playerTeam);
+            seededTeams.Add(others.ElementAtOrDefault(4) ?? new HighSchoolTeamEntry("NPC_S1", "동진 고"));
+        }
+
+        var q1 = new HighSchoolTournamentMatch(
+            "Q1",
+            days[0],
+            roundLabels[0],
+            new HighSchoolTournamentTeam(qualifierTeams[0].TeamId, qualifierTeams[0].TeamName),
+            new HighSchoolTournamentTeam(qualifierTeams[1].TeamId, qualifierTeams[1].TeamName),
+            null,
+            null);
+
+        var q2 = new HighSchoolTournamentMatch(
+            "Q2",
+            days[0],
+            roundLabels[0],
+            new HighSchoolTournamentTeam(qualifierTeams[2].TeamId, qualifierTeams[2].TeamName),
+            new HighSchoolTournamentTeam(qualifierTeams[3].TeamId, qualifierTeams[3].TeamName),
+            null,
+            null);
+
+        var s1 = new HighSchoolTournamentMatch(
+            "S1",
+            days[1],
+            roundLabels[1],
+            new HighSchoolTournamentTeam(seededTeams[0].TeamId, seededTeams[0].TeamName),
+            null,
+            null,
+            "Q1");
+
+        var s2 = new HighSchoolTournamentMatch(
+            "S2",
+            days[1],
+            roundLabels[1],
+            new HighSchoolTournamentTeam(seededTeams[1].TeamId, seededTeams[1].TeamName),
+            null,
+            null,
+            "Q2");
+
+        var f1 = new HighSchoolTournamentMatch(
+            "F1",
+            days[2],
+            roundLabels[2],
+            null,
+            null,
+            "S1",
+            "S2");
+
+        var rounds = new[]
+        {
+            new HighSchoolTournamentRound(roundLabels[0], days[0], new[] { q1, q2 }),
+            new HighSchoolTournamentRound(roundLabels[1], days[1], new[] { s1, s2 }),
+            new HighSchoolTournamentRound(roundLabels[2], days[2], new[] { f1 })
+        };
+
+        return new HighSchoolTournamentBracket(id, name, rounds);
+    }
+
+    private List<HighSchoolTeamEntry> BuildTournamentTeamPool(int requiredTeams)
+    {
+        var teams = BuildLeagueTeamPool();
+        if (teams.Count >= requiredTeams)
+        {
+            return teams.Take(requiredTeams).ToList();
+        }
+
+        var filler = new List<HighSchoolTeamEntry>();
+        for (var i = teams.Count; i < requiredTeams; i++)
+        {
+            filler.Add(new HighSchoolTeamEntry($"NPC_T{i}", $"강호 {i} 고"));
+        }
+
+        teams.AddRange(filler);
+        return teams;
+    }
+
     private void AddOneShotEvent(int day, string category, string title, string preview, Func<PlayerProfile, Random, HighSchoolYearManager, IEnumerable<string>> resolver)
     {
         _events.Add(ScheduledEvent.OneShot(day, resolver));
@@ -688,9 +1117,38 @@ public sealed class HighSchoolYearManager
     internal void IncreaseScoutInterest(double value) => _scoutInterest = Math.Clamp(_scoutInterest + value, 0, 100);
     internal void SetMatchOpportunity(string type, Random random, string? opponent = null)
     {
+        SetMatchOpportunity(
+            type,
+            random,
+            opponent,
+            null,
+            true,
+            false,
+            ResolveMatchKind(type),
+            null,
+            null);
+    }
+
+    internal void SetMatchOpportunity(
+        string type,
+        Random random,
+        string? opponent,
+        string? opponentId,
+        bool isHome,
+        bool isRivalry,
+        HighSchoolMatchKind kind,
+        string? stageLabel,
+        string? tournamentMatchId)
+    {
         MatchPending = true;
         MatchType = type;
         MatchOpponent = opponent ?? BuildOpponentName(type, random);
+        MatchOpponentId = opponentId ?? MatchOpponent;
+        MatchIsHome = isHome;
+        MatchIsRivalry = isRivalry;
+        MatchKind = kind;
+        MatchStageLabel = stageLabel;
+        MatchTournamentMatchId = tournamentMatchId;
     }
 
     internal void CompleteMatchOpportunity()
@@ -698,6 +1156,37 @@ public sealed class HighSchoolYearManager
         MatchPending = false;
         MatchType = null;
         MatchOpponent = null;
+        MatchOpponentId = null;
+        MatchIsHome = true;
+        MatchIsRivalry = false;
+        MatchKind = HighSchoolMatchKind.Friendly;
+        MatchStageLabel = null;
+        MatchTournamentMatchId = null;
+    }
+
+    private static HighSchoolMatchKind ResolveMatchKind(string type)
+    {
+        if (type.Contains("청백전", StringComparison.Ordinal))
+        {
+            return HighSchoolMatchKind.Scrimmage;
+        }
+
+        if (type.Contains("주말", StringComparison.Ordinal))
+        {
+            return HighSchoolMatchKind.WeekendLeague;
+        }
+
+        if (type.Contains("대회", StringComparison.Ordinal))
+        {
+            return HighSchoolMatchKind.Tournament;
+        }
+
+        if (type.Contains("공식", StringComparison.Ordinal) || type.Contains("정규", StringComparison.Ordinal))
+        {
+            return HighSchoolMatchKind.Official;
+        }
+
+        return HighSchoolMatchKind.Friendly;
     }
 
     private string BuildOpponentName(string type, Random random)

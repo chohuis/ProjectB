@@ -30,8 +30,8 @@ public partial class MainWindow : Window
     private const double PitchMarkerSize = 26;
     private const int MaxPitchMarkers = 20;
 
-    private static readonly SolidColorBrush StrikeBrush = CreateBrush(46, 204, 113);
-    private static readonly SolidColorBrush BallBrush = CreateBrush(241, 196, 15);
+    private static readonly SolidColorBrush StrikeBrush = CreateBrush(241, 196, 15);
+    private static readonly SolidColorBrush BallBrush = CreateBrush(46, 204, 113);
     private static readonly SolidColorBrush OutBrush = CreateBrush(231, 76, 60);
     private static readonly SolidColorBrush HitBrush = CreateBrush(230, 126, 34);
     private static readonly SolidColorBrush NeutralBrush = CreateBrush(149, 165, 166);
@@ -79,6 +79,9 @@ public partial class MainWindow : Window
     private readonly ObservableCollection<AcademicOption> _academicLectureOptions = new();
     private readonly ObservableCollection<AcademicOption> _academicSupportOptions = new();
     private readonly ObservableCollection<AcademicOption> _academicStudyOptions = new();
+    private readonly ObservableCollection<SeasonStandingView> _seasonStandings = new();
+    private readonly ObservableCollection<TournamentRoundView> _tournamentRounds = new();
+    private readonly ObservableCollection<SeasonMatchRecordView> _seasonMatchHistory = new();
     private readonly StringBuilder _matchOverlayLogBuilder = new();
     private readonly Dictionary<string, (int Column, int Row)> _zoneGridLookup;
 
@@ -91,6 +94,7 @@ public partial class MainWindow : Window
         new SectionItem("훈련", SectionType.Training),
         new SectionItem("학업", SectionType.Academics),
         new SectionItem("일정", SectionType.Schedule),
+        new SectionItem("리그/대회", SectionType.Season),
         new SectionItem("기록", SectionType.Records)
     ];
 
@@ -147,6 +151,9 @@ public partial class MainWindow : Window
         AcademicLectureCombo.ItemsSource = _academicLectureOptions;
         AcademicSupportCombo.ItemsSource = _academicSupportOptions;
         AcademicStudyCombo.ItemsSource = _academicStudyOptions;
+        LeagueTableList.ItemsSource = _seasonStandings;
+        TournamentRoundList.ItemsSource = _tournamentRounds;
+        SeasonMatchHistoryList.ItemsSource = _seasonMatchHistory;
 
         SectionList.ItemsSource = _sections;
         SectionList.SelectedIndex = 0;
@@ -499,6 +506,7 @@ public partial class MainWindow : Window
         HomeMessageList.ItemsSource = _game.PendingMessages;
         MessagesList.ItemsSource = _game.PendingMessages;
         UpdateMessageSummary();
+        UpdateHeaderMatchStatus();
     }
 
     private void PendingMessages_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -511,6 +519,8 @@ public partial class MainWindow : Window
             HomeMessageCountText.Text = "-";
             HomeMessageEmptyText.Visibility = Visibility.Visible;
             MessagesEmptyText.Visibility = Visibility.Visible;
+            HeaderMessageButton.Content = "메시지 0";
+            HeaderMessageButton.IsEnabled = false;
             return;
         }
 
@@ -518,6 +528,8 @@ public partial class MainWindow : Window
         HomeMessageCountText.Text = $"대기 메시지 {count}건";
         HomeMessageEmptyText.Visibility = count == 0 ? Visibility.Visible : Visibility.Collapsed;
         MessagesEmptyText.Visibility = count == 0 ? Visibility.Visible : Visibility.Collapsed;
+        HeaderMessageButton.Content = $"메시지 {count}";
+        HeaderMessageButton.IsEnabled = count > 0;
     }
 
     private void SwitchToSection(SectionType section)
@@ -531,6 +543,20 @@ public partial class MainWindow : Window
         }
 
         SectionList.SelectedItem = target;
+    }
+
+    private void HeaderMessageButton_OnClick(object sender, RoutedEventArgs e)
+        => SwitchToSection(SectionType.Messages);
+
+    private void HeaderMatchButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (_game?.MatchPending == true)
+        {
+            SetMatchPageVisibility(true);
+            return;
+        }
+
+        MessageBox.Show(this, "현재 진행 중인 경기가 없습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
     private void UpdateAcademicDescriptions()
@@ -555,10 +581,16 @@ public partial class MainWindow : Window
             LoopWeekText.Text = "-";
             LoopPhaseText.Text = "-";
             LoopMoodText.Text = "-";
-            LoopTrainingText.Text = "-";
-            LoopUpcomingText.Text = "-";
-            return;
-        }
+        LoopTrainingText.Text = "-";
+        LoopUpcomingText.Text = "-";
+        _seasonStandings.Clear();
+        _tournamentRounds.Clear();
+        _seasonMatchHistory.Clear();
+        SeasonPitchingStatsText.Text = string.Empty;
+        HeaderMatchStatusText.Text = "경기 없음";
+        HeaderMatchButton.IsEnabled = false;
+        return;
+    }
 
         var player = _game.Player;
         PlayerSummaryText.Text = $"{player.School} · {player.AcademicYear}학년 {player.Position} | {player.Name}";
@@ -571,6 +603,7 @@ public partial class MainWindow : Window
         RefreshLoopStatePanel();
         RefreshRecentMatches();
         RefreshRosterMembers();
+        RefreshSeasonPanel();
     }
 
     private void RefreshStats()
@@ -650,9 +683,97 @@ public partial class MainWindow : Window
         CalendarMonthCombo.SelectedIndex = _calendarMonths.Count > 0 ? 0 : -1;
     }
 
+    private void RefreshSeasonPanel()
+    {
+        _seasonStandings.Clear();
+        _tournamentRounds.Clear();
+        _seasonMatchHistory.Clear();
+
+        if (_game is null)
+        {
+            SeasonPitchingStatsText.Text = string.Empty;
+            return;
+        }
+
+        var teamLookup = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        if (_game.LeagueSchedule is { } schedule)
+        {
+            foreach (var match in schedule.Matches)
+            {
+                teamLookup[match.HomeTeamId] = match.HomeTeamName;
+                teamLookup[match.AwayTeamId] = match.AwayTeamName;
+            }
+        }
+
+        foreach (var record in _game.SeasonTracker.TeamRecords.Values)
+        {
+            teamLookup[record.TeamId] = record.TeamName;
+        }
+
+        var standings = new List<SeasonStandingView>();
+        var playerTeamId = _game.School.Id;
+        foreach (var entry in teamLookup)
+        {
+            if (_game.SeasonTracker.TeamRecords.TryGetValue(entry.Key, out var record))
+            {
+                standings.Add(new SeasonStandingView(record, playerTeamId));
+            }
+            else
+            {
+                standings.Add(new SeasonStandingView(entry.Key, entry.Value, playerTeamId));
+            }
+        }
+
+        foreach (var row in standings
+                     .OrderByDescending(r => r.WinRate)
+                     .ThenByDescending(r => r.RunDiff)
+                     .ThenByDescending(r => r.RunsFor)
+                     .ThenBy(r => r.TeamName, StringComparer.OrdinalIgnoreCase))
+        {
+            _seasonStandings.Add(row);
+        }
+
+        if (_game.TournamentBracket is { } bracket)
+        {
+            foreach (var round in bracket.Rounds)
+            {
+                var roundView = new TournamentRoundView($"{bracket.Name} {round.Label} (Day {round.Day})");
+                foreach (var match in round.Matches)
+                {
+                    var home = match.Home?.TeamName ?? "TBD";
+                    var away = match.Away?.TeamName ?? "TBD";
+                    var status = match.Winner is null ? "예정" : $"{match.Winner.TeamName} 승";
+                    var isPlayerMatch = match.HasTeam(playerTeamId);
+                    roundView.Matches.Add(new TournamentMatchView(home, away, status, isPlayerMatch));
+                }
+
+                _tournamentRounds.Add(roundView);
+            }
+        }
+
+        var pitching = _game.SeasonTracker.PlayerPitching;
+        SeasonPitchingStatsText.Text = pitching.Games == 0
+            ? "아직 공식 기록이 없습니다."
+            : $"경기 {pitching.Games} · 승패 {pitching.Wins}-{pitching.Losses} · 이닝 {pitching.InningsPitched:0.0} · ERA {pitching.Era:0.00} · WHIP {pitching.Whip:0.00} · K {pitching.Strikeouts} · BB {pitching.WalksAllowed}";
+        SeasonDraftSummaryText.Text = _game.GetDraftSummaryText();
+
+        foreach (var record in _game.SeasonTracker.MatchHistory
+                     .OrderByDescending(r => r.Day)
+                     .ThenByDescending(r => r.Kind))
+        {
+            _seasonMatchHistory.Add(new SeasonMatchRecordView(record, _game.School.Id));
+        }
+    }
+
     private void AdvanceButton_OnClick(object sender, RoutedEventArgs e)
     {
         if (_game is null) return;
+        if (_game.PendingMessages.Any())
+        {
+            MessageBox.Show(this, "선택 메시지를 먼저 처리하세요.", "안내", MessageBoxButton.OK, MessageBoxImage.Information);
+            SwitchToSection(SectionType.Messages);
+            return;
+        }
 
         var card = _game.PrepareTodayChoiceCard();
         if (card is not null && card.Options.Count > 0)
@@ -909,6 +1030,7 @@ public partial class MainWindow : Window
         TrainingPanel.Visibility = _currentSection == SectionType.Training ? Visibility.Visible : Visibility.Collapsed;
         AcademicPanel.Visibility = _currentSection == SectionType.Academics ? Visibility.Visible : Visibility.Collapsed;
         SchedulePanel.Visibility = _currentSection == SectionType.Schedule ? Visibility.Visible : Visibility.Collapsed;
+        SeasonPanel.Visibility = _currentSection == SectionType.Season ? Visibility.Visible : Visibility.Collapsed;
         RecordsPanel.Visibility = _currentSection == SectionType.Records ? Visibility.Visible : Visibility.Collapsed;
     }
 
@@ -1077,6 +1199,16 @@ public partial class MainWindow : Window
         {
             _matchGuestLineup.Add(new MatchLineupView(entry.Order, entry.Name, entry.Bats, entry.Rating));
         }
+
+        if (_matchHomeLineup.Count == 0)
+        {
+            _matchHomeLineup.Add(new MatchLineupView(0, "라인업 없음", "-", 0));
+        }
+
+        if (_matchGuestLineup.Count == 0)
+        {
+            _matchGuestLineup.Add(new MatchLineupView(0, "라인업 없음", "-", 0));
+        }
     }
 
     private void UpdateRosters()
@@ -1097,6 +1229,16 @@ public partial class MainWindow : Window
         foreach (var entry in roster.Guest)
         {
             _matchGuestRoster.Add(new MatchRosterView(entry.Name, entry.Year, entry.Position));
+        }
+
+        if (_matchHomeRoster.Count == 0)
+        {
+            _matchHomeRoster.Add(new MatchRosterView("로스터 없음", 0, "-"));
+        }
+
+        if (_matchGuestRoster.Count == 0)
+        {
+            _matchGuestRoster.Add(new MatchRosterView("로스터 없음", 0, "-"));
         }
     }
 
@@ -1135,6 +1277,7 @@ public partial class MainWindow : Window
         {
             MatchSimulateButton.IsEnabled = false;
             MatchCloseButton.IsEnabled = true;
+            RefreshSeasonPanel();
         }
     }
 
@@ -1235,7 +1378,7 @@ public partial class MainWindow : Window
 
     private static Brush GetMarkerBrush(PitchEventType type) => type switch
     {
-        PitchEventType.CalledStrike or PitchEventType.SwingingStrike => StrikeBrush,
+        PitchEventType.CalledStrike or PitchEventType.SwingingStrike or PitchEventType.Foul => StrikeBrush,
         PitchEventType.Strikeout or PitchEventType.BallInPlayOut => OutBrush,
         PitchEventType.Ball or PitchEventType.Walk => BallBrush,
         PitchEventType.BallInPlayHit => HitBrush,
@@ -1247,6 +1390,7 @@ public partial class MainWindow : Window
         PitchEventType.CalledStrike => "스트라이크",
         PitchEventType.SwingingStrike => "헛스윙",
         PitchEventType.Strikeout => "삼진 아웃",
+        PitchEventType.Foul => "파울",
         PitchEventType.Ball => "볼",
         PitchEventType.Walk => "볼넷",
         PitchEventType.BallInPlayOut => "인플레이 아웃",
@@ -1276,6 +1420,11 @@ public partial class MainWindow : Window
         if (normalized.Contains("볼넷", StringComparison.Ordinal))
         {
             return PitchEventType.Walk;
+        }
+
+        if (normalized.Contains("파울", StringComparison.Ordinal))
+        {
+            return PitchEventType.Foul;
         }
 
         if (normalized.Contains("볼 판정", StringComparison.Ordinal) ||
@@ -1308,14 +1457,15 @@ public partial class MainWindow : Window
 
     private void UpdateMatchOverlayLogText()
     {
-        if (MatchOverlayLogTextBox is null) return;
+        if (MatchOverlayLogTextBlock is null || MatchOverlayLogScroll is null) return;
         var text = _matchOverlayLogBuilder.ToString();
-        MatchOverlayLogTextBox.Dispatcher.BeginInvoke(new Action(() =>
+        MatchOverlayLogTextBlock.Text = text;
+        MatchOverlayLogTextBlock.Dispatcher.BeginInvoke(new Action(() =>
         {
-            MatchOverlayLogTextBox.Text = text;
-            MatchOverlayLogTextBox.CaretIndex = text.Length;
-            MatchOverlayLogTextBox.ScrollToEnd();
-        }), DispatcherPriority.Background);
+            MatchOverlayLogTextBlock.UpdateLayout();
+            MatchOverlayLogScroll.UpdateLayout();
+            MatchOverlayLogScroll.ScrollToVerticalOffset(MatchOverlayLogScroll.ExtentHeight);
+        }), DispatcherPriority.ContextIdle);
     }
 
     private void GameLogEntries_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -1359,6 +1509,7 @@ public partial class MainWindow : Window
             UpdateMatchOverlay(snapshot);
             MatchSimulateButton.IsEnabled = false;
             MatchCloseButton.IsEnabled = true;
+            RefreshSeasonPanel();
         }
     }
 
@@ -1530,6 +1681,7 @@ public partial class MainWindow : Window
         Training,
         Academics,
         Schedule,
+        Season,
         Records
     }
 
@@ -1830,6 +1982,125 @@ public partial class MainWindow : Window
         public string DayText => DayNumber > 0 ? DayNumber.ToString() : string.Empty;
     }
 
+    private sealed class SeasonStandingView
+    {
+        public SeasonStandingView(TeamSeasonRecord record, string playerTeamId)
+        {
+            TeamId = record.TeamId;
+            TeamName = record.TeamName;
+            Wins = record.Wins;
+            Losses = record.Losses;
+            RunsFor = record.RunsFor;
+            RunsAgainst = record.RunsAgainst;
+            RunDiff = record.RunDiff;
+            WinRate = record.WinRate;
+            IsPlayerTeam = record.TeamId.Equals(playerTeamId, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public SeasonStandingView(string teamId, string teamName, string playerTeamId)
+        {
+            TeamId = teamId;
+            TeamName = teamName;
+            Wins = 0;
+            Losses = 0;
+            RunsFor = 0;
+            RunsAgainst = 0;
+            RunDiff = 0;
+            WinRate = 0;
+            IsPlayerTeam = teamId.Equals(playerTeamId, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public string TeamId { get; }
+        public string TeamName { get; }
+        public int Wins { get; }
+        public int Losses { get; }
+        public int RunsFor { get; }
+        public int RunsAgainst { get; }
+        public int RunDiff { get; }
+        public double WinRate { get; }
+        public string WinRateText => Wins + Losses == 0 ? "-" : WinRate.ToString("0.000", CultureInfo.InvariantCulture);
+        public bool IsPlayerTeam { get; }
+    }
+
+    private sealed class TournamentRoundView
+    {
+        public TournamentRoundView(string label)
+        {
+            Label = label;
+        }
+
+        public string Label { get; }
+        public ObservableCollection<TournamentMatchView> Matches { get; } = new();
+    }
+
+    private sealed class TournamentMatchView
+    {
+        public TournamentMatchView(string homeTeam, string awayTeam, string status, bool isPlayerMatch)
+        {
+            HomeTeam = homeTeam;
+            AwayTeam = awayTeam;
+            Status = status;
+            IsPlayerMatch = isPlayerMatch;
+        }
+
+        public string HomeTeam { get; }
+        public string AwayTeam { get; }
+        public string Status { get; }
+        public bool IsPlayerMatch { get; }
+    }
+
+    private sealed class SeasonMatchRecordView
+    {
+        public SeasonMatchRecordView(HighSchoolMatchRecord record, string playerTeamId)
+        {
+            Day = record.Day.ToString(CultureInfo.InvariantCulture);
+            Kind = TranslateKind(record.Kind);
+            Stage = string.IsNullOrWhiteSpace(record.StageLabel) ? "-" : record.StageLabel;
+
+            var playerIsHome = record.HomeTeamId.Equals(playerTeamId, StringComparison.OrdinalIgnoreCase);
+            var playerIsAway = record.AwayTeamId.Equals(playerTeamId, StringComparison.OrdinalIgnoreCase);
+
+            if (playerIsHome)
+            {
+                Opponent = record.AwayTeamName;
+                HomeAway = "홈";
+                Score = $"{record.HomeRuns}-{record.AwayRuns}";
+            }
+            else if (playerIsAway)
+            {
+                Opponent = record.HomeTeamName;
+                HomeAway = "원정";
+                Score = $"{record.AwayRuns}-{record.HomeRuns}";
+            }
+            else
+            {
+                Opponent = record.AwayTeamName;
+                HomeAway = "-";
+                Score = $"{record.HomeRuns}-{record.AwayRuns}";
+            }
+
+            Rivalry = record.IsRivalry ? "라이벌" : "-";
+        }
+
+        public string Day { get; }
+        public string Kind { get; }
+        public string Stage { get; }
+        public string Opponent { get; }
+        public string HomeAway { get; }
+        public string Rivalry { get; }
+        public string Score { get; }
+
+        private static string TranslateKind(HighSchoolMatchKind kind) => kind switch
+        {
+            HighSchoolMatchKind.WeekendLeague => "주말리그",
+            HighSchoolMatchKind.Tournament => "대회",
+            HighSchoolMatchKind.Official => "공식전",
+            HighSchoolMatchKind.Scrimmage => "청백전",
+            HighSchoolMatchKind.Friendly => "친선",
+            _ => "경기"
+        };
+    }
+
     private enum StatGroup
     {
         Physical,
@@ -1843,6 +2114,7 @@ public partial class MainWindow : Window
         {
             SetMatchPageVisibility(false);
             _matchPanelInitialized = false;
+            UpdateHeaderMatchStatus();
             return;
         }
 
@@ -1862,6 +2134,24 @@ public partial class MainWindow : Window
         {
             SetMatchPageVisibility(false);
             _matchPanelInitialized = false;
+        }
+
+        UpdateHeaderMatchStatus();
+    }
+
+    private void UpdateHeaderMatchStatus()
+    {
+        if (_game?.MatchPending == true)
+        {
+            var label = _game.MatchLabel;
+            var opponent = _game.MatchOpponent;
+            HeaderMatchStatusText.Text = $"{label} · {opponent}";
+            HeaderMatchButton.IsEnabled = true;
+        }
+        else
+        {
+            HeaderMatchStatusText.Text = "경기 없음";
+            HeaderMatchButton.IsEnabled = false;
         }
     }
 
@@ -2009,6 +2299,7 @@ public partial class MainWindow : Window
         {
             Player = player;
             Name = player.Name;
+            Overall = player.Overall;
             Role = $"{player.Position} · {player.RoleLabel}";
             StatusLabel = $"{player.AcademicYear}학년 · {(player.Status.Equals("varsity", StringComparison.OrdinalIgnoreCase) ? "1군" : "2군")}";
             Tags = player.Tags.Count > 0 ? string.Join(", ", player.Tags) : "-";
@@ -2016,6 +2307,7 @@ public partial class MainWindow : Window
 
         public HighSchoolRosterPlayer Player { get; }
         public string Name { get; }
+        public int Overall { get; }
         public string Role { get; }
         public string StatusLabel { get; }
         public string Tags { get; }

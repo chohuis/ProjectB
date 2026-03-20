@@ -115,6 +115,11 @@
                     <StackPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center">
                         <TextBlock Text="현재 진행" HorizontalAlignment="Right"/>
                         <TextBlock x:Name="CurrentDayText" FontSize="20" FontWeight="Bold" HorizontalAlignment="Right"/>
+                        <TextBlock x:Name="HeaderMatchStatusText" Margin="0,6,0,0" Foreground="#9FA9C4" HorizontalAlignment="Right"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+                            <Button x:Name="HeaderMessageButton" Content="메시지 0" Width="110" Margin="0,0,8,0" Click="HeaderMessageButton_OnClick"/>
+                            <Button x:Name="HeaderMatchButton" Content="경기 보기" Width="110" Click="HeaderMatchButton_OnClick"/>
+                        </StackPanel>
                         <Button x:Name="AdvanceButton" Content="진행" Width="160" Margin="0,10,0,0" HorizontalAlignment="Right" Click="AdvanceButton_OnClick"/>
                     </StackPanel>
                 </Grid>
@@ -527,6 +532,7 @@
                                         <ListView.View>
                                             <GridView>
                                                 <GridViewColumn Header="이름" DisplayMemberBinding="{Binding Name}" Width="130"/>
+                                                <GridViewColumn Header="OVR" DisplayMemberBinding="{Binding Overall}" Width="50"/>
                                                 <GridViewColumn Header="역할" DisplayMemberBinding="{Binding Role}" Width="180"/>
                                                 <GridViewColumn Header="학년/상태" DisplayMemberBinding="{Binding StatusLabel}" Width="120"/>
                                                 <GridViewColumn Header="태그" DisplayMemberBinding="{Binding Tags}" Width="140"/>
@@ -859,6 +865,120 @@
                          </Border>
                      </Grid>
 
+                    <!-- Season Panel -->
+                    <Grid x:Name="SeasonPanel" Grid.Row="0" Visibility="Collapsed">
+                        <Border Padding="16" CornerRadius="8" Background="#1B1F2D">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,12">
+                                    <TextBlock Text="리그 · 대회 기록" FontSize="18" FontWeight="Bold"/>
+                                    <TextBlock Text="팀 순위표, 대진표, 시즌 스탯을 확인합니다." FontSize="12" Foreground="#9FA9C4" Margin="0,4,0,0"/>
+                                </StackPanel>
+                                <TabControl Grid.Row="1" Background="#1B1F2D" BorderThickness="0">
+                                    <TabItem Header="리그 테이블">
+                                        <ListView x:Name="LeagueTableList" Background="#1B1F2D" BorderThickness="0" Margin="0,8,0,0">
+                                            <ListView.ItemContainerStyle>
+                                                <Style TargetType="ListViewItem">
+                                                    <Setter Property="Background" Value="Transparent"/>
+                                                    <Setter Property="Foreground" Value="#E6EAF5"/>
+                                                    <Setter Property="Padding" Value="2"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsPlayerTeam}" Value="True">
+                                                            <Setter Property="Background" Value="#2B3A5B"/>
+                                                            <Setter Property="Foreground" Value="#FFFFFF"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ListView.ItemContainerStyle>
+                                            <ListView.View>
+                                                <GridView>
+                                                    <GridViewColumn Header="팀" DisplayMemberBinding="{Binding TeamName}" Width="200"/>
+                                                    <GridViewColumn Header="W" DisplayMemberBinding="{Binding Wins}" Width="40"/>
+                                                    <GridViewColumn Header="L" DisplayMemberBinding="{Binding Losses}" Width="40"/>
+                                                    <GridViewColumn Header="승률" DisplayMemberBinding="{Binding WinRateText}" Width="70"/>
+                                                    <GridViewColumn Header="득점" DisplayMemberBinding="{Binding RunsFor}" Width="60"/>
+                                                    <GridViewColumn Header="실점" DisplayMemberBinding="{Binding RunsAgainst}" Width="60"/>
+                                                    <GridViewColumn Header="득실" DisplayMemberBinding="{Binding RunDiff}" Width="60"/>
+                                                </GridView>
+                                            </ListView.View>
+                                        </ListView>
+                                    </TabItem>
+                                    <TabItem Header="대진표">
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                            <ItemsControl x:Name="TournamentRoundList" Margin="0,8,0,0">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Margin="0,0,0,12">
+                                                            <TextBlock Text="{Binding Label}" FontWeight="Bold" Margin="0,0,0,6"/>
+                                                            <ItemsControl ItemsSource="{Binding Matches}">
+                                                                <ItemsControl.ItemTemplate>
+                                                                    <DataTemplate>
+                                                                        <Border CornerRadius="6" Padding="10" Margin="0,0,0,6">
+                                                                            <Border.Style>
+                                                                                <Style TargetType="Border">
+                                                                                    <Setter Property="Background" Value="#1E2434"/>
+                                                                                    <Setter Property="BorderBrush" Value="#2A3247"/>
+                                                                                    <Setter Property="BorderThickness" Value="1"/>
+                                                                                    <Style.Triggers>
+                                                                                        <DataTrigger Binding="{Binding IsPlayerMatch}" Value="True">
+                                                                                            <Setter Property="Background" Value="#233250"/>
+                                                                                            <Setter Property="BorderBrush" Value="#5ED6B8"/>
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                            </Border.Style>
+                                                                            <Grid>
+                                                                                <Grid.ColumnDefinitions>
+                                                                                    <ColumnDefinition Width="*"/>
+                                                                                    <ColumnDefinition Width="Auto"/>
+                                                                                    <ColumnDefinition Width="*"/>
+                                                                                    <ColumnDefinition Width="Auto"/>
+                                                                                </Grid.ColumnDefinitions>
+                                                                                <TextBlock Text="{Binding HomeTeam}" FontWeight="Bold"/>
+                                                                                <TextBlock Grid.Column="1" Text="vs" Margin="10,0"/>
+                                                                                <TextBlock Grid.Column="2" Text="{Binding AwayTeam}" FontWeight="Bold"/>
+                                                                                <TextBlock Grid.Column="3" Text="{Binding Status}" Foreground="#9FA9C4" Margin="12,0,0,0"/>
+                                                                            </Grid>
+                                                                        </Border>
+                                                                    </DataTemplate>
+                                                                </ItemsControl.ItemTemplate>
+                                                            </ItemsControl>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </ScrollViewer>
+                                    </TabItem>
+                                    <TabItem Header="시즌 통계">
+                                        <StackPanel Margin="0,8,0,0">
+                                            <TextBlock Text="투수 시즌 기록" FontWeight="Bold"/>
+                                            <TextBlock x:Name="SeasonPitchingStatsText" Margin="0,6,0,12" Foreground="#E6EAF5"/>
+                                            <TextBlock Text="드래프트 프리뷰" FontWeight="Bold"/>
+                                            <TextBlock x:Name="SeasonDraftSummaryText" Margin="0,6,0,12" Foreground="#E6EAF5"/>
+                                            <TextBlock Text="경기 기록" FontWeight="Bold" Margin="0,0,0,6"/>
+                                            <ListView x:Name="SeasonMatchHistoryList" Background="#1B1F2D" BorderThickness="0" Height="320">
+                                                <ListView.View>
+                                                    <GridView>
+                                                        <GridViewColumn Header="Day" DisplayMemberBinding="{Binding Day}" Width="50"/>
+                                                        <GridViewColumn Header="종류" DisplayMemberBinding="{Binding Kind}" Width="90"/>
+                                                        <GridViewColumn Header="스테이지" DisplayMemberBinding="{Binding Stage}" Width="90"/>
+                                                        <GridViewColumn Header="상대" DisplayMemberBinding="{Binding Opponent}" Width="140"/>
+                                                        <GridViewColumn Header="홈/원정" DisplayMemberBinding="{Binding HomeAway}" Width="70"/>
+                                                        <GridViewColumn Header="라이벌" DisplayMemberBinding="{Binding Rivalry}" Width="70"/>
+                                                        <GridViewColumn Header="스코어" DisplayMemberBinding="{Binding Score}" Width="90"/>
+                                                    </GridView>
+                                                </ListView.View>
+                                            </ListView>
+                                        </StackPanel>
+                                    </TabItem>
+                                </TabControl>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
                     <!-- Records Panel -->
                     <Grid x:Name="RecordsPanel" Grid.Row="0" Visibility="Collapsed">
                         <Border Padding="16" CornerRadius="8" Background="#1B1F2D">
@@ -919,9 +1039,14 @@
 
                                 <Border x:Name="MatchLeftPanel" Grid.Column="0" Margin="0,0,12,0" Padding="12" Background="#151B2B" CornerRadius="8" Visibility="Collapsed">
                                     <StackPanel>
-                                        <TextBlock Text="LINEUP" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
-                                        <TextBlock x:Name="LineupHomeLabelText" FontWeight="Bold" Margin="0,0,0,6"/>
-                                        <ListView x:Name="LineupHomeList" Height="220" Background="#151B2B" BorderThickness="0">
+                                        <TextBlock Text="LINEUP" FontSize="14" FontWeight="Bold" Margin="0,0,0,10" Foreground="#FFFFFF"/>
+                                        <TextBlock x:Name="LineupHomeLabelText" FontWeight="Bold" Margin="0,0,0,6" Foreground="#FFFFFF"/>
+                                        <ListView x:Name="LineupHomeList" Height="220" Background="#151B2B" BorderThickness="0" Foreground="#FFFFFF">
+                                            <ListView.ItemContainerStyle>
+                                                <Style TargetType="ListViewItem">
+                                                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                                                </Style>
+                                            </ListView.ItemContainerStyle>
                                             <ListView.View>
                                                 <GridView>
                                                     <GridViewColumn Header="#" DisplayMemberBinding="{Binding Order}" Width="32"/>
@@ -931,8 +1056,13 @@
                                                 </GridView>
                                             </ListView.View>
                                         </ListView>
-                                        <TextBlock x:Name="LineupGuestLabelText" FontWeight="Bold" Margin="0,12,0,6"/>
-                                        <ListView x:Name="LineupGuestList" Height="220" Background="#151B2B" BorderThickness="0">
+                                        <TextBlock x:Name="LineupGuestLabelText" FontWeight="Bold" Margin="0,12,0,6" Foreground="#FFFFFF"/>
+                                        <ListView x:Name="LineupGuestList" Height="220" Background="#151B2B" BorderThickness="0" Foreground="#FFFFFF">
+                                            <ListView.ItemContainerStyle>
+                                                <Style TargetType="ListViewItem">
+                                                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                                                </Style>
+                                            </ListView.ItemContainerStyle>
                                             <ListView.View>
                                                 <GridView>
                                                     <GridViewColumn Header="#" DisplayMemberBinding="{Binding Order}" Width="32"/>
@@ -1148,19 +1278,24 @@
 
                                                 <StackPanel Grid.Row="0">
                                                     <TextBlock Text="GAME LOG" FontSize="16" FontWeight="Bold" Foreground="#FFFFFF"/>
-                                                    <TextBox x:Name="MatchOverlayLogTextBox"
-                                                             Margin="0,6,0,0"
-                                                             Height="220"
-                                                             MaxHeight="220"
-                                                             VerticalAlignment="Top"
-                                                             AcceptsReturn="True"
-                                                             TextWrapping="Wrap"
-                                                             IsReadOnly="True"
-                                                             Foreground="#FFFFFF"
-                                                             Background="#151A28"
-                                                             BorderBrush="#23293A"
-                                                             VerticalScrollBarVisibility="Auto"
-                                                             HorizontalScrollBarVisibility="Disabled"/>
+                                                    <Border Margin="0,6,0,0"
+                                                            Height="220"
+                                                            MaxHeight="220"
+                                                            Background="#151A28"
+                                                            BorderBrush="#23293A"
+                                                            BorderThickness="1"
+                                                            CornerRadius="4">
+                                                        <ScrollViewer x:Name="MatchOverlayLogScroll"
+                                                                      Padding="10,8,10,8"
+                                                                      VerticalScrollBarVisibility="Auto"
+                                                                      HorizontalScrollBarVisibility="Disabled">
+                                                            <TextBlock x:Name="MatchOverlayLogTextBlock"
+                                                                       TextWrapping="Wrap"
+                                                                       Foreground="#FFFFFF"
+                                                                       LineHeight="18"
+                                                                       LineStackingStrategy="BlockLineHeight"/>
+                                                        </ScrollViewer>
+                                                    </Border>
                                                 </StackPanel>
 
                                                 <Border Grid.Row="1" Margin="0,20,0,0" Padding="16" Background="#1B1F2D" CornerRadius="6">
@@ -1214,77 +1349,82 @@
                                             <Border Grid.Column="1" Padding="16" Background="#161C2B" CornerRadius="6">
                                                 <Grid>
                                                     <Grid.RowDefinitions>
-                                                        <RowDefinition Height="*"/>
                                                         <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="*"/>
                                                     </Grid.RowDefinitions>
-
                                                     <Grid Grid.Row="0">
                                                         <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="360"/>
+                                                            <ColumnDefinition Width="300"/>
                                                             <ColumnDefinition Width="*"/>
                                                         </Grid.ColumnDefinitions>
-                                                        <StackPanel Grid.Column="0" Margin="0,0,16,0">
-                                                            <TextBlock Text="PITCH MAP" FontSize="16" FontWeight="Bold" Foreground="#FFFFFF"/>
-                                                            <Grid Width="360" Height="420" Margin="0,8,0,0" ClipToBounds="True">
-                                                                <Canvas Width="360" Height="420" Background="#111729">
-                                                                    <Rectangle Canvas.Left="110" Canvas.Top="80" Width="180" Height="240" Stroke="#5B6483" StrokeThickness="2.2" Fill="#182036"/>
-                                                                    <Line X1="170" Y1="80" X2="170" Y2="320" Stroke="#3C425A" StrokeThickness="1.2"/>
-                                                                    <Line X1="230" Y1="80" X2="230" Y2="320" Stroke="#3C425A" StrokeThickness="1.2"/>
-                                                                    <Line X1="110" Y1="160" X2="290" Y2="160" Stroke="#3C425A" StrokeThickness="1.2"/>
-                                                                    <Line X1="110" Y1="240" X2="290" Y2="240" Stroke="#3C425A" StrokeThickness="1.2"/>
-                                                                </Canvas>
-                                                                <ItemsControl x:Name="PitchMarkerItems" IsHitTestVisible="False">
-                                                                    <ItemsControl.ItemsPanel>
-                                                                        <ItemsPanelTemplate>
-                                                                            <Canvas Width="360" Height="420"/>
-                                                                        </ItemsPanelTemplate>
-                                                                    </ItemsControl.ItemsPanel>
-                                                                    <ItemsControl.ItemContainerStyle>
-                                                                        <Style TargetType="ContentPresenter">
-                                                                            <Setter Property="Canvas.Left" Value="{Binding CanvasLeft}"/>
-                                                                            <Setter Property="Canvas.Top" Value="{Binding CanvasTop}"/>
-                                                                        </Style>
-                                                                    </ItemsControl.ItemContainerStyle>
-                                                                    <ItemsControl.ItemTemplate>
-                                                                        <DataTemplate>
-                                                                            <Grid>
-                                                                                <Ellipse Width="30" Height="30" Fill="{Binding FillBrush}" Stroke="#F5F5F5" StrokeThickness="2" Opacity="0.95"/>
-                                                                                <TextBlock Text="{Binding SequenceText}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#FFFFFF"/>
-                                                                            </Grid>
-                                                                        </DataTemplate>
-                                                                    </ItemsControl.ItemTemplate>
-                                                                </ItemsControl>
-                                                            </Grid>
-                                                        </StackPanel>
-                                                        <StackPanel Grid.Column="1">
-                                                            <TextBlock Text="PITCH RESULTS" FontSize="16" FontWeight="Bold" Foreground="#FFFFFF"/>
-                                                            <ScrollViewer Margin="0,8,0,0" VerticalScrollBarVisibility="Auto" Height="380">
-                                                                <ItemsControl x:Name="PitchResultList">
-                                                                    <ItemsControl.ItemTemplate>
-                                                                        <DataTemplate>
-                                                                            <Border Background="#1E2538" CornerRadius="6" Padding="10" Margin="0,4,0,4">
+                                                        <TextBlock Text="PITCH MAP" FontSize="16" FontWeight="Bold" Foreground="#FFFFFF"/>
+                                                        <TextBlock Grid.Column="1" Text="PITCH RESULTS" FontSize="16" FontWeight="Bold" Foreground="#FFFFFF"/>
+                                                    </Grid>
+                                                    <Grid Grid.Row="1" Margin="0,8,0,0">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="300"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Border Grid.Column="0" Background="#111729" CornerRadius="6" ClipToBounds="True">
+                                                            <Viewbox Stretch="Uniform">
+                                                                <Grid Width="360" Height="420">
+                                                                    <Canvas Width="360" Height="420" Background="#111729">
+                                                                        <Rectangle Canvas.Left="110" Canvas.Top="80" Width="180" Height="240" Stroke="#5B6483" StrokeThickness="2.2" Fill="#182036"/>
+                                                                        <Line X1="170" Y1="80" X2="170" Y2="320" Stroke="#3C425A" StrokeThickness="1.2"/>
+                                                                        <Line X1="230" Y1="80" X2="230" Y2="320" Stroke="#3C425A" StrokeThickness="1.2"/>
+                                                                        <Line X1="110" Y1="160" X2="290" Y2="160" Stroke="#3C425A" StrokeThickness="1.2"/>
+                                                                        <Line X1="110" Y1="240" X2="290" Y2="240" Stroke="#3C425A" StrokeThickness="1.2"/>
+                                                                    </Canvas>
+                                                                    <ItemsControl x:Name="PitchMarkerItems" IsHitTestVisible="False">
+                                                                        <ItemsControl.ItemsPanel>
+                                                                            <ItemsPanelTemplate>
+                                                                                <Canvas Width="360" Height="420"/>
+                                                                            </ItemsPanelTemplate>
+                                                                        </ItemsControl.ItemsPanel>
+                                                                        <ItemsControl.ItemContainerStyle>
+                                                                            <Style TargetType="ContentPresenter">
+                                                                                <Setter Property="Canvas.Left" Value="{Binding CanvasLeft}"/>
+                                                                                <Setter Property="Canvas.Top" Value="{Binding CanvasTop}"/>
+                                                                            </Style>
+                                                                        </ItemsControl.ItemContainerStyle>
+                                                                        <ItemsControl.ItemTemplate>
+                                                                            <DataTemplate>
                                                                                 <Grid>
-                                                                                    <Grid.ColumnDefinitions>
-                                                                                        <ColumnDefinition Width="Auto"/>
-                                                                                        <ColumnDefinition Width="*"/>
-                                                                                        <ColumnDefinition Width="Auto"/>
-                                                                                    </Grid.ColumnDefinitions>
-                                                                                    <Grid>
-                                                                                        <Ellipse Width="28" Height="28" Fill="{Binding FillBrush}" Stroke="#0B0E16" StrokeThickness="1.4"/>
-                                                                                        <TextBlock Text="{Binding SequenceText}" Foreground="#0B0E16" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                                                    </Grid>
-                                                                                    <StackPanel Grid.Column="1" Margin="14,0,0,0">
-                                                                                        <TextBlock Text="{Binding ResultLabel}" FontWeight="Bold" Foreground="#F7F8FF"/>
-                                                                                        <TextBlock Text="{Binding DetailText}" FontSize="11.5" Foreground="#FFFFFF" TextWrapping="Wrap"/>
-                                                                                    </StackPanel>
-                                                                                    <TextBlock Grid.Column="2" Text="{Binding CountLabel}" FontSize="11" Foreground="#FFFFFF" VerticalAlignment="Top"/>
+                                                                                    <Ellipse Width="30" Height="30" Fill="{Binding FillBrush}" Stroke="#F5F5F5" StrokeThickness="2" Opacity="0.95"/>
+                                                                                    <TextBlock Text="{Binding SequenceText}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#FFFFFF"/>
                                                                                 </Grid>
-                                                                            </Border>
-                                                                        </DataTemplate>
-                                                                    </ItemsControl.ItemTemplate>
-                                                                </ItemsControl>
-                                                            </ScrollViewer>
-                                                        </StackPanel>
+                                                                            </DataTemplate>
+                                                                        </ItemsControl.ItemTemplate>
+                                                                    </ItemsControl>
+                                                                </Grid>
+                                                            </Viewbox>
+                                                        </Border>
+                                                        <ScrollViewer Grid.Column="1" Margin="16,0,0,0" VerticalScrollBarVisibility="Auto">
+                                                            <ItemsControl x:Name="PitchResultList">
+                                                                <ItemsControl.ItemTemplate>
+                                                                    <DataTemplate>
+                                                                        <Border Background="#1E2538" CornerRadius="6" Padding="10" Margin="0,4,0,4">
+                                                                            <Grid>
+                                                                                <Grid.ColumnDefinitions>
+                                                                                    <ColumnDefinition Width="Auto"/>
+                                                                                    <ColumnDefinition Width="*"/>
+                                                                                    <ColumnDefinition Width="Auto"/>
+                                                                                </Grid.ColumnDefinitions>
+                                                                                <Grid>
+                                                                                    <Ellipse Width="28" Height="28" Fill="{Binding FillBrush}" Stroke="#0B0E16" StrokeThickness="1.4"/>
+                                                                                    <TextBlock Text="{Binding SequenceText}" Foreground="#0B0E16" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                                </Grid>
+                                                                                <StackPanel Grid.Column="1" Margin="14,0,0,0">
+                                                                                    <TextBlock Text="{Binding ResultLabel}" FontWeight="Bold" Foreground="#F7F8FF"/>
+                                                                                    <TextBlock Text="{Binding DetailText}" FontSize="11.5" Foreground="#FFFFFF" TextWrapping="Wrap"/>
+                                                                                </StackPanel>
+                                                                                <TextBlock Grid.Column="2" Text="{Binding CountLabel}" FontSize="11" Foreground="#FFFFFF" VerticalAlignment="Top"/>
+                                                                            </Grid>
+                                                                        </Border>
+                                                                    </DataTemplate>
+                                                                </ItemsControl.ItemTemplate>
+                                                            </ItemsControl>
+                                                        </ScrollViewer>
                                                     </Grid>
                                                 </Grid>
                                             </Border>
@@ -1294,9 +1434,14 @@
 
                                 <Border x:Name="MatchRightPanel" Grid.Column="2" Margin="12,0,0,0" Padding="12" Background="#151B2B" CornerRadius="8" Visibility="Collapsed">
                                     <StackPanel>
-                                        <TextBlock Text="ROSTER" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
-                                        <TextBlock x:Name="RosterHomeLabelText" FontWeight="Bold" Margin="0,0,0,6"/>
-                                        <ListView x:Name="RosterHomeList" Height="220" Background="#151B2B" BorderThickness="0">
+                                        <TextBlock Text="ROSTER" FontSize="14" FontWeight="Bold" Margin="0,0,0,10" Foreground="#FFFFFF"/>
+                                        <TextBlock x:Name="RosterHomeLabelText" FontWeight="Bold" Margin="0,0,0,6" Foreground="#FFFFFF"/>
+                                        <ListView x:Name="RosterHomeList" Height="220" Background="#151B2B" BorderThickness="0" Foreground="#FFFFFF">
+                                            <ListView.ItemContainerStyle>
+                                                <Style TargetType="ListViewItem">
+                                                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                                                </Style>
+                                            </ListView.ItemContainerStyle>
                                             <ListView.View>
                                                 <GridView>
                                                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="120"/>
@@ -1305,8 +1450,13 @@
                                                 </GridView>
                                             </ListView.View>
                                         </ListView>
-                                        <TextBlock x:Name="RosterGuestLabelText" FontWeight="Bold" Margin="0,12,0,6"/>
-                                        <ListView x:Name="RosterGuestList" Height="220" Background="#151B2B" BorderThickness="0">
+                                        <TextBlock x:Name="RosterGuestLabelText" FontWeight="Bold" Margin="0,12,0,6" Foreground="#FFFFFF"/>
+                                        <ListView x:Name="RosterGuestList" Height="220" Background="#151B2B" BorderThickness="0" Foreground="#FFFFFF">
+                                            <ListView.ItemContainerStyle>
+                                                <Style TargetType="ListViewItem">
+                                                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                                                </Style>
+                                            </ListView.ItemContainerStyle>
                                             <ListView.View>
                                                 <GridView>
                                                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="120"/>
