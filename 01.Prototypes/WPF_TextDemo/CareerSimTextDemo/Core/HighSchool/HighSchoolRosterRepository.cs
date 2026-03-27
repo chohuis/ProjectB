@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using CareerSimTextDemo.Core;
@@ -145,7 +146,7 @@ internal static class HighSchoolRosterRepository
 
         try
         {
-            var json = File.ReadAllText(path);
+            var json = File.ReadAllText(path, Encoding.UTF8);
             var dto = JsonSerializer.Deserialize<HighSchoolRosterFileDto>(json, Options);
             return dto?.ToDomain();
         }
@@ -176,7 +177,7 @@ internal static class HighSchoolRosterRepository
         {
             try
             {
-                var json = File.ReadAllText(file);
+                var json = File.ReadAllText(file, Encoding.UTF8);
                 var dto = JsonSerializer.Deserialize<HighSchoolRosterFileDto>(json, Options);
                 if (dto is null)
                 {

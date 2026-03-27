@@ -1,0 +1,1 @@
+﻿C:\Users\user\Desktop\업무폴더\00_업무\00_개인정보\개인자료\01.기획\01.Prototypes\WPF_TextDemo\CareerSimTextDemo\PlayerDetailWindow.xaml.cs

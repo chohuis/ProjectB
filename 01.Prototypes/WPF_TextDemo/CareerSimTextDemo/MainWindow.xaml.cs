@@ -521,6 +521,8 @@ public partial class MainWindow : Window
             MessagesEmptyText.Visibility = Visibility.Visible;
             HeaderMessageButton.Content = "메시지 0";
             HeaderMessageButton.IsEnabled = false;
+            AdvanceButton.IsEnabled = false;
+            AdvanceButton.ToolTip = "게임 데이터를 먼저 불러오세요.";
             return;
         }
 
@@ -530,6 +532,8 @@ public partial class MainWindow : Window
         MessagesEmptyText.Visibility = count == 0 ? Visibility.Visible : Visibility.Collapsed;
         HeaderMessageButton.Content = $"메시지 {count}";
         HeaderMessageButton.IsEnabled = count > 0;
+        AdvanceButton.IsEnabled = count == 0;
+        AdvanceButton.ToolTip = count == 0 ? null : "대기 메시지를 먼저 선택하세요.";
     }
 
     private void SwitchToSection(SectionType section)
@@ -1464,8 +1468,8 @@ public partial class MainWindow : Window
         {
             MatchOverlayLogTextBlock.UpdateLayout();
             MatchOverlayLogScroll.UpdateLayout();
-            MatchOverlayLogScroll.ScrollToVerticalOffset(MatchOverlayLogScroll.ExtentHeight);
-        }), DispatcherPriority.ContextIdle);
+            MatchOverlayLogScroll.ScrollToEnd();
+        }), DispatcherPriority.Background);
     }
 
     private void GameLogEntries_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
