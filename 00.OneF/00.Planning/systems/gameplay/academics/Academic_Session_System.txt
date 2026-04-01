@@ -1,85 +1,80 @@
 ﻿[Academic Session System]
-?묒꽦?? 2026-03-05
-紐⑺몴: 怨좊벑?숆탳~??숆퉴吏 ?숈씪???쒗븰?끸??몄뀡 猷⑦봽瑜??뺤쓽??猷⑦떞(?꾩묠/?먯떖/???怨??낅┰?곸쑝濡??댁쁺?쒕떎.
+작성일: 2026-03-05
+목표: 고등학교~대학교 학업 루프를 정의하고, 학습/튜터링/과제 선택이 능력치와 기록에 반영되도록 설계한다.
 
 ---------------------------------------------
-1. ?곗씠??援ъ“
+1. 데이터 구조
 ---------------------------------------------
 1) AcademicSessionSlot
-   - SlotId: morning / support / evening (3?щ’ 怨좎젙)
-   - Label: ?쒖닔?끸? ?쒕낫異??쒗꽣留곣? ?쒓낵???댁떇??   - AvailableActions: EducationAction 紐⑸줉(?숆탳/?숇뀈蹂꾨줈 ?꾪꽣)
+   - SlotId: morning / support / evening (3개 고정)
+   - Label: 수업 / 보충·튜터링 / 과제·자습
+   - AvailableActions: EducationAction 목록(학년/시기/상태에 따라 필터)
 
 2) EducationAction
    - Id / Name / Description
    - Type: lecture / tutoring / assignment / rest
-   - Requirements: ?쇰줈 < 70, 내신 등급 寃쎄퀬以???議곌굔
-   - Effects: Knowledge?, Focus?, Fatigue?, ScholarshipPoint?, WarningPoint?
-   - Visibility: ????꾩슜 ???뚮옒洹?
+   - Requirements: 집중도, 피로, 경고 상태 등의 조건
+   - Effects: Knowledge / Focus / Fatigue / ScholarshipPoint / WarningPoint 변화
+   - Visibility: 특정 구간(시험 주간, 성적 위험 등)에서만 노출
+
 3) AcademicDayPlan
    - Date / SlotAssignments[3]
-   - AutoRecommend: true/false (?? ?쒗뿕 二쇨컙 ?먮룞 ?명똿)
+   - AutoRecommend: true/false (자동 추천 여부)
 
 4) AcademicState
    - KnowledgeScore (0~100)
    - FocusScore (0~100)
-   - 내신 등급 (0~4.5) ??怨꾩궛? ?쒗뿕/?꾨줈?앺듃 ?꾨즺 ???낅뜲?댄듃
+   - 내신 등급 (0~4.5) : 중간/기말/과제/출석 기반으로 계산
    - ScholarshipPoint / WarningPoint
    - RecentActions Log
 
 ---------------------------------------------
-2. ?④퀎蹂?吏꾪뻾
+2. 일일 진행 흐름
 ---------------------------------------------
-1) ?꾩묠(?섏뾽) ?щ’
-   - 湲곕낯媛? ?쒖젙洹??섏뾽 李몄꽍??   - ?좏깮吏: ?쒓낵???ㅽ뿕?? ?쒖옄?⑦븰?듈? ?쒖텧?앸쭔 李띻퀬 ?댁떇????   - ?④낵: Knowledge +0.3~0.6, Focus +0.1, ?댁떇 ?좏깮 ??Fatigue -2 but Knowledge 0
+1) 오전(수업)
+   - 선택지: 수업을 듣는다 / 수업을 대충 듣는다 / 잔다
+   - 효과 예시:
+     * 듣는다: Knowledge +0.3~0.6, Focus +0.1, Fatigue +1
+     * 대충: Knowledge +0.1~0.3, Focus -0.1, Fatigue +0.5
+     * 잔다: Knowledge 0, Focus +0.2, WarningPoint +1
 
-2) ?먯떖(蹂댁땐/?쒗꽣留? ?щ’
-   - ?좏깮吏: ?쒗뒠?곕쭅?? ?쒕찘???ㅽ꽣?붴? ?쒖쁺???쒖껌??   - ?④낵: Knowledge 蹂댁젙 +, ScholarshipPoint ?곷┰. ?댁떇 ?좏깮 ??WarningPoint +1(吏媛?
+2) 오후(보충·튜터링)
+   - 선택지: 추가 학습을 한다 / 영어 회화를 한다 / 잔다
+   - 효과 예시:
+     * 추가 학습: Knowledge +0.4~0.7, Focus -0.1, Fatigue +1.5
+     * 영어 회화: Knowledge +0.2~0.4, Focus +0.1, Fatigue +1
+     * 잔다: Knowledge 0, Focus +0.2, WarningPoint +1
 
-3) ???怨쇱젣/?댁떇) ?щ’
-   - ?좏깮吏: ?쒓낵???꾨즺?? ?쒖슂???명듃?? ?쒖셿???댁떇??   - ?④낵: 怨쇱젣 ?꾨즺 ??Exam Prep 踰꾪봽, ?댁떇 ??Fatigue -6 & Focus -1
-
----------------------------------------------
-3. ?대깽???곕룞
----------------------------------------------
-1) 以묎컙/湲곕쭚怨좎궗
-   - ?쒗뿕 ??7?? AcademicDayPlan ?먮룞 異붿쿇(?섏뾽 吏묒쨷 猷⑦떞)
-   - ?쒗뿕 ?뱀씪: Knowledge/Five-day Average濡??깃툒 ?곗텧 ??내신 등급 媛깆떊
-   - ?좏깮吏: ?쒕え?섍퀬?р?(Focus -3, ?쒗뿕 ?쒖씠????, ?쒗쑕?앪?(Fatigue -5, ?쒖씠???좎?)
-
-2) ?ν븰湲?寃쎄퀬
-   - ScholarshipPoint ??5: ?ν븰湲??대깽??諛쒕룞 ??蹂대꼫??濡쒓렇
-   - WarningPoint ??3: ?쒗븰??寃쎄퀬???앹뾽 ??異쒖쟾 ?쒗븳, 猷⑦떞 媛뺤젣 議곗젙
-
-3) 罹좏봽/諛⑺븰
-   - 罹좏봽 湲곌컙: AcademicSlot ?좉툑(?섑빀??以묅??쒖떆)
-   - 諛⑺븰 以??먯쑉 ?ㅽ꽣???좏깮 媛??(?쒖삩?쇱씤 媛뺤쓽???? Knowledge ?좎?)
-
-4) ???怨좉탳 怨듯넻??   - 怨좉탳: EducationAction Pool = 湲곕낯 怨쇰ぉ + 援먭낵 蹂댁땐
-   - ??? 媛숈? Slot 援ъ“, Action留??쒖쟾怨??섏뾽?? ?쒖뿰援??몃??섃? ?쒖벙?ㅽ넠 ?꾨줈?앺듃???깆쑝濡?援먯껜
-   - 議몄뾽 ???꾨줈쨌援걔룸룆由?: Academic UI 鍮꾪솢?깊솕, State???덉뒪?좊━留??좎?
+3) 저녁(과제·자습)
+   - 선택지: 과제를 한다 / 과제를 대충한다 / 잔다
+   - 효과 예시:
+     * 과제: Knowledge +0.2~0.4, Focus -0.1, Fatigue +1
+     * 대충: Knowledge +0.1, Focus -0.2, WarningPoint +0.5
+     * 잔다: Knowledge 0, Focus +0.2, WarningPoint +1
 
 ---------------------------------------------
-4. UI & UX ?ъ뼇 (WPF 湲곗?)
+3. 성적 계산
 ---------------------------------------------
-1) 硫붿씤 硫붾돱???쒗븰?끸??뱀뀡 異붽?
-   - 醫뚯륫 硫붾돱: ???댁젙蹂?濡쒖뒪???덈젴/?숈뾽/?쇱젙/湲곕줉
-2) ?숈뾽 ?⑤꼸 援ъ꽦
-   - ?곷떒: 내신 등급/?ν븰/寃쎄퀬 ?붿빟 移대뱶
-   - 以묒븰: 3媛쒖쓽 Slot 移대뱶(ComboBox + ?ㅻ챸 + ?④낵 誘몃━蹂닿린)
-   - ?섎떒: 二쇨컙 ?숈뾽 罹섎┛??7??횞 3?щ’ ?붿빟), ?먮룞 異붿쿇 踰꾪듉
-3) ?대깽???앹뾽
-   - ?쒗뿕/寃쎄퀬/?ν븰湲덉? `DailyChoiceOverlay` ?ъ궗?????숈뾽 濡쒓렇? ?곕룞
+- KnowledgeScore와 FocusScore는 일일 선택에 따라 누적/감소한다.
+- 시험 성적은 기본 Knowledge + Focus 보정으로 산출한다.
+- 내신 등급은 중간/기말/과제/출석의 가중 평균으로 계산한다.
+- ScholarshipPoint는 일정 기준 이상에서 획득, WarningPoint는 누적 시 경고 이벤트 트리거.
 
 ---------------------------------------------
-5. ?듯빀 濡쒖쭅
+4. 추천/자동 배치
 ---------------------------------------------
-- GameState??AcademicState 異붽?, ?섎（ 吏꾪뻾 ??猷⑦떞 ???숈뾽 ???대깽???쒖쑝濡?泥섎━.
-- YearManager???쒗뿕 ?대깽?몃? PlannedEvent濡??몄텧, AcademicSystem? ?대떦 Day???쒗뿕 移대뱶 異쒕젰.
-- Save/Load ??AcademicState 吏곷젹??(내신 등급, Scholarship, Warning).
+- AutoRecommend가 켜진 경우, 현재 피로/성적/경고 상태를 기반으로 추천 선택지를 배치한다.
+- 시험 주간에는 공부/과제 쪽 가중치를 상향한다.
 
 ---------------------------------------------
-6. TODO
+5. UI/로그 반영
 ---------------------------------------------
-- EducationAction JSON ?ㅽ궎留??묒꽦 (?숆탳/?숇뀈蹂?Pool).
-- 내신 등급 怨꾩궛 怨듭떇 紐낆떆 (?쒗뿕 ?깆쟻 + ?숈뾽 ?몄뀡 媛以묒튂).
-- ???猷⑦듃 ?꾪솚 ??AcademicState Carry-over 洹쒖튃 寃곗젙.
+- 선택 결과는 하루 로그와 메시지 카드로 기록한다.
+- 내신 등급 변동/경고/장학 이벤트는 메시지 인박스에 적재한다.
+
+---------------------------------------------
+6. 밸런싱 가이드
+---------------------------------------------
+- 고교 기준: Knowledge 성장 속도는 느리게, Focus 소모는 상대적으로 크게.
+- 시험 주간: 성적 영향 1.2~1.4배 보정.
+- 경고 누적: 3회 경고 시 패널티 이벤트 발생.
