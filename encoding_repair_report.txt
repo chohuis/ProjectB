@@ -1,0 +1,7 @@
+﻿True | cp949 | H:5 C:0 P:0 R:0 | C:\Users\user\Desktop\업무폴더\00_업무\00_개인정보\개인자료\01.기획\00.OneF\00.Planning\flows\pro_usa\test_utf8.txt
+False | utf8 | H:772 C:48 P:0 R:0 | C:\Users\user\Desktop\업무폴더\00_업무\00_개인정보\개인자료\01.기획\00.OneF\00.Planning\Stage_Rules\HighSchool_YearlyPlan.txt
+False | utf8 | H:193 C:16 P:0 R:0 | C:\Users\user\Desktop\업무폴더\00_업무\00_개인정보\개인자료\01.기획\00.OneF\00.Planning\flows\draft\draft_system_plan.txt
+False | utf8 | H:222 C:15 P:0 R:0 | C:\Users\user\Desktop\업무폴더\00_업무\00_개인정보\개인자료\01.기획\00.OneF\00.Planning\05_Draft_and_ProEntry.txt
+False | utf8 | H:298 C:13 P:0 R:0 | C:\Users\user\Desktop\업무폴더\00_업무\00_개인정보\개인자료\01.기획\00.OneF\00.Planning\notes\tournaments\Weekend_League.txt
+False | utf8 | H:469 C:11 P:0 R:0 | C:\Users\user\Desktop\업무폴더\00_업무\00_개인정보\개인자료\01.기획\00.OneF\00.Planning\systems\gameplay\academics\Academic_Session_System.txt
+False | utf8 | H:168 C:9 P:0 R:0 | C:\Users\user\Desktop\업무폴더\00_업무\00_개인정보\개인자료\01.기획\00.OneF\00.Planning\Stage_Rules\HighSchool.txt
