@@ -2,14 +2,21 @@
   "name": "projectb-desktop",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "description": "ProjectB desktop app (Svelte + Electron)",
   "main": "apps/desktop/main.cjs",
   "scripts": {
+    "build:contracts": "npm run -w @projectb/contracts build",
+    "build:core": "npm run -w @projectb/core build",
+    "build:packages": "npm run build:contracts && npm run build:core",
     "dev:ui": "vite --config vite.config.ts",
     "dev:desktop": "node scripts/wait-for-port.cjs 5173 && cross-env VITE_DEV_SERVER_URL=http://localhost:5173 electron apps/desktop/main.cjs",
     "dev": "concurrently -k \"npm:dev:ui\" \"npm:dev:desktop\"",
     "build:ui": "vite build --config vite.config.ts",
-    "build": "npm run build:ui",
+    "build": "npm run build:packages && npm run build:ui",
     "preview:ui": "vite preview --config vite.config.ts",
     "start": "electron apps/desktop/main.cjs"
   },

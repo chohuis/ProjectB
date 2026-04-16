@@ -42,3 +42,9 @@
 ## 7) Documentation Rules
 - 규칙 변경 시 먼저 `docs`를 수정하고 구현을 맞춘다.
 - 기술 의사결정은 `docs/ADR`에 기록한다.
+
+## 8) Rule Sync Rules (Cross-PC)
+- 개발 규칙의 단일 소스는 `docs/` 하위 문서다.
+- 규칙이 추가/변경/삭제되면 반드시 문서 변경을 Git에 반영한다.
+- 다른 PC에서 작업 시작 전 `git pull` 후 `docs/DEVELOPMENT_RULES.md`, `docs/GIT_WORKFLOW.md`, `docs/RULE_SYNC_POLICY.md`를 확인한다.
+- 규칙 문서가 최신 커밋과 불일치하면 구현 작업을 시작하지 않는다.
