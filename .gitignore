@@ -1,5 +1,7 @@
 ﻿.vs/
 .vscode/
+node_modules/
+dist/
 bin/
 obj/
 out/
