@@ -1,5 +1,6 @@
 export type MainTabId =
   | "home"
+  | "status"
   | "roster"
   | "schedule"
   | "training"

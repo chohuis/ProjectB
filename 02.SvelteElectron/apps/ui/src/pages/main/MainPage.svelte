@@ -5,6 +5,7 @@
   import TopHeader from "../../features/main-layout/ui/TopHeader.svelte";
   import HomeDashboard from "../../features/dashboard/ui/HomeDashboard.svelte";
   import RightPanel from "../../features/main-layout/ui/RightPanel.svelte";
+  import StatusPage from "../status/StatusPage.svelte";
   import RosterPage from "../roster/RosterPage.svelte";
   import SchedulePage from "../schedule/SchedulePage.svelte";
   import TrainingPage from "../training/TrainingPage.svelte";
@@ -41,6 +42,8 @@
             fatigue={mockMainSnapshot.fatigue}
             upcoming={mockMainSnapshot.upcoming}
           />
+        {:else if currentTab === "status"}
+          <StatusPage />
         {:else if currentTab === "roster"}
           <RosterPage />
         {:else if currentTab === "schedule"}
