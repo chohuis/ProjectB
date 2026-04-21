@@ -1,10 +1,13 @@
 export type MainTabId =
   | "home"
-  | "messages"
   | "roster"
   | "schedule"
   | "training"
-  | "records";
+  | "finance"
+  | "test"
+  | "records"
+  | "messages"
+  | "team";
 
 export interface MainSnapshot {
   dayLabel: string;
@@ -15,4 +18,3 @@ export interface MainSnapshot {
   upcoming: string[];
   logs: string[];
 }
-

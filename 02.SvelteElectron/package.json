@@ -13,7 +13,7 @@
     "build:core": "npm run -w @projectb/core build",
     "build:packages": "npm run build:contracts && npm run build:core",
     "dev:ui": "vite --config vite.config.ts",
-    "dev:desktop": "node scripts/wait-for-port.cjs 5173 && cross-env VITE_DEV_SERVER_URL=http://localhost:5173 electron apps/desktop/main.cjs",
+    "dev:desktop": "npm run build:packages && node scripts/wait-for-port.cjs 5173 && cross-env VITE_DEV_SERVER_URL=http://localhost:5173 electron apps/desktop/main.cjs",
     "dev": "concurrently -k \"npm:dev:ui\" \"npm:dev:desktop\"",
     "build:ui": "vite build --config vite.config.ts",
     "build": "npm run build:packages && npm run build:ui",

@@ -18,7 +18,7 @@ export function advanceDay(state: GameState): AdvanceDayResult {
 
   const logs = [
     `[DAY ${nextDay}] 훈련 루틴을 완료했습니다.`,
-    `[DAY ${nextDay}] 컨디션 변동: 사기 ${state.morale} -> ${nextMorale}`
+    `[DAY ${nextDay}] 컨디션 변화: 사기 ${state.morale} -> ${nextMorale}`
   ];
 
   return { nextState, logs };

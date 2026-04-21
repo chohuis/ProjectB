@@ -4,25 +4,33 @@
   export let upcoming: string[];
 </script>
 
-<section class="grid">
-  <article class="card">
-    <h3>선수 상태</h3>
-    <p>사기: {morale}</p>
-    <p>피로: {fatigue}</p>
-  </article>
+<section class="layout">
+  <div class="grid">
+    <article class="card">
+      <h3>선수 상태</h3>
+      <p>사기: {morale}</p>
+      <p>피로: {fatigue}</p>
+    </article>
 
-  <article class="card">
-    <h3>다가오는 일정</h3>
-    {#each upcoming as item}
-      <p>{item}</p>
-    {/each}
-  </article>
+    <article class="card">
+      <h3>다가오는 일정</h3>
+      {#each upcoming as item}
+        <p>{item}</p>
+      {/each}
+    </article>
+  </div>
 </section>
 
 <style>
+  .layout {
+    display: grid;
+    gap: 12px;
+    min-height: 300px;
+  }
+
   .grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
   }
 

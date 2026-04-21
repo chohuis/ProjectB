@@ -6,11 +6,14 @@
 
   const tabs: { id: MainTabId; label: string }[] = [
     { id: "home", label: "홈" },
-     { id: "messages", label: "메시지" },
     { id: "roster", label: "로스터" },
     { id: "schedule", label: "일정" },
     { id: "training", label: "훈련" },
+    { id: "finance", label: "재정" },
+    { id: "test", label: "매치 엔진" },
     { id: "records", label: "기록" },
+    { id: "messages", label: "메시지" },
+    { id: "team", label: "팀" }
   ];
 </script>
 
@@ -43,4 +46,3 @@
     border-color: #6fa2ff;
   }
 </style>
-
