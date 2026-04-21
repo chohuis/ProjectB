@@ -32,6 +32,7 @@
     third: false
   };
   export let ballPos: Point = { x: 500, y: 645 };
+  export let ballTrail: Point[] = [];
   export let strikeZoneTarget: Point = { x: 500, y: 755 };
   export let isPitching = false;
 
@@ -143,7 +144,15 @@
       {/if}
 
       {#each defenders as player}
-        <g filter="url(#shadow)" class:selected={selectedPos === player.pos} on:click={() => selectPosition(player.pos)}>
+        <g
+          filter="url(#shadow)"
+          class:selected={selectedPos === player.pos}
+          role="button"
+          tabindex="0"
+          aria-label={player.pos}
+          on:click={() => selectPosition(player.pos)}
+          on:keydown={(e) => e.key === 'Enter' && selectPosition(player.pos)}
+        >
           <circle cx={player.x} cy={player.y + 8} r="28" fill="rgba(7, 11, 18, 0.35)" />
           <circle cx={player.x} cy={player.y} r="28" class="player-dot" />
           <text
@@ -169,6 +178,15 @@
         <circle cx={baseField.third.x} cy={baseField.third.y} r="18" class="runner-dot" />
       {/if}
 
+      {#each ballTrail as pos, i}
+        <circle
+          cx={pos.x}
+          cy={pos.y}
+          r={6 - i * 0.6}
+          fill="white"
+          opacity={(i + 1) / ballTrail.length * 0.35}
+        />
+      {/each}
       <circle cx={ballPos.x} cy={ballPos.y} r="8.5" class="ball-dot" />
     </svg>
   </div>

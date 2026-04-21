@@ -46,7 +46,7 @@
   const homeLineupTitle = "홈 라인업";
   const baseStatusTitle = "진루 상황";
   const countTitle = "S / B / O";
-  const zoneTitle = "투구 도착 위치";
+  const zoneTitle = "투구 코스";
   const pitchSelectTitle = "투구 선택";
   const batterInfoTitle = "타자 정보";
   const pitcherInfoTitle = "투수 컨디션 정보";
@@ -63,6 +63,7 @@
   };
 
   const zones = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
+  const zoneDisplayOrder: readonly (typeof zones)[number][] = [7, 8, 9, 4, 5, 6, 1, 2, 3];
   const zoneTargetMap: Record<(typeof zones)[number], FieldPoint> = {
     1: { x: 470, y: 790 },
     2: { x: 500, y: 790 },
@@ -163,6 +164,10 @@
   };
 
   let ballPos: FieldPoint = { ...baseField.mound };
+  let ballTrail: FieldPoint[] = [];
+  const TRAIL_MAX = 6;
+  let resultOverlay = { visible: false, text: '', color: '#ffffff' };
+  let overlayTimer: ReturnType<typeof setTimeout> | null = null;
   let selectedDefPosition = "";
 
   const localEngineState: SnapshotLike = {
@@ -278,12 +283,35 @@
     for (let i = 1; i <= steps; i += 1) {
       const t = i / steps;
       const eased = 1 - (1 - t) * (1 - t);
+      ballTrail = [...ballTrail, { ...ballPos }].slice(-TRAIL_MAX);
       ballPos = {
         x: Number((from.x + (to.x - from.x) * eased).toFixed(2)),
         y: Number((from.y + (to.y - from.y) * eased).toFixed(2))
       };
       await sleep(frame);
     }
+    ballTrail = [];
+  }
+
+  function showResultOverlay(code: PitchResultCode) {
+    const map: Partial<Record<PitchResultCode, { text: string; color: string }>> = {
+      STRIKE_SWING: { text: '헛스윙!',  color: '#37d67a' },
+      STRIKE_LOOK:  { text: '루킹!',    color: '#37d67a' },
+      BALL:         { text: '볼',       color: '#7a8fa8' },
+      FOUL:         { text: '파울',     color: '#ffd54f' },
+      INPLAY_OUT:   { text: '아웃!',    color: '#ff8c42' },
+      HIT_SINGLE:   { text: '안타!',    color: '#ffd54f' },
+      HIT_DOUBLE:   { text: '2루타!',   color: '#ffd54f' },
+      HIT_TRIPLE:   { text: '3루타!',   color: '#ff9800' },
+      HOME_RUN:     { text: '홈런!!',   color: '#ff4a4a' },
+      WALK:         { text: '볼넷',     color: '#7a8fa8' },
+    };
+    const entry = map[code] ?? { text: code, color: '#ffffff' };
+    if (overlayTimer) clearTimeout(overlayTimer);
+    resultOverlay = { visible: true, ...entry };
+    overlayTimer = setTimeout(() => {
+      resultOverlay = { ...resultOverlay, visible: false };
+    }, 1400);
   }
 
   function sleep(ms: number) {
@@ -436,6 +464,8 @@
       applySnapshot(local.snapshot, line, resultCode);
     }
 
+    showResultOverlay(resultCode);
+
     if (resultCode === "INPLAY_OUT" || resultCode === "HIT_SINGLE" || resultCode === "HIT_DOUBLE" || resultCode === "HIT_TRIPLE" || resultCode === "HOME_RUN") {
       await tweenBall(getBattedTarget(resultCode), 300);
     }
@@ -531,10 +561,16 @@
               defenders={defenseNormal}
               {runners}
               {ballPos}
+              {ballTrail}
               strikeZoneTarget={zoneTargetMap[selectedZone]}
               {isPitching}
               on:selectPosition={(event) => (selectedDefPosition = event.detail.pos)}
             />
+            {#if resultOverlay.visible}
+              <div class="result-overlay">
+                <span class="result-overlay-text" style="color: {resultOverlay.color}; text-shadow: 0 0 24px {resultOverlay.color};">{resultOverlay.text}</span>
+              </div>
+            {/if}
           </div>
 
           <aside class="lineup-panel" aria-label="home lineup">
@@ -604,19 +640,26 @@
       <div class="pair-row">
         <section class="panel zone-panel" aria-label="pitch zone panel">
           <h2>{zoneTitle}</h2>
-          <div class="zone-target">
-            <div class="zone-grid">
-              {#each zones as zone}
-                <button
-                  type="button"
-                  class="zone-btn"
-                  class:active={selectedZone === zone}
-                  on:click={() => (selectedZone = zone)}
-                >
-                  {zone}
-                </button>
-              {/each}
+          <div class="strike-zone-wrap">
+            <span class="sz-label sz-top">높</span>
+            <div class="sz-row">
+              <span class="sz-label sz-side">안</span>
+              <div class="zone-box">
+                {#each zoneDisplayOrder as zone}
+                  <button
+                    type="button"
+                    class="zone-btn"
+                    class:active={selectedZone === zone}
+                    class:corner={zone === 1 || zone === 3 || zone === 7 || zone === 9}
+                    on:click={() => (selectedZone = zone)}
+                  >
+                    <span class="zone-num">{zone}</span>
+                  </button>
+                {/each}
+              </div>
+              <span class="sz-label sz-side">바</span>
             </div>
+            <span class="sz-label sz-bottom">낮</span>
           </div>
         </section>
 
@@ -900,6 +943,32 @@
     width: 100%;
     align-items: start;
     margin-top: -4px;
+    position: relative;
+  }
+
+  .result-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .result-overlay-text {
+    font-size: 54px;
+    font-weight: 900;
+    animation: overlayPop 1.4s ease-out forwards;
+    filter: drop-shadow(0 2px 10px rgba(0,0,0,0.9));
+  }
+
+  @keyframes overlayPop {
+    0%   { opacity: 0; transform: scale(0.4); }
+    18%  { opacity: 1; transform: scale(1.18); }
+    35%  { transform: scale(1.0); }
+    65%  { opacity: 1; }
+    100% { opacity: 0; transform: scale(0.92) translateY(-28px); }
   }
 
   .base-panel {
@@ -1006,40 +1075,79 @@
     color: #ff4a4a;
   }
 
-  .zone-target {
-    width: 80%;
-    max-width: 200px;
-    margin: 0 auto;
-    background: #21314c;
-    border: 5px solid #3a4f73;
-    border-radius: 8px;
-    padding: 10px 8px;
-    box-shadow: inset 0 0 0 1px #5f79a8;
+  .strike-zone-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
   }
 
-  .zone-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .sz-row {
+    display: flex;
+    align-items: center;
     gap: 6px;
   }
 
+  .sz-label {
+    font-size: 11px;
+    color: #5a7090;
+    letter-spacing: 0.05em;
+    user-select: none;
+  }
+
+  .sz-side {
+    width: 14px;
+    text-align: center;
+  }
+
+  .zone-box {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 3px;
+    background: #0d1828;
+    border: 2px solid #2a4060;
+    border-radius: 5px;
+    padding: 4px;
+    box-shadow: 0 0 0 1px #3a5a80, inset 0 0 12px rgba(0,0,0,0.4);
+  }
+
   .zone-btn {
-    border: 1px solid #3a4a66;
+    position: relative;
+    border: 1px solid #1e2e48;
     border-radius: 3px;
-    background: #121a28;
-    color: #9cb3d9;
-    min-height: 62px;
-    font-size: 28px;
-    font-weight: 700;
-    line-height: 1;
+    background: #101825;
+    min-height: 52px;
     cursor: pointer;
+    transition: background 0.1s, border-color 0.1s;
+  }
+
+  .zone-btn.corner {
+    background: #0b1220;
+  }
+
+  .zone-btn:hover {
+    background: #182538;
+    border-color: #3a5a7a;
   }
 
   .zone-btn.active {
-    background: #1f2f4d;
-    border-color: #88aef1;
-    color: #eaf1ff;
-    box-shadow: inset 0 0 0 1px #b2ccff;
+    background: #1a3260;
+    border-color: #6a9de0;
+    box-shadow: inset 0 0 0 1px #a8c8ff, 0 0 8px rgba(100,160,240,0.3);
+  }
+
+  .zone-num {
+    position: absolute;
+    bottom: 3px;
+    right: 5px;
+    font-size: 10px;
+    color: #2e4a6a;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .zone-btn.active .zone-num {
+    color: #6a9de0;
   }
 
   .pitch-buttons {
@@ -1074,18 +1182,39 @@
 
   .execute-btn {
     width: 100%;
-    border: 1px solid #4f7fd6;
-    border-radius: 8px;
-    background: linear-gradient(180deg, #3d78df, #2e5fb5);
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(180deg, #4a8cf0 0%, #2e5fb5 100%);
     color: #ffffff;
-    padding: 10px;
-    font-weight: 700;
+    padding: 13px;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
     cursor: pointer;
+    box-shadow: 0 4px 16px rgba(61, 120, 223, 0.5), inset 0 1px 0 rgba(255,255,255,0.15);
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+
+  .execute-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 22px rgba(61, 120, 223, 0.6);
+  }
+
+  .execute-btn:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(61, 120, 223, 0.35);
   }
 
   .execute-btn:disabled {
     cursor: not-allowed;
-    opacity: 0.6;
+    background: linear-gradient(180deg, #2a4a7a, #1e3560);
+    box-shadow: none;
+    animation: pitchPulse 1.2s ease-in-out infinite;
+  }
+
+  @keyframes pitchPulse {
+    0%, 100% { box-shadow: 0 0 0 rgba(61, 120, 223, 0); }
+    50% { box-shadow: 0 0 20px rgba(61, 120, 223, 0.45); }
   }
 
   .engine-state {
