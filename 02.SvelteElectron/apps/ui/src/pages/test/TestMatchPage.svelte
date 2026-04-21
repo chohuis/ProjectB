@@ -63,18 +63,42 @@
   };
 
   const zones = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
-  const zoneDisplayOrder: readonly (typeof zones)[number][] = [7, 8, 9, 4, 5, 6, 1, 2, 3];
-  const zoneTargetMap: Record<(typeof zones)[number], FieldPoint> = {
-    1: { x: 470, y: 790 },
-    2: { x: 500, y: 790 },
-    3: { x: 530, y: 790 },
-    4: { x: 470, y: 760 },
-    5: { x: 500, y: 760 },
-    6: { x: 530, y: 760 },
-    7: { x: 470, y: 730 },
-    8: { x: 500, y: 730 },
-    9: { x: 530, y: 730 }
-  };
+
+  // 클릭 위치 기반 존 선택 (0~1 비율)
+  let zoneClickPct = { px: 0.5, py: 0.5 };
+  let zoneHoverPct: { px: number; py: number } | null = null;
+  let zoneCanvasEl: HTMLDivElement | null = null;
+
+  // 클릭 비율 → 필드 SVG 좌표 변환 (x: 440~560, y: 720~800)
+  $: clickedFieldPos = {
+    x: Number((440 + zoneClickPct.px * 120).toFixed(1)),
+    y: Number((720 + zoneClickPct.py * 80).toFixed(1))
+  } as FieldPoint;
+
+  // 엔진 호환용 zone 번호 (1-9) 클릭 위치에서 파생
+  function getZoneFromClick(px: number, py: number): (typeof zones)[number] {
+    const zoneMap: (typeof zones)[number][][] = [[7,8,9],[4,5,6],[1,2,3]];
+    return zoneMap[Math.min(2, Math.floor(py * 3))][Math.min(2, Math.floor(px * 3))];
+  }
+  $: selectedZone = getZoneFromClick(zoneClickPct.px, zoneClickPct.py);
+
+  function handleZoneClick(e: MouseEvent) {
+    if (!zoneCanvasEl) return;
+    const rect = zoneCanvasEl.getBoundingClientRect();
+    zoneClickPct = {
+      px: Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width)),
+      py: Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height))
+    };
+  }
+
+  function handleZoneMouseMove(e: MouseEvent) {
+    if (!zoneCanvasEl || isPitching) return;
+    const rect = zoneCanvasEl.getBoundingClientRect();
+    zoneHoverPct = {
+      px: Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width)),
+      py: Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height))
+    };
+  }
 
   const defenseNormal = [
     { pos: "P", x: 500, y: 645 },
@@ -107,7 +131,6 @@
     { id: "high", label: "강" }
   ];
 
-  let selectedZone: (typeof zones)[number] = 5;
   let selectedPitchType: PitchType = pitchTypes[0].id;
   let selectedStrategy: PitchStrategy = "balanced";
   let selectedPower: PitchPower = "normal";
@@ -432,7 +455,7 @@
     if (isPitching) return;
 
     isPitching = true;
-    const zoneTarget = zoneTargetMap[selectedZone];
+    const zoneTarget = { ...clickedFieldPos };
     ballPos = { ...baseField.mound };
 
     await tweenBall(zoneTarget, 220);
@@ -562,7 +585,7 @@
               {runners}
               {ballPos}
               {ballTrail}
-              strikeZoneTarget={zoneTargetMap[selectedZone]}
+              strikeZoneTarget={clickedFieldPos}
               {isPitching}
               on:selectPosition={(event) => (selectedDefPosition = event.detail.pos)}
             />
@@ -640,26 +663,22 @@
       <div class="pair-row">
         <section class="panel zone-panel" aria-label="pitch zone panel">
           <h2>{zoneTitle}</h2>
-          <div class="strike-zone-wrap">
-            <span class="sz-label sz-top">높</span>
-            <div class="sz-row">
-              <span class="sz-label sz-side">안</span>
-              <div class="zone-box">
-                {#each zoneDisplayOrder as zone}
-                  <button
-                    type="button"
-                    class="zone-btn"
-                    class:active={selectedZone === zone}
-                    class:corner={zone === 1 || zone === 3 || zone === 7 || zone === 9}
-                    on:click={() => (selectedZone = zone)}
-                  >
-                    <span class="zone-num">{zone}</span>
-                  </button>
-                {/each}
-              </div>
-              <span class="sz-label sz-side">바</span>
-            </div>
-            <span class="sz-label sz-bottom">낮</span>
+          <div
+            class="zone-canvas"
+            class:pitching={isPitching}
+            bind:this={zoneCanvasEl}
+            role="button"
+            tabindex="0"
+            aria-label="투구 위치 선택"
+            on:click={handleZoneClick}
+            on:mousemove={handleZoneMouseMove}
+            on:mouseleave={() => (zoneHoverPct = null)}
+            on:keydown={(e) => e.key === 'Enter' && handleZoneClick(e as unknown as MouseEvent)}
+          >
+            {#if zoneHoverPct && !isPitching}
+              <div class="zone-hover-dot" style="left:{zoneHoverPct.px * 100}%;top:{zoneHoverPct.py * 100}%;"></div>
+            {/if}
+            <div class="zone-target-dot" style="left:{zoneClickPct.px * 100}%;top:{zoneClickPct.py * 100}%;"></div>
           </div>
         </section>
 
@@ -1075,79 +1094,67 @@
     color: #ff4a4a;
   }
 
-  .strike-zone-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .sz-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .sz-label {
-    font-size: 11px;
-    color: #5a7090;
-    letter-spacing: 0.05em;
-    user-select: none;
-  }
-
-  .sz-side {
-    width: 14px;
-    text-align: center;
-  }
-
-  .zone-box {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 3px;
-    background: #0d1828;
-    border: 2px solid #2a4060;
-    border-radius: 5px;
-    padding: 4px;
-    box-shadow: 0 0 0 1px #3a5a80, inset 0 0 12px rgba(0,0,0,0.4);
-  }
-
-  .zone-btn {
+  .zone-canvas {
+    width: 80%;
+    max-width: 200px;
+    min-height: 196px;
+    margin: 0 auto;
+    background: #21314c;
+    border: 5px solid #3a4f73;
+    border-radius: 8px;
+    box-shadow: inset 0 0 0 1px #5f79a8;
     position: relative;
-    border: 1px solid #1e2e48;
-    border-radius: 3px;
-    background: #101825;
-    min-height: 52px;
-    cursor: pointer;
-    transition: background 0.1s, border-color 0.1s;
+    cursor: crosshair;
+    user-select: none;
+    display: block;
   }
 
-  .zone-btn.corner {
-    background: #0b1220;
-  }
-
-  .zone-btn:hover {
-    background: #182538;
-    border-color: #3a5a7a;
-  }
-
-  .zone-btn.active {
-    background: #1a3260;
-    border-color: #6a9de0;
-    box-shadow: inset 0 0 0 1px #a8c8ff, 0 0 8px rgba(100,160,240,0.3);
-  }
-
-  .zone-num {
+  .zone-canvas::before {
+    content: '';
     position: absolute;
-    bottom: 3px;
-    right: 5px;
-    font-size: 10px;
-    color: #2e4a6a;
-    line-height: 1;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(90, 120, 180, 0.22) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(90, 120, 180, 0.22) 1px, transparent 1px);
+    background-size: 33.333% 33.333%;
     pointer-events: none;
+    border-radius: 3px;
   }
 
-  .zone-btn.active .zone-num {
-    color: #6a9de0;
+  .zone-canvas.pitching {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  .zone-target-dot {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #88aef1;
+    background: rgba(101, 180, 255, 0.2);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    box-shadow: 0 0 10px rgba(101, 180, 255, 0.55);
+  }
+
+  .zone-target-dot::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    background: rgba(150, 210, 255, 0.55);
+  }
+
+  .zone-hover-dot {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid rgba(120, 160, 210, 0.45);
+    background: rgba(100, 150, 200, 0.08);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
   }
 
   .pitch-buttons {
