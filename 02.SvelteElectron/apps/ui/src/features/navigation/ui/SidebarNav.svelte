@@ -29,7 +29,11 @@
 <style>
   .nav {
     display: grid;
-    gap: 8px;
+    gap: 6px;
+    align-content: start;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
   }
 
   button {
@@ -37,7 +41,9 @@
     color: #e8eefc;
     border: 1px solid #2e3b58;
     border-radius: 8px;
-    padding: 10px;
+    padding: 8px 9px;
+    font-size: 13px;
+    line-height: 1.25;
     text-align: left;
     cursor: pointer;
   }

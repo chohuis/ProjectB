@@ -1127,7 +1127,7 @@
     padding-left: 18px;
     color: #d3ddf6;
     max-height: calc(100% - 28px);
-    overflow-y: auto;
+    overflow-y: hidden;
     scrollbar-width: thin;
     scrollbar-color: rgba(196, 218, 255, 0.22) transparent;
   }

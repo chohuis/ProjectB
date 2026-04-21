@@ -36,31 +36,33 @@
       <SidebarNav {currentTab} onSelectTab={(tab) => (currentTab = tab)} />
 
       <main>
-        {#if currentTab === "home"}
-          <HomeDashboard
-            morale={mockMainSnapshot.morale}
-            fatigue={mockMainSnapshot.fatigue}
-            upcoming={mockMainSnapshot.upcoming}
-          />
-        {:else if currentTab === "status"}
-          <StatusPage />
-        {:else if currentTab === "roster"}
-          <RosterPage />
-        {:else if currentTab === "schedule"}
-          <SchedulePage />
-        {:else if currentTab === "training"}
-          <TrainingPage />
-        {:else if currentTab === "finance"}
-          <FinancePage />
-        {:else if currentTab === "records"}
-          <RecordsPage />
-        {:else if currentTab === "messages"}
-          <MessagesPage />
-        {:else if currentTab === "team"}
-          <TeamPage />
-        {:else}
-          <section class="placeholder">{currentTab} 화면 준비 중</section>
-        {/if}
+        <div class="tab-content">
+          {#if currentTab === "home"}
+            <HomeDashboard
+              morale={mockMainSnapshot.morale}
+              fatigue={mockMainSnapshot.fatigue}
+              upcoming={mockMainSnapshot.upcoming}
+            />
+          {:else if currentTab === "status"}
+            <StatusPage />
+          {:else if currentTab === "roster"}
+            <RosterPage />
+          {:else if currentTab === "schedule"}
+            <SchedulePage />
+          {:else if currentTab === "training"}
+            <TrainingPage />
+          {:else if currentTab === "finance"}
+            <FinancePage />
+          {:else if currentTab === "records"}
+            <RecordsPage />
+          {:else if currentTab === "messages"}
+            <MessagesPage />
+          {:else if currentTab === "team"}
+            <TeamPage />
+          {:else}
+            <section class="placeholder">{currentTab} 화면 준비 중</section>
+          {/if}
+        </div>
       </main>
 
       <RightPanel logs={mockMainSnapshot.logs} />
@@ -71,19 +73,36 @@
 <style>
   .layout {
     display: grid;
-    gap: 12px;
-    padding: 16px;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 10px;
+    padding: 10px;
+    height: 100%;
+    overflow: hidden;
   }
 
   .body {
     display: grid;
-    grid-template-columns: 200px minmax(0, 1fr) 320px;
-    gap: 12px;
-    align-items: start;
+    grid-template-columns: 170px minmax(0, 1fr) 220px;
+    gap: 10px;
+    align-items: stretch;
+    min-height: 0;
+    overflow: hidden;
   }
 
   main {
     min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .tab-content {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .tab-content > :global(*) {
+    min-height: 0;
   }
 
   .placeholder {
@@ -91,12 +110,12 @@
     border: 1px solid #2d3956;
     border-radius: 10px;
     padding: 14px;
-    min-height: 300px;
+    height: 100%;
   }
 
   @media (max-width: 1280px) {
     .body {
-      grid-template-columns: 180px minmax(0, 1fr) 280px;
+      grid-template-columns: 154px minmax(0, 1fr) 196px;
     }
   }
 </style>
