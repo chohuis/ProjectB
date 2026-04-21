@@ -71,17 +71,17 @@
   let zoneCanvasEl: HTMLDivElement | null = null;
 
   // 캔버스 전체 → 필드 SVG 좌표 변환
-  // 캔버스: x:0-1 → 필드 x:400-600, y:0-1 → 필드 y:690-830
-  // 스트라이크존 박스: 캔버스 x 35-65%, y 29-71% (필드 470-530, 730-790)
+  // 스트라이크존 박스: 캔버스 x 10-90%, y 8-92% → 필드 x:470-530, y:730-790
+  // Ball 여백: 캔버스 각 방향 10%/8% → 필드 ±7.5/±5.7 유닛
   $: clickedFieldPos = {
-    x: Number((400 + zoneClickPct.px * 200).toFixed(1)),
-    y: Number((690 + zoneClickPct.py * 140).toFixed(1))
+    x: Number((462.5 + zoneClickPct.px * 75).toFixed(1)),
+    y: Number((724.3 + zoneClickPct.py * 71.4).toFixed(1))
   } as FieldPoint;
 
-  // 스트라이크존 내 정규화 비율로 zone 1-9 파생 (존 외곽 클릭은 가장 가까운 변 존으로)
+  // 스트라이크존 내 정규화 비율로 zone 1-9 파생 (존 외곽 = 가장 가까운 변 존)
   function getZoneFromClick(px: number, py: number): (typeof zones)[number] {
-    const normX = Math.max(0, Math.min(1, (px - 0.35) / 0.30));
-    const normY = Math.max(0, Math.min(1, (py - 0.286) / 0.428));
+    const normX = Math.max(0, Math.min(1, (px - 0.10) / 0.80));
+    const normY = Math.max(0, Math.min(1, (py - 0.08) / 0.84));
     const zoneMap: (typeof zones)[number][][] = [[7,8,9],[4,5,6],[1,2,3]];
     return zoneMap[Math.min(2, Math.floor(normY * 3))][Math.min(2, Math.floor(normX * 3))];
   }
@@ -1125,13 +1125,13 @@
     opacity: 0.75;
   }
 
-  /* 스트라이크존 박스: 캔버스 x 35-65%, y 29-71% */
+  /* 스트라이크존 박스: 캔버스 x 10-90%, y 8-92% */
   .sz-inner-box {
     position: absolute;
-    left: 35%;
-    right: 35%;
-    top: 28.6%;
-    bottom: 28.6%;
+    left: 10%;
+    right: 10%;
+    top: 8%;
+    bottom: 8%;
     border: 2px solid rgba(100, 160, 220, 0.6);
     border-radius: 2px;
     background-image:
