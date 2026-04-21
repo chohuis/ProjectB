@@ -67,18 +67,23 @@
   // 클릭 위치 기반 존 선택 (0~1 비율)
   let zoneClickPct = { px: 0.5, py: 0.5 };
   let zoneHoverPct: { px: number; py: number } | null = null;
+  let lastPitchPct: { px: number; py: number } | null = null;
   let zoneCanvasEl: HTMLDivElement | null = null;
 
-  // 클릭 비율 → 필드 SVG 좌표 변환 (x: 440~560, y: 720~800)
+  // 캔버스 전체 → 필드 SVG 좌표 변환
+  // 캔버스: x:0-1 → 필드 x:400-600, y:0-1 → 필드 y:690-830
+  // 스트라이크존 박스: 캔버스 x 35-65%, y 29-71% (필드 470-530, 730-790)
   $: clickedFieldPos = {
-    x: Number((440 + zoneClickPct.px * 120).toFixed(1)),
-    y: Number((720 + zoneClickPct.py * 80).toFixed(1))
+    x: Number((400 + zoneClickPct.px * 200).toFixed(1)),
+    y: Number((690 + zoneClickPct.py * 140).toFixed(1))
   } as FieldPoint;
 
-  // 엔진 호환용 zone 번호 (1-9) 클릭 위치에서 파생
+  // 스트라이크존 내 정규화 비율로 zone 1-9 파생 (존 외곽 클릭은 가장 가까운 변 존으로)
   function getZoneFromClick(px: number, py: number): (typeof zones)[number] {
+    const normX = Math.max(0, Math.min(1, (px - 0.35) / 0.30));
+    const normY = Math.max(0, Math.min(1, (py - 0.286) / 0.428));
     const zoneMap: (typeof zones)[number][][] = [[7,8,9],[4,5,6],[1,2,3]];
-    return zoneMap[Math.min(2, Math.floor(py * 3))][Math.min(2, Math.floor(px * 3))];
+    return zoneMap[Math.min(2, Math.floor(normY * 3))][Math.min(2, Math.floor(normX * 3))];
   }
   $: selectedZone = getZoneFromClick(zoneClickPct.px, zoneClickPct.py);
 
@@ -455,6 +460,7 @@
     if (isPitching) return;
 
     isPitching = true;
+    const pitchedAt = { ...zoneClickPct };
     const zoneTarget = { ...clickedFieldPos };
     ballPos = { ...baseField.mound };
 
@@ -494,6 +500,7 @@
     }
 
     await tweenBall(baseField.mound, 180);
+    lastPitchPct = pitchedAt;
     isPitching = false;
   }
 
@@ -675,6 +682,10 @@
             on:mouseleave={() => (zoneHoverPct = null)}
             on:keydown={(e) => e.key === 'Enter' && handleZoneClick(e as unknown as MouseEvent)}
           >
+            <div class="sz-inner-box"></div>
+            {#if lastPitchPct}
+              <div class="zone-last-dot" style="left:{lastPitchPct.px * 100}%;top:{lastPitchPct.py * 100}%;"></div>
+            {/if}
             {#if zoneHoverPct && !isPitching}
               <div class="zone-hover-dot" style="left:{zoneHoverPct.px * 100}%;top:{zoneHoverPct.py * 100}%;"></div>
             {/if}
@@ -1096,8 +1107,8 @@
 
   .zone-canvas {
     width: 80%;
-    max-width: 200px;
-    min-height: 196px;
+    max-width: 180px;
+    min-height: 260px;
     margin: 0 auto;
     background: #21314c;
     border: 5px solid #3a4f73;
@@ -1109,33 +1120,39 @@
     display: block;
   }
 
-  .zone-canvas::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(to right, rgba(90, 120, 180, 0.22) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(90, 120, 180, 0.22) 1px, transparent 1px);
-    background-size: 33.333% 33.333%;
-    pointer-events: none;
-    border-radius: 3px;
-  }
-
   .zone-canvas.pitching {
     cursor: not-allowed;
-    opacity: 0.7;
+    opacity: 0.75;
   }
 
+  /* 스트라이크존 박스: 캔버스 x 35-65%, y 29-71% */
+  .sz-inner-box {
+    position: absolute;
+    left: 35%;
+    right: 35%;
+    top: 28.6%;
+    bottom: 28.6%;
+    border: 2px solid rgba(100, 160, 220, 0.6);
+    border-radius: 2px;
+    background-image:
+      linear-gradient(to right, rgba(90, 120, 180, 0.2) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(90, 120, 180, 0.2) 1px, transparent 1px);
+    background-size: 33.333% 33.333%;
+    pointer-events: none;
+  }
+
+  /* 조준 dot (파란색) */
   .zone-target-dot {
     position: absolute;
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     border: 2px solid #88aef1;
     background: rgba(101, 180, 255, 0.2);
     transform: translate(-50%, -50%);
     pointer-events: none;
-    box-shadow: 0 0 10px rgba(101, 180, 255, 0.55);
+    box-shadow: 0 0 8px rgba(101, 180, 255, 0.5);
+    z-index: 3;
   }
 
   .zone-target-dot::after {
@@ -1143,18 +1160,34 @@
     position: absolute;
     inset: 4px;
     border-radius: 50%;
-    background: rgba(150, 210, 255, 0.55);
+    background: rgba(150, 210, 255, 0.5);
   }
 
+  /* 마지막 투구 위치 dot (노란색) */
+  .zone-last-dot {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #ffd54f;
+    background: rgba(255, 213, 79, 0.35);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    box-shadow: 0 0 6px rgba(255, 213, 79, 0.5);
+    z-index: 2;
+  }
+
+  /* hover 미리보기 dot */
   .zone-hover-dot {
     position: absolute;
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    border: 1px solid rgba(120, 160, 210, 0.45);
+    border: 1px solid rgba(120, 160, 210, 0.4);
     background: rgba(100, 150, 200, 0.08);
     transform: translate(-50%, -50%);
     pointer-events: none;
+    z-index: 1;
   }
 
   .pitch-buttons {
