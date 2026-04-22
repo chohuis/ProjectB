@@ -38,7 +38,13 @@
 
   const dispatch = createEventDispatcher<{ selectPosition: { pos: string } }>();
 
+  const posLabel: Record<string, string> = {
+    P: '투수', C: '포수', '1B': '1루수', '2B': '2루수',
+    SS: '유격수', '3B': '3루수', LF: '좌익수', CF: '중견수', RF: '우익수'
+  };
+
   let selectedPos = "";
+  let hoveredPos = "";
 
   function selectPosition(pos: string) {
     selectedPos = pos;
@@ -152,7 +158,12 @@
           aria-label={player.pos}
           on:click={() => selectPosition(player.pos)}
           on:keydown={(e) => e.key === 'Enter' && selectPosition(player.pos)}
+          on:mouseenter={() => (hoveredPos = player.pos)}
+          on:mouseleave={() => (hoveredPos = '')}
         >
+          {#if selectedPos === player.pos}
+            <circle cx={player.x} cy={player.y} r="40" class="select-ring" />
+          {/if}
           <circle cx={player.x} cy={player.y + 8} r="28" fill="rgba(7, 11, 18, 0.35)" />
           <circle cx={player.x} cy={player.y} r="28" class="player-dot" />
           <text
@@ -165,6 +176,12 @@
           >
             {player.pos}
           </text>
+          {#if hoveredPos === player.pos}
+            <g class="tooltip-group">
+              <rect x={player.x - 36} y={player.y - 60} width="72" height="24" rx="6" fill="rgba(8,18,36,0.92)" stroke="#3a5888" stroke-width="1" />
+              <text x={player.x} y={player.y - 43} text-anchor="middle" font-size="15" fill="#c8deff">{posLabel[player.pos] ?? player.pos}</text>
+            </g>
+          {/if}
         </g>
       {/each}
 
@@ -252,10 +269,37 @@
     stroke: #bfe4ff;
   }
 
+  .select-ring {
+    fill: none;
+    stroke: #4aa8ff;
+    stroke-width: 2.5;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: selectPulse 1.5s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes selectPulse {
+    0%, 100% { opacity: 0.75; transform: scale(1); }
+    50%       { opacity: 0.2;  transform: scale(1.3); }
+  }
+
+  .tooltip-group {
+    pointer-events: none;
+  }
+
   .runner-dot {
     fill: #2a7fff;
     stroke: #ffffff;
     stroke-width: 3;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: runnerAppear 0.35s ease-out;
+  }
+
+  @keyframes runnerAppear {
+    from { opacity: 0; transform: scale(0.25); }
+    to   { opacity: 1; transform: scale(1); }
   }
 
   .ball-dot {

@@ -169,12 +169,12 @@
     }
   ];
 
-  let playByPlayLines = [
-    "견제로 1루 주자 압박 중.",
-    "다음 타자 우전 안타로 출루.",
-    "3구째 헛스윙 삼진.",
-    "2구째 파울, 유리한 카운트.",
-    "1회초 선두타자, 초구 스트라이크."
+  let playByPlayLines: { text: string; cls: string }[] = [
+    { text: "견제로 1루 주자 압박 중.", cls: '' },
+    { text: "다음 타자 우전 안타로 출루.", cls: 'log-hit' },
+    { text: "3구째 헛스윙 삼진.", cls: 'log-strike' },
+    { text: "2구째 파울, 유리한 카운트.", cls: 'log-foul' },
+    { text: "1회초 선두타자, 초구 스트라이크.", cls: 'log-strike' }
   ];
 
   const batterInfo = [
@@ -196,6 +196,8 @@
   const TRAIL_MAX = 6;
   let resultOverlay = { visible: false, text: '', color: '#ffffff' };
   let overlayTimer: ReturnType<typeof setTimeout> | null = null;
+  let changeAlert = { visible: false };
+  let changeTimer: ReturnType<typeof setTimeout> | null = null;
   let selectedDefPosition = "";
 
   const localEngineState: SnapshotLike = {
@@ -212,12 +214,8 @@
   };
 
   $: inningHalfLabel = `${inning}회 ${half === "top" ? "초" : "말"}`;
-  $: pitcherInfo = [
-    { label: "이름", value: pitcherState.name },
-    { label: "구속", value: pitcherState.speed },
-    { label: "체력", value: `${pitcherState.stamina.toFixed(1)}` },
-    { label: "멘탈", value: `${pitcherState.mental.toFixed(1)}` }
-  ];
+  $: staminaColor = pitcherState.stamina > 60 ? '#37d67a' : pitcherState.stamina > 30 ? '#ffd54f' : '#ff4a4a';
+  $: mentalColor  = pitcherState.mental  > 60 ? '#5b9cf6' : pitcherState.mental  > 30 ? '#c47af5' : '#ff6b9d';
 
   function handleKeyDown(event: KeyboardEvent) {
     if (event.key === "Escape") {
@@ -251,8 +249,19 @@
     }
   }
 
-  function pushLog(line: string) {
-    playByPlayLines = [line, ...playByPlayLines].slice(0, 12);
+  function resultToCls(code: PitchResultCode): string {
+    if (code === 'HOME_RUN') return 'log-homerun';
+    if (code === 'HIT_SINGLE' || code === 'HIT_DOUBLE' || code === 'HIT_TRIPLE') return 'log-hit';
+    if (code === 'WALK') return 'log-walk';
+    if (code === 'STRIKE_SWING' || code === 'STRIKE_LOOK') return 'log-strike';
+    if (code === 'FOUL') return 'log-foul';
+    if (code === 'BALL') return 'log-ball';
+    if (code === 'INPLAY_OUT') return 'log-out';
+    return '';
+  }
+
+  function pushLog(line: string, cls = '') {
+    playByPlayLines = [{ text: line, cls }, ...playByPlayLines].slice(0, 20);
   }
 
   function updateScoreRows(awayScore: number, homeScore: number, resultCode: PitchResultCode) {
@@ -291,7 +300,7 @@
     updateScoreRows(snapshot.score.away, snapshot.score.home, resultCode);
 
     if (line) {
-      pushLog(line);
+      pushLog(line, resultToCls(resultCode));
     }
   }
 
@@ -360,7 +369,7 @@
     return "HOME_RUN";
   }
 
-  function applyLocalResult(resultCode: PitchResultCode): { snapshot: SnapshotLike; resolvedCode: PitchResultCode } {
+  function applyLocalResult(resultCode: PitchResultCode): { snapshot: SnapshotLike; resolvedCode: PitchResultCode; inningChange: boolean } {
     localEngineState.pitchCount += 1;
     localEngineState.stamina = Math.max(0, Number((localEngineState.stamina - 0.8).toFixed(1)));
 
@@ -428,7 +437,9 @@
       localEngineState.count.strikes = 0;
     }
 
+    let inningChange = false;
     if (localEngineState.outs >= 3) {
+      inningChange = true;
       localEngineState.outs = 0;
       localEngineState.count.balls = 0;
       localEngineState.count.strikes = 0;
@@ -446,6 +457,7 @@
 
     return {
       resolvedCode: resultCode,
+      inningChange,
       snapshot: {
         ...localEngineState,
         count: { ...localEngineState.count },
@@ -454,6 +466,14 @@
         recentLogs: [...localEngineState.recentLogs]
       }
     };
+  }
+
+  function showChangeAlert() {
+    if (changeTimer) clearTimeout(changeTimer);
+    changeAlert = { visible: true };
+    changeTimer = setTimeout(() => {
+      changeAlert = { visible: false };
+    }, 2200);
   }
 
   async function runPitch() {
@@ -491,6 +511,11 @@
       resultCode = local.resolvedCode;
       line = `${inningHalfLabel} ${pitchTypes.find((p) => p.id === selectedPitchType)?.label} ${localComment(resultCode)}`;
       applySnapshot(local.snapshot, line, resultCode);
+      if (local.inningChange) {
+        const newHalf = local.snapshot.half === 'top' ? '초' : '말';
+        pushLog(`──── ${local.snapshot.inning}회 ${newHalf} ────`, 'log-separator');
+        showChangeAlert();
+      }
     }
 
     showResultOverlay(resultCode);
@@ -539,7 +564,7 @@
         <tr>
           <th class="team-col">{teamHeader}</th>
           {#each innings as inningNumber}
-            <th>{inningNumber}</th>
+            <th class:current-inning={inningNumber === inning}>{inningNumber}</th>
           {/each}
           <th>R</th>
           <th>H</th>
@@ -551,8 +576,8 @@
         {#each scoreRows as row}
           <tr>
             <th class="team-col">{row.team}</th>
-            {#each row.inningScores as inningScore}
-              <td>{inningScore}</td>
+            {#each row.inningScores as inningScore, i}
+              <td class:current-inning={i + 1 === inning}>{inningScore}</td>
             {/each}
             <td>{row.r}</td>
             <td>{row.h}</td>
@@ -601,6 +626,11 @@
                 <span class="result-overlay-text" style="color: {resultOverlay.color}; text-shadow: 0 0 24px {resultOverlay.color};">{resultOverlay.text}</span>
               </div>
             {/if}
+            {#if changeAlert.visible}
+              <div class="change-overlay">
+                <span class="change-text">체인지!</span>
+              </div>
+            {/if}
           </div>
 
           <aside class="lineup-panel" aria-label="home lineup">
@@ -618,7 +648,7 @@
         <h2>{sectionTitle}</h2>
         <ul>
           {#each playByPlayLines as line}
-            <li>{line}</li>
+            <li class={line.cls}>{line.text}</li>
           {/each}
         </ul>
       </section>
@@ -757,9 +787,19 @@
         <section class="panel info-panel" aria-label="pitcher info panel">
           <h2>{pitcherInfoTitle}</h2>
           <ul class="stat-list">
-            {#each pitcherInfo as info}
-              <li><span>{info.label}</span><strong>{info.value}</strong></li>
-            {/each}
+            <li><span>이름</span><strong>{pitcherState.name}</strong></li>
+            <li><span>구속</span><strong>{pitcherState.speed}</strong></li>
+            <li class="gauge-row">
+              <span>체력</span>
+              <div class="gauge-wrap"><div class="gauge-bar" style="width:{pitcherState.stamina}%;background:{staminaColor};"></div></div>
+              <strong>{pitcherState.stamina.toFixed(1)}</strong>
+            </li>
+            <li class="gauge-row">
+              <span>멘탈</span>
+              <div class="gauge-wrap"><div class="gauge-bar" style="width:{pitcherState.mental}%;background:{mentalColor};"></div></div>
+              <strong>{pitcherState.mental.toFixed(1)}</strong>
+            </li>
+            <li><span>투구수</span><strong>{localEngineState.pitchCount}</strong></li>
           </ul>
         </section>
       </div>
@@ -1081,16 +1121,34 @@
   .sbo-lamp.strike.on {
     background: #37d67a;
     border-color: #7df0ae;
+    animation: sboPulseStrike 1.8s ease-in-out infinite;
   }
 
   .sbo-lamp.count-ball.on {
     background: #ffd54f;
     border-color: #ffe58f;
+    animation: sboPulseBall 1.8s ease-in-out infinite;
   }
 
   .sbo-lamp.out.on {
     background: #ff2727;
     border-color: #ff6c6c;
+    animation: sboPulseOut 1.8s ease-in-out infinite;
+  }
+
+  @keyframes sboPulseStrike {
+    0%, 100% { box-shadow: 0 0 4px rgba(55, 214, 122, 0.4); }
+    50% { box-shadow: 0 0 14px 4px rgba(55, 214, 122, 0.75); }
+  }
+
+  @keyframes sboPulseBall {
+    0%, 100% { box-shadow: 0 0 4px rgba(255, 213, 79, 0.4); }
+    50% { box-shadow: 0 0 14px 4px rgba(255, 213, 79, 0.75); }
+  }
+
+  @keyframes sboPulseOut {
+    0%, 100% { box-shadow: 0 0 4px rgba(255, 39, 39, 0.4); }
+    50% { box-shadow: 0 0 14px 4px rgba(255, 39, 39, 0.75); }
   }
 
   .sbo-label.strike {
@@ -1279,10 +1337,56 @@
   .stat-list li {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     gap: 8px;
     border-bottom: 1px solid #24334d;
     padding-bottom: 6px;
     color: #d7e4fb;
+  }
+
+  .gauge-row {
+    flex-direction: row;
+  }
+
+  .gauge-wrap {
+    flex: 1;
+    height: 8px;
+    background: #1a2a3f;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #2a3d5a;
+  }
+
+  .gauge-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s ease, background 0.4s ease;
+  }
+
+  .change-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 12;
+  }
+
+  .change-text {
+    font-size: 52px;
+    font-weight: 900;
+    color: #f0f4ff;
+    text-shadow: 0 0 30px rgba(160, 190, 255, 0.85), 0 2px 12px rgba(0,0,0,0.9);
+    animation: changeFlash 2.2s ease-out forwards;
+  }
+
+  @keyframes changeFlash {
+    0%   { opacity: 0; transform: scale(0.5); }
+    15%  { opacity: 1; transform: scale(1.15); }
+    30%  { transform: scale(1.0); }
+    70%  { opacity: 1; }
+    100% { opacity: 0; transform: scale(0.95) translateY(-20px); }
   }
 
   .play-text-panel h2 {
@@ -1296,7 +1400,7 @@
     padding-left: 18px;
     color: #d3ddf6;
     max-height: calc(100% - 28px);
-    overflow-y: hidden;
+    overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: rgba(196, 218, 255, 0.22) transparent;
   }
@@ -1321,6 +1425,33 @@
 
   .play-text-panel li {
     margin-bottom: 8px;
+  }
+
+  .play-text-panel li.log-homerun { color: #ff6b6b; font-weight: 700; }
+  .play-text-panel li.log-hit     { color: #ffd54f; }
+  .play-text-panel li.log-strike  { color: #37d67a; }
+  .play-text-panel li.log-foul    { color: #a0b8d8; }
+  .play-text-panel li.log-ball    { color: #7a8fa8; }
+  .play-text-panel li.log-out     { color: #ff8c42; }
+  .play-text-panel li.log-walk    { color: #8ecfff; }
+
+  .play-text-panel li.log-separator {
+    list-style: none;
+    margin-left: -18px;
+    text-align: center;
+    color: #4a6080;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    border-top: 1px solid #1e3050;
+    border-bottom: 1px solid #1e3050;
+    padding: 3px 0;
+    margin-bottom: 6px;
+  }
+
+  .scoreboard th.current-inning,
+  .scoreboard td.current-inning {
+    background: rgba(70, 120, 200, 0.18);
+    color: #aad0ff;
   }
 
   @media (max-width: 1280px) {

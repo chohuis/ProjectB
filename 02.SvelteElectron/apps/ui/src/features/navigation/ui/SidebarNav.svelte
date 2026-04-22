@@ -2,6 +2,7 @@
   import type { MainTabId } from "../../../shared/types/main";
 
   export let currentTab: MainTabId;
+  export let unreadMessageCount = 0;
   export let onSelectTab: (tab: MainTabId) => void;
 
   const tabs: { id: MainTabId; label: string }[] = [
@@ -21,7 +22,10 @@
 <nav class="nav">
   {#each tabs as tab}
     <button class:active={tab.id === currentTab} on:click={() => onSelectTab(tab.id)}>
-      {tab.label}
+      <span>{tab.label}</span>
+      {#if tab.id === "messages" && unreadMessageCount > 0}
+        <strong class="badge">{unreadMessageCount > 99 ? "99+" : unreadMessageCount}</strong>
+      {/if}
     </button>
   {/each}
 </nav>
@@ -46,10 +50,30 @@
     line-height: 1.25;
     text-align: left;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
   }
 
   button.active {
     background: #2d3f68;
     border-color: #6fa2ff;
+  }
+
+  .badge {
+    min-width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    padding: 0 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #4f86e8;
+    color: #f3f8ff;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    border: 1px solid #7aa8f6;
   }
 </style>

@@ -36,14 +36,19 @@
     {
       title: "기술",
       items: [
-        { label: "패스트볼", value: 29 },
         { label: "커맨드", value: 30 },
         { label: "무브먼트", value: 29 },
-        { label: "세컨더리", value: 30 },
-        { label: "체인지업", value: 25 },
-        { label: "슬라이더", value: 30 },
         { label: "스피드 유지", value: 29 },
         { label: "주자 견제", value: 29 }
+      ]
+    },
+    {
+      title: "구종",
+      items: [
+        { label: "패스트볼", value: 29 },
+        { label: "슬라이더", value: 30 },
+        { label: "체인지업", value: 25 },
+        { label: "커브", value: 26 }
       ]
     },
     {
@@ -226,7 +231,7 @@
 
   .stats-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 12px;
   }
 
@@ -308,6 +313,12 @@
   }
 
   @media (max-width: 1200px) {
+    .stats-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 1024px) {
     .stats-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
