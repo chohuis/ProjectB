@@ -1,6 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import BaseballField from "../../features/match-view/ui/BaseballField.svelte";
+  import SettingsPanel from "../../features/settings/ui/SettingsPanel.svelte";
+  import { fieldStyleStore, type FieldStyle } from "../../shared/stores/settings";
+
+  let fieldStyle: FieldStyle = 'digital';
+  fieldStyleStore.subscribe(v => { fieldStyle = v; });
+  let settingsOpen = false;
 
   export let onExit: () => void = () => {};
 
@@ -112,9 +118,9 @@
     { pos: "2B", x: 590, y: 575 },
     { pos: "SS", x: 410, y: 575 },
     { pos: "3B", x: 350, y: 675 },
-    { pos: "LF", x: 270, y: 360 },
-    { pos: "CF", x: 500, y: 250 },
-    { pos: "RF", x: 730, y: 360 }
+    { pos: "LF", x: 330, y: 600 },
+    { pos: "CF", x: 500, y: 510 },
+    { pos: "RF", x: 670, y: 600 }
   ];
 
   const pitchTypes: { id: PitchType; label: string }[] = [
@@ -214,12 +220,19 @@
   };
 
   $: inningHalfLabel = `${inning}회 ${half === "top" ? "초" : "말"}`;
+  // 초: 원정 공격 → 홈팀 수비(파랑), 말: 홈 공격 → 원정팀 수비(빨강)
+  $: fieldingTeam = half === 'top' ? 'home' : 'away';
   $: staminaColor = pitcherState.stamina > 60 ? '#37d67a' : pitcherState.stamina > 30 ? '#ffd54f' : '#ff4a4a';
   $: mentalColor  = pitcherState.mental  > 60 ? '#5b9cf6' : pitcherState.mental  > 30 ? '#c47af5' : '#ff6b9d';
 
   function handleKeyDown(event: KeyboardEvent) {
     if (event.key === "Escape") {
+      if (settingsOpen) { settingsOpen = false; return; }
       onExit();
+    }
+    if ((event.ctrlKey || event.metaKey) && (event.key === 'q' || event.key === 'Q')) {
+      event.preventDefault();
+      settingsOpen = !settingsOpen;
     }
   }
 
@@ -314,18 +327,32 @@
 
   async function tweenBall(to: FieldPoint, duration: number) {
     const from = { ...ballPos };
-    const frame = 16;
-    const steps = Math.max(1, Math.round(duration / frame));
 
-    for (let i = 1; i <= steps; i += 1) {
-      const t = i / steps;
-      const eased = 1 - (1 - t) * (1 - t);
-      ballTrail = [...ballTrail, { ...ballPos }].slice(-TRAIL_MAX);
-      ballPos = {
-        x: Number((from.x + (to.x - from.x) * eased).toFixed(2)),
-        y: Number((from.y + (to.y - from.y) * eased).toFixed(2))
-      };
-      await sleep(frame);
+    if (fieldStyle === 'dot') {
+      const dx = to.x - from.x;
+      const dy = to.y - from.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const steps = Math.max(1, Math.round(dist / 10));
+      const delay = Math.max(20, Math.round(duration / steps));
+      for (let i = 1; i <= steps; i++) {
+        const t = i / steps;
+        ballTrail = [...ballTrail, { ...ballPos }].slice(-TRAIL_MAX);
+        ballPos = { x: Math.round(from.x + dx * t), y: Math.round(from.y + dy * t) };
+        await sleep(delay);
+      }
+    } else {
+      const frame = 16;
+      const steps = Math.max(1, Math.round(duration / frame));
+      for (let i = 1; i <= steps; i += 1) {
+        const t = i / steps;
+        const eased = 1 - (1 - t) * (1 - t);
+        ballTrail = [...ballTrail, { ...ballPos }].slice(-TRAIL_MAX);
+        ballPos = {
+          x: Number((from.x + (to.x - from.x) * eased).toFixed(2)),
+          y: Number((from.y + (to.y - from.y) * eased).toFixed(2))
+        };
+        await sleep(frame);
+      }
     }
     ballTrail = [];
   }
@@ -557,6 +584,7 @@
   }
 </script>
 
+<SettingsPanel bind:open={settingsOpen} />
 <section class="match-engine-empty" aria-label="match engine workspace">
   <div class="scoreboard-wrap">
     <table class="scoreboard" aria-label="baseball scoreboard">
@@ -598,6 +626,7 @@
           {#if selectedDefPosition}
             <span class="pos-badge">선택: {selectedDefPosition}</span>
           {/if}
+          <button class="settings-btn" type="button" on:click={() => (settingsOpen = !settingsOpen)} title="환경설정 (Ctrl+Q)">⚙</button>
         </div>
 
         <div class="scene-layout">
@@ -619,12 +648,26 @@
               {ballTrail}
               strikeZoneTarget={clickedFieldPos}
               {isPitching}
+              {fieldStyle}
+              {fieldingTeam}
               on:selectPosition={(event) => (selectedDefPosition = event.detail.pos)}
             />
             {#if resultOverlay.visible}
-              <div class="result-overlay">
-                <span class="result-overlay-text" style="color: {resultOverlay.color}; text-shadow: 0 0 24px {resultOverlay.color};">{resultOverlay.text}</span>
-              </div>
+              {#if fieldStyle === 'dot'}
+                <div class="result-overlay dot-result-overlay">
+                  <div class="dot-result-box" style="border-color: {resultOverlay.color}; color: {resultOverlay.color};">
+                    <div class="dot-result-corner tl"></div>
+                    <div class="dot-result-corner tr"></div>
+                    <div class="dot-result-corner bl"></div>
+                    <div class="dot-result-corner br"></div>
+                    <span class="dot-result-text">{resultOverlay.text}</span>
+                  </div>
+                </div>
+              {:else}
+                <div class="result-overlay">
+                  <span class="result-overlay-text" style="color: {resultOverlay.color}; text-shadow: 0 0 24px {resultOverlay.color};">{resultOverlay.text}</span>
+                </div>
+              {/if}
             {/if}
             {#if changeAlert.visible}
               <div class="change-overlay">
@@ -827,6 +870,19 @@
     overflow-x: auto;
     margin-bottom: 0;
   }
+
+  .settings-btn {
+    margin-left: auto;
+    background: none;
+    border: 1px solid #2a3a56;
+    border-radius: 5px;
+    color: #6a8aaa;
+    font-size: 15px;
+    padding: 1px 7px;
+    cursor: pointer;
+    line-height: 1.5;
+  }
+  .settings-btn:hover { color: #c8d8f0; border-color: #5a7aaa; }
 
   .scoreboard {
     width: 100%;
@@ -1041,6 +1097,46 @@
     35%  { transform: scale(1.0); }
     65%  { opacity: 1; }
     100% { opacity: 0; transform: scale(0.92) translateY(-28px); }
+  }
+
+  /* 도트 결과 오버레이 */
+  .dot-result-overlay { background: none; }
+
+  .dot-result-box {
+    position: relative;
+    border: 3px solid;
+    padding: 10px 24px;
+    image-rendering: pixelated;
+    background: rgba(4, 8, 16, 0.88);
+    animation: dotResultAnim 1.4s steps(1) forwards;
+  }
+
+  .dot-result-corner {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: currentColor;
+  }
+  .dot-result-corner.tl { top: -3px; left: -3px; }
+  .dot-result-corner.tr { top: -3px; right: -3px; }
+  .dot-result-corner.bl { bottom: -3px; left: -3px; }
+  .dot-result-corner.br { bottom: -3px; right: -3px; }
+
+  .dot-result-text {
+    font-size: 40px;
+    font-weight: 900;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.06em;
+    animation: dotResultAnim 1.4s steps(1) forwards;
+  }
+
+  @keyframes dotResultAnim {
+    0%   { opacity: 0; }
+    8%   { opacity: 1; }
+    70%  { opacity: 1; }
+    80%  { opacity: 0; }
+    90%  { opacity: 1; }
+    100% { opacity: 0; }
   }
 
   .base-panel {
