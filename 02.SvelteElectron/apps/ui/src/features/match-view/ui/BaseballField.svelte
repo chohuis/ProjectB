@@ -56,18 +56,32 @@
   <div class="viewport">
     <svg
       class="field"
-      viewBox="0 0 1000 1000"
-      preserveAspectRatio="xMidYMid meet"
+      viewBox="0 0 1000 920"
+      preserveAspectRatio="xMidYMax meet"
     >
       <defs>
-        <radialGradient id="grassGrad" cx="50%" cy="55%" r="65%">
-          <stop offset="0%" stop-color="#2f7d32" />
-          <stop offset="100%" stop-color="#256b2a" />
+        <radialGradient id="grassGrad" cx="50%" cy="70%" r="65%">
+          <stop offset="0%" stop-color="#33883a" />
+          <stop offset="55%" stop-color="#2d7a33" />
+          <stop offset="100%" stop-color="#1e5e24" />
         </radialGradient>
         <linearGradient id="dirtGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#c68642" />
-          <stop offset="100%" stop-color="#b97838" />
+          <stop offset="0%" stop-color="#c98d4c" />
+          <stop offset="100%" stop-color="#b87a38" />
         </linearGradient>
+        <linearGradient id="warningTrackGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#9e6830" />
+          <stop offset="100%" stop-color="#b07a42" />
+        </linearGradient>
+        <radialGradient id="lightGrad" cx="50%" cy="82%" r="68%">
+          <stop offset="0%"   stop-color="rgba(255,255,220,0.09)" />
+          <stop offset="55%"  stop-color="rgba(255,255,200,0.02)" />
+          <stop offset="100%" stop-color="rgba(0,0,10,0.28)" />
+        </radialGradient>
+        <pattern id="mowPattern" x="0" y="0" width="1000" height="56" patternUnits="userSpaceOnUse">
+          <rect x="0" y="0"  width="1000" height="28" fill="rgba(255,255,255,0.028)" />
+          <rect x="0" y="28" width="1000" height="28" fill="rgba(0,0,0,0.028)" />
+        </pattern>
         <pattern id="seatPattern" x="0" y="0" width="18" height="18" patternUnits="userSpaceOnUse">
           <rect x="0" y="0" width="18" height="18" fill="#1b2a41" />
           <circle cx="5" cy="5" r="2.1" fill="#335177" />
@@ -79,70 +93,71 @@
         </filter>
       </defs>
 
-      <rect x="0" y="0" width="1000" height="1000" fill="#112d1a" />
+      <rect x="0" y="0" width="1000" height="1000" fill="#0d1f11" />
 
+      <!-- 관중석 -->
       <path d="M40,40 Q500,-80 960,40 L960,290 Q500,150 40,290 Z" fill="#17263b" />
       <path d="M80,90 Q500,-10 920,90 L920,330 Q500,220 80,330 Z" fill="url(#seatPattern)" opacity="0.95" />
       <path d="M120,170 Q500,85 880,170 L880,352 Q500,260 120,352 Z" fill="#233a57" opacity="0.85" />
 
+      <!-- 경고 트랙 (외야 담장 안쪽 흙 띠) -->
       <path
-        d="M120,760
-           Q500,120 880,760
-           L880,980
-           L120,980
-           Z"
-        fill="url(#grassGrad)"
+        d="M136,754 Q500,126 864,754 L840,716 Q500,164 160,716 Z"
+        fill="url(#warningTrackGrad)"
+        opacity="0.72"
       />
 
-      <path
-        d="M175,700
-           Q500,205 825,700"
-        fill="none"
-        stroke="#e7f2de"
-        stroke-width="4"
-        opacity="0.92"
-      />
+      <!-- 외야 잔디 -->
+      <path d="M120,760 Q500,120 880,760 L880,980 L120,980 Z" fill="url(#grassGrad)" />
+      <!-- 잔디 모잉 줄무늬 -->
+      <path d="M120,760 Q500,120 880,760 L880,980 L120,980 Z" fill="url(#mowPattern)" />
 
+      <!-- 외야 담장 -->
       <path d="M182,706 Q500,232 818,706" fill="none" stroke="#294760" stroke-width="22" opacity="0.78" />
-      <path d="M182,694 Q500,220 818,694" fill="none" stroke="#7fb0df" stroke-width="3" opacity="0.62" />
+      <path d="M182,694 Q500,220 818,694" fill="none" stroke="#7fb0df" stroke-width="3"  opacity="0.62" />
+      <!-- 담장 상단 하이라이트 -->
+      <path d="M184,692 Q500,218 816,692" fill="none" stroke="rgba(180,210,255,0.18)" stroke-width="4" />
 
-      <path
-        d="M500,520
-           L700,720
-           L500,920
-           L300,720
-           Z"
-        fill="url(#dirtGrad)"
-      />
+      <!-- 내야 흙 (상단 아크 포함) -->
+      <path d="M500,920 L300,720 Q500,420 700,720 Z" fill="url(#dirtGrad)" />
 
-      <path
-        d="M500,580
-           L640,720
-           L500,860
-           L360,720
-           Z"
-        fill="#367a3f"
-      />
+      <!-- 내야 잔디 -->
+      <path d="M500,580 L640,720 L500,860 L360,720 Z" fill="#2d7230" />
+      <!-- 내야 잔디 밝은 줄무늬 -->
+      <path d="M500,580 L640,720 L500,860 L360,720 Z" fill="url(#mowPattern)" opacity="0.6" />
 
-      <ellipse cx={baseField.mound.x} cy={baseField.mound.y} rx="58" ry="38" fill="#b97b3c" />
-      <ellipse cx={baseField.mound.x} cy={baseField.mound.y} rx="18" ry="10" fill="#e8d4bb" />
+      <!-- 마운드 -->
+      <ellipse cx={baseField.mound.x} cy={baseField.mound.y} rx="60" ry="40" fill="#b87b3a" />
+      <ellipse cx={baseField.mound.x} cy={baseField.mound.y} rx="20" ry="12" fill="#d4aa7a" />
+      <!-- 마운드 러버 -->
+      <rect x="488" y={baseField.mound.y - 4} width="24" height="7" rx="1" fill="#f0ede8" stroke="#c8c0b0" stroke-width="0.8" />
 
+      <!-- 파울 라인 / 폴 -->
       <line x1={baseField.home.x} y1={baseField.home.y} x2="160" y2="480" class="foul-line" />
       <line x1={baseField.home.x} y1={baseField.home.y} x2="840" y2="480" class="foul-line" />
       <line x1="160" y1="480" x2="160" y2="290" class="foul-pole" />
       <line x1="840" y1="480" x2="840" y2="290" class="foul-pole" />
 
-      <line x1={baseField.home.x} y1={baseField.home.y} x2={baseField.first.x} y2={baseField.first.y} class="base-line" />
-      <line x1={baseField.first.x} y1={baseField.first.y} x2={baseField.second.x} y2={baseField.second.y} class="base-line" />
-      <line x1={baseField.second.x} y1={baseField.second.y} x2={baseField.third.x} y2={baseField.third.y} class="base-line" />
-      <line x1={baseField.third.x} y1={baseField.third.y} x2={baseField.home.x} y2={baseField.home.y} class="base-line" />
+      <!-- 베이스라인 -->
+      <line x1={baseField.home.x} y1={baseField.home.y} x2={baseField.first.x}  y2={baseField.first.y}  class="base-line" />
+      <line x1={baseField.first.x}  y1={baseField.first.y}  x2={baseField.second.x} y2={baseField.second.y} class="base-line" />
+      <line x1={baseField.second.x} y1={baseField.second.y} x2={baseField.third.x}  y2={baseField.third.y}  class="base-line" />
+      <line x1={baseField.third.x}  y1={baseField.third.y}  x2={baseField.home.x}  y2={baseField.home.y}  class="base-line" />
 
+      <!-- 베이스 -->
       <rect x="638" y="658" width="24" height="24" transform="rotate(45 650 670)" class="field-base" />
       <rect x="488" y="508" width="24" height="24" transform="rotate(45 500 520)" class="field-base" />
       <rect x="338" y="658" width="24" height="24" transform="rotate(45 350 670)" class="field-base" />
-      <polygon points="500,805 520,825 500,845 480,825" class="field-base" />
+      <!-- 홈플레이트 (오각형) -->
+      <polygon points="484,808 516,808 524,828 500,842 476,828" class="field-base" />
 
-      <circle cx="500" cy="800" r="62" fill="#7b6a2a" opacity="0.35" />
+      <!-- 타석 박스 (좌·우) + 포수 박스 -->
+      <rect x="440" y="796" width="40" height="54" fill="rgba(190,148,80,0.10)" stroke="#ddc47a" stroke-width="1.5" opacity="0.48" />
+      <rect x="520" y="796" width="40" height="54" fill="rgba(190,148,80,0.10)" stroke="#ddc47a" stroke-width="1.5" opacity="0.48" />
+      <rect x="476" y="842" width="48" height="28" fill="rgba(190,148,80,0.08)" stroke="#ddc47a" stroke-width="1.2" opacity="0.38" />
+
+      <!-- 조명 오버레이 -->
+      <rect x="0" y="0" width="1000" height="1000" fill="url(#lightGrad)" pointer-events="none" />
 
       <circle cx={strikeZoneTarget.x} cy={strikeZoneTarget.y} r="12" class="zone-preview" />
       {#if isPitching}

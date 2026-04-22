@@ -912,6 +912,8 @@
   .scene-panel {
     padding-top: 8px;
     padding-bottom: 10px;
+    display: flex;
+    flex-direction: column;
   }
 
   .play-text-panel {
@@ -979,7 +981,7 @@
     grid-template-columns: 108px minmax(0, 1fr) 108px;
     gap: 8px;
     align-items: stretch;
-    height: calc(100% - 12px);
+    flex: 1;
     min-height: 0;
   }
 
