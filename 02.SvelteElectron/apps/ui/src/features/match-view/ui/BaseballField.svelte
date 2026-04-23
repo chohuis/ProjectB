@@ -36,10 +36,30 @@
   export let ballTrail: Point[] = [];
   export let strikeZoneTarget: Point = { x: 500, y: 755 };
   export let isPitching = false;
-  export let fieldStyle: 'digital' | 'dot' = 'digital';
+  export let fieldStyle: 'digital' | 'dot' | 'retro' = 'digital';
   export let fieldingTeam: 'home' | 'away' = 'home';
 
   const dispatch = createEventDispatcher<{ selectPosition: { pos: string } }>();
+
+  const RETRO_SPRITE: string[] = [
+    '..CCCC..',
+    '.CCCCCC.',
+    '.CSCCSC.',
+    '.SSSSSS.',
+    'UUUUUUUU',
+    'UUUUUUUU',
+    '.PPPPPP.',
+    '..PP.PP.',
+  ];
+
+  function retroSpriteColor(key: string): string {
+    const home = fieldingTeam === 'home';
+    if (key === 'C') return home ? '#1a2878' : '#781a1a';
+    if (key === 'S') return '#d4a870';
+    if (key === 'U') return home ? '#3858d0' : '#d03838';
+    if (key === 'P') return '#1a1a28';
+    return 'transparent';
+  }
 
   const posLabel: Record<string, string> = {
     P: '투수', C: '포수', '1B': '1루수', '2B': '2루수',
@@ -352,6 +372,256 @@
       {/each}
       <rect x={Math.round(ballPos.x) - 5} y={Math.round(ballPos.y) - 5} width="10" height="10"
         fill="#ffffff" stroke="#dae4ff" stroke-width="1" shape-rendering="crispEdges"/>
+    </svg>
+{:else if fieldStyle === 'retro'}
+    <!-- GBC 포켓몬 골드 스타일 레트로 필드 -->
+    <svg class="field dot-field" viewBox="0 0 1000 920" preserveAspectRatio="xMidYMax meet" shape-rendering="crispEdges">
+      <defs>
+        <!-- 외야 잔디: 밝은/어두운 줄무늬 8px 간격 -->
+        <pattern id="rg" x="0" y="0" width="1000" height="16" patternUnits="userSpaceOnUse">
+          <rect x="0" y="0"  width="1000" height="8" fill="#3a6832"/>
+          <rect x="0" y="8" width="1000" height="8" fill="#2d5828"/>
+        </pattern>
+        <!-- 내야 잔디: 조금 더 밝은 줄무늬 -->
+        <pattern id="rgIn" x="0" y="0" width="1000" height="16" patternUnits="userSpaceOnUse">
+          <rect x="0" y="0"  width="1000" height="8" fill="#4a7840"/>
+          <rect x="0" y="8" width="1000" height="8" fill="#3a6030"/>
+        </pattern>
+        <!-- 경고 트랙 흙 -->
+        <pattern id="rd" x="0" y="0" width="1000" height="16" patternUnits="userSpaceOnUse">
+          <rect x="0" y="0"  width="1000" height="8" fill="#b07a30"/>
+          <rect x="0" y="8" width="1000" height="8" fill="#8c5c20"/>
+        </pattern>
+        <!-- 관중석 디더링 패턴 (밝/어두 체크보드) -->
+        <pattern id="rc" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+          <rect width="8" height="8" fill="#0a1018"/>
+          <rect x="0" y="0" width="4" height="4" fill="#141e2e"/>
+          <rect x="4" y="4" width="4" height="4" fill="#141e2e"/>
+        </pattern>
+        <!-- 관중석 좌석 줄무늬 -->
+        <pattern id="rseat" x="0" y="0" width="1000" height="16" patternUnits="userSpaceOnUse">
+          <rect x="0" y="0"  width="1000" height="10" fill="rgba(0,0,0,0)"/>
+          <rect x="0" y="10" width="1000" height="6"  fill="rgba(0,0,0,0.4)"/>
+        </pattern>
+      </defs>
+
+      <!-- 하늘 배경 -->
+      <rect x="0" y="0" width="1000" height="920" fill="#0a0f18"/>
+      <!-- 하늘 그라데이션 (디더링) -->
+      <rect x="0" y="0"   width="1000" height="80"  fill="#0f1828"/>
+      <rect x="0" y="80"  width="1000" height="80"  fill="#0c1420"/>
+      <rect x="0" y="160" width="1000" height="80"  fill="#0a1018"/>
+
+      <!-- 외야 잔디 전체 -->
+      <rect x="0" y="320" width="1000" height="600" fill="url(#rg)"/>
+
+      <!-- 경고 트랙 (계단형 폴리곤) -->
+      <polygon points="
+        120,760 120,720 168,720 168,672 216,672 216,624 248,624 248,560
+        312,560 312,520 312,464 408,464 408,440 504,440
+        600,440 600,464 688,464 688,520 688,560
+        744,560 744,624 784,624 784,672 832,672 832,720 880,720 880,760
+        816,704 816,648 776,648 776,600 736,600 736,560 696,560 696,528
+        656,528 656,480 576,480 576,464 496,464
+        424,464 424,480 344,480 344,528 304,528
+        304,560 264,560 264,600 224,600 224,648 184,648 184,704"
+        fill="url(#rd)"/>
+
+      <!-- 외야 담장 (계단형, 3레이어) -->
+      <polyline points="
+        184,704 184,648 224,648 224,600 264,600 264,560
+        304,560 304,528 344,528 344,480 424,480 424,464
+        496,464 576,464 576,480 656,480 656,528
+        696,528 696,560 736,560 736,600 776,600 776,648 816,648 816,704"
+        fill="none" stroke="#0f2010" stroke-width="24" stroke-linejoin="miter"/>
+      <polyline points="
+        184,704 184,648 224,648 224,600 264,600 264,560
+        304,560 304,528 344,528 344,480 424,480 424,464
+        496,464 576,464 576,480 656,480 656,528
+        696,528 696,560 736,560 736,600 776,600 776,648 816,648 816,704"
+        fill="none" stroke="#286828" stroke-width="10" stroke-linejoin="miter"/>
+      <polyline points="
+        184,704 184,648 224,648 224,600 264,600 264,560
+        304,560 304,528 344,528 344,480 424,480 424,464
+        496,464 576,464 576,480 656,480 656,528
+        696,528 696,560 736,560 736,600 776,600 776,648 816,648 816,704"
+        fill="none" stroke="#4aac40" stroke-width="4" stroke-linejoin="miter"/>
+
+      <!-- 파울 라인 (계단형) -->
+      <polyline points="
+        496,816 488,808 488,800 480,800 480,792 472,792 472,784 464,784
+        464,776 456,776 456,768 448,768 448,760 440,760 440,752 432,752
+        432,744 424,744 424,736 416,736 416,728 408,728 408,720 400,720
+        400,712 392,712 392,704 384,704 384,696 376,696 376,688 368,688
+        368,680 360,680 360,672 352,672 352,664 344,664 344,656 336,656
+        336,648 328,648 328,640 320,640 320,632 312,632 312,624 304,624
+        304,616 296,616 296,608 288,608 288,600 280,600 280,592 272,592
+        272,584 264,584 264,576 256,576 256,568 248,568 248,560 240,560
+        240,552 232,552 232,544 224,544 224,536 216,536 216,528 208,528
+        208,520 200,520 200,512 192,512 192,504 184,504 184,496 176,496 176,488"
+        fill="none" stroke="#e8e8c8" stroke-width="2"/>
+      <polyline points="
+        504,816 512,808 512,800 520,800 520,792 528,792 528,784 536,784
+        536,776 544,776 544,768 552,768 552,760 560,760 560,752 568,752
+        568,744 576,744 576,736 584,736 584,728 592,728 592,720 600,720
+        600,712 608,712 608,704 616,704 616,696 624,696 624,688 632,688
+        632,680 640,680 640,672 648,672 648,664 656,664 656,656 664,656
+        664,648 672,648 672,640 680,640 680,632 688,632 688,624 696,624
+        696,616 704,616 704,608 712,608 712,600 720,600 720,592 728,592
+        728,584 736,584 736,576 744,576 744,568 752,568 752,560 760,560
+        760,552 768,552 768,544 776,544 776,536 784,536 784,528 792,528
+        792,520 800,520 800,512 808,512 808,504 816,504 816,496 824,496 824,488"
+        fill="none" stroke="#e8e8c8" stroke-width="2"/>
+
+      <!-- 파울 폴 (픽셀) -->
+      <rect x="168" y="320" width="8"  height="168" fill="#c8a800"/>
+      <rect x="168" y="320" width="16" height="8"   fill="#c8a800"/>
+      <rect x="824" y="320" width="8"  height="168" fill="#c8a800"/>
+      <rect x="816" y="320" width="16" height="8"   fill="#c8a800"/>
+
+      <!-- 내야 흙 (계단형 다이아몬드) -->
+      <polygon points="
+        500,920 500,904 488,904 488,896 480,896 480,888 472,888
+        472,880 456,880 456,872 440,872 440,856 432,856 432,848
+        424,848 424,840 416,840 416,824 408,824 408,808 400,808
+        400,792 408,792 408,784 408,776 416,776 416,768 424,768
+        424,760 432,760 432,752 440,752 440,744 456,744 456,736
+        464,736 464,728 472,728 472,720 480,720 480,712 488,712
+        488,704 496,704 496,696 504,696 504,704 512,704 512,712
+        520,712 520,720 528,720 528,728 536,728 536,736 544,736
+        544,744 560,744 560,752 568,752 568,760 576,760 576,768
+        584,768 584,776 592,776 592,784 592,792 600,792
+        600,808 592,808 592,824 584,824 584,840 576,840 576,848
+        568,848 568,856 552,856 552,872 536,872 536,880 520,880
+        512,888 512,896 500,896"
+        fill="url(#rd)"/>
+
+      <!-- 내야 잔디 (다이아몬드) -->
+      <polygon points="500,576 648,672 500,856 352,672"
+        fill="url(#rgIn)"/>
+
+      <!-- 베이스라인 (픽셀) -->
+      <line x1="500" y1="824" x2="648" y2="672" stroke="#e8e8c8" stroke-width="2"/>
+      <line x1="648" y1="672" x2="500" y2="520" stroke="#e8e8c8" stroke-width="2"/>
+      <line x1="500" y1="520" x2="352" y2="672" stroke="#e8e8c8" stroke-width="2"/>
+      <line x1="352" y1="672" x2="500" y2="824" stroke="#e8e8c8" stroke-width="2"/>
+
+      <!-- 마운드 (픽셀 타원 근사) -->
+      <rect x="480" y="632" width="40" height="32" fill="#b07a30"/>
+      <rect x="472" y="640" width="56" height="16" fill="#b07a30"/>
+      <rect x="488" y="648" width="24" height="6"  fill="#e8e8c8"/>
+
+      <!-- 베이스 -->
+      <rect x="640" y="664" width="16" height="16" transform="rotate(45 648 672)" fill="#e8e8c8"/>
+      <rect x="492" y="512" width="16" height="16" transform="rotate(45 500 520)" fill="#e8e8c8"/>
+      <rect x="344" y="664" width="16" height="16" transform="rotate(45 352 672)" fill="#e8e8c8"/>
+      <polygon points="484,816 516,816 520,832 500,840 480,832" fill="#e8e8c8"/>
+
+      <!-- 타석 박스 -->
+      <rect x="444" y="800" width="40" height="48" fill="none" stroke="#c8a800" stroke-width="2" opacity="0.6"/>
+      <rect x="516" y="800" width="40" height="48" fill="none" stroke="#c8a800" stroke-width="2" opacity="0.6"/>
+
+      <!-- 관중석 배경 (필드 위에 그려 마스킹) -->
+      <polygon points="0,0 1000,0 1000,360 870,660 790,568 712,500 628,460 500,444 372,460 288,500 210,568 130,660 0,360"
+        fill="url(#rc)"/>
+      <polygon points="0,0 1000,0 1000,360 870,660 790,568 712,500 628,460 500,444 372,460 288,500 210,568 130,660 0,360"
+        fill="url(#rseat)"/>
+      <!-- 티어 구분선 (픽셀) -->
+      <polyline points="0,232 1000,232" fill="none" stroke="#1e3050" stroke-width="8"/>
+      <!-- 하단 티어 배경 -->
+      <polygon points="0,232 1000,232 1000,360 870,660 790,568 712,500 628,460 500,444 372,460 288,500 210,568 130,660 0,360"
+        fill="#0e1a2e"/>
+      <polygon points="0,232 1000,232 1000,360 870,660 790,568 712,500 628,460 500,444 372,460 288,500 210,568 130,660 0,360"
+        fill="url(#rseat)"/>
+      <!-- 관중석 경계벽 (픽셀) -->
+      <polyline points="130,660 210,568 288,500 372,460 500,444 628,460 712,500 790,568 870,660"
+        fill="none" stroke="#0a1018" stroke-width="16"/>
+      <polyline points="130,660 210,568 288,500 372,460 500,444 628,460 712,500 790,568 870,660"
+        fill="none" stroke="#1e3050" stroke-width="8"/>
+      <polyline points="130,660 210,568 288,500 372,460 500,444 628,460 712,500 790,568 870,660"
+        fill="none" stroke="#3a6090" stroke-width="2"/>
+
+      <!-- 조명탑 (픽셀) -->
+      <rect x="56"  y="80"  width="8"  height="96" fill="#607080"/>
+      <rect x="48"  y="72"  width="24" height="8"  fill="#8090a0"/>
+      <rect x="40"  y="48"  width="40" height="32" fill="#506070"/>
+      <rect x="42"  y="50"  width="36" height="28" fill="#0a1020"/>
+      {#each [0,1,2,3] as col}
+        {#each [0,1,2] as row}
+          <rect x={44 + col*8} y={52 + row*8} width="6" height="6" fill="#e8e8c0"/>
+        {/each}
+      {/each}
+      <rect x="936" y="80"  width="8"  height="96" fill="#607080"/>
+      <rect x="928" y="72"  width="24" height="8"  fill="#8090a0"/>
+      <rect x="920" y="48"  width="40" height="32" fill="#506070"/>
+      <rect x="922" y="50"  width="36" height="28" fill="#0a1020"/>
+      {#each [0,1,2,3] as col}
+        {#each [0,1,2] as row}
+          <rect x={924 + col*8} y={52 + row*8} width="6" height="6" fill="#e8e8c0"/>
+        {/each}
+      {/each}
+
+      <!-- 존 미리보기 -->
+      <rect x={Math.round(strikeZoneTarget.x) - 6} y={Math.round(strikeZoneTarget.y) - 6} width="12" height="12"
+        fill="rgba(101,213,255,0.78)" stroke="rgba(227,250,255,0.95)" stroke-width="2"/>
+      {#if isPitching}
+        <rect x={Math.round(strikeZoneTarget.x) - 14} y={Math.round(strikeZoneTarget.y) - 14} width="28" height="28"
+          fill="none" stroke="rgba(101,213,255,0.72)" stroke-width="2" stroke-dasharray="4 4"/>
+      {/if}
+
+      <!-- 수비수 (GBC 픽셀 스프라이트) -->
+      {#each defenders as player}
+        <g role="button" tabindex="0" aria-label={player.pos}
+          on:click={() => selectPosition(player.pos)}
+          on:keydown={(e) => e.key === 'Enter' && selectPosition(player.pos)}
+          on:mouseenter={() => (hoveredPos = player.pos)}
+          on:mouseleave={() => (hoveredPos = '')}>
+          {#if selectedPos === player.pos}
+            <rect x={player.x - 20} y={player.y - 20} width="40" height="40"
+              fill="none" stroke="#e8e800" stroke-width="2" stroke-dasharray="4 4"/>
+          {/if}
+          {#each RETRO_SPRITE as rowStr, ri}
+            {#each rowStr.split('') as cell, ci}
+              {#if cell !== '.'}
+                <rect x={player.x - 16 + ci * 4} y={player.y - 18 + ri * 4}
+                  width="4" height="4" fill={retroSpriteColor(cell)}/>
+              {/if}
+            {/each}
+          {/each}
+          <!-- 포지션 텍스트 (GBC 폰트 스타일) -->
+          <text x={player.x} y={player.y + 26} text-anchor="middle"
+            font-size="10" font-weight="700" font-family="'Courier New',monospace"
+            fill="#e8e8c8">{player.pos}</text>
+          {#if hoveredPos === player.pos}
+            <rect x={player.x - 36} y={player.y - 52} width="72" height="18"
+              fill="#0a1018" stroke="#e8e8c8" stroke-width="1"/>
+            <text x={player.x} y={player.y - 39} text-anchor="middle"
+              font-size="11" font-family="'Courier New',monospace" fill="#e8e8c8">{posLabel[player.pos] ?? player.pos}</text>
+          {/if}
+        </g>
+      {/each}
+
+      <!-- 주자 -->
+      {#if runners.first}
+        <rect x={baseField.first.x - 8} y={baseField.first.y - 8} width="16" height="16"
+          fill="#e8e800" stroke="#e8e8c8" stroke-width="1"/>
+      {/if}
+      {#if runners.second}
+        <rect x={baseField.second.x - 8} y={baseField.second.y - 8} width="16" height="16"
+          fill="#e8e800" stroke="#e8e8c8" stroke-width="1"/>
+      {/if}
+      {#if runners.third}
+        <rect x={baseField.third.x - 8} y={baseField.third.y - 8} width="16" height="16"
+          fill="#e8e800" stroke="#e8e8c8" stroke-width="1"/>
+      {/if}
+
+      <!-- 공 궤적 & 공 -->
+      {#each ballTrail as pos, i}
+        <rect x={Math.round(pos.x) - 2} y={Math.round(pos.y) - 2} width="4" height="4"
+          fill="white" opacity={(i + 1) / ballTrail.length * 0.35}/>
+      {/each}
+      <rect x={Math.round(ballPos.x) - 4} y={Math.round(ballPos.y) - 4} width="8" height="8"
+        fill="#e8e8c8" stroke="#c8c8a0" stroke-width="1"/>
     </svg>
 {:else}
     <svg

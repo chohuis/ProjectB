@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 
-export type FieldStyle = 'digital' | 'dot';
+export type FieldStyle = 'digital' | 'dot' | 'retro';
 
 function makePersistedStore<T>(key: string, initial: T) {
   let saved = initial;

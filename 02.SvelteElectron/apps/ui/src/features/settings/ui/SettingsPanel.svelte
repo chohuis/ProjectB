@@ -11,7 +11,7 @@
 {#if open}
   <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
   <div class="backdrop" on:click={close}></div>
-  <aside class="panel" role="dialog" aria-label="환경설정">
+  <div class="panel" role="dialog" aria-label="환경설정">
     <header class="panel-header">
       <span class="panel-title">환경설정</span>
       <kbd class="shortcut">Ctrl+Q</kbd>
@@ -50,9 +50,23 @@
           <span class="style-label">도트</span>
           <span class="style-desc">픽셀 아트 · 레트로 스타일</span>
         </button>
+        <button
+          type="button"
+          class="style-card"
+          class:active={$fieldStyleStore === 'retro'}
+          on:click={() => setStyle('retro')}
+        >
+          <div class="style-preview retro-prev">
+            <div class="dp-field"></div>
+            <div class="dp-dirt"></div>
+            <div class="dp-mound"></div>
+          </div>
+          <span class="style-label">레트로</span>
+          <span class="style-desc">GBC 픽셀 · 포켓몬 골드</span>
+        </button>
       </div>
     </section>
-  </aside>
+  </div>
 {/if}
 
 <style>
@@ -137,8 +151,8 @@
 
   .style-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
   }
 
   .style-card {
@@ -234,5 +248,37 @@
     color: #4a6a8a;
     text-align: center;
     line-height: 1.3;
+  }
+
+  /* 레트로 미리보기 */
+  .retro-prev {
+    background: #0a0f18;
+    image-rendering: pixelated;
+  }
+  .retro-prev .dp-field {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      #3a6832 0px, #3a6832 4px,
+      #2d5828 4px, #2d5828 8px
+    );
+    clip-path: polygon(10% 100%, 10% 65%, 50% 20%, 90% 65%, 90% 100%);
+  }
+  .retro-prev .dp-dirt {
+    position: absolute;
+    left: 28%; right: 28%; top: 38%; bottom: 8%;
+    background: repeating-linear-gradient(
+      to bottom,
+      #b07a30 0px, #b07a30 4px,
+      #8c5c20 4px, #8c5c20 8px
+    );
+    clip-path: polygon(50% 0%, 100% 55%, 50% 100%, 0% 55%);
+  }
+  .retro-prev .dp-mound {
+    position: absolute;
+    left: 44%; top: 44%;
+    width: 12%; height: 8%;
+    background: #e8e8c8;
   }
 </style>
