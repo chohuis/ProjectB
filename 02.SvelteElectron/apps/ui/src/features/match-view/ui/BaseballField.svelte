@@ -61,6 +61,23 @@
     return 'transparent';
   }
 
+  const RETRO_RUNNER: string[] = [
+    '..RR..',
+    '.RRRR.',
+    '..RR..',
+    'RRRRRR',
+    '.RR.R.',
+    '.RR.R.',
+  ];
+  function retroRunnerColor(): string { return '#e8e800'; }
+
+  const RETRO_STARS: [number, number, number][] = [
+    [50,30,1],[120,18,2],[200,42,1],[290,22,1],[370,38,2],[450,12,1],
+    [530,50,1],[620,28,2],[700,16,1],[780,44,2],[860,20,1],[940,36,1],
+    [80,88,1],[160,112,2],[260,96,1],[400,104,2],[560,80,1],[680,118,1],
+    [760,90,2],[880,102,1],[960,76,1],[340,62,1],[490,136,1],[740,58,2],
+  ];
+
   const posLabel: Record<string, string> = {
     P: '투수', C: '포수', '1B': '1루수', '2B': '2루수',
     SS: '유격수', '3B': '3루수', LF: '좌익수', CF: '중견수', RF: '우익수'
@@ -81,7 +98,7 @@
 </script>
 
 <div class="wrapper">
-  <div class="viewport">
+  <div class="viewport" class:retro-viewport={fieldStyle === 'retro'}>
 {#if fieldStyle === 'dot'}
     <svg class="field dot-field" viewBox="0 0 1000 920" preserveAspectRatio="xMidYMax meet">
       <defs>
@@ -403,6 +420,20 @@
           <rect x="0" y="0"  width="1000" height="10" fill="rgba(0,0,0,0)"/>
           <rect x="0" y="10" width="1000" height="6"  fill="rgba(0,0,0,0.4)"/>
         </pattern>
+        <!-- 레트로 픽셀 관중 (하단 티어) -->
+        <pattern id="rcrowd" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse">
+          <rect width="16" height="16" fill="#0c1828"/>
+          <rect x="0" y="7" width="16" height="1" fill="#060e18"/>
+          <rect x="6" y="0" width="2" height="16" fill="#060e18"/>
+          <rect x="1" y="0" width="3" height="3" fill="#1a3068"/>
+          <rect x="0" y="3" width="5" height="4" fill="#142258"/>
+          <rect x="9" y="1" width="3" height="2" fill="#601818"/>
+          <rect x="8" y="3" width="5" height="3" fill="#4a1010"/>
+          <rect x="1" y="8" width="3" height="2" fill="#286020"/>
+          <rect x="0" y="10" width="5" height="5" fill="#1e4818"/>
+          <rect x="9" y="9" width="3" height="2" fill="#806018"/>
+          <rect x="8" y="11" width="5" height="4" fill="#604510"/>
+        </pattern>
       </defs>
 
       <!-- 하늘 배경 -->
@@ -411,6 +442,14 @@
       <rect x="0" y="0"   width="1000" height="80"  fill="#0f1828"/>
       <rect x="0" y="80"  width="1000" height="80"  fill="#0c1420"/>
       <rect x="0" y="160" width="1000" height="80"  fill="#0a1018"/>
+      <!-- 픽셀 별 -->
+      {#each RETRO_STARS as [sx, sy, ss]}
+        <rect x={sx} y={sy} width={ss} height={ss} fill="#e8e8c8"/>
+        {#if ss >= 2}
+          <rect x={sx - 1} y={sy} width="1" height="1" fill="#a8a890" opacity="0.6"/>
+          <rect x={sx + ss} y={sy} width="1" height="1" fill="#a8a890" opacity="0.6"/>
+        {/if}
+      {/each}
 
       <!-- 외야 잔디 전체 -->
       <rect x="0" y="320" width="1000" height="600" fill="url(#rg)"/>
@@ -500,21 +539,21 @@
       <polygon points="500,576 648,672 500,856 352,672"
         fill="url(#rgIn)"/>
 
-      <!-- 베이스라인 (픽셀) -->
-      <line x1="500" y1="824" x2="648" y2="672" stroke="#e8e8c8" stroke-width="2"/>
-      <line x1="648" y1="672" x2="500" y2="520" stroke="#e8e8c8" stroke-width="2"/>
-      <line x1="500" y1="520" x2="352" y2="672" stroke="#e8e8c8" stroke-width="2"/>
-      <line x1="352" y1="672" x2="500" y2="824" stroke="#e8e8c8" stroke-width="2"/>
+      <!-- 베이스라인 (계단형 GBC) -->
+      <polyline fill="none" stroke="#e8e8c8" stroke-width="2" points="500,824 508,824 508,816 516,816 516,808 524,808 524,800 532,800 532,792 540,792 540,784 548,784 548,776 556,776 556,768 564,768 564,760 572,760 572,752 580,752 580,744 588,744 588,736 596,736 596,728 604,728 604,720 612,720 612,712 620,712 620,704 628,704 628,696 636,696 636,688 644,688 644,680 648,680 648,672"/>
+      <polyline fill="none" stroke="#e8e8c8" stroke-width="2" points="648,672 640,672 640,664 632,664 632,656 624,656 624,648 616,648 616,640 608,640 608,632 600,632 600,624 592,624 592,616 584,616 584,608 576,608 576,600 568,600 568,592 560,592 560,584 552,584 552,576 544,576 544,568 536,568 536,560 528,560 528,552 520,552 520,544 512,544 512,536 504,536 504,528 500,528 500,520"/>
+      <polyline fill="none" stroke="#e8e8c8" stroke-width="2" points="500,520 492,520 492,528 484,528 484,536 476,536 476,544 468,544 468,552 460,552 460,560 452,560 452,568 444,568 444,576 436,576 436,584 428,584 428,592 420,592 420,600 412,600 412,608 404,608 404,616 396,616 396,624 388,624 388,632 380,632 380,640 372,640 372,648 364,648 364,656 356,656 356,664 352,664 352,672"/>
+      <polyline fill="none" stroke="#e8e8c8" stroke-width="2" points="352,672 360,672 360,680 368,680 368,688 376,688 376,696 384,696 384,704 392,704 392,712 400,712 400,720 408,720 408,728 416,728 416,736 424,736 424,744 432,744 432,752 440,752 440,760 448,760 448,768 456,768 456,776 464,776 464,784 472,784 472,792 480,792 480,800 488,800 488,808 496,808 496,816 500,816 500,824"/>
 
       <!-- 마운드 (픽셀 타원 근사) -->
       <rect x="480" y="632" width="40" height="32" fill="#b07a30"/>
       <rect x="472" y="640" width="56" height="16" fill="#b07a30"/>
       <rect x="488" y="648" width="24" height="6"  fill="#e8e8c8"/>
 
-      <!-- 베이스 -->
-      <rect x="640" y="664" width="16" height="16" transform="rotate(45 648 672)" fill="#e8e8c8"/>
-      <rect x="492" y="512" width="16" height="16" transform="rotate(45 500 520)" fill="#e8e8c8"/>
-      <rect x="344" y="664" width="16" height="16" transform="rotate(45 352 672)" fill="#e8e8c8"/>
+      <!-- 베이스 (픽셀 다이아몬드) -->
+      <polygon points="648,664 652,668 656,672 652,676 648,680 644,676 640,672 644,668" fill="#e8e8c8"/>
+      <polygon points="500,512 504,516 508,520 504,524 500,528 496,524 492,520 496,516" fill="#e8e8c8"/>
+      <polygon points="352,664 356,668 360,672 356,676 352,680 348,676 344,672 348,668" fill="#e8e8c8"/>
       <polygon points="484,816 516,816 520,832 500,840 480,832" fill="#e8e8c8"/>
 
       <!-- 타석 박스 -->
@@ -528,9 +567,9 @@
         fill="url(#rseat)"/>
       <!-- 티어 구분선 (픽셀) -->
       <polyline points="0,232 1000,232" fill="none" stroke="#1e3050" stroke-width="8"/>
-      <!-- 하단 티어 배경 -->
+      <!-- 하단 티어: 픽셀 관중 -->
       <polygon points="0,232 1000,232 1000,360 870,660 790,568 712,500 628,460 500,444 372,460 288,500 210,568 130,660 0,360"
-        fill="#0e1a2e"/>
+        fill="url(#rcrowd)"/>
       <polygon points="0,232 1000,232 1000,360 870,660 790,568 712,500 628,460 500,444 372,460 288,500 210,568 130,660 0,360"
         fill="url(#rseat)"/>
       <!-- 관중석 경계벽 (픽셀) -->
@@ -578,7 +617,8 @@
           on:mouseleave={() => (hoveredPos = '')}>
           {#if selectedPos === player.pos}
             <rect x={player.x - 20} y={player.y - 20} width="40" height="40"
-              fill="none" stroke="#e8e800" stroke-width="2" stroke-dasharray="4 4"/>
+              fill="none" stroke="#e8e800" stroke-width="2" stroke-dasharray="8 8"
+              class="retro-select-march"/>
           {/if}
           {#each RETRO_SPRITE as rowStr, ri}
             {#each rowStr.split('') as cell, ci}
@@ -601,24 +641,29 @@
         </g>
       {/each}
 
-      <!-- 주자 -->
-      {#if runners.first}
-        <rect x={baseField.first.x - 8} y={baseField.first.y - 8} width="16" height="16"
-          fill="#e8e800" stroke="#e8e8c8" stroke-width="1"/>
-      {/if}
-      {#if runners.second}
-        <rect x={baseField.second.x - 8} y={baseField.second.y - 8} width="16" height="16"
-          fill="#e8e800" stroke="#e8e8c8" stroke-width="1"/>
-      {/if}
-      {#if runners.third}
-        <rect x={baseField.third.x - 8} y={baseField.third.y - 8} width="16" height="16"
-          fill="#e8e800" stroke="#e8e8c8" stroke-width="1"/>
-      {/if}
+      <!-- 주자 (픽셀 스프라이트 + GBC 깜빡임) -->
+      {#each ([
+        runners.first  ? baseField.first  : null,
+        runners.second ? baseField.second : null,
+        runners.third  ? baseField.third  : null,
+      ]).filter((p): p is {x:number,y:number} => p !== null) as rp}
+        <g class="retro-runner-blink">
+          {#each RETRO_RUNNER as rowStr, ri}
+            {#each rowStr.split('') as cell, ci}
+              {#if cell !== '.'}
+                <rect x={rp.x - 12 + ci * 4} y={rp.y - 16 + ri * 4}
+                  width="4" height="4" fill={retroRunnerColor()}/>
+              {/if}
+            {/each}
+          {/each}
+        </g>
+      {/each}
 
-      <!-- 공 궤적 & 공 -->
+      <!-- 공 궤적 (앞→뒤로 shrink) & 공 -->
       {#each ballTrail as pos, i}
-        <rect x={Math.round(pos.x) - 2} y={Math.round(pos.y) - 2} width="4" height="4"
-          fill="white" opacity={(i + 1) / ballTrail.length * 0.35}/>
+        {@const sz = Math.max(2, Math.round(2 + (i / Math.max(ballTrail.length - 1, 1)) * 4))}
+        <rect x={Math.round(pos.x) - sz/2} y={Math.round(pos.y) - sz/2} width={sz} height={sz}
+          fill="#e8d870" opacity={(i + 1) / ballTrail.length * 0.45}/>
       {/each}
       <rect x={Math.round(ballPos.x) - 4} y={Math.round(ballPos.y) - 4} width="8" height="8"
         fill="#e8e8c8" stroke="#c8c8a0" stroke-width="1"/>
@@ -905,5 +950,33 @@
     stroke: rgba(101, 213, 255, 0.72);
     stroke-width: 2;
     stroke-dasharray: 6 4;
+  }
+
+  /* GBC 레트로 모드 viewport 프레임 */
+  .retro-viewport {
+    border: 4px solid #1e3050;
+    box-shadow:
+      0 0 0 2px #0a1018,
+      0 0 0 6px #1e3050,
+      inset 0 0 0 2px #0a1018;
+    border-radius: 4px;
+  }
+
+  .retro-runner-blink {
+    animation: gbcBlink 0.8s steps(1) infinite;
+  }
+
+  @keyframes gbcBlink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+
+  .retro-select-march {
+    stroke-dashoffset: 0;
+    animation: marchingAnts 0.4s linear infinite;
+  }
+
+  @keyframes marchingAnts {
+    to { stroke-dashoffset: -16; }
   }
 </style>
