@@ -392,7 +392,7 @@
     </svg>
 {:else if fieldStyle === 'retro'}
     <!-- GBC 포켓몬 골드 스타일 레트로 필드 -->
-    <svg class="field dot-field" viewBox="0 0 1000 920" preserveAspectRatio="xMidYMax meet" shape-rendering="crispEdges">
+    <svg class="field dot-field" viewBox="0 0 1000 920" preserveAspectRatio="xMidYMid meet" shape-rendering="crispEdges">
       <defs>
         <!-- 외야 잔디: 밝은/어두운 줄무늬 8px 간격 -->
         <pattern id="rg" x="0" y="0" width="1000" height="16" patternUnits="userSpaceOnUse">
@@ -436,23 +436,13 @@
         </pattern>
       </defs>
 
-      <!-- 하늘 배경 -->
+      <!-- 하늘 배경 (y=0~60 스트립) -->
       <rect x="0" y="0" width="1000" height="920" fill="#0a0f18"/>
-      <!-- 하늘 그라데이션 (디더링) -->
-      <rect x="0" y="0"   width="1000" height="80"  fill="#0f1828"/>
-      <rect x="0" y="80"  width="1000" height="80"  fill="#0c1420"/>
-      <rect x="0" y="160" width="1000" height="80"  fill="#0a1018"/>
-      <!-- 픽셀 별 -->
-      {#each RETRO_STARS as [sx, sy, ss]}
-        <rect x={sx} y={sy} width={ss} height={ss} fill="#e8e8c8"/>
-        {#if ss >= 2}
-          <rect x={sx - 1} y={sy} width="1" height="1" fill="#a8a890" opacity="0.6"/>
-          <rect x={sx + ss} y={sy} width="1" height="1" fill="#a8a890" opacity="0.6"/>
-        {/if}
-      {/each}
+      <rect x="0" y="0" width="1000" height="36"  fill="#0f1828"/>
+      <rect x="0" y="36" width="1000" height="24" fill="#0c1420"/>
 
       <!-- 외야 잔디 전체 -->
-      <rect x="0" y="320" width="1000" height="600" fill="url(#rg)"/>
+      <rect x="0" y="192" width="1000" height="728" fill="url(#rg)"/>
 
       <!-- 경고 트랙 (계단형 폴리곤) -->
       <polygon points="
@@ -560,43 +550,53 @@
       <rect x="444" y="800" width="40" height="48" fill="none" stroke="#c8a800" stroke-width="2" opacity="0.6"/>
       <rect x="516" y="800" width="40" height="48" fill="none" stroke="#c8a800" stroke-width="2" opacity="0.6"/>
 
-      <!-- 관중석 배경 (필드 위에 그려 마스킹) -->
-      <polygon points="0,0 1000,0 1000,360 870,660 790,568 712,500 628,460 500,444 372,460 288,500 210,568 130,660 0,360"
+      <!-- 관중석 배경 — 상단 60px는 하늘 스트립으로 열어둠 -->
+      <polygon points="0,0 0,60 1000,60 1000,200 870,500 790,410 712,344 628,300 500,284 372,300 288,344 210,410 130,500 0,200"
         fill="url(#rc)"/>
-      <polygon points="0,0 1000,0 1000,360 870,660 790,568 712,500 628,460 500,444 372,460 288,500 210,568 130,660 0,360"
+      <polygon points="0,0 0,60 1000,60 1000,200 870,500 790,410 712,344 628,300 500,284 372,300 288,344 210,410 130,500 0,200"
         fill="url(#rseat)"/>
       <!-- 티어 구분선 (픽셀) -->
-      <polyline points="0,232 1000,232" fill="none" stroke="#1e3050" stroke-width="8"/>
+      <polyline points="0,134 1000,134" fill="none" stroke="#1e3050" stroke-width="8"/>
       <!-- 하단 티어: 픽셀 관중 -->
-      <polygon points="0,232 1000,232 1000,360 870,660 790,568 712,500 628,460 500,444 372,460 288,500 210,568 130,660 0,360"
+      <polygon points="0,134 1000,134 1000,200 870,500 790,410 712,344 628,300 500,284 372,300 288,344 210,410 130,500 0,200"
         fill="url(#rcrowd)"/>
-      <polygon points="0,232 1000,232 1000,360 870,660 790,568 712,500 628,460 500,444 372,460 288,500 210,568 130,660 0,360"
+      <polygon points="0,134 1000,134 1000,200 870,500 790,410 712,344 628,300 500,284 372,300 288,344 210,410 130,500 0,200"
         fill="url(#rseat)"/>
       <!-- 관중석 경계벽 (픽셀) -->
-      <polyline points="130,660 210,568 288,500 372,460 500,444 628,460 712,500 790,568 870,660"
+      <polyline points="130,500 210,410 288,344 372,300 500,284 628,300 712,344 790,410 870,500"
         fill="none" stroke="#0a1018" stroke-width="16"/>
-      <polyline points="130,660 210,568 288,500 372,460 500,444 628,460 712,500 790,568 870,660"
+      <polyline points="130,500 210,410 288,344 372,300 500,284 628,300 712,344 790,410 870,500"
         fill="none" stroke="#1e3050" stroke-width="8"/>
-      <polyline points="130,660 210,568 288,500 372,460 500,444 628,460 712,500 790,568 870,660"
+      <polyline points="130,500 210,410 288,344 372,300 500,284 628,300 712,344 790,410 870,500"
         fill="none" stroke="#3a6090" stroke-width="2"/>
 
-      <!-- 조명탑 (픽셀) -->
-      <rect x="56"  y="80"  width="8"  height="96" fill="#607080"/>
-      <rect x="48"  y="72"  width="24" height="8"  fill="#8090a0"/>
-      <rect x="40"  y="48"  width="40" height="32" fill="#506070"/>
-      <rect x="42"  y="50"  width="36" height="28" fill="#0a1020"/>
-      {#each [0,1,2,3] as col}
+      <!-- 하늘 스트립 오버레이 (관중석 위에 그려 별이 보이게) -->
+      <rect x="0" y="0" width="1000" height="60" fill="none"/>
+      {#each RETRO_STARS.filter(([,sy]) => sy < 58) as [sx, sy, ss]}
+        <rect x={sx} y={sy} width={ss} height={ss} fill="#e8e8c8"/>
+        {#if ss >= 2}
+          <rect x={sx - 1} y={sy} width="1" height="1" fill="#a8a890" opacity="0.6"/>
+          <rect x={sx + ss} y={sy} width="1" height="1" fill="#a8a890" opacity="0.6"/>
+        {/if}
+      {/each}
+
+      <!-- 조명탑 (하늘 스트립 y=0~60 안에 배치) -->
+      <rect x="60"  y="36"  width="6"  height="28" fill="#607080"/>
+      <rect x="54"  y="32"  width="18" height="6"  fill="#8090a0"/>
+      <rect x="48"  y="8"   width="30" height="28" fill="#506070"/>
+      <rect x="50"  y="10"  width="26" height="24" fill="#0a1020"/>
+      {#each [0,1,2] as col}
         {#each [0,1,2] as row}
-          <rect x={44 + col*8} y={52 + row*8} width="6" height="6" fill="#e8e8c0"/>
+          <rect x={52 + col*8} y={12 + row*8} width="6" height="6" fill="#e8e8c0"/>
         {/each}
       {/each}
-      <rect x="936" y="80"  width="8"  height="96" fill="#607080"/>
-      <rect x="928" y="72"  width="24" height="8"  fill="#8090a0"/>
-      <rect x="920" y="48"  width="40" height="32" fill="#506070"/>
-      <rect x="922" y="50"  width="36" height="28" fill="#0a1020"/>
-      {#each [0,1,2,3] as col}
+      <rect x="934" y="36"  width="6"  height="28" fill="#607080"/>
+      <rect x="928" y="32"  width="18" height="6"  fill="#8090a0"/>
+      <rect x="922" y="8"   width="30" height="28" fill="#506070"/>
+      <rect x="924" y="10"  width="26" height="24" fill="#0a1020"/>
+      {#each [0,1,2] as col}
         {#each [0,1,2] as row}
-          <rect x={924 + col*8} y={52 + row*8} width="6" height="6" fill="#e8e8c0"/>
+          <rect x={926 + col*8} y={12 + row*8} width="6" height="6" fill="#e8e8c0"/>
         {/each}
       {/each}
 
