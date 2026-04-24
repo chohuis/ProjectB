@@ -1,4 +1,5 @@
 const path = require("node:path");
+const fs = require("node:fs");
 const { pathToFileURL } = require("node:url");
 const { app, BrowserWindow, ipcMain } = require("electron");
 
@@ -74,6 +75,50 @@ app.whenReady().then(() => {
       snapshot: toSnapshotDto(activeMatchState),
       summary: result.summary
     };
+  });
+
+  // ── 게임 저장/불러오기 ────────────────────────────────────────────────────
+  const savePath = () => path.join(app.getPath("userData"), "save.json");
+
+  ipcMain.handle("game:load", () => {
+    try {
+      const raw = fs.readFileSync(savePath(), "utf8");
+      return JSON.parse(raw);
+    } catch {
+      return null; // 파일 없음 → 첫 실행
+    }
+  });
+
+  ipcMain.handle("game:save", (_event, data) => {
+    try {
+      fs.writeFileSync(savePath(), JSON.stringify(data, null, 2), "utf8");
+    } catch (e) {
+      console.error("[game:save] 저장 실패:", e);
+    }
+  });
+
+  // ── 날짜 진행 ─────────────────────────────────────────────────────────────
+  ipcMain.handle("day:advance", async (_event, coreState) => {
+    const core = await loadCoreModule();
+    const result = core.advanceDay(coreState);
+    return {
+      snapshot: result.nextState,
+      logs: result.logs
+    };
+  });
+
+  // ── 마스터 데이터 (패키징 환경 fallback) ──────────────────────────────────
+  const resourceBase = path.resolve(__dirname, "../../resource/data/master");
+
+  ipcMain.handle("master:fetch", (_event, relPath) => {
+    try {
+      const fullPath = path.resolve(resourceBase, relPath);
+      const raw = fs.readFileSync(fullPath, "utf8");
+      return JSON.parse(raw);
+    } catch (e) {
+      console.error("[master:fetch] 로드 실패:", relPath, e);
+      return null;
+    }
   });
 
   createWindow();

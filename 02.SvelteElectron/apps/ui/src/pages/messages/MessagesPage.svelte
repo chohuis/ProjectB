@@ -1,11 +1,8 @@
 ﻿<script lang="ts">
   import type { MessageCategory, MessageItem } from "../../shared/types/main";
+  import { gameStore } from "../../shared/stores/game";
 
   type FilterId = "all" | "unread" | MessageCategory;
-
-  export let messages: MessageItem[] = [];
-  export let onReadMessage: (messageId: string) => void = () => {};
-  export let onResolveDecision: (messageId: string, optionId: string) => void = () => {};
 
   const filters: Array<{ id: FilterId; label: string }> = [
     { id: "all", label: "전체" },
@@ -26,6 +23,8 @@
   let activeFilter: FilterId = "all";
   let selectedMessageId: string | null = null;
 
+  $: messages = $gameStore.mailbox;
+
   $: selectedMessage =
     selectedMessageId === null
       ? null
@@ -42,7 +41,7 @@
     const waitingDecision =
       message.decision !== undefined && message.decision.selectedOptionId === null;
     if (message.readAt === null && !waitingDecision) {
-      onReadMessage(message.id);
+      gameStore.markMessageRead(message.id);
     }
   }
 
@@ -52,7 +51,7 @@
 
   function handleDecision(optionId: string) {
     if (!selectedMessage) return;
-    onResolveDecision(selectedMessage.id, optionId);
+    gameStore.resolveDecision(selectedMessage.id, optionId);
   }
 </script>
 

@@ -1,4 +1,6 @@
 ﻿<script lang="ts">
+  import { gameStore } from "../../shared/stores/game";
+
   type TrainingTab = "daily" | "weekly" | "risk";
   type SlotType = "main" | "sub" | "recovery";
   type PitchStatus = "discovered" | "training" | "learned";
@@ -37,9 +39,9 @@
     { id: "mobility", slot: "recovery", title: "모빌리티 케어", focus: "관절 가동 범위", gains: "유연성 +1, 부상위험 완화", fatigue: -3, risk: -2 }
   ];
 
-  let selectedMain = "bullpen_cmd";
-  let selectedSub = "video_analysis";
-  let selectedRecovery = "recovery_pool";
+  $: selectedMain = $gameStore.trainingPlan.primaryProgramId ?? "bullpen_cmd";
+  $: selectedSub = $gameStore.trainingPlan.secondaryProgramId ?? "video_analysis";
+  $: selectedRecovery = $gameStore.trainingPlan.recoveryProgramId ?? "recovery_pool";
 
   const baseCondition = 82;
   const baseFatigue = 28;
@@ -209,7 +211,10 @@
 
           <label>
             <span>주훈련</span>
-            <select bind:value={selectedMain}>
+            <select
+              value={selectedMain}
+              on:change={(e) => gameStore.setTrainingPlan({ primaryProgramId: e.currentTarget.value })}
+            >
               {#each trainingCards.filter((item) => item.slot === "main") as card}
                 <option value={card.id}>{card.title}</option>
               {/each}
@@ -218,7 +223,10 @@
 
           <label>
             <span>보조훈련</span>
-            <select bind:value={selectedSub}>
+            <select
+              value={selectedSub}
+              on:change={(e) => gameStore.setTrainingPlan({ secondaryProgramId: e.currentTarget.value })}
+            >
               {#each trainingCards.filter((item) => item.slot === "sub") as card}
                 <option value={card.id}>{card.title}</option>
               {/each}
@@ -227,7 +235,10 @@
 
           <label>
             <span>회복/멘탈</span>
-            <select bind:value={selectedRecovery}>
+            <select
+              value={selectedRecovery}
+              on:change={(e) => gameStore.setTrainingPlan({ recoveryProgramId: e.currentTarget.value })}
+            >
               {#each trainingCards.filter((item) => item.slot === "recovery") as card}
                 <option value={card.id}>{card.title}</option>
               {/each}
