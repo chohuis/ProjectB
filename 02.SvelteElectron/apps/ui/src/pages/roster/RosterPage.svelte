@@ -1,5 +1,5 @@
 ﻿<script lang="ts">
-  type RosterTab = "all" | "pitcher" | "batter" | "step";
+  type RosterTab = "all" | "pitcher" | "batter" | "staff";
   type Condition = "good" | "normal" | "alert";
   type SortDirection = "asc" | "desc";
 
@@ -60,8 +60,25 @@
     recentGames: BatterRecent[];
   };
 
+  type StaffRole = "manager" | "coach";
+
+  type StaffRow = {
+    id: string;
+    name: string;
+    role: StaffRole;
+    specialty: string;
+    leadership: number;
+    tactics: number;
+    development: number;
+    condition: Condition;
+    style: string;
+    note: string;
+    recentLogs: string[];
+  };
+
   type PitcherSortField = "name" | "age" | "role" | "g" | "ip" | "era" | "whip" | "k" | "bb";
   type BatterSortField = "name" | "age" | "pos" | "g" | "avg" | "ops" | "hr" | "rbi" | "sb";
+  type StaffSortField = "name" | "leadership" | "tactics" | "development";
 
   const pitcherSortOptions: Array<{ key: PitcherSortField; label: string }> = [
     { key: "name", label: "이름" },
@@ -87,6 +104,13 @@
     { key: "sb", label: "도루" }
   ];
 
+  const staffSortOptions: Array<{ key: StaffSortField; label: string }> = [
+    { key: "name", label: "이름" },
+    { key: "leadership", label: "리더십" },
+    { key: "tactics", label: "전술" },
+    { key: "development", label: "육성" }
+  ];
+
   let tab: RosterTab = "all";
   let keyword = "";
 
@@ -94,9 +118,13 @@
   let pitcherSortDirection: SortDirection = "asc";
   let batterSortField: BatterSortField = "ops";
   let batterSortDirection: SortDirection = "asc";
+  let staffSortField: StaffSortField = "leadership";
+  let staffSortDirection: SortDirection = "desc";
+  let staffRoleFilter: "all" | StaffRole = "all";
 
   let pitcherSortOpen = false;
   let batterSortOpen = false;
+  let staffSortOpen = false;
 
   const pitchers: PitcherRow[] = [
     {
@@ -394,8 +422,97 @@
     }
   ];
 
+  const staffs: StaffRow[] = [
+    {
+      id: "s1",
+      name: "임우현",
+      role: "manager",
+      specialty: "팀 운영 총괄",
+      leadership: 82,
+      tactics: 84,
+      development: 79,
+      condition: "good",
+      style: "공격적 운영 + 데이터 기반 교체 타이밍",
+      note: "접전에서 대타/대주자 운용이 빠른 편",
+      recentLogs: [
+        "주말 1차전 7회 승부처 대타 지시 적중",
+        "투수 교체 타이밍 미세 조정으로 실점 최소화",
+        "훈련 강도 주간 분배안 승인"
+      ]
+    },
+    {
+      id: "s2",
+      name: "오지경",
+      role: "coach",
+      specialty: "투수 코치",
+      leadership: 69,
+      tactics: 74,
+      development: 70,
+      condition: "normal",
+      style: "제구/릴리스 일관성 교정",
+      note: "불펜 세션 피드백 속도가 빠름",
+      recentLogs: [
+        "정서겸 릴리스 포인트 미세 보정",
+        "한서원 슬라이더 릴리스 각도 점검",
+        "불펜 루틴 30구 제한안 제안"
+      ]
+    },
+    {
+      id: "s3",
+      name: "서태연",
+      role: "coach",
+      specialty: "타격 코치",
+      leadership: 73,
+      tactics: 76,
+      development: 77,
+      condition: "good",
+      style: "컨택 우선 + 상황 타격 강화",
+      note: "상대 선발 유형별 타순 대응이 강점",
+      recentLogs: [
+        "최민석 초구 대응 루틴 조정",
+        "강시우 컨택 보정 드릴 배치",
+        "클러치 타석 전 루틴 카드 업데이트"
+      ]
+    },
+    {
+      id: "s4",
+      name: "강채주",
+      role: "coach",
+      specialty: "수비 코치",
+      leadership: 75,
+      tactics: 77,
+      development: 74,
+      condition: "normal",
+      style: "송구 전환/포지셔닝 강화",
+      note: "내야 수비 전환 훈련 설계 담당",
+      recentLogs: [
+        "SS-2B 병살 전환 루틴 강화",
+        "외야 컷오프 포지셔닝 점검",
+        "수비 시프트 시나리오 3종 배포"
+      ]
+    },
+    {
+      id: "s5",
+      name: "조수겸",
+      role: "coach",
+      specialty: "체력 코치",
+      leadership: 71,
+      tactics: 72,
+      development: 78,
+      condition: "alert",
+      style: "회복 우선 + 부하 관리",
+      note: "최근 누적 피로 관리 이슈 대응 중",
+      recentLogs: [
+        "주중 회복 세션 비율 상향 제안",
+        "선발진 하체 피로 지표 경고",
+        "부상 예방 스트레칭 루틴 재배포"
+      ]
+    }
+  ];
+
   let selectedPitcherId = pitchers[0].id;
   let selectedBatterId = batters[0].id;
+  let selectedStaffId = staffs[0].id;
 
   $: normalizedKeyword = keyword.trim().toLowerCase();
 
@@ -406,6 +523,12 @@
   $: filteredBatters = batters.filter((player) =>
     player.name.toLowerCase().includes(normalizedKeyword)
   );
+
+  $: filteredStaffs = staffs.filter((staff) => {
+    const roleMatched = staffRoleFilter === "all" || staff.role === staffRoleFilter;
+    const keywordMatched = staff.name.toLowerCase().includes(normalizedKeyword);
+    return roleMatched && keywordMatched;
+  });
 
   function compareValue(a: string | number, b: string | number, direction: SortDirection): number {
     const cmp = typeof a === "string" && typeof b === "string" ? a.localeCompare(b, "ko") : Number(a) - Number(b);
@@ -422,6 +545,12 @@
     const av = a[batterSortField];
     const bv = b[batterSortField];
     return compareValue(av, bv, batterSortDirection);
+  });
+
+  $: visibleStaffs = [...filteredStaffs].sort((a, b) => {
+    const av = a[staffSortField];
+    const bv = b[staffSortField];
+    return compareValue(av, bv, staffSortDirection);
   });
 
   function stepFromCondition(condition: Condition): string {
@@ -455,22 +584,23 @@
     }))
   ].sort((a, b) => a.name.localeCompare(b.name, "ko"));
 
-  $: stepRows = [...allRows].sort((a, b) => {
-    const rank = (value: string) => (value === "STEP 3" ? 3 : value === "STEP 2" ? 2 : 1);
-    return rank(b.step) - rank(a.step) || a.name.localeCompare(b.name, "ko");
-  });
-
   $: currentPitcherSortLabel =
     pitcherSortOptions.find((option) => option.key === pitcherSortField)?.label ?? "";
 
   $: currentBatterSortLabel =
     batterSortOptions.find((option) => option.key === batterSortField)?.label ?? "";
 
+  $: currentStaffSortLabel =
+    staffSortOptions.find((option) => option.key === staffSortField)?.label ?? "";
+
   $: selectedPitcher =
     visiblePitchers.find((player) => player.id === selectedPitcherId) ?? visiblePitchers[0] ?? null;
 
   $: selectedBatter =
     visibleBatters.find((player) => player.id === selectedBatterId) ?? visibleBatters[0] ?? null;
+
+  $: selectedStaff =
+    visibleStaffs.find((staff) => staff.id === selectedStaffId) ?? visibleStaffs[0] ?? null;
 
   function conditionLabel(condition: Condition): string {
     if (condition === "good") return "양호";
@@ -480,6 +610,10 @@
 
   function sortLabel(direction: SortDirection): string {
     return direction === "asc" ? "↑ 오름차순" : "↓ 내림차순";
+  }
+
+  function staffRoleLabel(role: StaffRole): string {
+    return role === "manager" ? "감독" : "코치";
   }
 
   function selectPitcherSort(field: PitcherSortField) {
@@ -501,6 +635,16 @@
     }
     batterSortOpen = false;
   }
+
+  function selectStaffSort(field: StaffSortField) {
+    if (staffSortField === field) {
+      staffSortDirection = staffSortDirection === "asc" ? "desc" : "asc";
+    } else {
+      staffSortField = field;
+      staffSortDirection = "asc";
+    }
+    staffSortOpen = false;
+  }
 </script>
 
 <section class="page">
@@ -512,7 +656,7 @@
         <button class:active={tab === "all"} on:click={() => (tab = "all")}>전체</button>
         <button class:active={tab === "pitcher"} on:click={() => (tab = "pitcher")}>투수</button>
         <button class:active={tab === "batter"} on:click={() => (tab = "batter")}>타자</button>
-        <button class:active={tab === "step"} on:click={() => (tab = "step")}>스텝</button>
+        <button class:active={tab === "staff"} on:click={() => (tab = "staff")}>스태프</button>
       </div>
 
       <div class="controls">
@@ -553,6 +697,43 @@
                 {/each}
               </div>
             {/if}
+          </div>
+        {:else if tab === "staff"}
+          <div class="staff-controls">
+            <div class="role-filter">
+              <button class:active={staffRoleFilter === "all"} on:click={() => (staffRoleFilter = "all")}>
+                전체
+              </button>
+              <button
+                class:active={staffRoleFilter === "manager"}
+                on:click={() => (staffRoleFilter = "manager")}
+              >
+                감독
+              </button>
+              <button
+                class:active={staffRoleFilter === "coach"}
+                on:click={() => (staffRoleFilter = "coach")}
+              >
+                코치
+              </button>
+            </div>
+            <div class="sort-box">
+              <button class="sort-trigger" on:click={() => (staffSortOpen = !staffSortOpen)}>
+                정렬: {currentStaffSortLabel} {sortLabel(staffSortDirection)}
+              </button>
+              {#if staffSortOpen}
+                <div class="sort-menu">
+                  {#each staffSortOptions as option}
+                    <button on:click={() => selectStaffSort(option.key)}>
+                      {option.label}
+                      {#if staffSortField === option.key}
+                        <span>{sortLabel(staffSortDirection)}</span>
+                      {/if}
+                    </button>
+                  {/each}
+                </div>
+              {/if}
+            </div>
           </div>
         {/if}
       </div>
@@ -671,26 +852,34 @@
             {/if}
           </div>
         {:else}
-          <div class="head-row step">
+          <div class="head-row staff">
             <span>이름</span>
-            <span>유형</span>
-            <span>현재 스텝</span>
-            <span>핵심 기록</span>
+            <span>역할</span>
+            <span>담당</span>
+            <span>리더십</span>
+            <span>전술</span>
+            <span>육성</span>
             <span>컨디션</span>
           </div>
 
           <div class="rows">
-            {#if stepRows.length === 0}
+            {#if visibleStaffs.length === 0}
               <p class="empty">검색 결과가 없습니다.</p>
             {:else}
-              {#each stepRows as row}
-                <div class="data-row step">
-                  <strong>{row.name}</strong>
-                  <span>{row.type}</span>
-                  <span class="step-tag">{row.step}</span>
-                  <span>{row.metric}</span>
-                  <span class={`cond ${row.condition}`}>{conditionLabel(row.condition)}</span>
-                </div>
+              {#each visibleStaffs as staff}
+                <button
+                  class="data-row staff"
+                  class:selected={selectedStaff?.id === staff.id}
+                  on:click={() => (selectedStaffId = staff.id)}
+                >
+                  <strong>{staff.name}</strong>
+                  <span>{staffRoleLabel(staff.role)}</span>
+                  <span>{staff.specialty}</span>
+                  <span>{staff.leadership}</span>
+                  <span>{staff.tactics}</span>
+                  <span>{staff.development}</span>
+                  <span class={`cond ${staff.condition}`}>{conditionLabel(staff.condition)}</span>
+                </button>
               {/each}
             {/if}
           </div>
@@ -764,10 +953,51 @@
           <h3>전체</h3>
           <p>투수/타자를 통합해서 확인하는 보기입니다.</p>
           <p class="trend">리스트에서 이름 검색 후 유형별 기록과 스텝을 함께 확인할 수 있습니다.</p>
-        {:else}
-          <h3>스텝</h3>
-          <p>선수 현재 단계(STEP 1~3)를 한 번에 보는 보기입니다.</p>
-          <p class="trend">컨디션 기반으로 자동 분류된 더미 스텝입니다.</p>
+        {:else if selectedStaff}
+          <h3>{selectedStaff.name}</h3>
+          <p>
+            {staffRoleLabel(selectedStaff.role)} · {selectedStaff.specialty} · 컨디션
+            {conditionLabel(selectedStaff.condition)}
+          </p>
+
+          <section class="detail-section">
+            <h4>{selectedStaff.role === "manager" ? "감독 운영 지표" : "코치 지도 지표"}</h4>
+            <div class="ability-grid">
+              <div>
+                <span>리더십</span>
+                <strong>{selectedStaff.leadership}</strong>
+              </div>
+              <div>
+                <span>전술</span>
+                <strong>{selectedStaff.tactics}</strong>
+              </div>
+              <div>
+                <span>육성</span>
+                <strong>{selectedStaff.development}</strong>
+              </div>
+            </div>
+          </section>
+
+          <section class="detail-section">
+            <h4>{selectedStaff.role === "manager" ? "최근 지시 로그" : "최근 훈련 제안 로그"}</h4>
+            <ul class="recent-list">
+              {#each selectedStaff.recentLogs as log, index}
+                <li>
+                  <span>{index + 1}.</span>
+                  <span>{log}</span>
+                  <span>-</span>
+                  <strong>{selectedStaff.role === "manager" ? "지시" : "제안"}</strong>
+                </li>
+              {/each}
+            </ul>
+          </section>
+
+          <p class="trend">
+            {selectedStaff.role === "manager"
+              ? `운영 성향: ${selectedStaff.style}`
+              : `코칭 성향: ${selectedStaff.style}`}
+          </p>
+          <p class="trend">메모: {selectedStaff.note}</p>
         {/if}
       </aside>
     </div>
@@ -822,6 +1052,32 @@
     display: flex;
     gap: 6px;
     align-items: center;
+  }
+
+  .staff-controls {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .role-filter {
+    display: flex;
+    gap: 4px;
+  }
+
+  .role-filter button {
+    border: 1px solid #355182;
+    background: #1f2f4f;
+    color: #dbe8ff;
+    border-radius: 8px;
+    padding: 5px 9px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .role-filter button.active {
+    background: #3262b0;
+    border-color: #6da1f7;
   }
 
   .tabs button,
@@ -932,9 +1188,9 @@
     grid-template-columns: 0.95fr 0.5fr 0.45fr 0.6fr 0.35fr 1.2fr 0.65fr 0.65fr;
   }
 
-  .head-row.step,
-  .data-row.step {
-    grid-template-columns: 0.95fr 0.5fr 0.6fr 1.3fr 0.65fr;
+  .head-row.staff,
+  .data-row.staff {
+    grid-template-columns: 0.9fr 0.55fr 0.9fr 0.5fr 0.5fr 0.5fr 0.7fr;
   }
 
   .rows {
@@ -955,8 +1211,7 @@
     cursor: pointer;
   }
 
-  .data-row.all,
-  .data-row.step {
+  .data-row.all {
     cursor: default;
   }
 
