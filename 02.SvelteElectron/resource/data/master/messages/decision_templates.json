@@ -1,0 +1,20 @@
+{
+  "decisions": [
+    {
+      "id": "MSG_DECISION_BULLPEN_EXTRA",
+      "prompt": "Do extra bullpen session?",
+      "options": [
+        {
+          "id": "do_train",
+          "label": "Do training",
+          "effects": ["condition:-4", "xp.command:+1"]
+        },
+        {
+          "id": "skip_train",
+          "label": "Skip training",
+          "effects": ["condition:+2"]
+        }
+      ]
+    }
+  ]
+}

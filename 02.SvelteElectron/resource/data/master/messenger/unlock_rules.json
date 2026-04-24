@@ -1,0 +1,11 @@
+{
+  "rules": [
+    { "id": "UNLOCK_DEFAULT_COACH", "type": "always", "params": {} },
+    { "id": "UNLOCK_DEFAULT_MANAGER", "type": "always", "params": {} },
+    {
+      "id": "UNLOCK_SCOUT_REPORTER",
+      "type": "event_completed",
+      "params": { "eventId": "EVENT_SCOUT_INTRO" }
+    }
+  ]
+}

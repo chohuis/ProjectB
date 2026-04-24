@@ -1,0 +1,24 @@
+{
+  "dailyPlan": {
+    "primaryProgramId": "TRN_CMD_BASE",
+    "secondaryProgramId": null
+  },
+  "weeklyRatio": {
+    "command": 35,
+    "velocity": 30,
+    "stamina": 20,
+    "mental": 15
+  },
+  "pitchDevelopment": [
+    {
+      "pitchId": "PITCH_CHANGEUP",
+      "state": "in_progress",
+      "progress": 24
+    },
+    {
+      "pitchId": "PITCH_SLIDER",
+      "state": "available",
+      "progress": 0
+    }
+  ]
+}

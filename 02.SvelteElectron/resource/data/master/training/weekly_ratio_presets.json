@@ -1,0 +1,14 @@
+{
+  "presets": [
+    {
+      "id": "WEEKLY_BALANCED",
+      "label": "Balanced",
+      "ratios": { "command": 35, "velocity": 30, "stamina": 20, "mental": 15 }
+    },
+    {
+      "id": "WEEKLY_COMMAND",
+      "label": "Command Focus",
+      "ratios": { "command": 50, "velocity": 20, "stamina": 15, "mental": 15 }
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "pitches": [
+    {
+      "id": "PITCH_FASTBALL",
+      "name": "Fastball",
+      "group": "fastball",
+      "unlockRuleId": "PITCH_UNLOCK_DEFAULT"
+    },
+    {
+      "id": "PITCH_SLIDER",
+      "name": "Slider",
+      "group": "breaking",
+      "unlockRuleId": "PITCH_UNLOCK_SLIDER"
+    },
+    {
+      "id": "PITCH_CHANGEUP",
+      "name": "Changeup",
+      "group": "offspeed",
+      "unlockRuleId": "PITCH_UNLOCK_CHANGEUP"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "categories": [
+    { "id": "system", "label": "System", "priority": 1 },
+    { "id": "news", "label": "News", "priority": 2 },
+    { "id": "coach", "label": "Coach", "priority": 3 },
+    { "id": "manager", "label": "Manager", "priority": 4 }
+  ]
+}

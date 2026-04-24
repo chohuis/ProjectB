@@ -1,0 +1,15 @@
+{
+  "rules": [
+    { "id": "PITCH_UNLOCK_DEFAULT", "type": "always", "params": {} },
+    {
+      "id": "PITCH_UNLOCK_SLIDER",
+      "type": "min_stat",
+      "params": { "stat": "command", "value": 52 }
+    },
+    {
+      "id": "PITCH_UNLOCK_CHANGEUP",
+      "type": "min_stat",
+      "params": { "stat": "mental", "value": 50 }
+    }
+  ]
+}

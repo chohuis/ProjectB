@@ -1,0 +1,16 @@
+{
+  "contacts": [
+    {
+      "id": "CONTACT_COACH_PITCHING",
+      "name": "Pitching Coach",
+      "category": "team",
+      "unlockRuleId": "UNLOCK_DEFAULT_COACH"
+    },
+    {
+      "id": "CONTACT_MANAGER",
+      "name": "Manager",
+      "category": "team",
+      "unlockRuleId": "UNLOCK_DEFAULT_MANAGER"
+    }
+  ]
+}

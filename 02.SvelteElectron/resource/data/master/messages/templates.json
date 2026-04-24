@@ -1,0 +1,11 @@
+{
+  "templates": [
+    {
+      "id": "MSG_TMPL_COACH_BULLPEN_EXTRA",
+      "category": "coach",
+      "subject": "Extra bullpen suggestion",
+      "body": "Add 30-pitch bullpen today. Choice affects condition and training gain.",
+      "decisionTemplateId": "MSG_DECISION_BULLPEN_EXTRA"
+    }
+  ]
+}

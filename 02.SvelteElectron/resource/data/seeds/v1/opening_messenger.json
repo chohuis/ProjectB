@@ -1,0 +1,23 @@
+{
+  "contacts": [
+    {
+      "contactId": "CONTACT_COACH_PITCHING",
+      "isUnlocked": true,
+      "unlockedAtDay": 1,
+      "affinity": 55
+    },
+    {
+      "contactId": "CONTACT_MANAGER",
+      "isUnlocked": true,
+      "unlockedAtDay": 1,
+      "affinity": 50
+    }
+  ],
+  "threads": [
+    {
+      "threadId": "THR_0001",
+      "contactId": "CONTACT_COACH_PITCHING",
+      "lastReadAtDay": 1
+    }
+  ]
+}

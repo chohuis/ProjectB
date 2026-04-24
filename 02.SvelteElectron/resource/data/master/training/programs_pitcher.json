@@ -1,0 +1,20 @@
+{
+  "programs": [
+    {
+      "id": "TRN_CMD_BASE",
+      "name": "Command Base",
+      "focus": "command",
+      "intensity": "medium",
+      "fatigueCost": 8,
+      "risk": 2
+    },
+    {
+      "id": "TRN_VEL_POWER",
+      "name": "Velocity Power",
+      "focus": "velocity",
+      "intensity": "high",
+      "fatigueCost": 14,
+      "risk": 6
+    }
+  ]
+}

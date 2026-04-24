@@ -1,0 +1,13 @@
+{
+  "messages": [
+    {
+      "id": "MSG_0001",
+      "templateId": "MSG_TMPL_COACH_BULLPEN_EXTRA",
+      "senderRef": "CONTACT_COACH_PITCHING",
+      "createdAtDay": 1,
+      "readAtDay": null,
+      "decisionStatus": "pending",
+      "selectedOptionId": null
+    }
+  ]
+}
