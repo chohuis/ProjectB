@@ -1,5 +1,5 @@
-﻿[University GPA & Draft Impact]
-- 학점 → 4.5 스케일 평균, 누적 GPA = ΣGPA/학기수.
-- 졸업 요건: GPA 2.5+, 6학기 이상. GPA 3.5+ Dean_List, 지능 특성 해금.
-- 드래프트: GPA 3.0+ 면담 보너스, 2.0 미만 Academic Concern.
-
+[University Credits & Draft Impact]
+- 대학 학업 지표는 `학점(4.5 만점)`으로 표기한다.
+- 누적 학점 = 학기별 학점 평균의 누적값으로 계산한다.
+- 졸업 요건: 학점 2.5+, 6학기 이상. 학점 3.5+는 Dean_List 및 특성 해금 보너스.
+- 드래프트: 학점 3.0+ 면담 보너스, 2.0 미만은 Academic Concern 태그 부여.
