@@ -1,0 +1,10 @@
+{
+  "id": "LEAGUE_KBO",
+  "name": "KBO",
+  "teamCount": 8,
+  "gamesPerTeam": 112,
+  "postseason": {
+    "qualifiers": 4,
+    "format": ["Wild Card", "Playoff", "Korean Series"]
+  }
+}

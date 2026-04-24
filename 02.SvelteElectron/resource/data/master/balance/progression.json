@@ -1,0 +1,5 @@
+{
+  "expCurve": "linear_v1",
+  "staminaRecoveryPerDay": 4,
+  "trainingFatigueGain": 3
+}

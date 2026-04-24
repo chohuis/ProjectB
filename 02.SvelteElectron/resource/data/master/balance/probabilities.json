@@ -1,0 +1,10 @@
+{
+  "injury": {
+    "base": 0.015,
+    "highFatigue": 0.045
+  },
+  "messengerContactUnlock": {
+    "default": 0.05,
+    "eventBoost": 0.2
+  }
+}

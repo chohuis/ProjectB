@@ -1,0 +1,10 @@
+{
+  "events": [
+    {
+      "id": "EVENT_COACH_BULLPEN_EXTRA",
+      "name": "\ucf54\uce58 \ubd88\ud39c \ucd94\uac00 \uc81c\uc548",
+      "category": "messenger",
+      "options": ["\ud6c8\ub828\ud55c\ub2e4", "\ud6c8\ub828\ud558\uc9c0 \uc54a\ub294\ub2e4"]
+    }
+  ]
+}

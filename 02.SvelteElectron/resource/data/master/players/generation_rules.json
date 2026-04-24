@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "description": "player generation baseline rules",
+  "ageRangeByStage": {
+    "highschool": [16, 18],
+    "university": [19, 22],
+    "independent": [19, 30],
+    "kbo": [18, 38],
+    "mlb": [18, 42]
+  },
+  "overallRangeByStage": {
+    "highschool": [45, 70],
+    "university": [52, 76],
+    "independent": [50, 74],
+    "kbo": [58, 90],
+    "mlb": [62, 94]
+  },
+  "potentialRangeByStage": {
+    "highschool": [60, 95],
+    "university": [58, 92],
+    "independent": [54, 86],
+    "kbo": [56, 90],
+    "mlb": [58, 92]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "activeTeamIds": [
+    "TEAM_UNIV_KNSU",
+    "TEAM_UNIV_KNU",
+    "TEAM_UNIV_YONSEI",
+    "TEAM_UNIV_KOREA",
+    "TEAM_UNIV_HANYANG",
+    "TEAM_UNIV_CHUNGBUK",
+    "TEAM_UNIV_DONGGUK"
+  ],
+  "archivedTeamIds": [],
+  "npcTeamCount": 20,
+  "creditSystem": "\ud559\uc810(4.5 \ub9cc\uc810)",
+  "defaultMajor": "\uccb4\uc721\uad50\uc721"
+}

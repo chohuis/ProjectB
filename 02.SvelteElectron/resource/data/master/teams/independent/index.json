@@ -1,0 +1,14 @@
+{
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "activeTeamIds": [
+    "TEAM_IND_SEOUL_PIONEERS",
+    "TEAM_IND_BUSAN_TEMPEST",
+    "TEAM_IND_DAEGU_FALCONS",
+    "TEAM_IND_GWANGJU_STORM",
+    "TEAM_IND_DAEJEON_HUNTERS",
+    "TEAM_IND_INCHEON_ORCAS",
+    "TEAM_IND_SUWON_BLAZE",
+    "TEAM_IND_ULSAN_PHOENIX"
+  ],
+  "archivedTeamIds": []
+}

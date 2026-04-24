@@ -1,0 +1,15 @@
+{
+  "notes": "\uc120\uc218 \uacc4\uc57d \uc2dc\uc791 \uc0c1\ud0dc",
+  "contracts": [
+    {
+      "contractId": "CNT_0001",
+      "playerId": "PLYR_0001",
+      "teamId": "TEAM_HS_SEOUL_INNOVATION",
+      "type": "amateur",
+      "annualSalary": 0,
+      "startSeason": 2026,
+      "endSeason": 2026,
+      "status": "active"
+    }
+  ]
+}

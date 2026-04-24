@@ -1,0 +1,18 @@
+{
+  "id": "LEAGUE_MLB",
+  "name": "MLB",
+  "subLeagues": [
+    { "id": "AL", "teamCount": 8 },
+    { "id": "NL", "teamCount": 8 }
+  ],
+  "gamesPerTeam": 128,
+  "postseason": {
+    "qualifiers": 8,
+    "format": ["WC", "DS", "LCS", "WS"]
+  },
+  "minor": {
+    "aaaTeamCount": 16,
+    "aaTeamCount": 16,
+    "gamesPerTeam": 112
+  }
+}

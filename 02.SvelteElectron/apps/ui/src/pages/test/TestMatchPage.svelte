@@ -61,12 +61,23 @@
   const homeLineup = ["1 2B", "2 SS", "3 RF", "4 1B", "5 3B", "6 DH", "7 LF", "8 C", "9 CF"];
 
   const baseField = {
-    home: { x: 500, y: 820 },
-    first: { x: 650, y: 670 },
+    home:   { x: 500, y: 820 },
+    first:  { x: 650, y: 670 },
     second: { x: 500, y: 520 },
-    third: { x: 350, y: 670 },
-    mound: { x: 500, y: 645 }
+    third:  { x: 350, y: 670 },
+    mound:  { x: 500, y: 645 }
   };
+
+  // 레트로 이미지 좌표 (probaseball.gif 기준)
+  const retroField = {
+    home:   { x: 497, y: 790 },
+    first:  { x: 715, y: 580 },
+    second: { x: 497, y: 454 },
+    third:  { x: 280, y: 580 },
+    mound:  { x: 497, y: 530 }
+  };
+
+  $: activeMound = fieldStyle === 'retro' ? retroField.mound : baseField.mound;
 
   const zones = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
 
@@ -112,8 +123,8 @@
   }
 
   const defenseNormal = [
-    { pos: "P", x: 500, y: 645 },
-    { pos: "C", x: 500, y: 800 },
+    { pos: "P",  x: 500, y: 645 },
+    { pos: "C",  x: 500, y: 800 },
     { pos: "1B", x: 650, y: 675 },
     { pos: "2B", x: 590, y: 575 },
     { pos: "SS", x: 410, y: 575 },
@@ -121,6 +132,19 @@
     { pos: "LF", x: 330, y: 600 },
     { pos: "CF", x: 500, y: 510 },
     { pos: "RF", x: 670, y: 600 }
+  ];
+
+  // 레트로 이미지 기준 수비 위치 (probaseball.gif 좌표계)
+  const defenseRetro = [
+    { pos: "P",  x: 497, y: 530 },
+    { pos: "C",  x: 497, y: 800 },
+    { pos: "1B", x: 710, y: 588 },
+    { pos: "2B", x: 600, y: 508 },
+    { pos: "SS", x: 387, y: 508 },
+    { pos: "3B", x: 272, y: 588 },
+    { pos: "LF", x: 242, y: 518 },
+    { pos: "CF", x: 497, y: 434 },
+    { pos: "RF", x: 752, y: 518 }
   ];
 
   const pitchTypes: { id: PitchType; label: string }[] = [
@@ -509,7 +533,7 @@
     isPitching = true;
     const pitchedAt = { ...zoneClickPct };
     const zoneTarget = { ...clickedFieldPos };
-    ballPos = { ...baseField.mound };
+    ballPos = { ...activeMound };
 
     await tweenBall(zoneTarget, 220);
 
@@ -551,7 +575,7 @@
       await tweenBall(getBattedTarget(resultCode), 300);
     }
 
-    await tweenBall(baseField.mound, 180);
+    await tweenBall(activeMound, 180);
     lastPitchPct = pitchedAt;
     isPitching = false;
   }
@@ -641,8 +665,8 @@
 
           <div class="field-stage-wrap">
             <BaseballField
-              {baseField}
-              defenders={defenseNormal}
+              baseField={fieldStyle === 'retro' ? retroField : baseField}
+              defenders={fieldStyle === 'retro' ? defenseRetro : defenseNormal}
               {runners}
               {ballPos}
               {ballTrail}

@@ -1,0 +1,17 @@
+{
+  "leagueId": "LEAGUE_KBO",
+  "activeTeamFiles": [
+    "PKT_Busan_GiantWhales",
+    "PKT_Changwon_SteelDinos",
+    "PKT_Daegu_RoyalLions",
+    "PKT_Daejeon_SoaringEagles",
+    "PKT_Gwangju_EmberTigers",
+    "PKT_Incheon_SkyGulls",
+    "PKT_Seoul_BearGuardians",
+    "PKT_Seoul_TwinWolves"
+  ],
+  "archivedTeamFiles": [
+    "PKT_Seoul_PhoenixHeroes",
+    "PKT_Suwon_ArcFoxes"
+  ]
+}

@@ -4,6 +4,7 @@ import path from "node:path";
 
 export default defineConfig({
   root: path.resolve(__dirname, "apps/ui"),
+  publicDir: path.resolve(__dirname, "resource"),
   plugins: [svelte()],
   build: {
     outDir: path.resolve(__dirname, "dist/ui"),

@@ -1,0 +1,16 @@
+{
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "activeTeamIds": [
+    "TEAM_HS_SEOUL_INNOVATION",
+    "TEAM_HS_BUSAN_WAVE",
+    "TEAM_HS_DAEGU_HEAT",
+    "TEAM_HS_GWANGJU_VISION",
+    "TEAM_HS_DAEJEON_RISE",
+    "TEAM_HS_INCHEON_HARBOR",
+    "TEAM_HS_ULSAN_CHARGE",
+    "TEAM_HS_SUWON_EDGE"
+  ],
+  "archivedTeamIds": [],
+  "npcTeamCount": 40,
+  "gradeSystem": "9\ub4f1\uae09\uc81c"
+}

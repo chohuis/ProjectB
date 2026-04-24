@@ -1,0 +1,24 @@
+{
+  "groups": [
+    {
+      "id": "highschool",
+      "path": "teams/highschool/index.json"
+    },
+    {
+      "id": "university",
+      "path": "teams/university/index.json"
+    },
+    {
+      "id": "independent",
+      "path": "teams/independent/index.json"
+    },
+    {
+      "id": "pro_korea",
+      "path": "teams/pro_korea/index.json"
+    },
+    {
+      "id": "pro_usa",
+      "path": "teams/pro_usa/index.json"
+    }
+  ]
+}

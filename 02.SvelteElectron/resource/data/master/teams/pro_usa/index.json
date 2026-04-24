@@ -1,0 +1,27 @@
+{
+  "leagueId": "LEAGUE_MLB",
+  "activeTeamFiles": [
+    "PUT_Atlanta_PeachtreeFalcons",
+    "PUT_Boston_HarborHawks",
+    "PUT_Cleveland_LakeSpirits",
+    "PUT_Dallas_LoneStars",
+    "PUT_Detroit_MotorWolves",
+    "PUT_Miami_WaveRiders",
+    "PUT_NewYork_Empire",
+    "PUT_Seattle_RainArrows",
+    "PUT_Chicago_WindBears",
+    "PUT_Denver_MountainPeaks",
+    "PUT_Houston_SpaceComets",
+    "PUT_LosAngeles_SunDragons",
+    "PUT_Phoenix_DesertSerpents",
+    "PUT_SanDiego_CoastalRays",
+    "PUT_SanFrancisco_BaySeals",
+    "PUT_StLouis_RiverCardinals"
+  ],
+  "archivedTeamFiles": [
+    "PUT_Baltimore_HarborCrows",
+    "PUT_Kansas_PrairieKings",
+    "PUT_Minneapolis_NorthOwls",
+    "PUT_Pittsburgh_SteelGuardians"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "ARCHETYPE_PITCHER_STARTER",
+  "position": "SP",
+  "baseStats": {
+    "command": 50,
+    "stamina": 55,
+    "velocity": 52,
+    "mental": 48
+  }
+}
