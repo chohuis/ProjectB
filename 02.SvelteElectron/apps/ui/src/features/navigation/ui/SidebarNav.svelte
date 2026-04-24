@@ -3,24 +3,31 @@
 
   export let currentTab: MainTabId;
   export let unreadMessageCount = 0;
+  export let showAcademicsTab = false;
   export let onSelectTab: (tab: MainTabId) => void;
 
   const tabs: { id: MainTabId; label: string }[] = [
     { id: "home", label: "홈" },
-    { id: "status", label: "상태" },
     { id: "messages", label: "메시지" },
+    { id: "messenger", label: "메신저" },
+    { id: "status", label: "상태" },
+    { id: "team", label: "팀" },
     { id: "roster", label: "로스터" },
     { id: "schedule", label: "일정" },
     { id: "training", label: "훈련" },
     { id: "finance", label: "재정" },
     { id: "test", label: "매치 엔진" },
     { id: "records", label: "기록" },
-    { id: "team", label: "팀" }
+    { id: "academics", label: "학업" }
   ];
+
+  $: visibleTabs = showAcademicsTab
+    ? tabs
+    : tabs.filter((tab) => tab.id !== "academics");
 </script>
 
 <nav class="nav">
-  {#each tabs as tab}
+  {#each visibleTabs as tab}
     <button class:active={tab.id === currentTab} on:click={() => onSelectTab(tab.id)}>
       <span>{tab.label}</span>
       {#if tab.id === "messages" && unreadMessageCount > 0}

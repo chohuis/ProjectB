@@ -1,11 +1,13 @@
 <script lang="ts">
   import { mockMainSnapshot } from "../../app/mockMain";
+  import { mockCareerSchool } from "../../app/mockCareer";
   import type { MainTabId, MessageItem } from "../../shared/types/main";
   import SidebarNav from "../../features/navigation/ui/SidebarNav.svelte";
   import TopHeader from "../../features/main-layout/ui/TopHeader.svelte";
   import HomeDashboard from "../../features/dashboard/ui/HomeDashboard.svelte";
   import RightPanel from "../../features/main-layout/ui/RightPanel.svelte";
   import StatusPage from "../status/StatusPage.svelte";
+  import AcademicsPage from "../academics/AcademicsPage.svelte";
   import RosterPage from "../roster/RosterPage.svelte";
   import SchedulePage from "../schedule/SchedulePage.svelte";
   import TrainingPage from "../training/TrainingPage.svelte";
@@ -13,6 +15,7 @@
   import TestMatchPage from "../test/TestMatchPage.svelte";
   import RecordsPage from "../records/RecordsPage.svelte";
   import MessagesPage from "../messages/MessagesPage.svelte";
+  import MessengerPage from "../messenger/MessengerPage.svelte";
   import TeamPage from "../team/TeamPage.svelte";
 
   let currentTab: MainTabId = "home";
@@ -87,6 +90,11 @@
   ];
 
   $: unreadMessageCount = mailbox.filter((message) => message.readAt === null).length;
+  $: showAcademicsTab =
+    mockCareerSchool.currentStage === "highschool" || mockCareerSchool.currentStage === "university";
+  $: if (!showAcademicsTab && currentTab === "academics") {
+    currentTab = "home";
+  }
 
   function closeMatchEngine() {
     currentTab = "home";
@@ -129,6 +137,7 @@
       <SidebarNav
         {currentTab}
         unreadMessageCount={unreadMessageCount}
+        showAcademicsTab={showAcademicsTab}
         onSelectTab={(tab) => (currentTab = tab)}
       />
 
@@ -142,6 +151,13 @@
             />
           {:else if currentTab === "status"}
             <StatusPage />
+          {:else if currentTab === "academics"}
+            <AcademicsPage
+              currentStage={mockCareerSchool.currentStage}
+              attendsUniversity={mockCareerSchool.attendsUniversity}
+              universityMajor={mockCareerSchool.universityMajor}
+              plannedUniversityMajors={mockCareerSchool.plannedUniversityMajors}
+            />
           {:else if currentTab === "roster"}
             <RosterPage />
           {:else if currentTab === "schedule"}
@@ -158,6 +174,8 @@
               onReadMessage={markMessageAsRead}
               onResolveDecision={resolveMessageDecision}
             />
+          {:else if currentTab === "messenger"}
+            <MessengerPage />
           {:else if currentTab === "team"}
             <TeamPage />
           {:else}

@@ -1,23 +1,11 @@
-﻿<script lang="ts">
+<script lang="ts">
+  import { mockCareerProfile } from "../../app/mockCareer";
   type StatGroup = {
     title: string;
     items: Array<{ label: string; value: number }>;
   };
 
-  const profile = {
-    name: "정서겸",
-    team: "서울 이노베이션 고",
-    year: "2학년",
-    position: "SP",
-    role: "에이스 선발",
-    throws: "좌투",
-    bats: "우타",
-    overall: 84,
-    potentialHidden: 93,
-    condition: 82,
-    fatigue: 28,
-    tags: ["핵심", "멘탈관리", "선발 로테이션"]
-  };
+  const profile = mockCareerProfile;
 
   const statGroups: StatGroup[] = [
     {

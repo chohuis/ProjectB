@@ -1,14 +1,16 @@
 export type MainTabId =
   | "home"
+  | "messages"
+  | "messenger"
   | "status"
+  | "team"
   | "roster"
   | "schedule"
   | "training"
   | "finance"
   | "test"
   | "records"
-  | "messages"
-  | "team";
+  | "academics";
 
 export interface MainSnapshot {
   dayLabel: string;
