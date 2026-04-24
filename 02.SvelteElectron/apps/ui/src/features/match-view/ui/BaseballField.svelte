@@ -38,6 +38,9 @@
   export let isPitching = false;
   export let fieldStyle: 'digital' | 'dot' | 'retro' = 'digital';
   export let fieldingTeam: 'home' | 'away' = 'home';
+  export let batter: { handedness: 'L' | 'R' } = { handedness: 'R' };
+  export let batterAnimPos: Point | null = null;
+  export let runnerAnimPositions: (Point | null)[] = [null, null, null];
 
   const dispatch = createEventDispatcher<{ selectPosition: { pos: string } }>();
 
@@ -70,6 +73,14 @@
     '.RR.R.',
   ];
   function retroRunnerColor(): string { return '#e8e800'; }
+
+  function retroBatterColor(key: string): string {
+    if (key === 'C') return '#781a1a';
+    if (key === 'S') return '#d4a870';
+    if (key === 'U') return '#d03030';
+    if (key === 'P') return '#1a1a28';
+    return 'transparent';
+  }
 
 
   const retroWall =
@@ -455,22 +466,42 @@
         </g>
       {/each}
 
-      <!-- 주자 (픽셀 스프라이트 + GBC 깜빡임) -->
-      {#each ([
-        runners.first  ? baseField.first  : null,
-        runners.second ? baseField.second : null,
-        runners.third  ? baseField.third  : null,
-      ]).filter((p): p is {x:number,y:number} => p !== null) as rp}
-        <g class="retro-runner-blink">
-          {#each RETRO_RUNNER as rowStr, ri}
+      <!-- 타자 (빨간 유니폼, 좌/우타석) -->
+      {#if batterAnimPos !== null}
+        <g>
+          <ellipse cx={batterAnimPos.x} cy={batterAnimPos.y + 16} rx="12" ry="4" fill="rgba(0,0,0,0.4)"/>
+          {#each RETRO_SPRITE as rowStr, ri}
             {#each rowStr.split('') as cell, ci}
               {#if cell !== '.'}
-                <rect x={rp.x - 12 + ci * 4} y={rp.y - 16 + ri * 4}
-                  width="4" height="4" fill={retroRunnerColor()} shape-rendering="crispEdges"/>
+                {#if batter.handedness === 'L'}
+                  <!-- 좌타: 우타석, 스프라이트 좌우반전 -->
+                  <rect x={batterAnimPos.x + 12 - (ci + 1) * 4} y={batterAnimPos.y - 18 + ri * 4}
+                    width="4" height="4" fill={retroBatterColor(cell)} shape-rendering="crispEdges"/>
+                {:else}
+                  <!-- 우타: 좌타석, 정방향 -->
+                  <rect x={batterAnimPos.x - 16 + ci * 4} y={batterAnimPos.y - 18 + ri * 4}
+                    width="4" height="4" fill={retroBatterColor(cell)} shape-rendering="crispEdges"/>
+                {/if}
               {/if}
             {/each}
           {/each}
         </g>
+      {/if}
+
+      <!-- 주자 (픽셀 스프라이트 + GBC 깜빡임, 애니메이션 좌표 기반) -->
+      {#each runnerAnimPositions as rp}
+        {#if rp !== null}
+          <g class="retro-runner-blink">
+            {#each RETRO_RUNNER as rowStr, ri}
+              {#each rowStr.split('') as cell, ci}
+                {#if cell !== '.'}
+                  <rect x={rp.x - 12 + ci * 4} y={rp.y - 16 + ri * 4}
+                    width="4" height="4" fill={retroRunnerColor()} shape-rendering="crispEdges"/>
+                {/if}
+              {/each}
+            {/each}
+          </g>
+        {/if}
       {/each}
 
       <!-- 공 궤적 & 공 -->

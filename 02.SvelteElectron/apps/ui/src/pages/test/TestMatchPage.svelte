@@ -79,6 +79,89 @@
 
   $: activeMound = fieldStyle === 'retro' ? retroField.mound : baseField.mound;
 
+  // ── 타자 / 주자 애니메이션 (레트로 전용) ─────────────────────────────
+  let batter: { handedness: 'L' | 'R' } = { handedness: 'R' };
+
+  function getBatterPlatePos(handedness: 'L' | 'R'): FieldPoint {
+    // 우타: 좌타석(플레이트 왼쪽 오프셋), 좌타: 우타석(플레이트 오른쪽)
+    const offset = handedness === 'R' ? -34 : 34;
+    return { x: retroField.home.x + offset, y: retroField.home.y - 22 };
+  }
+
+  let retroBatterPos: FieldPoint | null = getBatterPlatePos('R');
+  // [first, second, third] 슬롯; 초기 runners 상태({ first:true })에 맞춰 설정
+  let retroRunnerPositions: (FieldPoint | null)[] = [{ ...retroField.first }, null, null];
+
+  function syncRetroPositions() {
+    retroBatterPos = getBatterPlatePos(batter.handedness);
+    retroRunnerPositions = [
+      runners.first  ? { ...retroField.first }  : null,
+      runners.second ? { ...retroField.second } : null,
+      runners.third  ? { ...retroField.third }  : null,
+    ];
+  }
+
+  async function animateRetroRunners(
+    resultCode: PitchResultCode,
+    prevRunners: { first: boolean; second: boolean; third: boolean }
+  ) {
+    type Movement = { from: FieldPoint; to: FieldPoint };
+    const f = retroField;
+    const movements: Movement[] = [];
+    const bFrom = retroBatterPos ?? getBatterPlatePos(batter.handedness);
+
+    if (resultCode === 'HIT_SINGLE') {
+      movements.push({ from: { ...bFrom }, to: { ...f.first } });
+      if (prevRunners.first)  movements.push({ from: { ...f.first },  to: { ...f.second } });
+      if (prevRunners.second) movements.push({ from: { ...f.second }, to: { ...f.third } });
+      if (prevRunners.third)  movements.push({ from: { ...f.third },  to: { ...f.home } });
+    } else if (resultCode === 'HIT_DOUBLE') {
+      movements.push({ from: { ...bFrom }, to: { ...f.second } });
+      if (prevRunners.first)  movements.push({ from: { ...f.first },  to: { ...f.third } });
+      if (prevRunners.second) movements.push({ from: { ...f.second }, to: { ...f.home } });
+      if (prevRunners.third)  movements.push({ from: { ...f.third },  to: { ...f.home } });
+    } else if (resultCode === 'HIT_TRIPLE') {
+      movements.push({ from: { ...bFrom }, to: { ...f.third } });
+      if (prevRunners.first)  movements.push({ from: { ...f.first },  to: { ...f.home } });
+      if (prevRunners.second) movements.push({ from: { ...f.second }, to: { ...f.home } });
+      if (prevRunners.third)  movements.push({ from: { ...f.third },  to: { ...f.home } });
+    } else if (resultCode === 'HOME_RUN') {
+      movements.push({ from: { ...bFrom }, to: { ...f.home } });
+      if (prevRunners.first)  movements.push({ from: { ...f.first },  to: { ...f.home } });
+      if (prevRunners.second) movements.push({ from: { ...f.second }, to: { ...f.home } });
+      if (prevRunners.third)  movements.push({ from: { ...f.third },  to: { ...f.home } });
+    } else if (resultCode === 'WALK') {
+      movements.push({ from: { ...bFrom }, to: { ...f.first } });
+      if (prevRunners.first) movements.push({ from: { ...f.first }, to: { ...f.second } });
+      if (prevRunners.first && prevRunners.second)
+        movements.push({ from: { ...f.second }, to: { ...f.third } });
+      if (prevRunners.first && prevRunners.second && prevRunners.third)
+        movements.push({ from: { ...f.third }, to: { ...f.home } });
+    } else if (resultCode === 'INPLAY_OUT') {
+      retroBatterPos = null;
+      return;
+    } else {
+      return;
+    }
+
+    if (movements.length === 0) return;
+    retroBatterPos = null; // 타자 이동 시작 → 타석 스프라이트 숨김
+
+    const duration = 450;
+    const frame = 16;
+    const steps = Math.round(duration / frame);
+
+    for (let step = 1; step <= steps; step++) {
+      const t = step / steps;
+      const eased = 1 - (1 - t) * (1 - t);
+      retroRunnerPositions = movements.map(m => ({
+        x: Math.round(m.from.x + (m.to.x - m.from.x) * eased),
+        y: Math.round(m.from.y + (m.to.y - m.from.y) * eased),
+      }));
+      await sleep(frame);
+    }
+  }
+
   const zones = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
 
   // 클릭 위치 기반 존 선택 (0~1 비율)
@@ -245,7 +328,7 @@
 
   $: inningHalfLabel = `${inning}회 ${half === "top" ? "초" : "말"}`;
   // 초: 원정 공격 → 홈팀 수비(파랑), 말: 홈 공격 → 원정팀 수비(빨강)
-  $: fieldingTeam = half === 'top' ? 'home' : 'away';
+  $: fieldingTeam = (half === 'top' ? 'home' : 'away') as 'home' | 'away';
   $: staminaColor = pitcherState.stamina > 60 ? '#37d67a' : pitcherState.stamina > 30 ? '#ffd54f' : '#ff4a4a';
   $: mentalColor  = pitcherState.mental  > 60 ? '#5b9cf6' : pitcherState.mental  > 30 ? '#c47af5' : '#ff6b9d';
 
@@ -531,6 +614,7 @@
     if (isPitching) return;
 
     isPitching = true;
+    const prevRunners = { first: runners.first, second: runners.second, third: runners.third };
     const pitchedAt = { ...zoneClickPct };
     const zoneTarget = { ...clickedFieldPos };
     ballPos = { ...activeMound };
@@ -573,6 +657,18 @@
 
     if (resultCode === "INPLAY_OUT" || resultCode === "HIT_SINGLE" || resultCode === "HIT_DOUBLE" || resultCode === "HIT_TRIPLE" || resultCode === "HOME_RUN") {
       await tweenBall(getBattedTarget(resultCode), 300);
+    }
+
+    // 공 애니메이션 이후 주자/타자 이동 (레트로 전용)
+    if (fieldStyle === 'retro') {
+      await animateRetroRunners(resultCode, prevRunners);
+      // 타석 종료 결과면 다음 타자 핸드니스 랜덤 결정
+      const atBatEnded = resultCode !== 'STRIKE_SWING' && resultCode !== 'STRIKE_LOOK'
+        && resultCode !== 'FOUL' && resultCode !== 'BALL';
+      if (atBatEnded) {
+        batter = { handedness: Math.random() < 0.32 ? 'L' : 'R' };
+      }
+      syncRetroPositions();
     }
 
     await tweenBall(activeMound, 180);
@@ -674,6 +770,9 @@
               {isPitching}
               {fieldStyle}
               {fieldingTeam}
+              {batter}
+              batterAnimPos={fieldStyle === 'retro' ? retroBatterPos : null}
+              runnerAnimPositions={fieldStyle === 'retro' ? retroRunnerPositions : [null, null, null]}
               on:selectPosition={(event) => (selectedDefPosition = event.detail.pos)}
             />
             {#if resultOverlay.visible}
