@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { t } from "../../shared/i18n";
   import { mockCareerProfile } from "../../app/mockCareer";
   type StatGroup = {
     title: string;
@@ -66,7 +67,7 @@
 </script>
 
 <section class="page">
-  <h2>상태</h2>
+  <h2>{$t("page.status")}</h2>
 
   <article class="card profile-card">
     <div class="identity">

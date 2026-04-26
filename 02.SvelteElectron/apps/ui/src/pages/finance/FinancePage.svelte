@@ -1,4 +1,5 @@
 ﻿<script lang="ts">
+  import { t } from "../../shared/i18n";
   type FinanceTab = "overview" | "portfolio" | "contract";
 
   type CashFlowItem = {
@@ -66,7 +67,7 @@
 </script>
 
 <section class="page">
-  <h2>재정</h2>
+  <h2>{$t("page.finance")}</h2>
 
   <article class="card board">
     <header class="top-row">
@@ -391,3 +392,5 @@
     }
   }
 </style>
+
+

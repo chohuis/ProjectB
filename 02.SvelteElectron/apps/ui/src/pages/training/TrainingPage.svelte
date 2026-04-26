@@ -1,4 +1,5 @@
 ﻿<script lang="ts">
+  import { t } from "../../shared/i18n";
   import { gameStore } from "../../shared/stores/game";
 
   type TrainingTab = "daily" | "weekly" | "risk";
@@ -187,7 +188,7 @@
 </script>
 
 <section class="page">
-  <h2>훈련</h2>
+  <h2>{$t("page.training")}</h2>
 
   <article class="card board">
     <header class="top-row">
@@ -659,3 +660,5 @@
     }
   }
 </style>
+
+

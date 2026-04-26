@@ -1,4 +1,5 @@
 ﻿<script lang="ts">
+  import { t } from "../../shared/i18n";
   import type { MessageCategory, MessageItem } from "../../shared/types/main";
   import { gameStore } from "../../shared/stores/game";
 
@@ -56,7 +57,7 @@
 </script>
 
 <section class="page">
-  <h2>메시지</h2>
+  <h2>{$t("page.messages")}</h2>
 
   <article class="card inbox-card">
     <header class="inbox-header">
@@ -439,3 +440,5 @@
     font-size: 13px;
   }
 </style>
+
+

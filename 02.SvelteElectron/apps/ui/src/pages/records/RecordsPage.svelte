@@ -1,4 +1,5 @@
 ﻿<script lang="ts">
+  import { t } from "../../shared/i18n";
   type RecordTab = "personal" | "team";
   type Period = "season" | "last30" | "last10";
 
@@ -99,7 +100,7 @@
 </script>
 
 <section class="page">
-  <h2>기록</h2>
+  <h2>{$t("page.records")}</h2>
 
   <article class="card board">
     <header class="top-row">
@@ -447,3 +448,5 @@
     }
   }
 </style>
+
+

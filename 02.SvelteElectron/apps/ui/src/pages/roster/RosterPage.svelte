@@ -1,4 +1,5 @@
 ﻿<script lang="ts">
+  import { t } from "../../shared/i18n";
   type RosterTab = "all" | "pitcher" | "batter" | "staff";
   type Condition = "good" | "normal" | "alert";
   type SortDirection = "asc" | "desc";
@@ -648,7 +649,7 @@
 </script>
 
 <section class="page">
-  <h2>로스터</h2>
+  <h2>{$t("page.roster")}</h2>
 
   <article class="card board">
     <header class="tools">
@@ -1354,3 +1355,5 @@
     }
   }
 </style>
+
+

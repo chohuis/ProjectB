@@ -1,4 +1,5 @@
 ﻿<script lang="ts">
+  import { t } from "../../shared/i18n";
   type TeamTab = "my" | "all";
   type TeamSortField = "rank" | "winPct" | "name";
   type SortDirection = "asc" | "desc";
@@ -171,7 +172,7 @@
 </script>
 
 <section class="page">
-  <h2>팀</h2>
+  <h2>{$t("page.team")}</h2>
 
   <article class="card board">
     <header class="top-row">
@@ -603,3 +604,5 @@
     }
   }
 </style>
+
+

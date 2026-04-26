@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { MainTabId } from "../../shared/types/main";
   import { gameStore, unreadCount, showAcademicsTab } from "../../shared/stores/game";
+  import { t } from "../../shared/i18n";
   import SidebarNav from "../../features/navigation/ui/SidebarNav.svelte";
   import TopHeader from "../../features/main-layout/ui/TopHeader.svelte";
   import HomeDashboard from "../../features/dashboard/ui/HomeDashboard.svelte";
@@ -18,6 +19,20 @@
   import TeamPage from "../team/TeamPage.svelte";
 
   let currentTab: MainTabId = "home";
+  const tabPageKey: Record<MainTabId, string> = {
+    home: "page.home",
+    messages: "page.messages",
+    messenger: "page.messenger",
+    status: "page.status",
+    team: "page.team",
+    roster: "page.roster",
+    schedule: "page.schedule",
+    training: "page.training",
+    finance: "page.finance",
+    test: "page.matchEngine",
+    records: "page.records",
+    academics: "page.academics"
+  };
 
   $: if (!$showAcademicsTab && currentTab === "academics") {
     currentTab = "home";
@@ -80,7 +95,9 @@
           {:else if currentTab === "team"}
             <TeamPage />
           {:else}
-            <section class="placeholder">{currentTab} 화면 준비 중</section>
+            <section class="placeholder">
+              {$t("main.placeholderPreparing", { tab: $t(tabPageKey[currentTab]) })}
+            </section>
           {/if}
         </div>
       </main>

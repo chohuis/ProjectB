@@ -1,4 +1,5 @@
 ﻿<script lang="ts">
+  import { t } from "../../shared/i18n";
   type CalendarView = "year" | "month" | "week";
   type ScheduleType = "game" | "training" | "event" | "rest";
 
@@ -182,7 +183,7 @@
 </script>
 
 <section class="page">
-  <h2>일정</h2>
+  <h2>{$t("page.schedule")}</h2>
 
   <article class="card board">
     <header class="top-row">
@@ -715,3 +716,5 @@
     }
   }
 </style>
+
+

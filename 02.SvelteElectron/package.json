@@ -18,7 +18,9 @@
     "build:ui": "vite build --config vite.config.ts",
     "build": "npm run build:packages && npm run build:ui",
     "preview:ui": "vite preview --config vite.config.ts",
-    "start": "electron apps/desktop/main.cjs"
+    "start": "electron apps/desktop/main.cjs",
+    "check:i18n:keys": "node scripts/check-i18n-keys.mjs",
+    "check:mojibake": "node scripts/check-mojibake.mjs"
   },
   "dependencies": {
     "svelte": "^5.38.7"

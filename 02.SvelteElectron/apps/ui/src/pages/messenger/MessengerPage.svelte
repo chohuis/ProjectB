@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { t } from "../../shared/i18n";
   type ContactCategory = "팀" | "학교" | "개인";
 
   interface ContactItem {
@@ -105,7 +106,7 @@
 
 <section class="page">
   <header class="top">
-    <h2>메신저</h2>
+    <h2>{$t("page.messenger")}</h2>
     <p>연락처를 해금해 대화/교류/관계 이벤트를 진행합니다.</p>
   </header>
 
