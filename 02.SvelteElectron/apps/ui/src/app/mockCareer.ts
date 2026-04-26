@@ -25,27 +25,28 @@ export interface CareerProfile {
 export const mockCareerSchool: CareerSchoolState = {
   currentStage: "highschool",
   attendsUniversity: false,
-  universityMajor: "체육교육",
+  universityMajor: "\uccb4\uc721\uad50\uc721",
   plannedUniversityMajors: [
-    "스포츠과학",
-    "체육교육",
-    "스포츠경영",
-    "재활운동",
-    "스포츠심리"
+    "\uc2a4\ud3ec\uce20\uacfc\ud559",
+    "\uccb4\uc721\uad50\uc721",
+    "\uc2a4\ud3ec\uce20\uacbd\uc601",
+    "\uc0dd\ud65c\uccb4\uc721",
+    "\uc2a4\ud3ec\uce20\uc7ac\ud65c"
   ]
 };
 
 export const mockCareerProfile: CareerProfile = {
-  name: "정서겸",
-  team: "서울 이노베이션 고",
-  year: "2학년",
+  name: "\uc815\uc11c\uacb8",
+  team: "\uc11c\uc6b8 \uc774\ub178\ubca0\uc774\uc158 \uace0",
+  year: "2\ud559\ub144",
   position: "SP",
-  role: "에이스 선발",
-  throws: "좌투",
-  bats: "우타",
+  role: "\uc5d0\uc774\uc2a4 \uc120\ubc1c",
+  throws: "\uc6b0\ud22c",
+  bats: "\uc6b0\ud0c0",
   overall: 84,
   potentialHidden: 93,
   condition: 82,
   fatigue: 28,
-  tags: ["핵심", "멘탈관리", "선발 로테이션"]
+  tags: ["\uae09\uc131\uc7a5", "\uba58\ud0c8\uad00\ub9ac", "\uc120\ubc1c \ub85c\ud14c\uc774\uc158"]
 };
+

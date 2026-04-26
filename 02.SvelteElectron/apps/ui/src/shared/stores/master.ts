@@ -1,12 +1,10 @@
-import { writable, derived } from 'svelte/store';
-
-// ── 타입 ───────────────────────────────────────────────────────────────────
+import { derived, writable } from "svelte/store";
 
 export interface TrainingProgram {
   id: string;
   name: string;
   focus: string;
-  intensity: 'low' | 'medium' | 'high';
+  intensity: "low" | "medium" | "high";
   fatigueCost: number;
   risk: number;
 }
@@ -23,34 +21,31 @@ export interface MasterState {
   pitchCatalog: PitchEntry[];
 }
 
-// ── 스토어 팩토리 ───────────────────────────────────────────────────────────
-
 function createMasterStore() {
   const { subscribe, update } = writable<MasterState>({
     loaded: false,
     trainingPrograms: [],
-    pitchCatalog: [],
+    pitchCatalog: []
   });
 
-  // vite publicDir = resource/ → /data/master/... 경로로 fetch 가능
   async function load() {
     try {
       const [trainingRes, pitchRes] = await Promise.all([
-        fetch('/data/master/training/programs_pitcher.json'),
-        fetch('/data/master/training/pitch_catalog.json'),
+        fetch("/data/master/training/programs_pitcher.json"),
+        fetch("/data/master/training/pitch_catalog.json")
       ]);
 
-      const trainingData  = trainingRes.ok  ? await trainingRes.json()  : { programs: [] };
-      const pitchData     = pitchRes.ok     ? await pitchRes.json()     : { pitches: [] };
+      const trainingData = trainingRes.ok ? await trainingRes.json() : { programs: [] };
+      const pitchData = pitchRes.ok ? await pitchRes.json() : { pitches: [] };
 
       update(() => ({
         loaded: true,
-        trainingPrograms: trainingData.programs  ?? [],
-        pitchCatalog:     pitchData.pitches      ?? [],
+        trainingPrograms: trainingData.programs ?? [],
+        pitchCatalog: pitchData.pitches ?? []
       }));
-    } catch (e) {
-      console.warn('[masterStore] 마스터 데이터 로드 실패:', e);
-      update(s => ({ ...s, loaded: true }));
+    } catch (error) {
+      console.warn("[masterStore] failed to load master data", error);
+      update((state) => ({ ...state, loaded: true }));
     }
   }
 
@@ -59,7 +54,7 @@ function createMasterStore() {
 
 export const masterStore = createMasterStore();
 
-// 자주 쓰는 파생값
-export const trainingProgramMap = derived(masterStore, $m =>
-  new Map($m.trainingPrograms.map(p => [p.id, p]))
-);
+export const trainingProgramMap = derived(masterStore, ($master) => {
+  return new Map($master.trainingPrograms.map((program) => [program.id, program]));
+});
+
