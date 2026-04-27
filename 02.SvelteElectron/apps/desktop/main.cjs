@@ -145,7 +145,11 @@ function toSnapshotDto(state) {
     outs: state.outs,
     count: state.count,
     score: state.score,
-    runners: state.runners,
+    runners: {
+      first: !!state.runners.first,
+      second: !!state.runners.second,
+      third: !!state.runners.third
+    },
     pitchCount: state.pitchCount,
     stamina: state.stamina,
     mental: state.mental,

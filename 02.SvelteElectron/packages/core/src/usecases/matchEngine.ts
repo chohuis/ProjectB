@@ -1,6 +1,7 @@
 ﻿import {
   clamp,
   createBatter,
+  createRunner,
   createInitialMatchState,
   type HalfInning,
   type MatchCount,
@@ -13,6 +14,7 @@
   type PitchResultCode,
   type PitchStrategy,
   type PitchType,
+  type RunnerStats,
   type WeatherType
 } from "../domain/matchState";
 
@@ -54,100 +56,100 @@ export function finishMatch(state: MatchState): { nextState: MatchState; summary
 
 export function stepPitch(state: MatchState, decision: PitchDecision): MatchStepResult {
   if (state.isFinished) {
-    const outcome: PitchOutcome = {
-      resultCode: "GAME_OVER",
-      quality: 0,
-      comment: "이미 종료된 경기입니다."
-    };
+    const outcome: PitchOutcome = { resultCode: "GAME_OVER", quality: 0, comment: "이미 종료된 경기입니다." };
     return { nextState: state, outcome };
   }
 
-  const quality = calculatePitchQuality(state, decision);
-  let resultCode = applyHitUpgrade(resolvePitchResult(quality), state.batter.power, state.weather);
+  // ── 1. 도루 시도 (투구 전) ─────────────────────────────────────────────────
+  const stealResult = attemptSteals(state);
+  let preRunners = stealResult.runners;
+  let preOuts = stealResult.outs;
+  let preInning = state.inning;
+  let preHalf: HalfInning = state.half;
 
-  let nextCount = { ...state.count };
-  let nextOuts = state.outs;
-  let nextRunners: MatchRunners = { ...state.runners };
-  let nextScore = { ...state.score };
-  let nextInning = state.inning;
-  let nextHalf: HalfInning = state.half;
+  if (preOuts >= 3) {
+    preOuts = 0;
+    preRunners = { first: null, second: null, third: null };
+    if (preHalf === "top") { preHalf = "bottom"; }
+    else { preHalf = "top"; preInning += 1; }
+  }
+
+  const preState: MatchState = { ...state, runners: preRunners, outs: preOuts, inning: preInning, half: preHalf };
+
+  // ── 2. 투구 결과 결정 ──────────────────────────────────────────────────────
+  const quality = calculatePitchQuality(preState, decision);
+  let resultCode = applyHitUpgrade(resolvePitchResult(quality), preState.batter.power, preState.weather);
+
+  let nextCount = { ...preState.count };
+  let nextOuts = preState.outs;
+  let nextRunners: MatchRunners = { ...preState.runners };
+  let nextScore = { ...preState.score };
+  let nextInning = preState.inning;
+  let nextHalf: HalfInning = preState.half;
+  const runningLogs: string[] = [];
 
   if (resultCode === "BALL") {
     nextCount.balls += 1;
     if (nextCount.balls >= 4) {
       resultCode = "WALK";
       nextCount = { balls: 0, strikes: 0 };
-      const walkRun = advanceOnWalk(nextRunners);
+      const walkRun = advanceOnWalk(nextRunners, createRunner(preState.batterMean));
       nextRunners = walkRun.runners;
       nextScore = addRuns(nextScore, nextHalf, walkRun.runs);
     }
   } else if (resultCode === "STRIKE_LOOK" || resultCode === "STRIKE_SWING") {
     nextCount.strikes += 1;
-    if (nextCount.strikes >= 3) {
-      nextOuts += 1;
-      nextCount = { balls: 0, strikes: 0 };
-    }
+    if (nextCount.strikes >= 3) { nextOuts += 1; nextCount = { balls: 0, strikes: 0 }; }
   } else if (resultCode === "FOUL") {
-    if (nextCount.strikes < 2) {
-      nextCount.strikes += 1;
-    }
+    if (nextCount.strikes < 2) nextCount.strikes += 1;
   } else if (resultCode === "INPLAY_OUT") {
     nextOuts += 1;
     nextCount = { balls: 0, strikes: 0 };
   } else {
-    const hitResult = advanceOnHit(nextRunners, resultCode);
+    const hitResult = advanceOnHit(nextRunners, resultCode, createRunner(preState.batterMean));
     nextRunners = hitResult.runners;
     nextScore = addRuns(nextScore, nextHalf, hitResult.runs);
+    nextOuts += hitResult.extraOuts;
     nextCount = { balls: 0, strikes: 0 };
+    runningLogs.push(...hitResult.logs);
   }
 
   if (nextOuts >= 3) {
     nextOuts = 0;
     nextCount = { balls: 0, strikes: 0 };
-    nextRunners = { first: false, second: false, third: false };
-    if (nextHalf === "top") {
-      nextHalf = "bottom";
-    } else {
-      nextHalf = "top";
-      nextInning += 1;
-    }
+    nextRunners = { first: null, second: null, third: null };
+    if (nextHalf === "top") { nextHalf = "bottom"; }
+    else { nextHalf = "top"; nextInning += 1; }
   }
 
+  // ── 3. 스태미나/멘탈 계산 ────────────────────────────────────────────────────
   const powerStaminaCost: Record<PitchPower, number> = { low: 0.1, normal: 0.3, high: 0.55 };
   const baseStaminaLoss =
     0.85 +
     (decision.strategy === "aggressive" ? 0.25 : 0) +
     (decision.pitchType === "fastball" ? 0.2 : 0) +
     powerStaminaCost[decision.power];
-  // 체력 내구(staminaCap)가 높을수록 소모율 감소 (±15% 범위)
-  const staminaCapFactor = 1 - clamp((state.pitcher.staminaCap - 55) * 0.005, -0.15, 0.15);
+  const staminaCapFactor = 1 - clamp((preState.pitcher.staminaCap - 55) * 0.005, -0.15, 0.15);
   const staminaLoss = baseStaminaLoss * staminaCapFactor;
 
-  // 멘탈 회복력(mentalResil)이 높을수록 멘탈 진폭 완화 (±15% 범위)
-  const mentalResilFactor = 1 - clamp((state.pitcher.mentalResil - 50) * 0.004, -0.15, 0.15);
+  const mentalResilFactor = 1 - clamp((preState.pitcher.mentalResil - 50) * 0.004, -0.15, 0.15);
   const mentalDelta = resolveMentalDelta(resultCode) * mentalResilFactor;
-  const nextStamina = clamp(state.stamina - staminaLoss, 0, 100);
-  const nextMental = clamp(state.mental + mentalDelta, 0, 100);
+  const nextStamina = clamp(preState.stamina - staminaLoss, 0, 100);
+  const nextMental = clamp(preState.mental + mentalDelta, 0, 100);
 
-  // AB 종료 여부 판정 (타자 교체 트리거)
-  const isKOut =
-    (resultCode === "STRIKE_LOOK" || resultCode === "STRIKE_SWING") &&
-    state.count.strikes === 2;
-  const abEnded =
-    isKOut ||
-    resultCode === "WALK" ||
-    resultCode === "INPLAY_OUT" ||
-    resultCode === "HIT_SINGLE" ||
-    resultCode === "HIT_DOUBLE" ||
-    resultCode === "HIT_TRIPLE" ||
-    resultCode === "HOME_RUN";
-  const nextBatter = abEnded ? createBatter(state.batterMean) : state.batter;
+  // ── 4. 타자 교체 / 패턴 히스토리 ────────────────────────────────────────────
+  const isKOut = (resultCode === "STRIKE_LOOK" || resultCode === "STRIKE_SWING") && preState.count.strikes === 2;
+  const abEnded = isKOut || resultCode === "WALK" || resultCode === "INPLAY_OUT" ||
+    resultCode === "HIT_SINGLE" || resultCode === "HIT_DOUBLE" || resultCode === "HIT_TRIPLE" || resultCode === "HOME_RUN";
+  const nextBatter = abEnded ? createBatter(preState.batterMean) : preState.batter;
+  const nextLastPitchTypes = [...preState.lastPitchTypes, decision.pitchType].slice(-5);
 
-  // 투구 패턴 히스토리 업데이트 (최대 5구 보관)
-  const nextLastPitchTypes = [...state.lastPitchTypes, decision.pitchType].slice(-5);
+  // ── 5. 로그 조합 ──────────────────────────────────────────────────────────
+  const pitchLog = buildPitchLog(preState, decision, resultCode, quality);
+  const allNewLogs = [...stealResult.stealLogs, pitchLog, ...runningLogs];
 
   let nextState: MatchState = {
-    ...state,
+    ...preState,
     inning: nextInning,
     half: nextHalf,
     outs: nextOuts,
@@ -159,23 +161,14 @@ export function stepPitch(state: MatchState, decision: PitchDecision): MatchStep
     mental: Number(nextMental.toFixed(1)),
     batter: nextBatter,
     lastPitchTypes: nextLastPitchTypes,
-    logs: [...state.logs, buildPitchLog(state, decision, resultCode, quality)]
+    logs: [...state.logs, ...allNewLogs]
   };
 
   if (shouldAutoFinish(nextState)) {
-    nextState = {
-      ...nextState,
-      isFinished: true,
-      logs: [...nextState.logs, "규정 이닝 종료"]
-    };
+    nextState = { ...nextState, isFinished: true, logs: [...nextState.logs, "규정 이닝 종료"] };
   }
 
-  const outcome: PitchOutcome = {
-    resultCode,
-    quality,
-    comment: getResultComment(resultCode)
-  };
-
+  const outcome: PitchOutcome = { resultCode, quality, comment: getResultComment(resultCode) };
   return { nextState, outcome };
 }
 
@@ -314,52 +307,177 @@ function resolvePitchResult(quality: number): PitchResultCode {
   return "HOME_RUN";
 }
 
-function advanceOnWalk(runners: MatchRunners): { runners: MatchRunners; runs: number } {
+function advanceOnWalk(
+  runners: MatchRunners,
+  newRunner: RunnerStats
+): { runners: MatchRunners; runs: number } {
   let runs = 0;
-  const next = { ...runners };
+  let { first, second, third } = runners;
 
-  if (next.first && next.second && next.third) {
-    runs += 1;
+  if (first) {
+    if (second) {
+      if (third) { runs = 1; } // 만루: 3루주자 홈으로
+      third = second;
+      second = first;
+    } else {
+      second = first;
+    }
   }
+  first = newRunner;
 
-  next.third = next.third || next.second;
-  next.second = next.second || next.first;
-  next.first = true;
-
-  return { runners: next, runs };
+  return { runners: { first, second, third }, runs };
 }
 
-function advanceOnHit(runners: MatchRunners, resultCode: PitchResultCode): { runners: MatchRunners; runs: number } {
-  const next = { first: false, second: false, third: false };
+function advanceOnHit(
+  runners: MatchRunners,
+  resultCode: PitchResultCode,
+  newRunner: RunnerStats
+): { runners: MatchRunners; runs: number; extraOuts: number; logs: string[] } {
+  const next: MatchRunners = { first: null, second: null, third: null };
   let runs = 0;
+  let extraOuts = 0;
+  const logs: string[] = [];
 
   if (resultCode === "HOME_RUN") {
-    runs += (runners.first ? 1 : 0) + (runners.second ? 1 : 0) + (runners.third ? 1 : 0) + 1;
-    return { runners: next, runs };
+    runs = (runners.first ? 1 : 0) + (runners.second ? 1 : 0) + (runners.third ? 1 : 0) + 1;
+    return { runners: next, runs, extraOuts, logs };
   }
 
   if (resultCode === "HIT_TRIPLE") {
-    runs += (runners.first ? 1 : 0) + (runners.second ? 1 : 0) + (runners.third ? 1 : 0);
-    next.third = true;
-    return { runners: next, runs };
+    runs = (runners.first ? 1 : 0) + (runners.second ? 1 : 0) + (runners.third ? 1 : 0);
+    next.third = newRunner;
+    return { runners: next, runs, extraOuts, logs };
   }
 
   if (resultCode === "HIT_DOUBLE") {
-    runs += (runners.second ? 1 : 0) + (runners.third ? 1 : 0);
-    next.third = runners.first;
-    next.second = true;
-    return { runners: next, runs };
+    if (runners.third) runs += 1;
+    if (runners.second) runs += 1;
+    if (runners.first) {
+      const r = runners.first;
+      const result = tryExtraBase(r, "1st_scores_double");
+      if (result === "advance") {
+        runs += 1;
+        logs.push(`적극 주루! 1루 주자 홈인 (스피드 ${r.speed})`);
+      } else if (result === "out") {
+        extraOuts += 1;
+        logs.push(`주루 아웃! 1루 주자 홈 태그아웃 (스피드 ${r.speed})`);
+      } else {
+        next.third = r;
+      }
+    }
+    next.second = newRunner;
+    return { runners: next, runs, extraOuts, logs };
   }
 
   if (resultCode === "HIT_SINGLE") {
-    runs += runners.third ? 1 : 0;
-    next.third = runners.second;
-    next.second = runners.first;
-    next.first = true;
-    return { runners: next, runs };
+    if (runners.third) runs += 1;
+
+    if (runners.second) {
+      const r = runners.second;
+      const result = tryExtraBase(r, "2nd_scores_single");
+      if (result === "advance") {
+        runs += 1;
+        logs.push(`적극 주루! 2루 주자 홈인 (스피드 ${r.speed})`);
+      } else if (result === "out") {
+        extraOuts += 1;
+        logs.push(`주루 아웃! 2루 주자 홈 태그아웃 (스피드 ${r.speed})`);
+      } else {
+        next.third = r;
+      }
+    }
+
+    if (runners.first) {
+      const r = runners.first;
+      if (!next.third) {
+        const result = tryExtraBase(r, "1st_to_3rd_single");
+        if (result === "advance") {
+          next.third = r;
+          logs.push(`적극 주루! 1루 주자 3루까지 (스피드 ${r.speed})`);
+        } else if (result === "out") {
+          extraOuts += 1;
+          logs.push(`주루 아웃! 1루 주자 3루 태그아웃 (스피드 ${r.speed})`);
+        } else {
+          next.second = r;
+        }
+      } else {
+        next.second = r;
+      }
+    }
+
+    next.first = newRunner;
+    return { runners: next, runs, extraOuts, logs };
   }
 
-  return { runners: { ...runners }, runs: 0 };
+  return { runners: { ...runners }, runs: 0, extraOuts: 0, logs: [] };
+}
+
+// 여분 베이스 시도 결과: advance(성공) | stop(시도 안 함/안전 정지) | out(태그아웃)
+function tryExtraBase(
+  runner: RunnerStats,
+  context: "1st_to_3rd_single" | "2nd_scores_single" | "1st_scores_double"
+): "advance" | "stop" | "out" {
+  const configs = {
+    "1st_to_3rd_single": { attemptBase: 0.20, successBase: 0.72 },
+    "2nd_scores_single": { attemptBase: 0.35, successBase: 0.63 },
+    "1st_scores_double": { attemptBase: 0.30, successBase: 0.58 },
+  } as const;
+
+  const { attemptBase, successBase } = configs[context];
+  const speedMod = (runner.speed - 50) * 0.005;
+  const instinctMod = (runner.instinct - 50) * 0.003;
+
+  const attemptProb = clamp(attemptBase + speedMod + instinctMod, 0.02, 0.75);
+  if (Math.random() >= attemptProb) return "stop";
+
+  const successProb = clamp(successBase + speedMod, 0.15, 0.95);
+  return Math.random() < successProb ? "advance" : "out";
+}
+
+// 도루 시도 (투구 직전 자동 판정)
+function attemptSteals(
+  state: MatchState
+): { runners: MatchRunners; outs: number; stealLogs: string[] } {
+  let { first, second, third } = state.runners;
+  let outs = state.outs;
+  const stealLogs: string[] = [];
+
+  // 1루→2루 도루: 1루주자 있고 2루 비어있음
+  if (first && !second) {
+    const r = first;
+    const attemptProb = clamp((r.speed - 40) * 0.008 * (r.instinct / 50), 0, 0.28);
+    if (Math.random() < attemptProb) {
+      const successRate = clamp(0.28 + (r.speed - 50) * 0.007, 0.15, 0.90);
+      if (Math.random() < successRate) {
+        second = r;
+        first = null;
+        stealLogs.push(`도루 성공! 1루→2루 (스피드 ${r.speed})`);
+      } else {
+        first = null;
+        outs += 1;
+        stealLogs.push(`도루 실패! 1루 주자 아웃 (스피드 ${r.speed})`);
+      }
+    }
+  }
+
+  // 2루→3루 도루: 2루주자 있고 3루 비어있음 (발 빠른 주자만 시도)
+  if (second && !third && second.speed > 68) {
+    const r = second;
+    const attemptProb = clamp((r.speed - 58) * 0.006 * (r.instinct / 55), 0, 0.14);
+    if (Math.random() < attemptProb) {
+      const successRate = clamp(0.22 + (r.speed - 65) * 0.008, 0.10, 0.78);
+      if (Math.random() < successRate) {
+        third = r;
+        second = null;
+        stealLogs.push(`도루 성공! 2루→3루 (스피드 ${r.speed})`);
+      } else {
+        second = null;
+        outs += 1;
+        stealLogs.push(`도루 실패! 2루 주자 아웃 (스피드 ${r.speed})`);
+      }
+    }
+  }
+
+  return { runners: { first, second, third }, outs, stealLogs };
 }
 
 function addRuns(score: { home: number; away: number }, half: HalfInning, runs: number): { home: number; away: number } {

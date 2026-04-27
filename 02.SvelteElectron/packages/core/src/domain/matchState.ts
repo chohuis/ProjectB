@@ -37,10 +37,15 @@ export interface MatchScore {
   away: number;
 }
 
+export interface RunnerStats {
+  speed: number;    // 주루 속도 (1-99): 도루 성공률, 여분 베이스 진루 여부
+  instinct: number; // 주루 판단력 (1-99): 시도 빈도 및 적극성
+}
+
 export interface MatchRunners {
-  first: boolean;
-  second: boolean;
-  third: boolean;
+  first: RunnerStats | null;
+  second: RunnerStats | null;
+  third: RunnerStats | null;
 }
 
 export interface MatchCount {
@@ -97,7 +102,7 @@ export function createInitialMatchState(options: MatchStartOptions = {}): MatchS
     half: "top",
     outs: 0,
     count: { balls: 0, strikes: 0 },
-    runners: { first: false, second: false, third: false },
+    runners: { first: null, second: null, third: null },
     score: { home: 0, away: 0 },
     pitchCount: 0,
     stamina: clamp(options.initialStamina ?? 82, 0, 100),
@@ -117,6 +122,12 @@ export function createBatter(mean: number): BatterStats {
   const spread = 18;
   const rand = () => clamp(mean + Math.round((Math.random() * 2 - 1) * spread), 10, 95);
   return { contact: rand(), power: rand(), eye: rand() };
+}
+
+export function createRunner(mean: number): RunnerStats {
+  const spread = 18;
+  const rand = () => clamp(mean + Math.round((Math.random() * 2 - 1) * spread), 10, 95);
+  return { speed: rand(), instinct: rand() };
 }
 
 export function clamp(value: number, min: number, max: number): number {
