@@ -165,7 +165,7 @@ export function stepPitch(state: MatchState, decision: PitchDecision): MatchStep
   };
 
   if (shouldAutoFinish(nextState)) {
-    nextState = { ...nextState, isFinished: true, logs: [...nextState.logs, "규정 이닝 종료"] };
+    nextState = { ...nextState, isFinished: true, logs: [...nextState.logs, finishLog(nextState)] };
   }
 
   const outcome: PitchOutcome = { resultCode, quality, comment: getResultComment(resultCode) };
@@ -192,16 +192,19 @@ function calculatePitchQuality(state: MatchState, decision: PitchDecision): numb
     high: 2.8
   };
 
+  // 코너(1,3,7,9): 타자가 치기 어려워 투수 유리
+  // 엣지(2,4,6,8): 중간
+  // 중앙(5): 타자가 가장 치기 쉬워 투수 불리
   const locationBonus: Record<PitchLocation, number> = {
-    1: 2,
-    2: 1,
-    3: 2,
-    4: 1,
-    5: 4,
-    6: 1,
-    7: 2,
-    8: 1,
-    9: 2
+    1: 3,
+    2: 0,
+    3: 3,
+    4: 0,
+    5: -4,
+    6: 0,
+    7: 3,
+    8: 0,
+    9: 3
   };
 
   // command: 제구력 → 로케이션 정확도 + 기본 제구 보정
@@ -515,10 +518,22 @@ function resolveMentalDelta(resultCode: PitchResultCode): number {
 }
 
 function shouldAutoFinish(state: MatchState): boolean {
-  if (state.inning <= state.inningLimit) {
-    return false;
+  // 끝내기: 규정 이닝 이후 말 공격에서 홈팀이 앞서는 순간 즉시 종료
+  if (state.half === "bottom" && state.inning >= state.inningLimit && state.score.home > state.score.away) {
+    return true;
   }
-  return state.score.home !== state.score.away;
+  // 이닝 전환 후 규정 이닝 초과 + 점수차 있으면 종료
+  if (state.inning > state.inningLimit && state.score.home !== state.score.away) {
+    return true;
+  }
+  return false;
+}
+
+function finishLog(state: MatchState): string {
+  if (state.half === "bottom" && state.inning >= state.inningLimit && state.score.home > state.score.away) {
+    return "끝내기!";
+  }
+  return "규정 이닝 종료";
 }
 
 function getResultComment(resultCode: PitchResultCode): string {
