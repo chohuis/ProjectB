@@ -127,9 +127,18 @@
 
   export let open = false;
   const dispatch = createEventDispatcher<{ close: void }>();
-  const ENTITY_REL_PATH = "entities/people.json";
-  const ENTITY_LOCAL_KEY = "dev_entities_people";
   const ENTITY_REFS_PATH = "entities/refs.json";
+
+  // 리그별 파일 맵 — 향후 KBO·MLB 추가 시 여기에 추가
+  const ENTITY_FILE_MAP: Record<string, { rel: string; local: string }> = {
+    LEAGUE_HIGHSCHOOL:  { rel: "entities/people_hs.json",   local: "dev_entities_people_hs" },
+    LEAGUE_UNIVERSITY:  { rel: "entities/people_univ.json",  local: "dev_entities_people_univ" },
+    LEAGUE_INDEPENDENT: { rel: "entities/people_ind.json",   local: "dev_entities_people_ind" },
+    LEAGUE_KBO:         { rel: "entities/people_kbo.json",   local: "dev_entities_people_kbo" },
+    LEAGUE_MLB:         { rel: "entities/people_mlb.json",   local: "dev_entities_people_mlb" }
+  };
+
+  let activeLeagueFile = "LEAGUE_HIGHSCHOOL";
 
   const FALLBACK_LEAGUES: LeagueRef[] = [
     { id: "LEAGUE_HIGHSCHOOL",  name: "고교 리그",  nameEn: "High School League" },
@@ -167,140 +176,7 @@
   let teams: TeamRef[] = FALLBACK_TEAMS;
 
   let activeTab: EntityTab = "player";
-  let rows: EntityRow[] = [
-    {
-      id: "PLY_001",
-      name: "홍길동",
-      nameEn: "Hong Gil-dong",
-      role: "player",
-      age: 18,
-      status: "active",
-      originLeagueId: "LEAGUE_HIGHSCHOOL",
-      leagueId: "LEAGUE_HIGHSCHOOL",
-      clubId: "TEAM_HS_SEOUL_INNOVATION",
-      teamId: "TEAM_HS_SEOUL_INNOVATION",
-      grade: 2,
-      schoolId: "SCHOOL_HS_SEOUL_INNOVATION",
-      notes: "유망주",
-      details: createDefaultDetails({
-        player: {
-          playerType: "pitcher",
-          handedness: "R",
-          position: "SP",
-          jerseyNumber: 11,
-          pitching: {
-            ovr: 72,
-            stamina: 74,
-            velocity: 76,
-            command: 68,
-            control: 66,
-            movement: 70,
-            mentality: 63,
-            recovery: 67
-          },
-          batting: {
-            ovr: 42,
-            contact: 38,
-            power: 34,
-            eye: 45,
-            discipline: 41,
-            speed: 48,
-            fielding: 52,
-            arm: 58,
-            battingClutch: 40
-          },
-          developmentRate: 62,
-          potentialHidden: 86
-        }
-      })
-    },
-    {
-      id: "COA_001",
-      name: "박코치",
-      nameEn: "Park Coach",
-      role: "coach",
-      age: 42,
-      status: "active",
-      originLeagueId: "LEAGUE_KBO",
-      leagueId: "LEAGUE_KBO",
-      clubId: "TBD_KBO_TEAM",
-      teamId: "TBD_KBO_TEAM",
-      schoolId: "SCHOOL_NONE",
-      notes: "투수 인스트럭터",
-      details: createDefaultDetails({
-        coach: {
-          specialty: "투구 메커닉",
-          experienceYears: 14,
-          stats: {
-            teaching: 78,
-            analysis: 74,
-            communication: 70,
-            discipline: 66,
-            leadership: 72
-          },
-          trainingBuffs: "구속 훈련 +3%"
-        }
-      })
-    },
-    {
-      id: "MNG_001",
-      name: "최감독",
-      nameEn: "Choi Manager",
-      role: "manager",
-      age: 51,
-      status: "active",
-      originLeagueId: "LEAGUE_KBO",
-      leagueId: "LEAGUE_KBO",
-      clubId: "TBD_KBO_TEAM",
-      teamId: "TBD_KBO_TEAM",
-      schoolId: "SCHOOL_NONE",
-      notes: "불펜 운용 강점",
-      details: createDefaultDetails({
-        manager: {
-          style: "균형",
-          experienceYears: 11,
-          stats: {
-            tactics: 77,
-            decision: 74,
-            rotationMgmt: 70,
-            bullpenMgmt: 81,
-            moraleMgmt: 68
-          },
-          gamePlanBias: "중반 이후 불펜 강화",
-          riskTolerance: 56
-        }
-      })
-    },
-    {
-      id: "OWN_001",
-      name: "김구단주",
-      nameEn: "Kim Owner",
-      role: "owner",
-      age: 58,
-      status: "active",
-      originLeagueId: "LEAGUE_KBO",
-      leagueId: "LEAGUE_KBO",
-      clubId: "TBD_KBO_TEAM",
-      teamId: "TBD_KBO_TEAM",
-      schoolId: "SCHOOL_NONE",
-      notes: "장기 육성 선호",
-      details: createDefaultDetails({
-        owner: {
-          ownershipStyle: "안정 운영",
-          tenureYears: 9,
-          stats: {
-            budgetSupport: 66,
-            patience: 72,
-            prInfluence: 63,
-            facilityInvestment: 69,
-            staffTrust: 75
-          },
-          budgetPolicy: "시설 투자 우선",
-          hiringPolicy: "내부 육성 중시"
-        }
-      })
-    }
-  ];
+  let rows: EntityRow[] = [];
 
   let selectedId = "";
   let editDraft: EntityRow | null = null;
@@ -635,26 +511,35 @@
     };
   }
 
+  function currentFile() {
+    return ENTITY_FILE_MAP[activeLeagueFile] ?? ENTITY_FILE_MAP["LEAGUE_HIGHSCHOOL"];
+  }
+
   async function loadEntities() {
     persistMessage = "";
     persistError = "";
+    const { rel, local } = currentFile();
     try {
-      const remote = await window.projectB?.masterFetch?.(ENTITY_REL_PATH);
+      const remote = await window.projectB?.masterFetch?.(rel);
       const maybe = remote as { entities?: unknown[] } | null | undefined;
       if (maybe?.entities && Array.isArray(maybe.entities)) {
         rows = maybe.entities.map((item) => normalizeEntity(item));
-        persistMessage = `파일에서 ${rows.length}건을 불러왔습니다.`;
+        persistMessage = `[${rel}] 파일에서 ${rows.length}건을 불러왔습니다.`;
         return;
       }
 
-      const localRaw = window.localStorage.getItem(ENTITY_LOCAL_KEY);
+      const localRaw = window.localStorage.getItem(local);
       if (localRaw) {
         const parsed = JSON.parse(localRaw) as { entities?: unknown[] };
         if (Array.isArray(parsed.entities)) {
           rows = parsed.entities.map((item) => normalizeEntity(item));
-          persistMessage = `로컬 임시 저장에서 ${rows.length}건을 불러왔습니다.`;
+          persistMessage = `[로컬] ${rows.length}건을 불러왔습니다.`;
+          return;
         }
       }
+
+      rows = [];
+      persistMessage = `[${rel}] 등록된 데이터가 없습니다. 추가 버튼으로 새 인물을 등록하세요.`;
     } catch (error) {
       persistError = `불러오기 실패: ${String((error as Error)?.message ?? error)}`;
     }
@@ -663,23 +548,20 @@
   async function saveEntities() {
     persistMessage = "";
     persistError = "";
+    const { rel, local } = currentFile();
     try {
-      const payload = { version: 1, entities: rows };
+      const payload = { version: 1, sourceLeague: activeLeagueFile, entities: rows };
 
       if (window.projectB?.masterSave) {
-        const result = await window.projectB.masterSave({
-          relPath: ENTITY_REL_PATH,
-          data: payload,
-          backup: true
-        });
+        const result = await window.projectB.masterSave({ relPath: rel, data: payload, backup: true });
         if (!result?.ok) {
           persistError = `파일 저장 실패: ${result?.error ?? "알 수 없는 오류"}`;
           return;
         }
-        persistMessage = "파일 저장 완료 (백업 생성 포함)";
+        persistMessage = `[${rel}] 저장 완료 (${rows.length}건, 백업 생성)`;
       } else {
-        window.localStorage.setItem(ENTITY_LOCAL_KEY, JSON.stringify(payload));
-        persistMessage = "로컬 임시 저장 완료";
+        window.localStorage.setItem(local, JSON.stringify(payload));
+        persistMessage = `[로컬] 임시 저장 완료 (${rows.length}건)`;
       }
     } catch (error) {
       persistError = `저장 실패: ${String((error as Error)?.message ?? error)}`;
@@ -771,9 +653,20 @@
   <div class="entity-backdrop" role="presentation" on:click={close}>
     <section class="entity-modal" role="dialog" aria-label="선수/스태프/구단주 에디터" on:click|stopPropagation>
       <header>
-        <h2>선수/스태프/구단주 에디터</h2>
+        <div class="head-left">
+          <h2>선수/스태프/구단주 에디터</h2>
+          <select
+            class="league-file-select"
+            bind:value={activeLeagueFile}
+            on:change={loadEntities}
+          >
+            {#each Object.keys(ENTITY_FILE_MAP) as leagueId}
+              <option value={leagueId}>{leagues.find((l) => l.id === leagueId)?.name ?? leagueId}</option>
+            {/each}
+          </select>
+        </div>
         <div class="head-actions">
-          <button type="button" class="ghost" on:click={loadEntities}>다시 불러오기</button>
+          <button type="button" class="ghost" on:click={loadEntities}>새로고침</button>
           <button type="button" on:click={saveEntities}>파일 저장</button>
           <button type="button" class="ghost" on:click={close}>닫기</button>
         </div>
@@ -1004,8 +897,13 @@
               <button type="button" class="ghost" on:click={cancelEdit}>취소</button>
               <button type="button" on:click={saveEdit}>저장</button>
             </div>
+          {:else if filteredRows.length === 0}
+            <div class="empty-guide">
+              <p>이 리그에 등록된 {activeTab === "player" ? "선수" : activeTab === "coach" ? "코치" : activeTab === "manager" ? "감독" : "구단주"}가 없습니다.</p>
+              <p class="hint">왼쪽 <strong>추가</strong> 버튼으로 새 인물을 등록하거나,<br/>Step 4 자동 생성 스크립트를 실행하세요.</p>
+            </div>
           {:else}
-            <p class="empty">선택된 항목이 없습니다.</p>
+            <p class="empty">목록에서 항목을 선택하세요.</p>
           {/if}
         </section>
       </div>
@@ -1433,6 +1331,39 @@
   .empty {
     margin: 0;
     color: #9db5d8;
+  }
+
+  .empty-guide {
+    padding: 24px 20px;
+    display: grid;
+    gap: 8px;
+  }
+
+  .empty-guide p {
+    margin: 0;
+    color: #9db5d8;
+    font-size: 13px;
+  }
+
+  .empty-guide .hint {
+    color: #6a87ad;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .head-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .league-file-select {
+    font-size: 12px;
+    padding: 5px 8px;
+    background: #162743;
+    border: 1px solid #3a5a8a;
+    border-radius: 6px;
+    color: #a8c4e8;
   }
 
   .add-popup {
