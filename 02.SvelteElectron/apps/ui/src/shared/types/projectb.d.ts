@@ -17,6 +17,8 @@ declare global {
           mentalResil?: number;
         };
         batterMean?: number;
+        weather?: "sunny" | "cloudy" | "rainy" | "windy_in" | "windy_out";
+        park?: "neutral" | "pitcher_park" | "hitter_park" | "dome";
       }) => Promise<{ snapshot: MatchSnapshot }>;
       matchStep: (decision: PitchDecision) => Promise<{
         snapshot: MatchSnapshot;
@@ -70,6 +72,8 @@ export interface MatchSnapshot {
   stamina: number;
   mental: number;
   batter: { contact: number; power: number; eye: number };
+  weather: "sunny" | "cloudy" | "rainy" | "windy_in" | "windy_out";
+  park: "neutral" | "pitcher_park" | "hitter_park" | "dome";
   isFinished: boolean;
   recentLogs: string[];
 }

@@ -33,6 +33,9 @@
     y: number;
   }
 
+  type WeatherType = "sunny" | "cloudy" | "rainy" | "windy_in" | "windy_out";
+  type ParkType = "neutral" | "pitcher_park" | "hitter_park" | "dome";
+
   interface SnapshotLike {
     inning: number;
     half: "top" | "bottom";
@@ -45,7 +48,23 @@
     mental: number;
     recentLogs: string[];
     batter?: { contact: number; power: number; eye: number };
+    weather?: WeatherType;
+    park?: ParkType;
   }
+
+  const WEATHER_LABEL: Record<WeatherType, string> = {
+    sunny: "☀️ 맑음",
+    cloudy: "☁️ 흐림",
+    rainy: "🌧️ 비",
+    windy_in: "💨 역풍",
+    windy_out: "💨 순풍"
+  };
+  const PARK_LABEL: Record<ParkType, string> = {
+    neutral: "중립구장",
+    pitcher_park: "투수유리구장",
+    hitter_park: "타자유리구장",
+    dome: "돔구장"
+  };
 
   const teamHeader = "팀";
   const innings = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
@@ -299,6 +318,9 @@
     { label: "선구안", value: "50" }
   ];
 
+  let matchWeather: WeatherType = "sunny";
+  let matchPark: ParkType = "neutral";
+
   const _initPlayer = get(gameStore).player;
   let pitcherState = {
     name: _initPlayer.name,
@@ -362,7 +384,9 @@
         initialStamina: player.condition,
         initialMental: 74,
         pitcher: player.pitcherStats,
-        batterMean: 50
+        batterMean: 50,
+        weather: matchWeather,
+        park: matchPark
       });
       engineAvailable = true;
       engineStarted = true;
@@ -429,6 +453,8 @@
         { label: "선구안", value: String(snapshot.batter.eye) }
       ];
     }
+    if (snapshot.weather) matchWeather = snapshot.weather;
+    if (snapshot.park) matchPark = snapshot.park;
 
     updateScoreRows(snapshot.score.away, snapshot.score.home, resultCode);
 
@@ -966,6 +992,10 @@
               <li><span>{info.label}</span><strong>{info.value}</strong></li>
             {/each}
           </ul>
+          <div class="match-env-badges">
+            <span class="env-badge">{WEATHER_LABEL[matchWeather]}</span>
+            <span class="env-badge">{PARK_LABEL[matchPark]}</span>
+          </div>
         </section>
 
         <section class="panel info-panel" aria-label="pitcher info panel">
@@ -1571,6 +1601,22 @@
     padding: 0;
     display: grid;
     gap: 8px;
+  }
+
+  .match-env-badges {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .env-badge {
+    font-size: 0.72rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: #1a2a3f;
+    color: #8ab4d8;
+    border: 1px solid #2a3f5c;
   }
 
   .stat-list li {

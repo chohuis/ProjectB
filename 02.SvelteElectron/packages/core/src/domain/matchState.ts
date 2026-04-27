@@ -3,6 +3,8 @@ export type PitchType = "fastball" | "slider" | "curve" | "changeup";
 export type PitchStrategy = "aggressive" | "balanced" | "safe";
 export type PitchPower = "low" | "normal" | "high";
 export type PitchLocation = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+export type WeatherType = "sunny" | "cloudy" | "rainy" | "windy_in" | "windy_out";
+export type ParkType = "neutral" | "pitcher_park" | "hitter_park" | "dome";
 
 export interface PitcherStats {
   command: number;    // 제구력: 로케이션 정확도 및 루킹 스트라이크 빈도
@@ -61,6 +63,9 @@ export interface MatchState {
   pitcher: PitcherStats;
   batter: BatterStats;
   batterMean: number; // 상대팀 타자 평균 능력치 (타자 생성 기준)
+  weather: WeatherType;
+  park: ParkType;
+  lastPitchTypes: PitchType[]; // 직전 최대 5구 히스토리 (패턴 보정용)
   isFinished: boolean;
   logs: string[];
 }
@@ -72,6 +77,8 @@ export interface MatchStartOptions {
   initialMental?: number;
   pitcher?: Partial<PitcherStats>;
   batterMean?: number;
+  weather?: WeatherType;
+  park?: ParkType;
 }
 
 export function createInitialMatchState(options: MatchStartOptions = {}): MatchState {
@@ -98,6 +105,9 @@ export function createInitialMatchState(options: MatchStartOptions = {}): MatchS
     pitcher,
     batter,
     batterMean,
+    weather: options.weather ?? "sunny",
+    park: options.park ?? "neutral",
+    lastPitchTypes: [],
     isFinished: false,
     logs: ["경기 시작"]
   };

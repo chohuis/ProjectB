@@ -7,11 +7,13 @@
   type MatchRunners,
   type MatchStartOptions,
   type MatchState,
+  type ParkType,
   type PitchLocation,
   type PitchPower,
   type PitchResultCode,
   type PitchStrategy,
-  type PitchType
+  type PitchType,
+  type WeatherType
 } from "../domain/matchState";
 
 export interface PitchDecision {
@@ -61,7 +63,7 @@ export function stepPitch(state: MatchState, decision: PitchDecision): MatchStep
   }
 
   const quality = calculatePitchQuality(state, decision);
-  let resultCode = applyBatterPower(resolvePitchResult(quality), state.batter.power);
+  let resultCode = applyHitUpgrade(resolvePitchResult(quality), state.batter.power, state.weather);
 
   let nextCount = { ...state.count };
   let nextOuts = state.outs;
@@ -141,6 +143,9 @@ export function stepPitch(state: MatchState, decision: PitchDecision): MatchStep
     resultCode === "HOME_RUN";
   const nextBatter = abEnded ? createBatter(state.batterMean) : state.batter;
 
+  // 투구 패턴 히스토리 업데이트 (최대 5구 보관)
+  const nextLastPitchTypes = [...state.lastPitchTypes, decision.pitchType].slice(-5);
+
   let nextState: MatchState = {
     ...state,
     inning: nextInning,
@@ -153,6 +158,7 @@ export function stepPitch(state: MatchState, decision: PitchDecision): MatchStep
     stamina: Number(nextStamina.toFixed(1)),
     mental: Number(nextMental.toFixed(1)),
     batter: nextBatter,
+    lastPitchTypes: nextLastPitchTypes,
     logs: [...state.logs, buildPitchLog(state, decision, resultCode, quality)]
   };
 
@@ -230,6 +236,11 @@ function calculatePitchQuality(state: MatchState, decision: PitchDecision): numb
   const mentalBonus = (state.mental - 50) * 0.08;
   const randomNoise = Math.random() * 16 - 8;
 
+  // 3단계 보정: 날씨 / 구장 / 투구 패턴
+  const weatherMod = weatherQualityModifier(state.weather, decision.pitchType);
+  const parkMod = parkQualityModifier(state.park);
+  const patternMod = pitchPatternModifier(decision.pitchType, state.lastPitchTypes);
+
   return Number(
     (
       pitchBase[decision.pitchType] +
@@ -243,6 +254,9 @@ function calculatePitchQuality(state: MatchState, decision: PitchDecision): numb
       batterPenalty +
       mentalBonus -
       staminaPenalty +
+      weatherMod +
+      parkMod +
+      patternMod +
       randomNoise
     ).toFixed(2)
   );
@@ -429,18 +443,70 @@ function countModifier(count: MatchCount): number {
   return 0;
 }
 
-function applyBatterPower(code: PitchResultCode, power: number): PitchResultCode {
+function applyHitUpgrade(code: PitchResultCode, power: number, weather: WeatherType): PitchResultCode {
   if (code !== "HIT_SINGLE" && code !== "HIT_DOUBLE") return code;
   const powerFactor = (power - 50) / 50; // -1 ~ +1
+  const windBonus = weatherPowerModifier(weather);
   if (code === "HIT_SINGLE") {
-    // 강타자: 단타 일부가 2루타로 업그레이드 (기본 15%, 파워에 따라 ±10%)
-    if (Math.random() < Math.max(0, 0.15 + powerFactor * 0.10)) return "HIT_DOUBLE";
+    if (Math.random() < Math.max(0, 0.15 + powerFactor * 0.10 + windBonus)) return "HIT_DOUBLE";
   }
   if (code === "HIT_DOUBLE") {
-    // 강타자: 2루타 일부가 홈런으로 업그레이드 (기본 5%, 파워에 따라 ±8%)
-    if (Math.random() < Math.max(0, 0.05 + powerFactor * 0.08)) return "HOME_RUN";
+    if (Math.random() < Math.max(0, 0.05 + powerFactor * 0.08 + windBonus)) return "HOME_RUN";
   }
   return code;
+}
+
+function weatherQualityModifier(weather: WeatherType, pitchType: PitchType): number {
+  switch (weather) {
+    case "rainy":
+      // 비: 그립 불안정 → 변화구 -3, 패스트볼 -1
+      return pitchType === "fastball" ? -1 : -3;
+    case "windy_out":
+      // 외야 방향 바람: 투수 불리 (-2)
+      return -2;
+    case "windy_in":
+      // 내야 방향 바람: 공이 가라앉음 → 투수 유리 (+2)
+      return 2;
+    case "cloudy":
+      return -0.5;
+    case "sunny":
+    default:
+      return 0;
+  }
+}
+
+function weatherPowerModifier(weather: WeatherType): number {
+  switch (weather) {
+    case "windy_out": return 0.10;  // 바람 타고 장타 업그레이드 +10%
+    case "windy_in":  return -0.10; // 역풍으로 장타 억제 -10%
+    default:          return 0;
+  }
+}
+
+function parkQualityModifier(park: ParkType): number {
+  switch (park) {
+    case "pitcher_park": return 3;   // 넓은 파울존, 깊은 외야 → 투수 유리
+    case "hitter_park":  return -3;  // 짧은 펜스, 좁은 파울존 → 타자 유리
+    default:             return 0;
+  }
+}
+
+function pitchPatternModifier(pitchType: PitchType, lastPitches: PitchType[]): number {
+  if (lastPitches.length === 0) return 0;
+
+  // 직전부터 거꾸로 같은 구종 연속 카운트
+  let consecutive = 0;
+  for (let i = lastPitches.length - 1; i >= 0; i--) {
+    if (lastPitches[i] === pitchType) consecutive++;
+    else break;
+  }
+  if (consecutive >= 3) return -4; // 3구 연속: 패턴 완전히 읽힘
+  if (consecutive >= 2) return -2; // 2구 연속: 패턴 노출
+  if (consecutive >= 1) return -1; // 1구 연속: 미세 손해
+
+  // 최근 3구에 없던 구종: 기습 효과
+  if (!lastPitches.slice(-3).includes(pitchType)) return 1;
+  return 0;
 }
 
 function buildPitchLog(state: MatchState, decision: PitchDecision, resultCode: PitchResultCode, quality: number): string {

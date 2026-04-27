@@ -150,6 +150,8 @@ function toSnapshotDto(state) {
     stamina: state.stamina,
     mental: state.mental,
     batter: state.batter,
+    weather: state.weather,
+    park: state.park,
     isFinished: state.isFinished,
     recentLogs: state.logs.slice(-30)
   };
