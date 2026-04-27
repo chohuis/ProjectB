@@ -1,3 +1,6 @@
+import type { SaveGame } from "./save";
+import type { SaveSeason } from "./season";
+
 export {};
 
 declare global {
@@ -26,9 +29,11 @@ declare global {
       }>;
       matchFinish: () => Promise<{ snapshot: MatchSnapshot; summary: string }>;
       // ── 게임 저장/불러오기 ──────────────────────────────────
-      gameLoad: () => Promise<GameSaveData | null>;
-      gameSave: (data: GameSaveData) => Promise<void>;
-      // ── 날짜 진행 ──────────────────────────────────────────
+      gameLoad:   () => Promise<SaveGame | null>;
+      gameSave:   (data: SaveGame) => Promise<void>;
+      seasonLoad: () => Promise<SaveSeason | null>;
+      seasonSave: (data: SaveSeason) => Promise<void>;
+      // ── 주 진행 ────────────────────────────────────────────
       dayAdvance: (state: CoreGameState) => Promise<DayAdvanceResult>;
       // ── 마스터 데이터 (Electron 패키징 환경용 fallback) ──────
       masterFetch: (relPath: string) => Promise<unknown>;
@@ -54,6 +59,7 @@ export interface DayAdvanceResult {
   logs: string[];
 }
 
+/** @deprecated SaveGame / SaveSeason 타입으로 교체됨 */
 export type GameSaveData = Record<string, unknown>;
 
 export interface PitchDecision {

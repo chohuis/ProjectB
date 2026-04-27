@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { get } from "svelte/store";
   import { gameStore } from "../../../shared/stores/game";
   import { t } from "../../../shared/i18n";
 
@@ -19,9 +18,8 @@
       if (window.projectB?.dayAdvance) {
         const result = await window.projectB.dayAdvance(coreState);
         gameStore.applyDayResult(result.snapshot, result.logs);
-        if (window.projectB.gameSave) {
-          void window.projectB.gameSave(get(gameStore) as unknown as Record<string, unknown>);
-        }
+        // TODO Phase 2: gameStore → SaveGame 변환 후 교체
+        // if (window.projectB.gameSave) { void window.projectB.gameSave(...); }
       } else {
         gameStore.applyDayResult(
           { ...coreState, day: coreState.day + 1, morale: Math.min(100, coreState.morale + 1) },
