@@ -242,6 +242,10 @@ function calculatePitchQuality(state: MatchState, decision: PitchDecision): numb
   const weatherMod = weatherQualityModifier(state.weather, decision.pitchType);
   const parkMod = parkQualityModifier(state.park);
   const patternMod = pitchPatternModifier(decision.pitchType, state.lastPitchTypes);
+  // 상황 압박: 득점권 주자 + 아웃 수에 따른 quality 분산 증가 (평균은 유지, 변동폭 확대)
+  const jamMod = jamPressureModifier(state);
+  // 이닝 압박: 후반 접전일수록 멘탈 영향 증폭
+  const clutchMod = clutchModifier(state);
 
   return Number(
     (
@@ -259,6 +263,8 @@ function calculatePitchQuality(state: MatchState, decision: PitchDecision): numb
       weatherMod +
       parkMod +
       patternMod +
+      jamMod +
+      clutchMod +
       randomNoise
     ).toFixed(2)
   );
@@ -646,6 +652,41 @@ function pitchPatternModifier(pitchType: PitchType, lastPitches: PitchType[]): n
   // 최근 3구에 없던 구종: 기습 효과
   if (!lastPitches.slice(-3).includes(pitchType)) return 1;
   return 0;
+}
+
+// 상황 압박: 득점권 주자(2루/3루) + 2아웃 시 quality 추가 노이즈 (투수에게 불리한 방향)
+// 압박이 클수록 평균은 유지하되 변동폭이 커짐 (= 나쁜 쪽으로 기댓값 편향)
+function jamPressureModifier(state: MatchState): number {
+  const hasScoringPosition = !!(state.runners.second || state.runners.third);
+  const isTwoOut = state.outs === 2;
+  if (!hasScoringPosition) return 0;
+
+  // 득점권 주자 있을 때 기본 압박 -1
+  let pressure = -1;
+  // 2아웃 + 득점권: 집중 압박 추가 -1
+  if (isTwoOut) pressure -= 1;
+  // 만루: 최대 압박 -1 추가
+  if (state.runners.first && state.runners.second && state.runners.third) pressure -= 1;
+
+  // 멘탈이 낮을수록 압박에 더 취약 (멘탈 30 미만 시 추가 -1.5)
+  if (state.mental < 30) pressure -= 1.5;
+  else if (state.mental < 50) pressure -= 0.5;
+
+  return pressure;
+}
+
+// 이닝 압박: 후반부 접전일수록 투수에게 추가 부담
+function clutchModifier(state: MatchState): number {
+  const inningRatio = state.inning / state.inningLimit; // 0~1+
+  if (inningRatio < 0.67) return 0; // 전반부는 영향 없음
+
+  const scoreDiff = Math.abs(state.score.home - state.score.away);
+  if (scoreDiff > 3) return 0; // 4점 차 이상 대세 결정 → 압박 없음
+
+  // 후반 + 접전: 점수차가 좁을수록, 이닝이 늦을수록 압박 증가
+  const inningPressure = (inningRatio - 0.67) * 6; // 최대 ~2
+  const scorePressure = Math.max(0, (3 - scoreDiff) * 0.5); // 0~1.5
+  return -(inningPressure + scorePressure) * 0.8;
 }
 
 function buildPitchLog(state: MatchState, decision: PitchDecision, resultCode: PitchResultCode, quality: number): string {
