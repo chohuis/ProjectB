@@ -16,6 +16,13 @@
     nameEn?: string;
   }
 
+  interface ClubRef {
+    id: string;
+    name: string;
+    nameEn?: string;
+    leagueId: string;
+  }
+
   interface TeamRef {
     id: string;
     name: string;
@@ -23,6 +30,7 @@
     leagueId: string;
     clubId?: string;
     schoolId?: string;
+    tier?: RosterTier;
   }
 
   interface PitchingStats {
@@ -173,6 +181,7 @@
 
   let leagues: LeagueRef[] = FALLBACK_LEAGUES;
   let schools: SchoolRef[] = FALLBACK_SCHOOLS;
+  let clubs: ClubRef[] = [];
   let teams: TeamRef[] = FALLBACK_TEAMS;
 
   let activeTab: EntityTab = "player";
@@ -206,9 +215,10 @@
   async function loadRefs() {
     try {
       const remote = await window.projectB?.masterFetch?.(ENTITY_REFS_PATH);
-      const data = remote as { leagues?: LeagueRef[]; schools?: SchoolRef[]; teams?: TeamRef[] } | null | undefined;
+      const data = remote as { leagues?: LeagueRef[]; schools?: SchoolRef[]; clubs?: ClubRef[]; teams?: TeamRef[] } | null | undefined;
       if (data?.leagues?.length) leagues = data.leagues;
       if (data?.schools?.length) schools = data.schools;
+      if (data?.clubs?.length) clubs = data.clubs;
       if (data?.teams?.length) teams = data.teams;
     } catch {
       // fallback already set
