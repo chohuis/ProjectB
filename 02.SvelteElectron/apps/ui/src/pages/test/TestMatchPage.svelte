@@ -44,6 +44,7 @@
     stamina: number;
     mental: number;
     recentLogs: string[];
+    batter?: { contact: number; power: number; eye: number };
   }
 
   const teamHeader = "팀";
@@ -292,11 +293,10 @@
     { text: "1회초 선두타자, 초구 스트라이크.", cls: 'log-strike' }
   ];
 
-  const batterInfo = [
-    { label: "이름", value: "홍길동" },
-    { label: "타율", value: ".312" },
-    { label: "홈런", value: "21" },
-    { label: "타점", value: "78" }
+  let batterInfo = [
+    { label: "컨택", value: "50" },
+    { label: "파워", value: "50" },
+    { label: "선구안", value: "50" }
   ];
 
   const _initPlayer = get(gameStore).player;
@@ -361,7 +361,8 @@
       const response = await window.projectB.matchStart({
         initialStamina: player.condition,
         initialMental: 74,
-        pitcher: player.pitcherStats
+        pitcher: player.pitcherStats,
+        batterMean: 50
       });
       engineAvailable = true;
       engineStarted = true;
@@ -420,6 +421,14 @@
       stamina: snapshot.stamina,
       mental: snapshot.mental
     };
+
+    if (snapshot.batter) {
+      batterInfo = [
+        { label: "컨택", value: String(snapshot.batter.contact) },
+        { label: "파워", value: String(snapshot.batter.power) },
+        { label: "선구안", value: String(snapshot.batter.eye) }
+      ];
+    }
 
     updateScoreRows(snapshot.score.away, snapshot.score.home, resultCode);
 

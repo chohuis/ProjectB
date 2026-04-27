@@ -1,7 +1,9 @@
 ﻿import {
   clamp,
+  createBatter,
   createInitialMatchState,
   type HalfInning,
+  type MatchCount,
   type MatchRunners,
   type MatchStartOptions,
   type MatchState,
@@ -59,7 +61,7 @@ export function stepPitch(state: MatchState, decision: PitchDecision): MatchStep
   }
 
   const quality = calculatePitchQuality(state, decision);
-  let resultCode = resolvePitchResult(quality);
+  let resultCode = applyBatterPower(resolvePitchResult(quality), state.batter.power);
 
   let nextCount = { ...state.count };
   let nextOuts = state.outs;
@@ -125,6 +127,20 @@ export function stepPitch(state: MatchState, decision: PitchDecision): MatchStep
   const nextStamina = clamp(state.stamina - staminaLoss, 0, 100);
   const nextMental = clamp(state.mental + mentalDelta, 0, 100);
 
+  // AB 종료 여부 판정 (타자 교체 트리거)
+  const isKOut =
+    (resultCode === "STRIKE_LOOK" || resultCode === "STRIKE_SWING") &&
+    state.count.strikes === 2;
+  const abEnded =
+    isKOut ||
+    resultCode === "WALK" ||
+    resultCode === "INPLAY_OUT" ||
+    resultCode === "HIT_SINGLE" ||
+    resultCode === "HIT_DOUBLE" ||
+    resultCode === "HIT_TRIPLE" ||
+    resultCode === "HOME_RUN";
+  const nextBatter = abEnded ? createBatter(state.batterMean) : state.batter;
+
   let nextState: MatchState = {
     ...state,
     inning: nextInning,
@@ -136,6 +152,7 @@ export function stepPitch(state: MatchState, decision: PitchDecision): MatchStep
     pitchCount: state.pitchCount + 1,
     stamina: Number(nextStamina.toFixed(1)),
     mental: Number(nextMental.toFixed(1)),
+    batter: nextBatter,
     logs: [...state.logs, buildPitchLog(state, decision, resultCode, quality)]
   };
 
@@ -196,6 +213,19 @@ function calculatePitchQuality(state: MatchState, decision: PitchDecision): numb
       ? (state.pitcher.velocity - 50) * 0.12
       : (state.pitcher.velocity - 50) * 0.03;
 
+  // 타자 페널티: 컨택이 높을수록 투구 유효성 감소, 선구안이 높을수록 볼 판단력 향상
+  const contactPenalty = (state.batter.contact - 50) * 0.10;
+  const eyePenalty = (state.batter.eye - 50) * 0.06;
+  const batterPenalty = contactPenalty + eyePenalty;
+
+  // 볼카운트 보정: 투수/타자 유리 상황에 따른 Quality 조정
+  const countMod = countModifier(state.count);
+  // 풀카운트(3-2): 추가 분산으로 긴장감 표현
+  const fullCountNoise =
+    state.count.balls === 3 && state.count.strikes === 2
+      ? Math.random() * 6 - 3
+      : 0;
+
   const staminaPenalty = Math.max(0, (50 - state.stamina) * 0.18);
   const mentalBonus = (state.mental - 50) * 0.08;
   const randomNoise = Math.random() * 16 - 8;
@@ -208,6 +238,9 @@ function calculatePitchQuality(state: MatchState, decision: PitchDecision): numb
       locationBonus[decision.location] +
       commandBonus +
       velocityBonus +
+      countMod +
+      fullCountNoise -
+      batterPenalty +
       mentalBonus -
       staminaPenalty +
       randomNoise
@@ -383,6 +416,31 @@ function getResultComment(resultCode: PitchResultCode): string {
     default:
       return "결과 없음";
   }
+}
+
+function countModifier(count: MatchCount): number {
+  const { balls: b, strikes: s } = count;
+  if (s === 2 && b === 0) return 5;   // 0-2: 투수 절대 유리
+  if (s === 2 && b === 1) return 3;   // 1-2: 투수 유리
+  if (s === 2 && b === 2) return 2;   // 2-2: 약간 투수 유리
+  if (b === 3 && s === 0) return -8;  // 3-0: 타자 절대 유리 (투수 스트라이크 필요)
+  if (b === 3 && s === 1) return -5;  // 3-1: 타자 유리
+  // 3-2는 fullCountNoise로 처리, 여기선 0
+  return 0;
+}
+
+function applyBatterPower(code: PitchResultCode, power: number): PitchResultCode {
+  if (code !== "HIT_SINGLE" && code !== "HIT_DOUBLE") return code;
+  const powerFactor = (power - 50) / 50; // -1 ~ +1
+  if (code === "HIT_SINGLE") {
+    // 강타자: 단타 일부가 2루타로 업그레이드 (기본 15%, 파워에 따라 ±10%)
+    if (Math.random() < Math.max(0, 0.15 + powerFactor * 0.10)) return "HIT_DOUBLE";
+  }
+  if (code === "HIT_DOUBLE") {
+    // 강타자: 2루타 일부가 홈런으로 업그레이드 (기본 5%, 파워에 따라 ±8%)
+    if (Math.random() < Math.max(0, 0.05 + powerFactor * 0.08)) return "HOME_RUN";
+  }
+  return code;
 }
 
 function buildPitchLog(state: MatchState, decision: PitchDecision, resultCode: PitchResultCode, quality: number): string {

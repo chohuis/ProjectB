@@ -149,6 +149,7 @@ function toSnapshotDto(state) {
     pitchCount: state.pitchCount,
     stamina: state.stamina,
     mental: state.mental,
+    batter: state.batter,
     isFinished: state.isFinished,
     recentLogs: state.logs.slice(-30)
   };

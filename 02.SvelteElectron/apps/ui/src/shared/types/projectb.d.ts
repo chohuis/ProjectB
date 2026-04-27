@@ -16,6 +16,7 @@ declare global {
           staminaCap?: number;
           mentalResil?: number;
         };
+        batterMean?: number;
       }) => Promise<{ snapshot: MatchSnapshot }>;
       matchStep: (decision: PitchDecision) => Promise<{
         snapshot: MatchSnapshot;
@@ -68,6 +69,7 @@ export interface MatchSnapshot {
   pitchCount: number;
   stamina: number;
   mental: number;
+  batter: { contact: number; power: number; eye: number };
   isFinished: boolean;
   recentLogs: string[];
 }
