@@ -1209,12 +1209,16 @@
     min-height: 0;
     display: grid;
     grid-template-columns: 340px minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    overflow: hidden;
   }
 
   .list {
     border-right: 1px solid #243e62;
     display: grid;
     grid-template-rows: auto minmax(0, 1fr);
+    min-height: 0;
+    overflow: hidden;
   }
 
   .actions {
