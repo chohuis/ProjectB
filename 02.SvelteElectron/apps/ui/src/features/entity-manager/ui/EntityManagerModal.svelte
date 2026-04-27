@@ -118,24 +118,29 @@
   const dispatch = createEventDispatcher<{ close: void }>();
   const ENTITY_REL_PATH = "entities/people.json";
   const ENTITY_LOCAL_KEY = "dev_entities_people";
+  const ENTITY_REFS_PATH = "entities/refs.json";
 
-  const leagues: LeagueRef[] = [
+  const FALLBACK_LEAGUES: LeagueRef[] = [
     { id: "LEAGUE_HIGHSCHOOL", name: "고교 리그" },
     { id: "LEAGUE_UNIVERSITY", name: "대학 리그" },
     { id: "LEAGUE_PRO", name: "프로 리그" }
   ];
 
-  const schools: SchoolRef[] = [
+  const FALLBACK_SCHOOLS: SchoolRef[] = [
     { id: "SCHOOL_NONE", name: "해당 없음" },
     { id: "SCHOOL_SEOUL_HS", name: "서울고" },
     { id: "SCHOOL_HANBAT_U", name: "한밭대" }
   ];
 
-  const teams: TeamRef[] = [
+  const FALLBACK_TEAMS: TeamRef[] = [
     { id: "TEAM_SEOUL_NB", name: "서울 노베이스", leagueId: "LEAGUE_HIGHSCHOOL" },
     { id: "TEAM_DAEJEON_BS", name: "대전 블루스톰", leagueId: "LEAGUE_UNIVERSITY" },
     { id: "TEAM_INCHEON_SH", name: "인천 샤크스", leagueId: "LEAGUE_PRO" }
   ];
+
+  let leagues: LeagueRef[] = FALLBACK_LEAGUES;
+  let schools: SchoolRef[] = FALLBACK_SCHOOLS;
+  let teams: TeamRef[] = FALLBACK_TEAMS;
 
   let activeTab: EntityTab = "player";
   let rows: EntityRow[] = [
@@ -282,8 +287,20 @@
   }
 
   onMount(async () => {
-    await loadEntities();
+    await Promise.all([loadEntities(), loadRefs()]);
   });
+
+  async function loadRefs() {
+    try {
+      const remote = await window.projectB?.masterFetch?.(ENTITY_REFS_PATH);
+      const data = remote as { leagues?: LeagueRef[]; schools?: SchoolRef[]; teams?: TeamRef[] } | null | undefined;
+      if (data?.leagues?.length) leagues = data.leagues;
+      if (data?.schools?.length) schools = data.schools;
+      if (data?.teams?.length) teams = data.teams;
+    } catch {
+      // fallback already set
+    }
+  }
 
   function close() {
     dispatch("close");
@@ -395,7 +412,11 @@
 
   function nextId(role: EntityTab): string {
     const prefix = role === "player" ? "PLY" : role === "coach" ? "COA" : role === "manager" ? "MNG" : "OWN";
-    let n = rows.filter((row) => row.role === role).length + 1;
+    const existingNums = rows
+      .filter((row) => row.role === role)
+      .map((row) => parseInt(row.id.replace(`${prefix}_`, ""), 10))
+      .filter((n) => !isNaN(n));
+    let n = existingNums.length > 0 ? Math.max(...existingNums) + 1 : 1;
     while (rows.some((row) => row.id === `${prefix}_${String(n).padStart(3, "0")}`)) n += 1;
     return `${prefix}_${String(n).padStart(3, "0")}`;
   }

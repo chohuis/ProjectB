@@ -1,0 +1,17 @@
+{
+  "leagues": [
+    { "id": "LEAGUE_HIGHSCHOOL", "name": "고교 리그" },
+    { "id": "LEAGUE_UNIVERSITY", "name": "대학 리그" },
+    { "id": "LEAGUE_PRO", "name": "프로 리그" }
+  ],
+  "schools": [
+    { "id": "SCHOOL_NONE", "name": "해당 없음" },
+    { "id": "SCHOOL_SEOUL_HS", "name": "서울고" },
+    { "id": "SCHOOL_HANBAT_U", "name": "한밭대" }
+  ],
+  "teams": [
+    { "id": "TEAM_SEOUL_NB", "name": "서울 노베이스", "leagueId": "LEAGUE_HIGHSCHOOL" },
+    { "id": "TEAM_DAEJEON_BS", "name": "대전 블루스톰", "leagueId": "LEAGUE_UNIVERSITY" },
+    { "id": "TEAM_INCHEON_SH", "name": "인천 샤크스", "leagueId": "LEAGUE_PRO" }
+  ]
+}

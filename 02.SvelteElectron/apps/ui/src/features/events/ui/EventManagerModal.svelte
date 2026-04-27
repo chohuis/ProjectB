@@ -83,8 +83,19 @@
 
   const dispatch = createEventDispatcher<{ close: void }>();
 
+  const EVENT_SAVE_LOCAL_KEY = "dev_events_rules";
+  const EVENT_SAVE_PATHS: Record<EventType, string> = {
+    mandatory: "events/rules/mandatory.json",
+    conditional: "events/rules/conditional.json",
+    random: "events/rules/random.json"
+  };
+
   let loading = false;
+  let saving = false;
   let errorMessage = "";
+  let saveMessage = "";
+  let saveError = "";
+  let idError = "";
   let events: ManagedEvent[] = [];
   let selectedId = "";
   let search = "";
@@ -118,7 +129,42 @@
   });
 
   async function loadAll() {
+    saveMessage = "";
+    saveError = "";
     await Promise.all([loadEvents(), loadReferenceLists()]);
+  }
+
+  async function saveEvents() {
+    saveMessage = "";
+    saveError = "";
+    saving = true;
+    try {
+      const byType: Record<EventType, ManagedEvent[]> = { mandatory: [], conditional: [], random: [] };
+      for (const ev of events) {
+        byType[ev.type]?.push(ev);
+      }
+
+      if (window.projectB?.masterSave) {
+        const results = await Promise.all(
+          (Object.entries(byType) as [EventType, ManagedEvent[]][]).map(([type, evs]) =>
+            window.projectB!.masterSave({ relPath: EVENT_SAVE_PATHS[type], data: { events: evs }, backup: true })
+          )
+        );
+        const failed = results.find((r) => !r?.ok);
+        if (failed) {
+          saveError = `파일 저장 실패: ${failed.error ?? "알 수 없는 오류"}`;
+        } else {
+          saveMessage = `저장 완료 (mandatory ${byType.mandatory.length}건 / conditional ${byType.conditional.length}건 / random ${byType.random.length}건, 백업 생성)`;
+        }
+      } else {
+        window.localStorage.setItem(EVENT_SAVE_LOCAL_KEY, JSON.stringify(byType));
+        saveMessage = "로컬 임시 저장 완료";
+      }
+    } catch (error) {
+      saveError = `저장 실패: ${String((error as Error)?.message ?? error)}`;
+    } finally {
+      saving = false;
+    }
   }
 
   // 마스터 이벤트 JSON(필수/조건/랜덤)을 병합 로드
@@ -334,6 +380,19 @@
 
   function updateSelectedField(field: keyof ManagedEvent, value: string | number | null) {
     if (!selectedEvent) return;
+    if (field === "id" && typeof value === "string") {
+      const trimmed = value.trim();
+      if (!trimmed) { idError = "이벤트 ID는 비워둘 수 없습니다."; return; }
+      if (events.some((ev) => ev.id !== selectedEvent.id && ev.id === trimmed)) {
+        idError = `이미 존재하는 ID입니다: ${trimmed}`;
+        return;
+      }
+      idError = "";
+      const oldId = selectedEvent.id;
+      events = events.map((event) => (event.id === oldId ? { ...event, id: trimmed } : event));
+      selectedId = trimmed;
+      return;
+    }
     events = events.map((event) => (event.id === selectedEvent.id ? { ...event, [field]: value } : event));
   }
 
@@ -592,10 +651,20 @@
           <p>배포용 마스터 이벤트를 점검/편집하는 개발자 모드입니다.</p>
         </div>
         <div class="head-actions">
-          <button type="button" on:click={loadAll} disabled={loading}>새로고침</button>
+          <button type="button" on:click={loadAll} disabled={loading || saving}>새로고침</button>
+          <button type="button" class="save-btn" on:click={saveEvents} disabled={loading || saving}>
+            {saving ? "저장 중…" : "파일 저장"}
+          </button>
           <button type="button" class="ghost" on:click={closeModal}>닫기</button>
         </div>
       </header>
+
+      {#if saveMessage}
+        <p class="save-ok">{saveMessage}</p>
+      {/if}
+      {#if saveError}
+        <p class="save-err">{saveError}</p>
+      {/if}
 
       <div class="toolbar">
         <input type="text" bind:value={search} placeholder="제목/ID 검색" />
@@ -659,6 +728,7 @@
                   value={selectedEvent.id}
                   on:change={(e) => updateSelectedField("id", (e.currentTarget as HTMLInputElement).value)}
                 />
+                {#if idError}<small class="id-error">{idError}</small>{/if}
               </label>
 
               <label>
@@ -1045,6 +1115,35 @@
     background: #2b2530;
     border-bottom: 1px solid #51344f;
     font-size: 13px;
+  }
+
+  .save-ok {
+    margin: 0;
+    padding: 6px 16px;
+    color: #7ddba4;
+    background: #182d22;
+    border-bottom: 1px solid #2d5c40;
+    font-size: 12px;
+  }
+
+  .save-err {
+    margin: 0;
+    padding: 6px 16px;
+    color: #ffa8a8;
+    background: #2b1a1a;
+    border-bottom: 1px solid #5c2d2d;
+    font-size: 12px;
+  }
+
+  .save-btn {
+    background: #1a3a5c;
+    border-color: #4a85c8;
+    color: #b8d8ff;
+  }
+
+  .id-error {
+    color: #ff8fa3;
+    font-size: 11px;
   }
 
   .body {
