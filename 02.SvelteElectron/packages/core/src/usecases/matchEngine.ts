@@ -130,10 +130,16 @@ export function stepPitch(state: MatchState, decision: PitchDecision): MatchStep
     (decision.pitchType === "fastball" ? 0.2 : 0) +
     powerStaminaCost[decision.power];
   const staminaCapFactor = 1 - clamp((preState.pitcher.staminaCap - 55) * 0.005, -0.15, 0.15);
-  const staminaLoss = baseStaminaLoss * staminaCapFactor;
+  // 비선형 피로: 스태미나 40 미만부터 감소 가속 (최대 2배)
+  const fatigueMult = preState.stamina < 40 ? 1 + (40 - preState.stamina) * 0.025 : 1;
+  const staminaLoss = baseStaminaLoss * staminaCapFactor * fatigueMult;
 
   const mentalResilFactor = 1 - clamp((preState.pitcher.mentalResil - 50) * 0.004, -0.15, 0.15);
-  const mentalDelta = resolveMentalDelta(resultCode) * mentalResilFactor;
+  const rawMentalDelta = resolveMentalDelta(resultCode) * mentalResilFactor;
+  // 이닝 전환(아웃3개로 리셋됐을 때) 멘탈 소폭 회복
+  const inningChangedThisPitch = nextOuts === 0 && preState.outs > 0;
+  const mentalRecovery = inningChangedThisPitch ? 1.5 : 0;
+  const mentalDelta = rawMentalDelta + mentalRecovery;
   const nextStamina = clamp(preState.stamina - staminaLoss, 0, 100);
   const nextMental = clamp(preState.mental + mentalDelta, 0, 100);
 
