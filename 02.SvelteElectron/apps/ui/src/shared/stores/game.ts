@@ -1,233 +1,320 @@
 import { derived, get, writable } from "svelte/store";
-import type { CareerSchoolState, CareerStage, PitcherStats } from "../../app/mockCareer";
-import { mockCareerProfile, mockCareerSchool } from "../../app/mockCareer";
-import { mockMainSnapshot } from "../../app/mockMain";
 import type { MessageItem } from "../types/main";
+import type {
+  ProtagonistSave,
+  SaveGame,
+  SchoolState,
+  TrainingPlanState,
+} from "../types/save";
+import { makeSaveGame } from "../types/save";
+import type { CoreGameState } from "../types/projectb.d";
 
-export interface PlayerState {
-  name: string;
-  team: string;
-  year: string;
-  position: string;
-  role: string;
-  throws: string;
-  bats: string;
-  overall: number;
-  potentialHidden: number;
-  condition: number;
-  fatigue: number;
-  morale: number;
-  tags: string[];
-  pitcherStats: PitcherStats;
-}
-
-export interface TrainingPlanState {
-  primaryProgramId: string | null;
-  secondaryProgramId: string | null;
-  recoveryProgramId: string | null;
-}
-
+// ── gameStore 내부 상태 ────────────────────────────────────────
 export interface GameStoreState {
-  day: number;
-  seasonYear: number;
-  stage: CareerStage;
-  dayLabel: string;
-  player: PlayerState;
-  school: CareerSchoolState;
+  protagonist: ProtagonistSave;
   mailbox: MessageItem[];
   trainingPlan: TrainingPlanState;
+  schoolState: SchoolState;
+  dayLabel: string;
   logs: string[];
   upcoming: string[];
-}
 
-export interface CoreGameState {
-  day: number;
-  seasonYear: number;
-  stage: string;
-  playerName: string;
-  teamName: string;
-  morale: number;
-}
+  // 하위 호환: 기존 $gameStore.player.* 참조 유지
+  player: {
+    name: string;
+    team: string;
+    year: string;
+    position: string;
+    role: string;
+    throws: string;
+    bats: string;
+    overall: number;
+    potentialHidden: number;
+    condition: number;
+    fatigue: number;
+    morale: number;
+    tags: string[];
+    pitcherStats: { command: number; velocity: number; staminaCap: number; mentalResil: number };
+  };
 
-const INITIAL_MAILBOX: MessageItem[] = [
-  {
-    id: "msg-000",
-    category: "coach",
-    sender: "투수 코치 오지경",
-    subject: "불펜 추가 세션 제안",
-    preview: "오늘 저녁 불펜 30구 추가 세션 진행 여부를 선택해 주세요.",
-    body:
-      "오늘 저녁 추가 불펜 세션(30구)을 제안합니다.\n\n" +
-      "선택에 따라 오늘 컨디션과 내일 훈련 효율이 달라집니다.\n" +
-      "- 훈련한다: 컨디션 -4, 커맨드 경험치 +1\n" +
-      "- 훈련하지 않는다: 컨디션 +2, 변화 없음",
-    createdAt: "오늘 08:40",
-    readAt: null,
-    decision: {
-      prompt: "추가 불펜 30구 세션을 진행하시겠습니까?",
-      options: [
-        { id: "do_train", label: "훈련한다", effect: "컨디션 -4, 커맨드 경험치 +1" },
-        { id: "skip_train", label: "훈련하지 않는다", effect: "컨디션 +2, 변화 없음" }
-      ],
-      selectedOptionId: null
-    }
-  },
-  {
-    id: "msg-001",
-    category: "coach",
-    sender: "투수 코치 오지경",
-    subject: "릴리스 라인 체크 요청",
-    preview: "오늘 불펜 세션 후 하체 슬라이드-릴리스 타이밍을 다시 맞춰 봅시다.",
-    body:
-      "오늘 불펜 세션에서 릴리스 라인이 3구간에서 조금 흔들렸습니다.\n\n" +
-      "하체 슬라이드 이후 상체가 먼저 열리는 구간만 줄이면 커맨드가 더 안정됩니다.",
-    createdAt: "오늘 09:20",
-    readAt: null
-  },
-  {
-    id: "msg-002",
-    category: "manager",
-    sender: "감독 임우현",
-    subject: "주말 리그 선발 확정",
-    preview: "토요일 1차전 선발로 준비하고 금요일은 투구 수를 제한합니다.",
-    body:
-      "토요일 주말 리그 1차전 선발로 확정되었습니다.\n\n" +
-      "금요일 최종 점검은 투구 수 25구 제한으로 진행해 주세요.",
-    createdAt: "어제 18:05",
-    readAt: null
-  },
-  {
-    id: "msg-003",
-    category: "system",
-    sender: "시스템",
-    subject: "훈련 루틴 결과 반영",
-    preview: "불펜 루틴 숙련도 상승에 따라 커맨드 +1이 반영되었습니다.",
-    body:
-      "훈련 루틴 분석 결과:\n- 불펜 루틴 숙련도 상승\n- 커맨드 +1 반영\n- 피로도 +2 반영",
-    createdAt: "어제 13:42",
-    readAt: "어제 14:01"
-  },
-  {
-    id: "msg-004",
-    category: "news",
-    sender: "리그 뉴스",
-    subject: "주말 리그 매치업 발표",
-    preview: "서울 이노베이션 고 vs 부산 마린 고 2연전이 확정되었습니다.",
-    body:
-      "이번 주말 리그 주요 매치업이 확정되었습니다.\n\n" +
-      "서울 이노베이션 고는 부산 마린 고와 원정 2연전을 치릅니다.",
-    createdAt: "2일 전 20:10",
-    readAt: null
-  }
-];
-
-// 초기 게임 상태를 한 곳에서 구성해 스토어 생성 시 재사용한다.
-function buildInitialState(): GameStoreState {
-  return {
-    day: 1,
-    seasonYear: 2026,
-    stage: mockCareerSchool.currentStage,
-    dayLabel: mockMainSnapshot.dayLabel,
-    player: {
-      ...mockCareerProfile,
-      morale: mockMainSnapshot.morale
-    },
-    school: { ...mockCareerSchool },
-    mailbox: INITIAL_MAILBOX,
-    trainingPlan: {
-      primaryProgramId: "bullpen_cmd",
-      secondaryProgramId: "video_analysis",
-      recoveryProgramId: "recovery_pool"
-    },
-    logs: [...mockMainSnapshot.logs],
-    upcoming: [...mockMainSnapshot.upcoming]
+  // 하위 호환: 기존 $gameStore.school.* 참조 유지
+  school: {
+    currentStage: ProtagonistSave["careerStage"];
+    attendsUniversity: boolean;
+    universityMajor: string;
+    plannedUniversityMajors: string[];
   };
 }
 
-// 게임 진행 전반(메시지/훈련계획/로그)을 관리하는 메인 스토어
+// ── 기본값 (새 게임) ───────────────────────────────────────────
+const DEFAULT_PROTAGONIST: ProtagonistSave = {
+  id: "PLY_HERO",
+  name: "주인공 투수",
+  careerStage: "highschool",
+  leagueId: "LEAGUE_HIGHSCHOOL",
+  teamId: "TEAM_HS_SEOUL_INNOVATION",
+  schoolId: "SCHOOL_HS_SEOUL_INNOVATION",
+  grade: 2,
+  age: 17,
+  playerType: "pitcher",
+  position: "SP",
+  handedness: "R",
+  jerseyNumber: 18,
+  condition: 80,
+  fatigue: 20,
+  morale: 65,
+  pitching: { ovr: 62, stamina: 58, velocity: 52, command: 60, control: 55, movement: 50, mentality: 57, recovery: 55 },
+  batting:  { ovr: 30, contact: 35, power: 28, eye: 32, discipline: 30, speed: 50, fielding: 45, arm: 55, battingClutch: 30 },
+  developmentRate: 62,
+  potentialHidden: 88,
+  growthPoints: 0,
+  tags: ["급성장", "멘탈관리", "선발 로테이션"],
+};
+
+const DEFAULT_TRAINING_PLAN: TrainingPlanState = {
+  primaryProgramId:   "bullpen_cmd",
+  secondaryProgramId: "video_analysis",
+  recoveryProgramId:  "recovery_pool",
+};
+
+const DEFAULT_SCHOOL: SchoolState = {
+  attendsUniversity: false,
+  universityMajor: "체육교육",
+  plannedUniversityMajors: ["스포츠과학", "체육교육", "스포츠경영", "생활체육", "스포츠재활"],
+};
+
+const DEFAULT_MAILBOX: MessageItem[] = [
+  {
+    id: "msg-000", category: "coach", sender: "투수 코치 오지경",
+    subject: "불펜 추가 세션 제안",
+    preview: "오늘 저녁 불펜 30구 추가 세션 진행 여부를 선택해 주세요.",
+    body: "오늘 저녁 추가 불펜 세션(30구)을 제안합니다.\n\n선택에 따라 오늘 컨디션과 내일 훈련 효율이 달라집니다.\n- 훈련한다: 컨디션 -4, 커맨드 경험치 +1\n- 훈련하지 않는다: 컨디션 +2, 변화 없음",
+    createdAt: "오늘 08:40", readAt: null,
+    decision: {
+      prompt: "추가 불펜 30구 세션을 진행하시겠습니까?",
+      options: [
+        { id: "do_train",   label: "훈련한다",       effect: "컨디션 -4, 커맨드 경험치 +1" },
+        { id: "skip_train", label: "훈련하지 않는다", effect: "컨디션 +2, 변화 없음" },
+      ],
+      selectedOptionId: null,
+    },
+  },
+  {
+    id: "msg-001", category: "coach", sender: "투수 코치 오지경",
+    subject: "릴리스 라인 체크 요청",
+    preview: "오늘 불펜 세션 후 하체 슬라이드-릴리스 타이밍을 다시 맞춰 봅시다.",
+    body: "오늘 불펜 세션에서 릴리스 라인이 3구간에서 조금 흔들렸습니다.\n\n하체 슬라이드 이후 상체가 먼저 열리는 구간만 줄이면 커맨드가 더 안정됩니다.",
+    createdAt: "오늘 09:20", readAt: null,
+  },
+  {
+    id: "msg-002", category: "manager", sender: "감독 임우현",
+    subject: "주말 리그 선발 확정",
+    preview: "토요일 1차전 선발로 준비하고 금요일은 투구 수를 제한합니다.",
+    body: "토요일 주말 리그 1차전 선발로 확정되었습니다.\n\n금요일 최종 점검은 투구 수 25구 제한으로 진행해 주세요.",
+    createdAt: "어제 18:05", readAt: null,
+  },
+  {
+    id: "msg-003", category: "system", sender: "시스템",
+    subject: "훈련 루틴 결과 반영",
+    preview: "불펜 루틴 숙련도 상승에 따라 커맨드 +1이 반영되었습니다.",
+    body: "훈련 루틴 분석 결과:\n- 불펜 루틴 숙련도 상승\n- 커맨드 +1 반영\n- 피로도 +2 반영",
+    createdAt: "어제 13:42", readAt: "어제 14:01",
+  },
+];
+
+// ── 헬퍼: ProtagonistSave → player 호환 객체 ──────────────────
+function toPlayerCompat(p: ProtagonistSave): GameStoreState["player"] {
+  const gradeLabel = p.grade ? `${p.grade}학년` : "-";
+  const throws = p.handedness === "L" ? "좌투" : p.handedness === "S" ? "양투" : "우투";
+  const bats   = p.handedness === "L" ? "좌타" : p.handedness === "S" ? "양타" : "우타";
+  const roleLabel =
+    p.position === "SP" ? "에이스 선발" :
+    p.position === "RP" ? "중간 계투"  :
+    p.position === "CP" ? "마무리"     : p.position;
+  return {
+    name: p.name, team: p.teamId, year: gradeLabel,
+    position: p.position, role: roleLabel, throws, bats,
+    overall: p.pitching.ovr, potentialHidden: p.potentialHidden,
+    condition: p.condition, fatigue: p.fatigue, morale: p.morale,
+    tags: p.tags,
+    pitcherStats: {
+      command:    p.pitching.command,
+      velocity:   p.pitching.velocity,
+      staminaCap: p.pitching.stamina,
+      mentalResil: p.pitching.mentality,
+    },
+  };
+}
+
+// ── 헬퍼: school 호환 객체 ────────────────────────────────────
+function toSchoolCompat(
+  careerStage: ProtagonistSave["careerStage"],
+  s: SchoolState,
+): GameStoreState["school"] {
+  return {
+    currentStage: careerStage,
+    attendsUniversity: s.attendsUniversity,
+    universityMajor: s.universityMajor,
+    plannedUniversityMajors: s.plannedUniversityMajors,
+  };
+}
+
+// ── dayLabel 계산 (주차 기반) ─────────────────────────────────
+export function computeWeekLabel(week: number, grade: number = 1): string {
+  const monthNames = ["3월","4월","5월","6월","7월","8월","9월","10월","11월","12월","1월","2월"];
+  const monthIdx    = Math.floor(((week - 1) % 48) / 4) % 12;
+  const weekInMonth = ((week - 1) % 4) + 1;
+  return `${grade}학년 ${monthNames[monthIdx]} ${weekInMonth}주차`;
+}
+
+// ── 초기 상태 ─────────────────────────────────────────────────
+function buildInitialState(): GameStoreState {
+  const p = DEFAULT_PROTAGONIST;
+  return {
+    protagonist:  p,
+    mailbox:      DEFAULT_MAILBOX,
+    trainingPlan: DEFAULT_TRAINING_PLAN,
+    schoolState:  DEFAULT_SCHOOL,
+    dayLabel:     computeWeekLabel(1, p.grade ?? 1),
+    logs:         ["훈련 루틴 설정 완료", "코치 면담으로 제구 +1", "팀 분위기 안정"],
+    upcoming:     ["화요일 불펜 세션", "금요일 체력장", "토요일 주말 리그 1차전"],
+    player:       toPlayerCompat(p),
+    school:       toSchoolCompat(p.careerStage, DEFAULT_SCHOOL),
+  };
+}
+
+// ── SaveGame → 스토어 상태 변환 ───────────────────────────────
+function fromSaveGame(saved: SaveGame): GameStoreState {
+  const p = saved.protagonist;
+  return {
+    protagonist:  p,
+    mailbox:      saved.mailbox,
+    trainingPlan: saved.trainingPlan,
+    schoolState:  saved.schoolState,
+    dayLabel:     computeWeekLabel(1, p.grade ?? 1),
+    logs:         saved.recentLogs,
+    upcoming:     saved.recentUpcoming,
+    player:       toPlayerCompat(p),
+    school:       toSchoolCompat(p.careerStage, saved.schoolState),
+  };
+}
+
+// ── 스토어 생성 ───────────────────────────────────────────────
 function createGameStore() {
-  const { subscribe, update } = writable<GameStoreState>(buildInitialState());
+  const { subscribe, update, set } = writable<GameStoreState>(buildInitialState());
 
   return {
     subscribe,
 
-    // 저장된 상태를 현재 스토어에 병합 복원
-    hydrate(saved: Partial<GameStoreState>) {
-      update((state) => ({ ...state, ...saved }));
+    // 앱 시작 시 save_game.json에서 복원
+    async load() {
+      try {
+        const saved = await window.projectB?.gameLoad?.();
+        if (saved) set(fromSaveGame(saved));
+      } catch (e) {
+        console.warn("[gameStore] load failed, using defaults", e);
+      }
     },
 
-    // 특정 메시지를 읽음 처리
-    markMessageRead(id: string) {
-      update((state) => ({
-        ...state,
-        mailbox: state.mailbox.map((msg) =>
-          msg.id === id && msg.readAt === null ? { ...msg, readAt: "방금" } : msg
-        )
-      }));
+    // 현재 상태를 save_game.json에 저장
+    async save() {
+      const s = get({ subscribe });
+      const data = makeSaveGame(
+        s.protagonist, s.mailbox, s.trainingPlan,
+        s.schoolState, s.logs, s.upcoming,
+      );
+      try {
+        await window.projectB?.gameSave?.(data);
+      } catch (e) {
+        console.warn("[gameStore] save failed", e);
+      }
     },
 
-    // 선택지가 있는 메시지의 응답 결과를 기록
-    resolveDecision(messageId: string, optionId: string) {
-      update((state) => ({
-        ...state,
-        mailbox: state.mailbox.map((msg) => {
-          if (msg.id !== messageId || !msg.decision) return msg;
-          return {
-            ...msg,
-            readAt: msg.readAt ?? "방금",
-            decision: { ...msg.decision, selectedOptionId: optionId }
-          };
-        })
-      }));
+    // 주 진행 후 주인공 상태 패치
+    applyWeekResult(
+      protagonistPatch: Partial<ProtagonistSave>,
+      newLogs: string[],
+      newUpcoming: string[],
+      week: number,
+    ) {
+      update((s) => {
+        const p = { ...s.protagonist, ...protagonistPatch };
+        return {
+          ...s,
+          protagonist: p,
+          dayLabel:    computeWeekLabel(week, p.grade ?? 1),
+          logs:        [...newLogs, ...s.logs].slice(0, 30),
+          upcoming:    newUpcoming,
+          player:      toPlayerCompat(p),
+          school:      toSchoolCompat(p.careerStage, s.schoolState),
+        };
+      });
     },
 
-    // 주간 훈련 계획 일부만 부분 업데이트
-    setTrainingPlan(plan: Partial<TrainingPlanState>) {
-      update((state) => ({ ...state, trainingPlan: { ...state.trainingPlan, ...plan } }));
-    },
-
-    // 하루 진행 결과(스냅샷/로그)를 스토어에 반영
+    // 하위 호환: dayAdvance IPC 결과 적용 (TopHeader)
     applyDayResult(snapshot: CoreGameState, newLogs: string[]) {
-      update((state) => ({
-        ...state,
-        day: snapshot.day,
-        dayLabel: computeDayLabel(snapshot.day, snapshot.seasonYear),
-        player: { ...state.player, morale: snapshot.morale },
-        logs: [...newLogs, ...state.logs].slice(0, 30)
+      update((s) => {
+        const week = snapshot.day ? Math.ceil(snapshot.day / 7) : 1;
+        const p    = { ...s.protagonist, morale: snapshot.morale };
+        return {
+          ...s,
+          protagonist: p,
+          dayLabel:    computeWeekLabel(week, p.grade ?? 1),
+          player:      { ...s.player, morale: snapshot.morale },
+          logs:        [...newLogs, ...s.logs].slice(0, 30),
+        };
+      });
+    },
+
+    markMessageRead(id: string) {
+      update((s) => ({
+        ...s,
+        mailbox: s.mailbox.map((m) =>
+          m.id === id && m.readAt === null ? { ...m, readAt: "방금" } : m
+        ),
       }));
     },
 
-    // IPC 전달용 최소 코어 상태 직렬화
-    toCoreState(): CoreGameState {
-      const state = get({ subscribe });
-      return {
-        day: state.day,
-        seasonYear: state.seasonYear,
-        stage: state.stage,
-        playerName: state.player.name,
-        teamName: state.player.team,
-        morale: state.player.morale
-      };
-    }
-  };
-}
+    resolveDecision(messageId: string, optionId: string) {
+      update((s) => ({
+        ...s,
+        mailbox: s.mailbox.map((m) => {
+          if (m.id !== messageId || !m.decision) return m;
+          return { ...m, readAt: m.readAt ?? "방금", decision: { ...m.decision, selectedOptionId: optionId } };
+        }),
+      }));
+    },
 
-// day 인덱스를 화면 표시용 학년/월/주 라벨로 변환
-function computeDayLabel(day: number, _year: number): string {
-  const monthNames = ["3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월", "1월", "2월"];
-  const week = Math.ceil((((day - 1) % 28) + 1) / 7);
-  const monthIdx = Math.floor((day - 1) / 28) % 12;
-  const grade = Math.floor((day - 1) / 336) + 1;
-  return `${grade}학년 ${monthNames[monthIdx]} ${week}주차`;
+    setTrainingPlan(plan: Partial<TrainingPlanState>) {
+      update((s) => ({ ...s, trainingPlan: { ...s.trainingPlan, ...plan } }));
+    },
+
+    toCoreState(): CoreGameState {
+      const s = get({ subscribe });
+      return {
+        day: 1, seasonYear: 2026,
+        stage: s.protagonist.careerStage,
+        playerName: s.protagonist.name,
+        teamName: s.protagonist.teamId,
+        morale: s.protagonist.morale,
+      };
+    },
+
+    // 하위 호환: App.svelte의 hydrate 호출 유지
+    hydrate(saved: Partial<GameStoreState>) {
+      update((s) => ({ ...s, ...saved }));
+    },
+  };
 }
 
 export const gameStore = createGameStore();
 
-export const unreadCount = derived(gameStore, ($state) =>
-  $state.mailbox.filter((message) => message.readAt === null).length
+export const unreadCount = derived(
+  gameStore,
+  ($s) => $s.mailbox.filter((m) => m.readAt === null).length,
 );
 
 export const showAcademicsTab = derived(
   gameStore,
-  ($state) => $state.school.currentStage === "highschool" || $state.school.currentStage === "university"
+  ($s) => $s.school.currentStage === "highschool" || $s.school.currentStage === "university",
 );

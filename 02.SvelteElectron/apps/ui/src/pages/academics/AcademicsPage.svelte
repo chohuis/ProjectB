@@ -20,7 +20,7 @@
     percentileDelta: number;
   }
 
-  export let currentStage: "highschool" | "university" | "pro" = "highschool";
+  export let currentStage: "highschool" | "university" | "pro_kbl" | "pro_abl" = "highschool";
   export let attendsUniversity = false;
   export let universityMajor = "체육교육";
   export let plannedUniversityMajors: string[] = [

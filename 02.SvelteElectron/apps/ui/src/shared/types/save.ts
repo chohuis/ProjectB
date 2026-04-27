@@ -98,21 +98,50 @@ export interface BatterSeasonStats {
 
 export type PlayerSeasonStats = PitcherSeasonStats | BatterSeasonStats;
 
+// ── 훈련 계획 ──────────────────────────────────────────────────
+export interface TrainingPlanState {
+  primaryProgramId: string | null;
+  secondaryProgramId: string | null;
+  recoveryProgramId: string | null;
+}
+
+// ── 학교 생활 상태 ─────────────────────────────────────────────
+export interface SchoolState {
+  attendsUniversity: boolean;
+  universityMajor: string;
+  plannedUniversityMajors: string[];
+}
+
 // ── save_game.json 전체 구조 ───────────────────────────────────
 export interface SaveGame {
-  version: number;      // 저장 포맷 버전 (마이그레이션용)
-  savedAt: string;      // ISO 8601 timestamp
+  version: number;          // 저장 포맷 버전 (마이그레이션용)
+  savedAt: string;          // ISO 8601 timestamp
   protagonist: ProtagonistSave;
   mailbox: MessageItem[];
+  trainingPlan: TrainingPlanState;
+  schoolState: SchoolState;
+  recentLogs: string[];     // 최근 30개 활동 로그
+  recentUpcoming: string[]; // 다음 예정 이벤트 목록
 }
 
 export const SAVE_GAME_VERSION = 1;
 
-export function makeSaveGame(protagonist: ProtagonistSave, mailbox: MessageItem[]): SaveGame {
+export function makeSaveGame(
+  protagonist: ProtagonistSave,
+  mailbox: MessageItem[],
+  trainingPlan: TrainingPlanState,
+  schoolState: SchoolState,
+  recentLogs: string[],
+  recentUpcoming: string[],
+): SaveGame {
   return {
     version: SAVE_GAME_VERSION,
     savedAt: new Date().toISOString(),
     protagonist,
     mailbox,
+    trainingPlan,
+    schoolState,
+    recentLogs,
+    recentUpcoming,
   };
 }
