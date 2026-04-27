@@ -10,6 +10,12 @@ declare global {
         inningLimit?: number;
         initialStamina?: number;
         initialMental?: number;
+        pitcher?: {
+          command?: number;
+          velocity?: number;
+          staminaCap?: number;
+          mentalResil?: number;
+        };
       }) => Promise<{ snapshot: MatchSnapshot }>;
       matchStep: (decision: PitchDecision) => Promise<{
         snapshot: MatchSnapshot;

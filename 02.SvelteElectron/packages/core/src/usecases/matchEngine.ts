@@ -110,13 +110,18 @@ export function stepPitch(state: MatchState, decision: PitchDecision): MatchStep
   }
 
   const powerStaminaCost: Record<PitchPower, number> = { low: 0.1, normal: 0.3, high: 0.55 };
-  const staminaLoss =
+  const baseStaminaLoss =
     0.85 +
     (decision.strategy === "aggressive" ? 0.25 : 0) +
     (decision.pitchType === "fastball" ? 0.2 : 0) +
     powerStaminaCost[decision.power];
+  // 체력 내구(staminaCap)가 높을수록 소모율 감소 (±15% 범위)
+  const staminaCapFactor = 1 - clamp((state.pitcher.staminaCap - 55) * 0.005, -0.15, 0.15);
+  const staminaLoss = baseStaminaLoss * staminaCapFactor;
 
-  const mentalDelta = resolveMentalDelta(resultCode);
+  // 멘탈 회복력(mentalResil)이 높을수록 멘탈 진폭 완화 (±15% 범위)
+  const mentalResilFactor = 1 - clamp((state.pitcher.mentalResil - 50) * 0.004, -0.15, 0.15);
+  const mentalDelta = resolveMentalDelta(resultCode) * mentalResilFactor;
   const nextStamina = clamp(state.stamina - staminaLoss, 0, 100);
   const nextMental = clamp(state.mental + mentalDelta, 0, 100);
 
@@ -183,6 +188,14 @@ function calculatePitchQuality(state: MatchState, decision: PitchDecision): numb
     9: 2
   };
 
+  // command: 제구력 → 로케이션 정확도 + 기본 제구 보정
+  const commandBonus = (state.pitcher.command - 50) * 0.10;
+  // velocity: 구속 → 패스트볼 집중 보정, 변화구 소폭
+  const velocityBonus =
+    decision.pitchType === "fastball"
+      ? (state.pitcher.velocity - 50) * 0.12
+      : (state.pitcher.velocity - 50) * 0.03;
+
   const staminaPenalty = Math.max(0, (50 - state.stamina) * 0.18);
   const mentalBonus = (state.mental - 50) * 0.08;
   const randomNoise = Math.random() * 16 - 8;
@@ -193,6 +206,8 @@ function calculatePitchQuality(state: MatchState, decision: PitchDecision): numb
       strategyBonus[decision.strategy] +
       powerBonus[decision.power] +
       locationBonus[decision.location] +
+      commandBonus +
+      velocityBonus +
       mentalBonus -
       staminaPenalty +
       randomNoise

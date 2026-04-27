@@ -7,6 +7,13 @@ export interface CareerSchoolState {
   plannedUniversityMajors: string[];
 }
 
+export interface PitcherStats {
+  command: number;
+  velocity: number;
+  staminaCap: number;
+  mentalResil: number;
+}
+
 export interface CareerProfile {
   name: string;
   team: string;
@@ -20,6 +27,7 @@ export interface CareerProfile {
   condition: number;
   fatigue: number;
   tags: string[];
+  pitcherStats: PitcherStats;
 }
 
 export const mockCareerSchool: CareerSchoolState = {
@@ -47,6 +55,12 @@ export const mockCareerProfile: CareerProfile = {
   potentialHidden: 93,
   condition: 82,
   fatigue: 28,
-  tags: ["\uae09\uc131\uc7a5", "\uba58\ud0c8\uad00\ub9ac", "\uc120\ubc1c \ub85c\ud14c\uc774\uc158"]
+  tags: ["\uae09\uc131\uc7a5", "\uba58\ud0c8\uad00\ub9ac", "\uc120\ubc1c \ub85c\ud14c\uc774\uc158"],
+  pitcherStats: {
+    command: 62,
+    velocity: 52,
+    staminaCap: 58,
+    mentalResil: 57
+  }
 };
 

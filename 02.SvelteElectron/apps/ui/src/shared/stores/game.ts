@@ -1,5 +1,5 @@
 import { derived, get, writable } from "svelte/store";
-import type { CareerSchoolState, CareerStage } from "../../app/mockCareer";
+import type { CareerSchoolState, CareerStage, PitcherStats } from "../../app/mockCareer";
 import { mockCareerProfile, mockCareerSchool } from "../../app/mockCareer";
 import { mockMainSnapshot } from "../../app/mockMain";
 import type { MessageItem } from "../types/main";
@@ -18,6 +18,7 @@ export interface PlayerState {
   fatigue: number;
   morale: number;
   tags: string[];
+  pitcherStats: PitcherStats;
 }
 
 export interface TrainingPlanState {
@@ -120,6 +121,7 @@ const INITIAL_MAILBOX: MessageItem[] = [
   }
 ];
 
+// 초기 게임 상태를 한 곳에서 구성해 스토어 생성 시 재사용한다.
 function buildInitialState(): GameStoreState {
   return {
     day: 1,
@@ -142,16 +144,19 @@ function buildInitialState(): GameStoreState {
   };
 }
 
+// 게임 진행 전반(메시지/훈련계획/로그)을 관리하는 메인 스토어
 function createGameStore() {
   const { subscribe, update } = writable<GameStoreState>(buildInitialState());
 
   return {
     subscribe,
 
+    // 저장된 상태를 현재 스토어에 병합 복원
     hydrate(saved: Partial<GameStoreState>) {
       update((state) => ({ ...state, ...saved }));
     },
 
+    // 특정 메시지를 읽음 처리
     markMessageRead(id: string) {
       update((state) => ({
         ...state,
@@ -161,6 +166,7 @@ function createGameStore() {
       }));
     },
 
+    // 선택지가 있는 메시지의 응답 결과를 기록
     resolveDecision(messageId: string, optionId: string) {
       update((state) => ({
         ...state,
@@ -175,10 +181,12 @@ function createGameStore() {
       }));
     },
 
+    // 주간 훈련 계획 일부만 부분 업데이트
     setTrainingPlan(plan: Partial<TrainingPlanState>) {
       update((state) => ({ ...state, trainingPlan: { ...state.trainingPlan, ...plan } }));
     },
 
+    // 하루 진행 결과(스냅샷/로그)를 스토어에 반영
     applyDayResult(snapshot: CoreGameState, newLogs: string[]) {
       update((state) => ({
         ...state,
@@ -189,6 +197,7 @@ function createGameStore() {
       }));
     },
 
+    // IPC 전달용 최소 코어 상태 직렬화
     toCoreState(): CoreGameState {
       const state = get({ subscribe });
       return {
@@ -203,6 +212,7 @@ function createGameStore() {
   };
 }
 
+// day 인덱스를 화면 표시용 학년/월/주 라벨로 변환
 function computeDayLabel(day: number, _year: number): string {
   const monthNames = ["3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월", "1월", "2월"];
   const week = Math.ceil((((day - 1) % 28) + 1) / 7);
@@ -221,4 +231,3 @@ export const showAcademicsTab = derived(
   gameStore,
   ($state) => $state.school.currentStage === "highschool" || $state.school.currentStage === "university"
 );
-

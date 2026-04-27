@@ -1,8 +1,10 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { get } from "svelte/store";
   import BaseballField from "../../features/match-view/ui/BaseballField.svelte";
   import SettingsPanel from "../../features/settings/ui/SettingsPanel.svelte";
   import { fieldStyleStore, type FieldStyle } from "../../shared/stores/settings";
+  import { gameStore } from "../../shared/stores/game";
 
   let fieldStyle: FieldStyle = 'digital';
   fieldStyleStore.subscribe(v => { fieldStyle = v; });
@@ -297,10 +299,11 @@
     { label: "타점", value: "78" }
   ];
 
+  const _initPlayer = get(gameStore).player;
   let pitcherState = {
-    name: "김철수",
-    speed: "152 km/h",
-    stamina: 82,
+    name: _initPlayer.name,
+    speed: `${_initPlayer.pitcherStats.velocity} km/h`,
+    stamina: _initPlayer.condition,
     mental: 74
   };
 
@@ -337,10 +340,6 @@
       if (settingsOpen) { settingsOpen = false; return; }
       onExit();
     }
-    if ((event.ctrlKey || event.metaKey) && (event.key === 'q' || event.key === 'Q')) {
-      event.preventDefault();
-      settingsOpen = !settingsOpen;
-    }
   }
 
   onMount(() => {
@@ -358,7 +357,12 @@
     }
 
     try {
-      const response = await window.projectB.matchStart({ initialStamina: 82, initialMental: 74 });
+      const player = get(gameStore).player;
+      const response = await window.projectB.matchStart({
+        initialStamina: player.condition,
+        initialMental: 74,
+        pitcher: player.pitcherStats
+      });
       engineAvailable = true;
       engineStarted = true;
       applySnapshot(response.snapshot, "매치 엔진 연결 완료");
@@ -626,7 +630,12 @@
 
     if (engineAvailable && window.projectB?.matchStep) {
       if (!engineStarted && window.projectB.matchStart) {
-        await window.projectB.matchStart({ initialStamina: 82, initialMental: 74 });
+        const player = get(gameStore).player;
+        await window.projectB.matchStart({
+          initialStamina: player.condition,
+          initialMental: 74,
+          pitcher: player.pitcherStats
+        });
         engineStarted = true;
       }
 
@@ -746,7 +755,7 @@
           {#if selectedDefPosition}
             <span class="pos-badge">선택: {selectedDefPosition}</span>
           {/if}
-          <button class="settings-btn" type="button" on:click={() => (settingsOpen = !settingsOpen)} title="환경설정 (Ctrl+Q)">⚙</button>
+          <button class="settings-btn" type="button" on:click={() => (settingsOpen = !settingsOpen)} title="환경설정">⚙</button>
         </div>
 
         <div class="scene-layout">
