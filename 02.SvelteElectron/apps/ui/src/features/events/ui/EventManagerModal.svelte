@@ -25,24 +25,58 @@
   interface PoolFile {
     id: string;
     description?: string;
+    baseRoll?: { mode: string; value: number };
+    maxPicksPerDay?: number;
     eventIds?: string[];
   }
 
   interface MessageTemplate {
     id: string;
+    category?: string;
     subject?: string;
+    body?: string;
     decisionTemplateId?: string | null;
   }
 
   interface DecisionTemplate {
     id: string;
     prompt?: string;
+    options?: Array<{ id: string; label: string; effects?: string[] }>;
   }
 
   interface EventIndexFile {
     files?: {
       pools?: string[];
     };
+  }
+
+  interface PoolDraft {
+    id: string;
+    description: string;
+    baseRollMode: "percent";
+    baseRollValue: number;
+    maxPicksPerDay: number;
+    includeCurrentEvent: boolean;
+  }
+
+  interface MessageDraft {
+    id: string;
+    category: string;
+    subject: string;
+    body: string;
+    decisionTemplateId: string;
+  }
+
+  interface DecisionOptionDraft {
+    id: string;
+    label: string;
+    effectsText: string;
+  }
+
+  interface DecisionDraft {
+    id: string;
+    prompt: string;
+    options: DecisionOptionDraft[];
   }
 
   export let open = false;
@@ -62,6 +96,21 @@
   let decisionTemplates: DecisionTemplate[] = [];
 
   const ONCE_POLICY_OPTIONS = ["repeatable", "once_per_stage_year", "once_per_season", "once_per_career"];
+  const DEFAULT_MESSAGE_CATEGORIES = ["system", "news", "coach", "manager"];
+
+  let poolPopupOpen = false;
+  let messagePopupOpen = false;
+  let decisionPopupOpen = false;
+  let messageCategoryOptions: string[] = [...DEFAULT_MESSAGE_CATEGORIES];
+
+  let poolDraft: PoolDraft = createPoolDraft();
+  let messageDraft: MessageDraft = createMessageDraft();
+  let decisionDraft: DecisionDraft = createDecisionDraft();
+
+  let poolPopupError = "";
+  let messagePopupError = "";
+  let decisionPopupError = "";
+  let newMessageCategory = "";
 
   // Ctrl+Q로 열 때 즉시 사용할 수 있도록 최초 1회 로드
   onMount(async () => {
@@ -116,11 +165,7 @@
     try {
       const poolPaths = await resolvePoolPaths();
       const poolsLoaded = await Promise.all(
-        poolPaths.map(async (path) => {
-          const response = await fetch(path);
-          if (!response.ok) return null;
-          return ((await response.json()) as PoolFile) ?? null;
-        })
+        poolPaths.map(async (path) => await fetchJsonSafe<PoolFile>(path))
       );
 
       poolOptions = poolsLoaded.filter((pool): pool is PoolFile => Boolean(pool?.id));
@@ -130,9 +175,8 @@
     }
 
     try {
-      const response = await fetch("/data/master/messages/templates.json");
-      if (response.ok) {
-        const data = (await response.json()) as { templates?: MessageTemplate[] };
+      const data = await fetchJsonSafe<{ templates?: MessageTemplate[] }>("/data/master/messages/templates.json");
+      if (data) {
         messageTemplates = data.templates ?? [];
       }
     } catch (error) {
@@ -141,9 +185,10 @@
     }
 
     try {
-      const response = await fetch("/data/master/messages/decision_templates.json");
-      if (response.ok) {
-        const data = (await response.json()) as { decisions?: DecisionTemplate[] };
+      const data = await fetchJsonSafe<{ decisions?: DecisionTemplate[] }>(
+        "/data/master/messages/decision_templates.json"
+      );
+      if (data) {
         decisionTemplates = data.decisions ?? [];
       }
     } catch (error) {
@@ -154,9 +199,8 @@
 
   async function resolvePoolPaths(): Promise<string[]> {
     try {
-      const response = await fetch("/data/master/events/index.json");
-      if (response.ok) {
-        const data = (await response.json()) as EventIndexFile;
+      const data = await fetchJsonSafe<EventIndexFile>("/data/master/events/index.json");
+      if (data) {
         const pools = data.files?.pools ?? [];
         if (pools.length > 0) {
           return pools.map((path) => (path.startsWith("/") ? path : `/${path}`));
@@ -171,6 +215,21 @@
       "/data/master/events/pools/social.json",
       "/data/master/events/pools/team_life.json"
     ];
+  }
+
+  // JSON 경로가 HTML fallback(예: index.html)로 응답될 때 파싱 오류를 막는다.
+  async function fetchJsonSafe<T>(path: string): Promise<T | null> {
+    const response = await fetch(path);
+    if (!response.ok) return null;
+
+    const contentType = response.headers.get("content-type") ?? "";
+    if (!contentType.includes("application/json")) return null;
+
+    try {
+      return (await response.json()) as T;
+    } catch {
+      return null;
+    }
   }
 
   function buildFallbackEvents(): ManagedEvent[] {
@@ -227,6 +286,12 @@
   $: selectedEvent = events.find((event) => event.id === selectedId) ?? null;
 
   $: selectedIssues = selectedEvent ? validateEvent(selectedEvent) : [];
+  $: messageCategoryOptions = Array.from(
+    new Set([
+      ...DEFAULT_MESSAGE_CATEGORIES,
+      ...messageTemplates.map((item) => (item.category ?? "").trim()).filter(Boolean)
+    ])
+  );
 
   function closeModal() {
     dispatch("close");
@@ -320,31 +385,201 @@
     return issues;
   }
 
-  function addPoolOption() {
-    const next = buildNextId(
-      "POOL_NEW",
-      poolOptions.map((pool) => pool.id)
-    );
-    poolOptions = [...poolOptions, { id: next, description: "로컬 임시 추가 항목" }];
-    updateSelectedField("poolId", next);
+  function createPoolDraft(): PoolDraft {
+    return {
+      id: buildNextId("POOL_NEW", poolOptions.map((pool) => pool.id)),
+      description: "",
+      baseRollMode: "percent",
+      baseRollValue: 20,
+      maxPicksPerDay: 1,
+      includeCurrentEvent: true
+    };
   }
 
-  function addMessageTemplateOption() {
-    const next = buildNextId(
-      "MSG_TMPL_NEW",
-      messageTemplates.map((item) => item.id)
-    );
-    messageTemplates = [...messageTemplates, { id: next, subject: "로컬 임시 템플릿" }];
-    updateSelectedField("messageTemplateId", next);
+  function createMessageDraft(): MessageDraft {
+    return {
+      id: buildNextId("MSG_TMPL_NEW", messageTemplates.map((item) => item.id)),
+      category: messageCategoryOptions[0] ?? "system",
+      subject: "",
+      body: "",
+      decisionTemplateId: ""
+    };
   }
 
-  function addDecisionTemplateOption() {
-    const next = buildNextId(
-      "MSG_DECISION_NEW",
-      decisionTemplates.map((item) => item.id)
-    );
-    decisionTemplates = [...decisionTemplates, { id: next, prompt: "로컬 임시 선택지" }];
-    updateSelectedField("decisionTemplateId", next);
+  function createDecisionDraft(): DecisionDraft {
+    return {
+      id: buildNextId("MSG_DECISION_NEW", decisionTemplates.map((item) => item.id)),
+      prompt: "",
+      options: [
+        { id: "option_a", label: "선택지 A", effectsText: "" },
+        { id: "option_b", label: "선택지 B", effectsText: "" }
+      ]
+    };
+  }
+
+  function openPoolPopup() {
+    poolPopupError = "";
+    poolDraft = createPoolDraft();
+    poolPopupOpen = true;
+  }
+
+  function openMessagePopup() {
+    messagePopupError = "";
+    messageDraft = createMessageDraft();
+    newMessageCategory = "";
+    messagePopupOpen = true;
+  }
+
+  function addMessageCategoryOption() {
+    const next = ensureText(newMessageCategory);
+    if (!next) return;
+    messageDraft = { ...messageDraft, category: next };
+    newMessageCategory = "";
+  }
+
+  function openDecisionPopup() {
+    decisionPopupError = "";
+    decisionDraft = createDecisionDraft();
+    decisionPopupOpen = true;
+  }
+
+  // 팝업 취소: 팝업 오픈 이전 상태로 폐기하고 닫는다.
+  function cancelPoolPopup() {
+    poolPopupError = "";
+    poolDraft = createPoolDraft();
+    poolPopupOpen = false;
+  }
+
+  function cancelMessagePopup() {
+    messagePopupError = "";
+    messageDraft = createMessageDraft();
+    newMessageCategory = "";
+    messagePopupOpen = false;
+  }
+
+  function cancelDecisionPopup() {
+    decisionPopupError = "";
+    decisionDraft = createDecisionDraft();
+    decisionPopupOpen = false;
+  }
+
+  function createPool() {
+    if (!poolDraft.id.trim()) {
+      poolPopupError = "풀 ID를 입력하세요.";
+      return;
+    }
+    if (poolOptions.some((item) => item.id === poolDraft.id)) {
+      poolPopupError = "이미 존재하는 풀 ID입니다.";
+      return;
+    }
+    if (poolDraft.baseRollValue < 0 || poolDraft.baseRollValue > 100) {
+      poolPopupError = "baseRoll 값은 0~100 범위여야 합니다.";
+      return;
+    }
+    if (poolDraft.maxPicksPerDay < 1) {
+      poolPopupError = "일일 최대 추첨 횟수는 1 이상이어야 합니다.";
+      return;
+    }
+
+    const eventIds = poolDraft.includeCurrentEvent && selectedEvent ? [selectedEvent.id] : [];
+    poolOptions = [
+      ...poolOptions,
+      {
+        id: poolDraft.id,
+        description: poolDraft.description.trim() || "로컬 임시 추가 항목",
+        baseRoll: { mode: poolDraft.baseRollMode, value: Number(poolDraft.baseRollValue) },
+        maxPicksPerDay: Number(poolDraft.maxPicksPerDay),
+        eventIds
+      }
+    ];
+    updateSelectedField("poolId", poolDraft.id);
+    poolPopupOpen = false;
+  }
+
+  function createMessageTemplate() {
+    if (!messageDraft.id.trim()) {
+      messagePopupError = "메시지 템플릿 ID를 입력하세요.";
+      return;
+    }
+    if (messageTemplates.some((item) => item.id === messageDraft.id)) {
+      messagePopupError = "이미 존재하는 메시지 템플릿 ID입니다.";
+      return;
+    }
+    if (!messageDraft.subject.trim() || !messageDraft.body.trim()) {
+      messagePopupError = "제목과 본문은 필수입니다.";
+      return;
+    }
+
+    const selectedDecisionId = ensureText(messageDraft.decisionTemplateId);
+    if (selectedDecisionId && !decisionTemplates.some((item) => item.id === selectedDecisionId)) {
+      messagePopupError = "연결할 선택지 템플릿이 목록에 없습니다.";
+      return;
+    }
+
+    messageTemplates = [
+      ...messageTemplates,
+      {
+        id: messageDraft.id,
+        category: messageDraft.category,
+        subject: messageDraft.subject,
+        body: messageDraft.body,
+        decisionTemplateId: selectedDecisionId
+      }
+    ];
+    updateSelectedField("messageTemplateId", messageDraft.id);
+    if (selectedDecisionId) updateSelectedField("decisionTemplateId", selectedDecisionId);
+    messagePopupOpen = false;
+  }
+
+  function addDecisionOptionRow() {
+    const next = decisionDraft.options.length + 1;
+    decisionDraft = {
+      ...decisionDraft,
+      options: [...decisionDraft.options, { id: `option_${next}`, label: `선택지 ${next}`, effectsText: "" }]
+    };
+  }
+
+  function removeDecisionOptionRow(index: number) {
+    if (decisionDraft.options.length <= 2) return;
+    decisionDraft = {
+      ...decisionDraft,
+      options: decisionDraft.options.filter((_, i) => i !== index)
+    };
+  }
+
+  function createDecisionTemplate() {
+    if (!decisionDraft.id.trim()) {
+      decisionPopupError = "선택지 템플릿 ID를 입력하세요.";
+      return;
+    }
+    if (decisionTemplates.some((item) => item.id === decisionDraft.id)) {
+      decisionPopupError = "이미 존재하는 선택지 템플릿 ID입니다.";
+      return;
+    }
+    if (!decisionDraft.prompt.trim()) {
+      decisionPopupError = "질문(prompt)을 입력하세요.";
+      return;
+    }
+
+    const options = decisionDraft.options
+      .map((option) => ({
+        id: option.id.trim(),
+        label: option.label.trim(),
+        effects: option.effectsText
+          .split(",")
+          .map((effect) => effect.trim())
+          .filter(Boolean)
+      }))
+      .filter((option) => option.id && option.label);
+
+    if (options.length < 2) {
+      decisionPopupError = "선택지는 최소 2개가 필요합니다.";
+      return;
+    }
+
+    decisionTemplates = [...decisionTemplates, { id: decisionDraft.id, prompt: decisionDraft.prompt, options }];
+    updateSelectedField("decisionTemplateId", decisionDraft.id);
+    decisionPopupOpen = false;
   }
 </script>
 
@@ -508,7 +743,7 @@
                     {/each}
                   </select>
                 </label>
-                <button type="button" class="mini" on:click={addPoolOption}>풀 추가</button>
+                <button type="button" class="mini" on:click={openPoolPopup}>풀 추가</button>
               </div>
 
               <div class="select-with-action">
@@ -524,7 +759,7 @@
                     {/each}
                   </select>
                 </label>
-                <button type="button" class="mini" on:click={addMessageTemplateOption}>템플릿 추가</button>
+                <button type="button" class="mini" on:click={openMessagePopup}>템플릿 추가</button>
               </div>
 
               <div class="select-with-action">
@@ -540,7 +775,7 @@
                     {/each}
                   </select>
                 </label>
-                <button type="button" class="mini" on:click={addDecisionTemplateOption}>선택지 추가</button>
+                <button type="button" class="mini" on:click={openDecisionPopup}>선택지 추가</button>
               </div>
             </div>
 
@@ -565,6 +800,178 @@
         </section>
       </div>
     </section>
+
+    {#if poolPopupOpen}
+      <section class="popup" role="dialog" aria-label="풀 추가" on:click|stopPropagation>
+        <header>
+          <h3>풀 추가</h3>
+          <button type="button" class="ghost" on:click={cancelPoolPopup}>닫기</button>
+        </header>
+        <div class="popup-grid">
+          <label>
+            <span>풀 ID (`id`)</span>
+            <input type="text" bind:value={poolDraft.id} />
+            <small class="hint">랜덤 이벤트 그룹의 고유 키입니다. 예: `POOL_MEDIA_DAILY`</small>
+          </label>
+          <label>
+            <span>설명 (`description`)</span>
+            <input type="text" bind:value={poolDraft.description} />
+            <small class="hint">운영자가 용도를 파악하기 위한 설명입니다.</small>
+          </label>
+          <label>
+            <span>기본 추첨 방식 (`baseRoll.mode`)</span>
+            <input type="text" value={poolDraft.baseRollMode} disabled />
+            <small class="hint">현재는 `percent` 고정입니다.</small>
+          </label>
+          <label>
+            <span>기본 추첨 확률 (`baseRoll.value`)</span>
+            <input type="number" min="0" max="100" bind:value={poolDraft.baseRollValue} />
+            <small class="hint">0~100. 해당 풀을 검사할지 결정하는 확률입니다.</small>
+          </label>
+          <label>
+            <span>일일 최대 추첨 횟수 (`maxPicksPerDay`)</span>
+            <input type="number" min="1" bind:value={poolDraft.maxPicksPerDay} />
+            <small class="hint">하루에 이 풀에서 뽑을 최대 이벤트 수입니다.</small>
+          </label>
+          <label class="check">
+            <input type="checkbox" bind:checked={poolDraft.includeCurrentEvent} />
+            <span>현재 이벤트를 `eventIds`에 자동 포함</span>
+          </label>
+
+          <div class="existing-list">
+            <strong>기존 풀 목록</strong>
+            <ul>
+              {#each poolOptions as item}
+                <li><code>{item.id}</code> · {item.description ?? "-"}</li>
+              {/each}
+            </ul>
+          </div>
+        </div>
+        {#if poolPopupError}
+          <p class="popup-error">{poolPopupError}</p>
+        {/if}
+        <footer>
+          <button type="button" class="ghost" on:click={cancelPoolPopup}>취소</button>
+          <button type="button" on:click={createPool}>저장</button>
+        </footer>
+      </section>
+    {/if}
+
+    {#if messagePopupOpen}
+      <section class="popup" role="dialog" aria-label="메시지 템플릿 추가" on:click|stopPropagation>
+        <header>
+          <h3>메시지 템플릿 추가</h3>
+          <button type="button" class="ghost" on:click={cancelMessagePopup}>닫기</button>
+        </header>
+        <div class="popup-grid">
+          <label>
+            <span>템플릿 ID (`id`)</span>
+            <input type="text" bind:value={messageDraft.id} />
+            <small class="hint">메시지 텍스트 템플릿의 고유 키입니다. 예: `MSG_TMPL_...`</small>
+          </label>
+          <label>
+            <span>카테고리 (`category`)</span>
+            <select bind:value={messageDraft.category}>
+              {#each messageCategoryOptions as category}
+                <option value={category}>{category}</option>
+              {/each}
+            </select>
+            <div class="inline-add">
+              <input type="text" bind:value={newMessageCategory} placeholder="새 카테고리 입력" />
+              <button type="button" class="mini" on:click={addMessageCategoryOption}>카테고리 추가</button>
+            </div>
+            <small class="hint">메시지함 분류값입니다. 예: `system`, `coach`, `news`</small>
+          </label>
+          <label>
+            <span>제목 (`subject`)</span>
+            <input type="text" bind:value={messageDraft.subject} />
+            <small class="hint">메시지 리스트에 표시됩니다.</small>
+          </label>
+          <label>
+            <span>본문 (`body`)</span>
+            <textarea rows="4" bind:value={messageDraft.body}></textarea>
+            <small class="hint">메시지 상세 팝업의 본문으로 사용됩니다.</small>
+          </label>
+          <label>
+            <span>기본 선택지 템플릿 (`decisionTemplateId`)</span>
+            <select bind:value={messageDraft.decisionTemplateId}>
+              <option value="">연결 안 함</option>
+              {#each decisionTemplates as decision}
+                <option value={decision.id}>{decision.id}</option>
+              {/each}
+            </select>
+            <small class="hint">이 메시지 템플릿에 기본 선택지를 연결합니다.</small>
+          </label>
+
+          <div class="existing-list">
+            <strong>기존 메시지 템플릿 목록</strong>
+            <ul>
+              {#each messageTemplates as item}
+                <li><code>{item.id}</code> · {item.category ?? "-"} · {item.subject ?? "-"}</li>
+              {/each}
+            </ul>
+          </div>
+        </div>
+        {#if messagePopupError}
+          <p class="popup-error">{messagePopupError}</p>
+        {/if}
+        <footer>
+          <button type="button" class="ghost" on:click={cancelMessagePopup}>취소</button>
+          <button type="button" on:click={createMessageTemplate}>저장</button>
+        </footer>
+      </section>
+    {/if}
+
+    {#if decisionPopupOpen}
+      <section class="popup" role="dialog" aria-label="선택지 템플릿 추가" on:click|stopPropagation>
+        <header>
+          <h3>선택지 템플릿 추가</h3>
+          <button type="button" class="ghost" on:click={cancelDecisionPopup}>닫기</button>
+        </header>
+        <div class="popup-grid">
+          <label>
+            <span>선택지 템플릿 ID (`id`)</span>
+            <input type="text" bind:value={decisionDraft.id} />
+            <small class="hint">선택 버튼 묶음의 고유 키입니다. 예: `MSG_DECISION_...`</small>
+          </label>
+          <label>
+            <span>질문 (`prompt`)</span>
+            <input type="text" bind:value={decisionDraft.prompt} />
+            <small class="hint">메시지 팝업에서 사용자에게 노출되는 질문 문장입니다.</small>
+          </label>
+
+          <div class="option-table">
+            <div class="option-head">선택지 목록 (`options`)</div>
+            {#each decisionDraft.options as option, idx}
+              <div class="option-row">
+                <input type="text" bind:value={option.id} placeholder="option id" />
+                <input type="text" bind:value={option.label} placeholder="버튼 라벨" />
+                <input type="text" bind:value={option.effectsText} placeholder="effect1, effect2" />
+                <button type="button" class="danger mini" on:click={() => removeDecisionOptionRow(idx)} disabled={decisionDraft.options.length <= 2}>삭제</button>
+              </div>
+            {/each}
+            <small class="hint">effects는 쉼표로 구분합니다. 예: `condition:-4, xp.command:+1`</small>
+            <button type="button" class="mini" on:click={addDecisionOptionRow}>선택지 행 추가</button>
+          </div>
+
+          <div class="existing-list">
+            <strong>기존 선택지 템플릿 목록</strong>
+            <ul>
+              {#each decisionTemplates as item}
+                <li><code>{item.id}</code> · {item.prompt ?? "-"}</li>
+              {/each}
+            </ul>
+          </div>
+        </div>
+        {#if decisionPopupError}
+          <p class="popup-error">{decisionPopupError}</p>
+        {/if}
+        <footer>
+          <button type="button" class="ghost" on:click={cancelDecisionPopup}>취소</button>
+          <button type="button" on:click={createDecisionTemplate}>저장</button>
+        </footer>
+      </section>
+    {/if}
   </div>
 {/if}
 
@@ -742,9 +1149,16 @@
     font-size: 12px;
   }
 
+  .hint {
+    color: #7f9ac5;
+    font-size: 11px;
+    line-height: 1.35;
+  }
+
   input,
   select,
-  button {
+  button,
+  textarea {
     background: #16243c;
     color: #dfeaff;
     border: 1px solid #35527d;
@@ -838,5 +1252,125 @@
     margin: 0;
     padding: 18px;
     color: #9eb2d4;
+  }
+
+  .popup {
+    position: fixed;
+    z-index: 95;
+    width: min(780px, 92vw);
+    max-height: 86vh;
+    overflow: auto;
+    background: #101d33;
+    border: 1px solid #36507a;
+    border-radius: 12px;
+    padding: 12px;
+    display: grid;
+    gap: 10px;
+  }
+
+  .popup header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #294367;
+    padding-bottom: 8px;
+  }
+
+  .popup h3 {
+    margin: 0;
+    color: #e6efff;
+    font-size: 17px;
+  }
+
+  .popup-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .inline-add {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .check {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .check input {
+    width: 16px;
+    height: 16px;
+  }
+
+  .option-table {
+    grid-column: 1 / -1;
+    border: 1px solid #2e476c;
+    border-radius: 10px;
+    padding: 10px;
+    display: grid;
+    gap: 8px;
+    background: #0f1c31;
+  }
+
+  .existing-list {
+    grid-column: 1 / -1;
+    border: 1px solid #2f4a73;
+    background: #0f1d33;
+    border-radius: 10px;
+    padding: 10px;
+    display: grid;
+    gap: 8px;
+  }
+
+  .existing-list strong {
+    color: #c6d7f3;
+    font-size: 12px;
+  }
+
+  .existing-list ul {
+    margin: 0;
+    padding-left: 18px;
+    max-height: 150px;
+    overflow: auto;
+    display: grid;
+    gap: 4px;
+    color: #a9bfdf;
+    font-size: 12px;
+  }
+
+  .existing-list code {
+    color: #dfeaff;
+  }
+
+  .option-head {
+    color: #bdd0ed;
+    font-size: 12px;
+  }
+
+  .option-row {
+    display: grid;
+    grid-template-columns: 130px minmax(0, 1fr) minmax(0, 1fr) 70px;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .popup-error {
+    margin: 0;
+    color: #ffccd7;
+    background: #361f2a;
+    border: 1px solid #6a3f52;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .popup footer {
+    display: flex;
+    justify-content: flex-end;
   }
 </style>

@@ -18,9 +18,13 @@
   import MessengerPage from "../messenger/MessengerPage.svelte";
   import TeamPage from "../team/TeamPage.svelte";
   import EventManagerModal from "../../features/events/ui/EventManagerModal.svelte";
+  import DevToolsHubModal from "../../features/devtools/ui/DevToolsHubModal.svelte";
+  import EntityManagerModal from "../../features/entity-manager/ui/EntityManagerModal.svelte";
 
   let currentTab: MainTabId = "home";
+  let devToolsHubOpen = false;
   let eventManagerOpen = false;
+  let entityManagerOpen = false;
   const tabPageKey: Record<MainTabId, string> = {
     home: "page.home",
     messages: "page.messages",
@@ -57,7 +61,14 @@
     if (typing) return;
 
     event.preventDefault();
-    eventManagerOpen = !eventManagerOpen;
+    const anyOpen = devToolsHubOpen || eventManagerOpen || entityManagerOpen;
+    if (anyOpen) {
+      devToolsHubOpen = false;
+      eventManagerOpen = false;
+      entityManagerOpen = false;
+      return;
+    }
+    devToolsHubOpen = true;
   }
 </script>
 
@@ -127,7 +138,21 @@
   </div>
 {/if}
 
+<DevToolsHubModal
+  open={devToolsHubOpen}
+  on:close={() => (devToolsHubOpen = false)}
+  on:openEvent={() => {
+    devToolsHubOpen = false;
+    eventManagerOpen = true;
+  }}
+  on:openEntity={() => {
+    devToolsHubOpen = false;
+    entityManagerOpen = true;
+  }}
+/>
+
 <EventManagerModal open={eventManagerOpen} on:close={() => (eventManagerOpen = false)} />
+<EntityManagerModal open={entityManagerOpen} on:close={() => (entityManagerOpen = false)} />
 
 <style>
   .layout {
