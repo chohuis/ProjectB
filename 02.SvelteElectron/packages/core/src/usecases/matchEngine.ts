@@ -105,6 +105,13 @@ export function stepPitch(state: MatchState, decision: PitchDecision): MatchStep
   } else if (resultCode === "INPLAY_OUT") {
     nextOuts += 1;
     nextCount = { balls: 0, strikes: 0 };
+    // 병살타: 0아웃/1아웃 + 1루 주자 있을 때 확률적으로 더블플레이
+    const gidpResult = tryDoublePlay(nextRunners, preState.outs);
+    if (gidpResult.isDoublePlay) {
+      nextOuts += 1;
+      nextRunners = gidpResult.runners;
+      runningLogs.push("병살타!");
+    }
   } else {
     const hitResult = advanceOnHit(nextRunners, resultCode, createRunner(preState.batterMean));
     nextRunners = hitResult.runners;
@@ -666,6 +673,34 @@ function pitchPatternModifier(pitchType: PitchType, lastPitches: PitchType[]): n
   // 최근 3구에 없던 구종: 기습 효과
   if (!lastPitches.slice(-3).includes(pitchType)) return 1;
   return 0;
+}
+
+// 병살타 판정: 0~1아웃 + 1루 주자 있을 때 확률적으로 더블플레이
+function tryDoublePlay(
+  runners: MatchRunners,
+  outsBeforePlay: number
+): { isDoublePlay: boolean; runners: MatchRunners } {
+  // 2아웃이면 병살 불가
+  if (outsBeforePlay >= 2) return { isDoublePlay: false, runners };
+  // 1루 주자 없으면 병살 불가
+  if (!runners.first) return { isDoublePlay: false, runners };
+
+  // 기본 병살 확률 40% (실제 MLB 평균과 유사)
+  // 주자가 많을수록(만루 등) 소폭 증가
+  const baseProb = 0.40 + (runners.second ? 0.05 : 0) + (runners.third ? 0.03 : 0);
+  if (Math.random() >= baseProb) return { isDoublePlay: false, runners };
+
+  // 병살 성립: 1루 주자 아웃, 주자들 한 베이스씩 전진
+  const next: MatchRunners = {
+    first: null,
+    second: runners.first,  // 원래 1루주자가 2루로 (실제로는 아웃이지만 다른 주자 밀어냄)
+    third: runners.second ?? runners.third
+  };
+  // 실제로는 1루주자가 아웃되고 타자도 아웃: 남은 주자들은 그대로
+  return {
+    isDoublePlay: true,
+    runners: { first: null, second: runners.second, third: runners.third }
+  };
 }
 
 // 상황 압박: 득점권 주자(2루/3루) + 2아웃 시 quality 추가 노이즈 (투수에게 불리한 방향)
