@@ -2,21 +2,26 @@
   import { createEventDispatcher, onMount } from "svelte";
 
   type EntityTab = "player" | "coach" | "manager" | "owner";
+  type RosterTier = "1군" | "2군" | "육성" | "AAA" | "AA" | "A";
 
   interface LeagueRef {
     id: string;
     name: string;
+    nameEn?: string;
   }
 
   interface SchoolRef {
     id: string;
     name: string;
+    nameEn?: string;
   }
 
   interface TeamRef {
     id: string;
     name: string;
+    nameEn?: string;
     leagueId: string;
+    clubId?: string;
   }
 
   interface PitchingStats {
@@ -104,12 +109,17 @@
   interface EntityRow {
     id: string;
     name: string;
+    nameEn?: string;
     role: EntityTab;
     age: number;
     status: "active" | "inactive" | "retired" | "injured";
-    leagueId: string;
+    originLeagueId: string;   // 최초 등록 리그 (파일 분류 기준 — 이동 시 변경 안 함)
+    leagueId: string;         // 현재 소속 리그 (이동 시 변경)
+    clubId: string;           // 구단 ID (고교·대학은 teamId와 동일)
+    teamId: string;           // 팀/엔트리 ID
+    tier?: RosterTier;        // KBO·MLB 전용 (1군/2군/육성/AAA 등)
     schoolId: string;
-    teamId: string;
+    grade?: 1 | 2 | 3;       // 고교 전용 학년
     notes: string;
     details: EntityDetails;
   }
@@ -147,12 +157,16 @@
     {
       id: "PLY_001",
       name: "홍길동",
+      nameEn: "Hong Gil-dong",
       role: "player",
       age: 18,
       status: "active",
+      originLeagueId: "LEAGUE_HIGHSCHOOL",
       leagueId: "LEAGUE_HIGHSCHOOL",
-      schoolId: "SCHOOL_SEOUL_HS",
+      clubId: "TEAM_SEOUL_NB",
       teamId: "TEAM_SEOUL_NB",
+      grade: 2,
+      schoolId: "SCHOOL_SEOUL_HS",
       notes: "유망주",
       details: createDefaultDetails({
         player: {
@@ -189,12 +203,15 @@
     {
       id: "COA_001",
       name: "박코치",
+      nameEn: "Park Coach",
       role: "coach",
       age: 42,
       status: "active",
+      originLeagueId: "LEAGUE_PRO",
       leagueId: "LEAGUE_PRO",
-      schoolId: "SCHOOL_NONE",
+      clubId: "TEAM_INCHEON_SH",
       teamId: "TEAM_INCHEON_SH",
+      schoolId: "SCHOOL_NONE",
       notes: "투수 인스트럭터",
       details: createDefaultDetails({
         coach: {
@@ -214,12 +231,15 @@
     {
       id: "MNG_001",
       name: "최감독",
+      nameEn: "Choi Manager",
       role: "manager",
       age: 51,
       status: "active",
+      originLeagueId: "LEAGUE_PRO",
       leagueId: "LEAGUE_PRO",
-      schoolId: "SCHOOL_NONE",
+      clubId: "TEAM_INCHEON_SH",
       teamId: "TEAM_INCHEON_SH",
+      schoolId: "SCHOOL_NONE",
       notes: "불펜 운용 강점",
       details: createDefaultDetails({
         manager: {
@@ -240,12 +260,15 @@
     {
       id: "OWN_001",
       name: "김구단주",
+      nameEn: "Kim Owner",
       role: "owner",
       age: 58,
       status: "active",
+      originLeagueId: "LEAGUE_PRO",
       leagueId: "LEAGUE_PRO",
-      schoolId: "SCHOOL_NONE",
+      clubId: "TEAM_INCHEON_SH",
       teamId: "TEAM_INCHEON_SH",
+      schoolId: "SCHOOL_NONE",
       notes: "장기 육성 선호",
       details: createDefaultDetails({
         owner: {
@@ -428,15 +451,21 @@
 
   function createAddDraft(role: EntityTab): EntityRow {
     const leagueId = leagues[0]?.id ?? "";
+    const teamId = defaultTeamId(leagueId);
     return {
       id: nextId(role),
       name: `신규 ${roleLabel(role)}`,
+      nameEn: "",
       role,
       age: role === "player" ? 18 : 40,
       status: "active",
+      originLeagueId: leagueId,
       leagueId,
+      clubId: teamId,
+      teamId,
+      tier: undefined,
       schoolId: "SCHOOL_NONE",
-      teamId: defaultTeamId(leagueId),
+      grade: leagueId === "LEAGUE_HIGHSCHOOL" ? 1 : undefined,
       notes: "",
       details: createDefaultDetails()
     };
@@ -456,7 +485,10 @@
   }
 
   function onLeagueChanged(target: EntityRow) {
-    target.teamId = defaultTeamId(target.leagueId);
+    const teamId = defaultTeamId(target.leagueId);
+    target.teamId = teamId;
+    target.clubId = teamId;
+    target.grade = target.leagueId === "LEAGUE_HIGHSCHOOL" ? (target.grade ?? 1) : undefined;
   }
 
   function onPlayerTypeChanged(target: EntityRow) {
@@ -542,6 +574,16 @@
     return "player";
   }
 
+  function normalizeTier(value: unknown): RosterTier | undefined {
+    const valid: RosterTier[] = ["1군", "2군", "육성", "AAA", "AA", "A"];
+    return valid.includes(value as RosterTier) ? (value as RosterTier) : undefined;
+  }
+
+  function normalizeGrade(value: unknown): 1 | 2 | 3 | undefined {
+    if (value === 1 || value === 2 || value === 3) return value;
+    return undefined;
+  }
+
   function normalizeEntity(raw: unknown): EntityRow {
     const obj = (raw ?? {}) as Partial<EntityRow>;
     const role = normalizeRole(obj.role);
@@ -554,10 +596,19 @@
         ...legacyStats
       };
     }
+    const leagueId = (typeof obj.leagueId === "string" && obj.leagueId) ? obj.leagueId : base.leagueId;
+    const teamId = (typeof obj.teamId === "string" && obj.teamId) ? obj.teamId : base.teamId;
     return {
       ...base,
       ...obj,
       role,
+      leagueId,
+      teamId,
+      originLeagueId: (typeof obj.originLeagueId === "string" && obj.originLeagueId) ? obj.originLeagueId : leagueId,
+      clubId: (typeof obj.clubId === "string" && obj.clubId) ? obj.clubId : teamId,
+      nameEn: typeof obj.nameEn === "string" ? obj.nameEn : "",
+      tier: normalizeTier(obj.tier),
+      grade: normalizeGrade(obj.grade),
       details: normalizedDetails
     };
   }
@@ -636,6 +687,9 @@
 
     if (entity.role === "player") {
       const d = entity.details.player;
+      if (entity.leagueId === "LEAGUE_HIGHSCHOOL" && ![1, 2, 3].includes(entity.grade as number)) {
+        issues.push("고교 선수는 학년(1~3)을 선택하세요.");
+      }
       if (!d.position.trim()) issues.push("선수 포지션을 입력하세요.");
       if (!validateRange(d.jerseyNumber, 0, 999)) issues.push("등번호는 0~999 범위여야 합니다.");
       if (!validateRange(d.developmentRate)) issues.push("성장률은 0~100 범위여야 합니다.");
@@ -736,7 +790,8 @@
             <h3>공통 정보</h3>
             <div class="grid three">
               <label><span>ID</span><input type="text" bind:value={editDraft.id} /></label>
-              <label><span>이름</span><input type="text" bind:value={editDraft.name} /></label>
+              <label><span>이름 (한국어)</span><input type="text" bind:value={editDraft.name} /></label>
+              <label><span>이름 (English)</span><input type="text" bind:value={editDraft.nameEn} placeholder="Hong Gil-dong" /></label>
               <label><span>역할</span>
                 <select bind:value={editDraft.role}>
                   <option value="player">선수</option>
@@ -754,17 +809,10 @@
                   <option value="retired">은퇴</option>
                 </select>
               </label>
-              <label><span>리그</span>
+              <label><span>리그 (현재)</span>
                 <select bind:value={editDraft.leagueId} on:change={() => editDraft && onLeagueChanged(editDraft)}>
                   {#each leagues as league}
                     <option value={league.id}>{league.name}</option>
-                  {/each}
-                </select>
-              </label>
-              <label><span>학교</span>
-                <select bind:value={editDraft.schoolId}>
-                  {#each schools as school}
-                    <option value={school.id}>{school.name}</option>
                   {/each}
                 </select>
               </label>
@@ -774,6 +822,40 @@
                     <option value={team.id}>{team.name}</option>
                   {/each}
                 </select>
+              </label>
+              {#if editDraft.leagueId === "LEAGUE_HIGHSCHOOL" || editDraft.leagueId === "LEAGUE_UNIVERSITY"}
+                <label><span>학교</span>
+                  <select bind:value={editDraft.schoolId}>
+                    {#each schools as school}
+                      <option value={school.id}>{school.name}</option>
+                    {/each}
+                  </select>
+                </label>
+              {/if}
+              {#if editDraft.role === "player" && editDraft.leagueId === "LEAGUE_HIGHSCHOOL"}
+                <label><span>학년</span>
+                  <select bind:value={editDraft.grade}>
+                    <option value={1}>1학년</option>
+                    <option value={2}>2학년</option>
+                    <option value={3}>3학년</option>
+                  </select>
+                </label>
+              {/if}
+              {#if editDraft.leagueId === "LEAGUE_KBO" || editDraft.leagueId === "LEAGUE_MLB"}
+                <label><span>엔트리 (tier)</span>
+                  <select bind:value={editDraft.tier}>
+                    <option value={undefined}>-</option>
+                    <option value="1군">1군</option>
+                    <option value="2군">2군</option>
+                    <option value="육성">육성</option>
+                    <option value="AAA">AAA</option>
+                    <option value="AA">AA</option>
+                    <option value="A">A</option>
+                  </select>
+                </label>
+              {/if}
+              <label><span>등록 원리그</span>
+                <input type="text" value={editDraft.originLeagueId} disabled title="최초 등록 리그 — 변경 불가" />
               </label>
               <label class="full"><span>메모</span><textarea rows="2" bind:value={editDraft.notes}></textarea></label>
             </div>
@@ -912,7 +994,8 @@
 
         <div class="grid three">
           <label><span>ID</span><input type="text" bind:value={addDraft.id} /></label>
-          <label><span>이름</span><input type="text" bind:value={addDraft.name} /></label>
+          <label><span>이름 (한국어)</span><input type="text" bind:value={addDraft.name} /></label>
+          <label><span>이름 (English)</span><input type="text" bind:value={addDraft.nameEn} placeholder="Hong Gil-dong" /></label>
           <label><span>역할</span>
             <select bind:value={addDraft.role} on:change={onAddRoleChanged}>
               <option value="player">선수</option>
@@ -937,13 +1020,6 @@
               {/each}
             </select>
           </label>
-          <label><span>학교</span>
-            <select bind:value={addDraft.schoolId}>
-              {#each schools as school}
-                <option value={school.id}>{school.name}</option>
-              {/each}
-            </select>
-          </label>
           <label><span>팀</span>
             <select bind:value={addDraft.teamId}>
               {#each teams.filter((team) => team.leagueId === addDraft.leagueId) as team}
@@ -951,6 +1027,24 @@
               {/each}
             </select>
           </label>
+          {#if addDraft.leagueId === "LEAGUE_HIGHSCHOOL" || addDraft.leagueId === "LEAGUE_UNIVERSITY"}
+            <label><span>학교</span>
+              <select bind:value={addDraft.schoolId}>
+                {#each schools as school}
+                  <option value={school.id}>{school.name}</option>
+                {/each}
+              </select>
+            </label>
+          {/if}
+          {#if addDraft.role === "player" && addDraft.leagueId === "LEAGUE_HIGHSCHOOL"}
+            <label><span>학년</span>
+              <select bind:value={addDraft.grade}>
+                <option value={1}>1학년</option>
+                <option value={2}>2학년</option>
+                <option value={3}>3학년</option>
+              </select>
+            </label>
+          {/if}
           <label class="full"><span>메모</span><textarea rows="2" bind:value={addDraft.notes}></textarea></label>
         </div>
 
