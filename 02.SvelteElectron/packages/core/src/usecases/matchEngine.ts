@@ -78,7 +78,7 @@ export function stepPitch(state: MatchState, decision: PitchDecision): MatchStep
 
   // ── 2. 투구 결과 결정 ──────────────────────────────────────────────────────
   const quality = calculatePitchQuality(preState, decision);
-  let resultCode = applyHitUpgrade(resolvePitchResult(quality), preState.batter.power, preState.weather);
+  let resultCode = applyHitUpgrade(resolvePitchResult(quality, decision), preState.batter.power, preState.weather);
 
   let nextCount = { ...preState.count };
   let nextOuts = preState.outs;
@@ -270,56 +270,70 @@ function calculatePitchQuality(state: MatchState, decision: PitchDecision): numb
   );
 }
 
-function resolvePitchResult(quality: number): PitchResultCode {
+function resolvePitchResult(quality: number, decision: PitchDecision): PitchResultCode {
   const roll = Math.random();
+  const base = resolveBaseResult(quality, roll);
+  if (base === "STRIKE") return resolveStrikeType(decision, roll);
+  return base;
+}
 
+function resolveBaseResult(quality: number, roll: number): PitchResultCode | "STRIKE" {
   if (quality >= 72) {
-    if (roll < 0.52) return "STRIKE_SWING";
-    if (roll < 0.82) return "STRIKE_LOOK";
+    if (roll < 0.82) return "STRIKE";
     if (roll < 0.92) return "FOUL";
     return "BALL";
   }
-
   if (quality >= 60) {
-    if (roll < 0.36) return "STRIKE_LOOK";
-    if (roll < 0.58) return "STRIKE_SWING";
+    if (roll < 0.58) return "STRIKE";
     if (roll < 0.78) return "FOUL";
     return "BALL";
   }
-
   if (quality >= 52) {
-    if (roll < 0.24) return "STRIKE_LOOK";
+    if (roll < 0.24) return "STRIKE";
     if (roll < 0.44) return "FOUL";
     if (roll < 0.72) return "INPLAY_OUT";
     return "BALL";
   }
-
   if (quality >= 45) {
     if (roll < 0.16) return "FOUL";
     if (roll < 0.44) return "INPLAY_OUT";
-    if (roll < 0.8) return "HIT_SINGLE";
+    if (roll < 0.80) return "HIT_SINGLE";
     return "BALL";
   }
-
   if (quality >= 38) {
-    if (roll < 0.2) return "INPLAY_OUT";
+    if (roll < 0.20) return "INPLAY_OUT";
     if (roll < 0.62) return "HIT_SINGLE";
-    if (roll < 0.9) return "HIT_DOUBLE";
+    if (roll < 0.90) return "HIT_DOUBLE";
     return "BALL";
   }
-
   if (quality >= 32) {
     if (roll < 0.18) return "INPLAY_OUT";
     if (roll < 0.45) return "HIT_SINGLE";
-    if (roll < 0.8) return "HIT_DOUBLE";
+    if (roll < 0.80) return "HIT_DOUBLE";
     return "HIT_TRIPLE";
   }
-
   if (roll < 0.25) return "BALL";
   if (roll < 0.58) return "HIT_SINGLE";
   if (roll < 0.82) return "HIT_DOUBLE";
   if (roll < 0.92) return "HIT_TRIPLE";
   return "HOME_RUN";
+}
+
+// LOOK/SWING: 구종·로케이션에 따라 차별화
+// 변화구·코너 → LOOK 비율 높음 (타자가 체크)
+// 패스트볼·중앙 → SWING 비율 높음 (타자가 속아 스윙)
+function resolveStrikeType(decision: PitchDecision, roll: number): "STRIKE_LOOK" | "STRIKE_SWING" {
+  const isCorner = [1, 3, 7, 9].includes(decision.location);
+  const isFastball = decision.pitchType === "fastball";
+  const isBreaking = decision.pitchType === "curve" || decision.pitchType === "changeup";
+
+  let lookProb = 0.50;
+  if (isCorner)              lookProb += 0.15;
+  if (isBreaking)            lookProb += 0.12;
+  if (isFastball)            lookProb -= 0.18;
+  if (decision.location === 5) lookProb -= 0.10;
+
+  return roll < clamp(lookProb, 0.15, 0.85) ? "STRIKE_LOOK" : "STRIKE_SWING";
 }
 
 function advanceOnWalk(
