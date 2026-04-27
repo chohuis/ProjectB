@@ -1,0 +1,13 @@
+{
+  "id": "POOL_TEAM_LIFE_DAILY",
+  "description": "Random team-life events checked in daily cycle",
+  "baseRoll": {
+    "mode": "percent",
+    "value": 24
+  },
+  "maxPicksPerDay": 1,
+  "eventIds": [
+    "EVT_RANDOM_BUY_MEAL_FOR_JUNIOR"
+  ]
+}
+

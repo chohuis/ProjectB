@@ -17,8 +17,10 @@
   import MessagesPage from "../messages/MessagesPage.svelte";
   import MessengerPage from "../messenger/MessengerPage.svelte";
   import TeamPage from "../team/TeamPage.svelte";
+  import EventManagerModal from "../../features/events/ui/EventManagerModal.svelte";
 
   let currentTab: MainTabId = "home";
+  let eventManagerOpen = false;
   const tabPageKey: Record<MainTabId, string> = {
     home: "page.home",
     messages: "page.messages",
@@ -41,7 +43,25 @@
   function closeMatchEngine() {
     currentTab = "home";
   }
+
+  // 개발자 이벤트 관리 도구 단축키: Ctrl+Q (메인 레이아웃에서만 동작)
+  function handleGlobalShortcut(event: KeyboardEvent) {
+    if (currentTab === "test") return;
+    if (!(event.ctrlKey || event.metaKey)) return;
+    if (event.key !== "q" && event.key !== "Q") return;
+
+    const target = event.target as HTMLElement | null;
+    const tag = target?.tagName?.toLowerCase();
+    const typing =
+      tag === "input" || tag === "textarea" || tag === "select" || target?.isContentEditable === true;
+    if (typing) return;
+
+    event.preventDefault();
+    eventManagerOpen = !eventManagerOpen;
+  }
 </script>
+
+<svelte:window on:keydown={handleGlobalShortcut} />
 
 {#if currentTab === "test"}
   <TestMatchPage onExit={closeMatchEngine} />
@@ -106,6 +126,8 @@
     </div>
   </div>
 {/if}
+
+<EventManagerModal open={eventManagerOpen} on:close={() => (eventManagerOpen = false)} />
 
 <style>
   .layout {

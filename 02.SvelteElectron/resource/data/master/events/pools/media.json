@@ -1,0 +1,13 @@
+{
+  "id": "POOL_MEDIA_DAILY",
+  "description": "Random media-related events checked in daily cycle",
+  "baseRoll": {
+    "mode": "percent",
+    "value": 18
+  },
+  "maxPicksPerDay": 1,
+  "eventIds": [
+    "EVT_RANDOM_INTERVIEW_REQUEST"
+  ]
+}
+

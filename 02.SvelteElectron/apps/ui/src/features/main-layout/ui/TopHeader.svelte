@@ -9,6 +9,7 @@
 
   let advancing = false;
 
+  // 하루 진행 버튼: 백엔드 연동 가능 시 IPC 호출, 없으면 로컬 더미 진행
   async function handleAdvance() {
     if (advancing) return;
     advancing = true;

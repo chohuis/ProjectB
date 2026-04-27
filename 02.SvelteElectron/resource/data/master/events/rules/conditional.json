@@ -1,0 +1,46 @@
+{
+  "events": [
+    {
+      "id": "EVT_PRO_YEAR2_WINS_TITLE_RACE",
+      "type": "conditional",
+      "category": "career",
+      "priority": 700,
+      "oncePolicy": "once_per_season",
+      "cooldownDays": 14,
+      "conditions": {
+        "all": [
+          { "op": "eq", "left": "career.stage", "right": "pro" },
+          { "op": "eq", "left": "career.proYear", "right": 2 },
+          { "op": "gte", "left": "season.day", "right": 70 },
+          { "op": "gte", "left": "player.stats.win", "right": 10 }
+        ]
+      },
+      "messageTemplateId": "MSG_TMPL_CAREER_WINS_TITLE_RACE",
+      "decisionTemplateId": "MSG_DECISION_CAREER_WINS_TITLE_RACE",
+      "effectsOnTrigger": ["flag:career.wins_title_race=true"]
+    },
+    {
+      "id": "EVT_PRO_RELATIONSHIP_RUMOR",
+      "type": "conditional",
+      "category": "media",
+      "priority": 650,
+      "oncePolicy": "repeatable",
+      "cooldownDays": 30,
+      "conditions": {
+        "all": [
+          { "op": "eq", "left": "career.stage", "right": "pro" },
+          { "op": "gte", "left": "player.fame", "right": 55 },
+          { "op": "gte", "left": "season.day", "right": 40 }
+        ],
+        "any": [
+          { "op": "gte", "left": "player.stats.win", "right": 8 },
+          { "op": "gte", "left": "player.stats.eraRankTopPercent", "right": 80 }
+        ]
+      },
+      "messageTemplateId": "MSG_TMPL_MEDIA_RELATIONSHIP_RUMOR",
+      "decisionTemplateId": "MSG_DECISION_MEDIA_RELATIONSHIP_RUMOR",
+      "effectsOnTrigger": ["flag:media.relationship_rumor=true"]
+    }
+  ]
+}
+

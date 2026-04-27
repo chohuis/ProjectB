@@ -23,8 +23,10 @@
     { id: "academics", labelKey: "nav.academics" }
   ];
 
+  // 학업 단계가 아닐 때는 학업 탭을 숨긴다.
   $: visibleTabs = showAcademicsTab ? tabs : tabs.filter((tab) => tab.id !== "academics");
 
+  // 언어 변경 시 즉시 반영하고 팝업을 닫는다.
   function setLanguage(next: Language) {
     if (next === "ko" || next === "en") {
       language.set(next);
@@ -32,11 +34,13 @@
     }
   }
 
+  // 설정 버튼 토글 (이벤트 버블링 차단)
   function toggleSettings(event: MouseEvent) {
     event.stopPropagation();
     settingsOpen = !settingsOpen;
   }
 
+  // 외부 클릭/ESC 입력 시 설정 팝업 닫기
   function closeSettings() {
     settingsOpen = false;
   }

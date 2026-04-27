@@ -1,4 +1,5 @@
 {
-  "categories": ["match", "academics", "messenger", "career"],
-  "templateFiles": ["core_events"]
+  "categories": ["match", "academics", "messenger", "career", "media", "social"],
+  "templateFiles": ["core_events"],
+  "eventIndexFile": "index"
 }

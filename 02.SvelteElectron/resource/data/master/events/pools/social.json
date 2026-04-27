@@ -1,0 +1,11 @@
+{
+  "id": "POOL_SOCIAL_DAILY",
+  "description": "Random social events checked in daily cycle",
+  "baseRoll": {
+    "mode": "percent",
+    "value": 20
+  },
+  "maxPicksPerDay": 1,
+  "eventIds": []
+}
+

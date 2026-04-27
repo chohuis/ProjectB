@@ -1,0 +1,41 @@
+{
+  "events": [
+    {
+      "id": "EVT_RANDOM_INTERVIEW_REQUEST",
+      "type": "random",
+      "category": "media",
+      "priority": 300,
+      "oncePolicy": "repeatable",
+      "cooldownDays": 10,
+      "weight": 28,
+      "poolId": "POOL_MEDIA_DAILY",
+      "randomGateConditions": {
+        "all": [
+          { "op": "gte", "left": "player.fame", "right": 20 },
+          { "op": "lte", "left": "player.fatigue", "right": 65 }
+        ]
+      },
+      "messageTemplateId": "MSG_TMPL_RANDOM_INTERVIEW",
+      "decisionTemplateId": "MSG_DECISION_RANDOM_INTERVIEW"
+    },
+    {
+      "id": "EVT_RANDOM_BUY_MEAL_FOR_JUNIOR",
+      "type": "random",
+      "category": "social",
+      "priority": 280,
+      "oncePolicy": "repeatable",
+      "cooldownDays": 7,
+      "weight": 35,
+      "poolId": "POOL_TEAM_LIFE_DAILY",
+      "randomGateConditions": {
+        "all": [
+          { "op": "eq", "left": "schedule.nextDayType", "right": "training" },
+          { "op": "lte", "left": "player.fatigue", "right": 70 }
+        ]
+      },
+      "messageTemplateId": "MSG_TMPL_RANDOM_BUY_MEAL",
+      "decisionTemplateId": "MSG_DECISION_RANDOM_BUY_MEAL"
+    }
+  ]
+}
+

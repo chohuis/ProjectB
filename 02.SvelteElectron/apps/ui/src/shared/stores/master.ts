@@ -21,6 +21,7 @@ export interface MasterState {
   pitchCatalog: PitchEntry[];
 }
 
+// 정적 마스터 데이터(훈련/구종) 로딩 전용 스토어
 function createMasterStore() {
   const { subscribe, update } = writable<MasterState>({
     loaded: false,
@@ -28,6 +29,7 @@ function createMasterStore() {
     pitchCatalog: []
   });
 
+  // 앱 시작 시 필요한 마스터 JSON을 한 번에 불러온다.
   async function load() {
     try {
       const [trainingRes, pitchRes] = await Promise.all([
@@ -54,7 +56,7 @@ function createMasterStore() {
 
 export const masterStore = createMasterStore();
 
+// 훈련 프로그램 조회를 빠르게 하기 위한 ID 맵
 export const trainingProgramMap = derived(masterStore, ($master) => {
   return new Map($master.trainingPrograms.map((program) => [program.id, program]));
 });
-

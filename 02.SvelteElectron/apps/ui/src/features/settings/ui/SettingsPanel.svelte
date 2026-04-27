@@ -14,7 +14,7 @@
   <div class="panel" role="dialog" aria-label="환경설정">
     <header class="panel-header">
       <span class="panel-title">환경설정</span>
-      <kbd class="shortcut">Ctrl+Q</kbd>
+      <kbd class="shortcut">아이콘</kbd>
       <button class="close-btn" type="button" on:click={close} aria-label="닫기">✕</button>
     </header>
 

@@ -4,6 +4,7 @@ export type Language = "ko" | "en";
 
 const STORAGE_KEY = "ui_language";
 
+// 언어별 UI 문자열 사전
 const dictionaries: Record<Language, Record<string, string>> = {
   ko: {
     "nav.home": "\ud648",
@@ -52,7 +53,7 @@ const dictionaries: Record<Language, Record<string, string>> = {
     "header.progress": "Advance",
     "header.progressRunning": "Advancing...",
     "header.language": "Language",
-    "header.playerLine": "{team} · {player}",
+    "header.playerLine": "{team} \u00b7 {player}",
     "page.home": "Home",
     "page.messages": "Messages",
     "page.messenger": "Messenger",
@@ -69,6 +70,7 @@ const dictionaries: Record<Language, Record<string, string>> = {
   }
 };
 
+// 초기 언어 결정: 저장값 우선, 없으면 브라우저 언어 기반
 function initialLanguage(): Language {
   if (typeof window === "undefined") return "ko";
   try {
@@ -81,6 +83,7 @@ function initialLanguage(): Language {
 
 export const language = writable<Language>(initialLanguage());
 
+// 언어 변경 시 로컬 스토리지에 즉시 반영
 language.subscribe((value) => {
   if (typeof window === "undefined") return;
   try {
@@ -88,11 +91,13 @@ language.subscribe((value) => {
   } catch {}
 });
 
+// {key} 형태의 플레이스홀더 치환
 function format(template: string, params?: Record<string, string | number>): string {
   if (!params) return template;
   return template.replace(/\{(\w+)\}/g, (_, key: string) => String(params[key] ?? `{${key}}`));
 }
 
+// 현재 언어 기준 번역 함수 제공 (키 미존재 시 한국어 사전으로 폴백)
 export const t = derived(language, ($language) => {
   return (key: string, params?: Record<string, string | number>): string => {
     const dict = dictionaries[$language];
@@ -102,8 +107,8 @@ export const t = derived(language, ($language) => {
   };
 });
 
+// 설정 팝업에서 사용하는 언어 선택 목록
 export const languageOptions: Array<{ id: Language; label: string }> = [
   { id: "ko", label: "\ud55c\uad6d\uc5b4" },
   { id: "en", label: "English" }
 ];
-

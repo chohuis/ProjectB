@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "description": "Event system templates for mandatory, conditional, and random triggers",
+  "files": {
+    "policy": "events/rules/global_policy.json",
+    "mandatory": "events/rules/mandatory.json",
+    "conditional": "events/rules/conditional.json",
+    "random": "events/rules/random.json",
+    "pools": [
+      "events/pools/media.json",
+      "events/pools/social.json",
+      "events/pools/team_life.json"
+    ],
+    "calendars": [
+      "events/calendars/highschool_calendar.json",
+      "events/calendars/pro_calendar.json"
+    ]
+  }
+}

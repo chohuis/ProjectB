@@ -1,0 +1,20 @@
+{
+  "maxEventsPerDay": 2,
+  "maxEventsPerCategoryPerDay": 1,
+  "priorityOrder": ["mandatory", "conditional", "random"],
+  "categoryCooldownDays": {
+    "academics": 1,
+    "career": 2,
+    "messenger": 1,
+    "media": 2,
+    "social": 2
+  },
+  "duplicateGuard": {
+    "blockSameEventIdWithinDays": 7
+  },
+  "queuePolicy": {
+    "allowDeferredToNextDay": true,
+    "deferredLimitDays": 3
+  }
+}
+

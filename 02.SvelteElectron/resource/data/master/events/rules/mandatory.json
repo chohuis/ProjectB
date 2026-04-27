@@ -1,0 +1,39 @@
+{
+  "events": [
+    {
+      "id": "EVT_HS_YEAR1_MIDTERM",
+      "type": "mandatory",
+      "category": "academics",
+      "priority": 1000,
+      "oncePolicy": "once_per_stage_year",
+      "schedule": {
+        "stage": "highschool",
+        "stageYear": 1,
+        "month": 5,
+        "weekOfMonth": 2,
+        "dayOfWeek": 1
+      },
+      "messageTemplateId": "MSG_TMPL_ACADEMICS_MIDTERM",
+      "decisionTemplateId": null,
+      "effectsOnTrigger": ["flag:exam.midterm.year1=true"]
+    },
+    {
+      "id": "EVT_HS_YEAR1_FINAL",
+      "type": "mandatory",
+      "category": "academics",
+      "priority": 1000,
+      "oncePolicy": "once_per_stage_year",
+      "schedule": {
+        "stage": "highschool",
+        "stageYear": 1,
+        "month": 11,
+        "weekOfMonth": 3,
+        "dayOfWeek": 1
+      },
+      "messageTemplateId": "MSG_TMPL_ACADEMICS_FINAL",
+      "decisionTemplateId": null,
+      "effectsOnTrigger": ["flag:exam.final.year1=true"]
+    }
+  ]
+}
+

@@ -1,0 +1,19 @@
+{
+  "id": "CALENDAR_PRO",
+  "stage": "pro",
+  "items": [
+    {
+      "key": "season_opening_window",
+      "seasonDayStart": 1,
+      "seasonDayEnd": 14,
+      "linkedMandatoryEventIds": []
+    },
+    {
+      "key": "all_star_window",
+      "seasonDayStart": 65,
+      "seasonDayEnd": 78,
+      "linkedMandatoryEventIds": []
+    }
+  ]
+}
+
