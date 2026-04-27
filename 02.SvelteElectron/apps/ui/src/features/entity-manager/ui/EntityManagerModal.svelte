@@ -22,6 +22,7 @@
     nameEn?: string;
     leagueId: string;
     clubId?: string;
+    schoolId?: string;
   }
 
   interface PitchingStats {
@@ -131,21 +132,34 @@
   const ENTITY_REFS_PATH = "entities/refs.json";
 
   const FALLBACK_LEAGUES: LeagueRef[] = [
-    { id: "LEAGUE_HIGHSCHOOL", name: "고교 리그" },
-    { id: "LEAGUE_UNIVERSITY", name: "대학 리그" },
-    { id: "LEAGUE_PRO", name: "프로 리그" }
+    { id: "LEAGUE_HIGHSCHOOL",  name: "고교 리그",  nameEn: "High School League" },
+    { id: "LEAGUE_UNIVERSITY",  name: "대학 리그",  nameEn: "University League" },
+    { id: "LEAGUE_INDEPENDENT", name: "독립 리그",  nameEn: "Independent League" },
+    { id: "LEAGUE_KBO",         name: "KBO 리그",   nameEn: "KBO League" },
+    { id: "LEAGUE_MLB",         name: "MLB",        nameEn: "MLB" }
   ];
 
   const FALLBACK_SCHOOLS: SchoolRef[] = [
-    { id: "SCHOOL_NONE", name: "해당 없음" },
-    { id: "SCHOOL_SEOUL_HS", name: "서울고" },
-    { id: "SCHOOL_HANBAT_U", name: "한밭대" }
+    { id: "SCHOOL_NONE",                    name: "해당 없음",       nameEn: "N/A" },
+    { id: "SCHOOL_HS_SEOUL_INNOVATION",     name: "서울혁신고등학교", nameEn: "Seoul Hyeoksin High School" },
+    { id: "SCHOOL_HS_BUSAN_WAVE",           name: "부산해운고등학교", nameEn: "Busan Haeun High School" },
+    { id: "SCHOOL_HS_DAEGU_HEAT",           name: "대구열풍고등학교", nameEn: "Daegu Yeolpung High School" },
+    { id: "SCHOOL_HS_GWANGJU_VISION",       name: "광주미래고등학교", nameEn: "Gwangju Mirae High School" },
+    { id: "SCHOOL_HS_DAEJEON_RISE",         name: "대전도약고등학교", nameEn: "Daejeon Doyak High School" },
+    { id: "SCHOOL_HS_INCHEON_HARBOR",       name: "인천항만고등학교", nameEn: "Incheon Hangman High School" },
+    { id: "SCHOOL_HS_ULSAN_CHARGE",         name: "울산강진고등학교", nameEn: "Ulsan Gangjin High School" },
+    { id: "SCHOOL_HS_SUWON_EDGE",           name: "수원예봉고등학교", nameEn: "Suwon Yebong High School" }
   ];
 
   const FALLBACK_TEAMS: TeamRef[] = [
-    { id: "TEAM_SEOUL_NB", name: "서울 노베이스", leagueId: "LEAGUE_HIGHSCHOOL" },
-    { id: "TEAM_DAEJEON_BS", name: "대전 블루스톰", leagueId: "LEAGUE_UNIVERSITY" },
-    { id: "TEAM_INCHEON_SH", name: "인천 샤크스", leagueId: "LEAGUE_PRO" }
+    { id: "TEAM_HS_SEOUL_INNOVATION", name: "서울 이노베이션", nameEn: "Seoul Innovation", leagueId: "LEAGUE_HIGHSCHOOL", clubId: "TEAM_HS_SEOUL_INNOVATION", schoolId: "SCHOOL_HS_SEOUL_INNOVATION" },
+    { id: "TEAM_HS_BUSAN_WAVE",       name: "부산 웨이브",     nameEn: "Busan Wave",       leagueId: "LEAGUE_HIGHSCHOOL", clubId: "TEAM_HS_BUSAN_WAVE",       schoolId: "SCHOOL_HS_BUSAN_WAVE" },
+    { id: "TEAM_HS_DAEGU_HEAT",       name: "대구 히트",       nameEn: "Daegu Heat",       leagueId: "LEAGUE_HIGHSCHOOL", clubId: "TEAM_HS_DAEGU_HEAT",       schoolId: "SCHOOL_HS_DAEGU_HEAT" },
+    { id: "TEAM_HS_GWANGJU_VISION",   name: "광주 비전",       nameEn: "Gwangju Vision",   leagueId: "LEAGUE_HIGHSCHOOL", clubId: "TEAM_HS_GWANGJU_VISION",   schoolId: "SCHOOL_HS_GWANGJU_VISION" },
+    { id: "TEAM_HS_DAEJEON_RISE",     name: "대전 라이즈",     nameEn: "Daejeon Rise",     leagueId: "LEAGUE_HIGHSCHOOL", clubId: "TEAM_HS_DAEJEON_RISE",     schoolId: "SCHOOL_HS_DAEJEON_RISE" },
+    { id: "TEAM_HS_INCHEON_HARBOR",   name: "인천 하버",       nameEn: "Incheon Harbor",   leagueId: "LEAGUE_HIGHSCHOOL", clubId: "TEAM_HS_INCHEON_HARBOR",   schoolId: "SCHOOL_HS_INCHEON_HARBOR" },
+    { id: "TEAM_HS_ULSAN_CHARGE",     name: "울산 차지",       nameEn: "Ulsan Charge",     leagueId: "LEAGUE_HIGHSCHOOL", clubId: "TEAM_HS_ULSAN_CHARGE",     schoolId: "SCHOOL_HS_ULSAN_CHARGE" },
+    { id: "TEAM_HS_SUWON_EDGE",       name: "수원 엣지",       nameEn: "Suwon Edge",       leagueId: "LEAGUE_HIGHSCHOOL", clubId: "TEAM_HS_SUWON_EDGE",       schoolId: "SCHOOL_HS_SUWON_EDGE" }
   ];
 
   let leagues: LeagueRef[] = FALLBACK_LEAGUES;
@@ -163,10 +177,10 @@
       status: "active",
       originLeagueId: "LEAGUE_HIGHSCHOOL",
       leagueId: "LEAGUE_HIGHSCHOOL",
-      clubId: "TEAM_SEOUL_NB",
-      teamId: "TEAM_SEOUL_NB",
+      clubId: "TEAM_HS_SEOUL_INNOVATION",
+      teamId: "TEAM_HS_SEOUL_INNOVATION",
       grade: 2,
-      schoolId: "SCHOOL_SEOUL_HS",
+      schoolId: "SCHOOL_HS_SEOUL_INNOVATION",
       notes: "유망주",
       details: createDefaultDetails({
         player: {
@@ -207,10 +221,10 @@
       role: "coach",
       age: 42,
       status: "active",
-      originLeagueId: "LEAGUE_PRO",
-      leagueId: "LEAGUE_PRO",
-      clubId: "TEAM_INCHEON_SH",
-      teamId: "TEAM_INCHEON_SH",
+      originLeagueId: "LEAGUE_KBO",
+      leagueId: "LEAGUE_KBO",
+      clubId: "TBD_KBO_TEAM",
+      teamId: "TBD_KBO_TEAM",
       schoolId: "SCHOOL_NONE",
       notes: "투수 인스트럭터",
       details: createDefaultDetails({
@@ -235,10 +249,10 @@
       role: "manager",
       age: 51,
       status: "active",
-      originLeagueId: "LEAGUE_PRO",
-      leagueId: "LEAGUE_PRO",
-      clubId: "TEAM_INCHEON_SH",
-      teamId: "TEAM_INCHEON_SH",
+      originLeagueId: "LEAGUE_KBO",
+      leagueId: "LEAGUE_KBO",
+      clubId: "TBD_KBO_TEAM",
+      teamId: "TBD_KBO_TEAM",
       schoolId: "SCHOOL_NONE",
       notes: "불펜 운용 강점",
       details: createDefaultDetails({
@@ -264,10 +278,10 @@
       role: "owner",
       age: 58,
       status: "active",
-      originLeagueId: "LEAGUE_PRO",
-      leagueId: "LEAGUE_PRO",
-      clubId: "TEAM_INCHEON_SH",
-      teamId: "TEAM_INCHEON_SH",
+      originLeagueId: "LEAGUE_KBO",
+      leagueId: "LEAGUE_KBO",
+      clubId: "TBD_KBO_TEAM",
+      teamId: "TBD_KBO_TEAM",
       schoolId: "SCHOOL_NONE",
       notes: "장기 육성 선호",
       details: createDefaultDetails({
@@ -484,11 +498,19 @@
     editDraft = found ? structuredClone(found) : null;
   }
 
+  function onTeamChanged(target: EntityRow) {
+    const ref = teams.find((t) => t.id === target.teamId);
+    if (!ref) return;
+    target.clubId = ref.clubId ?? ref.id;
+    if (ref.schoolId) target.schoolId = ref.schoolId;
+  }
+
   function onLeagueChanged(target: EntityRow) {
     const teamId = defaultTeamId(target.leagueId);
     target.teamId = teamId;
     target.clubId = teamId;
     target.grade = target.leagueId === "LEAGUE_HIGHSCHOOL" ? (target.grade ?? 1) : undefined;
+    onTeamChanged(target);
   }
 
   function onPlayerTypeChanged(target: EntityRow) {
@@ -675,8 +697,12 @@
     if (!entity.name.trim()) issues.push("이름을 입력하세요.");
     if (!validateRange(entity.age, 10, 90)) issues.push("나이는 10~90 범위여야 합니다.");
     if (!leagues.some((league) => league.id === entity.leagueId)) issues.push("리그 선택이 올바르지 않습니다.");
-    if (!schools.some((school) => school.id === entity.schoolId)) issues.push("학교 선택이 올바르지 않습니다.");
-    if (!teams.some((team) => team.id === entity.teamId)) issues.push("팀 선택이 올바르지 않습니다.");
+    const isHsOrUniv = entity.leagueId === "LEAGUE_HIGHSCHOOL" || entity.leagueId === "LEAGUE_UNIVERSITY";
+    if (isHsOrUniv && !schools.some((school) => school.id === entity.schoolId)) {
+      issues.push("학교 선택이 올바르지 않습니다.");
+    }
+    const teamKnown = teams.some((team) => team.id === entity.teamId);
+    if (!teamKnown && !entity.teamId.startsWith("TBD_")) issues.push("팀 선택이 올바르지 않습니다.");
     const team = teams.find((item) => item.id === entity.teamId);
     if (team && team.leagueId !== entity.leagueId) issues.push("선택한 팀이 현재 리그와 일치하지 않습니다.");
 
@@ -817,7 +843,7 @@
                 </select>
               </label>
               <label><span>팀</span>
-                <select bind:value={editDraft.teamId}>
+                <select bind:value={editDraft.teamId} on:change={() => editDraft && onTeamChanged(editDraft)}>
                   {#each teams.filter((team) => team.leagueId === editDraft?.leagueId) as team}
                     <option value={team.id}>{team.name}</option>
                   {/each}
@@ -1021,7 +1047,7 @@
             </select>
           </label>
           <label><span>팀</span>
-            <select bind:value={addDraft.teamId}>
+            <select bind:value={addDraft.teamId} on:change={() => onTeamChanged(addDraft)}>
               {#each teams.filter((team) => team.leagueId === addDraft.leagueId) as team}
                 <option value={team.id}>{team.name}</option>
               {/each}

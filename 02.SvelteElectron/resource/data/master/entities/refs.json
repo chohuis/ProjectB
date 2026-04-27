@@ -1,17 +1,87 @@
 {
+  "version": 2,
   "leagues": [
-    { "id": "LEAGUE_HIGHSCHOOL", "name": "고교 리그" },
-    { "id": "LEAGUE_UNIVERSITY", "name": "대학 리그" },
-    { "id": "LEAGUE_PRO", "name": "프로 리그" }
+    { "id": "LEAGUE_HIGHSCHOOL",  "name": "고교 리그",  "nameEn": "High School League" },
+    { "id": "LEAGUE_UNIVERSITY",  "name": "대학 리그",  "nameEn": "University League" },
+    { "id": "LEAGUE_INDEPENDENT", "name": "독립 리그",  "nameEn": "Independent League" },
+    { "id": "LEAGUE_KBO",         "name": "KBO 리그",   "nameEn": "KBO League" },
+    { "id": "LEAGUE_MLB",         "name": "MLB",        "nameEn": "MLB" }
   ],
   "schools": [
-    { "id": "SCHOOL_NONE", "name": "해당 없음" },
-    { "id": "SCHOOL_SEOUL_HS", "name": "서울고" },
-    { "id": "SCHOOL_HANBAT_U", "name": "한밭대" }
+    { "id": "SCHOOL_NONE",                    "name": "해당 없음",         "nameEn": "N/A" },
+    { "id": "SCHOOL_HS_SEOUL_INNOVATION",     "name": "서울혁신고등학교",   "nameEn": "Seoul Hyeoksin High School" },
+    { "id": "SCHOOL_HS_BUSAN_WAVE",           "name": "부산해운고등학교",   "nameEn": "Busan Haeun High School" },
+    { "id": "SCHOOL_HS_DAEGU_HEAT",           "name": "대구열풍고등학교",   "nameEn": "Daegu Yeolpung High School" },
+    { "id": "SCHOOL_HS_GWANGJU_VISION",       "name": "광주미래고등학교",   "nameEn": "Gwangju Mirae High School" },
+    { "id": "SCHOOL_HS_DAEJEON_RISE",         "name": "대전도약고등학교",   "nameEn": "Daejeon Doyak High School" },
+    { "id": "SCHOOL_HS_INCHEON_HARBOR",       "name": "인천항만고등학교",   "nameEn": "Incheon Hangman High School" },
+    { "id": "SCHOOL_HS_ULSAN_CHARGE",         "name": "울산강진고등학교",   "nameEn": "Ulsan Gangjin High School" },
+    { "id": "SCHOOL_HS_SUWON_EDGE",           "name": "수원예봉고등학교",   "nameEn": "Suwon Yebong High School" }
   ],
   "teams": [
-    { "id": "TEAM_SEOUL_NB", "name": "서울 노베이스", "leagueId": "LEAGUE_HIGHSCHOOL" },
-    { "id": "TEAM_DAEJEON_BS", "name": "대전 블루스톰", "leagueId": "LEAGUE_UNIVERSITY" },
-    { "id": "TEAM_INCHEON_SH", "name": "인천 샤크스", "leagueId": "LEAGUE_PRO" }
+    {
+      "id": "TEAM_HS_SEOUL_INNOVATION",
+      "name": "서울 이노베이션",
+      "nameEn": "Seoul Innovation",
+      "leagueId": "LEAGUE_HIGHSCHOOL",
+      "clubId": "TEAM_HS_SEOUL_INNOVATION",
+      "schoolId": "SCHOOL_HS_SEOUL_INNOVATION"
+    },
+    {
+      "id": "TEAM_HS_BUSAN_WAVE",
+      "name": "부산 웨이브",
+      "nameEn": "Busan Wave",
+      "leagueId": "LEAGUE_HIGHSCHOOL",
+      "clubId": "TEAM_HS_BUSAN_WAVE",
+      "schoolId": "SCHOOL_HS_BUSAN_WAVE"
+    },
+    {
+      "id": "TEAM_HS_DAEGU_HEAT",
+      "name": "대구 히트",
+      "nameEn": "Daegu Heat",
+      "leagueId": "LEAGUE_HIGHSCHOOL",
+      "clubId": "TEAM_HS_DAEGU_HEAT",
+      "schoolId": "SCHOOL_HS_DAEGU_HEAT"
+    },
+    {
+      "id": "TEAM_HS_GWANGJU_VISION",
+      "name": "광주 비전",
+      "nameEn": "Gwangju Vision",
+      "leagueId": "LEAGUE_HIGHSCHOOL",
+      "clubId": "TEAM_HS_GWANGJU_VISION",
+      "schoolId": "SCHOOL_HS_GWANGJU_VISION"
+    },
+    {
+      "id": "TEAM_HS_DAEJEON_RISE",
+      "name": "대전 라이즈",
+      "nameEn": "Daejeon Rise",
+      "leagueId": "LEAGUE_HIGHSCHOOL",
+      "clubId": "TEAM_HS_DAEJEON_RISE",
+      "schoolId": "SCHOOL_HS_DAEJEON_RISE"
+    },
+    {
+      "id": "TEAM_HS_INCHEON_HARBOR",
+      "name": "인천 하버",
+      "nameEn": "Incheon Harbor",
+      "leagueId": "LEAGUE_HIGHSCHOOL",
+      "clubId": "TEAM_HS_INCHEON_HARBOR",
+      "schoolId": "SCHOOL_HS_INCHEON_HARBOR"
+    },
+    {
+      "id": "TEAM_HS_ULSAN_CHARGE",
+      "name": "울산 차지",
+      "nameEn": "Ulsan Charge",
+      "leagueId": "LEAGUE_HIGHSCHOOL",
+      "clubId": "TEAM_HS_ULSAN_CHARGE",
+      "schoolId": "SCHOOL_HS_ULSAN_CHARGE"
+    },
+    {
+      "id": "TEAM_HS_SUWON_EDGE",
+      "name": "수원 엣지",
+      "nameEn": "Suwon Edge",
+      "leagueId": "LEAGUE_HIGHSCHOOL",
+      "clubId": "TEAM_HS_SUWON_EDGE",
+      "schoolId": "SCHOOL_HS_SUWON_EDGE"
+    }
   ]
 }
