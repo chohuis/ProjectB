@@ -1125,8 +1125,8 @@
     background: #101d33;
     border: 1px solid #35517d;
     border-radius: 12px;
-    display: grid;
-    grid-template-rows: auto auto auto minmax(0, 1fr);
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
   }
 
@@ -1205,6 +1205,7 @@
   }
 
   .body {
+    flex: 1;
     min-height: 0;
     display: grid;
     grid-template-columns: 340px minmax(0, 1fr);
