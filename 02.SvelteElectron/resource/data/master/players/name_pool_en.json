@@ -1,4 +1,16 @@
 {
-  "firstNames": ["Liam", "Noah", "Ethan", "Lucas", "Mason"],
-  "lastNames": ["Smith", "Brown", "Johnson", "Davis", "Miller"]
+  "lastNames": [
+    "Kim", "Lee", "Park", "Choi", "Jung", "Kang", "Cho", "Yoon", "Jang", "Lim",
+    "Han", "Oh", "Seo", "Shin", "Kwon", "Hwang", "Ahn", "Song", "Jeon", "Hong",
+    "Ko", "Moon", "Yang", "Son", "Bae", "Baek", "Heo", "You", "Nam", "Sim",
+    "Noh", "Ha", "Kwak", "Sung", "Cha", "Joo", "Woo", "Ku", "Na", "Min"
+  ],
+  "givenNames": [
+    "Min-jun", "Seo-jun", "Do-yun", "Si-woo", "Ju-won", "Ha-jun", "Ji-ho", "Ji-hoo", "Jun-seo", "Jun-woo",
+    "Ye-jun", "Do-hyun", "Ji-hoon", "Min-jae", "Hyun-woo", "Woo-jin", "Hyun-jun", "Tae-yang", "Ji-won", "Seong-min",
+    "Geon-woo", "Seung-hyun", "Jae-won", "Yeon-woo", "Jeong-woo", "Jun-hyuk", "Dong-hyun", "Jae-min", "Yong-jun", "Tae-min",
+    "Seong-jun", "Min-hyuk", "Dong-jun", "Hyun-seo", "Jun-ho", "Jae-hyun", "Gi-jun", "Chan-woo", "Tae-jun", "Seung-woo",
+    "Min-seok", "Sang-hyun", "Dong-hyuk", "Jun-young", "Tae-hyun", "Seong-hyun", "Jae-hoon", "Gi-hoon", "Min-woo", "Sang-min",
+    "Chan-young", "Jae-yun", "Seung-min", "Hyun-jin", "Ji-sung", "Won-jun", "Tae-woo", "Jin-woo", "Dong-woo", "Seong-woo"
+  ]
 }
