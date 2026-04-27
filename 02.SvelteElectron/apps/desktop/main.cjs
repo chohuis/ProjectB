@@ -109,15 +109,50 @@ app.whenReady().then(() => {
 
   // ── 마스터 데이터 (패키징 환경 fallback) ──────────────────────────────────
   const resourceBase = path.resolve(__dirname, "../../resource/data/master");
+  const isPathInside = (target, base) => {
+    const rel = path.relative(base, target);
+    return rel && !rel.startsWith("..") && !path.isAbsolute(rel);
+  };
 
   ipcMain.handle("master:fetch", (_event, relPath) => {
     try {
       const fullPath = path.resolve(resourceBase, relPath);
+      if (!isPathInside(fullPath, resourceBase)) {
+        throw new Error(`invalid master path: ${relPath}`);
+      }
       const raw = fs.readFileSync(fullPath, "utf8");
       return JSON.parse(raw);
     } catch (e) {
       console.error("[master:fetch] 로드 실패:", relPath, e);
       return null;
+    }
+  });
+
+  ipcMain.handle("master:save", (_event, payload) => {
+    try {
+      const relPath = payload?.relPath;
+      const data = payload?.data;
+      const backup = payload?.backup !== false;
+      if (typeof relPath !== "string" || !relPath.trim()) {
+        throw new Error("relPath is required");
+      }
+      const fullPath = path.resolve(resourceBase, relPath);
+      if (!isPathInside(fullPath, resourceBase)) {
+        throw new Error(`invalid master path: ${relPath}`);
+      }
+
+      fs.mkdirSync(path.dirname(fullPath), { recursive: true });
+
+      if (backup && fs.existsSync(fullPath)) {
+        const stamp = new Date().toISOString().replace(/[.:]/g, "-");
+        fs.copyFileSync(fullPath, `${fullPath}.${stamp}.bak`);
+      }
+
+      fs.writeFileSync(fullPath, JSON.stringify(data, null, 2), "utf8");
+      return { ok: true };
+    } catch (e) {
+      console.error("[master:save] save failed:", e);
+      return { ok: false, error: String(e?.message ?? e) };
     }
   });
 

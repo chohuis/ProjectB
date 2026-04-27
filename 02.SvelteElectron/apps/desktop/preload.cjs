@@ -17,4 +17,5 @@ contextBridge.exposeInMainWorld("projectB", {
 
   // ── 마스터 데이터 (패키징 환경 fallback) ────────────────────────────────
   masterFetch: (relPath) => ipcRenderer.invoke("master:fetch", relPath),
+  masterSave: (payload) => ipcRenderer.invoke("master:save", payload),
 });

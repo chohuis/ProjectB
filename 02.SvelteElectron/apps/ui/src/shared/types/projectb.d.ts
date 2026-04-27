@@ -32,6 +32,10 @@ declare global {
       dayAdvance: (state: CoreGameState) => Promise<DayAdvanceResult>;
       // ── 마스터 데이터 (Electron 패키징 환경용 fallback) ──────
       masterFetch: (relPath: string) => Promise<unknown>;
+      masterSave: (payload: { relPath: string; data: unknown; backup?: boolean }) => Promise<{
+        ok: boolean;
+        error?: string;
+      }>;
     };
   }
 }
