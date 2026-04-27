@@ -142,8 +142,8 @@
     LEAGUE_HIGHSCHOOL:  { rel: "entities/people_hs.json",   local: "dev_entities_people_hs" },
     LEAGUE_UNIVERSITY:  { rel: "entities/people_univ.json",  local: "dev_entities_people_univ" },
     LEAGUE_INDEPENDENT: { rel: "entities/people_ind.json",   local: "dev_entities_people_ind" },
-    LEAGUE_KBO:         { rel: "entities/people_kbo.json",   local: "dev_entities_people_kbo" },
-    LEAGUE_MLB:         { rel: "entities/people_mlb.json",   local: "dev_entities_people_mlb" }
+    LEAGUE_KBL:         { rel: "entities/people_kbl.json",   local: "dev_entities_people_kbl" },
+    LEAGUE_ABL:         { rel: "entities/people_abl.json",   local: "dev_entities_people_abl" }
   };
 
   let activeLeagueFile = "LEAGUE_HIGHSCHOOL";
@@ -152,8 +152,8 @@
     { id: "LEAGUE_HIGHSCHOOL",  name: "고교 리그",  nameEn: "High School League" },
     { id: "LEAGUE_UNIVERSITY",  name: "대학 리그",  nameEn: "University League" },
     { id: "LEAGUE_INDEPENDENT", name: "독립 리그",  nameEn: "Independent League" },
-    { id: "LEAGUE_KBO",         name: "KBO 리그",   nameEn: "KBO League" },
-    { id: "LEAGUE_MLB",         name: "MLB",        nameEn: "MLB" }
+    { id: "LEAGUE_KBL",         name: "KBL 리그",   nameEn: "KBL League" },
+    { id: "LEAGUE_ABL",         name: "ABL",        nameEn: "ABL" }
   ];
 
   const FALLBACK_SCHOOLS: SchoolRef[] = [
@@ -770,7 +770,7 @@
                   </select>
                 </label>
               {/if}
-              {#if editDraft.leagueId === "LEAGUE_KBO" || editDraft.leagueId === "LEAGUE_MLB"}
+              {#if editDraft.leagueId === "LEAGUE_KBL" || editDraft.leagueId === "LEAGUE_ABL"}
                 <label><span>엔트리 (tier)</span>
                   <select bind:value={editDraft.tier}>
                     <option value={undefined}>-</option>

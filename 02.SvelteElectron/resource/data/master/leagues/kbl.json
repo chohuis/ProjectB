@@ -1,6 +1,6 @@
 {
-  "id": "LEAGUE_KBO",
-  "name": "KBO",
+  "id": "LEAGUE_KBL",
+  "name": "KBL",
   "teamCount": 8,
   "gamesPerTeam": 112,
   "postseason": {

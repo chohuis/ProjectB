@@ -1,6 +1,6 @@
 {
-  "id": "LEAGUE_MLB",
-  "name": "MLB",
+  "id": "LEAGUE_ABL",
+  "name": "ABL",
   "subLeagues": [
     { "id": "AL", "teamCount": 8 },
     { "id": "NL", "teamCount": 8 }
