@@ -14,7 +14,7 @@ import { calcAvg, calcEra, calcOps, calcWhip, makeEmptySeason, SAVE_SEASON_VERSI
 export type SeasonStoreState = SaveSeason;
 
 function buildInitialState(): SeasonStoreState {
-  return makeEmptySeason("LEAGUE_HIGHSCHOOL", 2026, 24, []);
+  return makeEmptySeason("LEAGUE_HIGHSCHOOL", 2026, 52, []);
 }
 
 // ── 스토어 생성 ───────────────────────────────────────────────

@@ -161,12 +161,19 @@ function toSchoolCompat(
   };
 }
 
-// ── dayLabel 계산 (주차 기반) ─────────────────────────────────
+// ── dayLabel 계산 (주차 기반, 52주 = 3월~2월 한국 학사년도) ──
+// 각 월의 시작 주차 인덱스 (0-based): 3월=0,4월=5,5월=9,...,2월=48
+const MONTH_STARTS = [0, 5, 9, 13, 18, 22, 26, 31, 35, 39, 44, 48];
+const MONTH_NAMES  = ["3월","4월","5월","6월","7월","8월","9월","10월","11월","12월","1월","2월"];
+
 export function computeWeekLabel(week: number, grade: number = 1): string {
-  const monthNames = ["3월","4월","5월","6월","7월","8월","9월","10월","11월","12월","1월","2월"];
-  const monthIdx    = Math.floor(((week - 1) % 48) / 4) % 12;
-  const weekInMonth = ((week - 1) % 4) + 1;
-  return `${grade}학년 ${monthNames[monthIdx]} ${weekInMonth}주차`;
+  const w = (week - 1) % 52;
+  let monthIdx = 0;
+  for (let i = MONTH_STARTS.length - 1; i >= 0; i--) {
+    if (w >= MONTH_STARTS[i]) { monthIdx = i; break; }
+  }
+  const weekInMonth = w - MONTH_STARTS[monthIdx] + 1;
+  return `${grade}학년 ${MONTH_NAMES[monthIdx]} ${weekInMonth}주차`;
 }
 
 // ── 초기 상태 ─────────────────────────────────────────────────

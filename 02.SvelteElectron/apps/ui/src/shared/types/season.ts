@@ -45,6 +45,9 @@ export interface MatchResult {
   events: GameEvent[];
 }
 
+// ── 시즌 페이즈 ────────────────────────────────────────────────
+export type SeasonPhase = "preseason" | "season" | "postseason" | "offseason";
+
 // ── 시즌 일정 항목 ─────────────────────────────────────────────
 export interface ScheduleEntry {
   id: string;               // "SCH_W01_G1"
@@ -52,6 +55,7 @@ export interface ScheduleEntry {
   homeTeamId: string;
   awayTeamId: string;
   isProtagonistGame: boolean;  // 주인공 팀 경기 여부
+  phase: SeasonPhase;       // 해당 경기의 시즌 페이즈
   result?: MatchResult;     // 경기 완료 후 채워짐
 }
 

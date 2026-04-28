@@ -118,8 +118,8 @@
     };
 
     gameStore.initNew(protagonist);
-    seasonStore.initSeason("LEAGUE_HIGHSCHOOL", 2026, 24, teamIds);
-    const schedule = generateSchedule(teamIds, selectedTeamId, 24);
+    seasonStore.initSeason("LEAGUE_HIGHSCHOOL", 2026, 52, teamIds);
+    const schedule = generateSchedule(teamIds, selectedTeamId, 52);
     seasonStore.setSchedule(schedule);
 
     onComplete();
