@@ -1,6 +1,10 @@
 ﻿<script lang="ts">
   import { t } from "../../shared/i18n";
-  type CalendarView = "year" | "month" | "week";
+  import { seasonStore } from "../../shared/stores/season";
+  import { gameStore } from "../../shared/stores/game";
+  import { masterStore } from "../../shared/stores/master";
+
+  type CalendarView = "year" | "month" | "week" | "season";
   type ScheduleType = "game" | "training" | "event" | "rest";
 
   type ScheduleItem = {
@@ -180,6 +184,25 @@
   function formatDate(date: Date): string {
     return `${date.getMonth() + 1}/${date.getDate()}`;
   }
+
+  // 시즌 일정: seasonStore에서 주인공 팀 경기 목록
+  $: protagonistTeamId = $gameStore.protagonist.teamId;
+  $: seasonEntries = $seasonStore.schedule;
+  $: hasSeasonSchedule = seasonEntries.length > 0;
+
+  // 팀 이름 표시 (masterStore에 팀 정보가 없으면 ID 그대로)
+  function teamLabel(teamId: string): string {
+    return $masterStore.teams.find((t) => t.id === teamId)?.name ?? teamId;
+  }
+
+  function gameStatusLabel(entry: (typeof seasonEntries)[0]): string {
+    if (!entry.result) {
+      return entry.week > $seasonStore.currentWeek ? "예정" : "진행 중";
+    }
+    const r = entry.result;
+    const won = r.winnerId === protagonistTeamId;
+    return `${won ? "승" : "패"} ${r.homeScore}:${r.awayScore}`;
+  }
 </script>
 
 <section class="page">
@@ -188,6 +211,7 @@
   <article class="card board">
     <header class="top-row">
       <div class="tabs">
+        <button class:active={view === "season"} on:click={() => (view = "season")}>시즌</button>
         <button class:active={view === "year"} on:click={() => (view = "year")}>연간</button>
         <button class:active={view === "month"} on:click={() => (view = "month")}>월간</button>
         <button class:active={view === "week"} on:click={() => (view = "week")}>주간</button>
@@ -210,7 +234,31 @@
     </div>
 
     <div class="content">
-      {#if view === "year"}
+      {#if view === "season"}
+        <section class="season-view">
+          {#if !hasSeasonSchedule}
+            <p class="no-season">시즌 일정이 설정되지 않았습니다.</p>
+          {:else}
+            <ul class="season-list">
+              {#each seasonEntries.filter((e) => e.isProtagonistGame) as entry}
+                {@const isHome = entry.homeTeamId === protagonistTeamId}
+                {@const opponent = isHome ? entry.awayTeamId : entry.homeTeamId}
+                {@const status = gameStatusLabel(entry)}
+                {@const done = !!entry.result}
+                <li class:done class:current={entry.week === $seasonStore.currentWeek}>
+                  <span class="week-badge">W{entry.week}</span>
+                  <span class="vs-label">{isHome ? "홈" : "원정"}</span>
+                  <span class="opponent">vs {teamLabel(opponent)}</span>
+                  <span class="status" class:win={done && entry.result?.winnerId === protagonistTeamId}
+                        class:lose={done && entry.result?.winnerId !== protagonistTeamId}>
+                    {status}
+                  </span>
+                </li>
+              {/each}
+            </ul>
+          {/if}
+        </section>
+      {:else if view === "year"}
         <section class="year-grid">
           {#each monthLabel as label, monthIndex}
             {@const summary = getMonthSummary(monthIndex)}
@@ -623,6 +671,82 @@
     color: #9db2d8;
     font-size: 12px;
     padding: 4px 0;
+  }
+
+  .season-view {
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  .no-season {
+    color: #8aa2ca;
+    font-size: 14px;
+    padding: 16px 0;
+  }
+
+  .season-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 6px;
+  }
+
+  .season-list li {
+    display: grid;
+    grid-template-columns: 52px 48px minmax(0, 1fr) 80px;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid #2a4068;
+    border-radius: 8px;
+    background: #13243f;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .season-list li.current {
+    border-color: #6da1f7;
+    background: #1a3156;
+  }
+
+  .season-list li.done {
+    opacity: 0.65;
+  }
+
+  .week-badge {
+    font-size: 11px;
+    color: #9fb6db;
+    font-weight: 600;
+  }
+
+  .vs-label {
+    font-size: 11px;
+    border: 1px solid #3d5f96;
+    border-radius: 999px;
+    padding: 2px 7px;
+    text-align: center;
+    color: #b8d0f7;
+  }
+
+  .opponent {
+    color: #e4edff;
+    font-weight: 500;
+  }
+
+  .status {
+    text-align: right;
+    font-size: 12px;
+    color: #a8bfdf;
+  }
+
+  .status.win {
+    color: #68de92;
+    font-weight: 700;
+  }
+
+  .status.lose {
+    color: #ff8a8a;
+    font-weight: 700;
   }
 
   .detail-box {

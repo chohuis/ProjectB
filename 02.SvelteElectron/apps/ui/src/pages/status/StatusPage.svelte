@@ -1,67 +1,51 @@
 <script lang="ts">
+  import { gameStore } from "../../shared/stores/game";
   import { t } from "../../shared/i18n";
-  import { mockCareerProfile } from "../../app/mockCareer";
+
   type StatGroup = {
     title: string;
     items: Array<{ label: string; value: number }>;
   };
 
-  const profile = mockCareerProfile;
+  // 주인공 능력치 → statGroups 변환
+  $: statGroups = buildStatGroups($gameStore.protagonist);
 
-  const statGroups: StatGroup[] = [
-    {
-      title: "신체",
-      items: [
-        { label: "힘", value: 23 },
-        { label: "순발력", value: 25 },
-        { label: "스피드", value: 24 },
-        { label: "유연성", value: 23 },
-        { label: "밸런스", value: 26 },
-        { label: "체력", value: 25 },
-        { label: "회복력", value: 22 },
-        { label: "하체 드라이브", value: 25 }
-      ]
-    },
-    {
-      title: "기술",
-      items: [
-        { label: "커맨드", value: 30 },
-        { label: "무브먼트", value: 29 },
-        { label: "스피드 유지", value: 29 },
-        { label: "주자 견제", value: 29 }
-      ]
-    },
-    {
-      title: "구종",
-      items: [
-        { label: "패스트볼", value: 29 },
-        { label: "슬라이더", value: 30 },
-        { label: "체인지업", value: 25 },
-        { label: "커브", value: 26 }
-      ]
-    },
-    {
-      title: "멘탈",
-      items: [
-        { label: "집중력", value: 27 },
-        { label: "멘탈 회복", value: 24 },
-        { label: "리더십", value: 20 },
-        { label: "천재성", value: 26 },
-        { label: "침착성", value: 25 }
-      ]
-    }
-  ];
-
-  const recentChanges = [
-    { when: "오늘", text: "불펜 세션 이후 커맨드 +1" },
-    { when: "어제", text: "회복 프로그램 적용으로 피로도 -3" },
-    { when: "3일 전", text: "라이브 피칭 평가에서 슬라이더 안정" },
-    { when: "4일 전", text: "멘탈 케어 루틴 적용으로 집중력 소폭 상승" }
-  ];
+  function buildStatGroups(p: typeof $gameStore.protagonist): StatGroup[] {
+    const pit = p.pitching;
+    const bat = p.batting;
+    return [
+      {
+        title: "투구",
+        items: [
+          { label: "OVR",    value: pit.ovr },
+          { label: "구위",   value: pit.velocity },
+          { label: "커맨드", value: pit.command },
+          { label: "제구",   value: pit.control },
+          { label: "무브먼트", value: pit.movement },
+          { label: "멘탈",  value: pit.mentality },
+          { label: "스태미나", value: pit.stamina },
+          { label: "회복력", value: pit.recovery },
+        ],
+      },
+      {
+        title: "타격",
+        items: [
+          { label: "컨택",  value: bat.contact },
+          { label: "파워",  value: bat.power },
+          { label: "선구안", value: bat.eye },
+          { label: "선구력", value: bat.discipline },
+          { label: "스피드", value: bat.speed },
+          { label: "수비",  value: bat.fielding },
+          { label: "어깨",  value: bat.arm },
+          { label: "클러치", value: bat.battingClutch },
+        ],
+      },
+    ];
+  }
 
   function statTone(value: number): "good" | "mid" | "low" {
-    if (value >= 27) return "good";
-    if (value >= 20) return "mid";
+    if (value >= 70) return "good";
+    if (value >= 50) return "mid";
     return "low";
   }
 </script>
@@ -71,13 +55,13 @@
 
   <article class="card profile-card">
     <div class="identity">
-      <p class="name">{profile.name}</p>
+      <p class="name">{$gameStore.player.name}</p>
       <p class="meta">
-        {profile.team} · {profile.year} · {profile.position} · {profile.role}
+        {$gameStore.player.team} · {$gameStore.player.year} · {$gameStore.player.position} · {$gameStore.player.role}
       </p>
-      <p class="meta">{profile.throws} / {profile.bats}</p>
+      <p class="meta">{$gameStore.player.throws} / {$gameStore.player.bats}</p>
       <div class="tags">
-        {#each profile.tags as tag}
+        {#each $gameStore.player.tags as tag}
           <span>{tag}</span>
         {/each}
       </div>
@@ -86,15 +70,19 @@
     <div class="summary-grid">
       <div class="summary-item">
         <span>OVR</span>
-        <strong>{profile.overall}</strong>
+        <strong>{$gameStore.player.overall}</strong>
       </div>
       <div class="summary-item">
         <span>컨디션</span>
-        <strong>{profile.condition}</strong>
+        <strong>{$gameStore.player.condition}</strong>
       </div>
       <div class="summary-item">
         <span>피로도</span>
-        <strong>{profile.fatigue}</strong>
+        <strong>{$gameStore.player.fatigue}</strong>
+      </div>
+      <div class="summary-item">
+        <span>사기</span>
+        <strong>{$gameStore.player.morale}</strong>
       </div>
     </div>
   </article>
@@ -116,12 +104,11 @@
   </section>
 
   <article class="card changes-card">
-    <h3>최근 변동</h3>
+    <h3>최근 활동</h3>
     <ul class="changes-list">
-      {#each recentChanges as log}
+      {#each $gameStore.logs.slice(0, 6) as log}
         <li>
-          <span class="when">{log.when}</span>
-          <span class="desc">{log.text}</span>
+          <span class="desc">{log}</span>
         </li>
       {/each}
     </ul>
@@ -194,7 +181,7 @@
 
   .summary-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(80px, 1fr));
+    grid-template-columns: repeat(4, minmax(70px, 1fr));
     gap: 8px;
   }
 
@@ -220,8 +207,13 @@
 
   .stats-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
+    overflow: hidden;
+  }
+
+  .stat-card {
+    overflow-y: auto;
   }
 
   .stat-card h3 {
@@ -278,10 +270,6 @@
   }
 
   .changes-list li {
-    display: grid;
-    grid-template-columns: 72px minmax(0, 1fr);
-    gap: 10px;
-    align-items: center;
     padding: 8px 0;
     border-top: 1px solid #253451;
   }
@@ -291,26 +279,9 @@
     padding-top: 0;
   }
 
-  .when {
-    color: #9fb3d9;
-    font-size: 13px;
-  }
-
   .desc {
     color: #e4edff;
     font-size: 14px;
-  }
-
-  @media (max-width: 1200px) {
-    .stats-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-  }
-
-  @media (max-width: 1024px) {
-    .stats-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
   }
 
   @media (max-width: 960px) {
@@ -319,7 +290,7 @@
     }
 
     .summary-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 
     .stats-grid {
