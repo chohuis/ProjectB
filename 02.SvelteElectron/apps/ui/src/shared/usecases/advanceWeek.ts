@@ -1,16 +1,28 @@
 import { get } from "svelte/store";
 import { seasonStore } from "../stores/season";
 import { gameStore } from "../stores/game";
+import { calcTrainingGrowth } from "../utils/growthEngine";
 import type { MatchResult, WeekAdvanceResult } from "../types/season";
+import type { MessageItem } from "../types/main";
 
-// NPC 경기 간이 시뮬
+function makeTrainingMessage(week: number, logs: string[]): MessageItem {
+  return {
+    id: `msg-train-w${week}-${Date.now()}`,
+    category: "system",
+    sender: "훈련 시스템",
+    subject: `W${week} 훈련 성과`,
+    preview: logs[0] ?? "",
+    body: logs.join("\n"),
+    createdAt: `W${week}`,
+    readAt: null,
+  };
+}
+
 function simulateNpcGame(homeTeamId: string, awayTeamId: string): MatchResult {
   const score = () => Math.max(0, Math.round((Math.random() + Math.random() + Math.random() - 1.5) * 4));
   let h = score();
   let a = score();
-  // 동점 방지
   if (h === a) { h > 0 ? h-- : a++; }
-
   return {
     homeScore: h,
     awayScore: a,
@@ -21,13 +33,10 @@ function simulateNpcGame(homeTeamId: string, awayTeamId: string): MatchResult {
   };
 }
 
-// 주인공 경기 간이 시뮬 (자동 처리 시 사용)
 export function simulateProtagonistGame(homeTeamId: string, awayTeamId: string): MatchResult {
   return simulateNpcGame(homeTeamId, awayTeamId);
 }
 
-// 한 주 진행
-// 순서: 1) 미결 결정 메시지 체크 → 2) NPC 경기 시뮬 → 3) 주인공 경기 정지
 export async function advanceWeek(): Promise<WeekAdvanceResult> {
   const s = get(seasonStore);
   const g = get(gameStore);
@@ -62,15 +71,24 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
 
   seasonStore.advanceWeek();
 
+  // 훈련 성장 계산 (주 진행 시 항상 적용)
+  const growth = calcTrainingGrowth(g.protagonist, g.trainingPlan);
+
   // 3. 이번 주 경기 처리
   const weekGames = s.schedule.filter((e) => e.week === nextWeek && !e.result);
-  const logs: string[] = [];
+  const logs: string[] = [...growth.logs];
   const matchResults: MatchResult[] = [];
 
   for (const game of weekGames) {
     if (game.isProtagonistGame) {
       const action = { type: "game" as const, scheduleId: game.id };
       seasonStore.pushPendingAction(action);
+      gameStore.applyWeekResult(growth.protagonistPatch, logs, [], nextWeek);
+      if (growth.logs.length > 0) {
+        gameStore.addMessage(makeTrainingMessage(nextWeek, growth.logs));
+      }
+      gameStore.save();
+      seasonStore.save();
       return {
         processedWeek: nextWeek,
         logs,
@@ -86,6 +104,12 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     logs.push(`W${nextWeek} ${game.homeTeamId} ${result.homeScore}:${result.awayScore} ${game.awayTeamId}`);
   }
 
+  gameStore.applyWeekResult(growth.protagonistPatch, logs, [], nextWeek);
+  if (growth.logs.length > 0) {
+    gameStore.addMessage(makeTrainingMessage(nextWeek, growth.logs));
+  }
+  gameStore.save();
+  seasonStore.save();
   return {
     processedWeek: nextWeek,
     logs,

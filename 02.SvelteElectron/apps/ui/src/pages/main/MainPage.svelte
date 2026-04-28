@@ -4,6 +4,7 @@
   import { seasonStore, nextPendingAction } from "../../shared/stores/season";
   import { teamMap } from "../../shared/stores/master";
   import { simulateProtagonistGame } from "../../shared/usecases/advanceWeek";
+  import { calcGameGrowth } from "../../shared/utils/growthEngine";
   import type { MatchResult } from "../../shared/types/season";
   import { t } from "../../shared/i18n";
 
@@ -80,17 +81,33 @@
     seasonStore.resolvePendingAction("game", pendingGameEntry.id);
 
     const myTeamId = $gameStore.protagonist.teamId;
-    const isHome = pendingGameEntry.homeTeamId === myTeamId;
+    const isHome   = pendingGameEntry.homeTeamId === myTeamId;
     const myScore  = isHome ? result.homeScore : result.awayScore;
     const oppScore = isHome ? result.awayScore : result.homeScore;
     const oppId    = isHome ? pendingGameEntry.awayTeamId : pendingGameEntry.homeTeamId;
-    const won = myScore > oppScore;
+    const won      = myScore > oppScore;
+    const diff     = Math.abs(myScore - oppScore);
+
+    const growth = calcGameGrowth($gameStore.protagonist, won, diff);
+    const matchLog = `W${pendingGameEntry.week} vs ${tName(oppId)} ${myScore}:${oppScore} ${won ? "승리" : "패배"}`;
     gameStore.applyWeekResult(
-      {},
-      [`W${pendingGameEntry.week} vs ${tName(oppId)} ${myScore}:${oppScore} ${won ? "승리" : "패배"}`],
+      growth.protagonistPatch,
+      [matchLog, ...growth.logs],
       [],
       $seasonStore.currentWeek,
     );
+    gameStore.addMessage({
+      id: `msg-game-w${pendingGameEntry.week}-${Date.now()}`,
+      category: "system",
+      sender: "경기 시스템",
+      subject: matchLog,
+      preview: growth.logs[1] ?? growth.logs[0] ?? matchLog,
+      body: [matchLog, ...growth.logs].join("\n"),
+      createdAt: `W${pendingGameEntry.week}`,
+      readAt: null,
+    });
+    gameStore.save();
+    seasonStore.save();
   }
 
   function closeMatchEngine() {
@@ -144,11 +161,7 @@
       <main>
         <div class="tab-content">
           {#if currentTab === "home"}
-            <HomeDashboard
-              morale={$gameStore.player.morale}
-              fatigue={$gameStore.player.fatigue}
-              upcoming={$gameStore.upcoming}
-            />
+            <HomeDashboard />
           {:else if currentTab === "status"}
             <StatusPage />
           {:else if currentTab === "academics"}

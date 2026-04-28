@@ -12,6 +12,8 @@ export interface PitchingAttributes {
   recovery: number;
 }
 
+export type PitchingStatKey = Exclude<keyof PitchingAttributes, "ovr">;
+
 export interface BattingAttributes {
   ovr: number;
   contact: number;
@@ -61,6 +63,9 @@ export interface ProtagonistSave {
   growthPoints: number;              // 미사용 성장 포인트
 
   tags: string[];                    // ["급성장", "멘탈관리", …]
+
+  // XP 누적 (주간 성장 엔진용)
+  pitchingXP: Partial<Record<PitchingStatKey, number>>;
 }
 
 // ── 시즌 스탯 (선수 1명분) ─────────────────────────────────────

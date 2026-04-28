@@ -114,6 +114,7 @@
       potentialHidden,
       growthPoints: 0,
       tags: preset.tags,
+      pitchingXP: {},
     };
 
     gameStore.initNew(protagonist);

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { gameStore } from "../../../shared/stores/game";
   import { hasPendingAction, nextPendingAction } from "../../../shared/stores/season";
   import { advanceWeek } from "../../../shared/usecases/advanceWeek";
   import { t } from "../../../shared/i18n";
@@ -22,8 +21,7 @@
     if (btnDisabled) return;
     advancing = true;
     try {
-      const result = await advanceWeek();
-      gameStore.applyWeekResult({}, result.logs, [], result.processedWeek);
+      await advanceWeek();
     } finally {
       advancing = false;
     }

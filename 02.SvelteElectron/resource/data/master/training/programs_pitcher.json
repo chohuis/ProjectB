@@ -2,7 +2,7 @@
   "programs": [
     {
       "id": "TRN_CMD_BASE",
-      "name": "Command Base",
+      "name": "커맨드 기초",
       "focus": "command",
       "intensity": "medium",
       "fatigueCost": 8,
@@ -10,11 +10,51 @@
     },
     {
       "id": "TRN_VEL_POWER",
-      "name": "Velocity Power",
+      "name": "구위 파워",
       "focus": "velocity",
       "intensity": "high",
       "fatigueCost": 14,
       "risk": 6
+    },
+    {
+      "id": "TRN_CTRL_MECH",
+      "name": "제구 메커니즘",
+      "focus": "control",
+      "intensity": "medium",
+      "fatigueCost": 8,
+      "risk": 2
+    },
+    {
+      "id": "TRN_MVT_PITCH",
+      "name": "변화구 연습",
+      "focus": "movement",
+      "intensity": "medium",
+      "fatigueCost": 9,
+      "risk": 3
+    },
+    {
+      "id": "TRN_MNT_FOCUS",
+      "name": "멘탈 집중 훈련",
+      "focus": "mentality",
+      "intensity": "low",
+      "fatigueCost": 5,
+      "risk": 0
+    },
+    {
+      "id": "TRN_STA_COND",
+      "name": "체력 강화",
+      "focus": "stamina",
+      "intensity": "high",
+      "fatigueCost": 12,
+      "risk": 4
+    },
+    {
+      "id": "TRN_RECOVERY",
+      "name": "컨디셔닝 회복",
+      "focus": "recovery",
+      "intensity": "low",
+      "fatigueCost": -8,
+      "risk": 0
     }
   ]
 }

@@ -3,12 +3,10 @@
   import { gameStore } from "../../shared/stores/game";
 
   type TrainingTab = "daily" | "weekly" | "risk";
-  type SlotType = "main" | "sub" | "recovery";
   type PitchStatus = "discovered" | "training" | "learned";
 
-  type TrainingCard = {
+  type ProgramCard = {
     id: string;
-    slot: SlotType;
     title: string;
     focus: string;
     gains: string;
@@ -26,40 +24,34 @@
 
   let tab: TrainingTab = "daily";
 
-  const trainingCards: TrainingCard[] = [
-    { id: "bullpen_cmd", slot: "main", title: "불펜 제구 세션", focus: "제구/릴리스", gains: "제구 +2, 멘탈 +0.5", fatigue: 8, risk: 3 },
-    { id: "velo_power", slot: "main", title: "구속 파워 세션", focus: "구속/하체 드라이브", gains: "구속 +2, 스태미나 +1", fatigue: 10, risk: 5 },
-    { id: "game_sim", slot: "main", title: "실전 피칭 시뮬", focus: "구종 운용/경기 감각", gains: "무브 +1.5, 운용 +1", fatigue: 9, risk: 4 },
-
-    { id: "video_analysis", slot: "sub", title: "영상 분석", focus: "투구 패턴/상대 대응", gains: "전술 +1, 제구 +0.5", fatigue: 2, risk: 0 },
-    { id: "pickoff_drill", slot: "sub", title: "견제/퀵모션 드릴", focus: "주자 견제", gains: "견제 +1.5", fatigue: 3, risk: 1 },
-    { id: "mental_routine", slot: "sub", title: "멘탈 루틴", focus: "압박 대응/집중", gains: "멘탈 +1.5", fatigue: 1, risk: -1 },
-
-    { id: "recovery_pool", slot: "recovery", title: "수중 회복 세션", focus: "회복/유연성", gains: "회복 +2", fatigue: -5, risk: -3 },
-    { id: "sleep_reset", slot: "recovery", title: "휴식 + 수면 리셋", focus: "피로 회복", gains: "피로 -6", fatigue: -6, risk: -2 },
-    { id: "mobility", slot: "recovery", title: "모빌리티 케어", focus: "관절 가동 범위", gains: "유연성 +1, 부상위험 완화", fatigue: -3, risk: -2 }
+  // growthEngine TRAINING_MAP과 동일한 ID 사용
+  const mainPrograms: ProgramCard[] = [
+    { id: "TRN_CMD_BASE",  title: "커맨드 기초",    focus: "커맨드/릴리스",      gains: "커맨드, 제구",      fatigue: 8,  risk: 2 },
+    { id: "TRN_VEL_POWER", title: "구위 파워",       focus: "구속/하체 드라이브", gains: "구위, 스태미나",     fatigue: 14, risk: 6 },
+    { id: "TRN_CTRL_MECH", title: "제구 메커니즘",   focus: "제구/릴리스 일관성", gains: "제구, 커맨드",       fatigue: 8,  risk: 2 },
+    { id: "TRN_MVT_PITCH", title: "변화구 연습",     focus: "무브먼트/구종",      gains: "무브먼트, 제구",     fatigue: 9,  risk: 3 },
+    { id: "TRN_MNT_FOCUS", title: "멘탈 집중 훈련", focus: "압박 대응/집중",     gains: "멘탈",              fatigue: 5,  risk: 0 },
+    { id: "TRN_STA_COND",  title: "체력 강화",       focus: "스태미나/지구력",    gains: "스태미나, 회복력",   fatigue: 12, risk: 4 },
   ];
 
-  $: selectedMain = $gameStore.trainingPlan.primaryProgramId ?? "bullpen_cmd";
-  $: selectedSub = $gameStore.trainingPlan.secondaryProgramId ?? "video_analysis";
-  $: selectedRecovery = $gameStore.trainingPlan.recoveryProgramId ?? "recovery_pool";
+  const recoveryPrograms: ProgramCard[] = [
+    { id: "TRN_RECOVERY", title: "컨디셔닝 회복", focus: "회복/유연성", gains: "피로 ↓, 컨디션 ↑", fatigue: -8, risk: 0 },
+  ];
 
-  const baseCondition = 82;
-  const baseFatigue = 28;
-  const baseInjuryRisk = 12;
+  const allPrograms = [...mainPrograms, ...recoveryPrograms];
 
-  // 투수 전용 능력치(더미)
-  const pitcherStat = {
-    command: 58,
-    movement: 54,
-    flexibility: 56,
-    spin: 52,
-    mental: 57,
-    fatigueCap: 45
-  };
+  $: selectedMain     = $gameStore.trainingPlan.primaryProgramId   ?? "TRN_CMD_BASE";
+  $: selectedSub      = $gameStore.trainingPlan.secondaryProgramId ?? "TRN_CTRL_MECH";
+  $: selectedRecovery = $gameStore.trainingPlan.recoveryProgramId  ?? "TRN_RECOVERY";
 
-  const coachMod = { efficiency: 1.1, fatigue: 0.95, risk: 0.9 };
-  const facilityMod = { efficiency: 1.05, fatigue: 0.9, risk: 0.95 };
+  // 실제 주인공 상태
+  $: protagonist = $gameStore.protagonist;
+  $: realCondition = protagonist.condition;
+  $: realFatigue   = protagonist.fatigue;
+  $: realMorale    = protagonist.morale;
+
+  const coachMod    = { fatigue: 0.95, risk: 0.9 };
+  const facilityMod = { fatigue: 0.90, risk: 0.95 };
 
   let weeklyMix = {
     bullpen: 25,
@@ -70,7 +62,6 @@
     pitchDev: 10
   };
 
-  // 전체 구종은 숨김(미발견 구종 수만 내부에서 관리)
   const hiddenPitchCount = 3;
 
   let pitchCandidates: PitchCandidate[] = [
@@ -80,8 +71,8 @@
       status: "learned",
       progress: 100,
       requirements: [
-        { label: "제구", required: 50, current: pitcherStat.command },
-        { label: "회전 효율", required: 45, current: pitcherStat.spin }
+        { label: "제구", required: 50, current: 58 },
+        { label: "회전 효율", required: 45, current: 52 }
       ]
     },
     {
@@ -90,8 +81,8 @@
       status: "training",
       progress: 42,
       requirements: [
-        { label: "제구", required: 55, current: pitcherStat.command },
-        { label: "멘탈", required: 50, current: pitcherStat.mental }
+        { label: "제구", required: 55, current: 58 },
+        { label: "멘탈", required: 50, current: 57 }
       ]
     },
     {
@@ -100,8 +91,8 @@
       status: "discovered",
       progress: 0,
       requirements: [
-        { label: "유연성", required: 60, current: pitcherStat.flexibility },
-        { label: "회전 효율", required: 55, current: pitcherStat.spin }
+        { label: "유연성", required: 60, current: 56 },
+        { label: "회전 효율", required: 55, current: 52 }
       ]
     },
     {
@@ -110,53 +101,45 @@
       status: "discovered",
       progress: 0,
       requirements: [
-        { label: "제구", required: 60, current: pitcherStat.command },
-        { label: "멘탈", required: 58, current: pitcherStat.mental }
+        { label: "제구", required: 60, current: 58 },
+        { label: "멘탈", required: 58, current: 57 }
       ]
     }
   ];
 
-  const recentLogs = [
-    "불펜 제구 세션 적용: 제구 안정 +1, 피로 +6",
-    "체인지업 훈련 진행률 +7%",
-    "구속 파워 세션 과부하 경고(주의)",
-    "수중 회복 세션 후 피로도 -4"
-  ];
+  $: mainCard     = allPrograms.find((p) => p.id === selectedMain);
+  $: subCard      = allPrograms.find((p) => p.id === selectedSub);
+  $: recoveryCard = allPrograms.find((p) => p.id === selectedRecovery);
+  $: selectedCards = [mainCard, subCard, recoveryCard].filter(Boolean) as ProgramCard[];
 
-  $: mainCard = trainingCards.find((item) => item.id === selectedMain);
-  $: subCard = trainingCards.find((item) => item.id === selectedSub);
-  $: recoveryCard = trainingCards.find((item) => item.id === selectedRecovery);
-  $: selectedCards = [mainCard, subCard, recoveryCard].filter(Boolean) as TrainingCard[];
+  $: rawFatigueDelta = selectedCards.reduce((sum, c) => sum + c.fatigue, 0);
+  $: rawRiskDelta    = selectedCards.reduce((sum, c) => sum + c.risk,    0);
 
-  $: rawFatigueDelta = selectedCards.reduce((sum, card) => sum + card.fatigue, 0);
-  $: rawRiskDelta = selectedCards.reduce((sum, card) => sum + card.risk, 0);
+  // 기본 주간 회복 (-5 fatigue, +3 condition) 포함
+  $: finalFatigueDelta   = Math.round(rawFatigueDelta * coachMod.fatigue * facilityMod.fatigue) - 5;
+  $: finalRiskDelta      = Math.round(rawRiskDelta    * coachMod.risk    * facilityMod.risk);
 
-  $: finalFatigueDelta = Math.round(rawFatigueDelta * coachMod.fatigue * facilityMod.fatigue);
-  $: finalRiskDelta = Math.round(rawRiskDelta * coachMod.risk * facilityMod.risk);
-
-  $: projectedFatigue = Math.max(0, baseFatigue + finalFatigueDelta);
-  $: projectedRisk = Math.max(0, baseInjuryRisk + finalRiskDelta);
-  $: projectedCondition = Math.max(0, Math.min(100, baseCondition - Math.max(0, finalFatigueDelta) * 0.6));
+  $: projectedFatigue   = Math.max(0,   Math.min(100, realFatigue   + finalFatigueDelta));
+  $: projectedCondition = Math.max(0,   Math.min(100, realCondition - Math.max(0, finalFatigueDelta) * 0.4 + 3));
+  $: projectedRisk      = Math.max(0,   Math.round(Math.max(0, projectedFatigue - 60) * 0.8));
 
   $: weeklyTotal =
-    weeklyMix.bullpen +
-    weeklyMix.gameSim +
-    weeklyMix.strength +
-    weeklyMix.analysis +
-    weeklyMix.recovery +
-    weeklyMix.pitchDev;
+    weeklyMix.bullpen + weeklyMix.gameSim + weeklyMix.strength +
+    weeklyMix.analysis + weeklyMix.recovery + weeklyMix.pitchDev;
 
-  $: learnedPitches = pitchCandidates.filter((pitch) => pitch.status === "learned");
-  $: trainingPitch = pitchCandidates.find((pitch) => pitch.status === "training") ?? null;
-  $: discoveredPitches = pitchCandidates.filter((pitch) => pitch.status === "discovered");
-  $: pitchDevGain = Math.max(0, Math.round(weeklyMix.pitchDev * 0.6));
+  $: learnedPitches   = pitchCandidates.filter((p) => p.status === "learned");
+  $: trainingPitch    = pitchCandidates.find((p) => p.status === "training") ?? null;
+  $: discoveredPitches = pitchCandidates.filter((p) => p.status === "discovered");
+  $: pitchDevGain     = Math.max(0, Math.round(weeklyMix.pitchDev * 0.6));
   $: projectedTrainingProgress = trainingPitch
     ? Math.min(100, trainingPitch.progress + pitchDevGain)
     : 0;
 
+  $: recentLogs = $gameStore.logs.slice(0, 5);
+
   function riskTone(value: number): "safe" | "warn" | "danger" {
     if (value >= 20) return "danger";
-    if (value >= 13) return "warn";
+    if (value >= 10) return "warn";
     return "safe";
   }
 
@@ -167,15 +150,11 @@
   function unmetRequirementText(pitch: PitchCandidate): string {
     const unmet = pitch.requirements.filter((req) => req.current < req.required);
     if (unmet.length === 0) return "조건 충족";
-    return unmet.map((req) => `${req.label} ${req.required} 필요(현재 ${req.current})`).join(" · ");
+    return unmet.map((req) => `${req.label} ${req.required} 필요 (현재 ${req.current})`).join(" · ");
   }
 
   function canStartLearning(pitch: PitchCandidate): boolean {
-    if (pitch.status !== "discovered") return false;
-    if (!isEligible(pitch)) return false;
-    if (trainingPitch) return false;
-    if (projectedFatigue >= pitcherStat.fatigueCap) return false;
-    return true;
+    return pitch.status === "discovered" && isEligible(pitch) && !trainingPitch && projectedFatigue < 80;
   }
 
   function startPitchLearning(pitchId: string) {
@@ -216,8 +195,8 @@
               value={selectedMain}
               on:change={(e) => gameStore.setTrainingPlan({ primaryProgramId: e.currentTarget.value })}
             >
-              {#each trainingCards.filter((item) => item.slot === "main") as card}
-                <option value={card.id}>{card.title}</option>
+              {#each mainPrograms as p}
+                <option value={p.id}>{p.title}</option>
               {/each}
             </select>
           </label>
@@ -228,8 +207,8 @@
               value={selectedSub}
               on:change={(e) => gameStore.setTrainingPlan({ secondaryProgramId: e.currentTarget.value })}
             >
-              {#each trainingCards.filter((item) => item.slot === "sub") as card}
-                <option value={card.id}>{card.title}</option>
+              {#each mainPrograms as p}
+                <option value={p.id}>{p.title}</option>
               {/each}
             </select>
           </label>
@@ -240,8 +219,8 @@
               value={selectedRecovery}
               on:change={(e) => gameStore.setTrainingPlan({ recoveryProgramId: e.currentTarget.value })}
             >
-              {#each trainingCards.filter((item) => item.slot === "recovery") as card}
-                <option value={card.id}>{card.title}</option>
+              {#each recoveryPrograms as p}
+                <option value={p.id}>{p.title}</option>
               {/each}
             </select>
           </label>
@@ -357,22 +336,22 @@
         <section class="panel">
           <h3>리스크 추적</h3>
           <ul>
-            <li><span>현재 부상위험</span><strong class={riskTone(projectedRisk)}>{projectedRisk}%</strong></li>
-            <li><span>현재 피로도</span><strong>{projectedFatigue}</strong></li>
-            <li><span>연속 고강도 일수</span><strong>2일</strong></li>
-            <li><span>다음 경기까지</span><strong>2일</strong></li>
+            <li><span>현재 피로도</span><strong class={riskTone(realFatigue >= 70 ? 20 : realFatigue >= 50 ? 13 : 0)}>{realFatigue}</strong></li>
+            <li><span>현재 컨디션</span><strong>{realCondition}</strong></li>
+            <li><span>현재 사기</span><strong>{realMorale}</strong></li>
+            <li><span>부상 위험 추정</span><strong class={riskTone(projectedRisk)}>{projectedRisk}%</strong></li>
           </ul>
 
           <h3>자동 경고 룰</h3>
           <ul>
-            <li>고강도 3일 연속 시 효율 -15%</li>
-            <li>피로 45 이상 시 제구 훈련 효율 -10%</li>
-            <li>피로 55 이상 시 부상 위험 +6%p</li>
+            <li>피로 70 이상: 훈련 XP -30% 페널티</li>
+            <li>피로 85 이상 × 2주 연속: 긴급 이벤트</li>
+            <li>사기 35 미만 × 3주: 슬럼프 진입</li>
           </ul>
         </section>
 
         <aside class="panel">
-          <h3>최근 훈련 로그</h3>
+          <h3>최근 활동 로그</h3>
           <ol>
             {#each recentLogs as log}
               <li>{log}</li>

@@ -69,12 +69,13 @@ const DEFAULT_PROTAGONIST: ProtagonistSave = {
   potentialHidden: 88,
   growthPoints: 0,
   tags: ["급성장", "멘탈관리", "선발 로테이션"],
+  pitchingXP: {},
 };
 
 const DEFAULT_TRAINING_PLAN: TrainingPlanState = {
-  primaryProgramId:   "bullpen_cmd",
-  secondaryProgramId: "video_analysis",
-  recoveryProgramId:  "recovery_pool",
+  primaryProgramId:   "TRN_CMD_BASE",
+  secondaryProgramId: "TRN_CTRL_MECH",
+  recoveryProgramId:  "TRN_RECOVERY",
 };
 
 const DEFAULT_SCHOOL: SchoolState = {
@@ -284,6 +285,10 @@ function createGameStore() {
           return { ...m, readAt: m.readAt ?? "방금", decision: { ...m.decision, selectedOptionId: optionId } };
         }),
       }));
+    },
+
+    addMessage(msg: MessageItem) {
+      update((s) => ({ ...s, mailbox: [msg, ...s.mailbox] }));
     },
 
     setTrainingPlan(plan: Partial<TrainingPlanState>) {
