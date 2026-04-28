@@ -24,10 +24,19 @@ export interface MainSnapshot {
 
 export type MessageCategory = "system" | "news" | "coach" | "manager";
 
+// 선택지 실제 효과 (타입 기반 적용)
+export interface DecisionEffect {
+  conditionDelta?: number;
+  fatigueDelta?: number;
+  moraleDelta?: number;
+  xp?: Record<string, number>; // PitchingStatKey → XP 적립량
+}
+
 export interface MessageDecisionOption {
   id: string;
   label: string;
-  effect: string;
+  effect: string;             // 표시용 효과 설명
+  effects?: DecisionEffect;   // 실제 적용 효과
 }
 
 export interface MessageDecision {

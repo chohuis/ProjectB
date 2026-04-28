@@ -1,6 +1,7 @@
 import { derived, get, writable } from "svelte/store";
 import type { MessageItem } from "../types/main";
 import type {
+  PitchingStatKey,
   ProtagonistSave,
   SaveGame,
   SchoolState,
@@ -94,8 +95,10 @@ const DEFAULT_MAILBOX: MessageItem[] = [
     decision: {
       prompt: "추가 불펜 30구 세션을 진행하시겠습니까?",
       options: [
-        { id: "do_train",   label: "훈련한다",       effect: "컨디션 -4, 커맨드 경험치 +1" },
-        { id: "skip_train", label: "훈련하지 않는다", effect: "컨디션 +2, 변화 없음" },
+        { id: "do_train",   label: "훈련한다",       effect: "컨디션 -4, 커맨드 경험치 +1",
+          effects: { conditionDelta: -4, xp: { command: 1 } } },
+        { id: "skip_train", label: "훈련하지 않는다", effect: "컨디션 +2, 변화 없음",
+          effects: { conditionDelta: 2 } },
       ],
       selectedOptionId: null,
     },
@@ -285,13 +288,34 @@ function createGameStore() {
     },
 
     resolveDecision(messageId: string, optionId: string) {
-      update((s) => ({
-        ...s,
-        mailbox: s.mailbox.map((m) => {
+      update((s) => {
+        const msg    = s.mailbox.find((m) => m.id === messageId);
+        const option = msg?.decision?.options.find((o) => o.id === optionId);
+        const fx     = option?.effects;
+
+        const mailbox = s.mailbox.map((m) => {
           if (m.id !== messageId || !m.decision) return m;
           return { ...m, readAt: m.readAt ?? "방금", decision: { ...m.decision, selectedOptionId: optionId } };
-        }),
-      }));
+        });
+
+        if (!fx) return { ...s, mailbox };
+
+        const p = s.protagonist;
+        const clamp = (v: number) => Math.max(0, Math.min(100, v));
+        const condition = clamp(p.condition + (fx.conditionDelta ?? 0));
+        const fatigue   = clamp(p.fatigue   + (fx.fatigueDelta   ?? 0));
+        const morale    = clamp(p.morale    + (fx.moraleDelta    ?? 0));
+
+        const pitchingXP = { ...p.pitchingXP };
+        if (fx.xp) {
+          for (const [stat, amt] of Object.entries(fx.xp)) {
+            pitchingXP[stat as PitchingStatKey] = (pitchingXP[stat as PitchingStatKey] ?? 0) + amt;
+          }
+        }
+
+        const updated: ProtagonistSave = { ...p, condition, fatigue, morale, pitchingXP };
+        return { ...s, mailbox, protagonist: updated, player: toPlayerCompat(updated) };
+      });
     },
 
     addMessage(msg: MessageItem) {
