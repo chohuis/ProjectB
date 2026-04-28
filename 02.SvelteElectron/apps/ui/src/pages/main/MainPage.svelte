@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { MainTabId } from "../../shared/types/main";
   import { gameStore, unreadCount, showAcademicsTab } from "../../shared/stores/game";
-  import { seasonStore, nextPendingAction } from "../../shared/stores/season";
+  import { seasonStore, nextPendingAction, seasonEnded } from "../../shared/stores/season";
   import { teamMap } from "../../shared/stores/master";
   import { simulateProtagonistGame } from "../../shared/usecases/advanceWeek";
   import { calcGameGrowth } from "../../shared/utils/growthEngine";
@@ -29,6 +29,9 @@
   import EventManagerModal from "../../features/events/ui/EventManagerModal.svelte";
   import DevToolsHubModal from "../../features/devtools/ui/DevToolsHubModal.svelte";
   import EntityManagerModal from "../../features/entity-manager/ui/EntityManagerModal.svelte";
+  import SeasonEndModal from "../../features/season-end/ui/SeasonEndModal.svelte";
+
+  export let onSeasonEnd: () => void = () => {};
 
   let currentTab: MainTabId = "home";
   let devToolsHubOpen = false;
@@ -215,6 +218,10 @@
 
 <EventManagerModal open={eventManagerOpen} on:close={() => (eventManagerOpen = false)} />
 <EntityManagerModal open={entityManagerOpen} on:close={() => (entityManagerOpen = false)} />
+
+{#if $seasonEnded}
+  <SeasonEndModal onExit={onSeasonEnd} />
+{/if}
 
 {#if pendingGameEntry}
   <div class="game-overlay">

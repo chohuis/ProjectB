@@ -201,6 +201,11 @@ export const currentStandings = derived(
   ($s) => [...$s.standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins),
 );
 
+export const seasonEnded = derived(
+  seasonStore,
+  ($s) => $s.totalWeeks > 0 && $s.currentWeek >= $s.totalWeeks,
+);
+
 export const hasPendingAction = derived(
   seasonStore,
   ($s) => $s.pendingActions.length > 0,

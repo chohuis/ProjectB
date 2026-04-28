@@ -56,7 +56,7 @@
 {:else if phase === "create"}
   <NewGamePage onComplete={() => (phase = "playing")} />
 {:else}
-  <MainPage />
+  <MainPage onSeasonEnd={() => (phase = "intro")} />
 {/if}
 
 <style>
