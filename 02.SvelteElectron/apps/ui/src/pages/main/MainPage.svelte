@@ -1,6 +1,9 @@
 <script lang="ts">
   import type { MainTabId } from "../../shared/types/main";
   import { gameStore, unreadCount, showAcademicsTab } from "../../shared/stores/game";
+  import { seasonStore, nextPendingAction } from "../../shared/stores/season";
+  import { simulateProtagonistGame } from "../../shared/usecases/advanceWeek";
+  import type { MatchResult } from "../../shared/types/season";
   import { t } from "../../shared/i18n";
   import SidebarNav from "../../features/navigation/ui/SidebarNav.svelte";
   import TopHeader from "../../features/main-layout/ui/TopHeader.svelte";
@@ -42,6 +45,47 @@
 
   $: if (!$showAcademicsTab && currentTab === "academics") {
     currentTab = "home";
+  }
+
+  // 메시지 결정 pendingAction → 메시지 탭 자동 전환 (최초 1회)
+  let handledMessageId: string | null = null;
+  $: {
+    const pa = $nextPendingAction;
+    if (pa?.type === "message" && pa.messageId !== handledMessageId) {
+      handledMessageId = pa.messageId;
+      currentTab = "messages";
+    }
+    if (!pa || pa.type !== "message") handledMessageId = null;
+  }
+
+  // 경기 pendingAction → 해당 일정 항목
+  $: pendingGame = $nextPendingAction?.type === "game" ? $nextPendingAction : null;
+  $: pendingGameEntry = pendingGame
+    ? $seasonStore.schedule.find((e) => e.id === pendingGame!.scheduleId) ?? null
+    : null;
+
+  // 경기 자동 시뮬 후 pendingAction 해제
+  function autoSimGame() {
+    if (!pendingGameEntry) return;
+    const result: MatchResult = simulateProtagonistGame(
+      pendingGameEntry.homeTeamId,
+      pendingGameEntry.awayTeamId,
+    );
+    seasonStore.applyMatchResult(pendingGameEntry.id, result);
+    seasonStore.resolvePendingAction("game", pendingGameEntry.id);
+
+    const myTeamId = $gameStore.protagonist.teamId;
+    const isHome = pendingGameEntry.homeTeamId === myTeamId;
+    const myScore  = isHome ? result.homeScore : result.awayScore;
+    const oppScore = isHome ? result.awayScore : result.homeScore;
+    const oppId    = isHome ? pendingGameEntry.awayTeamId : pendingGameEntry.homeTeamId;
+    const won = myScore > oppScore;
+    gameStore.applyWeekResult(
+      {},
+      [`W${pendingGameEntry.week} vs ${oppId} ${myScore}:${oppScore} ${won ? "승리 🎉" : "패배"}`],
+      [],
+      $seasonStore.currentWeek,
+    );
   }
 
   function closeMatchEngine() {
@@ -154,6 +198,27 @@
 <EventManagerModal open={eventManagerOpen} on:close={() => (eventManagerOpen = false)} />
 <EntityManagerModal open={entityManagerOpen} on:close={() => (entityManagerOpen = false)} />
 
+{#if pendingGameEntry}
+  <div class="game-overlay">
+    <div class="game-modal">
+      <p class="week-badge">W{pendingGameEntry.week} 경기</p>
+      <div class="matchup">
+        <span class:my-team={pendingGameEntry.homeTeamId === $gameStore.protagonist.teamId}>
+          {pendingGameEntry.homeTeamId}
+        </span>
+        <span class="vs">vs</span>
+        <span class:my-team={pendingGameEntry.awayTeamId === $gameStore.protagonist.teamId}>
+          {pendingGameEntry.awayTeamId}
+        </span>
+      </div>
+      <div class="game-actions">
+        <button class="btn-auto" on:click={autoSimGame}>자동 시뮬</button>
+        <button class="btn-play" disabled>직접 플레이 (준비 중)</button>
+      </div>
+    </div>
+  </div>
+{/if}
+
 <style>
   .layout {
     display: grid;
@@ -201,5 +266,85 @@
     .body {
       grid-template-columns: 154px minmax(0, 1fr) 196px;
     }
+  }
+
+  /* ── 경기 대기 모달 ── */
+  .game-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+  }
+
+  .game-modal {
+    background: #111d34;
+    border: 1px solid #3a5a96;
+    border-radius: 14px;
+    padding: 32px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    min-width: 340px;
+  }
+
+  .week-badge {
+    margin: 0;
+    font-size: 13px;
+    color: #7a9ac8;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .matchup {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #b8d0f7;
+  }
+
+  .matchup .my-team {
+    color: #f0e060;
+  }
+
+  .vs {
+    font-size: 13px;
+    color: #4a6888;
+    font-weight: 400;
+  }
+
+  .game-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .btn-auto {
+    padding: 10px 28px;
+    background: #1a6640;
+    color: #fff;
+    border: 0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .btn-auto:hover {
+    background: #22854f;
+  }
+
+  .btn-play {
+    padding: 10px 20px;
+    background: #1a2840;
+    color: #4a6888;
+    border: 1px solid #2e4060;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: not-allowed;
   }
 </style>

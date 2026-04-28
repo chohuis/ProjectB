@@ -1,5 +1,7 @@
 <script lang="ts">
   import { gameStore } from "../../../shared/stores/game";
+  import { hasPendingAction, nextPendingAction } from "../../../shared/stores/season";
+  import { advanceWeek } from "../../../shared/usecases/advanceWeek";
   import { t } from "../../../shared/i18n";
 
   export let dayLabel: string;
@@ -8,29 +10,24 @@
 
   let advancing = false;
 
-  // 하루 진행 버튼: 백엔드 연동 가능 시 IPC 호출, 없으면 로컬 더미 진행
+  $: btnDisabled = advancing || $hasPendingAction;
+
+  $: btnLabel =
+    $nextPendingAction?.type === "game"    ? "경기 대기 중" :
+    $nextPendingAction?.type === "message" ? "메시지 확인 필요" :
+    $nextPendingAction?.type === "event"   ? "이벤트 처리 필요" :
+    advancing ? "진행 중..." : "주 진행";
+
   async function handleAdvance() {
-    if (advancing) return;
+    if (btnDisabled) return;
     advancing = true;
     try {
-      const coreState = gameStore.toCoreState();
-
-      if (window.projectB?.dayAdvance) {
-        const result = await window.projectB.dayAdvance(coreState);
-        gameStore.applyDayResult(result.snapshot, result.logs);
-        // TODO Phase 2: gameStore → SaveGame 변환 후 교체
-        // if (window.projectB.gameSave) { void window.projectB.gameSave(...); }
-      } else {
-        gameStore.applyDayResult(
-          { ...coreState, day: coreState.day + 1, morale: Math.min(100, coreState.morale + 1) },
-          [`[DAY ${coreState.day + 1}] Training routine completed`]
-        );
-      }
+      const result = await advanceWeek();
+      gameStore.applyWeekResult({}, result.logs, [], result.processedWeek);
     } finally {
       advancing = false;
     }
   }
-
 </script>
 
 <header class="header">
@@ -41,8 +38,14 @@
   <div class="right">
     <strong>{dayLabel}</strong>
     <div class="controls">
-      <button class="advance-button" on:click={handleAdvance} disabled={advancing} class:advancing>
-        {advancing ? $t("header.progressRunning") : $t("header.progress")}
+      <button
+        class="advance-button"
+        on:click={handleAdvance}
+        disabled={btnDisabled}
+        class:advancing
+        class:pending={$hasPendingAction}
+      >
+        {btnLabel}
       </button>
     </div>
   </div>
@@ -89,16 +92,25 @@
     padding: 8px 14px;
     cursor: pointer;
     transition: background 0.12s;
+    white-space: nowrap;
   }
 
   .advance-button:hover:not(:disabled) {
     background: #3a5f9e;
   }
 
-  .advance-button:disabled,
+  .advance-button:disabled {
+    cursor: default;
+  }
+
   .advance-button.advancing {
     background: #1e3356;
     color: #6a8aaa;
-    cursor: default;
+  }
+
+  .advance-button.pending {
+    background: #5c3a1a;
+    color: #f0b060;
+    border: 1px solid #8a5a28;
   }
 </style>

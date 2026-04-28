@@ -2,6 +2,7 @@
   import { t } from "../../shared/i18n";
   import type { MessageCategory, MessageItem } from "../../shared/types/main";
   import { gameStore } from "../../shared/stores/game";
+  import { seasonStore } from "../../shared/stores/season";
 
   type FilterId = "all" | "unread" | MessageCategory;
 
@@ -53,6 +54,7 @@
   function handleDecision(optionId: string) {
     if (!selectedMessage) return;
     gameStore.resolveDecision(selectedMessage.id, optionId);
+    seasonStore.resolvePendingAction("message", selectedMessage.id);
   }
 </script>
 

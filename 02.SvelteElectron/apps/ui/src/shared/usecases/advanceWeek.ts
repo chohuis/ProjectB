@@ -1,38 +1,55 @@
 import { get } from "svelte/store";
 import { seasonStore } from "../stores/season";
+import { gameStore } from "../stores/game";
 import type { MatchResult, WeekAdvanceResult } from "../types/season";
 
-// NPC 경기 간이 시뮬: 무작위 점수 생성
+// NPC 경기 간이 시뮬
 function simulateNpcGame(homeTeamId: string, awayTeamId: string): MatchResult {
-  // 야구 점수 분포: 포아송λ≈4 근사 (0~12)
   const score = () => Math.max(0, Math.round((Math.random() + Math.random() + Math.random() - 1.5) * 4));
-  const homeScore = score();
-  const awayScore = score();
-
-  // 동점이면 연장 처리 대신 재추첨
-  const finalHome = homeScore === awayScore ? homeScore + 1 : homeScore;
-  const finalAway = homeScore === awayScore ? awayScore     : awayScore;
-
-  const winnerId = finalHome > finalAway ? homeTeamId : awayTeamId;
-  const loserId  = finalHome > finalAway ? awayTeamId : homeTeamId;
+  let h = score();
+  let a = score();
+  // 동점 방지
+  if (h === a) { h > 0 ? h-- : a++; }
 
   return {
-    homeScore: finalHome,
-    awayScore: finalAway,
-    winnerId,
-    loserId,
+    homeScore: h,
+    awayScore: a,
+    winnerId: h > a ? homeTeamId : awayTeamId,
+    loserId:  h > a ? awayTeamId : homeTeamId,
     playerLines: [],
     events: [],
   };
 }
 
+// 주인공 경기 간이 시뮬 (자동 처리 시 사용)
+export function simulateProtagonistGame(homeTeamId: string, awayTeamId: string): MatchResult {
+  return simulateNpcGame(homeTeamId, awayTeamId);
+}
+
 // 한 주 진행
-// - NPC 경기는 자동 시뮬
-// - 주인공 경기는 PendingAction("game") 등록 후 중단
+// 순서: 1) 미결 결정 메시지 체크 → 2) NPC 경기 시뮬 → 3) 주인공 경기 정지
 export async function advanceWeek(): Promise<WeekAdvanceResult> {
   const s = get(seasonStore);
-  const nextWeek = s.currentWeek + 1;
+  const g = get(gameStore);
 
+  // 1. 미결 결정 메시지 → 먼저 처리 요청
+  const unresolvedMsg = g.mailbox.find(
+    (m) => m.decision && m.decision.selectedOptionId === null,
+  );
+  if (unresolvedMsg) {
+    const action = { type: "message" as const, messageId: unresolvedMsg.id };
+    seasonStore.pushPendingAction(action);
+    return {
+      processedWeek: s.currentWeek,
+      logs: [],
+      newMessages: [],
+      matchResults: [],
+      stoppedBy: action,
+    };
+  }
+
+  // 2. 시즌 종료 체크
+  const nextWeek = s.currentWeek + 1;
   if (nextWeek > s.totalWeeks) {
     return {
       processedWeek: s.currentWeek,
@@ -45,6 +62,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
 
   seasonStore.advanceWeek();
 
+  // 3. 이번 주 경기 처리
   const weekGames = s.schedule.filter((e) => e.week === nextWeek && !e.result);
   const logs: string[] = [];
   const matchResults: MatchResult[] = [];
@@ -65,9 +83,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     const result = simulateNpcGame(game.homeTeamId, game.awayTeamId);
     seasonStore.applyMatchResult(game.id, result);
     matchResults.push(result);
-    logs.push(
-      `W${nextWeek} ${game.homeTeamId} ${result.homeScore}:${result.awayScore} ${game.awayTeamId}`,
-    );
+    logs.push(`W${nextWeek} ${game.homeTeamId} ${result.homeScore}:${result.awayScore} ${game.awayTeamId}`);
   }
 
   return {
