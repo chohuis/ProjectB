@@ -13,7 +13,14 @@ export interface TrainingProgram {
 export interface PitchEntry {
   id: string;
   name: string;
-  unlockRequirements?: Record<string, number>;
+  group: string;
+  unlockRuleId: string;
+}
+
+export interface PitchUnlockRule {
+  id: string;
+  type: "always" | "min_stat";
+  params: { stat?: string; value?: number };
 }
 
 // ── refs 타입 (refs.json 구조) ─────────────────────────────────
@@ -68,15 +75,13 @@ export interface EntityRow {
 // ── 스토어 상태 ───────────────────────────────────────────────
 export interface MasterState {
   loaded: boolean;
-  // 훈련·구종 (기존)
   trainingPrograms: TrainingProgram[];
   pitchCatalog: PitchEntry[];
-  // 레퍼런스 데이터
+  pitchUnlockRules: PitchUnlockRule[];
   leagues: LeagueRef[];
   schools: SchoolRef[];
   clubs: ClubRef[];
   teams: TeamRef[];
-  // 인물 엔티티 (현재 활성 리그 기준으로 로드)
   entities: EntityRow[];
 }
 
@@ -100,6 +105,7 @@ function createMasterStore() {
     loaded: false,
     trainingPrograms: [],
     pitchCatalog: [],
+    pitchUnlockRules: [],
     leagues: [],
     schools: [],
     clubs: [],
@@ -109,9 +115,10 @@ function createMasterStore() {
 
   async function load() {
     try {
-      const [trainingData, pitchData, refsData] = await Promise.all([
+      const [trainingData, pitchData, unlockData, refsData] = await Promise.all([
         fetchMaster<{ programs: TrainingProgram[] }>("training/programs_pitcher.json"),
         fetchMaster<{ pitches: PitchEntry[] }>("training/pitch_catalog.json"),
+        fetchMaster<{ rules: PitchUnlockRule[] }>("training/pitch_unlock_rules.json"),
         fetchMaster<{ leagues: LeagueRef[]; schools: SchoolRef[]; clubs: ClubRef[]; teams: TeamRef[] }>(
           "entities/refs.json"
         ),
@@ -120,8 +127,9 @@ function createMasterStore() {
       update((s) => ({
         ...s,
         loaded: true,
-        trainingPrograms: trainingData?.programs ?? [],
-        pitchCatalog:     pitchData?.pitches     ?? [],
+        trainingPrograms: trainingData?.programs  ?? [],
+        pitchCatalog:     pitchData?.pitches      ?? [],
+        pitchUnlockRules: unlockData?.rules       ?? [],
         leagues:          refsData?.leagues ?? [],
         schools:          refsData?.schools ?? [],
         clubs:            refsData?.clubs   ?? [],
@@ -165,4 +173,8 @@ export const teamMap = derived(masterStore, ($m) =>
 
 export const leagueMap = derived(masterStore, ($m) =>
   new Map($m.leagues.map((l) => [l.id, l]))
+);
+
+export const pitchUnlockRuleMap = derived(masterStore, ($m) =>
+  new Map($m.pitchUnlockRules.map((r) => [r.id, r]))
 );

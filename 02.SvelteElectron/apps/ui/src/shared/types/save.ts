@@ -66,6 +66,10 @@ export interface ProtagonistSave {
 
   // XP 누적 (주간 성장 엔진용)
   pitchingXP: Partial<Record<PitchingStatKey, number>>;
+
+  // 구종 시스템
+  learnedPitchIds: string[];                           // 보유 구종 ID 목록
+  trainingPitchState?: { id: string; progress: number }; // 현재 훈련 중인 구종
 }
 
 // ── 시즌 스탯 (선수 1명분) ─────────────────────────────────────

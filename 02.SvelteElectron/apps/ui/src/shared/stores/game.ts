@@ -71,6 +71,7 @@ const DEFAULT_PROTAGONIST: ProtagonistSave = {
   growthPoints: 0,
   tags: ["급성장", "멘탈관리", "선발 로테이션"],
   pitchingXP: {},
+  learnedPitchIds: ["PITCH_FASTBALL"],
 };
 
 const DEFAULT_TRAINING_PLAN: TrainingPlanState = {
@@ -353,6 +354,42 @@ function createGameStore() {
 
     setTrainingPlan(plan: Partial<TrainingPlanState>) {
       update((s) => ({ ...s, trainingPlan: { ...s.trainingPlan, ...plan } }));
+    },
+
+    // 구종 습득 시작
+    startPitchTraining(pitchId: string) {
+      update((s) => ({
+        ...s,
+        protagonist: { ...s.protagonist, trainingPitchState: { id: pitchId, progress: 5 } },
+      }));
+    },
+
+    // 구종 습득 완료 (progress >= 100)
+    completePitchLearning(pitchId: string) {
+      update((s) => {
+        const learned = s.protagonist.learnedPitchIds ?? ["PITCH_FASTBALL"];
+        if (learned.includes(pitchId)) return s;
+        const p: ProtagonistSave = {
+          ...s.protagonist,
+          learnedPitchIds: [...learned, pitchId],
+          trainingPitchState: undefined,
+        };
+        return { ...s, protagonist: p };
+      });
+    },
+
+    // 구종 훈련 진행률 갱신
+    advancePitchProgress(delta: number) {
+      update((s) => {
+        const ts = s.protagonist.trainingPitchState;
+        if (!ts) return s;
+        const progress = Math.min(100, ts.progress + delta);
+        const p: ProtagonistSave = {
+          ...s.protagonist,
+          trainingPitchState: { ...ts, progress },
+        };
+        return { ...s, protagonist: p };
+      });
     },
 
     toCoreState(): CoreGameState {

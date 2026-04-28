@@ -1,6 +1,7 @@
 ﻿<script lang="ts">
   import { t } from "../../shared/i18n";
   import { gameStore } from "../../shared/stores/game";
+  import { masterStore, pitchUnlockRuleMap } from "../../shared/stores/master";
 
   type TrainingTab = "daily" | "weekly" | "risk";
   type PitchStatus = "discovered" | "training" | "learned";
@@ -62,50 +63,59 @@
     pitchDev: 10
   };
 
-  const hiddenPitchCount = 3;
+  // 구종 시스템 — masterStore + protagonist 실데이터
+  const STAT_LABEL: Record<string, string> = {
+    command:   "커맨드",
+    control:   "제구",
+    velocity:  "구위",
+    movement:  "무브먼트",
+    stamina:   "스태미나",
+    mentality: "멘탈",
+    mental:    "멘탈",
+    recovery:  "회복력",
+  };
 
-  let pitchCandidates: PitchCandidate[] = [
-    {
-      id: "slider",
-      name: "슬라이더",
-      status: "learned",
-      progress: 100,
-      requirements: [
-        { label: "제구", required: 50, current: 58 },
-        { label: "회전 효율", required: 45, current: 52 }
-      ]
-    },
-    {
-      id: "changeup",
-      name: "체인지업",
-      status: "training",
-      progress: 42,
-      requirements: [
-        { label: "제구", required: 55, current: 58 },
-        { label: "멘탈", required: 50, current: 57 }
-      ]
-    },
-    {
-      id: "curve",
-      name: "커브",
-      status: "discovered",
-      progress: 0,
-      requirements: [
-        { label: "유연성", required: 60, current: 56 },
-        { label: "회전 효율", required: 55, current: 52 }
-      ]
-    },
-    {
-      id: "splitter",
-      name: "스플리터",
-      status: "discovered",
-      progress: 0,
-      requirements: [
-        { label: "제구", required: 60, current: 58 },
-        { label: "멘탈", required: 58, current: 57 }
-      ]
+  function getStatValue(statKey: string, p: typeof protagonist): number {
+    const map: Record<string, number> = {
+      command:   p.pitching.command,
+      control:   p.pitching.control,
+      velocity:  p.pitching.velocity,
+      movement:  p.pitching.movement,
+      stamina:   p.pitching.stamina,
+      mentality: p.pitching.mentality,
+      mental:    p.pitching.mentality,
+      recovery:  p.pitching.recovery,
+    };
+    return map[statKey] ?? 0;
+  }
+
+  function isPitchUnlocked(pitch: { unlockRuleId: string }, p: typeof protagonist): boolean {
+    const rule = $pitchUnlockRuleMap.get(pitch.unlockRuleId);
+    if (!rule || rule.type === "always") return true;
+    if (rule.type === "min_stat" && rule.params.stat && rule.params.value !== undefined) {
+      return getStatValue(rule.params.stat, p) >= rule.params.value;
     }
-  ];
+    return false;
+  }
+
+  $: learnedIds       = new Set(protagonist.learnedPitchIds ?? ["PITCH_FASTBALL"]);
+  $: trainingPitchSt  = protagonist.trainingPitchState ?? null;
+
+  $: pitchCandidates = $masterStore.pitchCatalog.map((pitch) => {
+    const learned = learnedIds.has(pitch.id);
+    const inTraining = !learned && trainingPitchSt?.id === pitch.id;
+    const rule = $pitchUnlockRuleMap.get(pitch.unlockRuleId);
+    const requirements = (rule?.type === "min_stat" && rule.params.stat && rule.params.value !== undefined)
+      ? [{ label: STAT_LABEL[rule.params.stat] ?? rule.params.stat, required: rule.params.value, current: getStatValue(rule.params.stat, protagonist) }]
+      : [];
+    return {
+      id:           pitch.id,
+      name:         pitch.name,
+      status:       learned ? "learned" : inTraining ? "training" : "discovered",
+      progress:     inTraining ? trainingPitchSt!.progress : learned ? 100 : 0,
+      requirements,
+    } as PitchCandidate;
+  });
 
   $: mainCard     = allPrograms.find((p) => p.id === selectedMain);
   $: subCard      = allPrograms.find((p) => p.id === selectedSub);
@@ -127,10 +137,10 @@
     weeklyMix.bullpen + weeklyMix.gameSim + weeklyMix.strength +
     weeklyMix.analysis + weeklyMix.recovery + weeklyMix.pitchDev;
 
-  $: learnedPitches   = pitchCandidates.filter((p) => p.status === "learned");
-  $: trainingPitch    = pitchCandidates.find((p) => p.status === "training") ?? null;
+  $: learnedPitches    = pitchCandidates.filter((p) => p.status === "learned");
+  $: trainingPitch     = pitchCandidates.find((p) => p.status === "training") ?? null;
   $: discoveredPitches = pitchCandidates.filter((p) => p.status === "discovered");
-  $: pitchDevGain     = Math.max(0, Math.round(weeklyMix.pitchDev * 0.6));
+  $: pitchDevGain      = Math.max(0, Math.round(weeklyMix.pitchDev * 0.6));
   $: projectedTrainingProgress = trainingPitch
     ? Math.min(100, trainingPitch.progress + pitchDevGain)
     : 0;
@@ -158,11 +168,9 @@
   }
 
   function startPitchLearning(pitchId: string) {
-    pitchCandidates = pitchCandidates.map((pitch) =>
-      pitch.id === pitchId && canStartLearning(pitch)
-        ? { ...pitch, status: "training", progress: 5 }
-        : pitch
-    );
+    if (!canStartLearning(pitchCandidates.find((p) => p.id === pitchId)!)) return;
+    gameStore.startPitchTraining(pitchId);
+    gameStore.save();
   }
 </script>
 
@@ -240,7 +248,6 @@
         <aside class="panel">
           <h3>적용 보정</h3>
           <ul>
-            <li><span>코치 효율</span><strong>x{coachMod.efficiency.toFixed(2)}</strong></li>
             <li><span>코치 피로 보정</span><strong>x{coachMod.fatigue.toFixed(2)}</strong></li>
             <li><span>시설 피로 보정</span><strong>x{facilityMod.fatigue.toFixed(2)}</strong></li>
             <li><span>시설 리스크 보정</span><strong>x{facilityMod.risk.toFixed(2)}</strong></li>

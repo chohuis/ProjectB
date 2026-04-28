@@ -115,6 +115,7 @@
       growthPoints: 0,
       tags: preset.tags,
       pitchingXP: {},
+      learnedPitchIds: ["PITCH_FASTBALL"],
     };
 
     gameStore.initNew(protagonist);
