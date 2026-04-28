@@ -211,6 +211,35 @@ function fromSaveGame(saved: SaveGame): GameStoreState {
   };
 }
 
+// ── 메일함 정리: 최대 50건, 미결 선택지 메시지는 항상 보존 ────
+const MAX_MAILBOX = 50;
+
+function trimMailbox(mailbox: MessageItem[]): MessageItem[] {
+  if (mailbox.length <= MAX_MAILBOX) return mailbox;
+
+  const keepIds = new Set<string>();
+  let slots = MAX_MAILBOX;
+
+  // 미결 decision 메시지 우선 보존
+  for (const m of mailbox) {
+    if (m.decision && m.decision.selectedOptionId === null) {
+      keepIds.add(m.id);
+      slots--;
+    }
+  }
+
+  // 남은 슬롯에 최신 메시지 채우기 (mailbox는 최신순)
+  for (const m of mailbox) {
+    if (slots <= 0) break;
+    if (!keepIds.has(m.id)) {
+      keepIds.add(m.id);
+      slots--;
+    }
+  }
+
+  return mailbox.filter((m) => keepIds.has(m.id));
+}
+
 // ── 스토어 생성 ───────────────────────────────────────────────
 function createGameStore() {
   const { subscribe, update, set } = writable<GameStoreState>(buildInitialState());
@@ -319,7 +348,7 @@ function createGameStore() {
     },
 
     addMessage(msg: MessageItem) {
-      update((s) => ({ ...s, mailbox: [msg, ...s.mailbox] }));
+      update((s) => ({ ...s, mailbox: trimMailbox([msg, ...s.mailbox]) }));
     },
 
     setTrainingPlan(plan: Partial<TrainingPlanState>) {
