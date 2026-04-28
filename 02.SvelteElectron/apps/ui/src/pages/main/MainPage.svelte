@@ -2,9 +2,14 @@
   import type { MainTabId } from "../../shared/types/main";
   import { gameStore, unreadCount, showAcademicsTab } from "../../shared/stores/game";
   import { seasonStore, nextPendingAction } from "../../shared/stores/season";
+  import { teamMap } from "../../shared/stores/master";
   import { simulateProtagonistGame } from "../../shared/usecases/advanceWeek";
   import type { MatchResult } from "../../shared/types/season";
   import { t } from "../../shared/i18n";
+
+  function tName(id: string): string {
+    return $teamMap.get(id)?.name ?? id;
+  }
   import SidebarNav from "../../features/navigation/ui/SidebarNav.svelte";
   import TopHeader from "../../features/main-layout/ui/TopHeader.svelte";
   import HomeDashboard from "../../features/dashboard/ui/HomeDashboard.svelte";
@@ -82,7 +87,7 @@
     const won = myScore > oppScore;
     gameStore.applyWeekResult(
       {},
-      [`W${pendingGameEntry.week} vs ${oppId} ${myScore}:${oppScore} ${won ? "승리 🎉" : "패배"}`],
+      [`W${pendingGameEntry.week} vs ${tName(oppId)} ${myScore}:${oppScore} ${won ? "승리" : "패배"}`],
       [],
       $seasonStore.currentWeek,
     );
@@ -124,7 +129,7 @@
   <div class="layout">
     <TopHeader
       dayLabel={$gameStore.dayLabel}
-      teamName={$gameStore.player.team}
+      teamName={tName($gameStore.protagonist.teamId)}
       playerName={$gameStore.player.name}
     />
 
@@ -204,11 +209,11 @@
       <p class="week-badge">W{pendingGameEntry.week} 경기</p>
       <div class="matchup">
         <span class:my-team={pendingGameEntry.homeTeamId === $gameStore.protagonist.teamId}>
-          {pendingGameEntry.homeTeamId}
+          {tName(pendingGameEntry.homeTeamId)}
         </span>
         <span class="vs">vs</span>
         <span class:my-team={pendingGameEntry.awayTeamId === $gameStore.protagonist.teamId}>
-          {pendingGameEntry.awayTeamId}
+          {tName(pendingGameEntry.awayTeamId)}
         </span>
       </div>
       <div class="game-actions">

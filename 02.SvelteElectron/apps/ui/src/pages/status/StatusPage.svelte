@@ -1,5 +1,6 @@
 <script lang="ts">
   import { gameStore } from "../../shared/stores/game";
+  import { teamMap } from "../../shared/stores/master";
   import { t } from "../../shared/i18n";
 
   type StatGroup = {
@@ -57,7 +58,7 @@
     <div class="identity">
       <p class="name">{$gameStore.player.name}</p>
       <p class="meta">
-        {$gameStore.player.team} · {$gameStore.player.year} · {$gameStore.player.position} · {$gameStore.player.role}
+        {$teamMap.get($gameStore.protagonist.teamId)?.name ?? $gameStore.player.team} · {$gameStore.player.year} · {$gameStore.player.position} · {$gameStore.player.role}
       </p>
       <p class="meta">{$gameStore.player.throws} / {$gameStore.player.bats}</p>
       <div class="tags">
