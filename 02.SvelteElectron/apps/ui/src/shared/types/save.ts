@@ -25,9 +25,10 @@ export interface BattingAttributes {
 }
 
 // ── 주인공 저장 데이터 ─────────────────────────────────────────
-export type CareerStage = "highschool" | "university" | "pro_kbl" | "pro_abl";
+export type CareerStage  = "highschool" | "university" | "pro_kbl" | "pro_abl";
 export type PlayerType   = "pitcher" | "batter" | "twoWay";
 export type Handedness   = "L" | "R" | "S";
+export type PitchingForm = "overhand" | "threeQuarter" | "sidearm" | "underhand";
 
 export interface ProtagonistSave {
   id: string;                        // 고정 ID (예: "PLY_HERO")
@@ -40,8 +41,9 @@ export interface ProtagonistSave {
   grade?: 1 | 2 | 3;                // 고교 학년
   age: number;
   playerType: PlayerType;
-  position: string;                  // "SP" | "RP" | "C" | "1B" | …
+  position: string;                  // "SP" | "RP" | "CP" | "" (미정)
   handedness: Handedness;
+  pitchingForm?: PitchingForm;       // 투구 폼 (투수 전용)
   jerseyNumber: number;
 
   // 현재 상태 (주 단위로 변동)

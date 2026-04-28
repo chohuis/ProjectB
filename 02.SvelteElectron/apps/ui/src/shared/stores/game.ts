@@ -130,7 +130,8 @@ function toPlayerCompat(p: ProtagonistSave): GameStoreState["player"] {
   const roleLabel =
     p.position === "SP" ? "에이스 선발" :
     p.position === "RP" ? "중간 계투"  :
-    p.position === "CP" ? "마무리"     : p.position;
+    p.position === "CP" ? "마무리"     :
+    p.position || "미정";
   return {
     name: p.name, team: p.teamId, year: gradeLabel,
     position: p.position, role: roleLabel, throws, bats,
@@ -298,6 +299,21 @@ function createGameStore() {
         teamName: s.protagonist.teamId,
         morale: s.protagonist.morale,
       };
+    },
+
+    // 새 게임 시작: 캐릭터 생성 완료 시 호출
+    initNew(protagonist: ProtagonistSave) {
+      set({
+        protagonist,
+        mailbox: [],
+        trainingPlan: DEFAULT_TRAINING_PLAN,
+        schoolState: DEFAULT_SCHOOL,
+        dayLabel: computeWeekLabel(1, protagonist.grade ?? 1),
+        logs: [],
+        upcoming: [],
+        player: toPlayerCompat(protagonist),
+        school: toSchoolCompat(protagonist.careerStage, DEFAULT_SCHOOL),
+      });
     },
 
     // 하위 호환: App.svelte의 hydrate 호출 유지
