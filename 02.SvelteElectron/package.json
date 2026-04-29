@@ -20,7 +20,8 @@
     "preview:ui": "vite preview --config vite.config.ts",
     "start": "electron apps/desktop/main.cjs",
     "check:i18n:keys": "node scripts/check-i18n-keys.mjs",
-    "check:mojibake": "node scripts/check-mojibake.mjs"
+    "check:mojibake": "node scripts/check-mojibake.mjs",
+    "gen:npc": "node scripts/generate-npc-people.mjs"
   },
   "dependencies": {
     "svelte": "^5.38.7"

@@ -7,6 +7,7 @@
     close: void;
     openEvent: void;
     openEntity: void;
+    openAchievement: void;
   }>();
 
   function close() {
@@ -19,6 +20,10 @@
 
   function openEntity() {
     dispatch("openEntity");
+  }
+
+  function openAchievement() {
+    dispatch("openAchievement");
   }
 </script>
 
@@ -39,6 +44,11 @@
         <button type="button" class="tool-btn" on:click={openEntity}>
           <strong>선수/스태프/구단주 에디터</strong>
           <span>선수, 감독, 코치, 구단주 생성/수정/삭제 관리</span>
+        </button>
+
+        <button type="button" class="tool-btn" on:click={openAchievement}>
+          <strong>업적 에디터</strong>
+          <span>업적 조건/보상/카테고리 생성 및 수정</span>
         </button>
       </div>
     </section>

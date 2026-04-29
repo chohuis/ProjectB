@@ -47,28 +47,28 @@
   let cursor = new Date(today);
   let selectedDateKey = toDateKey(today);
 
-  const schedules: ScheduleItem[] = [
-    { id: "s1", date: "2026-04-01", type: "training", title: "웨이트 + 코어", time: "07:30", location: "실내 훈련장", status: "done" },
-    { id: "s2", date: "2026-04-02", type: "training", title: "불펜 35구", time: "10:00", location: "불펜", status: "done" },
-    { id: "s3", date: "2026-04-03", type: "event", title: "코치 면담", time: "16:00", location: "코치실", status: "done" },
-    { id: "s4", date: "2026-04-04", type: "game", title: "주말 리그 1차전", time: "13:00", location: "부산 마린 구장", status: "important" },
-    { id: "s5", date: "2026-04-05", type: "game", title: "주말 리그 2차전", time: "13:00", location: "부산 마린 구장", status: "planned" },
-    { id: "s6", date: "2026-04-07", type: "training", title: "수비 전환 훈련", time: "09:00", location: "메인 그라운드", status: "planned" },
-    { id: "s7", date: "2026-04-09", type: "rest", title: "회복/휴식", time: "전일", location: "팀 숙소", status: "planned" },
-    { id: "s8", date: "2026-04-10", type: "training", title: "라이브 피칭", time: "11:00", location: "메인 그라운드", status: "planned" },
-    { id: "s9", date: "2026-04-11", type: "game", title: "청백전", time: "14:00", location: "팀 구장", status: "planned" },
-    { id: "s10", date: "2026-04-14", type: "event", title: "학교 시험 주간 시작", time: "09:00", location: "교실", status: "important" },
-    { id: "s11", date: "2026-04-16", type: "training", title: "포심/슬라이더 정밀 세션", time: "10:30", location: "불펜", status: "planned" },
-    { id: "s12", date: "2026-04-18", type: "game", title: "주말 리그 3차전", time: "13:00", location: "서울 이노베이션 구장", status: "important" },
-    { id: "s13", date: "2026-04-19", type: "game", title: "주말 리그 4차전", time: "13:00", location: "서울 이노베이션 구장", status: "planned" },
-    { id: "s14", date: "2026-04-20", type: "rest", title: "휴식", time: "전일", location: "팀 숙소", status: "planned" },
-    { id: "s15", date: "2026-04-21", type: "training", title: "불펜 + 주자 견제", time: "10:00", location: "불펜", status: "important" },
-    { id: "s16", date: "2026-04-22", type: "event", title: "스카우트 참관", time: "15:00", location: "메인 그라운드", status: "important" },
-    { id: "s17", date: "2026-04-24", type: "training", title: "전술 회의", time: "17:00", location: "전력분석실", status: "planned" },
-    { id: "s18", date: "2026-04-25", type: "game", title: "주말 리그 5차전", time: "13:00", location: "인천 스카이 구장", status: "planned" },
-    { id: "s19", date: "2026-04-26", type: "game", title: "주말 리그 6차전", time: "13:00", location: "인천 스카이 구장", status: "planned" },
-    { id: "s20", date: "2026-05-01", type: "event", title: "월간 평가 리포트", time: "18:00", location: "감독실", status: "planned" }
-  ];
+  $: schedules = seasonEntries.map((entry): ScheduleItem => {
+    const seasonYear = $seasonStore.seasonYear || 2026;
+    const baseDate = new Date(seasonYear, 2, 1); // 3월 1주차 기준
+    baseDate.setDate(baseDate.getDate() + (entry.week - 1) * 7);
+    const date = toDateKey(baseDate);
+    const isHome = entry.homeTeamId === protagonistTeamId;
+    const opponent = teamLabel(isHome ? entry.awayTeamId : entry.homeTeamId);
+    const status: ScheduleItem["status"] = entry.result
+      ? "done"
+      : entry.week >= $seasonStore.currentWeek
+        ? "important"
+        : "planned";
+    return {
+      id: entry.id,
+      date,
+      type: "game",
+      title: `W${entry.week} vs ${opponent}`,
+      time: "13:00",
+      location: isHome ? "홈" : "원정",
+      status,
+    };
+  });
 
   $: visibleSchedules =
     filter === "all" ? schedules : schedules.filter((item) => item.type === filter);
@@ -1005,5 +1005,4 @@
     }
   }
 </style>
-
 

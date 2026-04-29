@@ -20,6 +20,7 @@
     { id: "finance", labelKey: "nav.finance" },
     { id: "test", labelKey: "nav.matchEngine" },
     { id: "records", labelKey: "nav.records" },
+    { id: "achievements", labelKey: "nav.achievements" },
     { id: "academics", labelKey: "nav.academics" }
   ];
 
