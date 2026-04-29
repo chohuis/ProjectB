@@ -94,7 +94,11 @@ export interface GrowthResult {
   logs: string[];
 }
 
-export function calcTrainingGrowth(protagonist: ProtagonistSave, plan: TrainingPlanState): GrowthResult {
+export function calcTrainingGrowth(
+  protagonist: ProtagonistSave,
+  plan: TrainingPlanState,
+  efficiencyMod = 1.0,  // 학업 모드에 따른 훈련 효율 배율
+): GrowthResult {
   const xpGains = new Map<PitchingStatKey, number>();
   const add = (stat: PitchingStatKey, gain: number) =>
     xpGains.set(stat, (xpGains.get(stat) ?? 0) + gain);
@@ -109,7 +113,7 @@ export function calcTrainingGrowth(protagonist: ProtagonistSave, plan: TrainingP
     fatigueDelta   += cfg.fatigueCost   * mult;
     conditionDelta -= cfg.conditionCost * mult;
     if (cfg.isRecovery) return;
-    const xp = weekXP(cfg.baseXP, protagonist.condition, protagonist.fatigue, protagonist.developmentRate) * mult;
+    const xp = weekXP(cfg.baseXP, protagonist.condition, protagonist.fatigue, protagonist.developmentRate) * mult * efficiencyMod;
     add(cfg.primaryStat, xp);
     if (cfg.secondaryStat) add(cfg.secondaryStat, xp * 0.3);
   }

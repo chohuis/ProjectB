@@ -1,39 +1,69 @@
 {
   "events": [
     {
-      "id": "EVT_HS_YEAR1_MIDTERM",
+      "id": "EVT_HS_SEASON_OPEN",
       "type": "mandatory",
-      "category": "academics",
+      "category": "season",
       "priority": 1000,
-      "oncePolicy": "once_per_stage_year",
-      "schedule": {
-        "stage": "highschool",
-        "stageYear": 1,
-        "month": 5,
-        "weekOfMonth": 2,
-        "dayOfWeek": 1
-      },
-      "messageTemplateId": "MSG_TMPL_ACADEMICS_MIDTERM",
-      "decisionTemplateId": null,
-      "effectsOnTrigger": ["flag:exam.midterm.year1=true"]
+      "oncePolicy": "once_per_season",
+      "conditions": [
+        { "type": "week_eq", "value": 4 },
+        { "type": "career_stage", "stage": "highschool" }
+      ],
+      "messageTemplateId": "MSG_HS_SEASON_OPEN",
+      "decisionTemplateId": null
     },
     {
-      "id": "EVT_HS_YEAR1_FINAL",
+      "id": "EVT_HS_MIDTERM",
       "type": "mandatory",
       "category": "academics",
       "priority": 1000,
-      "oncePolicy": "once_per_stage_year",
-      "schedule": {
-        "stage": "highschool",
-        "stageYear": 1,
-        "month": 11,
-        "weekOfMonth": 3,
-        "dayOfWeek": 1
-      },
-      "messageTemplateId": "MSG_TMPL_ACADEMICS_FINAL",
-      "decisionTemplateId": null,
-      "effectsOnTrigger": ["flag:exam.final.year1=true"]
+      "oncePolicy": "once_per_season",
+      "conditions": [
+        { "type": "week_eq", "value": 11 },
+        { "type": "career_stage", "stage": "highschool" }
+      ],
+      "messageTemplateId": "MSG_HS_MIDTERM",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "EVT_HS_SUMMER_CAMP",
+      "type": "mandatory",
+      "category": "training",
+      "priority": 900,
+      "oncePolicy": "once_per_season",
+      "conditions": [
+        { "type": "week_eq", "value": 20 },
+        { "type": "career_stage", "stage": "highschool" }
+      ],
+      "messageTemplateId": "MSG_HS_SUMMER_CAMP",
+      "decisionTemplateId": "DEC_HS_SUMMER_CAMP"
+    },
+    {
+      "id": "EVT_HS_FINAL",
+      "type": "mandatory",
+      "category": "academics",
+      "priority": 1000,
+      "oncePolicy": "once_per_season",
+      "conditions": [
+        { "type": "week_eq", "value": 38 },
+        { "type": "career_stage", "stage": "highschool" }
+      ],
+      "messageTemplateId": "MSG_HS_FINAL",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "EVT_HS_YEAR_END",
+      "type": "mandatory",
+      "category": "season",
+      "priority": 900,
+      "oncePolicy": "once_per_season",
+      "conditions": [
+        { "type": "week_eq", "value": 50 },
+        { "type": "career_stage", "stage": "highschool" }
+      ],
+      "messageTemplateId": "MSG_HS_YEAR_END",
+      "decisionTemplateId": null
     }
   ]
 }
-

@@ -10,6 +10,7 @@ export type MainTabId =
   | "finance"
   | "test"
   | "records"
+  | "achievements"
   | "academics";
 
 export interface MainSnapshot {
@@ -35,7 +36,7 @@ export interface DecisionEffect {
 export interface MessageDecisionOption {
   id: string;
   label: string;
-  effect: string;             // 표시용 효과 설명
+  effectHint: string;         // 표시용 효과 설명
   effects?: DecisionEffect;   // 실제 적용 효과
 }
 

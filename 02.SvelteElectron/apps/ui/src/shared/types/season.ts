@@ -1,4 +1,5 @@
 import type { PlayerSeasonStats } from "./save";
+import type { DecisionEffect } from "./main";
 
 // ── 출전 선수 한 경기 성적 라인 ────────────────────────────────
 export interface PitcherGameLine {
@@ -72,11 +73,20 @@ export interface Standing {
   last10: string;       // "7W2L1D" 형태
 }
 
+// ── 인게임 이벤트 선택지 ──────────────────────────────────────
+export interface EventChoice {
+  id: string;
+  label: string;
+  effectHint?: string;       // 표시용 효과 설명 (예: "+컨디션 10")
+  effects?: DecisionEffect;  // 실제 적용 효과
+}
+
 // ── 주 진행 정지 조건 ──────────────────────────────────────────
 export type PendingAction =
-  | { type: "game";    scheduleId: string }   // 경기 시작 대기
-  | { type: "message"; messageId: string }    // 결정 메시지 대기
-  | { type: "event";   eventId: string };     // 이벤트 선택 대기
+  | { type: "game";         scheduleId: string }
+  | { type: "message";      messageId: string }
+  | { type: "event";        eventId: string; title: string; description: string; choices?: EventChoice[] }
+  | { type: "careerChoice" };
 
 // ── 주 진행 결과 (advanceWeek 반환값) ──────────────────────────
 export interface WeekAdvanceResult {
@@ -99,6 +109,7 @@ export interface SaveSeason {
   schedule: ScheduleEntry[];
   standings: Standing[];
   stats: Record<string, PlayerSeasonStats>;  // playerId → 누적 스탯
+  triggeredEvents: Record<string, number>;   // eventId → 마지막 발생 주차
 }
 
 export const SAVE_SEASON_VERSION = 1;
@@ -130,6 +141,7 @@ export function makeEmptySeason(
       last10: "",
     })),
     stats: {},
+    triggeredEvents: {},
   };
 }
 

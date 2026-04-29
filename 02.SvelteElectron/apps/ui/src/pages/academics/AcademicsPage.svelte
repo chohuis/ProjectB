@@ -1,605 +1,535 @@
-﻿<script lang="ts">
-  type SchoolSegment = "highschool" | "university";
-  type RiskLevel = "정상" | "주의" | "경고";
+<script lang="ts">
+  import { gameStore } from "../../shared/stores/game";
+  import { seasonStore } from "../../shared/stores/season";
+  import {
+    percentileToGrade, STUDY_MODE_EFFECTS, weeksUntilNextExam,
+    UNIVERSITY_MAJORS, getUniversityEffBonus,
+  } from "../../shared/utils/academicsEngine";
+  import type { StudyMode } from "../../shared/types/save";
 
-  interface SubjectRow {
-    id: string;
-    name: string;
-    percentile: number;
-    attendance: number;
-    assignment: number;
-  }
-
-  interface WeeklyChoice {
-    id: string;
-    name: string;
-    description: string;
-    staminaDelta: number;
-    attendanceDelta: number;
-    assignmentDelta: number;
-    percentileDelta: number;
-  }
-
-  export let currentStage: "highschool" | "university" | "pro_kbl" | "pro_abl" = "highschool";
-  export let attendsUniversity = false;
-  export let universityMajor = "체육교육";
-  export let plannedUniversityMajors: string[] = [
-    "스포츠과학",
-    "체육교육",
-    "스포츠경영",
-    "재활운동",
-    "스포츠심리"
-  ];
-
-  let activeSegment: SchoolSegment =
-    currentStage === "university" && attendsUniversity ? "university" : "highschool";
-  let stamina = 61;
-  let warningCount = 0;
-
-  let highSchoolRows: SubjectRow[] = [
-    { id: "kor", name: "국어", percentile: 13, attendance: 96, assignment: 90 },
-    { id: "eng", name: "영어", percentile: 18, attendance: 93, assignment: 84 },
-    { id: "math", name: "수학", percentile: 29, attendance: 89, assignment: 81 },
-    { id: "soc", name: "사회", percentile: 34, attendance: 95, assignment: 92 },
-    { id: "sci", name: "과학", percentile: 41, attendance: 87, assignment: 79 }
-  ];
-
-  const weeklyChoices: WeeklyChoice[] = [
-    {
-      id: "focus_class",
-      name: "집중 수업",
-      description: "수업 집중. 체력 회복 없음",
-      staminaDelta: 0,
-      attendanceDelta: 1,
-      assignmentDelta: 2,
-      percentileDelta: -2
-    },
-    {
-      id: "normal_class",
-      name: "일반 수업",
-      description: "균형 진행",
-      staminaDelta: 1,
-      attendanceDelta: 0,
-      assignmentDelta: 1,
-      percentileDelta: -1
-    },
-    {
-      id: "rest_in_class",
-      name: "수업 중 휴식",
-      description: "체력 중간 회복, 학업 페널티",
-      staminaDelta: 5,
-      attendanceDelta: -4,
-      assignmentDelta: -6,
-      percentileDelta: 4
-    },
-    {
-      id: "sleep_in_class",
-      name: "수업 중 수면",
-      description: "체력 크게 회복, 학업 페널티 큼",
-      staminaDelta: 9,
-      attendanceDelta: -8,
-      assignmentDelta: -10,
-      percentileDelta: 7
-    }
-  ];
-
-  let selectedChoiceId = weeklyChoices[1].id;
-
-  const universitySummary = {
-    creditLabel: "3.4 / 4.5",
-    acquiredCredits: 12,
-    targetCredits: 18,
-    attendance: 88,
-    assignment: 82,
-    warningRisk: "주의" as RiskLevel
+  const SUBJECT_NAMES: Record<string, string> = {
+    kor: "국어", eng: "영어", math: "수학", soc: "사회", sci: "과학",
   };
 
-  $: selectedChoice = weeklyChoices.find((item) => item.id === selectedChoiceId) ?? weeklyChoices[1];
-  $: avgPercentile = highSchoolRows.reduce((sum, row) => sum + row.percentile, 0) / highSchoolRows.length;
-  $: avgGrade = toGrade(avgPercentile);
-  $: avgAttendance =
-    highSchoolRows.reduce((sum, row) => sum + row.attendance, 0) / highSchoolRows.length;
-  $: avgAssignment =
-    highSchoolRows.reduce((sum, row) => sum + row.assignment, 0) / highSchoolRows.length;
-  $: riskLevel = resolveRisk(avgGrade, avgAttendance, warningCount);
+  const STUDY_MODE_OPTIONS: Array<{ id: StudyMode; name: string; desc: string }> = [
+    { id: "focus",  name: "집중 수업",    desc: `학업 +8점/주, 훈련 효율 75%` },
+    { id: "normal", name: "일반 수업",    desc: `학업 +4점/주, 훈련 효율 90%` },
+    { id: "rest",   name: "수업 중 휴식", desc: `학업 +1점/주, 훈련 효율 100%, 출석 -3%` },
+    { id: "sleep",  name: "수업 중 수면", desc: `학업 0점/주, 훈련 효율 105%, 경고 위험` },
+  ];
 
-  $: projectedStamina = clamp(stamina + selectedChoice.staminaDelta, 0, 100);
-  $: projectedAvgGrade = toGrade(clamp(avgPercentile + selectedChoice.percentileDelta, 1, 100));
-  $: projectedAttendance = clamp(avgAttendance + selectedChoice.attendanceDelta, 0, 100);
-  $: projectedAssignment = clamp(avgAssignment + selectedChoice.assignmentDelta, 0, 100);
+  $: school      = $gameStore.schoolState;
+  $: careerStage = $gameStore.protagonist.careerStage;
+  $: isUniv      = careerStage === "university";
+  $: curWeek     = $seasonStore.currentWeek;
 
-  $: if (!attendsUniversity && activeSegment === "university") {
-    activeSegment = "highschool";
-  }
+  // 대학 년차 (1~4)
+  $: univYear = Math.min(4, Math.floor(school.universityWeek / 52) + 1);
+  $: univSemester = Math.min(8, Math.floor(school.universityWeek / 26) + 1);
 
-  function toGrade(percentile: number): number {
-    if (percentile <= 4) return 1;
-    if (percentile <= 11) return 2;
-    if (percentile <= 23) return 3;
-    if (percentile <= 40) return 4;
-    if (percentile <= 60) return 5;
-    if (percentile <= 77) return 6;
-    if (percentile <= 89) return 7;
-    if (percentile <= 96) return 8;
-    return 9;
-  }
+  $: subjects = Object.entries(school.subjectScores).map(([id, s]) => ({
+    id,
+    name:       SUBJECT_NAMES[id] ?? id,
+    percentile: s.percentile,
+    attendance: s.attendance,
+    assignment: s.assignment,
+    grade:      percentileToGrade(s.percentile),
+  }));
 
-  function gradeClass(grade: number): string {
-    if (grade <= 2) return "g-top";
-    if (grade <= 4) return "g-mid";
-    if (grade <= 6) return "g-low";
+  $: avgPercentile = subjects.length
+    ? subjects.reduce((a, s) => a + s.percentile, 0) / subjects.length
+    : 50;
+  $: avgGrade = percentileToGrade(avgPercentile);
+
+  $: nextExam = weeksUntilNextExam(curWeek);
+  $: accumPct  = Math.min(100, Math.round(school.examAccumScore));
+
+  // 현재 전공 효율 보너스
+  $: majorEffPct = Math.round(getUniversityEffBonus(school.universityMajor) * 100);
+  $: isGeneral   = school.universityMajor === "일반전공";
+
+  function gradeClass(g: number): string {
+    if (g <= 2) return "g-top";
+    if (g <= 4) return "g-mid";
+    if (g <= 6) return "g-low";
     return "g-risk";
   }
 
-  function resolveRisk(grade: number, attendance: number, warning: number): RiskLevel {
-    if (warning >= 2 || grade >= 7 || attendance < 82) return "경고";
-    if (warning >= 1 || grade >= 5 || attendance < 90) return "주의";
-    return "정상";
-  }
-
-  function riskClass(level: RiskLevel): string {
-    if (level === "정상") return "ok";
-    if (level === "주의") return "warn";
+  function riskClass(r: string): string {
+    if (r === "ok") return "ok";
+    if (r === "warn") return "warn";
     return "danger";
   }
 
-  function clamp(value: number, min: number, max: number): number {
-    return Math.min(max, Math.max(min, Math.round(value * 10) / 10));
+  function setMode(mode: StudyMode) {
+    gameStore.setStudyMode(mode);
+    gameStore.save();
   }
 
-  function applyWeeklyChoice() {
-    stamina = projectedStamina;
-    highSchoolRows = highSchoolRows.map((row) => ({
-      ...row,
-      percentile: clamp(row.percentile + selectedChoice.percentileDelta, 1, 100),
-      attendance: clamp(row.attendance + selectedChoice.attendanceDelta, 0, 100),
-      assignment: clamp(row.assignment + selectedChoice.assignmentDelta, 0, 100)
-    }));
-
-    if (selectedChoice.id === "sleep_in_class") {
-      warningCount = clamp(warningCount + 1, 0, 3);
-    } else if (selectedChoice.id === "focus_class" && warningCount > 0) {
-      warningCount = clamp(warningCount - 1, 0, 3);
-    }
+  function pickMajor(majorId: string) {
+    gameStore.selectMajor(majorId);
+    gameStore.save();
   }
 </script>
 
-<section class="academics-page">
-  <header class="summary panel">
-    <div>
-      <p class="label">현재 학업 단계</p>
-      <strong>{activeSegment === "highschool" ? "고등학교" : "대학교"}</strong>
+<section class="page">
+  <!-- ── 요약 헤더 ─────────────────────────────────────────── -->
+  <header class="summary-row">
+    {#if isUniv}
+      <div class="summary-item">
+        <p class="lbl">재학 상태</p>
+        <strong class="g-top">{univYear}학년 {univSemester % 2 === 1 ? "1학기" : "2학기"}</strong>
+      </div>
+      <div class="summary-item">
+        <p class="lbl">전공</p>
+        <strong class={school.majorSelected ? "g-mid" : "g-low"}>
+          {school.majorSelected ? school.universityMajor : "미선택"}
+        </strong>
+      </div>
+      {#if school.majorSelected && majorEffPct > 0}
+        <div class="summary-item">
+          <p class="lbl">전공 보너스</p>
+          <strong class="g-top">훈련 +{majorEffPct}%</strong>
+        </div>
+      {/if}
+      {#if school.majorSelected && isGeneral}
+        <div class="summary-item">
+          <p class="lbl">전공 보너스</p>
+          <strong class="g-mid">학업 점수 ×1.5</strong>
+        </div>
+      {/if}
+    {:else}
+      <div class="summary-item">
+        <p class="lbl">평균 등급</p>
+        <strong class={gradeClass(avgGrade)}>{avgGrade}등급</strong>
+      </div>
+    {/if}
+    <div class="summary-item">
+      <p class="lbl">학업 상태</p>
+      <strong class={riskClass(school.lastGradeRisk)}>
+        {school.lastGradeRisk === "ok" ? "정상" : school.lastGradeRisk === "warn" ? "주의" : "경고"}
+      </strong>
     </div>
-    <div>
-      <p class="label">평균 등급</p>
-      <strong class={gradeClass(avgGrade)}>{avgGrade.toFixed(1)} 등급</strong>
+    <div class="summary-item">
+      <p class="lbl">최근 성적</p>
+      <strong class={school.lastGrade ? gradeClass(school.lastGrade) : "g-low"}>
+        {school.lastGrade ? `${school.lastGrade}등급` : "미응시"}
+      </strong>
     </div>
-    <div>
-      <p class="label">학업 상태</p>
-      <strong class={riskClass(riskLevel)}>{riskLevel}</strong>
+    <div class="summary-item">
+      <p class="lbl">경고 누적</p>
+      <strong class={school.warningCount >= 2 ? "g-risk" : school.warningCount >= 1 ? "g-low" : "ok"}>
+        {school.warningCount}회
+      </strong>
     </div>
-    <div>
-      <p class="label">체력</p>
-      <strong>{stamina.toFixed(0)}</strong>
-    </div>
+    {#if school.eligibilityBlocked}
+      <div class="block-banner">⚠ 학사 경고 — 이번 주 경기 출전 정지</div>
+    {/if}
   </header>
 
-  <div class="segment-tabs">
-    <button
-      class:active={activeSegment === "highschool"}
-      on:click={() => (activeSegment = "highschool")}
-    >
-      고등학교
-    </button>
-    <button
-      class:active={activeSegment === "university"}
-      disabled={!attendsUniversity}
-      on:click={() => (activeSegment = "university")}
-    >
-      대학교
-      {#if !attendsUniversity}<span class="lock">비진학</span>{/if}
-    </button>
-  </div>
-
-  {#if activeSegment === "highschool"}
-    <div class="content-grid">
-      <section class="panel">
-        <h3>과목별 9등급 현황</h3>
-        <div class="subject-head">
-          <span>과목</span>
-          <span>석차백분율</span>
-          <span>등급</span>
-          <span>출석</span>
-          <span>과제</span>
-        </div>
-        <div class="subject-rows">
-          {#each highSchoolRows as row}
-            <div class="subject-row">
-              <strong>{row.name}</strong>
-              <span>{row.percentile.toFixed(1)}%</span>
-              <span class={gradeClass(toGrade(row.percentile))}>{toGrade(row.percentile)}등급</span>
-              <span>{row.attendance.toFixed(0)}%</span>
-              <span>{row.assignment.toFixed(0)}%</span>
-            </div>
-          {/each}
-        </div>
-      </section>
-
-      <section class="panel">
-        <h3>주간 학업 선택</h3>
-        <div class="choices">
-          {#each weeklyChoices as choice}
-            <button
-              class:active={selectedChoiceId === choice.id}
-              on:click={() => (selectedChoiceId = choice.id)}
-            >
-              <strong>{choice.name}</strong>
-              <p>{choice.description}</p>
-            </button>
-          {/each}
-        </div>
-        <div class="projection">
-          <p>예상 변화</p>
-          <ul>
-            <li>체력 {stamina.toFixed(0)} → {projectedStamina.toFixed(0)}</li>
-            <li>평균등급 {avgGrade.toFixed(1)} → {projectedAvgGrade.toFixed(1)}</li>
-            <li>평균출석 {avgAttendance.toFixed(1)}% → {projectedAttendance.toFixed(1)}%</li>
-            <li>평균과제 {avgAssignment.toFixed(1)}% → {projectedAssignment.toFixed(1)}%</li>
-          </ul>
-          <button class="apply" on:click={applyWeeklyChoice}>이번 주 선택 적용</button>
-        </div>
-      </section>
-
-      <section class="panel events">
-        <h3>시험/리스크</h3>
-        <ul>
-          <li>중간고사 D-11</li>
-          <li>영어 듣기 평가 D-4</li>
-          <li>과학 수행평가 D-6</li>
-          <li>현재 경고 누적: {warningCount}회</li>
-        </ul>
-      </section>
+  <!-- ── 대학 전공 선택 (미선택 시 우선 표시) ──────────────── -->
+  {#if isUniv && !school.majorSelected}
+    <div class="major-select-banner">
+      <p class="major-select-title">전공을 선택해주세요</p>
+      <p class="major-select-hint">전공은 훈련 효율에 영구적으로 영향을 줍니다. 신중하게 선택하세요.</p>
+      <div class="major-list">
+        {#each UNIVERSITY_MAJORS as m}
+          <button class="major-btn" on:click={() => pickMajor(m.id)} type="button">
+            <strong>{m.id}</strong>
+            <span>{m.desc}</span>
+          </button>
+        {/each}
+      </div>
     </div>
-  {:else if attendsUniversity}
-    <div class="uni-grid">
-      <section class="panel">
-        <h3>대학교 학업 더미</h3>
-        <div class="uni-head">
-          <div>
-            <p class="label">전공</p>
-            <strong>{universityMajor}</strong>
-          </div>
-          <div>
-            <p class="label">학점</p>
-            <strong>{universitySummary.creditLabel}</strong>
-          </div>
-          <div>
-            <p class="label">이수 학점</p>
-            <strong>{universitySummary.acquiredCredits} / {universitySummary.targetCredits}</strong>
-          </div>
-        </div>
-        <ul class="uni-list">
-          <li><span>출석</span><strong>{universitySummary.attendance}%</strong></li>
-          <li><span>과제</span><strong>{universitySummary.assignment}%</strong></li>
-          <li><span>학사 위험</span><strong class={riskClass(universitySummary.warningRisk)}>{universitySummary.warningRisk}</strong></li>
-        </ul>
-      </section>
-
-      <section class="panel">
-        <h3>전공 선택 계획</h3>
-        <p class="plan-text">현재 더미는 체육교육 고정입니다. 진학 단계에서 아래 전공 중 선택하도록 확장 예정입니다.</p>
-        <div class="major-chips">
-          {#each plannedUniversityMajors as major}
-            <span class:active={major === universityMajor}>{major}</span>
-          {/each}
-        </div>
-      </section>
-    </div>
-  {:else}
-    <section class="panel locked">
-      <h3>대학교 학업</h3>
-      <p>현재 커리어에서 대학 진학을 선택하지 않아 비활성 상태입니다.</p>
-      <p>대학 진학 경로 선택 시 학점/전공/학사경고 시스템이 활성화됩니다.</p>
-    </section>
   {/if}
+
+  <div class="main-grid">
+    <!-- ── 과목별 현황 ──────────────────────────────────────── -->
+    <section class="panel subject-panel">
+      <h3>과목별 현황</h3>
+      <div class="subject-head">
+        <span>과목</span>
+        <span>석차백분율</span>
+        <span>등급</span>
+        <span>출석</span>
+        <span>과제</span>
+      </div>
+      <div class="subject-rows">
+        {#each subjects as row}
+          <div class="subject-row">
+            <strong>{row.name}</strong>
+            <span>{row.percentile.toFixed(1)}%</span>
+            <span class={gradeClass(row.grade)}>{row.grade}등급</span>
+            <span class={row.attendance < 85 ? "warn" : ""}>{row.attendance.toFixed(0)}%</span>
+            <span class={row.assignment < 75 ? "warn" : ""}>{row.assignment.toFixed(0)}%</span>
+          </div>
+        {/each}
+      </div>
+    </section>
+
+    <!-- ── 주간 학업 선택 ────────────────────────────────────── -->
+    <section class="panel mode-panel">
+      <h3>주간 학업 선택</h3>
+      <p class="mode-hint">선택한 모드는 다음 주 진행 시 적용됩니다.</p>
+
+      <div class="mode-list">
+        {#each STUDY_MODE_OPTIONS as opt}
+          {@const fx = STUDY_MODE_EFFECTS[opt.id]}
+          <button
+            class="mode-btn"
+            class:active={school.weeklyStudyMode === opt.id}
+            class:risk={opt.id === "sleep"}
+            on:click={() => setMode(opt.id)}
+            type="button"
+          >
+            <div class="mode-top">
+              <strong>{opt.name}</strong>
+              <span class="eff-badge">훈련 {Math.round(fx.efficiencyMod * 100)}%</span>
+            </div>
+            <p class="mode-desc">{opt.desc}</p>
+          </button>
+        {/each}
+      </div>
+    </section>
+
+    <!-- ── 시험 진행 상황 ────────────────────────────────────── -->
+    <section class="panel exam-panel">
+      <h3>시험 준비 현황</h3>
+
+      <div class="exam-next">
+        <p class="lbl">다음 시험</p>
+        <strong>{nextExam.label}</strong>
+        <span class="weeks-left">D-{nextExam.weeksLeft}주</span>
+      </div>
+
+      <div class="accum-bar-wrap">
+        <div class="bar-label">
+          <span>누적 학업 점수</span>
+          <span>{accumPct} / 100</span>
+        </div>
+        <div class="bar-track">
+          <div
+            class="bar-fill"
+            class:bar-good={accumPct >= 65}
+            class:bar-mid={accumPct >= 38 && accumPct < 65}
+            class:bar-low={accumPct < 38}
+            style="width: {accumPct}%"
+          ></div>
+        </div>
+        <p class="bar-hint">
+          {accumPct >= 80 ? "우수한 준비 상태" :
+           accumPct >= 50 ? "평균 수준, 꾸준히 유지하세요" :
+           accumPct >= 25 ? "주의: 집중 수업을 늘리세요" :
+           "위험: 즉시 학업 집중이 필요합니다"}
+        </p>
+      </div>
+
+      {#if school.lastGrade !== null}
+        <div class="last-grade-row">
+          <p class="lbl">직전 시험 성적</p>
+          <span class="grade-badge {gradeClass(school.lastGrade)}">{school.lastGrade}등급</span>
+          <span class="risk-tag {riskClass(school.lastGradeRisk)}">
+            {school.lastGradeRisk === "ok" ? "정상" : school.lastGradeRisk === "warn" ? "주의" : "경고"}
+          </span>
+        </div>
+      {/if}
+    </section>
+  </div>
 </section>
 
 <style>
-  .academics-page {
-    height: 100%;
-    min-height: 0;
-    overflow: hidden;
+  .page {
     display: grid;
     grid-template-rows: auto auto minmax(0, 1fr);
     gap: 10px;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* ── 대학 전공 선택 배너 ────────────────────────────────────── */
+  .major-select-banner {
+    background: #101e38;
+    border: 1px solid #3a5a20;
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: grid;
+    gap: 10px;
+  }
+
+  .major-select-title {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: #a0d870;
+  }
+
+  .major-select-hint {
+    margin: 0;
+    font-size: 12px;
+    color: #6a9050;
+  }
+
+  .major-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .major-btn {
+    background: #0e1a2e;
+    border: 1px solid #2a4050;
+    border-radius: 8px;
+    padding: 10px 12px;
+    text-align: left;
+    cursor: pointer;
+    display: grid;
+    gap: 4px;
+    transition: background 0.1s, border-color 0.1s;
+  }
+
+  .major-btn:hover {
+    background: #162838;
+    border-color: #4a7050;
+  }
+
+  .major-btn strong {
+    font-size: 14px;
+    color: #c8e8a8;
+  }
+
+  .major-btn span {
+    font-size: 11px;
+    color: #6a8860;
+  }
+
+  /* ── 요약 헤더 ─────────────────────────────────────────────── */
+  .summary-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    background: #0f1c34;
+    border: 1px solid #2a3e65;
+    border-radius: 10px;
+    padding: 10px 16px;
+    flex-wrap: wrap;
+  }
+
+  .summary-item {
+    display: grid;
+    gap: 2px;
+    min-width: 70px;
+  }
+
+  .lbl {
+    margin: 0;
+    font-size: 11px;
+    color: #6a86b8;
+  }
+
+  .summary-item strong {
+    font-size: 18px;
+    color: #e8f2ff;
+  }
+
+  .block-banner {
+    margin-left: auto;
+    padding: 5px 12px;
+    background: #3a0c0c;
+    border: 1px solid #8a2020;
+    border-radius: 6px;
+    color: #ff9090;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  /* ── 메인 그리드 ────────────────────────────────────────────── */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1.3fr 1fr;
+    gap: 10px;
+    min-height: 0;
+    overflow: hidden;
   }
 
   .panel {
     background: #0f1c34;
     border: 1px solid #2a3e65;
     border-radius: 12px;
-    padding: 12px;
-  }
-
-  .summary {
+    padding: 14px;
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 8px;
-  }
-
-  .summary .label,
-  .label {
-    margin: 0 0 4px;
-    font-size: 12px;
-    color: #8ea7d8;
-  }
-
-  .summary strong {
-    font-size: 20px;
-    color: #eaf1ff;
-  }
-
-  .segment-tabs {
-    display: flex;
-    gap: 8px;
-  }
-
-  .segment-tabs button {
-    border: 1px solid #2f4672;
-    background: #172743;
-    color: #d8e5ff;
-    border-radius: 10px;
-    padding: 8px 12px;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .segment-tabs button.active {
-    border-color: #75a6ff;
-    background: #213764;
-  }
-
-  .segment-tabs button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  .lock {
-    font-size: 11px;
-    color: #ffcc7a;
-    border: 1px solid #92672d;
-    border-radius: 999px;
-    padding: 2px 8px;
-  }
-
-  .content-grid {
-    min-height: 0;
-    display: grid;
-    grid-template-columns: 1.6fr 1.2fr 0.9fr;
+    align-content: start;
     gap: 10px;
-  }
-
-  .uni-grid {
     min-height: 0;
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: 10px;
+    overflow: hidden;
   }
 
-  h3 {
-    margin: 0 0 10px;
-    font-size: 18px;
-    color: #f5f9ff;
-  }
+  h3 { margin: 0; font-size: 16px; color: #e8f2ff; }
 
+  /* ── 과목 테이블 ────────────────────────────────────────────── */
   .subject-head,
   .subject-row {
     display: grid;
-    grid-template-columns: 1.1fr 0.9fr 0.7fr 0.7fr 0.7fr;
-    gap: 8px;
+    grid-template-columns: 1fr 1.1fr 0.8fr 0.8fr 0.8fr;
+    gap: 6px;
     align-items: center;
+    font-size: 13px;
   }
 
   .subject-head {
-    font-size: 12px;
-    color: #8ea7d8;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #26395d;
+    color: #6a86b8;
+    font-size: 11px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #1e3050;
   }
 
-  .subject-rows {
-    display: grid;
-    gap: 8px;
-    margin-top: 8px;
-  }
+  .subject-rows { display: grid; gap: 6px; }
 
   .subject-row {
     background: #122443;
-    border: 1px solid #264170;
-    border-radius: 8px;
+    border: 1px solid #1e3a62;
+    border-radius: 7px;
     padding: 7px 8px;
-    font-size: 13px;
-    color: #dfe8ff;
+    color: #d8e8ff;
   }
 
-  .choices {
-    display: grid;
-    gap: 8px;
+  .subject-row strong { color: #eef4ff; }
+
+  /* ── 주간 선택 ──────────────────────────────────────────────── */
+  .mode-hint {
+    margin: -4px 0 0;
+    font-size: 12px;
+    color: #5a78a8;
   }
 
-  .choices button {
+  .mode-list { display: grid; gap: 8px; }
+
+  .mode-btn {
     border: 1px solid #2a4168;
-    background: #13233f;
-    color: #dce8ff;
+    background: #0e1e38;
     border-radius: 9px;
-    padding: 8px;
+    padding: 10px 12px;
     text-align: left;
     cursor: pointer;
-  }
-
-  .choices button.active {
-    border-color: #7cabff;
-    background: #1b325b;
-  }
-
-  .choices button strong {
-    display: block;
-    font-size: 14px;
-    margin-bottom: 4px;
-  }
-
-  .choices button p {
-    margin: 0;
-    font-size: 12px;
-    color: #b5c8ee;
-  }
-
-  .projection {
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid #26395d;
-  }
-
-  .projection p {
-    margin: 0 0 6px;
-    font-size: 13px;
-    color: #8ea7d8;
-  }
-
-  .projection ul,
-  .events ul,
-  .uni-list {
-    margin: 0;
-    padding-left: 18px;
-    color: #e0ebff;
-    font-size: 13px;
-    line-height: 1.5;
-  }
-
-  .apply {
-    margin-top: 10px;
-    width: 100%;
-    border: 1px solid #6f9fff;
-    background: #2f5eb4;
-    color: #f1f7ff;
-    border-radius: 8px;
-    padding: 8px 10px;
-    font-weight: 700;
-    cursor: pointer;
-  }
-
-  .uni-head {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4px;
+    transition: background 0.1s, border-color 0.1s;
+  }
+
+  .mode-btn:hover   { background: #152640; border-color: #3a5a90; }
+  .mode-btn.active  { background: #1a3560; border-color: #5080d0; }
+  .mode-btn.risk    { border-color: #5c2a10; }
+  .mode-btn.risk:hover  { background: #1c1208; border-color: #804020; }
+  .mode-btn.risk.active { background: #2a1808; border-color: #a05020; }
+
+  .mode-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     gap: 8px;
-    margin-bottom: 10px;
   }
 
-  .uni-head strong {
-    color: #eef4ff;
-    font-size: 18px;
+  .mode-top strong { font-size: 14px; color: #e0ecff; }
+
+  .eff-badge {
+    font-size: 11px;
+    color: #8ab0e0;
+    background: #1a2e50;
+    border: 1px solid #2a4270;
+    border-radius: 4px;
+    padding: 1px 6px;
   }
 
-  .uni-list {
-    list-style: none;
-    padding-left: 0;
+  .mode-btn.active .eff-badge { background: #1e3a70; border-color: #4070c0; color: #c0d8ff; }
+
+  .mode-desc { margin: 0; font-size: 12px; color: #6a88b8; }
+  .mode-btn.active .mode-desc { color: #90b0e0; }
+
+  /* ── 시험 준비 ──────────────────────────────────────────────── */
+  .exam-next {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
   }
 
-  .uni-list li {
-    border-top: 1px solid #26395d;
-    padding: 8px 0;
+  .exam-next strong { font-size: 16px; color: #e8f2ff; }
+
+  .weeks-left {
+    font-size: 13px;
+    color: #7090c8;
+    background: #152240;
+    border: 1px solid #2a3e65;
+    border-radius: 4px;
+    padding: 1px 7px;
+  }
+
+  .accum-bar-wrap { display: grid; gap: 6px; }
+
+  .bar-label {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-  }
-
-  .uni-list li:first-child {
-    border-top: 0;
-  }
-
-  .plan-text {
-    margin: 0;
-    color: #c9d8f5;
-    font-size: 13px;
-    line-height: 1.5;
-  }
-
-  .major-chips {
-    margin-top: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-
-  .major-chips span {
-    border: 1px solid #35517f;
-    border-radius: 999px;
-    padding: 4px 10px;
-    color: #c9daf9;
-    background: #142745;
     font-size: 12px;
+    color: #7090c8;
   }
 
-  .major-chips span.active {
-    border-color: #8bb5ff;
-    color: #f1f7ff;
-    background: #2a4677;
+  .bar-track {
+    height: 10px;
+    background: #0a1428;
+    border-radius: 999px;
+    overflow: hidden;
   }
 
-  .locked {
-    display: grid;
-    align-content: center;
-    justify-items: center;
+  .bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.3s;
+  }
+
+  .bar-good  { background: linear-gradient(90deg, #2a7a50, #50c880); }
+  .bar-mid   { background: linear-gradient(90deg, #7a6020, #d0a030); }
+  .bar-low   { background: linear-gradient(90deg, #7a2020, #d04040); }
+
+  .bar-hint {
+    margin: 0;
+    font-size: 12px;
+    color: #6a86b8;
+  }
+
+  .last-grade-row {
+    display: flex;
+    align-items: center;
     gap: 8px;
-    text-align: center;
-    color: #d6e3ff;
+    padding-top: 8px;
+    border-top: 1px solid #1e3050;
   }
 
-  .g-top {
-    color: #77eb9f;
+  .grade-badge {
+    font-size: 15px;
     font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 6px;
+    background: #122030;
   }
 
-  .g-mid {
-    color: #77b8ff;
-    font-weight: 700;
+  .risk-tag {
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid;
   }
 
-  .g-low {
-    color: #ffd37a;
-    font-weight: 700;
-  }
-
-  .g-risk {
-    color: #ff8d8d;
-    font-weight: 700;
-  }
-
-  .ok {
-    color: #77eb9f;
-  }
-
-  .warn {
-    color: #ffd37a;
-  }
-
-  .danger {
-    color: #ff8d8d;
-  }
+  /* ── 색상 클래스 ─────────────────────────────────────────────── */
+  .g-top    { color: #70e898; }
+  .g-mid    { color: #70b8ff; }
+  .g-low    { color: #ffd060; }
+  .g-risk   { color: #ff8080; }
+  .ok       { color: #70e898; }
+  .warn     { color: #ffd060; border-color: #806020; background: #201808; }
+  .danger   { color: #ff8080; border-color: #801010; background: #1e0808; }
 
   @media (max-width: 1280px) {
-    .summary strong {
-      font-size: 18px;
-    }
-
-    .content-grid {
-      grid-template-columns: 1.35fr 1fr 0.9fr;
-    }
-
-    .uni-grid {
-      grid-template-columns: 1fr;
-    }
+    .main-grid { grid-template-columns: 1.4fr 1.2fr; }
+    .exam-panel { grid-column: 1 / -1; }
   }
 </style>

@@ -1,11 +1,13 @@
 {
   "id": "POOL_SOCIAL_DAILY",
-  "description": "Random social events checked in daily cycle",
+  "description": "소셜 관련 랜덤 이벤트 풀",
   "baseRoll": {
     "mode": "percent",
-    "value": 20
+    "value": 22
   },
-  "maxPicksPerDay": 1,
-  "eventIds": []
+  "maxPicksPerWeek": 1,
+  "eventIds": [
+    "EVT_RAND_FRIEND_VISIT",
+    "EVT_RAND_SOCIAL_MEDIA_MENTION"
+  ]
 }
-

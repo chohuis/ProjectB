@@ -1,46 +1,69 @@
 {
   "events": [
     {
-      "id": "EVT_PRO_YEAR2_WINS_TITLE_RACE",
+      "id": "EVT_COND_FATIGUE_WARNING",
       "type": "conditional",
-      "category": "career",
-      "priority": 700,
-      "oncePolicy": "once_per_season",
-      "cooldownDays": 14,
-      "conditions": {
-        "all": [
-          { "op": "eq", "left": "career.stage", "right": "pro" },
-          { "op": "eq", "left": "career.proYear", "right": 2 },
-          { "op": "gte", "left": "season.day", "right": 70 },
-          { "op": "gte", "left": "player.stats.win", "right": 10 }
-        ]
-      },
-      "messageTemplateId": "MSG_TMPL_CAREER_WINS_TITLE_RACE",
-      "decisionTemplateId": "MSG_DECISION_CAREER_WINS_TITLE_RACE",
-      "effectsOnTrigger": ["flag:career.wins_title_race=true"]
+      "category": "health",
+      "priority": 900,
+      "oncePolicy": "repeatable",
+      "cooldownWeeks": 3,
+      "conditions": [
+        { "type": "fatigue_gte", "value": 75 }
+      ],
+      "messageTemplateId": "MSG_COND_FATIGUE_WARNING",
+      "decisionTemplateId": "DEC_COND_FATIGUE_WARNING"
     },
     {
-      "id": "EVT_PRO_RELATIONSHIP_RUMOR",
+      "id": "EVT_COND_SLUMP",
       "type": "conditional",
-      "category": "media",
-      "priority": 650,
+      "category": "mental",
+      "priority": 850,
       "oncePolicy": "repeatable",
-      "cooldownDays": 30,
-      "conditions": {
-        "all": [
-          { "op": "eq", "left": "career.stage", "right": "pro" },
-          { "op": "gte", "left": "player.fame", "right": 55 },
-          { "op": "gte", "left": "season.day", "right": 40 }
-        ],
-        "any": [
-          { "op": "gte", "left": "player.stats.win", "right": 8 },
-          { "op": "gte", "left": "player.stats.eraRankTopPercent", "right": 80 }
-        ]
-      },
-      "messageTemplateId": "MSG_TMPL_MEDIA_RELATIONSHIP_RUMOR",
-      "decisionTemplateId": "MSG_DECISION_MEDIA_RELATIONSHIP_RUMOR",
-      "effectsOnTrigger": ["flag:media.relationship_rumor=true"]
+      "cooldownWeeks": 4,
+      "conditions": [
+        { "type": "morale_lte", "value": 38 }
+      ],
+      "messageTemplateId": "MSG_COND_SLUMP",
+      "decisionTemplateId": "DEC_COND_SLUMP"
+    },
+    {
+      "id": "EVT_COND_PEAK_FORM",
+      "type": "conditional",
+      "category": "training",
+      "priority": 800,
+      "oncePolicy": "repeatable",
+      "cooldownWeeks": 3,
+      "conditions": [
+        { "type": "condition_gte", "value": 88 },
+        { "type": "morale_gte", "value": 70 }
+      ],
+      "messageTemplateId": "MSG_COND_PEAK_FORM",
+      "decisionTemplateId": "DEC_COND_PEAK_FORM"
+    },
+    {
+      "id": "EVT_COND_STAT_MILESTONE",
+      "type": "conditional",
+      "category": "career",
+      "priority": 750,
+      "oncePolicy": "once_per_season",
+      "conditions": [
+        { "type": "season_wins_gte", "value": 5 }
+      ],
+      "messageTemplateId": "MSG_COND_STAT_MILESTONE",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "EVT_COND_TEAM_SUCCESS",
+      "type": "conditional",
+      "category": "team",
+      "priority": 700,
+      "oncePolicy": "once_per_season",
+      "conditions": [
+        { "type": "team_rank_lte", "value": 2 },
+        { "type": "week_gte", "value": 10 }
+      ],
+      "messageTemplateId": "MSG_COND_TEAM_SUCCESS",
+      "decisionTemplateId": null
     }
   ]
 }
-

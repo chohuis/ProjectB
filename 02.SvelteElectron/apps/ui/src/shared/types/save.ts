@@ -27,7 +27,7 @@ export interface BattingAttributes {
 }
 
 // ── 주인공 저장 데이터 ─────────────────────────────────────────
-export type CareerStage  = "highschool" | "university" | "pro_kbl" | "pro_abl";
+export type CareerStage  = "highschool" | "university" | "pro" | "independent" | "military" | "pro_kbl" | "pro_abl";
 export type PlayerType   = "pitcher" | "batter" | "twoWay";
 export type Handedness   = "L" | "R" | "S";
 export type PitchingForm = "overhand" | "threeQuarter" | "sidearm" | "underhand";
@@ -117,10 +117,46 @@ export interface TrainingPlanState {
 }
 
 // ── 학교 생활 상태 ─────────────────────────────────────────────
+export type StudyMode = "focus" | "normal" | "rest" | "sleep";
+export type GradeRisk  = "ok" | "warn" | "danger";
+
+export interface SubjectScore {
+  percentile: number;   // 석차백분율 (1~100, 낮을수록 좋음)
+  attendance: number;   // 출석률 (0~100)
+  assignment: number;   // 과제 이행률 (0~100)
+}
+
 export interface SchoolState {
   attendsUniversity: boolean;
   universityMajor: string;
   plannedUniversityMajors: string[];
+  // 학업 관리
+  weeklyStudyMode: StudyMode;
+  examAccumScore: number;           // 시험까지 누적 학업 점수 (0~100)
+  lastGrade: number | null;         // 최근 시험 등급 (1~9, null=미응시)
+  lastGradeRisk: GradeRisk;
+  eligibilityBlocked: boolean;      // 성적 불량 출전 정지 중
+  subjectScores: Record<string, SubjectScore>;
+  warningCount: number;             // 누적 수업 태만 경고
+  careerChoiceTriggered: boolean;   // 진로 선택 이벤트 발동 여부
+  universityWeek: number;           // 대학 입학 후 경과 주차 (0 = 고교)
+  majorSelected: boolean;           // 전공 확정 여부
+}
+
+export type AchievementCategory = "baseball" | "growth" | "social" | "hidden";
+
+export interface AchievementRuntime {
+  id: string;
+  progress: number;
+  unlockedAt: string | null;
+  claimedAt: string | null;
+  tracked?: boolean;
+}
+
+export interface AchievementMetrics {
+  strikeoutTotal: number;
+  saveTotal: number;
+  kakaoFirstContact: boolean;
 }
 
 // ── save_game.json 전체 구조 ───────────────────────────────────
@@ -131,6 +167,8 @@ export interface SaveGame {
   mailbox: MessageItem[];
   trainingPlan: TrainingPlanState;
   schoolState: SchoolState;
+  achievements: AchievementRuntime[];
+  achievementMetrics: AchievementMetrics;
   recentLogs: string[];     // 최근 30개 활동 로그
   recentUpcoming: string[]; // 다음 예정 이벤트 목록
 }
@@ -142,6 +180,8 @@ export function makeSaveGame(
   mailbox: MessageItem[],
   trainingPlan: TrainingPlanState,
   schoolState: SchoolState,
+  achievements: AchievementRuntime[],
+  achievementMetrics: AchievementMetrics,
   recentLogs: string[],
   recentUpcoming: string[],
 ): SaveGame {
@@ -152,6 +192,8 @@ export function makeSaveGame(
     mailbox,
     trainingPlan,
     schoolState,
+    achievements,
+    achievementMetrics,
     recentLogs,
     recentUpcoming,
   };

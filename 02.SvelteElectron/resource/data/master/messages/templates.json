@@ -1,11 +1,123 @@
 {
   "templates": [
     {
-      "id": "MSG_TMPL_COACH_BULLPEN_EXTRA",
+      "id": "MSG_HS_SEASON_OPEN",
+      "category": "system",
+      "subject": "새 시즌이 시작됩니다",
+      "body": "드디어 새 시즌이 개막했습니다.\n\n올 시즌도 최선을 다해 팀의 승리에 기여하세요. 훈련 루틴을 점검하고 컨디션 관리에 집중하는 것이 좋습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_HS_MIDTERM",
+      "category": "system",
+      "subject": "중간고사 기간입니다",
+      "body": "이번 주는 중간고사 기간입니다.\n\n시험 준비로 인해 훈련 시간이 줄어들 수 있습니다. 학업과 훈련의 균형을 유지하면서 최선을 다해 주세요.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_HS_SUMMER_CAMP",
       "category": "coach",
-      "subject": "Extra bullpen suggestion",
-      "body": "Add 30-pitch bullpen today. Choice affects condition and training gain.",
-      "decisionTemplateId": "MSG_DECISION_BULLPEN_EXTRA"
+      "subject": "하계 합숙 훈련 안내",
+      "body": "이번 주부터 하계 합숙 훈련이 시작됩니다.\n\n합숙 강도에 따라 체력 소모와 성장이 달라집니다. 자신의 현재 상태를 고려하여 훈련 강도를 결정하세요.",
+      "decisionTemplateId": "DEC_HS_SUMMER_CAMP"
+    },
+    {
+      "id": "MSG_HS_FINAL",
+      "category": "system",
+      "subject": "기말고사 기간입니다",
+      "body": "이번 주는 기말고사 기간입니다.\n\n시험이 끝나면 곧 동계 훈련이 시작됩니다. 학업 마무리에 집중하고 몸 상태를 유지하세요.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_HS_YEAR_END",
+      "category": "system",
+      "subject": "시즌 마무리",
+      "body": "올 시즌이 마무리되었습니다.\n\n시즌 동안의 성과를 돌아보고, 다음 시즌을 위한 준비를 시작하세요. 겨울 동안의 훈련이 내년 성장의 기반이 됩니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_COND_FATIGUE_WARNING",
+      "category": "coach",
+      "subject": "피로 누적 경고",
+      "body": "코치의 말: 요즘 훈련 중에 움직임이 둔해졌어요. 피로가 꽤 쌓인 것 같습니다.\n\n지금 상태로 무리하면 부상 위험이 있습니다. 이번 주 훈련 강도를 어떻게 할지 결정하세요.",
+      "decisionTemplateId": "DEC_COND_FATIGUE_WARNING"
+    },
+    {
+      "id": "MSG_COND_SLUMP",
+      "category": "coach",
+      "subject": "슬럼프 징후 — 코치 상담",
+      "body": "코치의 말: 최근 투구 리듬이 많이 흔들리고 있어요. 멘탈적으로 힘든 시기인 것 같은데, 같이 얘기해봅시다.\n\n슬럼프를 극복하는 방법은 다양합니다. 어떻게 접근하고 싶으신가요?",
+      "decisionTemplateId": "DEC_COND_SLUMP"
+    },
+    {
+      "id": "MSG_COND_PEAK_FORM",
+      "category": "coach",
+      "subject": "최상의 컨디션 — 특별 훈련 제안",
+      "body": "코치의 말: 요즘 상태가 정말 좋아 보입니다. 움직임도 가볍고 공도 잘 빠지네요.\n\n이 타이밍에 한 단계 더 올라갈 수 있는 집중 훈련을 해봅시다. 어떻게 할까요?",
+      "decisionTemplateId": "DEC_COND_PEAK_FORM"
+    },
+    {
+      "id": "MSG_COND_STAT_MILESTONE",
+      "category": "system",
+      "subject": "시즌 5승 달성!",
+      "body": "이번 시즌 5승을 달성했습니다!\n\n팀의 핵심 투수로서 인정받고 있습니다. 더 높은 목표를 향해 계속 나아가세요.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_COND_TEAM_SUCCESS",
+      "category": "manager",
+      "subject": "팀 상위권 진입 — 감독 메시지",
+      "body": "감독의 말: 우리 팀이 현재 리그 상위권에 올라섰습니다. 이 기세를 계속 이어가야 해요.\n\n네가 에이스로서 팀을 이끌어주길 바랍니다. 자신감을 갖고 임해주세요.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_RAND_LOCAL_INTERVIEW",
+      "category": "news",
+      "subject": "지역 방송 인터뷰 요청",
+      "body": "지역 스포츠 방송국에서 인터뷰 요청이 왔습니다.\n\n짧은 인터뷰이지만 지역 팬들에게 얼굴을 알릴 수 있는 기회입니다. 참여 여부를 결정하세요.",
+      "decisionTemplateId": "DEC_RAND_LOCAL_INTERVIEW"
+    },
+    {
+      "id": "MSG_RAND_SPORTS_MEDIA",
+      "category": "news",
+      "subject": "스포츠 매체에 이름이 언급됐습니다",
+      "body": "지역 스포츠 포털에 최근 경기 호투가 소개되었습니다.\n\n기사 내용: '올 시즌 주목해야 할 투수' 명단에 이름이 올랐습니다. 팀 관계자들도 주목하고 있습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_RAND_FRIEND_VISIT",
+      "category": "system",
+      "subject": "친구가 연락해왔습니다",
+      "body": "오랜 친구에게서 연락이 왔습니다. '요즘 어때? 오랜만에 얼굴 보자'\n\n잠깐 시간을 내어 만났습니다. 일상적인 대화가 정신적 환기에 도움이 됩니다.\n\n[사기 +5]",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_RAND_SOCIAL_MEDIA_MENTION",
+      "category": "news",
+      "subject": "SNS에 경기 영상이 올라왔습니다",
+      "body": "팬이 찍은 경기 하이라이트 영상이 SNS에서 공유되고 있습니다.\n\n댓글 반응: '이 선수 진짜 공 빠르다', '커맨드가 장난 아니네'\n\n작은 관심이지만 선수로서 보람을 느낍니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_RAND_SENIOR_ADVICE",
+      "category": "coach",
+      "subject": "선배가 조언을 건네왔습니다",
+      "body": "경험 많은 선배가 훈련 후 말을 걸어왔습니다.\n\n'나도 너만할 때 제일 힘들었어. 투구폼 잡는 게 평생 숙제야. 그래도 포기하지 마.'\n\n선배의 경험에서 무언가를 배울 수 있을 것 같습니다.",
+      "decisionTemplateId": "DEC_RAND_SENIOR_ADVICE"
+    },
+    {
+      "id": "MSG_RAND_TEAM_MEAL",
+      "category": "system",
+      "subject": "팀 회식이 있습니다",
+      "body": "오늘 저녁 팀 전체 회식이 잡혔습니다.\n\n분위기가 다소 가라앉아 있던 팀에 활력을 불어넣을 수 있는 기회입니다. 어떻게 참여할지 결정하세요.",
+      "decisionTemplateId": "DEC_RAND_TEAM_MEAL"
+    },
+    {
+      "id": "MSG_RAND_BULLPEN_EXTRA",
+      "category": "coach",
+      "subject": "추가 불펜 세션 제안",
+      "body": "코치의 말: 오늘 컨디션이 좋아 보이는데, 저녁에 30구 추가 불펜 세션 어때요?\n\n선택에 따라 오늘 컨디션과 내일 훈련 효율이 달라집니다.",
+      "decisionTemplateId": "DEC_RAND_BULLPEN_EXTRA"
     }
   ]
 }

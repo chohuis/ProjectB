@@ -3,11 +3,12 @@
   import { seasonStore } from "../../../shared/stores/season";
   import { teamMap } from "../../../shared/stores/master";
 
-  $: protagonist = $gameStore.protagonist;
-  $: myTeamId    = protagonist.teamId;
-  $: fatigue     = protagonist.fatigue;
-  $: condition   = protagonist.condition;
-  $: morale      = protagonist.morale;
+  $: protagonist        = $gameStore.protagonist;
+  $: myTeamId           = protagonist.teamId;
+  $: fatigue            = protagonist.fatigue;
+  $: condition          = protagonist.condition;
+  $: morale             = protagonist.morale;
+  $: eligibilityBlocked = $gameStore.schoolState.eligibilityBlocked;
 
   // 다음 경기
   $: nextGame = $seasonStore.schedule.find((e) => e.isProtagonistGame && !e.result) ?? null;
@@ -49,6 +50,7 @@
 
   // 리스크 알림
   $: riskAlerts = [
+    ...(eligibilityBlocked ? [`학사 경고 — 이번 주 경기 출전 정지`] : []),
     ...(fatigue > 70 ? [`피로도 ${fatigue} — 훈련 강도 조절 권장`] : []),
     ...(morale  < 40 ? [`사기 저하 (${morale}) — 회복 전략 필요`]   : []),
     ...(condition < 50 ? [`컨디션 저하 (${condition}) — 회복 집중 필요`] : []),
@@ -105,8 +107,11 @@
 
     <article class="card schedule-card">
       <h3>일정 및 경기</h3>
+      {#if eligibilityBlocked}
+        <div class="block-banner">학사 경고 — 이번 주 경기 출전 정지</div>
+      {/if}
       {#if nextGame}
-        <div class="next-game">
+        <div class="next-game" class:dimmed={eligibilityBlocked && nextGame.week === $seasonStore.currentWeek}>
           <p><strong>{nextGameLabel}</strong> vs {nextGameOpponent}</p>
           <p>{isHomeGame ? "홈" : "원정"} · W{nextGame.week}</p>
         </div>
@@ -260,6 +265,19 @@
     font-size: 13px;
     padding: 4px 0;
   }
+
+  .block-banner {
+    background: #3a0c0c;
+    border: 1px solid #8a2020;
+    border-radius: 6px;
+    color: #ff9090;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 10px;
+    text-align: center;
+  }
+
+  .dimmed { opacity: 0.45; }
 
   @media (max-width: 1280px) {
     .kpi-row {

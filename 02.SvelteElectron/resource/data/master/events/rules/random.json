@@ -1,41 +1,109 @@
 {
   "events": [
     {
-      "id": "EVT_RANDOM_INTERVIEW_REQUEST",
+      "id": "EVT_RAND_LOCAL_INTERVIEW",
       "type": "random",
       "category": "media",
       "priority": 300,
       "oncePolicy": "repeatable",
-      "cooldownDays": 10,
-      "weight": 28,
+      "cooldownWeeks": 2,
+      "weight": 30,
       "poolId": "POOL_MEDIA_DAILY",
-      "randomGateConditions": {
-        "all": [
-          { "op": "gte", "left": "player.fame", "right": 20 },
-          { "op": "lte", "left": "player.fatigue", "right": 65 }
-        ]
-      },
-      "messageTemplateId": "MSG_TMPL_RANDOM_INTERVIEW",
-      "decisionTemplateId": "MSG_DECISION_RANDOM_INTERVIEW"
+      "conditions": [
+        { "type": "fatigue_lte", "value": 70 }
+      ],
+      "messageTemplateId": "MSG_RAND_LOCAL_INTERVIEW",
+      "decisionTemplateId": "DEC_RAND_LOCAL_INTERVIEW"
     },
     {
-      "id": "EVT_RANDOM_BUY_MEAL_FOR_JUNIOR",
+      "id": "EVT_RAND_SPORTS_MEDIA",
+      "type": "random",
+      "category": "media",
+      "priority": 280,
+      "oncePolicy": "repeatable",
+      "cooldownWeeks": 3,
+      "weight": 20,
+      "poolId": "POOL_MEDIA_DAILY",
+      "conditions": [
+        { "type": "career_stage", "stage": "highschool" },
+        { "type": "pitching_ovr_gte", "value": 60 }
+      ],
+      "messageTemplateId": "MSG_RAND_SPORTS_MEDIA",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "EVT_RAND_FRIEND_VISIT",
       "type": "random",
       "category": "social",
       "priority": 280,
       "oncePolicy": "repeatable",
-      "cooldownDays": 7,
+      "cooldownWeeks": 2,
+      "weight": 35,
+      "poolId": "POOL_SOCIAL_DAILY",
+      "conditions": [
+        { "type": "fatigue_lte", "value": 60 }
+      ],
+      "messageTemplateId": "MSG_RAND_FRIEND_VISIT",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "EVT_RAND_SOCIAL_MEDIA_MENTION",
+      "type": "random",
+      "category": "social",
+      "priority": 260,
+      "oncePolicy": "repeatable",
+      "cooldownWeeks": 1,
+      "weight": 25,
+      "poolId": "POOL_SOCIAL_DAILY",
+      "conditions": [],
+      "messageTemplateId": "MSG_RAND_SOCIAL_MEDIA_MENTION",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "EVT_RAND_SENIOR_ADVICE",
+      "type": "random",
+      "category": "team_life",
+      "priority": 300,
+      "oncePolicy": "repeatable",
+      "cooldownWeeks": 2,
+      "weight": 30,
+      "poolId": "POOL_TEAM_LIFE_DAILY",
+      "conditions": [
+        { "type": "fatigue_lte", "value": 75 }
+      ],
+      "messageTemplateId": "MSG_RAND_SENIOR_ADVICE",
+      "decisionTemplateId": "DEC_RAND_SENIOR_ADVICE"
+    },
+    {
+      "id": "EVT_RAND_TEAM_MEAL",
+      "type": "random",
+      "category": "team_life",
+      "priority": 290,
+      "oncePolicy": "repeatable",
+      "cooldownWeeks": 2,
       "weight": 35,
       "poolId": "POOL_TEAM_LIFE_DAILY",
-      "randomGateConditions": {
-        "all": [
-          { "op": "eq", "left": "schedule.nextDayType", "right": "training" },
-          { "op": "lte", "left": "player.fatigue", "right": 70 }
-        ]
-      },
-      "messageTemplateId": "MSG_TMPL_RANDOM_BUY_MEAL",
-      "decisionTemplateId": "MSG_DECISION_RANDOM_BUY_MEAL"
+      "conditions": [
+        { "type": "morale_lte", "value": 72 }
+      ],
+      "messageTemplateId": "MSG_RAND_TEAM_MEAL",
+      "decisionTemplateId": "DEC_RAND_TEAM_MEAL"
+    },
+    {
+      "id": "EVT_RAND_BULLPEN_EXTRA",
+      "type": "random",
+      "category": "training",
+      "priority": 310,
+      "oncePolicy": "repeatable",
+      "cooldownWeeks": 1,
+      "weight": 25,
+      "poolId": "POOL_TEAM_LIFE_DAILY",
+      "conditions": [
+        { "type": "fatigue_lte", "value": 65 },
+        { "type": "condition_gte", "value": 70 }
+      ],
+      "messageTemplateId": "MSG_RAND_BULLPEN_EXTRA",
+      "decisionTemplateId": "DEC_RAND_BULLPEN_EXTRA"
     }
   ]
 }
-

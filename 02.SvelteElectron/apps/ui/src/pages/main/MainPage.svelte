@@ -23,12 +23,16 @@
   import FinancePage from "../finance/FinancePage.svelte";
   import TestMatchPage from "../test/TestMatchPage.svelte";
   import RecordsPage from "../records/RecordsPage.svelte";
+  import AchievementsPage from "../achievements/AchievementsPage.svelte";
   import MessagesPage from "../messages/MessagesPage.svelte";
   import MessengerPage from "../messenger/MessengerPage.svelte";
   import TeamPage from "../team/TeamPage.svelte";
   import EventManagerModal from "../../features/events/ui/EventManagerModal.svelte";
+  import InGameEventModal from "../../features/events/ui/InGameEventModal.svelte";
+  import CareerChoiceModal from "../../features/career/ui/CareerChoiceModal.svelte";
   import DevToolsHubModal from "../../features/devtools/ui/DevToolsHubModal.svelte";
   import EntityManagerModal from "../../features/entity-manager/ui/EntityManagerModal.svelte";
+  import AchievementManagerModal from "../../features/achievements/ui/AchievementManagerModal.svelte";
   import SeasonEndModal from "../../features/season-end/ui/SeasonEndModal.svelte";
 
   export let onSeasonEnd: () => void = () => {};
@@ -37,6 +41,7 @@
   let devToolsHubOpen = false;
   let eventManagerOpen = false;
   let entityManagerOpen = false;
+  let achievementManagerOpen = false;
   const tabPageKey: Record<MainTabId, string> = {
     home: "page.home",
     messages: "page.messages",
@@ -49,6 +54,7 @@
     finance: "page.finance",
     test: "page.matchEngine",
     records: "page.records",
+    achievements: "page.achievements",
     academics: "page.academics"
   };
 
@@ -66,6 +72,12 @@
     }
     if (!pa || pa.type !== "message") handledMessageId = null;
   }
+
+  // 이벤트 pendingAction
+  $: pendingEvent = $nextPendingAction?.type === "event" ? $nextPendingAction : null;
+
+  // 진로 선택 pendingAction
+  $: pendingCareerChoice = $nextPendingAction?.type === "careerChoice";
 
   // 경기 pendingAction → 해당 일정 항목
   $: pendingGame = $nextPendingAction?.type === "game" ? $nextPendingAction : null;
@@ -90,6 +102,8 @@
     const oppId    = isHome ? pendingGameEntry.awayTeamId : pendingGameEntry.homeTeamId;
     const won      = myScore > oppScore;
     const diff     = Math.abs(myScore - oppScore);
+    const strikeouts = Math.max(0, Math.floor(Math.random() * 7) + 2);
+    const gotSave = won && pendingGameEntry.week > 3 && diff <= 3 ? 1 : 0;
 
     const growth = calcGameGrowth($gameStore.protagonist, won, diff);
     const matchLog = `W${pendingGameEntry.week} vs ${tName(oppId)} ${myScore}:${oppScore} ${won ? "승리" : "패배"}`;
@@ -99,6 +113,7 @@
       [],
       $seasonStore.currentWeek,
     );
+    gameStore.recordBaseballAchievementMetric({ strikeouts, save: gotSave });
     gameStore.addMessage({
       id: `msg-game-w${pendingGameEntry.week}-${Date.now()}`,
       category: "system",
@@ -130,11 +145,12 @@
     if (typing) return;
 
     event.preventDefault();
-    const anyOpen = devToolsHubOpen || eventManagerOpen || entityManagerOpen;
+    const anyOpen = devToolsHubOpen || eventManagerOpen || entityManagerOpen || achievementManagerOpen;
     if (anyOpen) {
       devToolsHubOpen = false;
       eventManagerOpen = false;
       entityManagerOpen = false;
+      achievementManagerOpen = false;
       return;
     }
     devToolsHubOpen = true;
@@ -168,12 +184,7 @@
           {:else if currentTab === "status"}
             <StatusPage />
           {:else if currentTab === "academics"}
-            <AcademicsPage
-              currentStage={$gameStore.school.currentStage}
-              attendsUniversity={$gameStore.school.attendsUniversity}
-              universityMajor={$gameStore.school.universityMajor}
-              plannedUniversityMajors={$gameStore.school.plannedUniversityMajors}
-            />
+            <AcademicsPage />
           {:else if currentTab === "roster"}
             <RosterPage />
           {:else if currentTab === "schedule"}
@@ -184,6 +195,8 @@
             <FinancePage />
           {:else if currentTab === "records"}
             <RecordsPage />
+          {:else if currentTab === "achievements"}
+            <AchievementsPage />
           {:else if currentTab === "messages"}
             <MessagesPage />
           {:else if currentTab === "messenger"}
@@ -214,13 +227,26 @@
     devToolsHubOpen = false;
     entityManagerOpen = true;
   }}
+  on:openAchievement={() => {
+    devToolsHubOpen = false;
+    achievementManagerOpen = true;
+  }}
 />
 
 <EventManagerModal open={eventManagerOpen} on:close={() => (eventManagerOpen = false)} />
 <EntityManagerModal open={entityManagerOpen} on:close={() => (entityManagerOpen = false)} />
+<AchievementManagerModal open={achievementManagerOpen} on:close={() => (achievementManagerOpen = false)} />
 
 {#if $seasonEnded}
   <SeasonEndModal onExit={onSeasonEnd} />
+{/if}
+
+{#if pendingCareerChoice}
+  <CareerChoiceModal />
+{/if}
+
+{#if pendingEvent}
+  <InGameEventModal action={pendingEvent} />
 {/if}
 
 {#if pendingGameEntry}

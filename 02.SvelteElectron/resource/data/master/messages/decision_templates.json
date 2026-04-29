@@ -1,17 +1,175 @@
 {
   "decisions": [
     {
-      "id": "MSG_DECISION_BULLPEN_EXTRA",
-      "prompt": "Do extra bullpen session?",
+      "id": "DEC_HS_SUMMER_CAMP",
+      "prompt": "하계 합숙 훈련 강도를 선택하세요.",
+      "options": [
+        {
+          "id": "intensive",
+          "label": "강도 높게 훈련한다",
+          "effectHint": "피로 +12, 커맨드·스태미나 경험치 +2",
+          "effects": ["fatigue:+12", "xp.command:+2", "xp.stamina:+2"]
+        },
+        {
+          "id": "normal",
+          "label": "보통 강도로 훈련한다",
+          "effectHint": "피로 +6, 커맨드 경험치 +1",
+          "effects": ["fatigue:+6", "xp.command:+1"]
+        },
+        {
+          "id": "recovery",
+          "label": "컨디션 회복에 집중한다",
+          "effectHint": "피로 -5, 컨디션 +8",
+          "effects": ["fatigue:-5", "condition:+8"]
+        }
+      ]
+    },
+    {
+      "id": "DEC_COND_FATIGUE_WARNING",
+      "prompt": "이번 주 훈련 강도를 어떻게 조절하겠습니까?",
+      "options": [
+        {
+          "id": "rest",
+          "label": "훈련을 줄이고 쉰다",
+          "effectHint": "피로 -15, 컨디션 +10",
+          "effects": ["fatigue:-15", "condition:+10"]
+        },
+        {
+          "id": "moderate",
+          "label": "가벼운 훈련만 한다",
+          "effectHint": "피로 -7, 컨디션 +4",
+          "effects": ["fatigue:-7", "condition:+4"]
+        },
+        {
+          "id": "push",
+          "label": "계획대로 밀어붙인다",
+          "effectHint": "피로 +5, 커맨드 경험치 +1",
+          "effects": ["fatigue:+5", "xp.command:+1"]
+        }
+      ]
+    },
+    {
+      "id": "DEC_COND_SLUMP",
+      "prompt": "슬럼프를 어떻게 극복하겠습니까?",
+      "options": [
+        {
+          "id": "coach_talk",
+          "label": "코치에게 솔직하게 털어놓는다",
+          "effectHint": "사기 +15, 커맨드 경험치 +1",
+          "effects": ["morale:+15", "xp.command:+1"]
+        },
+        {
+          "id": "self_train",
+          "label": "혼자 기본기 훈련에 집중한다",
+          "effectHint": "사기 +8, 피로 +5",
+          "effects": ["morale:+8", "fatigue:+5"]
+        },
+        {
+          "id": "rest_mind",
+          "label": "완전히 쉬면서 마음을 정리한다",
+          "effectHint": "사기 +12, 컨디션 +5",
+          "effects": ["morale:+12", "condition:+5"]
+        }
+      ]
+    },
+    {
+      "id": "DEC_COND_PEAK_FORM",
+      "prompt": "이 기회에 집중 훈련을 진행하겠습니까?",
+      "options": [
+        {
+          "id": "intensive_train",
+          "label": "집중 훈련에 돌입한다",
+          "effectHint": "피로 +10, 스피드·커맨드 경험치 +3",
+          "effects": ["fatigue:+10", "xp.velocity:+3", "xp.command:+3"]
+        },
+        {
+          "id": "steady",
+          "label": "이 컨디션을 유지하며 훈련한다",
+          "effectHint": "컨디션 +5, 경험치 +1",
+          "effects": ["condition:+5", "xp.command:+1"]
+        }
+      ]
+    },
+    {
+      "id": "DEC_RAND_LOCAL_INTERVIEW",
+      "prompt": "지역 방송 인터뷰에 참여하겠습니까?",
+      "options": [
+        {
+          "id": "accept",
+          "label": "인터뷰에 응한다",
+          "effectHint": "사기 +8, 피로 +3",
+          "effects": ["morale:+8", "fatigue:+3"]
+        },
+        {
+          "id": "decline",
+          "label": "정중히 거절한다",
+          "effectHint": "변화 없음",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "DEC_RAND_SENIOR_ADVICE",
+      "prompt": "선배의 조언을 어떻게 받아들이겠습니까?",
+      "options": [
+        {
+          "id": "ask_more",
+          "label": "더 자세히 여쭤본다",
+          "effectHint": "커맨드 경험치 +2, 사기 +5",
+          "effects": ["xp.command:+2", "morale:+5"]
+        },
+        {
+          "id": "appreciate",
+          "label": "감사하게 받아들인다",
+          "effectHint": "사기 +8",
+          "effects": ["morale:+8"]
+        },
+        {
+          "id": "nod",
+          "label": "듣기만 한다",
+          "effectHint": "변화 없음",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "DEC_RAND_TEAM_MEAL",
+      "prompt": "팀 회식에 어떻게 참여하겠습니까?",
+      "options": [
+        {
+          "id": "active",
+          "label": "적극적으로 분위기를 끌어올린다",
+          "effectHint": "사기 +12, 피로 +5",
+          "effects": ["morale:+12", "fatigue:+5"]
+        },
+        {
+          "id": "join",
+          "label": "함께 참여하며 즐긴다",
+          "effectHint": "사기 +8, 피로 +3",
+          "effects": ["morale:+8", "fatigue:+3"]
+        },
+        {
+          "id": "skip",
+          "label": "피로해서 일찍 귀가한다",
+          "effectHint": "피로 -5",
+          "effects": ["fatigue:-5"]
+        }
+      ]
+    },
+    {
+      "id": "DEC_RAND_BULLPEN_EXTRA",
+      "prompt": "추가 불펜 세션에 참여하겠습니까?",
       "options": [
         {
           "id": "do_train",
-          "label": "Do training",
+          "label": "훈련한다",
+          "effectHint": "컨디션 -4, 커맨드 경험치 +1",
           "effects": ["condition:-4", "xp.command:+1"]
         },
         {
           "id": "skip_train",
-          "label": "Skip training",
+          "label": "오늘은 쉰다",
+          "effectHint": "컨디션 +2",
           "effects": ["condition:+2"]
         }
       ]

@@ -1,6 +1,8 @@
 import { derived, get, writable } from "svelte/store";
 import type { MessageItem } from "../types/main";
 import type {
+  AchievementMetrics,
+  AchievementRuntime,
   PitchingStatKey,
   ProtagonistSave,
   SaveGame,
@@ -16,6 +18,8 @@ export interface GameStoreState {
   mailbox: MessageItem[];
   trainingPlan: TrainingPlanState;
   schoolState: SchoolState;
+  achievements: AchievementRuntime[];
+  achievementMetrics: AchievementMetrics;
   dayLabel: string;
   logs: string[];
   upcoming: string[];
@@ -84,7 +88,36 @@ const DEFAULT_SCHOOL: SchoolState = {
   attendsUniversity: false,
   universityMajor: "체육교육",
   plannedUniversityMajors: ["스포츠과학", "체육교육", "스포츠경영", "생활체육", "스포츠재활"],
+  weeklyStudyMode: "normal",
+  examAccumScore: 0,
+  lastGrade: null,
+  lastGradeRisk: "ok",
+  eligibilityBlocked: false,
+  warningCount: 0,
+  careerChoiceTriggered: false,
+  universityWeek: 0,
+  majorSelected: false,
+  subjectScores: {
+    kor:  { percentile: 13, attendance: 96, assignment: 90 },
+    eng:  { percentile: 18, attendance: 93, assignment: 84 },
+    math: { percentile: 29, attendance: 89, assignment: 81 },
+    soc:  { percentile: 34, attendance: 95, assignment: 92 },
+    sci:  { percentile: 41, attendance: 87, assignment: 79 },
+  },
 };
+
+const DEFAULT_ACHIEVEMENT_METRICS: AchievementMetrics = {
+  strikeoutTotal: 0,
+  saveTotal: 0,
+  kakaoFirstContact: false,
+};
+
+const DEFAULT_ACHIEVEMENTS: AchievementRuntime[] = [
+  { id: "ACH_BASEBALL_FIRST_STRIKEOUT", progress: 0, unlockedAt: null, claimedAt: null },
+  { id: "ACH_BASEBALL_100_STRIKEOUTS", progress: 0, unlockedAt: null, claimedAt: null },
+  { id: "ACH_BASEBALL_FIRST_SAVE", progress: 0, unlockedAt: null, claimedAt: null },
+  { id: "ACH_SOCIAL_FIRST_KAKAO", progress: 0, unlockedAt: null, claimedAt: null },
+];
 
 const DEFAULT_MAILBOX: MessageItem[] = [
   {
@@ -96,9 +129,9 @@ const DEFAULT_MAILBOX: MessageItem[] = [
     decision: {
       prompt: "추가 불펜 30구 세션을 진행하시겠습니까?",
       options: [
-        { id: "do_train",   label: "훈련한다",       effect: "컨디션 -4, 커맨드 경험치 +1",
+        { id: "do_train",   label: "훈련한다",       effectHint: "컨디션 -4, 커맨드 경험치 +1",
           effects: { conditionDelta: -4, xp: { command: 1 } } },
-        { id: "skip_train", label: "훈련하지 않는다", effect: "컨디션 +2, 변화 없음",
+        { id: "skip_train", label: "훈련하지 않는다", effectHint: "컨디션 +2, 변화 없음",
           effects: { conditionDelta: 2 } },
       ],
       selectedOptionId: null,
@@ -188,6 +221,8 @@ function buildInitialState(): GameStoreState {
     mailbox:      DEFAULT_MAILBOX,
     trainingPlan: DEFAULT_TRAINING_PLAN,
     schoolState:  DEFAULT_SCHOOL,
+    achievements: DEFAULT_ACHIEVEMENTS,
+    achievementMetrics: DEFAULT_ACHIEVEMENT_METRICS,
     dayLabel:     computeWeekLabel(1, p.grade ?? 1),
     logs:         ["훈련 루틴 설정 완료", "코치 면담으로 제구 +1", "팀 분위기 안정"],
     upcoming:     ["화요일 불펜 세션", "금요일 체력장", "토요일 주말 리그 1차전"],
@@ -199,11 +234,15 @@ function buildInitialState(): GameStoreState {
 // ── SaveGame → 스토어 상태 변환 ───────────────────────────────
 function fromSaveGame(saved: SaveGame): GameStoreState {
   const p = saved.protagonist;
+  const metrics = saved.achievementMetrics ?? DEFAULT_ACHIEVEMENT_METRICS;
+  const achievements = saved.achievements ?? DEFAULT_ACHIEVEMENTS;
   return {
     protagonist:  p,
     mailbox:      saved.mailbox,
     trainingPlan: saved.trainingPlan,
-    schoolState:  saved.schoolState,
+    schoolState:  { ...DEFAULT_SCHOOL, ...saved.schoolState },
+    achievements,
+    achievementMetrics: metrics,
     dayLabel:     computeWeekLabel(1, p.grade ?? 1),
     logs:         saved.recentLogs,
     upcoming:     saved.recentUpcoming,
@@ -241,6 +280,36 @@ function trimMailbox(mailbox: MessageItem[]): MessageItem[] {
   return mailbox.filter((m) => keepIds.has(m.id));
 }
 
+function updateAchievementProgress(
+  current: AchievementRuntime[],
+  metrics: AchievementMetrics,
+): AchievementRuntime[] {
+  const now = new Date().toISOString();
+  return current.map((item) => {
+    if (item.id === "ACH_BASEBALL_FIRST_STRIKEOUT") {
+      const progress = Math.max(item.progress, metrics.strikeoutTotal);
+      const unlockedAt = item.unlockedAt ?? (progress >= 1 ? now : null);
+      return { ...item, progress, unlockedAt };
+    }
+    if (item.id === "ACH_BASEBALL_100_STRIKEOUTS") {
+      const progress = Math.max(item.progress, metrics.strikeoutTotal);
+      const unlockedAt = item.unlockedAt ?? (progress >= 100 ? now : null);
+      return { ...item, progress, unlockedAt };
+    }
+    if (item.id === "ACH_BASEBALL_FIRST_SAVE") {
+      const progress = Math.max(item.progress, metrics.saveTotal);
+      const unlockedAt = item.unlockedAt ?? (progress >= 1 ? now : null);
+      return { ...item, progress, unlockedAt };
+    }
+    if (item.id === "ACH_SOCIAL_FIRST_KAKAO") {
+      const progress = Math.max(item.progress, metrics.kakaoFirstContact ? 1 : 0);
+      const unlockedAt = item.unlockedAt ?? (progress >= 1 ? now : null);
+      return { ...item, progress, unlockedAt };
+    }
+    return item;
+  });
+}
+
 // ── 스토어 생성 ───────────────────────────────────────────────
 function createGameStore() {
   const { subscribe, update, set } = writable<GameStoreState>(buildInitialState());
@@ -263,7 +332,7 @@ function createGameStore() {
       const s = get({ subscribe });
       const data = makeSaveGame(
         s.protagonist, s.mailbox, s.trainingPlan,
-        s.schoolState, s.logs, s.upcoming,
+        s.schoolState, s.achievements, s.achievementMetrics, s.logs, s.upcoming,
       );
       try {
         await window.projectB?.gameSave?.(data);
@@ -344,8 +413,56 @@ function createGameStore() {
         }
 
         const updated: ProtagonistSave = { ...p, condition, fatigue, morale, pitchingXP };
-        return { ...s, mailbox, protagonist: updated, player: toPlayerCompat(updated) };
+        const nextMetrics: AchievementMetrics = {
+          ...s.achievementMetrics,
+          kakaoFirstContact: s.achievementMetrics.kakaoFirstContact || messageId.startsWith("chat-"),
+        };
+        const nextAchievements = updateAchievementProgress(s.achievements, nextMetrics);
+        return {
+          ...s,
+          mailbox,
+          protagonist: updated,
+          player: toPlayerCompat(updated),
+          achievementMetrics: nextMetrics,
+          achievements: nextAchievements,
+        };
       });
+    },
+
+    recordBaseballAchievementMetric(payload: { strikeouts?: number; save?: number }) {
+      update((s) => {
+        const nextMetrics: AchievementMetrics = {
+          ...s.achievementMetrics,
+          strikeoutTotal: s.achievementMetrics.strikeoutTotal + (payload.strikeouts ?? 0),
+          saveTotal: s.achievementMetrics.saveTotal + (payload.save ?? 0),
+        };
+        return {
+          ...s,
+          achievementMetrics: nextMetrics,
+          achievements: updateAchievementProgress(s.achievements, nextMetrics),
+        };
+      });
+    },
+
+    recordSocialFirstKakao() {
+      update((s) => {
+        if (s.achievementMetrics.kakaoFirstContact) return s;
+        const nextMetrics: AchievementMetrics = { ...s.achievementMetrics, kakaoFirstContact: true };
+        return {
+          ...s,
+          achievementMetrics: nextMetrics,
+          achievements: updateAchievementProgress(s.achievements, nextMetrics),
+        };
+      });
+    },
+
+    claimAchievement(id: string) {
+      update((s) => ({
+        ...s,
+        achievements: s.achievements.map((a) =>
+          a.id === id && a.unlockedAt && !a.claimedAt ? { ...a, claimedAt: new Date().toISOString() } : a,
+        ),
+      }));
     },
 
     addMessage(msg: MessageItem) {
@@ -354,6 +471,134 @@ function createGameStore() {
 
     setTrainingPlan(plan: Partial<TrainingPlanState>) {
       update((s) => ({ ...s, trainingPlan: { ...s.trainingPlan, ...plan } }));
+    },
+
+    // 주간 학업 선택 모드 저장
+    setStudyMode(mode: import("../types/save").StudyMode) {
+      update((s) => ({ ...s, schoolState: { ...s.schoolState, weeklyStudyMode: mode } }));
+    },
+
+    // advanceWeek에서 주간 학업 효과 반영
+    applyWeeklyStudyResult(result: import("../utils/academicsEngine").WeeklyStudyResult) {
+      update((s) => ({
+        ...s,
+        schoolState: {
+          ...s.schoolState,
+          examAccumScore:  Math.min(100, s.schoolState.examAccumScore + result.examAccumDelta),
+          warningCount:    s.schoolState.warningCount + result.warningCountDelta,
+          subjectScores:   result.updatedSubjectScores,
+        },
+      }));
+    },
+
+    // 시험 결과 반영
+    applyExamResult(result: import("../utils/academicsEngine").ExamResult) {
+      update((s) => {
+        const clamp = (v: number) => Math.max(0, Math.min(100, v));
+        const p = s.protagonist;
+        return {
+          ...s,
+          protagonist: {
+            ...p,
+            morale: clamp(p.morale + result.moraleDelta),
+          },
+          player: toPlayerCompat({ ...p, morale: clamp(p.morale + result.moraleDelta) }),
+          schoolState: {
+            ...s.schoolState,
+            lastGrade:          result.grade,
+            lastGradeRisk:      result.riskLevel,
+            eligibilityBlocked: result.eligibilityBlocked,
+            examAccumScore:     0,   // 시험 후 리셋
+            warningCount:       result.eligibilityBlocked
+              ? s.schoolState.warningCount
+              : Math.max(0, s.schoolState.warningCount - 1), // 경고 1감소(자연 회복)
+          },
+        };
+      });
+    },
+
+    // 출전 정지 해제 (1주 후 자동)
+    clearEligibilityBlock() {
+      update((s) => ({
+        ...s,
+        schoolState: { ...s.schoolState, eligibilityBlocked: false },
+      }));
+    },
+
+    // 진로 선택 완료 → careerStage 변경
+    setCareerStage(stage: import("../types/save").CareerStage) {
+      update((s) => {
+        const p = { ...s.protagonist, careerStage: stage };
+        const schoolPatch: Partial<import("../types/save").SchoolState> = {
+          careerChoiceTriggered: true,
+        };
+        if (stage === "university") {
+          schoolPatch.attendsUniversity = true;
+          schoolPatch.universityWeek    = 0;
+          schoolPatch.majorSelected     = false;
+          // 대학 과목 초기화 (고교보다 낮은 성적에서 시작)
+          schoolPatch.subjectScores = {
+            kor:  { percentile: 28, attendance: 93, assignment: 85 },
+            eng:  { percentile: 32, attendance: 90, assignment: 82 },
+            math: { percentile: 45, attendance: 87, assignment: 78 },
+            soc:  { percentile: 38, attendance: 91, assignment: 80 },
+            sci:  { percentile: 50, attendance: 85, assignment: 76 },
+          };
+          schoolPatch.examAccumScore = 0;
+          schoolPatch.lastGrade      = null;
+          schoolPatch.lastGradeRisk  = "ok";
+          schoolPatch.warningCount   = 0;
+        }
+        return {
+          ...s,
+          protagonist: p,
+          player:      toPlayerCompat(p),
+          schoolState: { ...s.schoolState, ...schoolPatch },
+        };
+      });
+    },
+
+    // 진로 선택 이벤트 발동 마킹 (중복 방지)
+    markCareerChoiceTriggered() {
+      update((s) => ({
+        ...s,
+        schoolState: { ...s.schoolState, careerChoiceTriggered: true },
+      }));
+    },
+
+    // 대학 전공 선택 확정
+    selectMajor(major: string) {
+      update((s) => ({
+        ...s,
+        schoolState: { ...s.schoolState, universityMajor: major, majorSelected: true },
+      }));
+    },
+
+    // 대학 진행 주차 증가 (advanceWeek에서 호출)
+    incrementUniversityWeek() {
+      update((s) => ({
+        ...s,
+        schoolState: { ...s.schoolState, universityWeek: s.schoolState.universityWeek + 1 },
+      }));
+    },
+
+    // 이벤트 선택지 효과 적용
+    applyEventEffect(effect: import("../types/main").DecisionEffect) {
+      update((s) => {
+        const p = s.protagonist;
+        const clamp = (v: number) => Math.max(0, Math.min(100, v));
+        const condition = clamp(p.condition + (effect.conditionDelta ?? 0));
+        const fatigue   = clamp(p.fatigue   + (effect.fatigueDelta   ?? 0));
+        const morale    = clamp(p.morale    + (effect.moraleDelta    ?? 0));
+        const pitchingXP = { ...p.pitchingXP };
+        if (effect.xp) {
+          for (const [stat, amt] of Object.entries(effect.xp)) {
+            pitchingXP[stat as PitchingStatKey] = (pitchingXP[stat as PitchingStatKey] ?? 0) + amt;
+          }
+        }
+        const updated: ProtagonistSave = { ...p, condition, fatigue, morale, pitchingXP };
+        return { ...s, protagonist: updated, player: toPlayerCompat(updated) };
+      });
     },
 
     // 구종 습득 시작
@@ -410,6 +655,8 @@ function createGameStore() {
         mailbox: [],
         trainingPlan: DEFAULT_TRAINING_PLAN,
         schoolState: DEFAULT_SCHOOL,
+        achievements: DEFAULT_ACHIEVEMENTS,
+        achievementMetrics: DEFAULT_ACHIEVEMENT_METRICS,
         dayLabel: computeWeekLabel(1, protagonist.grade ?? 1),
         logs: [],
         upcoming: [],
@@ -434,5 +681,8 @@ export const unreadCount = derived(
 
 export const showAcademicsTab = derived(
   gameStore,
-  ($s) => $s.school.currentStage === "highschool" || $s.school.currentStage === "university",
+  ($s) => {
+    const stage = $s.protagonist.careerStage;
+    return stage === "highschool" || stage === "university";
+  },
 );

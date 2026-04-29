@@ -78,17 +78,32 @@ function createSeasonStore() {
     },
 
     // 정지 조건 제거 (처리 완료)
-    resolvePendingAction(type: PendingAction["type"], id: string) {
+    resolvePendingAction(type: PendingAction["type"], id?: string) {
       update((s) => ({
         ...s,
         pendingActions: s.pendingActions.filter((a) => {
           if (a.type !== type) return true;
-          if (a.type === "game"    && type === "game")    return a.scheduleId !== id;
-          if (a.type === "message" && type === "message") return a.messageId  !== id;
-          if (a.type === "event"   && type === "event")   return a.eventId    !== id;
+          if (a.type === "game"         && type === "game")         return a.scheduleId !== id;
+          if (a.type === "message"      && type === "message")      return a.messageId  !== id;
+          if (a.type === "event"        && type === "event")        return a.eventId    !== id;
+          if (a.type === "careerChoice" && type === "careerChoice") return false;
           return true;
         }),
       }));
+    },
+
+    // 이번 주 발생한 이벤트 기록 (eventId → week)
+    recordTriggeredEvents(triggers: Record<string, number>) {
+      if (Object.keys(triggers).length === 0) return;
+      update((s) => ({
+        ...s,
+        triggeredEvents: { ...s.triggeredEvents, ...triggers },
+      }));
+    },
+
+    // 시즌 초기화 시 이벤트 기록 초기화
+    clearTriggeredEvents() {
+      update((s) => ({ ...s, triggeredEvents: {} }));
     },
   };
 }
