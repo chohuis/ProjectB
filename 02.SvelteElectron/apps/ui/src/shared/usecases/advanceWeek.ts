@@ -5,6 +5,7 @@ import { masterStore } from "../stores/master";
 import { calcTrainingGrowth } from "../utils/growthEngine";
 import { runEventEngine } from "../utils/eventEngine";
 import { applyWeeklyStudy, calcExamResult, getUniversityEffBonus, getUniversityExamGainMult } from "../utils/academicsEngine";
+import { checkAchievements, computeMetrics } from "../utils/achievementEngine";
 import type { MatchResult, WeekAdvanceResult } from "../types/season";
 import type { EventContext } from "../types/event";
 import type { MessageItem } from "../types/main";
@@ -223,6 +224,23 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
   if (growth.logs.length > 0) {
     gameStore.addMessage(makeTrainingMessage(nextWeek, growth.logs));
   }
+
+  // ── 8. 업적 체크 ───────────────────────────────────────────────
+  const gFinal   = get(gameStore);
+  const sFinal   = get(seasonStore);
+  const mFinal   = get(masterStore);
+  const metrics  = computeMetrics(
+    gFinal.achievementMetrics,
+    gFinal.mailbox,
+    sFinal.standings,
+    sFinal.schedule,
+    gFinal.protagonist.teamId,
+  );
+  const achResult = checkAchievements(mFinal.achievements, gFinal.achievements, metrics, `W${nextWeek}`);
+  if (achResult.newlyUnlocked.length > 0 || achResult.updatedRuntime.some((r, i) => r.progress !== gFinal.achievements[i]?.progress)) {
+    gameStore.applyAchievementCheck(achResult);
+  }
+
   gameStore.save();
   seasonStore.save();
 

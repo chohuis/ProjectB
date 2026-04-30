@@ -20,6 +20,7 @@ export interface GameStoreState {
   schoolState: SchoolState;
   achievements: AchievementRuntime[];
   achievementMetrics: AchievementMetrics;
+  pendingAchievements: string[];   // 미확인 신규 달성 (비저장)
   dayLabel: string;
   logs: string[];
   upcoming: string[];
@@ -223,6 +224,7 @@ function buildInitialState(): GameStoreState {
     schoolState:  DEFAULT_SCHOOL,
     achievements: DEFAULT_ACHIEVEMENTS,
     achievementMetrics: DEFAULT_ACHIEVEMENT_METRICS,
+    pendingAchievements: [],
     dayLabel:     computeWeekLabel(1, p.grade ?? 1),
     logs:         ["훈련 루틴 설정 완료", "코치 면담으로 제구 +1", "팀 분위기 안정"],
     upcoming:     ["화요일 불펜 세션", "금요일 체력장", "토요일 주말 리그 1차전"],
@@ -243,6 +245,7 @@ function fromSaveGame(saved: SaveGame): GameStoreState {
     schoolState:  { ...DEFAULT_SCHOOL, ...saved.schoolState },
     achievements,
     achievementMetrics: metrics,
+    pendingAchievements: [],
     dayLabel:     computeWeekLabel(1, p.grade ?? 1),
     logs:         saved.recentLogs,
     upcoming:     saved.recentUpcoming,
@@ -465,6 +468,21 @@ function createGameStore() {
       }));
     },
 
+    // 업적 체크 결과 적용 (advanceWeek / 경기 후 호출)
+    applyAchievementCheck(result: import("../utils/achievementEngine").AchievementCheckResult) {
+      if (result.newlyUnlocked.length === 0 && result.updatedRuntime.length === 0) return;
+      update((s) => ({
+        ...s,
+        achievements:        result.updatedRuntime,
+        pendingAchievements: [...s.pendingAchievements, ...result.newlyUnlocked],
+      }));
+    },
+
+    // 업적 알림 뱃지 클리어 (탭 진입 시 호출)
+    clearAchievementNotifications() {
+      update((s) => ({ ...s, pendingAchievements: [] }));
+    },
+
     addMessage(msg: MessageItem) {
       update((s) => ({ ...s, mailbox: trimMailbox([msg, ...s.mailbox]) }));
     },
@@ -657,6 +675,7 @@ function createGameStore() {
         schoolState: DEFAULT_SCHOOL,
         achievements: DEFAULT_ACHIEVEMENTS,
         achievementMetrics: DEFAULT_ACHIEVEMENT_METRICS,
+        pendingAchievements: [],
         dayLabel: computeWeekLabel(1, protagonist.grade ?? 1),
         logs: [],
         upcoming: [],

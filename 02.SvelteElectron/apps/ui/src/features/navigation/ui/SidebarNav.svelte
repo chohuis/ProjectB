@@ -4,6 +4,7 @@
 
   export let currentTab: MainTabId;
   export let unreadMessageCount = 0;
+  export let pendingAchievementCount = 0;
   export let showAcademicsTab = false;
   export let onSelectTab: (tab: MainTabId) => void;
   let settingsOpen = false;
@@ -56,6 +57,9 @@
         <span>{$t(tab.labelKey)}</span>
         {#if tab.id === "messages" && unreadMessageCount > 0}
           <strong class="badge">{unreadMessageCount > 99 ? "99+" : unreadMessageCount}</strong>
+        {/if}
+        {#if tab.id === "achievements" && pendingAchievementCount > 0}
+          <strong class="badge badge-gold">{pendingAchievementCount > 99 ? "99+" : pendingAchievementCount}</strong>
         {/if}
       </button>
     {/each}
@@ -137,6 +141,12 @@
     font-weight: 700;
     line-height: 1;
     border: 1px solid #7aa8f6;
+  }
+
+  .badge-gold {
+    background: #b87800;
+    border-color: #e8a820;
+    color: #fff8e0;
   }
 
   .settings-wrap {

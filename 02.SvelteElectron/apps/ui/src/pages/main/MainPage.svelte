@@ -2,9 +2,10 @@
   import type { MainTabId } from "../../shared/types/main";
   import { gameStore, unreadCount, showAcademicsTab } from "../../shared/stores/game";
   import { seasonStore, nextPendingAction, seasonEnded } from "../../shared/stores/season";
-  import { teamMap } from "../../shared/stores/master";
+  import { masterStore, teamMap } from "../../shared/stores/master";
   import { simulateProtagonistGame } from "../../shared/usecases/advanceWeek";
   import { calcGameGrowth } from "../../shared/utils/growthEngine";
+  import { checkAchievements, computeMetrics } from "../../shared/utils/achievementEngine";
   import type { MatchResult } from "../../shared/types/season";
   import { t } from "../../shared/i18n";
 
@@ -124,9 +125,25 @@
       createdAt: `W${pendingGameEntry.week}`,
       readAt: null,
     });
+    // 경기 후 업적 체크
+    const achMetrics = computeMetrics(
+      $gameStore.achievementMetrics,
+      $gameStore.mailbox,
+      $seasonStore.standings,
+      $seasonStore.schedule,
+      myTeamId,
+    );
+    const achResult = checkAchievements($masterStore.achievements, $gameStore.achievements, achMetrics, `W${pendingGameEntry.week}`);
+    if (achResult.newlyUnlocked.length > 0) {
+      gameStore.applyAchievementCheck(achResult);
+    }
+
     gameStore.save();
     seasonStore.save();
   }
+
+  // 업적 뱃지 카운트
+  $: pendingAchievementCount = $gameStore.pendingAchievements.length;
 
   function closeMatchEngine() {
     currentTab = "home";
@@ -173,8 +190,12 @@
       <SidebarNav
         {currentTab}
         unreadMessageCount={$unreadCount}
+        pendingAchievementCount={pendingAchievementCount}
         showAcademicsTab={$showAcademicsTab}
-        onSelectTab={(tab) => (currentTab = tab)}
+        onSelectTab={(tab) => {
+          currentTab = tab;
+          if (tab === "achievements") gameStore.clearAchievementNotifications();
+        }}
       />
 
       <main>

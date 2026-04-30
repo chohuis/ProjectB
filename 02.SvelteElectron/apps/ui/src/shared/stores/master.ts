@@ -90,6 +90,7 @@ export interface MasterState {
   messageTmpls: MessageTemplate[];
   decisionTmpls: DecisionTemplate[];
   eventPools: EventPool[];
+  achievements: import("../utils/achievementEngine").MasterAchievement[];
 }
 
 // ── masterFetch 래퍼 (IPC 우선, fetch 폴백) ───────────────────
@@ -253,6 +254,7 @@ function createMasterStore() {
     messageTmpls: [],
     decisionTmpls: [],
     eventPools: [],
+    achievements: [],
   });
 
   async function load() {
@@ -262,6 +264,7 @@ function createMasterStore() {
         mandatoryData, conditionalData, randomData,
         msgTmplData, decisionTmplData,
         poolMedia, poolSocial, poolTeamLife,
+        achievementsData,
       ] = await Promise.all([
         fetchMaster<{ programs: TrainingProgram[] }>("training/programs_pitcher.json"),
         fetchMaster<{ pitches: PitchEntry[] }>("training/pitch_catalog.json"),
@@ -285,6 +288,9 @@ function createMasterStore() {
         fetchMaster<Record<string, any>>("events/pools/social.json"),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         fetchMaster<Record<string, any>>("events/pools/team_life.json"),
+        fetchMaster<{ achievements: import("../utils/achievementEngine").MasterAchievement[] }>(
+          "achievements/achievements.json"
+        ),
       ]);
 
       // 이벤트 규칙 병합 + 파싱
@@ -319,6 +325,7 @@ function createMasterStore() {
         messageTmpls,
         decisionTmpls,
         eventPools,
+        achievements: achievementsData?.achievements ?? [],
       }));
     } catch (e) {
       console.warn("[masterStore] load failed", e);
