@@ -159,6 +159,27 @@ export interface AchievementMetrics {
   kakaoFirstContact: boolean;
 }
 
+// ── 메신저 시스템 ──────────────────────────────────────────────
+export type ContactCategory = "team" | "school" | "personal";
+
+export interface ChatMessage {
+  from: "me" | "contact";
+  text: string;
+  week: number;
+  affinityDelta?: number;
+}
+
+export interface ChatContact {
+  id: string;
+  name: string;
+  category: ContactCategory;
+  relation: string;
+  unlocked: boolean;
+  affinity: number;         // 0–100
+  lastActionWeek: number;   // 쿨다운 계산용 (0 = 미사용)
+  chatHistory: ChatMessage[]; // max 60개
+}
+
 // ── save_game.json 전체 구조 ───────────────────────────────────
 export interface SaveGame {
   version: number;          // 저장 포맷 버전 (마이그레이션용)
@@ -169,6 +190,7 @@ export interface SaveGame {
   schoolState: SchoolState;
   achievements: AchievementRuntime[];
   achievementMetrics: AchievementMetrics;
+  contacts: ChatContact[];
   recentLogs: string[];     // 최근 30개 활동 로그
   recentUpcoming: string[]; // 다음 예정 이벤트 목록
 }
@@ -184,6 +206,7 @@ export function makeSaveGame(
   achievementMetrics: AchievementMetrics,
   recentLogs: string[],
   recentUpcoming: string[],
+  contacts: ChatContact[],
 ): SaveGame {
   return {
     version: SAVE_GAME_VERSION,
@@ -194,6 +217,7 @@ export function makeSaveGame(
     schoolState,
     achievements,
     achievementMetrics,
+    contacts,
     recentLogs,
     recentUpcoming,
   };

@@ -3,6 +3,8 @@ import type { MessageItem } from "../types/main";
 import type {
   AchievementMetrics,
   AchievementRuntime,
+  ChatContact,
+  ChatMessage,
   PitchingStatKey,
   ProtagonistSave,
   SaveGame,
@@ -20,6 +22,7 @@ export interface GameStoreState {
   schoolState: SchoolState;
   achievements: AchievementRuntime[];
   achievementMetrics: AchievementMetrics;
+  contacts: ChatContact[];
   pendingAchievements: string[];   // 미확인 신규 달성 (비저장)
   dayLabel: string;
   logs: string[];
@@ -224,6 +227,7 @@ function buildInitialState(): GameStoreState {
     schoolState:  DEFAULT_SCHOOL,
     achievements: DEFAULT_ACHIEVEMENTS,
     achievementMetrics: DEFAULT_ACHIEVEMENT_METRICS,
+    contacts:     [],
     pendingAchievements: [],
     dayLabel:     computeWeekLabel(1, p.grade ?? 1),
     logs:         ["훈련 루틴 설정 완료", "코치 면담으로 제구 +1", "팀 분위기 안정"],
@@ -245,6 +249,7 @@ function fromSaveGame(saved: SaveGame): GameStoreState {
     schoolState:  { ...DEFAULT_SCHOOL, ...saved.schoolState },
     achievements,
     achievementMetrics: metrics,
+    contacts:     saved.contacts ?? [],
     pendingAchievements: [],
     dayLabel:     computeWeekLabel(1, p.grade ?? 1),
     logs:         saved.recentLogs,
@@ -336,6 +341,7 @@ function createGameStore() {
       const data = makeSaveGame(
         s.protagonist, s.mailbox, s.trainingPlan,
         s.schoolState, s.achievements, s.achievementMetrics, s.logs, s.upcoming,
+        s.contacts,
       );
       try {
         await window.projectB?.gameSave?.(data);
@@ -481,6 +487,42 @@ function createGameStore() {
     // 업적 알림 뱃지 클리어 (탭 진입 시 호출)
     clearAchievementNotifications() {
       update((s) => ({ ...s, pendingAchievements: [] }));
+    },
+
+    // ── 메신저 액션 ──────────────────────────────────────────────
+
+    unlockContact(id: string) {
+      update((s) => ({
+        ...s,
+        contacts: s.contacts.map((c) => c.id === id ? { ...c, unlocked: true } : c),
+      }));
+    },
+
+    addChatMessage(contactId: string, msg: ChatMessage) {
+      update((s) => ({
+        ...s,
+        contacts: s.contacts.map((c) => {
+          if (c.id !== contactId) return c;
+          const history = [...c.chatHistory, msg];
+          return { ...c, chatHistory: history.slice(-60) };
+        }),
+      }));
+    },
+
+    updateAffinity(contactId: string, delta: number) {
+      update((s) => ({
+        ...s,
+        contacts: s.contacts.map((c) =>
+          c.id !== contactId ? c : { ...c, affinity: Math.max(0, Math.min(100, c.affinity + delta)) }
+        ),
+      }));
+    },
+
+    setLastActionWeek(contactId: string, week: number) {
+      update((s) => ({
+        ...s,
+        contacts: s.contacts.map((c) => c.id !== contactId ? c : { ...c, lastActionWeek: week }),
+      }));
     },
 
     addMessage(msg: MessageItem) {
@@ -675,6 +717,7 @@ function createGameStore() {
         schoolState: DEFAULT_SCHOOL,
         achievements: DEFAULT_ACHIEVEMENTS,
         achievementMetrics: DEFAULT_ACHIEVEMENT_METRICS,
+        contacts: [],
         pendingAchievements: [],
         dayLabel: computeWeekLabel(1, protagonist.grade ?? 1),
         logs: [],
