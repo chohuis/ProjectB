@@ -26,10 +26,18 @@
   let activeFilter: FilterId = "all";
   let selectedId: string | null = null;
   let sortAsc = false;
+  let counts: Record<FilterId, number> = {
+    all: 0,
+    unread: 0,
+    system: 0,
+    news: 0,
+    coach: 0,
+    manager: 0,
+  };
 
   $: msgs = $gameStore.mailbox;
 
-  $: counts: Record<FilterId, number> = {
+  $: counts = {
     all:     msgs.length,
     unread:  msgs.filter((m) => m.readAt === null).length,
     system:  msgs.filter((m) => m.category === "system").length,

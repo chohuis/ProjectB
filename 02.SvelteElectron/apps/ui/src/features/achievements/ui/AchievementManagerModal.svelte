@@ -1,6 +1,5 @@
-<script lang="ts">
+﻿<script lang="ts">
   import { createEventDispatcher, onMount } from "svelte";
-
   type Category = "baseball" | "growth" | "social" | "hidden";
   type AchievementStatus = "active" | "provisional" | "blocked";
   type MetricKey =
@@ -21,26 +20,21 @@
     hidden: boolean;
     reward: string;
   }
-
   export let open = false;
   const dispatch = createEventDispatcher<{ close: void }>();
   const REL_PATH = "achievements/achievements.json";
-  const LOCAL_KEY = "dev_achievements_master";
-
   let rows: AchievementDef[] = [];
   let selectedId = "";
   let draft: AchievementDef | null = null;
   let msg = "";
   let err = "";
-
+  let saveValidationErrors: string[] = [];
   onMount(async () => {
     await load();
   });
-
   $: selected = rows.find((r) => r.id === selectedId) ?? null;
   $: if (selected && !draft) draft = structuredClone(selected);
   $: if (rows.length > 0 && !rows.some((r) => r.id === selectedId)) selectedId = rows[0].id;
-
   function close() { dispatch("close"); }
   function select(id: string) { selectedId = id; draft = structuredClone(rows.find((r) => r.id === id)!); }
   function createNew() {
@@ -62,42 +56,63 @@
     if (!selected) return;
     draft = structuredClone(selected);
   }
-
   async function load() {
     msg = ""; err = "";
+    saveValidationErrors = [];
     try {
       const remote = await window.projectB?.masterFetch?.(REL_PATH);
       const list = (remote as { achievements?: AchievementDef[] } | null)?.achievements;
       if (Array.isArray(list)) {
         rows = list;
-        msg = `${rows.length}개 업적 로드 완료`;
+        msg = `${rows.length}개 업적을 불러왔습니다.`;
         return;
       }
-      const local = window.localStorage.getItem(LOCAL_KEY);
-      if (local) rows = (JSON.parse(local) as { achievements: AchievementDef[] }).achievements ?? [];
+      rows = [];
     } catch (e) {
       err = `불러오기 실패: ${String((e as Error)?.message ?? e)}`;
     }
   }
 
+  function validateAchievement(row: AchievementDef): string[] {
+    const issues: string[] = [];
+    if (!row.id.trim()) issues.push("ID가 비어 있습니다.");
+    if (!row.title.trim()) issues.push("제목이 비어 있습니다.");
+    if (!Number.isFinite(row.targetValue) || row.targetValue < 0) issues.push("목표값은 0 이상의 숫자여야 합니다.");
+    return issues;
+  }
+
   async function save() {
     msg = ""; err = "";
+    saveValidationErrors = [];
     try {
-      const payload = { version: 1, achievements: rows };
-      if (window.projectB?.masterSave) {
-        const r = await window.projectB.masterSave({ relPath: REL_PATH, data: payload, backup: true });
-        if (!r.ok) { err = `저장 실패: ${r.error ?? "알 수 없는 오류"}`; return; }
-        msg = "파일 저장 완료";
-      } else {
-        window.localStorage.setItem(LOCAL_KEY, JSON.stringify(payload));
-        msg = "로컬 임시 저장 완료";
+      const idSet = new Set<string>();
+      for (const row of rows) {
+        if (idSet.has(row.id)) {
+          saveValidationErrors.push(`${row.id}: 중복 ID입니다.`);
+        }
+        idSet.add(row.id);
+        const issues = validateAchievement(row);
+        saveValidationErrors.push(...issues.map((issue) => `${row.id || "(빈 ID)"}: ${issue}`));
       }
+      if (saveValidationErrors.length > 0) {
+        err = `검증 실패: ${saveValidationErrors.length}개 항목을 확인하세요.`;
+        return;
+      }
+
+      const payload = { version: 1, achievements: rows };
+      if (!window.projectB?.masterSave) {
+        err = "masterSave API를 사용할 수 없습니다. 개발자 모드/IPC 연결 상태를 확인하세요.";
+        return;
+      }
+      const r = await window.projectB.masterSave({ relPath: REL_PATH, data: payload, backup: true });
+      if (!r.ok) { err = `파일 저장 실패: ${r.error ?? "알 수 없는 오류"}`; return; }
+      msg = "파일 저장 완료";
+      await load();
     } catch (e) {
       err = `저장 실패: ${String((e as Error)?.message ?? e)}`;
     }
   }
 </script>
-
 {#if open}
   <div class="backdrop" on:click={close}>
     <section class="modal" role="dialog" aria-label="업적 에디터" on:click|stopPropagation>
@@ -111,6 +126,13 @@
       </header>
       {#if msg}<p class="ok">{msg}</p>{/if}
       {#if err}<p class="error">{err}</p>{/if}
+      {#if saveValidationErrors.length > 0}
+        <ul class="issues">
+          {#each saveValidationErrors as issue}
+            <li>{issue}</li>
+          {/each}
+        </ul>
+      {/if}
       <div class="body">
         <aside class="list">
           <div class="row">
@@ -163,7 +185,6 @@
     </section>
   </div>
 {/if}
-
 <style>
   .backdrop { position:fixed; inset:0; z-index:95; background:rgba(5,10,18,.72); display:grid; place-items:center; padding:24px; }
   .modal { width:min(1080px,95vw); height:min(780px,92vh); background:#101d33; border:1px solid #35517d; border-radius:12px; display:grid; grid-template-rows:auto auto minmax(0,1fr); overflow:hidden; }
@@ -175,6 +196,7 @@
   .danger { border-color:#7c4552; background:#2b1e26; color:#ffc6d0; }
   .ok,.error { margin:0; padding:7px 14px; font-size:12px; border-bottom:1px solid #2a4368; }
   .ok { color:#c5f1da; background:#1c3430; } .error { color:#ffd1da; background:#3a242c; }
+  .issues { margin:0; padding:8px 18px 10px; list-style:disc; color:#ffd7dd; background:#2b1419; border-bottom:1px solid #5b2a34; font-size:12px; }
   .body { min-height:0; display:grid; grid-template-columns:320px minmax(0,1fr); }
   .list { border-right:1px solid #243e62; display:grid; grid-template-rows:auto minmax(0,1fr); min-height:0; }
   .row { display:flex; gap:8px; padding:10px; border-bottom:1px solid #243e62; }

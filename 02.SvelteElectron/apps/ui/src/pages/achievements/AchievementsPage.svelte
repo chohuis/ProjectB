@@ -1,4 +1,4 @@
-<script lang="ts">
+﻿<script lang="ts">
   import { gameStore } from "../../shared/stores/game";
   import { seasonStore } from "../../shared/stores/season";
   import { masterStore } from "../../shared/stores/master";
@@ -11,14 +11,14 @@
     baseball: "야구",
     growth: "성장",
     social: "소셜",
-    hidden: "숨김",
+    hidden: "히든",
   };
 
   const DESC_MAP: Record<string, (target: number) => string> = {
-    strikeoutTotal:    (t) => `통산 삼진 ${t}개 달성`,
-    saveTotal:         (t) => `통산 세이브 ${t}개 달성`,
+    strikeoutTotal:    (t) => `누적 삼진 ${t}개 달성`,
+    saveTotal:         (t) => `누적 세이브 ${t}개 달성`,
     kakaoFirstContact: ()  => "첫 카카오톡 대화 달성",
-    winsTotal:         (t) => `통산 승리 ${t}회 달성`,
+    winsTotal:         (t) => `누적 승리 ${t}회 달성`,
     gamesPlayedTotal:  (t) => `경기 ${t}회 출전`,
     messagesReadTotal: (t) => `메시지 ${t}개 읽기`,
   };
@@ -28,7 +28,6 @@
   }
 
   let category: Category = "all";
-  let showProvisional = false;
 
   $: metrics = computeMetrics(
     $gameStore.achievementMetrics,
@@ -39,8 +38,7 @@
   );
 
   $: items = $masterStore.achievements
-    .filter((d) => d.status !== "blocked")
-    .filter((d) => d.status === "active" || showProvisional)
+    .filter((d) => d.status === "active")
     .map((d) => {
       const rt = $gameStore.achievements.find((x) => x.id === d.id);
       const liveVal = metrics[d.metricKey] ?? 0;
@@ -66,10 +64,6 @@
         <span class="chip chip-gold">보상 미수령 <strong>{claimable}</strong></span>
       {/if}
     </div>
-    <label class="toggle">
-      <input type="checkbox" bind:checked={showProvisional} />
-      임시 업적
-    </label>
   </header>
 
   <nav class="filter-row">
@@ -83,10 +77,10 @@
   <div class="list">
     {#each items as a (a.id)}
       {@const isHiddenLocked = !!a.hidden && !a.unlocked}
-      <article class="item" class:unlocked={a.unlocked} class:provisional={a.status === "provisional"}>
+      <article class="item" class:unlocked={a.unlocked} >
         <div class="row-title">
-          <span class="badge-status" class:done={a.unlocked} class:prov={a.status === "provisional"}>
-            {a.unlocked ? "✓" : a.status === "provisional" ? "임시" : "진행"}
+          <span class="badge-status" class:done={a.unlocked} class:claimed={a.claimed}>
+            {a.claimed ? "수령 완료" : a.unlocked ? "달성" : "진행중"}
           </span>
           <strong class="title">{isHiddenLocked ? "???" : a.title}</strong>
           {#if a.reward && a.unlocked}
@@ -163,15 +157,6 @@
 
   .chip-gold strong { color: #ffd060; }
 
-  .toggle {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    color: #7a94bc;
-    cursor: pointer;
-    white-space: nowrap;
-  }
 
   .filter-row {
     display: flex;
@@ -220,9 +205,6 @@
     background: #0e1f14;
   }
 
-  .item.provisional {
-    opacity: 0.75;
-  }
 
   .row-title {
     display: flex;
@@ -246,10 +228,10 @@
     color: #5ed38a;
   }
 
-  .badge-status.prov {
-    background: #2a1f06;
-    border-color: #7a5800;
-    color: #c08820;
+   .badge-status.claimed {
+    background: #1d2d4f;
+    border-color: #4a6ca6;
+    color: #9ec0ff;
   }
 
   .title {

@@ -83,7 +83,6 @@
 
   const dispatch = createEventDispatcher<{ close: void }>();
 
-  const EVENT_SAVE_LOCAL_KEY = "dev_events_rules";
   const EVENT_SAVE_PATHS: Record<EventType, string> = {
     mandatory: "events/rules/mandatory.json",
     conditional: "events/rules/conditional.json",
@@ -95,6 +94,7 @@
   let errorMessage = "";
   let saveMessage = "";
   let saveError = "";
+  let saveValidationErrors: string[] = [];
   let idError = "";
   let events: ManagedEvent[] = [];
   let selectedId = "";
@@ -137,28 +137,38 @@
   async function saveEvents() {
     saveMessage = "";
     saveError = "";
+    saveValidationErrors = [];
     saving = true;
     try {
+      const invalidRows = events
+        .map((ev) => ({ id: ev.id, issues: validateEvent(ev) }))
+        .filter((row) => row.issues.length > 0);
+      if (invalidRows.length > 0) {
+        saveError = `검증 실패: ${invalidRows.length}개 이벤트를 저장할 수 없습니다.`;
+        saveValidationErrors = invalidRows.flatMap((row) => row.issues.map((issue) => `${row.id}: ${issue}`));
+        return;
+      }
+
       const byType: Record<EventType, ManagedEvent[]> = { mandatory: [], conditional: [], random: [] };
       for (const ev of events) {
         byType[ev.type]?.push(ev);
       }
 
-      if (window.projectB?.masterSave) {
-        const results = await Promise.all(
-          (Object.entries(byType) as [EventType, ManagedEvent[]][]).map(([type, evs]) =>
-            window.projectB!.masterSave({ relPath: EVENT_SAVE_PATHS[type], data: { events: evs }, backup: true })
-          )
-        );
-        const failed = results.find((r) => !r?.ok);
-        if (failed) {
-          saveError = `파일 저장 실패: ${failed.error ?? "알 수 없는 오류"}`;
-        } else {
-          saveMessage = `저장 완료 (mandatory ${byType.mandatory.length}건 / conditional ${byType.conditional.length}건 / random ${byType.random.length}건, 백업 생성)`;
-        }
+      if (!window.projectB?.masterSave) {
+        saveError = "masterSave API를 사용할 수 없습니다. 개발자 모드/IPC 연결 상태를 확인하세요.";
+        return;
+      }
+      const results = await Promise.all(
+        (Object.entries(byType) as [EventType, ManagedEvent[]][]).map(([type, evs]) =>
+          window.projectB!.masterSave({ relPath: EVENT_SAVE_PATHS[type], data: { events: evs }, backup: true })
+        )
+      );
+      const failed = results.find((r) => !r?.ok);
+      if (failed) {
+        saveError = `파일 저장 실패: ${failed.error ?? "알 수 없는 오류"}`;
       } else {
-        window.localStorage.setItem(EVENT_SAVE_LOCAL_KEY, JSON.stringify(byType));
-        saveMessage = "로컬 임시 저장 완료";
+        saveMessage = `저장 완료 (mandatory ${byType.mandatory.length}건 / conditional ${byType.conditional.length}건 / random ${byType.random.length}건, 백업 생성)`;
+        await loadAll();
       }
     } catch (error) {
       saveError = `저장 실패: ${String((error as Error)?.message ?? error)}`;
@@ -665,6 +675,13 @@
       {#if saveError}
         <p class="save-err">{saveError}</p>
       {/if}
+      {#if saveValidationErrors.length > 0}
+        <ul class="save-issues">
+          {#each saveValidationErrors as issue}
+            <li>{issue}</li>
+          {/each}
+        </ul>
+      {/if}
 
       <div class="toolbar">
         <input type="text" bind:value={search} placeholder="제목/ID 검색" />
@@ -1132,6 +1149,16 @@
     color: #ffa8a8;
     background: #2b1a1a;
     border-bottom: 1px solid #5c2d2d;
+    font-size: 12px;
+  }
+
+  .save-issues {
+    margin: 0;
+    padding: 8px 18px 10px;
+    list-style: disc;
+    color: #ffd7dd;
+    background: #2b1419;
+    border-bottom: 1px solid #5b2a34;
     font-size: 12px;
   }
 

@@ -1,4 +1,4 @@
-<script lang="ts">
+﻿<script lang="ts">
   import { createEventDispatcher, onMount } from "svelte";
 
   type EntityTab = "player" | "coach" | "manager" | "owner";
@@ -122,11 +122,11 @@
     role: EntityTab;
     age: number;
     status: "active" | "inactive" | "retired" | "injured";
-    originLeagueId: string;   // 최초 등록 리그 (파일 분류 기준 — 이동 시 변경 안 함)
+    originLeagueId: string;   // 최초 등록 리그 (파일 분류 기준, 이동 시 변경 안 함)
     leagueId: string;         // 현재 소속 리그 (이동 시 변경)
-    clubId: string;           // 구단 ID (고교·대학은 teamId와 동일)
+    clubId: string;           // 구단 ID (고교/대학은 teamId와 동일)
     teamId: string;           // 팀/엔트리 ID
-    tier?: RosterTier;        // KBO·MLB 전용 (1군/2군/육성/AAA 등)
+    tier?: RosterTier;        // KBO/ABL 전용 (1군/2군/육성/AAA 등)
     schoolId: string;
     grade?: 1 | 2 | 3;       // 고교 전용 학년
     notes: string;
@@ -137,7 +137,7 @@
   const dispatch = createEventDispatcher<{ close: void }>();
   const ENTITY_REFS_PATH = "entities/refs.json";
 
-  // 리그별 파일 맵 — 향후 KBO·MLB 추가 시 여기에 추가
+  // 리그별 파일 맵. 추후 KBO/ABL 확장 시 추가
   const ENTITY_FILE_MAP: Record<string, { rel: string; local: string }> = {
     LEAGUE_HIGHSCHOOL:  { rel: "entities/people_hs.json",   local: "dev_entities_people_hs" },
     LEAGUE_UNIVERSITY:  { rel: "entities/people_univ.json",  local: "dev_entities_people_univ" },
@@ -149,23 +149,23 @@
   let activeLeagueFile = "LEAGUE_HIGHSCHOOL";
 
   const FALLBACK_LEAGUES: LeagueRef[] = [
-    { id: "LEAGUE_HIGHSCHOOL",  name: "고교 리그",  nameEn: "High School League" },
-    { id: "LEAGUE_UNIVERSITY",  name: "대학 리그",  nameEn: "University League" },
-    { id: "LEAGUE_INDEPENDENT", name: "독립 리그",  nameEn: "Independent League" },
-    { id: "LEAGUE_KBL",         name: "KBL 리그",   nameEn: "KBL League" },
-    { id: "LEAGUE_ABL",         name: "ABL",        nameEn: "ABL" }
+    { id: "LEAGUE_HIGHSCHOOL",  name: "고교 리그", nameEn: "High School League" },
+    { id: "LEAGUE_UNIVERSITY",  name: "대학 리그", nameEn: "University League" },
+    { id: "LEAGUE_INDEPENDENT", name: "독립 리그", nameEn: "Independent League" },
+    { id: "LEAGUE_KBL",         name: "KBL 리그",  nameEn: "KBL League" },
+    { id: "LEAGUE_ABL",         name: "ABL 리그",  nameEn: "ABL League" }
   ];
 
   const FALLBACK_SCHOOLS: SchoolRef[] = [
-    { id: "SCHOOL_NONE",                    name: "해당 없음",       nameEn: "N/A" },
-    { id: "SCHOOL_HS_SEOUL_INNOVATION",     name: "서울혁신고등학교", nameEn: "Seoul Hyeoksin High School" },
-    { id: "SCHOOL_HS_BUSAN_WAVE",           name: "부산해운고등학교", nameEn: "Busan Haeun High School" },
-    { id: "SCHOOL_HS_DAEGU_HEAT",           name: "대구열풍고등학교", nameEn: "Daegu Yeolpung High School" },
-    { id: "SCHOOL_HS_GWANGJU_VISION",       name: "광주미래고등학교", nameEn: "Gwangju Mirae High School" },
-    { id: "SCHOOL_HS_DAEJEON_RISE",         name: "대전도약고등학교", nameEn: "Daejeon Doyak High School" },
-    { id: "SCHOOL_HS_INCHEON_HARBOR",       name: "인천항만고등학교", nameEn: "Incheon Hangman High School" },
-    { id: "SCHOOL_HS_ULSAN_CHARGE",         name: "울산강진고등학교", nameEn: "Ulsan Gangjin High School" },
-    { id: "SCHOOL_HS_SUWON_EDGE",           name: "수원예봉고등학교", nameEn: "Suwon Yebong High School" }
+    { id: "SCHOOL_NONE",                name: "해당 없음",         nameEn: "N/A" },
+    { id: "SCHOOL_HS_SEOUL_INNOVATION", name: "서울혁신고등학교",   nameEn: "Seoul Innovation High School" },
+    { id: "SCHOOL_HS_BUSAN_WAVE",       name: "부산해운고등학교",   nameEn: "Busan Haeun High School" },
+    { id: "SCHOOL_HS_DAEGU_HEAT",       name: "대구열풍고등학교",   nameEn: "Daegu Heat High School" },
+    { id: "SCHOOL_HS_GWANGJU_VISION",   name: "광주비전고등학교",   nameEn: "Gwangju Vision High School" },
+    { id: "SCHOOL_HS_DAEJEON_RISE",     name: "대전도약고등학교",   nameEn: "Daejeon Rise High School" },
+    { id: "SCHOOL_HS_INCHEON_HARBOR",   name: "인천항만고등학교",   nameEn: "Incheon Harbor High School" },
+    { id: "SCHOOL_HS_ULSAN_CHARGE",     name: "울산강진고등학교",   nameEn: "Ulsan Charge High School" },
+    { id: "SCHOOL_HS_SUWON_EDGE",       name: "수원예봉고등학교",   nameEn: "Suwon Edge High School" }
   ];
 
   const FALLBACK_TEAMS: TeamRef[] = [
@@ -194,6 +194,7 @@
   let addPopupError = "";
   let persistMessage = "";
   let persistError = "";
+  let persistValidationErrors: string[] = [];
 
   $: filteredRows = rows.filter((row) => row.role === activeTab);
   $: selectedRow = rows.find((row) => row.id === selectedId) ?? null;
@@ -377,7 +378,7 @@
     if (first) selectEntity(first.id);
   }
 
-  // 편집은 draft에서 수행하고 저장 시에만 원본 rows에 반영
+  // 편집은 draft에서 수행하고 저장 시에만 rows에 반영
   function selectEntity(id: string) {
     selectedId = id;
     const found = rows.find((row) => row.id === id);
@@ -528,7 +529,8 @@
   async function loadEntities() {
     persistMessage = "";
     persistError = "";
-    const { rel, local } = currentFile();
+    persistValidationErrors = [];
+    const { rel } = currentFile();
     try {
       const remote = await window.projectB?.masterFetch?.(rel);
       const maybe = remote as { entities?: unknown[] } | null | undefined;
@@ -538,18 +540,8 @@
         return;
       }
 
-      const localRaw = window.localStorage.getItem(local);
-      if (localRaw) {
-        const parsed = JSON.parse(localRaw) as { entities?: unknown[] };
-        if (Array.isArray(parsed.entities)) {
-          rows = parsed.entities.map((item) => normalizeEntity(item));
-          persistMessage = `[로컬] ${rows.length}건을 불러왔습니다.`;
-          return;
-        }
-      }
-
       rows = [];
-      persistMessage = `[${rel}] 등록된 데이터가 없습니다. 추가 버튼으로 새 인물을 등록하세요.`;
+      persistMessage = `[${rel}] 등록된 데이터가 없습니다. 추가 버튼으로 새 항목을 등록하세요.`;
     } catch (error) {
       persistError = `불러오기 실패: ${String((error as Error)?.message ?? error)}`;
     }
@@ -558,21 +550,31 @@
   async function saveEntities() {
     persistMessage = "";
     persistError = "";
-    const { rel, local } = currentFile();
+    persistValidationErrors = [];
+    const { rel } = currentFile();
     try {
+      const invalidRows = rows
+        .map((row) => ({ id: row.id, issues: validateEntity(row, false) }))
+        .filter((row) => row.issues.length > 0);
+      if (invalidRows.length > 0) {
+        persistError = `검증 실패: ${invalidRows.length}개 항목을 저장할 수 없습니다.`;
+        persistValidationErrors = invalidRows.flatMap((row) => row.issues.map((issue) => `${row.id}: ${issue}`));
+        return;
+      }
+
       const payload = { version: 1, sourceLeague: activeLeagueFile, entities: rows };
 
-      if (window.projectB?.masterSave) {
-        const result = await window.projectB.masterSave({ relPath: rel, data: payload, backup: true });
-        if (!result?.ok) {
-          persistError = `파일 저장 실패: ${result?.error ?? "알 수 없는 오류"}`;
-          return;
-        }
-        persistMessage = `[${rel}] 저장 완료 (${rows.length}건, 백업 생성)`;
-      } else {
-        window.localStorage.setItem(local, JSON.stringify(payload));
-        persistMessage = `[로컬] 임시 저장 완료 (${rows.length}건)`;
+      if (!window.projectB?.masterSave) {
+        persistError = "masterSave API를 사용할 수 없습니다. 개발자 모드/IPC 연결 상태를 확인하세요.";
+        return;
       }
+      const result = await window.projectB.masterSave({ relPath: rel, data: payload, backup: true });
+      if (!result?.ok) {
+        persistError = `파일 저장 실패: ${result?.error ?? "알 수 없는 오류"}`;
+        return;
+      }
+      persistMessage = `[${rel}] 저장 완료 (${rows.length}건, 백업 생성)`;
+      await loadEntities();
     } catch (error) {
       persistError = `저장 실패: ${String((error as Error)?.message ?? error)}`;
     }
@@ -596,7 +598,7 @@
     const teamKnown = teams.some((team) => team.id === entity.teamId);
     if (!teamKnown && !entity.teamId.startsWith("TBD_")) issues.push("팀 선택이 올바르지 않습니다.");
     const team = teams.find((item) => item.id === entity.teamId);
-    if (team && team.leagueId !== entity.leagueId) issues.push("선택한 팀이 현재 리그와 일치하지 않습니다.");
+    if (team && team.leagueId !== entity.leagueId) issues.push("선택한 팀과 현재 리그가 일치하지 않습니다.");
 
     if (isCreate && rows.some((row) => row.id === entity.id)) issues.push("이미 존재하는 ID입니다.");
     if (!isCreate && rows.some((row) => row.id === entity.id && row.id !== selectedRow?.id)) {
@@ -617,16 +619,16 @@
       if (!pitchingStats.every((value) => validateRange(value))) issues.push("투수 능력치는 0~100 범위여야 합니다.");
       if (!battingStats.every((value) => validateRange(value))) issues.push("타자 능력치는 0~100 범위여야 합니다.");
       if (!["pitcher", "batter", "twoWay"].includes(d.playerType)) {
-        issues.push("선수 타입(playerType)이 올바르지 않습니다.");
+        issues.push("선수 유형(playerType)이 올바르지 않습니다.");
       }
       if (d.playerType === "pitcher" && !["SP", "RP", "CP"].includes(d.position)) {
-        issues.push("투수 타입은 투수 포지션(SP/RP/CP)만 선택 가능합니다.");
+        issues.push("투수 유형은 투수 포지션(SP/RP/CP)만 선택 가능합니다.");
       }
       if (
         d.playerType === "batter" &&
         !["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH"].includes(d.position)
       ) {
-        issues.push("타자 타입은 야수 포지션(C~DH)만 선택 가능합니다.");
+        issues.push("타자 유형은 야수 포지션(C~DH)만 선택 가능합니다.");
       }
     }
 
@@ -688,6 +690,13 @@
       {#if persistError}
         <p class="persist-error">{persistError}</p>
       {/if}
+      {#if persistValidationErrors.length > 0}
+        <ul class="persist-issues">
+          {#each persistValidationErrors as issue}
+            <li>{issue}</li>
+          {/each}
+        </ul>
+      {/if}
 
       <div class="tabs">
         <button type="button" class:active={activeTab === "player"} on:click={() => selectTab("player")}>선수</button>
@@ -700,7 +709,7 @@
         <aside class="list">
           <div class="actions">
             <button type="button" on:click={openAddPopup}>추가</button>
-            <button type="button" class="danger" on:click={removeEntity} disabled={!selectedRow}>제거</button>
+            <button type="button" class="danger" on:click={removeEntity} disabled={!selectedRow}>삭제</button>
           </div>
           <ul>
             {#each filteredRows as row}
@@ -771,7 +780,7 @@
                 </label>
               {/if}
               {#if editDraft.leagueId === "LEAGUE_KBL" || editDraft.leagueId === "LEAGUE_ABL"}
-                <label><span>엔트리 (tier)</span>
+                <label><span>팀 레벨(tier)</span>
                   <select bind:value={editDraft.tier}>
                     <option value={undefined}>-</option>
                     <option value="1군">1군</option>
@@ -783,8 +792,8 @@
                   </select>
                 </label>
               {/if}
-              <label><span>등록 원리그</span>
-                <input type="text" value={editDraft.originLeagueId} disabled title="최초 등록 리그 — 변경 불가" />
+              <label><span>등록 리그</span>
+                <input type="text" value={editDraft.originLeagueId} disabled title="최초 등록 리그는 변경 불가" />
               </label>
               <label class="full"><span>메모</span><textarea rows="2" bind:value={editDraft.notes}></textarea></label>
             </div>
@@ -792,7 +801,7 @@
             {#if editDraft.role === "player"}
               <h3>선수 상세</h3>
               <div class="grid three">
-                <label><span>선수 타입</span>
+                <label><span>선수 유형</span>
                   <select bind:value={editDraft.details.player.playerType} on:change={() => editDraft && onPlayerTypeChanged(editDraft)}>
                     <option value="pitcher">투수</option>
                     <option value="batter">타자</option>
@@ -869,9 +878,9 @@
                 <label><span>경력(년)</span><input type="number" bind:value={editDraft.details.manager.experienceYears} /></label>
                 <label><span>전술</span><input type="number" bind:value={editDraft.details.manager.stats.tactics} /></label>
                 <label><span>결단</span><input type="number" bind:value={editDraft.details.manager.stats.decision} /></label>
-                <label><span>선발 운용</span><input type="number" bind:value={editDraft.details.manager.stats.rotationMgmt} /></label>
-                <label><span>불펜 운용</span><input type="number" bind:value={editDraft.details.manager.stats.bullpenMgmt} /></label>
-                <label><span>사기 관리</span><input type="number" bind:value={editDraft.details.manager.stats.moraleMgmt} /></label>
+                <label><span>선발 운영</span><input type="number" bind:value={editDraft.details.manager.stats.rotationMgmt} /></label>
+                <label><span>불펜 운영</span><input type="number" bind:value={editDraft.details.manager.stats.bullpenMgmt} /></label>
+                <label><span>분위기 관리</span><input type="number" bind:value={editDraft.details.manager.stats.moraleMgmt} /></label>
                 <label><span>리스크 성향</span><input type="number" bind:value={editDraft.details.manager.riskTolerance} /></label>
                 <label class="full"><span>게임플랜 편향</span><input type="text" bind:value={editDraft.details.manager.gamePlanBias} /></label>
               </div>
@@ -909,8 +918,8 @@
             </div>
           {:else if filteredRows.length === 0}
             <div class="empty-guide">
-              <p>이 리그에 등록된 {activeTab === "player" ? "선수" : activeTab === "coach" ? "코치" : activeTab === "manager" ? "감독" : "구단주"}가 없습니다.</p>
-              <p class="hint">왼쪽 <strong>추가</strong> 버튼으로 새 인물을 등록하거나,<br/>Step 4 자동 생성 스크립트를 실행하세요.</p>
+              <p>현재 리그에 등록된 {activeTab === "player" ? "선수" : activeTab === "coach" ? "코치" : activeTab === "manager" ? "감독" : "구단주"}가 없습니다.</p>
+              <p class="hint">왼쪽 <strong>추가</strong> 버튼으로 새 항목을 등록하세요.<br/>Step 4 자동 생성 스크립트를 실행해도 됩니다.</p>
             </div>
           {:else}
             <p class="empty">목록에서 항목을 선택하세요.</p>
@@ -920,7 +929,7 @@
     </section>
 
     {#if addPopupOpen}
-      <section class="add-popup" role="dialog" aria-label="인물 추가" on:click|stopPropagation>
+      <section class="add-popup" role="dialog" aria-label="신규 추가" on:click|stopPropagation>
         <header>
           <h3>{roleLabel(activeTab)} 추가</h3>
           <button type="button" class="ghost" on:click={cancelAddPopup}>닫기</button>
@@ -985,14 +994,14 @@
         {#if addDraft.role === "player"}
           <h3>선수 상세</h3>
           <div class="grid three">
-            <label><span>선수 타입</span>
+            <label><span>선수 유형</span>
               <select bind:value={addDraft.details.player.playerType} on:change={onAddPlayerTypeChanged}>
                 <option value="pitcher">투수</option>
                 <option value="batter">타자</option>
                 <option value="twoWay">투타겸업</option>
               </select>
             </label>
-            <label><span>손잡이</span>
+            <label><span>투타</span>
               <select bind:value={addDraft.details.player.handedness}>
                 <option value="R">우투</option>
                 <option value="L">좌투</option>
@@ -1062,9 +1071,9 @@
             <label><span>경력(년)</span><input type="number" bind:value={addDraft.details.manager.experienceYears} /></label>
             <label><span>전술</span><input type="number" bind:value={addDraft.details.manager.stats.tactics} /></label>
             <label><span>결단</span><input type="number" bind:value={addDraft.details.manager.stats.decision} /></label>
-            <label><span>선발 운용</span><input type="number" bind:value={addDraft.details.manager.stats.rotationMgmt} /></label>
-            <label><span>불펜 운용</span><input type="number" bind:value={addDraft.details.manager.stats.bullpenMgmt} /></label>
-            <label><span>사기 관리</span><input type="number" bind:value={addDraft.details.manager.stats.moraleMgmt} /></label>
+            <label><span>선발 운영</span><input type="number" bind:value={addDraft.details.manager.stats.rotationMgmt} /></label>
+            <label><span>불펜 운영</span><input type="number" bind:value={addDraft.details.manager.stats.bullpenMgmt} /></label>
+            <label><span>분위기 관리</span><input type="number" bind:value={addDraft.details.manager.stats.moraleMgmt} /></label>
             <label><span>리스크 성향</span><input type="number" bind:value={addDraft.details.manager.riskTolerance} /></label>
             <label class="full"><span>게임플랜 편향</span><input type="text" bind:value={addDraft.details.manager.gamePlanBias} /></label>
           </div>
@@ -1181,6 +1190,16 @@
   .persist-error {
     color: #ffd1da;
     background: #3a242c;
+  }
+
+  .persist-issues {
+    margin: 0;
+    padding: 8px 18px 10px;
+    list-style: disc;
+    color: #ffd7dd;
+    background: #2b1419;
+    border-bottom: 1px solid #5b2a34;
+    font-size: 12px;
   }
 
   .tabs {
@@ -1411,3 +1430,5 @@
     gap: 8px;
   }
 </style>
+
+
