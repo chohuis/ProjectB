@@ -30,8 +30,24 @@
 
   // ── Step 2 상태 ────────────────────────────────────────────────
   let selectedTeamId = "";
+  let entitiesLoaded = false;
 
   $: hsTeams = $masterStore.teams.filter((t) => t.leagueId === "LEAGUE_HIGHSCHOOL");
+  $: selectedTeam = hsTeams.find((t) => t.id === selectedTeamId) ?? null;
+
+  // Step 2 진입 시 엔티티 로드
+  $: if (step === 2 && !entitiesLoaded) {
+    entitiesLoaded = true;
+    masterStore.loadEntities("LEAGUE_HIGHSCHOOL");
+  }
+
+  // 선택된 팀의 감독·코치·선수 필터
+  $: teamEntities = selectedTeamId
+    ? $masterStore.entities.filter((e) => e.teamId === selectedTeamId)
+    : [];
+  $: teamManager = teamEntities.find((e) => e.role === "manager") ?? null;
+  $: teamCoaches = teamEntities.filter((e) => e.role === "coach").slice(0, 2);
+  $: teamPlayers = teamEntities.filter((e) => e.role === "player").slice(0, 4);
 
   // ── Step 3 상태 ────────────────────────────────────────────────
   type PresetKey = "balanced" | "power" | "control" | "movement";
@@ -201,9 +217,11 @@
 
     <!-- Step 2 -->
     {:else if step === 2}
-      <section class="step-body">
-        <h2>팀 선택</h2>
-        <p class="sub">소속할 고등학교 팀을 선택하세요</p>
+      <section class="step2-layout">
+        <div class="step2-top">
+          <h2>팀 선택</h2>
+          <p class="sub">소속할 고등학교 팀을 선택하세요</p>
+        </div>
 
         {#if $masterStore.loaded && hsTeams.length > 0}
           <div class="team-grid">
@@ -220,6 +238,83 @@
           </div>
         {:else}
           <p class="loading-msg">팀 데이터 로드 중...</p>
+        {/if}
+
+        {#if selectedTeam}
+          <div class="detail-panel">
+            <!-- 왼쪽: 팀 특징 -->
+            <aside class="profile-col">
+              {#if selectedTeam.profile}
+                <div class="style-badge">{selectedTeam.profile.style}</div>
+                <p class="team-desc">{selectedTeam.profile.desc}</p>
+                <div class="tag-row">
+                  {#each selectedTeam.profile.tags as tag}
+                    <span class="tag">{tag}</span>
+                  {/each}
+                </div>
+                <div class="strength-section">
+                  <p class="section-label">강점</p>
+                  <div class="strength-chips">
+                    {#each selectedTeam.profile.strengths as s}
+                      <span class="strength-chip">{s}</span>
+                    {/each}
+                  </div>
+                </div>
+              {/if}
+            </aside>
+
+            <!-- 오른쪽: 스태프·선수 -->
+            <div class="roster-col">
+              {#if teamManager}
+                <div class="section-label">감독</div>
+                <div class="entity-card manager-card">
+                  <span class="entity-name">{teamManager.name}</span>
+                  <span class="entity-badge manager">감독</span>
+                  <span class="entity-sub">{teamManager.details.manager?.style ?? ""} · {teamManager.age}세</span>
+                </div>
+              {/if}
+
+              {#if teamCoaches.length > 0}
+                <div class="section-label">코치</div>
+                <div class="entity-list">
+                  {#each teamCoaches as coach}
+                    <div class="entity-card">
+                      <span class="entity-name">{coach.name}</span>
+                      <span class="entity-badge coach">코치</span>
+                      <span class="entity-sub">{coach.details.coach?.specialty ?? "-"} 전문 · {coach.age}세</span>
+                    </div>
+                  {/each}
+                </div>
+              {/if}
+
+              {#if teamPlayers.length > 0}
+                <div class="section-label">주요 선수</div>
+                <div class="entity-list">
+                  {#each teamPlayers as player}
+                    {@const pd = player.details.player}
+                    <div class="entity-card player-card">
+                      <div class="player-main">
+                        <span class="entity-name">{player.name}</span>
+                        <span class="entity-badge player">{pd?.position ?? "?"}</span>
+                        <span class="player-grade">{player.grade}학년</span>
+                      </div>
+                      <div class="player-stats">
+                        <span class="stat-pill">OVR <strong>{pd?.pitching?.ovr ?? pd?.batting?.ovr ?? "-"}</strong></span>
+                        <span class="stat-pill">{pd?.handedness === "L" ? "좌투" : pd?.handedness === "S" ? "양투" : "우투"}</span>
+                        <span class="stat-pill">구위 <strong>{pd?.pitching?.velocity ?? "-"}</strong></span>
+                      </div>
+                    </div>
+                  {/each}
+                </div>
+              {:else if $masterStore.entities.length === 0}
+                <p class="loading-msg">선수 정보 로드 중...</p>
+              {/if}
+            </div>
+          </div>
+        {:else}
+          <div class="detail-placeholder">
+            팀을 선택하면 상세 정보가 표시됩니다
+          </div>
         {/if}
       </section>
 
@@ -504,15 +599,25 @@
     line-height: 1.5;
   }
 
+  /* ── Step 2 전용 레이아웃 ── */
+  .step2-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 8px 0 32px;
+  }
+
+  .step2-top h2 { margin: 0 0 4px; font-size: 24px; color: #ebf3ff; }
+
   /* ── 팀 그리드 ── */
   .team-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    gap: 8px;
   }
 
   .team-card {
-    padding: 18px 12px;
+    padding: 14px 10px;
     border: 1px solid #2d4470;
     border-radius: 10px;
     background: #111d34;
@@ -529,19 +634,218 @@
 
   .team-card strong {
     display: block;
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .team-card span {
     display: block;
     font-size: 11px;
     color: #6a8fbc;
-    margin-top: 4px;
+    margin-top: 3px;
   }
 
   .loading-msg {
     color: #5a7aa8;
     font-size: 14px;
+  }
+
+  /* ── 상세 패널 ── */
+  .detail-panel {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .detail-placeholder {
+    text-align: center;
+    color: #3d5880;
+    font-size: 14px;
+    padding: 32px 0;
+    border: 1px dashed #2a3f60;
+    border-radius: 10px;
+  }
+
+  /* ── 프로필 열 ── */
+  .profile-col {
+    background: #0d1928;
+    border: 1px solid #1e3050;
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .style-badge {
+    display: inline-block;
+    background: #1a3060;
+    border: 1px solid #3a62a8;
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #88b8f8;
+    align-self: flex-start;
+  }
+
+  .team-desc {
+    margin: 0;
+    font-size: 13px;
+    color: #9bb4d8;
+    line-height: 1.65;
+  }
+
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tag {
+    background: #152238;
+    border: 1px solid #2a4060;
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 11px;
+    color: #7a9ac8;
+  }
+
+  .strength-section {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    color: #4a6888;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+
+  .strength-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .strength-chip {
+    background: #0e2438;
+    border: 1px solid #1e5080;
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 12px;
+    color: #5a9ad8;
+    font-weight: 600;
+  }
+
+  /* ── 로스터 열 ── */
+  .roster-col {
+    background: #0d1928;
+    border: 1px solid #1e3050;
+    border-radius: 10px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+  }
+
+  .entity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .entity-card {
+    background: #111e34;
+    border: 1px solid #253650;
+    border-radius: 8px;
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .manager-card {
+    border-color: #2d4a80;
+    background: #0f1e38;
+  }
+
+  .entity-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #d8e8ff;
+    flex: 0 0 auto;
+  }
+
+  .entity-badge {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    flex: 0 0 auto;
+  }
+
+  .entity-badge.manager {
+    background: #1e3d7a;
+    border: 1px solid #3a6ab0;
+    color: #88b8f8;
+  }
+
+  .entity-badge.coach {
+    background: #1a3a28;
+    border: 1px solid #2a6040;
+    color: #70c890;
+  }
+
+  .entity-badge.player {
+    background: #3a2010;
+    border: 1px solid #805030;
+    color: #d0a060;
+  }
+
+  .entity-sub {
+    font-size: 11px;
+    color: #5a7a9a;
+  }
+
+  .player-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .player-main {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .player-grade {
+    font-size: 11px;
+    color: #4a6888;
+  }
+
+  .player-stats {
+    display: flex;
+    gap: 6px;
+  }
+
+  .stat-pill {
+    background: #0e1e34;
+    border: 1px solid #1e3050;
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-size: 11px;
+    color: #7a9ac8;
+  }
+
+  .stat-pill strong {
+    color: #b8d8f8;
+    font-weight: 700;
   }
 
   /* ── 프리셋 그리드 ── */

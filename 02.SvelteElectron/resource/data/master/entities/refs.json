@@ -62,14 +62,86 @@
     { "id": "CLUB_ABL_ARI", "name": "애리조나 다이아몬드백스","nameEn": "Arizona Diamondbacks","leagueId": "LEAGUE_ABL" }
   ],
   "teams": [
-    { "id": "TEAM_HS_SEOUL_INNOVATION", "name": "서울 이노베이션", "nameEn": "Seoul Innovation", "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_SEOUL_INNOVATION", "schoolId": "SCHOOL_HS_SEOUL_INNOVATION" },
-    { "id": "TEAM_HS_BUSAN_WAVE",       "name": "부산 웨이브",     "nameEn": "Busan Wave",       "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_BUSAN_WAVE",       "schoolId": "SCHOOL_HS_BUSAN_WAVE" },
-    { "id": "TEAM_HS_DAEGU_HEAT",       "name": "대구 히트",       "nameEn": "Daegu Heat",       "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_DAEGU_HEAT",       "schoolId": "SCHOOL_HS_DAEGU_HEAT" },
-    { "id": "TEAM_HS_GWANGJU_VISION",   "name": "광주 비전",       "nameEn": "Gwangju Vision",   "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_GWANGJU_VISION",   "schoolId": "SCHOOL_HS_GWANGJU_VISION" },
-    { "id": "TEAM_HS_DAEJEON_RISE",     "name": "대전 라이즈",     "nameEn": "Daejeon Rise",     "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_DAEJEON_RISE",     "schoolId": "SCHOOL_HS_DAEJEON_RISE" },
-    { "id": "TEAM_HS_INCHEON_HARBOR",   "name": "인천 하버",       "nameEn": "Incheon Harbor",   "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_INCHEON_HARBOR",   "schoolId": "SCHOOL_HS_INCHEON_HARBOR" },
-    { "id": "TEAM_HS_ULSAN_CHARGE",     "name": "울산 차지",       "nameEn": "Ulsan Charge",     "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_ULSAN_CHARGE",     "schoolId": "SCHOOL_HS_ULSAN_CHARGE" },
-    { "id": "TEAM_HS_SUWON_EDGE",       "name": "수원 엣지",       "nameEn": "Suwon Edge",       "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_SUWON_EDGE",       "schoolId": "SCHOOL_HS_SUWON_EDGE" },
+    {
+      "id": "TEAM_HS_SEOUL_INNOVATION", "name": "서울 이노베이션", "nameEn": "Seoul Innovation",
+      "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_SEOUL_INNOVATION", "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+      "profile": {
+        "style": "균형형",
+        "desc": "서울 도심의 전통 명문 야구부. 분석적인 작전야구와 안정적인 수비가 강점이며, 매 시즌 꾸준히 상위권을 유지한다.",
+        "tags": ["균형형", "작전야구", "수비적"],
+        "strengths": ["투수력", "수비"]
+      }
+    },
+    {
+      "id": "TEAM_HS_BUSAN_WAVE", "name": "부산 웨이브", "nameEn": "Busan Wave",
+      "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_BUSAN_WAVE", "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+      "profile": {
+        "style": "공격형",
+        "desc": "바다처럼 거센 공격이 트레이드마크. 강타선을 앞세운 폭발적인 득점력이 리그 최상위권이다.",
+        "tags": ["공격형", "장타", "적극적"],
+        "strengths": ["타격", "장타력"]
+      }
+    },
+    {
+      "id": "TEAM_HS_DAEGU_HEAT", "name": "대구 히트", "nameEn": "Daegu Heat",
+      "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_DAEGU_HEAT", "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+      "profile": {
+        "style": "투수형",
+        "desc": "제구력 중심의 정통 투수야구팀. 에이스급 선발진을 중심으로 낮은 실점으로 경기를 지배한다.",
+        "tags": ["투수형", "제구 중심", "로우스코어"],
+        "strengths": ["선발 투수", "제구력"]
+      }
+    },
+    {
+      "id": "TEAM_HS_GWANGJU_VISION", "name": "광주 비전", "nameEn": "Gwangju Vision",
+      "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_GWANGJU_VISION", "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+      "profile": {
+        "style": "수비형",
+        "desc": "철통 수비와 끈끈한 팀워크로 승부하는 팀. 실책이 적고 실점을 극도로 줄이는 야구를 구사한다.",
+        "tags": ["수비형", "팀워크", "안정적"],
+        "strengths": ["수비력", "팀 결속"]
+      }
+    },
+    {
+      "id": "TEAM_HS_DAEJEON_RISE", "name": "대전 라이즈", "nameEn": "Daejeon Rise",
+      "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_DAEJEON_RISE", "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+      "profile": {
+        "style": "파워형",
+        "desc": "강속구 투수진과 파워히터들로 구성된 팀. 타격과 투구 모두 힘으로 밀어붙이는 호쾌한 야구가 특징이다.",
+        "tags": ["파워형", "강속구", "호쾌"],
+        "strengths": ["구속", "장타"]
+      }
+    },
+    {
+      "id": "TEAM_HS_INCHEON_HARBOR", "name": "인천 하버", "nameEn": "Incheon Harbor",
+      "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_INCHEON_HARBOR", "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+      "profile": {
+        "style": "균형형",
+        "desc": "항구도시의 끈기를 닮은 팀. 두터운 선수층과 치열한 내부 경쟁으로 꾸준하고 안정적인 성적을 낸다.",
+        "tags": ["균형형", "두터운 선수층", "끈기"],
+        "strengths": ["선수층", "계투진"]
+      }
+    },
+    {
+      "id": "TEAM_HS_ULSAN_CHARGE", "name": "울산 차지", "nameEn": "Ulsan Charge",
+      "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_ULSAN_CHARGE", "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+      "profile": {
+        "style": "파워형",
+        "desc": "리그에서 손꼽히는 장타력을 보유한 팀. 한 방을 믿는 공격적인 야구와 강력한 불펜이 무기다.",
+        "tags": ["파워형", "장타 중심", "공격적"],
+        "strengths": ["장타력", "불펜"]
+      }
+    },
+    {
+      "id": "TEAM_HS_SUWON_EDGE", "name": "수원 엣지", "nameEn": "Suwon Edge",
+      "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_SUWON_EDGE", "schoolId": "SCHOOL_HS_SUWON_EDGE",
+      "profile": {
+        "style": "피네스형",
+        "desc": "날카로운 변화구로 승부하는 피네스 피처들의 팀. 다양한 구종으로 타자를 요리하는 기술야구를 구사한다.",
+        "tags": ["피네스형", "변화구", "기술적"],
+        "strengths": ["무브먼트", "구종 다양성"]
+      }
+    },
 
     { "id": "TEAM_KBL_KIA_1",     "name": "기아 타이거즈 1군",   "nameEn": "KIA Tigers (1st)",      "leagueId": "LEAGUE_KBL", "clubId": "CLUB_KBL_KIA",     "tier": "1군" },
     { "id": "TEAM_KBL_KIA_2",     "name": "기아 타이거즈 2군",   "nameEn": "KIA Tigers (2nd)",      "leagueId": "LEAGUE_KBL", "clubId": "CLUB_KBL_KIA",     "tier": "2군" },

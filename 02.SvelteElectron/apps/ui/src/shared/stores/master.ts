@@ -46,6 +46,13 @@ export interface ClubRef {
   leagueId: string;
 }
 
+export interface TeamProfile {
+  style: string;
+  desc: string;
+  tags: string[];
+  strengths: string[];
+}
+
 export interface TeamRef {
   id: string;
   name: string;
@@ -54,6 +61,7 @@ export interface TeamRef {
   clubId?: string;
   schoolId?: string;
   tier?: string;
+  profile?: TeamProfile;
 }
 
 // ── 인물 엔티티 타입 (people_*.json 구조) ─────────────────────
