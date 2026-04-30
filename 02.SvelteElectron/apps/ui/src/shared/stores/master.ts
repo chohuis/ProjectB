@@ -83,6 +83,9 @@ export interface EntityRow {
   details: Record<string, unknown>;
 }
 
+// actionKey → category → 답장 문자열 배열
+export type ContactReplies = Record<string, Record<string, string[]>>;
+
 // ── 스토어 상태 ───────────────────────────────────────────────
 export interface MasterState {
   loaded: boolean;
@@ -99,6 +102,7 @@ export interface MasterState {
   decisionTmpls: DecisionTemplate[];
   eventPools: EventPool[];
   achievements: import("../utils/achievementEngine").MasterAchievement[];
+  contactReplies: ContactReplies;
 }
 
 // ── masterFetch 래퍼 (IPC 우선, fetch 폴백) ───────────────────
@@ -263,6 +267,7 @@ function createMasterStore() {
     decisionTmpls: [],
     eventPools: [],
     achievements: [],
+    contactReplies: {},
   });
 
   async function load() {
@@ -272,7 +277,7 @@ function createMasterStore() {
         mandatoryData, conditionalData, randomData,
         msgTmplData, decisionTmplData,
         poolMedia, poolSocial, poolTeamLife,
-        achievementsData,
+        achievementsData, contactRepliesData,
       ] = await Promise.all([
         fetchMaster<{ programs: TrainingProgram[] }>("training/programs_pitcher.json"),
         fetchMaster<{ pitches: PitchEntry[] }>("training/pitch_catalog.json"),
@@ -299,6 +304,7 @@ function createMasterStore() {
         fetchMaster<{ achievements: import("../utils/achievementEngine").MasterAchievement[] }>(
           "achievements/achievements.json"
         ),
+        fetchMaster<{ replies: ContactReplies }>("messenger/contact_replies.json"),
       ]);
 
       // 이벤트 규칙 병합 + 파싱
@@ -333,7 +339,8 @@ function createMasterStore() {
         messageTmpls,
         decisionTmpls,
         eventPools,
-        achievements: achievementsData?.achievements ?? [],
+        achievements:    achievementsData?.achievements ?? [],
+        contactReplies:  contactRepliesData?.replies   ?? {},
       }));
     } catch (e) {
       console.warn("[masterStore] load failed", e);
