@@ -31,7 +31,10 @@
   import EventManagerModal from "../../features/events/ui/EventManagerModal.svelte";
   import InGameEventModal from "../../features/events/ui/InGameEventModal.svelte";
   import CareerChoiceModal from "../../features/career/ui/CareerChoiceModal.svelte";
+  import MessengerScriptModal from "../../features/messenger/ui/MessengerScriptModal.svelte";
+  import MessengerManagerModal from "../../features/messenger-manager/ui/MessengerManagerModal.svelte";
   import DevToolsHubModal from "../../features/devtools/ui/DevToolsHubModal.svelte";
+  import MatchEngineLabModal from "../../features/match-engine-lab/ui/MatchEngineLabModal.svelte";
   import EntityManagerModal from "../../features/entity-manager/ui/EntityManagerModal.svelte";
   import AchievementManagerModal from "../../features/achievements/ui/AchievementManagerModal.svelte";
   import SeasonEndModal from "../../features/season-end/ui/SeasonEndModal.svelte";
@@ -43,6 +46,8 @@
   let eventManagerOpen = false;
   let entityManagerOpen = false;
   let achievementManagerOpen = false;
+  let matchLabOpen = false;
+  let messengerManagerOpen = false;
   const tabPageKey: Record<MainTabId, string> = {
     home: "page.home",
     messages: "page.messages",
@@ -79,6 +84,9 @@
 
   // 진로 선택 pendingAction
   $: pendingCareerChoice = $nextPendingAction?.type === "careerChoice";
+
+  // 메신저 스크립트 pendingAction
+  $: pendingScript = $nextPendingAction?.type === "messengerScript" ? $nextPendingAction : null;
 
   // 경기 pendingAction → 해당 일정 항목
   $: pendingGame = $nextPendingAction?.type === "game" ? $nextPendingAction : null;
@@ -162,12 +170,14 @@
     if (typing) return;
 
     event.preventDefault();
-    const anyOpen = devToolsHubOpen || eventManagerOpen || entityManagerOpen || achievementManagerOpen;
+    const anyOpen = devToolsHubOpen || eventManagerOpen || entityManagerOpen || achievementManagerOpen || matchLabOpen || messengerManagerOpen;
     if (anyOpen) {
       devToolsHubOpen = false;
       eventManagerOpen = false;
       entityManagerOpen = false;
       achievementManagerOpen = false;
+      matchLabOpen = false;
+      messengerManagerOpen = false;
       return;
     }
     devToolsHubOpen = true;
@@ -252,11 +262,21 @@
     devToolsHubOpen = false;
     achievementManagerOpen = true;
   }}
+  on:openMatchLab={() => {
+    devToolsHubOpen = false;
+    matchLabOpen = true;
+  }}
+  on:openMessenger={() => {
+    devToolsHubOpen = false;
+    messengerManagerOpen = true;
+  }}
 />
 
 <EventManagerModal open={eventManagerOpen} on:close={() => (eventManagerOpen = false)} />
 <EntityManagerModal open={entityManagerOpen} on:close={() => (entityManagerOpen = false)} />
 <AchievementManagerModal open={achievementManagerOpen} on:close={() => (achievementManagerOpen = false)} />
+<MatchEngineLabModal open={matchLabOpen} on:close={() => (matchLabOpen = false)} />
+<MessengerManagerModal open={messengerManagerOpen} on:close={() => (messengerManagerOpen = false)} />
 
 {#if $seasonEnded}
   <SeasonEndModal onExit={onSeasonEnd} />
@@ -268,6 +288,10 @@
 
 {#if pendingEvent}
   <InGameEventModal action={pendingEvent} />
+{/if}
+
+{#if pendingScript}
+  <MessengerScriptModal contactId={pendingScript.contactId} arcId={pendingScript.arcId} />
 {/if}
 
 {#if pendingGameEntry}

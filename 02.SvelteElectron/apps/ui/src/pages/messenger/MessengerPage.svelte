@@ -3,21 +3,19 @@
   import { gameStore } from "../../shared/stores/game";
   import { seasonStore } from "../../shared/stores/season";
   import { masterStore } from "../../shared/stores/master";
+  import { matchChatLine, isSpecialChat } from "../../shared/types/messenger";
   import type { ChatContact } from "../../shared/types/save";
+  import type { SpecialChatLine, ChatOption } from "../../shared/types/messenger";
 
   type FilterKey = "전체" | "team" | "school" | "personal";
+  type ActionKey = "greet" | "advice" | "plan";
 
-  const FILTER_LABELS: Record<FilterKey, string> = {
-    "전체": "전체",
-    "team": "팀",
-    "school": "학교",
-    "personal": "개인",
-  };
+  const FILTER_LABELS: Record<FilterKey, string> = { "전체": "전체", team: "팀", school: "학교", personal: "개인" };
 
-  const ACTIONS: { key: string; label: string; affinityDelta: number; myText: string }[] = [
-    { key: "greet",  label: "안부 인사",      affinityDelta: 1, myText: "안녕하세요! 잘 지내셨나요?" },
-    { key: "advice", label: "훈련/학업 상담",  affinityDelta: 2, myText: "조언을 구해도 될까요?" },
-    { key: "plan",   label: "약속 잡기",       affinityDelta: 3, myText: "시간 되실 때 한번 만날 수 있을까요?" },
+  const ACTIONS: { key: ActionKey; label: string; affinityDelta: number }[] = [
+    { key: "greet",  label: "안부 인사",     affinityDelta: 1 },
+    { key: "advice", label: "훈련/학업 상담", affinityDelta: 2 },
+    { key: "plan",   label: "약속 잡기",      affinityDelta: 3 },
   ];
 
   let activeFilter: FilterKey = "전체";
@@ -25,14 +23,14 @@
   let chatEl: HTMLDivElement;
   let sending = false;
 
+  // 특별 대화 진행 중 상태
+  let pendingSpecial: { line: SpecialChatLine; contactId: string } | null = null;
+
   $: currentWeek = $seasonStore.currentWeek;
   $: unlockedContacts = $gameStore.contacts.filter((c) => c.unlocked);
   $: filteredContacts =
-    activeFilter === "전체"
-      ? unlockedContacts
-      : unlockedContacts.filter((c) => c.category === activeFilter);
+    activeFilter === "전체" ? unlockedContacts : unlockedContacts.filter((c) => c.category === activeFilter);
 
-  // 필터 변경 시 선택 유지 또는 첫 항목으로
   $: {
     if (!filteredContacts.some((c) => c.id === selectedContactId)) {
       selectedContactId = filteredContacts[0]?.id ?? "";
@@ -42,11 +40,11 @@
   $: selectedContact = filteredContacts.find((c) => c.id === selectedContactId) ?? null;
 
   function canAct(contact: ChatContact): boolean {
-    return currentWeek > contact.lastActionWeek;
+    return currentWeek > contact.lastActionWeek && !pendingSpecial;
   }
 
   function cooldownLabel(contact: ChatContact): string {
-    if (canAct(contact)) return "";
+    if (currentWeek > contact.lastActionWeek) return "";
     return `W${contact.lastActionWeek + 1} 이후`;
   }
 
@@ -65,39 +63,91 @@
     return "냉담";
   }
 
-  function getReply(actionKey: string, category: string): string {
-    const pool = $masterStore.contactReplies?.[actionKey]?.[category] ?? [];
-    if (!pool.length) return "알겠어.";
-    return pool[Math.floor(Math.random() * pool.length)];
+  // per-NPC 채팅 카탈로그 → 없으면 generic fallback
+  function getReply(contact: ChatContact, actionKey: ActionKey): string {
+    const def = $masterStore.contactDefs.find((d) => d.id === contact.id);
+    const catalog = def?.chat?.[actionKey] ?? [];
+    const matched = matchChatLine(catalog, contact.affinity, contact.flags);
+
+    if (matched && !isSpecialChat(matched)) {
+      const pool = matched.lines;
+      return pool[Math.floor(Math.random() * pool.length)] ?? "알겠어.";
+    }
+
+    // generic fallback (contact_replies.json)
+    const pool = $masterStore.contactReplies?.[actionKey]?.[contact.category] ?? [];
+    return pool.length ? pool[Math.floor(Math.random() * pool.length)] : "알겠어.";
   }
 
-  async function handleAction(actionKey: string, myText: string, affinityDelta: number) {
+  async function handleAction(actionKey: ActionKey, defaultAffinityDelta: number) {
     if (!selectedContact || !canAct(selectedContact) || sending) return;
     sending = true;
 
-    const contactId = selectedContact.id;
-    const category  = selectedContact.category;
-    const week      = currentWeek;
+    const contact = selectedContact;
+    const def = $masterStore.contactDefs.find((d) => d.id === contact.id);
+    const catalog = def?.chat?.[actionKey] ?? [];
+    const matched = matchChatLine(catalog, contact.affinity, contact.flags);
 
     if (!$gameStore.achievementMetrics.kakaoFirstContact) {
       gameStore.recordSocialFirstKakao();
     }
 
-    gameStore.addChatMessage(contactId, { from: "me", text: myText, week, affinityDelta });
-    gameStore.setLastActionWeek(contactId, week);
-    gameStore.updateAffinity(contactId, affinityDelta);
+    // 특별 대화
+    if (matched && isSpecialChat(matched)) {
+      gameStore.addChatMessage(contact.id, {
+        from: "contact", text: matched.prompt, week: currentWeek,
+      });
+      await tick();
+      chatEl?.scrollTo({ top: chatEl.scrollHeight, behavior: "smooth" });
+      pendingSpecial = { line: matched, contactId: contact.id };
+      sending = false;
+      return;
+    }
+
+    // 일반 대화
+    const myText = actionKey === "greet" ? "안녕하세요! 잘 지내셨나요?"
+      : actionKey === "advice" ? "조언을 구해도 될까요?"
+      : "시간 되실 때 한번 만날 수 있을까요?";
+
+    gameStore.addChatMessage(contact.id, { from: "me", text: myText, week: currentWeek, affinityDelta: defaultAffinityDelta });
+    gameStore.setLastActionWeek(contact.id, currentWeek);
+    gameStore.updateAffinity(contact.id, defaultAffinityDelta);
 
     await tick();
     chatEl?.scrollTo({ top: chatEl.scrollHeight, behavior: "smooth" });
 
     setTimeout(async () => {
-      const replyText = getReply(actionKey, category);
-      gameStore.addChatMessage(contactId, { from: "contact", text: replyText, week });
+      const replyText = getReply(contact, actionKey);
+      gameStore.addChatMessage(contact.id, { from: "contact", text: replyText, week: currentWeek });
       gameStore.save();
       sending = false;
       await tick();
       chatEl?.scrollTo({ top: chatEl.scrollHeight, behavior: "smooth" });
     }, 700);
+  }
+
+  async function resolveSpecial(opt: ChatOption) {
+    if (!pendingSpecial || !selectedContact) return;
+    const { line, contactId } = pendingSpecial;
+    pendingSpecial = null;
+    sending = true;
+
+    gameStore.addChatMessage(contactId, { from: "me", text: opt.text, week: currentWeek });
+    gameStore.setLastActionWeek(contactId, currentWeek);
+    if (opt.affinityDelta) gameStore.updateAffinity(contactId, opt.affinityDelta);
+    if (opt.effects) gameStore.applyContactEffect(opt.effects);
+    gameStore.setContactFlag(contactId, line.flag);
+
+    await tick();
+    chatEl?.scrollTo({ top: chatEl.scrollHeight, behavior: "smooth" });
+
+    setTimeout(async () => {
+      gameStore.addChatMessage(contactId, { from: "contact", text: opt.reply, week: currentWeek });
+      gameStore.save();
+      sending = false;
+      await tick();
+      chatEl?.scrollTo({ top: chatEl.scrollHeight, behavior: "smooth" });
+    }, 500);
   }
 </script>
 
@@ -119,14 +169,14 @@
       {#if filteredContacts.length === 0}
         <div class="empty-contacts">
           <p>연락처 없음</p>
-          <p>이벤트나 경기 결과에 따라 연락처가 해금됩니다.</p>
+          <p>게임을 진행하면 새로운 연락처가 등록됩니다.</p>
         </div>
       {:else}
         {#each filteredContacts as contact (contact.id)}
           <button
             class="contact-item"
             class:selected={selectedContact?.id === contact.id}
-            on:click={() => (selectedContactId = contact.id)}
+            on:click={() => { selectedContactId = contact.id; pendingSpecial = null; }}
           >
             <div class="contact-avatar" data-tier={affinityTier(contact.affinity)}>
               {contact.name[0]}
@@ -153,7 +203,6 @@
     <!-- 채팅 패널 -->
     <div class="chat-panel">
       {#if selectedContact}
-        <!-- 헤더 -->
         <div class="chat-header">
           <div class="chat-header-info">
             <strong>{selectedContact.name}</strong>
@@ -173,46 +222,56 @@
           </div>
         </div>
 
-        <!-- 메시지 목록 -->
         <div class="messages" bind:this={chatEl}>
           {#if selectedContact.chatHistory.length === 0}
-            <div class="no-messages">
-              아직 대화가 없습니다. 아래 버튼으로 대화를 시작해보세요.
-            </div>
+            <div class="no-messages">아직 대화가 없습니다.</div>
           {:else}
             {#each selectedContact.chatHistory as msg}
               <div class="bubble {msg.from}">
                 <p>{msg.text}</p>
                 <small>
                   W{msg.week}
-                  {#if msg.affinityDelta && msg.affinityDelta > 0}
-                    · 친밀도 +{msg.affinityDelta}
-                  {/if}
+                  {#if msg.affinityDelta && msg.affinityDelta > 0}· 친밀도 +{msg.affinityDelta}{/if}
                 </small>
               </div>
             {/each}
           {/if}
         </div>
 
-        <!-- 액션 버튼 -->
+        <!-- 액션 영역 -->
         <div class="actions">
-          {#if !canAct(selectedContact)}
-            <p class="cooldown-notice">
-              {cooldownLabel(selectedContact)}까지 대화 쿨다운 중
-            </p>
+          {#if pendingSpecial && pendingSpecial.contactId === selectedContact.id}
+            <!-- 특별 대화 선택지 -->
+            <div class="special-options">
+              {#each pendingSpecial.line.options as opt}
+                <button class="special-opt" on:click={() => resolveSpecial(opt)}>
+                  <span>{opt.text}</span>
+                  {#if opt.affinityDelta && opt.affinityDelta > 0}
+                    <span class="opt-delta">+친밀</span>
+                  {/if}
+                  {#if opt.effects?.unlockPitchId}
+                    <span class="opt-effect">구종 해금</span>
+                  {/if}
+                </button>
+              {/each}
+            </div>
+          {:else}
+            {#if !canAct(selectedContact) && currentWeek <= selectedContact.lastActionWeek}
+              <p class="cooldown-notice">{cooldownLabel(selectedContact)}까지 쿨다운</p>
+            {/if}
+            {#each ACTIONS as action}
+              {@const disabled = !canAct(selectedContact) || sending}
+              <button
+                class="action-btn"
+                class:disabled
+                {disabled}
+                on:click={() => handleAction(action.key, action.affinityDelta)}
+              >
+                <span class="action-label">{action.label}</span>
+                <span class="action-delta">+{action.affinityDelta}</span>
+              </button>
+            {/each}
           {/if}
-          {#each ACTIONS as action}
-            {@const disabled = !canAct(selectedContact) || sending}
-            <button
-              class="action-btn"
-              class:disabled
-              {disabled}
-              on:click={() => handleAction(action.key, action.myText, action.affinityDelta)}
-            >
-              <span class="action-label">{action.label}</span>
-              <span class="action-delta">+{action.affinityDelta}</span>
-            </button>
-          {/each}
         </div>
       {:else}
         <div class="no-contact-selected">
@@ -237,39 +296,15 @@
     overflow: hidden;
   }
 
-  .top-bar {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
+  .top-bar { display: flex; align-items: center; gap: 16px; }
+  h2 { margin: 0; font-size: 18px; color: #dce8ff; flex-shrink: 0; }
 
-  h2 {
-    margin: 0;
-    font-size: 18px;
-    color: #dce8ff;
-    flex-shrink: 0;
-  }
-
-  .filters {
-    display: flex;
-    gap: 6px;
-  }
-
+  .filters { display: flex; gap: 6px; }
   .filters button {
-    border: 1px solid #2d4470;
-    background: #111d34;
-    color: #9bb4d8;
-    border-radius: 20px;
-    padding: 4px 12px;
-    font-size: 12px;
-    cursor: pointer;
+    border: 1px solid #2d4470; background: #111d34; color: #9bb4d8;
+    border-radius: 20px; padding: 4px 12px; font-size: 12px; cursor: pointer;
   }
-
-  .filters button.active {
-    background: #2b5aaa;
-    border-color: #5a8fe8;
-    color: #f0f6ff;
-  }
+  .filters button.active { background: #2b5aaa; border-color: #5a8fe8; color: #f0f6ff; }
 
   .layout {
     display: grid;
@@ -280,184 +315,69 @@
 
   /* ── 연락처 목록 ── */
   .contact-list {
-    background: #0d1928;
-    border: 1px solid #1e3050;
-    border-radius: 10px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: 8px;
+    background: #0d1928; border: 1px solid #1e3050; border-radius: 10px;
+    overflow-y: auto; display: flex; flex-direction: column; gap: 4px; padding: 8px;
   }
 
-  .empty-contacts {
-    padding: 20px 12px;
-    text-align: center;
-    color: #3d5880;
-    font-size: 12px;
-    line-height: 1.7;
-  }
-
+  .empty-contacts { padding: 20px 12px; text-align: center; color: #3d5880; font-size: 12px; line-height: 1.7; }
   .empty-contacts p { margin: 0; }
 
   .contact-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 10px;
-    background: #111e34;
-    border: 1px solid #1e3050;
-    border-radius: 8px;
-    cursor: pointer;
-    text-align: left;
-    width: 100%;
-    transition: background 0.12s;
+    display: flex; align-items: center; gap: 10px; padding: 8px 10px;
+    background: #111e34; border: 1px solid #1e3050; border-radius: 8px;
+    cursor: pointer; text-align: left; width: 100%; transition: background 0.12s;
   }
-
-  .contact-item.selected {
-    background: #1a3060;
-    border-color: #3a6ab0;
-  }
+  .contact-item.selected { background: #1a3060; border-color: #3a6ab0; }
 
   .contact-avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: #1c2f4e;
-    border: 2px solid #253650;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    font-weight: 700;
-    color: #7aa0d8;
-    flex-shrink: 0;
+    width: 36px; height: 36px; border-radius: 50%; background: #1c2f4e;
+    border: 2px solid #253650; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; color: #7aa0d8; flex-shrink: 0;
   }
-
   .contact-avatar[data-tier="top"]  { border-color: #d4a000; color: #f8d060; }
   .contact-avatar[data-tier="high"] { border-color: #2d8050; color: #60d890; }
   .contact-avatar[data-tier="mid"]  { border-color: #2a5a98; color: #70a8f0; }
   .contact-avatar[data-tier="low"]  { border-color: #3a3a50; color: #8888a8; }
 
-  .contact-info {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .contact-name {
-    margin: 0;
-    font-size: 13px;
-    font-weight: 600;
-    color: #d8e8ff;
-  }
-
-  .contact-meta {
-    margin: 2px 0 0;
-    font-size: 11px;
-    color: #5a7a9a;
-  }
-
+  .contact-info { flex: 1; min-width: 0; }
+  .contact-name { margin: 0; font-size: 13px; font-weight: 600; color: #d8e8ff; }
+  .contact-meta { margin: 2px 0 0; font-size: 11px; color: #5a7a9a; }
   .contact-preview {
-    margin: 3px 0 0;
-    font-size: 11px;
-    color: #7a94b8;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    margin: 3px 0 0; font-size: 11px; color: #7a94b8;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
 
-  .contact-right {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 2px;
-    flex-shrink: 0;
-  }
+  .contact-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
 
-  .affinity-badge {
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    border: 1px solid transparent;
-  }
-
+  .affinity-badge { font-size: 10px; padding: 2px 6px; border-radius: 4px; border: 1px solid transparent; }
   .affinity-badge[data-tier="top"]  { background: #2a1e06; border-color: #b87800; color: #f8d060; }
   .affinity-badge[data-tier="high"] { background: #0e2418; border-color: #2d6040; color: #60d890; }
   .affinity-badge[data-tier="mid"]  { background: #0e1a30; border-color: #2a5080; color: #70a8f0; }
   .affinity-badge[data-tier="low"]  { background: #1a1a28; border-color: #303050; color: #7878a0; }
-
-  .affinity-num {
-    font-size: 11px;
-    color: #4a6888;
-  }
+  .affinity-num { font-size: 11px; color: #4a6888; }
 
   /* ── 채팅 패널 ── */
   .chat-panel {
-    background: #0d1928;
-    border: 1px solid #1e3050;
-    border-radius: 10px;
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr) auto;
-    overflow: hidden;
+    background: #0d1928; border: 1px solid #1e3050; border-radius: 10px;
+    display: grid; grid-template-rows: auto minmax(0, 1fr) auto; overflow: hidden;
   }
 
   .chat-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 14px;
-    border-bottom: 1px solid #1e3050;
-    gap: 12px;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 14px; border-bottom: 1px solid #1e3050; gap: 12px;
   }
+  .chat-header-info { display: flex; align-items: baseline; gap: 8px; }
+  .chat-header-info strong { font-size: 14px; color: #d8e8ff; }
+  .chat-header-info span { font-size: 12px; color: #4a6888; }
 
-  .chat-header-info {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-  }
-
-  .chat-header-info strong {
-    font-size: 14px;
-    color: #d8e8ff;
-  }
-
-  .chat-header-info span {
-    font-size: 12px;
-    color: #4a6888;
-  }
-
-  .affinity-section {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-  }
-
-  .affinity-bar-wrap {
-    width: 80px;
-    height: 6px;
-    background: #1c2f4e;
-    border-radius: 3px;
-    overflow: hidden;
-  }
-
-  .affinity-bar-fill {
-    height: 100%;
-    border-radius: 3px;
-    transition: width 0.3s ease;
-  }
-
+  .affinity-section { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .affinity-bar-wrap { width: 80px; height: 6px; background: #1c2f4e; border-radius: 3px; overflow: hidden; }
+  .affinity-bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s ease; }
   .affinity-bar-fill[data-tier="top"]  { background: #d4a000; }
   .affinity-bar-fill[data-tier="high"] { background: #2d9e58; }
   .affinity-bar-fill[data-tier="mid"]  { background: #2a6ab8; }
   .affinity-bar-fill[data-tier="low"]  { background: #505070; }
-
-  .affinity-value {
-    font-size: 11px;
-    font-weight: 600;
-    white-space: nowrap;
-  }
-
+  .affinity-value { font-size: 11px; font-weight: 600; white-space: nowrap; }
   .affinity-value[data-tier="top"]  { color: #f8d060; }
   .affinity-value[data-tier="high"] { color: #60d890; }
   .affinity-value[data-tier="mid"]  { color: #70a8f0; }
@@ -465,109 +385,58 @@
 
   /* ── 메시지 ── */
   .messages {
-    overflow-y: auto;
-    padding: 12px 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    overflow-y: auto; padding: 12px 14px;
+    display: flex; flex-direction: column; gap: 8px;
   }
+  .no-messages { text-align: center; color: #3d5880; font-size: 13px; margin: auto; padding: 20px; }
 
-  .no-messages {
-    text-align: center;
-    color: #3d5880;
-    font-size: 13px;
-    margin: auto;
-    padding: 20px;
-  }
-
-  .bubble {
-    max-width: 70%;
-    border-radius: 10px;
-    padding: 8px 12px;
-  }
-
+  .bubble { max-width: 70%; border-radius: 10px; padding: 8px 12px; }
   .bubble p { margin: 0; font-size: 13px; color: #e0eeff; line-height: 1.5; }
-
-  .bubble small {
-    display: block;
-    margin-top: 4px;
-    font-size: 10px;
-    color: #4a6888;
-  }
-
-  .bubble.contact {
-    background: #111e38;
-    border: 1px solid #1e3050;
-    align-self: flex-start;
-  }
-
-  .bubble.me {
-    background: #1a3a6a;
-    border: 1px solid #2a5098;
-    align-self: flex-end;
-  }
-
+  .bubble small { display: block; margin-top: 4px; font-size: 10px; color: #4a6888; }
+  .bubble.contact { background: #111e38; border: 1px solid #1e3050; align-self: flex-start; }
+  .bubble.me { background: #1a3a6a; border: 1px solid #2a5098; align-self: flex-end; }
   .bubble.me small { text-align: right; }
 
   /* ── 액션 영역 ── */
   .actions {
-    padding: 10px 14px;
-    border-top: 1px solid #1e3050;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    align-items: center;
+    padding: 10px 14px; border-top: 1px solid #1e3050;
+    display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
   }
 
-  .cooldown-notice {
-    width: 100%;
-    margin: 0 0 4px;
-    font-size: 11px;
-    color: #7a5030;
-  }
+  .cooldown-notice { width: 100%; margin: 0 0 4px; font-size: 11px; color: #7a5030; }
 
   .action-btn {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 7px 14px;
-    background: #1a2e50;
-    border: 1px solid #2a4878;
-    border-radius: 8px;
-    color: #9bbce8;
-    font-size: 12px;
-    cursor: pointer;
+    display: flex; align-items: center; gap: 6px; padding: 7px 14px;
+    background: #1a2e50; border: 1px solid #2a4878; border-radius: 8px;
+    color: #9bbce8; font-size: 12px; cursor: pointer; transition: background 0.12s;
+  }
+  .action-btn:hover:not(.disabled) { background: #243a60; border-color: #4a6898; }
+  .action-btn.disabled { opacity: 0.35; cursor: not-allowed; }
+  .action-delta { font-size: 10px; color: #60d890; font-weight: 700; }
+
+  /* ── 특별 대화 선택지 ── */
+  .special-options { display: grid; gap: 6px; width: 100%; }
+
+  .special-opt {
+    display: flex; align-items: center; gap: 8px; padding: 9px 14px;
+    background: #1a3050; border: 1px solid #3a5a8a; border-radius: 9px;
+    color: #ddeeff; font-size: 13px; cursor: pointer; text-align: left;
     transition: background 0.12s;
   }
+  .special-opt:hover { background: #24406a; border-color: #5a80b8; }
+  .special-opt span:first-child { flex: 1; }
 
-  .action-btn:hover:not(.disabled) {
-    background: #243a60;
-    border-color: #4a6898;
-  }
-
-  .action-btn.disabled {
-    opacity: 0.35;
-    cursor: not-allowed;
-  }
-
-  .action-delta {
-    font-size: 10px;
-    color: #60d890;
-    font-weight: 700;
+  .opt-delta { font-size: 10px; color: #50d090; font-weight: 700; flex-shrink: 0; }
+  .opt-effect {
+    font-size: 10px; color: #f0c040; font-weight: 700; flex-shrink: 0;
+    background: #2a2010; border: 1px solid #806020; border-radius: 4px; padding: 1px 5px;
   }
 
   /* ── 빈 상태 ── */
   .no-contact-selected {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    color: #3d5880;
-    font-size: 13px;
-    gap: 6px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    height: 100%; color: #3d5880; font-size: 13px; gap: 6px;
   }
-
   .no-contact-selected p { margin: 0; }
 
   @media (max-width: 1280px) {

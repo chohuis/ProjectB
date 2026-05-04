@@ -30,7 +30,8 @@ export interface DecisionEffect {
   conditionDelta?: number;
   fatigueDelta?: number;
   moraleDelta?: number;
-  xp?: Record<string, number>; // PitchingStatKey → XP 적립량
+  xp?: Record<string, number>;      // PitchingStatKey → XP 적립량
+  statDelta?: Record<string, number>; // PitchingStatKey → 즉시 스탯 증가량
 }
 
 export interface MessageDecisionOption {

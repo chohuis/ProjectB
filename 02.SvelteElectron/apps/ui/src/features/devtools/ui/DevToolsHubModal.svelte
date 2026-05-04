@@ -8,6 +8,8 @@
     openEvent: void;
     openEntity: void;
     openAchievement: void;
+    openMessenger: void;
+    openMatchLab: void;
   }>();
 
   function close() {
@@ -24,6 +26,14 @@
 
   function openAchievement() {
     dispatch("openAchievement");
+  }
+
+  function openMessenger() {
+    dispatch("openMessenger");
+  }
+
+  function openMatchLab() {
+    dispatch("openMatchLab");
   }
 </script>
 
@@ -49,6 +59,16 @@
         <button type="button" class="tool-btn" on:click={openAchievement}>
           <strong>업적 에디터</strong>
           <span>업적 조건/보상/카테고리 생성 및 수정</span>
+        </button>
+
+        <button type="button" class="tool-btn" on:click={openMessenger}>
+          <strong>메신저 에디터</strong>
+          <span>NPC 컨택트 / 아크 스크립트 / 채팅 카탈로그 관리</span>
+        </button>
+
+        <button type="button" class="tool-btn" on:click={openMatchLab}>
+          <strong>매치 엔진 시뮬레이터</strong>
+          <span>밸런스 수치 조정, 즉시 반영, 영구 저장, 배치 시뮬레이션</span>
         </button>
       </div>
     </section>

@@ -2,6 +2,7 @@ import { derived, writable } from "svelte/store";
 import type { EventRule, EventPool, MessageTemplate, DecisionTemplate, DecisionTemplateOption } from "../types/event";
 import type { CareerStage } from "../types/save";
 import type { DecisionEffect } from "../types/main";
+import type { ContactDef } from "../types/messenger";
 
 // ── 훈련·구종 타입 ─────────────────────────────────────────────
 export interface TrainingProgram {
@@ -103,6 +104,7 @@ export interface MasterState {
   eventPools: EventPool[];
   achievements: import("../utils/achievementEngine").MasterAchievement[];
   contactReplies: ContactReplies;
+  contactDefs: ContactDef[];
 }
 
 // ── masterFetch 래퍼 (IPC 우선, fetch 폴백) ───────────────────
@@ -268,6 +270,7 @@ function createMasterStore() {
     eventPools: [],
     achievements: [],
     contactReplies: {},
+    contactDefs: [],
   });
 
   async function load() {
@@ -277,7 +280,7 @@ function createMasterStore() {
         mandatoryData, conditionalData, randomData,
         msgTmplData, decisionTmplData,
         poolMedia, poolSocial, poolTeamLife,
-        achievementsData, contactRepliesData,
+        achievementsData, contactRepliesData, contactIndexData,
       ] = await Promise.all([
         fetchMaster<{ programs: TrainingProgram[] }>("training/programs_pitcher.json"),
         fetchMaster<{ pitches: PitchEntry[] }>("training/pitch_catalog.json"),
@@ -305,6 +308,7 @@ function createMasterStore() {
           "achievements/achievements.json"
         ),
         fetchMaster<{ replies: ContactReplies }>("messenger/contact_replies.json"),
+        fetchMaster<{ contacts: string[] }>("contacts/index.json"),
       ]);
 
       // 이벤트 규칙 병합 + 파싱
@@ -339,9 +343,20 @@ function createMasterStore() {
         messageTmpls,
         decisionTmpls,
         eventPools,
-        achievements:    achievementsData?.achievements ?? [],
-        contactReplies:  contactRepliesData?.replies   ?? {},
+        achievements:   achievementsData?.achievements ?? [],
+        contactReplies: contactRepliesData?.replies   ?? {},
+        contactDefs:    [],
       }));
+
+      // contact 파일 개별 로드 (index.json의 ID 목록 기준)
+      const contactIds = contactIndexData?.contacts ?? [];
+      if (contactIds.length > 0) {
+        const contactFiles = await Promise.all(
+          contactIds.map((id) => fetchMaster<ContactDef>(`contacts/${id}.json`))
+        );
+        const contactDefs = contactFiles.filter((d): d is ContactDef => d !== null);
+        update((s) => ({ ...s, contactDefs }));
+      }
     } catch (e) {
       console.warn("[masterStore] load failed", e);
       update((s) => ({ ...s, loaded: true }));
@@ -364,7 +379,21 @@ function createMasterStore() {
     update((s) => ({ ...s, entities: data?.entities ?? [] }));
   }
 
-  return { subscribe, load, loadEntities };
+  async function reloadContacts() {
+    const indexData = await fetchMaster<{ contacts: string[] }>("contacts/index.json");
+    const contactIds = indexData?.contacts ?? [];
+    if (contactIds.length === 0) {
+      update((s) => ({ ...s, contactDefs: [] }));
+      return;
+    }
+    const contactFiles = await Promise.all(
+      contactIds.map((id) => fetchMaster<ContactDef>(`contacts/${id}.json`))
+    );
+    const contactDefs = contactFiles.filter((d): d is ContactDef => d !== null);
+    update((s) => ({ ...s, contactDefs }));
+  }
+
+  return { subscribe, load, loadEntities, reloadContacts };
 }
 
 export const masterStore = createMasterStore();

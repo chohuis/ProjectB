@@ -12,6 +12,7 @@ import type {
   TrainingPlanState,
 } from "../types/save";
 import { makeSaveGame } from "../types/save";
+import type { ContactDef, ContactEffect } from "../types/messenger";
 import type { CoreGameState } from "../types/projectb.d";
 
 // ── gameStore 내부 상태 ────────────────────────────────────────
@@ -249,7 +250,7 @@ function fromSaveGame(saved: SaveGame): GameStoreState {
     schoolState:  { ...DEFAULT_SCHOOL, ...saved.schoolState },
     achievements,
     achievementMetrics: metrics,
-    contacts:     saved.contacts ?? [],
+    contacts:     (saved.contacts ?? []).map((c) => ({ ...c, flags: c.flags ?? [] })),
     pendingAchievements: [],
     dayLabel:     computeWeekLabel(1, p.grade ?? 1),
     logs:         saved.recentLogs,
@@ -498,6 +499,61 @@ function createGameStore() {
       }));
     },
 
+    unlockOrRegisterContact(def: ContactDef) {
+      update((s) => {
+        const exists = s.contacts.some((c) => c.id === def.id);
+        if (exists) {
+          return { ...s, contacts: s.contacts.map((c) => c.id === def.id ? { ...c, unlocked: true } : c) };
+        }
+        const newContact: ChatContact = {
+          id: def.id, name: def.name, category: def.category, relation: def.relation,
+          unlocked: true, affinity: def.initialAffinity,
+          lastActionWeek: 0, chatHistory: [], flags: [],
+        };
+        return { ...s, contacts: [...s.contacts, newContact] };
+      });
+    },
+
+    setContactFlag(contactId: string, flag: string) {
+      update((s) => ({
+        ...s,
+        contacts: s.contacts.map((c) =>
+          c.id !== contactId || c.flags.includes(flag) ? c : { ...c, flags: [...c.flags, flag] }
+        ),
+      }));
+    },
+
+    applyContactEffect(effect: ContactEffect) {
+      update((s) => {
+        const p = s.protagonist;
+        const clamp100 = (v: number) => Math.max(0, Math.min(100, v));
+        const clampStat = (v: number) => Math.max(1, Math.min(99, v));
+        const condition = clamp100(p.condition + (effect.conditionDelta ?? 0));
+        const fatigue   = clamp100(p.fatigue   + (effect.fatigueDelta   ?? 0));
+        const morale    = clamp100(p.morale    + (effect.moraleDelta    ?? 0));
+        const pitchingXP = { ...p.pitchingXP };
+        if (effect.xp) {
+          for (const [stat, amt] of Object.entries(effect.xp)) {
+            pitchingXP[stat as PitchingStatKey] = (pitchingXP[stat as PitchingStatKey] ?? 0) + amt;
+          }
+        }
+        const pitching = { ...p.pitching };
+        if (effect.statDelta) {
+          for (const [stat, amt] of Object.entries(effect.statDelta)) {
+            if (stat !== "ovr" && stat in pitching) {
+              (pitching as Record<string, number>)[stat] = clampStat((pitching as Record<string, number>)[stat] + amt);
+            }
+          }
+        }
+        let learnedPitchIds = p.learnedPitchIds;
+        if (effect.unlockPitchId && !learnedPitchIds.includes(effect.unlockPitchId)) {
+          learnedPitchIds = [...learnedPitchIds, effect.unlockPitchId];
+        }
+        const updated: ProtagonistSave = { ...p, condition, fatigue, morale, pitchingXP, pitching, learnedPitchIds };
+        return { ...s, protagonist: updated, player: toPlayerCompat(updated) };
+      });
+    },
+
     addChatMessage(contactId: string, msg: ChatMessage) {
       update((s) => ({
         ...s,
@@ -646,17 +702,26 @@ function createGameStore() {
     applyEventEffect(effect: import("../types/main").DecisionEffect) {
       update((s) => {
         const p = s.protagonist;
-        const clamp = (v: number) => Math.max(0, Math.min(100, v));
-        const condition = clamp(p.condition + (effect.conditionDelta ?? 0));
-        const fatigue   = clamp(p.fatigue   + (effect.fatigueDelta   ?? 0));
-        const morale    = clamp(p.morale    + (effect.moraleDelta    ?? 0));
+        const clamp100 = (v: number) => Math.max(0, Math.min(100, v));
+        const clampStat = (v: number) => Math.max(1, Math.min(99, v));
+        const condition = clamp100(p.condition + (effect.conditionDelta ?? 0));
+        const fatigue   = clamp100(p.fatigue   + (effect.fatigueDelta   ?? 0));
+        const morale    = clamp100(p.morale    + (effect.moraleDelta    ?? 0));
         const pitchingXP = { ...p.pitchingXP };
         if (effect.xp) {
           for (const [stat, amt] of Object.entries(effect.xp)) {
             pitchingXP[stat as PitchingStatKey] = (pitchingXP[stat as PitchingStatKey] ?? 0) + amt;
           }
         }
-        const updated: ProtagonistSave = { ...p, condition, fatigue, morale, pitchingXP };
+        const pitching = { ...p.pitching };
+        if (effect.statDelta) {
+          for (const [stat, amt] of Object.entries(effect.statDelta)) {
+            if (stat !== "ovr" && stat in pitching) {
+              (pitching as Record<string, number>)[stat] = clampStat((pitching as Record<string, number>)[stat] + amt);
+            }
+          }
+        }
+        const updated: ProtagonistSave = { ...p, condition, fatigue, morale, pitchingXP, pitching };
         return { ...s, protagonist: updated, player: toPlayerCompat(updated) };
       });
     },

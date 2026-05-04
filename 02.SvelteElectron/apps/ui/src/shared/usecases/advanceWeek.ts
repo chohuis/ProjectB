@@ -205,9 +205,36 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     logs.push(`[시험] ${examRes.messageSubject}`);
   }
 
-  // ── 7. 진로 선택 이벤트 (고3 말, W50) ─────────────────────────
-  const gLatest = get(gameStore);
+  // ── 7. 메신저 아크 트리거 (contactDefs 순회, 데이터 드리븐) ──
   const weekInYear = ((nextWeek - 1) % 52) + 1;
+  {
+    const mCur = get(masterStore);
+    const gCur = get(gameStore);
+    const contactMap = new Map(gCur.contacts.map((c) => [c.id, c]));
+
+    for (const def of mCur.contactDefs) {
+      for (const arc of def.arcs) {
+        const contact = contactMap.get(def.id);
+        const flags = contact?.flags ?? [];
+        if (flags.includes(arc.flag)) continue;
+
+        const t = arc.trigger;
+        if (t.weekInSeason    !== undefined && weekInYear !== t.weekInSeason)       continue;
+        if (t.weekInSeasonGte !== undefined && weekInYear < t.weekInSeasonGte)      continue;
+        if (t.careerStage     !== undefined && g.protagonist.careerStage !== t.careerStage) continue;
+        if (t.careerYear      !== undefined && careerStageYear !== t.careerYear)    continue;
+        if (t.affinityGte     !== undefined && (contact?.affinity ?? 0) < t.affinityGte) continue;
+        if (t.flagSet         !== undefined && !flags.includes(t.flagSet))           continue;
+        if (t.flagNotSet      !== undefined &&  flags.includes(t.flagNotSet))        continue;
+
+        seasonStore.pushPendingAction({ type: "messengerScript", contactId: def.id, arcId: arc.id });
+        break; // 컨택트 당 1개 아크만 큐에 추가
+      }
+    }
+  }
+
+  // ── 8. 진로 선택 이벤트 (고3 말, W50) ─────────────────────────
+  const gLatest = get(gameStore);
   if (
     gLatest.protagonist.careerStage === "highschool" &&
     careerStageYear === 2 &&
