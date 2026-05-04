@@ -41,6 +41,41 @@ declare global {
         ok: boolean;
         error?: string;
       }>;
+      tuningLoad: () => Promise<{
+        ok: boolean;
+        data?: MatchEngineTuningPayload;
+        error?: string;
+        details?: string[];
+      }>;
+      tuningValidate: (payload: MatchEngineTuningPayload | { tuning: MatchEngineTuningPayload }) => Promise<{
+        ok: boolean;
+        errors: string[];
+      }>;
+      tuningApply: (payload: MatchEngineTuningPayload | { tuning: MatchEngineTuningPayload }) => Promise<{
+        ok: boolean;
+        error?: string;
+        details?: string[];
+        smoke?: MatchEngineSimMetrics;
+        smokeGate?: { ok: boolean; failures: string[] };
+      }>;
+      tuningSave: (payload: MatchEngineTuningPayload | { tuning: MatchEngineTuningPayload; forceSave?: boolean }) => Promise<{
+        ok: boolean;
+        data?: MatchEngineTuningPayload;
+        error?: string;
+        details?: string[];
+        gateFailed?: boolean;
+        smoke?: MatchEngineSimMetrics;
+        thresholds?: MatchEngineSmokeThresholds;
+        gateBypassed?: boolean;
+      }>;
+      tuningSmoke: (payload?: { tuning?: MatchEngineTuningPayload; games?: number }) => Promise<{
+        ok: boolean;
+        error?: string;
+        details?: string[];
+        smoke?: MatchEngineSimMetrics;
+        smokeGate?: { ok: boolean; failures: string[] };
+        thresholds?: MatchEngineSmokeThresholds;
+      }>;
     };
   }
 }
@@ -86,4 +121,47 @@ export interface MatchSnapshot {
   park: "neutral" | "pitcher_park" | "hitter_park" | "dome";
   isFinished: boolean;
   recentLogs: string[];
+}
+
+export interface MatchEngineTuningPayload {
+  version?: number;
+  updatedAt?: string;
+  updatedBy?: string;
+  pitchBase: { fastball: number; slider: number; curve: number; changeup: number };
+  strategyBonus: { aggressive: number; balanced: number; safe: number };
+  powerBonus: { low: number; normal: number; high: number };
+  locationBonus: Record<string, number>;
+  staminaBase: number;
+  staminaAggressiveBonus: number;
+  staminaFastballBonus: number;
+  staminaPowerCost: { low: number; normal: number; high: number };
+  mentalRecoveryOnInningEnd: number;
+  hitUpgradeSingleToDoubleBase: number;
+  hitUpgradeDoubleToHomeRunBase: number;
+  weatherPowerModifier: { sunny: number; cloudy: number; rainy: number; windy_in: number; windy_out: number };
+  weatherQualityModifier: { rainyFastball: number; rainyBreaking: number; windyOut: number; windyIn: number; cloudy: number };
+  parkQualityModifier: { neutral: number; pitcher_park: number; hitter_park: number; dome: number };
+  doublePlayBaseProb: number;
+}
+
+export interface MatchEngineSimMetrics {
+  games: number;
+  avgAway: number;
+  avgHome: number;
+  avgTotalScore: number;
+  avgPitches: number;
+  bbRate: number;
+  kRate: number;
+  hrRate: number;
+  p50Pitches: number;
+  p90Pitches: number;
+  resultRates: Record<string, number>;
+}
+
+export interface MatchEngineSmokeThresholds {
+  avgTotalScore: { min: number; max: number };
+  bbRate: { min: number; max: number };
+  kRate: { min: number; max: number };
+  hrRate: { min: number; max: number };
+  avgPitches: { min: number; max: number };
 }

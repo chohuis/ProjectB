@@ -21,6 +21,7 @@
     "start": "electron apps/desktop/main.cjs",
     "check:i18n:keys": "node scripts/check-i18n-keys.mjs",
     "check:mojibake": "node scripts/check-mojibake.mjs",
+    "check:encoding": "npm run check:mojibake",
     "gen:npc": "node scripts/generate-npc-people.mjs"
   },
   "dependencies": {

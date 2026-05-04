@@ -17,6 +17,7 @@
   type RunnerStats,
   type WeatherType
 } from "../domain/matchState";
+import { getMatchEngineTuning } from "../domain/matchEngineTuning";
 
 export interface PitchDecision {
   pitchType: PitchType;
@@ -130,11 +131,12 @@ export function stepPitch(state: MatchState, decision: PitchDecision): MatchStep
   }
 
   // ── 3. 스태미나/멘탈 계산 ────────────────────────────────────────────────────
-  const powerStaminaCost: Record<PitchPower, number> = { low: 0.1, normal: 0.3, high: 0.55 };
+  const tuning = getMatchEngineTuning();
+  const powerStaminaCost: Record<PitchPower, number> = tuning.staminaPowerCost;
   const baseStaminaLoss =
-    0.85 +
-    (decision.strategy === "aggressive" ? 0.25 : 0) +
-    (decision.pitchType === "fastball" ? 0.2 : 0) +
+    tuning.staminaBase +
+    (decision.strategy === "aggressive" ? tuning.staminaAggressiveBonus : 0) +
+    (decision.pitchType === "fastball" ? tuning.staminaFastballBonus : 0) +
     powerStaminaCost[decision.power];
   const staminaCapFactor = 1 - clamp((preState.pitcher.staminaCap - 55) * 0.005, -0.15, 0.15);
   // 비선형 피로: 스태미나 40 미만부터 감소 가속 (최대 2배)
@@ -145,7 +147,7 @@ export function stepPitch(state: MatchState, decision: PitchDecision): MatchStep
   const rawMentalDelta = resolveMentalDelta(resultCode) * mentalResilFactor;
   // 이닝 전환(아웃3개로 리셋됐을 때) 멘탈 소폭 회복
   const inningChangedThisPitch = nextOuts === 0 && preState.outs > 0;
-  const mentalRecovery = inningChangedThisPitch ? 1.5 : 0;
+  const mentalRecovery = inningChangedThisPitch ? tuning.mentalRecoveryOnInningEnd : 0;
   const mentalDelta = rawMentalDelta + mentalRecovery;
   const nextStamina = clamp(preState.stamina - staminaLoss, 0, 100);
   const nextMental = clamp(preState.mental + mentalDelta, 0, 100);
@@ -186,39 +188,15 @@ export function stepPitch(state: MatchState, decision: PitchDecision): MatchStep
 }
 
 function calculatePitchQuality(state: MatchState, decision: PitchDecision): number {
-  const pitchBase: Record<PitchType, number> = {
-    fastball: 63,
-    slider: 60,
-    curve: 58,
-    changeup: 57
-  };
-
-  const strategyBonus: Record<PitchStrategy, number> = {
-    aggressive: 2,
-    balanced: 0,
-    safe: -2
-  };
-
-  const powerBonus: Record<PitchPower, number> = {
-    low: -1.5,
-    normal: 0,
-    high: 2.8
-  };
+  const tuning = getMatchEngineTuning();
+  const pitchBase: Record<PitchType, number> = tuning.pitchBase;
+  const strategyBonus: Record<PitchStrategy, number> = tuning.strategyBonus;
+  const powerBonus: Record<PitchPower, number> = tuning.powerBonus;
 
   // 코너(1,3,7,9): 타자가 치기 어려워 투수 유리
   // 엣지(2,4,6,8): 중간
   // 중앙(5): 타자가 가장 치기 쉬워 투수 불리
-  const locationBonus: Record<PitchLocation, number> = {
-    1: 3,
-    2: 0,
-    3: 3,
-    4: 0,
-    5: -4,
-    6: 0,
-    7: 3,
-    8: 0,
-    9: 3
-  };
+  const locationBonus: Record<PitchLocation, number> = tuning.locationBonus;
 
   // command: 제구력 → 로케이션 정확도 + 기본 제구 보정
   const commandBonus = (state.pitcher.command - 50) * 0.10;
@@ -610,31 +588,33 @@ function countModifier(count: MatchCount): number {
 }
 
 function applyHitUpgrade(code: PitchResultCode, power: number, weather: WeatherType): PitchResultCode {
+  const tuning = getMatchEngineTuning();
   if (code !== "HIT_SINGLE" && code !== "HIT_DOUBLE") return code;
   const powerFactor = (power - 50) / 50; // -1 ~ +1
   const windBonus = weatherPowerModifier(weather);
   if (code === "HIT_SINGLE") {
-    if (Math.random() < Math.max(0, 0.15 + powerFactor * 0.10 + windBonus)) return "HIT_DOUBLE";
+    if (Math.random() < Math.max(0, tuning.hitUpgradeSingleToDoubleBase + powerFactor * 0.10 + windBonus)) return "HIT_DOUBLE";
   }
   if (code === "HIT_DOUBLE") {
-    if (Math.random() < Math.max(0, 0.05 + powerFactor * 0.08 + windBonus)) return "HOME_RUN";
+    if (Math.random() < Math.max(0, tuning.hitUpgradeDoubleToHomeRunBase + powerFactor * 0.08 + windBonus)) return "HOME_RUN";
   }
   return code;
 }
 
 function weatherQualityModifier(weather: WeatherType, pitchType: PitchType): number {
+  const tuning = getMatchEngineTuning();
   switch (weather) {
     case "rainy":
       // 비: 그립 불안정 → 변화구 -3, 패스트볼 -1
-      return pitchType === "fastball" ? -1 : -3;
+      return pitchType === "fastball" ? tuning.weatherQualityModifier.rainyFastball : tuning.weatherQualityModifier.rainyBreaking;
     case "windy_out":
       // 외야 방향 바람: 투수 불리 (-2)
-      return -2;
+      return tuning.weatherQualityModifier.windyOut;
     case "windy_in":
       // 내야 방향 바람: 공이 가라앉음 → 투수 유리 (+2)
-      return 2;
+      return tuning.weatherQualityModifier.windyIn;
     case "cloudy":
-      return -0.5;
+      return tuning.weatherQualityModifier.cloudy;
     case "sunny":
     default:
       return 0;
@@ -642,19 +622,13 @@ function weatherQualityModifier(weather: WeatherType, pitchType: PitchType): num
 }
 
 function weatherPowerModifier(weather: WeatherType): number {
-  switch (weather) {
-    case "windy_out": return 0.10;  // 바람 타고 장타 업그레이드 +10%
-    case "windy_in":  return -0.10; // 역풍으로 장타 억제 -10%
-    default:          return 0;
-  }
+  const tuning = getMatchEngineTuning();
+  return tuning.weatherPowerModifier[weather] ?? 0;
 }
 
 function parkQualityModifier(park: ParkType): number {
-  switch (park) {
-    case "pitcher_park": return 3;   // 넓은 파울존, 깊은 외야 → 투수 유리
-    case "hitter_park":  return -3;  // 짧은 펜스, 좁은 파울존 → 타자 유리
-    default:             return 0;
-  }
+  const tuning = getMatchEngineTuning();
+  return tuning.parkQualityModifier[park] ?? 0;
 }
 
 function pitchPatternModifier(pitchType: PitchType, lastPitches: PitchType[]): number {
@@ -687,7 +661,8 @@ function tryDoublePlay(
 
   // 기본 병살 확률 40% (실제 MLB 평균과 유사)
   // 주자가 많을수록(만루 등) 소폭 증가
-  const baseProb = 0.40 + (runners.second ? 0.05 : 0) + (runners.third ? 0.03 : 0);
+  const tuning = getMatchEngineTuning();
+  const baseProb = tuning.doublePlayBaseProb + (runners.second ? 0.05 : 0) + (runners.third ? 0.03 : 0);
   if (Math.random() >= baseProb) return { isDoublePlay: false, runners };
 
   // 병살 성립: 1루 주자 아웃, 주자들 한 베이스씩 전진

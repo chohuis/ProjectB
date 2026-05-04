@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "projectb/match_engine_tuning.schema.json",
+  "title": "MatchEngineTuning",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "pitchBase",
+    "strategyBonus",
+    "powerBonus",
+    "locationBonus",
+    "staminaBase",
+    "staminaAggressiveBonus",
+    "staminaFastballBonus",
+    "staminaPowerCost",
+    "mentalRecoveryOnInningEnd",
+    "hitUpgradeSingleToDoubleBase",
+    "hitUpgradeDoubleToHomeRunBase",
+    "weatherPowerModifier",
+    "weatherQualityModifier",
+    "parkQualityModifier",
+    "doublePlayBaseProb"
+  ],
+  "properties": {
+    "version": { "type": "number" },
+    "updatedAt": { "type": "string" },
+    "updatedBy": { "type": "string" },
+    "pitchBase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fastball", "slider", "curve", "changeup"],
+      "properties": {
+        "fastball": { "type": "number", "minimum": -999, "maximum": 999 },
+        "slider": { "type": "number", "minimum": -999, "maximum": 999 },
+        "curve": { "type": "number", "minimum": -999, "maximum": 999 },
+        "changeup": { "type": "number", "minimum": -999, "maximum": 999 }
+      }
+    },
+    "strategyBonus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["aggressive", "balanced", "safe"],
+      "properties": {
+        "aggressive": { "type": "number", "minimum": -999, "maximum": 999 },
+        "balanced": { "type": "number", "minimum": -999, "maximum": 999 },
+        "safe": { "type": "number", "minimum": -999, "maximum": 999 }
+      }
+    },
+    "powerBonus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["low", "normal", "high"],
+      "properties": {
+        "low": { "type": "number", "minimum": -999, "maximum": 999 },
+        "normal": { "type": "number", "minimum": -999, "maximum": 999 },
+        "high": { "type": "number", "minimum": -999, "maximum": 999 }
+      }
+    },
+    "locationBonus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+      "properties": {
+        "1": { "type": "number", "minimum": -999, "maximum": 999 },
+        "2": { "type": "number", "minimum": -999, "maximum": 999 },
+        "3": { "type": "number", "minimum": -999, "maximum": 999 },
+        "4": { "type": "number", "minimum": -999, "maximum": 999 },
+        "5": { "type": "number", "minimum": -999, "maximum": 999 },
+        "6": { "type": "number", "minimum": -999, "maximum": 999 },
+        "7": { "type": "number", "minimum": -999, "maximum": 999 },
+        "8": { "type": "number", "minimum": -999, "maximum": 999 },
+        "9": { "type": "number", "minimum": -999, "maximum": 999 }
+      }
+    },
+    "staminaBase": { "type": "number", "minimum": 0, "maximum": 10 },
+    "staminaAggressiveBonus": { "type": "number", "minimum": -5, "maximum": 5 },
+    "staminaFastballBonus": { "type": "number", "minimum": -5, "maximum": 5 },
+    "staminaPowerCost": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["low", "normal", "high"],
+      "properties": {
+        "low": { "type": "number", "minimum": 0, "maximum": 10 },
+        "normal": { "type": "number", "minimum": 0, "maximum": 10 },
+        "high": { "type": "number", "minimum": 0, "maximum": 10 }
+      }
+    },
+    "mentalRecoveryOnInningEnd": { "type": "number", "minimum": -10, "maximum": 10 },
+    "hitUpgradeSingleToDoubleBase": { "type": "number", "minimum": 0, "maximum": 1 },
+    "hitUpgradeDoubleToHomeRunBase": { "type": "number", "minimum": 0, "maximum": 1 },
+    "weatherPowerModifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sunny", "cloudy", "rainy", "windy_in", "windy_out"],
+      "properties": {
+        "sunny": { "type": "number", "minimum": -1, "maximum": 1 },
+        "cloudy": { "type": "number", "minimum": -1, "maximum": 1 },
+        "rainy": { "type": "number", "minimum": -1, "maximum": 1 },
+        "windy_in": { "type": "number", "minimum": -1, "maximum": 1 },
+        "windy_out": { "type": "number", "minimum": -1, "maximum": 1 }
+      }
+    },
+    "weatherQualityModifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rainyFastball", "rainyBreaking", "windyOut", "windyIn", "cloudy"],
+      "properties": {
+        "rainyFastball": { "type": "number", "minimum": -20, "maximum": 20 },
+        "rainyBreaking": { "type": "number", "minimum": -20, "maximum": 20 },
+        "windyOut": { "type": "number", "minimum": -20, "maximum": 20 },
+        "windyIn": { "type": "number", "minimum": -20, "maximum": 20 },
+        "cloudy": { "type": "number", "minimum": -20, "maximum": 20 }
+      }
+    },
+    "parkQualityModifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["neutral", "pitcher_park", "hitter_park", "dome"],
+      "properties": {
+        "neutral": { "type": "number", "minimum": -20, "maximum": 20 },
+        "pitcher_park": { "type": "number", "minimum": -20, "maximum": 20 },
+        "hitter_park": { "type": "number", "minimum": -20, "maximum": 20 },
+        "dome": { "type": "number", "minimum": -20, "maximum": 20 }
+      }
+    },
+    "doublePlayBaseProb": { "type": "number", "minimum": 0, "maximum": 1 }
+  }
+}

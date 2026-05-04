@@ -18,4 +18,11 @@ contextBridge.exposeInMainWorld("projectB", {
   // ── 마스터 데이터 (패키징 환경 fallback) ────────────────────────────────
   masterFetch: (relPath) => ipcRenderer.invoke("master:fetch", relPath),
   masterSave: (payload) => ipcRenderer.invoke("master:save", payload),
+
+  // ── 매치 엔진 튜닝 (관리자 도구) ───────────────────────────────────────
+  tuningLoad: () => ipcRenderer.invoke("tuning:load"),
+  tuningValidate: (payload) => ipcRenderer.invoke("tuning:validate", payload),
+  tuningApply: (payload) => ipcRenderer.invoke("tuning:apply", payload),
+  tuningSave: (payload) => ipcRenderer.invoke("tuning:save", payload),
+  tuningSmoke: (payload) => ipcRenderer.invoke("tuning:smoke", payload),
 });
