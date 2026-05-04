@@ -83,10 +83,11 @@ export interface EventChoice {
 
 // ── 주 진행 정지 조건 ──────────────────────────────────────────
 export type PendingAction =
-  | { type: "game";         scheduleId: string }
-  | { type: "message";      messageId: string }
-  | { type: "event";        eventId: string; title: string; description: string; choices?: EventChoice[] }
-  | { type: "careerChoice" };
+  | { type: "game";            scheduleId: string }
+  | { type: "message";         messageId: string }
+  | { type: "event";           eventId: string; title: string; description: string; choices?: EventChoice[] }
+  | { type: "careerChoice" }
+  | { type: "messengerScript"; contactId: string; arcId: string };
 
 // ── 주 진행 결과 (advanceWeek 반환값) ──────────────────────────
 export interface WeekAdvanceResult {

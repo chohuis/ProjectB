@@ -86,7 +86,8 @@ function createSeasonStore() {
           if (a.type === "game"         && type === "game")         return a.scheduleId !== id;
           if (a.type === "message"      && type === "message")      return a.messageId  !== id;
           if (a.type === "event"        && type === "event")        return a.eventId    !== id;
-          if (a.type === "careerChoice" && type === "careerChoice") return false;
+          if (a.type === "careerChoice"    && type === "careerChoice")    return false;
+          if (a.type === "messengerScript" && type === "messengerScript") return id !== undefined && a.arcId !== id;
           return true;
         }),
       }));

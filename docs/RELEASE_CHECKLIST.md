@@ -14,6 +14,8 @@
 - 주요 UI 텍스트 한글 깨짐 없음
 - 저장 파일/로그 파일 한글 재로드 정상
 - 메시지/알림/에러 문구 한글 출력 정상
+- `02.SvelteElectron`에서 `npm.cmd run check:encoding` 통과
+- 콘솔 출력 깨짐 발생 시 `Get-Content -Encoding utf8`로 원문 확인(오판 재저장 금지)
 
 ## 4) Stability
 - 초기 실행/재실행/강제 종료 복구
@@ -24,4 +26,3 @@
 - 설치형 또는 포터블 배포 형식 확정
 - 코드사인 여부 결정(Windows SmartScreen 대응)
 - 릴리스 노트 작성 및 태그/커밋 고정
-

@@ -175,9 +175,10 @@ export interface ChatContact {
   category: ContactCategory;
   relation: string;
   unlocked: boolean;
-  affinity: number;         // 0–100
-  lastActionWeek: number;   // 쿨다운 계산용 (0 = 미사용)
+  affinity: number;           // 0–100
+  lastActionWeek: number;     // 쿨다운 계산용 (0 = 미사용)
   chatHistory: ChatMessage[]; // max 60개
+  flags: string[];            // 완료한 아크·특별 대화 ID 목록
 }
 
 // ── save_game.json 전체 구조 ───────────────────────────────────
