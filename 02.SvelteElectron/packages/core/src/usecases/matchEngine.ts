@@ -14,6 +14,7 @@
   type PitchResultCode,
   type PitchStrategy,
   type PitchType,
+  type PitcherStats,
   type RunnerStats,
   type WeatherType
 } from "../domain/matchState";
@@ -719,4 +720,72 @@ function buildPitchLog(state: MatchState, decision: PitchDecision, resultCode: P
 
 function buildSummary(state: MatchState): string {
   return `${state.score.away}:${state.score.home} 종료 (투구수 ${state.pitchCount}, 체력 ${state.stamina.toFixed(1)}, 멘탈 ${state.mental.toFixed(1)})`;
+}
+
+// ── 자동 경기 시뮬레이터 ────────────────────────────────────────────────────
+export interface GameSummary {
+  homeScore: number;
+  awayScore: number;
+  strikeouts: number;
+  hits: number;
+  walks: number;
+}
+
+const CORNERS: PitchLocation[] = [1, 3, 7, 9];
+const EDGES:   PitchLocation[] = [2, 4, 6, 8];
+const AUTO_TYPES: PitchType[] = ["fastball", "fastball", "slider", "changeup"];
+
+function autoPickDecision(state: MatchState): PitchDecision {
+  const { balls, strikes } = state.count;
+  if (balls >= 3) {
+    return { pitchType: "fastball", location: EDGES[Math.floor(Math.random() * 4)], strategy: "safe", power: "normal" };
+  }
+  if (strikes === 2) {
+    return { pitchType: "slider", location: CORNERS[Math.floor(Math.random() * 4)], strategy: "aggressive", power: "normal" };
+  }
+  const all = [...CORNERS, ...EDGES] as PitchLocation[];
+  return {
+    pitchType: AUTO_TYPES[Math.floor(Math.random() * AUTO_TYPES.length)],
+    location:  all[Math.floor(Math.random() * all.length)],
+    strategy: "balanced",
+    power: "normal",
+  };
+}
+
+/**
+ * 주인공 투수 스탯 기반 1경기 자동 시뮬.
+ * homeScore = 주인공 팀 득점(타선 추정), awayScore = 상대 득점(주인공 허용).
+ */
+export function runSimpleGame(
+  pitcher: Partial<PitcherStats>,
+  opponentOvr: number,
+  protagonistOvr = 62,
+): GameSummary {
+  let state = startMatch({ pitcher, batterMean: opponentOvr });
+  let strikeouts = 0;
+  let hits = 0;
+  let walks = 0;
+
+  let safety = 600;
+  while (!state.isFinished && safety-- > 0) {
+    const prevStrikes = state.count.strikes;
+    const { nextState, outcome } = stepPitch(state, autoPickDecision(state));
+    const code = outcome.resultCode;
+    if ((code === "STRIKE_LOOK" || code === "STRIKE_SWING") && prevStrikes === 2) strikeouts++;
+    if (code === "HIT_SINGLE" || code === "HIT_DOUBLE" || code === "HIT_TRIPLE" || code === "HOME_RUN") hits++;
+    if (code === "WALK") walks++;
+    state = nextState;
+  }
+
+  // 상대 실점 = 엔진의 away(상대 공격) + home(동일 투수 bottom)을 모두 허용 실점으로 처리
+  const runsAllowed = state.score.away + state.score.home;
+
+  // 주인공 팀 타선 = OVR 차이 기반 + 노이즈 (3점 기준, 차이 10당 0.5점 보정)
+  const offenseBase = 3.0 + (protagonistOvr - opponentOvr) * 0.05;
+  const noise = (Math.random() + Math.random() + Math.random() - 1.5) * 2;
+  let homeScore = Math.max(0, Math.round(offenseBase + noise));
+  let awayScore = runsAllowed;
+  if (homeScore === awayScore) { homeScore > 0 ? homeScore-- : awayScore++; }
+
+  return { homeScore, awayScore, strikeouts, hits, walks };
 }

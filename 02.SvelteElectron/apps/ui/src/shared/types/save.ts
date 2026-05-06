@@ -32,6 +32,20 @@ export type PlayerType   = "pitcher" | "batter" | "twoWay";
 export type Handedness   = "L" | "R" | "S";
 export type PitchingForm = "overhand" | "threeQuarter" | "sidearm" | "underhand";
 
+export interface ProContract {
+  teamId: string;
+  leagueId: string;
+  salary: number;               // 연간 연봉 (만 원 단위)
+  durationYears: number;        // 총 계약 기간
+  remainingYears: number;       // 시즌 종료마다 감산
+  signingBonus: number;
+  teamOptionYears: number;      // 0이면 없음
+  playerOptionYears: number;    // 0이면 없음
+  noTrade: boolean;
+  incentives?: { condition: string; bonus: number }[];
+  status: "active" | "expired" | "voided";
+}
+
 export interface ProtagonistSave {
   id: string;                        // 고정 ID (예: "PLY_HERO")
   name: string;
@@ -70,6 +84,12 @@ export interface ProtagonistSave {
   // 구종 시스템
   learnedPitchIds: string[];                           // 보유 구종 ID 목록
   trainingPitchState?: { id: string; progress: number }; // 현재 훈련 중인 구종
+  money: number;
+  fame: number;
+  scoutScore: number;
+  proServiceYears: number;
+  militaryUnit: "sports" | "general" | null;
+  contract?: ProContract;
 }
 
 // ── 시즌 스탯 (선수 1명분) ─────────────────────────────────────
@@ -139,6 +159,7 @@ export interface SchoolState {
   subjectScores: Record<string, SubjectScore>;
   warningCount: number;             // 누적 수업 태만 경고
   careerChoiceTriggered: boolean;   // 진로 선택 이벤트 발동 여부
+  draftTriggered: boolean;          // 드래프트 이벤트 발동 여부(중복 방지)
   universityWeek: number;           // 대학 입학 후 경과 주차 (0 = 고교)
   majorSelected: boolean;           // 전공 확정 여부
 }
@@ -157,6 +178,8 @@ export interface AchievementMetrics {
   strikeoutTotal: number;
   saveTotal: number;
   kakaoFirstContact: boolean;
+  trainingWeeksTotal: number;
+  gamesWonTotal: number;
 }
 
 // ── 메신저 시스템 ──────────────────────────────────────────────

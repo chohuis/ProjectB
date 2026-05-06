@@ -23,12 +23,14 @@ export function computeMetrics(
 ): Record<string, number> {
   const teamRow = standings.find((s) => s.teamId === myTeamId);
   return {
-    strikeoutTotal:    achMetrics.strikeoutTotal,
-    saveTotal:         achMetrics.saveTotal,
-    kakaoFirstContact: achMetrics.kakaoFirstContact ? 1 : 0,
-    winsTotal:         teamRow?.wins ?? 0,
-    gamesPlayedTotal:  schedule.filter((e) => e.isProtagonistGame && !!e.result).length,
-    messagesReadTotal: mailbox.filter((m) => m.readAt !== null).length,
+    strikeoutTotal:     achMetrics.strikeoutTotal,
+    saveTotal:          achMetrics.saveTotal,
+    kakaoFirstContact:  achMetrics.kakaoFirstContact ? 1 : 0,
+    trainingWeeksTotal: achMetrics.trainingWeeksTotal ?? 0,
+    gamesWonTotal:      achMetrics.gamesWonTotal ?? 0,
+    winsTotal:          teamRow?.wins ?? 0,
+    gamesPlayedTotal:   schedule.filter((e) => e.isProtagonistGame && !!e.result).length,
+    messagesReadTotal:  mailbox.filter((m) => m.readAt !== null).length,
   };
 }
 

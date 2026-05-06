@@ -1,135 +1,47 @@
 {
-  "version": 1,
+  "version": 2,
   "achievements": [
-    {
-      "id": "ACH_BASEBALL_FIRST_WIN",
-      "title": "첫 승리",
-      "category": "baseball",
-      "status": "active",
-      "metricKey": "winsTotal",
-      "targetValue": 1,
-      "hidden": false,
-      "reward": "명성 +1"
-    },
-    {
-      "id": "ACH_BASEBALL_10_WINS",
-      "title": "10승 달성",
-      "category": "baseball",
-      "status": "active",
-      "metricKey": "winsTotal",
-      "targetValue": 10,
-      "hidden": false,
-      "reward": "명성 +3"
-    },
-    {
-      "id": "ACH_BASEBALL_FIRST_STRIKEOUT",
-      "title": "첫 삼진",
-      "category": "baseball",
-      "status": "active",
-      "metricKey": "strikeoutTotal",
-      "targetValue": 1,
-      "hidden": false,
-      "reward": "명성 +1"
-    },
-    {
-      "id": "ACH_BASEBALL_50_STRIKEOUTS",
-      "title": "50삼진",
-      "category": "baseball",
-      "status": "active",
-      "metricKey": "strikeoutTotal",
-      "targetValue": 50,
-      "hidden": false,
-      "reward": "명성 +3"
-    },
-    {
-      "id": "ACH_BASEBALL_100_STRIKEOUTS",
-      "title": "백삼진",
-      "category": "baseball",
-      "status": "active",
-      "metricKey": "strikeoutTotal",
-      "targetValue": 100,
-      "hidden": false,
-      "reward": "명성 +5"
-    },
-    {
-      "id": "ACH_BASEBALL_FIRST_SAVE",
-      "title": "첫 세이브",
-      "category": "baseball",
-      "status": "active",
-      "metricKey": "saveTotal",
-      "targetValue": 1,
-      "hidden": false,
-      "reward": "명성 +2"
-    },
-    {
-      "id": "ACH_BASEBALL_10_SAVES",
-      "title": "세이브 10회",
-      "category": "baseball",
-      "status": "active",
-      "metricKey": "saveTotal",
-      "targetValue": 10,
-      "hidden": false,
-      "reward": "명성 +5"
-    },
-    {
-      "id": "ACH_BASEBALL_5_GAMES",
-      "title": "5경기 출전",
-      "category": "baseball",
-      "status": "active",
-      "metricKey": "gamesPlayedTotal",
-      "targetValue": 5,
-      "hidden": false,
-      "reward": "명성 +1"
-    },
-    {
-      "id": "ACH_BASEBALL_20_GAMES",
-      "title": "20경기 출전",
-      "category": "baseball",
-      "status": "active",
-      "metricKey": "gamesPlayedTotal",
-      "targetValue": 20,
-      "hidden": false,
-      "reward": "명성 +3"
-    },
-    {
-      "id": "ACH_SOCIAL_FIRST_KAKAO",
-      "title": "첫 카톡",
-      "category": "social",
-      "status": "active",
-      "metricKey": "kakaoFirstContact",
-      "targetValue": 1,
-      "hidden": false,
-      "reward": "관계도 +1"
-    },
-    {
-      "id": "ACH_SOCIAL_MESSAGES_10",
-      "title": "메시지 확인",
-      "category": "social",
-      "status": "active",
-      "metricKey": "messagesReadTotal",
-      "targetValue": 10,
-      "hidden": false,
-      "reward": "관계도 +1"
-    },
-    {
-      "id": "ACH_SOCIAL_MESSAGES_50",
-      "title": "메시지 확인왕",
-      "category": "social",
-      "status": "active",
-      "metricKey": "messagesReadTotal",
-      "targetValue": 50,
-      "hidden": false,
-      "reward": "관계도 +3"
-    },
-    {
-      "id": "ACH_HIDDEN_RELATIONSHIP_1",
-      "title": "첫 고백",
-      "category": "hidden",
-      "status": "blocked",
-      "metricKey": "relationshipStep",
-      "targetValue": 1,
-      "hidden": true,
-      "reward": "특수 이벤트 해금"
-    }
+    { "id": "ACH_BASEBALL_FIRST_WIN",        "title": "첫 승리",          "category": "baseball", "status": "active", "metricKey": "winsTotal",          "targetValue": 1,   "hidden": false, "reward": "명성 +1" },
+    { "id": "ACH_BASEBALL_5_WINS",           "title": "5승 달성",         "category": "baseball", "status": "active", "metricKey": "winsTotal",          "targetValue": 5,   "hidden": false, "reward": "명성 +2" },
+    { "id": "ACH_BASEBALL_10_WINS",          "title": "10승 달성",        "category": "baseball", "status": "active", "metricKey": "winsTotal",          "targetValue": 10,  "hidden": false, "reward": "명성 +3" },
+    { "id": "ACH_BASEBALL_20_WINS",          "title": "20승 달성",        "category": "baseball", "status": "active", "metricKey": "winsTotal",          "targetValue": 20,  "hidden": false, "reward": "명성 +5" },
+    { "id": "ACH_BASEBALL_30_WINS",          "title": "30승 달성",        "category": "baseball", "status": "active", "metricKey": "winsTotal",          "targetValue": 30,  "hidden": false, "reward": "명성 +8" },
+    { "id": "ACH_BASEBALL_50_WINS",          "title": "50승 달성",        "category": "baseball", "status": "active", "metricKey": "winsTotal",          "targetValue": 50,  "hidden": false, "reward": "명성 +15" },
+
+    { "id": "ACH_BASEBALL_FIRST_WIN_CAREER", "title": "커리어 첫 승",     "category": "baseball", "status": "active", "metricKey": "gamesWonTotal",      "targetValue": 1,   "hidden": false, "reward": "자신감 +1" },
+    { "id": "ACH_BASEBALL_10_WINS_CAREER",   "title": "커리어 10승",      "category": "baseball", "status": "active", "metricKey": "gamesWonTotal",      "targetValue": 10,  "hidden": false, "reward": "명성 +3" },
+    { "id": "ACH_BASEBALL_30_WINS_CAREER",   "title": "커리어 30승",      "category": "baseball", "status": "active", "metricKey": "gamesWonTotal",      "targetValue": 30,  "hidden": false, "reward": "명성 +8" },
+
+    { "id": "ACH_BASEBALL_FIRST_STRIKEOUT",  "title": "첫 삼진",          "category": "baseball", "status": "active", "metricKey": "strikeoutTotal",     "targetValue": 1,   "hidden": false, "reward": "명성 +1" },
+    { "id": "ACH_BASEBALL_10_STRIKEOUTS",    "title": "삼진 10개",        "category": "baseball", "status": "active", "metricKey": "strikeoutTotal",     "targetValue": 10,  "hidden": false, "reward": "명성 +1" },
+    { "id": "ACH_BASEBALL_50_STRIKEOUTS",    "title": "50삼진",           "category": "baseball", "status": "active", "metricKey": "strikeoutTotal",     "targetValue": 50,  "hidden": false, "reward": "명성 +3" },
+    { "id": "ACH_BASEBALL_100_STRIKEOUTS",   "title": "백삼진",           "category": "baseball", "status": "active", "metricKey": "strikeoutTotal",     "targetValue": 100, "hidden": false, "reward": "명성 +5" },
+    { "id": "ACH_BASEBALL_200_STRIKEOUTS",   "title": "200삼진",          "category": "baseball", "status": "active", "metricKey": "strikeoutTotal",     "targetValue": 200, "hidden": false, "reward": "명성 +10" },
+    { "id": "ACH_BASEBALL_500_STRIKEOUTS",   "title": "탈삼진 기계",       "category": "baseball", "status": "active", "metricKey": "strikeoutTotal",     "targetValue": 500, "hidden": false, "reward": "명성 +20" },
+
+    { "id": "ACH_BASEBALL_FIRST_SAVE",       "title": "첫 세이브",        "category": "baseball", "status": "active", "metricKey": "saveTotal",          "targetValue": 1,   "hidden": false, "reward": "명성 +2" },
+    { "id": "ACH_BASEBALL_5_SAVES",          "title": "세이브 5회",       "category": "baseball", "status": "active", "metricKey": "saveTotal",          "targetValue": 5,   "hidden": false, "reward": "명성 +3" },
+    { "id": "ACH_BASEBALL_10_SAVES",         "title": "세이브 10회",      "category": "baseball", "status": "active", "metricKey": "saveTotal",          "targetValue": 10,  "hidden": false, "reward": "명성 +5" },
+    { "id": "ACH_BASEBALL_30_SAVES",         "title": "믿을 수 있는 마무리","category": "baseball", "status": "active", "metricKey": "saveTotal",          "targetValue": 30,  "hidden": false, "reward": "명성 +12" },
+
+    { "id": "ACH_BASEBALL_FIRST_GAME",       "title": "첫 출전",          "category": "baseball", "status": "active", "metricKey": "gamesPlayedTotal",   "targetValue": 1,   "hidden": false, "reward": "경험 +1" },
+    { "id": "ACH_BASEBALL_5_GAMES",          "title": "5경기 출전",       "category": "baseball", "status": "active", "metricKey": "gamesPlayedTotal",   "targetValue": 5,   "hidden": false, "reward": "명성 +1" },
+    { "id": "ACH_BASEBALL_10_GAMES",         "title": "10경기 출전",      "category": "baseball", "status": "active", "metricKey": "gamesPlayedTotal",   "targetValue": 10,  "hidden": false, "reward": "명성 +2" },
+    { "id": "ACH_BASEBALL_20_GAMES",         "title": "20경기 출전",      "category": "baseball", "status": "active", "metricKey": "gamesPlayedTotal",   "targetValue": 20,  "hidden": false, "reward": "명성 +3" },
+    { "id": "ACH_BASEBALL_50_GAMES",         "title": "50경기 출전",      "category": "baseball", "status": "active", "metricKey": "gamesPlayedTotal",   "targetValue": 50,  "hidden": false, "reward": "명성 +8" },
+    { "id": "ACH_BASEBALL_100_GAMES",        "title": "백 경기",          "category": "baseball", "status": "active", "metricKey": "gamesPlayedTotal",   "targetValue": 100, "hidden": false, "reward": "명성 +15" },
+
+    { "id": "ACH_GROWTH_WEEK_10",            "title": "훈련 10주",        "category": "growth",   "status": "active", "metricKey": "trainingWeeksTotal", "targetValue": 10,  "hidden": false, "reward": "훈련 효율 +1%" },
+    { "id": "ACH_GROWTH_WEEK_26",            "title": "반년 훈련",        "category": "growth",   "status": "active", "metricKey": "trainingWeeksTotal", "targetValue": 26,  "hidden": false, "reward": "훈련 효율 +2%" },
+    { "id": "ACH_GROWTH_WEEK_52",            "title": "1년 훈련",         "category": "growth",   "status": "active", "metricKey": "trainingWeeksTotal", "targetValue": 52,  "hidden": false, "reward": "잠재력 +1" },
+    { "id": "ACH_GROWTH_WEEK_104",           "title": "2년 훈련",         "category": "growth",   "status": "active", "metricKey": "trainingWeeksTotal", "targetValue": 104, "hidden": false, "reward": "잠재력 +2" },
+    { "id": "ACH_GROWTH_WEEK_156",           "title": "3년 훈련",         "category": "growth",   "status": "active", "metricKey": "trainingWeeksTotal", "targetValue": 156, "hidden": false, "reward": "잠재력 +3" },
+
+    { "id": "ACH_SOCIAL_FIRST_KAKAO",        "title": "첫 카톡",          "category": "social",   "status": "active", "metricKey": "kakaoFirstContact",  "targetValue": 1,   "hidden": false, "reward": "관계도 +1" },
+    { "id": "ACH_SOCIAL_MESSAGES_10",        "title": "메시지 확인",      "category": "social",   "status": "active", "metricKey": "messagesReadTotal",  "targetValue": 10,  "hidden": false, "reward": "관계도 +1" },
+    { "id": "ACH_SOCIAL_MESSAGES_50",        "title": "메시지 확인왕",    "category": "social",   "status": "active", "metricKey": "messagesReadTotal",  "targetValue": 50,  "hidden": false, "reward": "관계도 +3" },
+    { "id": "ACH_SOCIAL_MESSAGES_100",       "title": "소통의 달인",      "category": "social",   "status": "active", "metricKey": "messagesReadTotal",  "targetValue": 100, "hidden": false, "reward": "관계도 +5" },
+
+    { "id": "ACH_HIDDEN_RELATIONSHIP_1",     "title": "첫 고백",          "category": "hidden",   "status": "blocked","metricKey": "relationshipStep",   "targetValue": 1,   "hidden": true,  "reward": "특수 이벤트 해금" }
   ]
 }

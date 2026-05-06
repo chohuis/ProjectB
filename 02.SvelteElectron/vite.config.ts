@@ -6,6 +6,11 @@ export default defineConfig({
   root: path.resolve(__dirname, "apps/ui"),
   publicDir: path.resolve(__dirname, "resource"),
   plugins: [svelte()],
+  resolve: {
+    alias: {
+      "@core": path.resolve(__dirname, "packages/core/src"),
+    }
+  },
   build: {
     outDir: path.resolve(__dirname, "dist/ui"),
     emptyOutDir: true

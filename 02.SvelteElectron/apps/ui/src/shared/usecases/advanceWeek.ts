@@ -1,4 +1,4 @@
-import { get } from "svelte/store";
+﻿import { get } from "svelte/store";
 import { seasonStore } from "../stores/season";
 import { gameStore } from "../stores/game";
 import { masterStore } from "../stores/master";
@@ -9,6 +9,29 @@ import { checkAchievements, computeMetrics } from "../utils/achievementEngine";
 import type { MatchResult, WeekAdvanceResult } from "../types/season";
 import type { EventContext } from "../types/event";
 import type { MessageItem } from "../types/main";
+import type { ProtagonistSave } from "../types/save";
+
+// ?? 二쇨컙 ???꾧툑?먮쫫 (?섏엯 - 吏異? 留??? ??????????????????????
+function calcWeeklyNet(p: ProtagonistSave): number {
+  switch (p.careerStage) {
+    case "highschool":
+      return Math.round((42 - 18) / 4);
+    case "university":
+      return Math.round((62 - 21) / 4);
+    case "military":
+      return Math.round((196 - 13) / 4);
+    case "pro":
+    case "pro_kbl":
+    case "pro_abl": {
+      const salary = p.contract?.salary ?? 3000;
+      return Math.round(salary / 52 - 54);
+    }
+    case "independent":
+      return Math.round((80 - 30) / 4);
+    default:
+      return 0;
+  }
+}
 
 const EXAM_EVENT_IDS = new Set(["EVT_HS_MIDTERM", "EVT_HS_FINAL"]);
 
@@ -17,7 +40,7 @@ function makeTrainingMessage(week: number, logs: string[]): MessageItem {
     id: `msg-train-w${week}-${Date.now()}`,
     category: "system",
     sender: "훈련 시스템",
-    subject: `W${week} 훈련 성과`,
+    subject: `W${week} ?덈젴 ?깃낵`,
     preview: logs[0] ?? "",
     body: logs.join("\n"),
     createdAt: `W${week}`,
@@ -29,7 +52,7 @@ function makeExamMessage(week: number, subject: string, body: string): MessageIt
   return {
     id: `msg-exam-w${week}-${Date.now()}`,
     category: "system",
-    sender: "학교",
+    sender: "?숆탳",
     subject,
     preview: body.split("\n")[0] ?? "",
     body,
@@ -61,7 +84,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
   const s = get(seasonStore);
   const g = get(gameStore);
 
-  // 1. 미결 결정 메시지 → 먼저 처리 요청
+  // 1. 誘멸껐 寃곗젙 硫붿떆吏 ??癒쇱? 泥섎━ ?붿껌
   const unresolvedMsg = g.mailbox.find(
     (m) => m.decision && m.decision.selectedOptionId === null,
   );
@@ -77,9 +100,31 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     };
   }
 
-  // 2. 시즌 종료 체크
+  // 2. ?쒖쫵 醫낅즺 泥댄겕
   const nextWeek = s.currentWeek + 1;
   if (nextWeek > s.totalWeeks) {
+    const isProStage =
+      g.protagonist.careerStage === "pro_kbl" || g.protagonist.careerStage === "pro_abl";
+    const hasSalaryPending = s.pendingActions.some((a) => a.type === "salaryNegotiation");
+    if (isProStage && g.protagonist.contract && !hasSalaryPending) {
+      const offeredSalary = Math.round(g.protagonist.contract.salary * 1.05);
+      const action = {
+        type: "salaryNegotiation" as const,
+        teamId: g.protagonist.contract.teamId,
+        leagueId: g.protagonist.contract.leagueId,
+        offeredSalary,
+        durationYears: Math.max(1, g.protagonist.contract.remainingYears),
+        signingBonus: 0,
+      };
+      seasonStore.pushPendingAction(action);
+      return {
+        processedWeek: s.currentWeek,
+        logs: ["시즌 종료: 연봉 협상을 진행하세요."],
+        newMessages: [],
+        matchResults: [],
+        stoppedBy: action,
+      };
+    }
     return {
       processedWeek: s.currentWeek,
       logs: ["시즌이 종료되었습니다."],
@@ -91,15 +136,15 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
 
   seasonStore.advanceWeek();
 
-  // ── 3. 주간 학업 효과 + 훈련 효율 계산 ────────────────────────
+  // ?? 3. 二쇨컙 ?숈뾽 ?④낵 + ?덈젴 ?⑥쑉 怨꾩궛 ????????????????????????
   const isUniversity = g.protagonist.careerStage === "university";
 
-  // 대학 진행 주차 증가
+  // ???吏꾪뻾 二쇱감 利앷?
   if (isUniversity) {
     gameStore.incrementUniversityWeek();
   }
 
-  // 일반전공 시험 점수 배율 적용
+  // ?쇰컲?꾧났 ?쒗뿕 ?먯닔 諛곗쑉 ?곸슜
   const examGainMult = isUniversity ? getUniversityExamGainMult(g.schoolState.universityMajor) : 1.0;
   const studyResult = applyWeeklyStudy(g.schoolState, examGainMult);
   gameStore.applyWeeklyStudyResult(studyResult);
@@ -110,18 +155,27 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
 
   const growth = calcTrainingGrowth(g.protagonist, g.trainingPlan, finalEffMod);
 
-  // 훈련 효율 감소 로그
-  if (studyResult.efficiencyMod < 1.0) {
-    const pct = Math.round(studyResult.efficiencyMod * 100);
-    growth.logs.push(`[학업] 훈련 효율 ${pct}% (${g.schoolState.weeklyStudyMode === "focus" ? "집중 수업" : "일반 수업"})`);
+  gameStore.applyMoneyChange(calcWeeklyNet(g.protagonist));
+  gameStore.recordTrainingWeek();
+
+  const ovrBefore = g.protagonist.pitching.ovr;
+  const ovrAfter = growth.protagonistPatch.pitching?.ovr ?? ovrBefore;
+  if (ovrAfter > ovrBefore) {
+    gameStore.updateScoutScore(Math.min(3, Math.max(1, ovrAfter - ovrBefore)));
   }
 
-  // ── 4. 이번 주 경기 처리 ──────────────────────────────────────
+  // ?덈젴 ?⑥쑉 媛먯냼 濡쒓렇
+  if (studyResult.efficiencyMod < 1.0) {
+    const pct = Math.round(studyResult.efficiencyMod * 100);
+    growth.logs.push(`[?숈뾽] ?덈젴 ?⑥쑉 ${pct}% (${g.schoolState.weeklyStudyMode === "focus" ? "吏묒쨷 ?섏뾽" : "?쇰컲 ?섏뾽"})`);
+  }
+
+  // ?? 4. ?대쾲 二?寃쎄린 泥섎━ ??????????????????????????????????????
   const weekGames = s.schedule.filter((e) => e.week === nextWeek && !e.result);
   const logs: string[] = [...growth.logs];
   const matchResults: MatchResult[] = [];
 
-  // 전주 시험 9등급 출전 정지 체크 — 이번 주 경기에 적용 후 해제
+  // ?꾩＜ ?쒗뿕 9?깃툒 異쒖쟾 ?뺤? 泥댄겕 ???대쾲 二?寃쎄린???곸슜 ???댁젣
   const eligibilityBlocked = g.schoolState.eligibilityBlocked;
   if (eligibilityBlocked) {
     gameStore.clearEligibilityBlock();
@@ -130,7 +184,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
   for (const game of weekGames) {
     if (game.isProtagonistGame) {
       if (eligibilityBlocked) {
-        logs.push("학사 경고 — 이번 경기 출전 제한");
+        logs.push("?숈궗 寃쎄퀬 ???대쾲 寃쎄린 異쒖쟾 ?쒗븳");
         seasonStore.applyMatchResult(game.id, simulateNpcGame(game.homeTeamId, game.awayTeamId));
       } else {
         const action = { type: "game" as const, scheduleId: game.id };
@@ -157,7 +211,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     }
   }
 
-  // ── 5. 이벤트 엔진 실행 ────────────────────────────────────────
+  // ?? 5. ?대깽???붿쭊 ?ㅽ뻾 ????????????????????????????????????????
   const m = get(masterStore);
   const sNow = get(seasonStore);
   const eventCtx: EventContext = {
@@ -188,7 +242,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
   }
   seasonStore.recordTriggeredEvents(evResult.updatedTriggers);
 
-  // ── 6. 시험 이벤트 처리 ────────────────────────────────────────
+  // ?? 6. ?쒗뿕 ?대깽??泥섎━ ????????????????????????????????????????
   const gAfterStudy = get(gameStore);
   const triggeredExamId = Object.keys(evResult.updatedTriggers)
     .find((id) => EXAM_EVENT_IDS.has(id));
@@ -202,10 +256,10 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     );
     gameStore.applyExamResult(examRes);
     gameStore.addMessage(makeExamMessage(nextWeek, examRes.messageSubject, examRes.messageBody));
-    logs.push(`[시험] ${examRes.messageSubject}`);
+    logs.push(`[?쒗뿕] ${examRes.messageSubject}`);
   }
 
-  // ── 7. 메신저 아크 트리거 (contactDefs 순회, 데이터 드리븐) ──
+  // ?? 7. 硫붿떊? ?꾪겕 ?몃━嫄?(contactDefs ?쒗쉶, ?곗씠???쒕━釉? ??
   const weekInYear = ((nextWeek - 1) % 52) + 1;
   {
     const mCur = get(masterStore);
@@ -228,12 +282,12 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         if (t.flagNotSet      !== undefined &&  flags.includes(t.flagNotSet))        continue;
 
         seasonStore.pushPendingAction({ type: "messengerScript", contactId: def.id, arcId: arc.id });
-        break; // 컨택트 당 1개 아크만 큐에 추가
+        break; // 而⑦깮????1媛??꾪겕留??먯뿉 異붽?
       }
     }
   }
 
-  // ── 8. 진로 선택 이벤트 (고3 말, W50) ─────────────────────────
+  // ?? 8. 吏꾨줈 ?좏깮 ?대깽??(怨? 留? W50) ?????????????????????????
   const gLatest = get(gameStore);
   if (
     gLatest.protagonist.careerStage === "highschool" &&
@@ -245,6 +299,21 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     seasonStore.pushPendingAction({ type: "careerChoice" });
   }
 
+  // ?? 9. ?쒕옒?꾪듃 ?대깽???몃━嫄?(怨?/?4 W52) ????????????????????
+  const gDraft = get(gameStore);
+  const isHsDraftWeek =
+    gDraft.protagonist.careerStage === "highschool" &&
+    gDraft.protagonist.grade === 3 &&
+    weekInYear === 52;
+  const isUnivDraftWeek =
+    gDraft.protagonist.careerStage === "university" &&
+    careerStageYear === 3 &&
+    weekInYear === 52;
+  if ((isHsDraftWeek || isUnivDraftWeek) && !gDraft.schoolState.draftTriggered) {
+    gameStore.markDraftTriggered(true);
+    seasonStore.pushPendingAction({ type: "draft" });
+  }
+
   const newMessages = evResult.newMessages.map((msg) => msg.id);
 
   gameStore.applyWeekResult(growth.protagonistPatch, logs, [], nextWeek);
@@ -252,7 +321,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     gameStore.addMessage(makeTrainingMessage(nextWeek, growth.logs));
   }
 
-  // ── 8. 업적 체크 ───────────────────────────────────────────────
+  // ?? 8. ?낆쟻 泥댄겕 ???????????????????????????????????????????????
   const gFinal   = get(gameStore);
   const sFinal   = get(seasonStore);
   const mFinal   = get(masterStore);
@@ -281,3 +350,4 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     stoppedBy,
   };
 }
+

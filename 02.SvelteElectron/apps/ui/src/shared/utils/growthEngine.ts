@@ -92,6 +92,7 @@ function applyXPGains(
 export interface GrowthResult {
   protagonistPatch: Partial<ProtagonistSave>;
   logs: string[];
+  fameDelta: number;
 }
 
 export function calcTrainingGrowth(
@@ -134,6 +135,7 @@ export function calcTrainingGrowth(
       condition:  clamp(protagonist.condition + conditionDelta, 0, 100),
     },
     logs: logs.length > 0 ? [`[훈련] ${logs.join(", ")}`] : [],
+    fameDelta: 0,
   };
 }
 
@@ -141,6 +143,7 @@ export function calcGameGrowth(
   protagonist: ProtagonistSave,
   won: boolean,
   scoreDiff: number,
+  strikeouts = 0,
 ): GrowthResult {
   const xpGains = new Map<PitchingStatKey, number>();
   const add = (stat: PitchingStatKey, gain: number) =>
@@ -161,6 +164,11 @@ export function calcGameGrowth(
   const moraleDelta = won ? 6 : scoreDiff >= 5 ? -15 : -8;
   const resultLog   = won ? "경기 승리 — 사기 +6" : scoreDiff >= 5 ? "대패 — 사기 -15" : "경기 패배 — 사기 -8";
 
+  // 명성 증감: 승리 +1~3, 삼진당 +0.3, 대패 -1
+  const fameDelta = Math.round(
+    (won ? 2 : scoreDiff >= 5 ? -1 : 0) + strikeouts * 0.3
+  );
+
   return {
     protagonistPatch: {
       pitching:   newPitching,
@@ -170,5 +178,6 @@ export function calcGameGrowth(
       morale:     clamp(protagonist.morale + moraleDelta, 0, 100),
     },
     logs: [resultLog, ...(logs.length > 0 ? [`[경기 성장] ${logs.join(", ")}`] : [])],
+    fameDelta,
   };
 }

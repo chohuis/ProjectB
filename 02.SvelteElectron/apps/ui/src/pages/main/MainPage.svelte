@@ -3,7 +3,7 @@
   import { gameStore, unreadCount, showAcademicsTab } from "../../shared/stores/game";
   import { seasonStore, nextPendingAction, seasonEnded } from "../../shared/stores/season";
   import { masterStore, teamMap } from "../../shared/stores/master";
-  import { simulateProtagonistGame } from "../../shared/usecases/advanceWeek";
+  import { runSimpleGame } from "@core/usecases/matchEngine";
   import { calcGameGrowth } from "../../shared/utils/growthEngine";
   import { checkAchievements, computeMetrics } from "../../shared/utils/achievementEngine";
   import type { MatchResult } from "../../shared/types/season";
@@ -31,6 +31,8 @@
   import EventManagerModal from "../../features/events/ui/EventManagerModal.svelte";
   import InGameEventModal from "../../features/events/ui/InGameEventModal.svelte";
   import CareerChoiceModal from "../../features/career/ui/CareerChoiceModal.svelte";
+  import DraftModal from "../../features/draft/ui/DraftModal.svelte";
+  import ContractNegotiationModal from "../../features/contract/ui/ContractNegotiationModal.svelte";
   import MessengerScriptModal from "../../features/messenger/ui/MessengerScriptModal.svelte";
   import MessengerManagerModal from "../../features/messenger-manager/ui/MessengerManagerModal.svelte";
   import DevToolsHubModal from "../../features/devtools/ui/DevToolsHubModal.svelte";
@@ -84,6 +86,8 @@
 
   // 진로 선택 pendingAction
   $: pendingCareerChoice = $nextPendingAction?.type === "careerChoice";
+  $: pendingDraft = $nextPendingAction?.type === "draft";
+  $: pendingSalaryNegotiation = $nextPendingAction?.type === "salaryNegotiation" ? $nextPendingAction : null;
 
   // 메신저 스크립트 pendingAction
   $: pendingScript = $nextPendingAction?.type === "messengerScript" ? $nextPendingAction : null;
@@ -97,24 +101,36 @@
   // 경기 자동 시뮬 후 pendingAction 해제
   function autoSimGame() {
     if (!pendingGameEntry) return;
-    const result: MatchResult = simulateProtagonistGame(
-      pendingGameEntry.homeTeamId,
-      pendingGameEntry.awayTeamId,
-    );
+    const p = $gameStore.protagonist;
+    const pitcherStats = {
+      command:    p.pitching.command,
+      velocity:   p.pitching.velocity,
+      staminaCap: p.pitching.stamina,
+      mentalResil: p.pitching.mentality,
+    };
+    const gameSummary = runSimpleGame(pitcherStats, 55, p.pitching.ovr);
+
+    const myTeamId = p.teamId;
+    const isHome   = pendingGameEntry.homeTeamId === myTeamId;
+    const result: MatchResult = {
+      homeScore: gameSummary.homeScore,
+      awayScore: gameSummary.awayScore,
+      winnerId: gameSummary.homeScore > gameSummary.awayScore ? pendingGameEntry.homeTeamId : pendingGameEntry.awayTeamId,
+      loserId:  gameSummary.homeScore > gameSummary.awayScore ? pendingGameEntry.awayTeamId : pendingGameEntry.homeTeamId,
+      playerLines: [], events: [],
+    };
     seasonStore.applyMatchResult(pendingGameEntry.id, result);
     seasonStore.resolvePendingAction("game", pendingGameEntry.id);
 
-    const myTeamId = $gameStore.protagonist.teamId;
-    const isHome   = pendingGameEntry.homeTeamId === myTeamId;
     const myScore  = isHome ? result.homeScore : result.awayScore;
     const oppScore = isHome ? result.awayScore : result.homeScore;
     const oppId    = isHome ? pendingGameEntry.awayTeamId : pendingGameEntry.homeTeamId;
     const won      = myScore > oppScore;
     const diff     = Math.abs(myScore - oppScore);
-    const strikeouts = Math.max(0, Math.floor(Math.random() * 7) + 2);
+    const strikeouts = gameSummary.strikeouts;
     const gotSave = won && pendingGameEntry.week > 3 && diff <= 3 ? 1 : 0;
 
-    const growth = calcGameGrowth($gameStore.protagonist, won, diff);
+    const growth = calcGameGrowth(p, won, diff, strikeouts);
     const matchLog = `W${pendingGameEntry.week} vs ${tName(oppId)} ${myScore}:${oppScore} ${won ? "승리" : "패배"}`;
     gameStore.applyWeekResult(
       growth.protagonistPatch,
@@ -122,7 +138,8 @@
       [],
       $seasonStore.currentWeek,
     );
-    gameStore.recordBaseballAchievementMetric({ strikeouts, save: gotSave });
+    if (growth.fameDelta !== 0) gameStore.updateFame(growth.fameDelta);
+    gameStore.recordBaseballAchievementMetric({ strikeouts, save: gotSave, won });
     gameStore.addMessage({
       id: `msg-game-w${pendingGameEntry.week}-${Date.now()}`,
       category: "system",
@@ -284,6 +301,14 @@
 
 {#if pendingCareerChoice}
   <CareerChoiceModal />
+{/if}
+
+{#if pendingDraft}
+  <DraftModal />
+{/if}
+
+{#if pendingSalaryNegotiation}
+  <ContractNegotiationModal action={pendingSalaryNegotiation} />
 {/if}
 
 {#if pendingEvent}

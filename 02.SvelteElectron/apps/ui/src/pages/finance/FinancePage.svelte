@@ -26,9 +26,9 @@
   $: totalExpense = monthlyExpense.reduce((s, x) => s + x.amount, 0);
   $: netCashflow = totalIncome - totalExpense;
 
-  $: cash = 80 + p.grade * 12 + Math.round(p.morale * 0.6);
-  $: savings = 140 + Math.round(p.pitching.ovr * 1.7);
-  $: investments = stage === "pro" ? 220 + Math.round(p.pitching.ovr * 2.2) : Math.round(p.pitching.ovr * 0.5);
+  $: cash = p.money;
+  $: savings = Math.round(p.money * 0.4);
+  $: investments = stage === "pro" ? Math.round(p.money * 0.3) : Math.round(p.pitching.ovr * 0.5);
 
   $: assets = [
     { label: "현금", value: cash, risk: "low" },
@@ -36,7 +36,7 @@
     { label: stage === "pro" ? "투자" : "교육/장비 적립", value: investments, risk: stage === "pro" ? "mid" : "low" },
   ];
 
-  $: totalAsset = assets.reduce((s, x) => s + x.value, 0);
+  $: totalAsset = p.money;
   $: savingRate = totalIncome > 0 ? ((netCashflow / totalIncome) * 100).toFixed(1) : "0.0";
   $: emergencyMonths = totalExpense > 0 ? (cash / totalExpense).toFixed(1) : "0.0";
 

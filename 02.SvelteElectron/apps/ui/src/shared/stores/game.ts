@@ -14,6 +14,7 @@ import type {
 import { makeSaveGame } from "../types/save";
 import type { ContactDef, ContactEffect } from "../types/messenger";
 import type { CoreGameState } from "../types/projectb.d";
+import type { ProContract } from "../types/save";
 
 // ── gameStore 내부 상태 ────────────────────────────────────────
 export interface GameStoreState {
@@ -81,6 +82,11 @@ const DEFAULT_PROTAGONIST: ProtagonistSave = {
   tags: ["급성장", "멘탈관리", "선발 로테이션"],
   pitchingXP: {},
   learnedPitchIds: ["PITCH_FASTBALL"],
+  money: 1200,
+  fame: 5,
+  scoutScore: 15,
+  proServiceYears: 0,
+  militaryUnit: null,
 };
 
 const DEFAULT_TRAINING_PLAN: TrainingPlanState = {
@@ -100,6 +106,7 @@ const DEFAULT_SCHOOL: SchoolState = {
   eligibilityBlocked: false,
   warningCount: 0,
   careerChoiceTriggered: false,
+  draftTriggered: false,
   universityWeek: 0,
   majorSelected: false,
   subjectScores: {
@@ -115,6 +122,8 @@ const DEFAULT_ACHIEVEMENT_METRICS: AchievementMetrics = {
   strikeoutTotal: 0,
   saveTotal: 0,
   kakaoFirstContact: false,
+  trainingWeeksTotal: 0,
+  gamesWonTotal: 0,
 };
 
 const DEFAULT_ACHIEVEMENTS: AchievementRuntime[] = [
@@ -241,7 +250,7 @@ function buildInitialState(): GameStoreState {
 // ── SaveGame → 스토어 상태 변환 ───────────────────────────────
 function fromSaveGame(saved: SaveGame): GameStoreState {
   const p = saved.protagonist;
-  const metrics = saved.achievementMetrics ?? DEFAULT_ACHIEVEMENT_METRICS;
+  const metrics = { ...DEFAULT_ACHIEVEMENT_METRICS, ...(saved.achievementMetrics ?? {}) };
   const achievements = saved.achievements ?? DEFAULT_ACHIEVEMENTS;
   return {
     protagonist:  p,
@@ -414,6 +423,7 @@ function createGameStore() {
         const condition = clamp(p.condition + (fx.conditionDelta ?? 0));
         const fatigue   = clamp(p.fatigue   + (fx.fatigueDelta   ?? 0));
         const morale    = clamp(p.morale    + (fx.moraleDelta    ?? 0));
+        const money     = Math.max(0, p.money + (fx.moneyDelta ?? 0));
 
         const pitchingXP = { ...p.pitchingXP };
         if (fx.xp) {
@@ -422,7 +432,7 @@ function createGameStore() {
           }
         }
 
-        const updated: ProtagonistSave = { ...p, condition, fatigue, morale, pitchingXP };
+        const updated: ProtagonistSave = { ...p, condition, fatigue, morale, money, pitchingXP };
         const nextMetrics: AchievementMetrics = {
           ...s.achievementMetrics,
           kakaoFirstContact: s.achievementMetrics.kakaoFirstContact || messageId.startsWith("chat-"),
@@ -439,12 +449,27 @@ function createGameStore() {
       });
     },
 
-    recordBaseballAchievementMetric(payload: { strikeouts?: number; save?: number }) {
+    recordBaseballAchievementMetric(payload: { strikeouts?: number; save?: number; won?: boolean }) {
       update((s) => {
         const nextMetrics: AchievementMetrics = {
           ...s.achievementMetrics,
           strikeoutTotal: s.achievementMetrics.strikeoutTotal + (payload.strikeouts ?? 0),
           saveTotal: s.achievementMetrics.saveTotal + (payload.save ?? 0),
+          gamesWonTotal: s.achievementMetrics.gamesWonTotal + (payload.won ? 1 : 0),
+        };
+        return {
+          ...s,
+          achievementMetrics: nextMetrics,
+          achievements: updateAchievementProgress(s.achievements, nextMetrics),
+        };
+      });
+    },
+
+    recordTrainingWeek() {
+      update((s) => {
+        const nextMetrics: AchievementMetrics = {
+          ...s.achievementMetrics,
+          trainingWeeksTotal: s.achievementMetrics.trainingWeeksTotal + 1,
         };
         return {
           ...s,
@@ -531,6 +556,7 @@ function createGameStore() {
         const condition = clamp100(p.condition + (effect.conditionDelta ?? 0));
         const fatigue   = clamp100(p.fatigue   + (effect.fatigueDelta   ?? 0));
         const morale    = clamp100(p.morale    + (effect.moraleDelta    ?? 0));
+        const money     = Math.max(0, p.money + (effect.moneyDelta ?? 0));
         const pitchingXP = { ...p.pitchingXP };
         if (effect.xp) {
           for (const [stat, amt] of Object.entries(effect.xp)) {
@@ -549,9 +575,39 @@ function createGameStore() {
         if (effect.unlockPitchId && !learnedPitchIds.includes(effect.unlockPitchId)) {
           learnedPitchIds = [...learnedPitchIds, effect.unlockPitchId];
         }
-        const updated: ProtagonistSave = { ...p, condition, fatigue, morale, pitchingXP, pitching, learnedPitchIds };
+        const updated: ProtagonistSave = { ...p, condition, fatigue, morale, money, pitchingXP, pitching, learnedPitchIds };
         return { ...s, protagonist: updated, player: toPlayerCompat(updated) };
       });
+    },
+
+    applyMoneyChange(delta: number) {
+      update((s) => ({
+        ...s,
+        protagonist: {
+          ...s.protagonist,
+          money: Math.max(0, s.protagonist.money + delta),
+        },
+      }));
+    },
+
+    updateFame(delta: number) {
+      update((s) => ({
+        ...s,
+        protagonist: {
+          ...s.protagonist,
+          fame: Math.max(0, Math.min(100, s.protagonist.fame + delta)),
+        },
+      }));
+    },
+
+    updateScoutScore(delta: number) {
+      update((s) => ({
+        ...s,
+        protagonist: {
+          ...s.protagonist,
+          scoutScore: Math.max(0, Math.min(100, s.protagonist.scoutScore + delta)),
+        },
+      }));
     },
 
     addChatMessage(contactId: string, msg: ChatMessage) {
@@ -682,6 +738,13 @@ function createGameStore() {
       }));
     },
 
+    markDraftTriggered(flag: boolean) {
+      update((s) => ({
+        ...s,
+        schoolState: { ...s.schoolState, draftTriggered: flag },
+      }));
+    },
+
     // 대학 전공 선택 확정
     selectMajor(major: string) {
       update((s) => ({
@@ -707,6 +770,7 @@ function createGameStore() {
         const condition = clamp100(p.condition + (effect.conditionDelta ?? 0));
         const fatigue   = clamp100(p.fatigue   + (effect.fatigueDelta   ?? 0));
         const morale    = clamp100(p.morale    + (effect.moraleDelta    ?? 0));
+        const money     = Math.max(0, p.money + (effect.moneyDelta ?? 0));
         const pitchingXP = { ...p.pitchingXP };
         if (effect.xp) {
           for (const [stat, amt] of Object.entries(effect.xp)) {
@@ -721,8 +785,71 @@ function createGameStore() {
             }
           }
         }
-        const updated: ProtagonistSave = { ...p, condition, fatigue, morale, pitchingXP, pitching };
+        const updated: ProtagonistSave = { ...p, condition, fatigue, morale, money, pitchingXP, pitching };
         return { ...s, protagonist: updated, player: toPlayerCompat(updated) };
+      });
+    },
+
+    applyDraftDecision(payload: {
+      stage: import("../types/save").CareerStage;
+      leagueId?: string;
+      teamId?: string;
+      teamName?: string;
+      signingBonus?: number;
+      resetDraftTrigger?: boolean;
+    }) {
+      update((s) => {
+        const protagonist: ProtagonistSave = {
+          ...s.protagonist,
+          careerStage: payload.stage,
+          leagueId: payload.leagueId ?? s.protagonist.leagueId,
+          teamId: payload.teamId ?? s.protagonist.teamId,
+          money: Math.max(0, s.protagonist.money + (payload.signingBonus ?? 0)),
+          grade: payload.stage === "highschool" ? s.protagonist.grade : undefined,
+        };
+        const schoolState = {
+          ...s.schoolState,
+          attendsUniversity: payload.stage === "university",
+          draftTriggered: payload.resetDraftTrigger ? false : s.schoolState.draftTriggered,
+        };
+        const logs = payload.teamName
+          ? [`드래프트: ${payload.teamName} 지명`, ...s.logs].slice(0, 30)
+          : s.logs;
+        return {
+          ...s,
+          protagonist,
+          player: toPlayerCompat(protagonist),
+          schoolState,
+          logs,
+        };
+      });
+    },
+
+    signContract(contract: ProContract, contactDefs: ContactDef[]) {
+      update((s) => {
+        const leagueStage =
+          contract.leagueId === "LEAGUE_ABL" ? "pro_abl" : "pro_kbl";
+        const protagonist: ProtagonistSave = {
+          ...s.protagonist,
+          contract: { ...contract, status: "active" },
+          money: Math.max(0, s.protagonist.money + contract.signingBonus),
+          careerStage: leagueStage,
+          teamId: contract.teamId,
+          leagueId: contract.leagueId,
+        };
+        const unlockedIds = new Set(
+          contactDefs.filter((c) => c.category === "team").map((c) => c.id),
+        );
+        const contacts = s.contacts.map((c) =>
+          unlockedIds.has(c.id) ? { ...c, unlocked: true } : c,
+        );
+        return {
+          ...s,
+          protagonist,
+          player: toPlayerCompat(protagonist),
+          school: toSchoolCompat(protagonist.careerStage, s.schoolState),
+          contacts,
+        };
       });
     },
 

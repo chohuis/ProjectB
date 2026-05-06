@@ -5,8 +5,15 @@
     "moduleResolution": "Bundler",
     "strict": true,
     "types": ["vite/client"],
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "@core/*": ["./packages/core/src/*"]
+    }
   },
-  "include": ["apps/ui/src/**/*.ts", "apps/ui/src/**/*.d.ts"]
+  "include": [
+    "apps/ui/src/**/*.ts",
+    "apps/ui/src/**/*.d.ts",
+    "packages/core/src/**/*.ts"
+  ]
 }
 
