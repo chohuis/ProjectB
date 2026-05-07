@@ -81,8 +81,9 @@ const totalEvents =
   randomMedia.length + randomSocial.length + randomTeamLife.length;
 const totalAch = achBaseball.length + achGrowth.length + achSocial.length + achHidden.length;
 
-// entities/players/_index.json 에서 선수·컨택트 수 집계 (manifest 외부 관리)
+// entities/players/_index.json — 선수 집계 + contacts[] 자동 갱신
 const entityIndexPath = join(MASTER, "entities/players/_index.json");
+const plyDir = join(MASTER, "entities/players");
 let totalEntities = 0;
 let entityLeagueStats = "";
 let totalContacts = 0;
@@ -90,11 +91,32 @@ if (existsSync(entityIndexPath)) {
   try {
     const idx = JSON.parse(readFileSync(entityIndexPath, "utf8"));
     const byLeague = idx.byLeague ?? {};
-    totalEntities = Object.values(byLeague).flat().length;
+    const allIds = Object.values(byLeague).flat();
+    totalEntities = allIds.length;
     entityLeagueStats = Object.entries(byLeague)
       .map(([k, v]) => `${k.replace("LEAGUE_", "")} ${v.length}`)
       .join(" / ");
-    totalContacts = (idx.contacts ?? []).length;
+
+    // contact.arcs 또는 chat 내용이 있는 파일을 contacts[]에 자동 등록
+    const contactIds = [];
+    for (const id of allIds) {
+      const filePath = join(plyDir, `${id}.json`);
+      if (!existsSync(filePath)) continue;
+      try {
+        const { contact } = JSON.parse(readFileSync(filePath, "utf8"));
+        if (!contact) continue;
+        const hasArcs = Array.isArray(contact.arcs) && contact.arcs.length > 0;
+        const hasChat = contact.chat && Object.keys(contact.chat).some(
+          (k) => Array.isArray(contact.chat[k]) && contact.chat[k].length > 0
+        );
+        if (hasArcs || hasChat) contactIds.push(id);
+      } catch { /* JSON 오류 파일 스킵 */ }
+    }
+    contactIds.sort();
+    idx.contacts = contactIds;
+    idx.generated = new Date().toISOString();
+    writeFileSync(entityIndexPath, JSON.stringify(idx, null, 2) + "\n", "utf8");
+    totalContacts = contactIds.length;
   } catch { /* 인덱스 파싱 실패 시 무시 */ }
 }
 
