@@ -99,12 +99,9 @@ export function matchChatLine(
   return null;
 }
 
-// ── NPC 컨택트 정의 (마스터 데이터 / 읽기 전용) ──────────────
-export interface ContactDef {
-  id: string;
-  name: string;
-  nameEn?: string;
-  category: "team" | "school" | "personal";
+// ── NPC 컨택트 필드 (PLY 파일의 contact 필드 / 마스터 공통 타입) ──
+export interface ContactFields {
+  category: "team" | "school" | "personal" | "rival";
   relation: string;
   relationEn?: string;
   initialAffinity: number;
@@ -114,4 +111,11 @@ export interface ContactDef {
     advice?: ChatLine[];
     plan?: ChatLine[];
   };
+  messengerScript?: {
+    startStepId: string;
+    steps: ScriptStep[];
+  };
 }
+
+// ── NPC 컨택트 정의 (마스터 데이터 / 읽기 전용) ──────────────
+export type ContactDef = { id: string; name: string; nameEn?: string } & ContactFields;

@@ -188,7 +188,7 @@ export interface AchievementMetrics {
 }
 
 // ── 메신저 시스템 ──────────────────────────────────────────────
-export type ContactCategory = "team" | "school" | "personal";
+export type ContactCategory = "team" | "school" | "personal" | "rival";
 
 export interface ChatMessage {
   from: "me" | "contact";

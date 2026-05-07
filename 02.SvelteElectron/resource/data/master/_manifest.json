@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-07T04:04:29.892Z",
+  "generatedAt": "2026-05-07T05:04:06.897Z",
   "events": {
     "mandatory": [
       "EVT_HS_FINAL",
@@ -77,9 +77,5 @@
     "hidden": [
       "ACH_HIDDEN_RELATIONSHIP_1"
     ]
-  },
-  "characters": [
-    "CONTACT_CAPTAIN_PARK",
-    "CONTACT_COACH_JI"
-  ]
+  }
 }

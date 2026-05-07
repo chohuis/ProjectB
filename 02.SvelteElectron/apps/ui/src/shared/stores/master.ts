@@ -2,7 +2,7 @@ import { derived, writable } from "svelte/store";
 import type { EventRule, EventPool, MessageTemplate, DecisionTemplate, DecisionTemplateOption } from "../types/event";
 import type { CareerStage } from "../types/save";
 import type { DecisionEffect } from "../types/main";
-import type { ContactDef } from "../types/messenger";
+import type { ContactDef, ContactFields } from "../types/messenger";
 
 // ── 훈련·구종 타입 ─────────────────────────────────────────────
 export interface TrainingProgram {
@@ -82,6 +82,7 @@ export interface EntityRow {
   grade?: 1 | 2 | 3;
   notes: string;
   details: Record<string, unknown>;
+  contact?: ContactFields;
 }
 
 // actionKey → category → 답장 문자열 배열
@@ -268,13 +269,13 @@ interface Manifest {
     random: { media: string[]; social: string[]; team_life: string[] };
   };
   achievements: { baseball: string[]; growth: string[]; social: string[]; hidden: string[] };
-  characters:   string[];
 }
 
 // entities/players/_index.json 구조
 interface EntityIndex {
   generated: string;
   byLeague: Record<string, string[]>;
+  contacts?: string[];
 }
 
 // ── batchFetch 헬퍼 ───────────────────────────────────────────
@@ -334,13 +335,15 @@ function createMasterStore() {
     return all.flat() as import("../utils/achievementEngine").MasterAchievement[];
   }
 
-  // ── manifest 기반 contactDefs 로드 (arcs는 캐릭터 파일에 포함) ──
-  async function loadContactDefsFromManifest(m: Manifest): Promise<ContactDef[]> {
-    const results = await batchFetch<ContactDef>(
-      m.characters,
-      (id) => `characters/${id}.json`,
-    );
-    return results.map((r) => ({ arcs: [], ...r }));
+  // ── _index.contacts 기반 contactDefs 로드 (PLY 파일에서 contact 필드 추출) ──
+  async function loadContactDefs(): Promise<ContactDef[]> {
+    const index = await fetchMaster<EntityIndex>("entities/players/_index.json");
+    const ids = index?.contacts ?? [];
+    if (ids.length === 0) return [];
+    const plys = await batchFetch<EntityRow>(ids, (id) => `entities/players/${id}.json`);
+    return plys
+      .filter((p) => p.contact != null)
+      .map((p) => ({ id: p.id, name: p.name, nameEn: p.nameEn, ...p.contact! }));
   }
 
   async function load() {
@@ -391,7 +394,7 @@ function createMasterStore() {
         [eventRules, achievements, contactDefs] = await Promise.all([
           loadEventsFromManifest(manifest),
           loadAchievementsFromManifest(manifest),
-          loadContactDefsFromManifest(manifest),
+          loadContactDefs(),
         ]);
       } else {
         // ── 레거시 폴백 (manifest 없을 때) ───────────────────
@@ -464,19 +467,17 @@ function createMasterStore() {
     update((s) => ({ ...s, achievements }));
   }
 
-  async function reloadArcs(contactId?: string) {
-    if (contactId) {
-      // 특정 캐릭터만 재로드 (arcs는 캐릭터 파일 안에 포함)
-      const updated = await fetchMaster<ContactDef>(`characters/${contactId}.json`);
-      if (!updated) return;
+  async function reloadArcs(plyId?: string) {
+    if (plyId) {
+      const ply = await fetchMaster<EntityRow>(`entities/players/${plyId}.json`);
+      if (!ply?.contact) return;
+      const updated: ContactDef = { id: ply.id, name: ply.name, nameEn: ply.nameEn, ...ply.contact };
       update((s) => ({
         ...s,
-        contactDefs: s.contactDefs.map((c) => c.id === contactId ? { arcs: [], ...updated } : c),
+        contactDefs: s.contactDefs.map((c) => c.id === plyId ? updated : c),
       }));
     } else {
-      const manifest = await fetchMaster<Manifest>("_manifest.json");
-      if (!manifest) return;
-      const contactDefs = await loadContactDefsFromManifest(manifest);
+      const contactDefs = await loadContactDefs();
       update((s) => ({ ...s, contactDefs }));
     }
   }

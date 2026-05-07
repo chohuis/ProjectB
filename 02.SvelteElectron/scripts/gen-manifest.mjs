@@ -51,8 +51,6 @@ const achGrowth   = validateAndFilter(join(MASTER, "achievements/growth"),   sca
 const achSocial   = validateAndFilter(join(MASTER, "achievements/social"),   scanIds(join(MASTER, "achievements/social")));
 const achHidden   = validateAndFilter(join(MASTER, "achievements/hidden"),   scanIds(join(MASTER, "achievements/hidden")));
 
-const characters = validateAndFilter(join(MASTER, "characters"), scanIds(join(MASTER, "characters")));
-
 // ── 매니페스트 조립 ──────────────────────────────────────────
 
 const manifest = {
@@ -72,7 +70,6 @@ const manifest = {
     social:   achSocial,
     hidden:   achHidden,
   },
-  characters,
 };
 
 writeFileSync(join(MASTER, "_manifest.json"), JSON.stringify(manifest, null, 2), "utf8");
@@ -84,10 +81,11 @@ const totalEvents =
   randomMedia.length + randomSocial.length + randomTeamLife.length;
 const totalAch = achBaseball.length + achGrowth.length + achSocial.length + achHidden.length;
 
-// entities/players/_index.json 에서 선수 수 집계 (manifest 외부 관리)
+// entities/players/_index.json 에서 선수·컨택트 수 집계 (manifest 외부 관리)
 const entityIndexPath = join(MASTER, "entities/players/_index.json");
 let totalEntities = 0;
 let entityLeagueStats = "";
+let totalContacts = 0;
 if (existsSync(entityIndexPath)) {
   try {
     const idx = JSON.parse(readFileSync(entityIndexPath, "utf8"));
@@ -96,15 +94,16 @@ if (existsSync(entityIndexPath)) {
     entityLeagueStats = Object.entries(byLeague)
       .map(([k, v]) => `${k.replace("LEAGUE_", "")} ${v.length}`)
       .join(" / ");
+    totalContacts = (idx.contacts ?? []).length;
   } catch { /* 인덱스 파싱 실패 시 무시 */ }
 }
 
 console.log("✓ _manifest.json 생성 완료");
 console.log(`  이벤트  ${totalEvents.toString().padStart(4)}개  (필수 ${mandatoryIds.length} / 조건부 ${conditionalIds.length} / 랜덤 ${randomMedia.length + randomSocial.length + randomTeamLife.length})`);
 console.log(`  업적    ${totalAch.toString().padStart(4)}개`);
-console.log(`  캐릭터  ${characters.length.toString().padStart(4)}개`);
 if (totalEntities > 0) {
   console.log(`  선수    ${totalEntities.toString().padStart(4)}개  (entities/players/_index.json — ${entityLeagueStats})`);
 } else {
   console.log(`  선수       0개  (npm run migrate:entities 미실행)`);
 }
+console.log(`  컨택트  ${totalContacts.toString().padStart(4)}개  (entities/players/_index.json#contacts)`);
