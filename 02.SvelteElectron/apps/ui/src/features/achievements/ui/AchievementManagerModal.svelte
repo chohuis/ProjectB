@@ -22,7 +22,6 @@
   }
   export let open = false;
   const dispatch = createEventDispatcher<{ close: void }>();
-  const REL_PATH = "achievements/achievements.json";
   let rows: AchievementDef[] = [];
   let selectedId = "";
   let draft: AchievementDef | null = null;
@@ -50,24 +49,34 @@
   }
   function saveDraft() {
     if (!draft) return;
-    rows = rows.map((r) => (r.id === draft.id ? structuredClone(draft) : r));
+    rows = rows.map((r) => (r.id === draft!.id ? structuredClone(draft!) : r));
   }
   function cancelDraft() {
     if (!selected) return;
     draft = structuredClone(selected);
   }
+
   async function load() {
     msg = ""; err = "";
     saveValidationErrors = [];
     try {
-      const remote = await window.projectB?.masterFetch?.(REL_PATH);
-      const list = (remote as { achievements?: AchievementDef[] } | null)?.achievements;
-      if (Array.isArray(list)) {
-        rows = list;
-        msg = `${rows.length}개 업적을 불러왔습니다.`;
-        return;
-      }
-      rows = [];
+      type ManifestAch = { achievements?: { baseball?: string[]; growth?: string[]; social?: string[]; hidden?: string[] } };
+      const manifest = await window.projectB?.masterFetch?.("_manifest.json") as ManifestAch | null;
+      const ach = manifest?.achievements;
+      if (!ach) { rows = []; msg = "_manifest.json 없음. gen:manifest를 실행하세요."; return; }
+
+      const entries: Array<{ id: string; cat: string }> = [
+        ...(ach.baseball ?? []).map((id) => ({ id, cat: "baseball" })),
+        ...(ach.growth   ?? []).map((id) => ({ id, cat: "growth" })),
+        ...(ach.social   ?? []).map((id) => ({ id, cat: "social" })),
+        ...(ach.hidden   ?? []).map((id) => ({ id, cat: "hidden" })),
+      ];
+
+      const fetched = await Promise.all(
+        entries.map(({ id, cat }) => window.projectB?.masterFetch?.(`achievements/${cat}/${id}.json`))
+      );
+      rows = fetched.filter(Boolean) as AchievementDef[];
+      msg = `${rows.length}개 업적을 불러왔습니다.`;
     } catch (e) {
       err = `불러오기 실패: ${String((e as Error)?.message ?? e)}`;
     }
@@ -87,26 +96,33 @@
     try {
       const idSet = new Set<string>();
       for (const row of rows) {
-        if (idSet.has(row.id)) {
-          saveValidationErrors.push(`${row.id}: 중복 ID입니다.`);
-        }
+        if (idSet.has(row.id)) saveValidationErrors.push(`${row.id}: 중복 ID입니다.`);
         idSet.add(row.id);
-        const issues = validateAchievement(row);
-        saveValidationErrors.push(...issues.map((issue) => `${row.id || "(빈 ID)"}: ${issue}`));
+        saveValidationErrors.push(...validateAchievement(row).map((issue) => `${row.id || "(빈 ID)"}: ${issue}`));
       }
-      if (saveValidationErrors.length > 0) {
-        err = `검증 실패: ${saveValidationErrors.length}개 항목을 확인하세요.`;
-        return;
+      if (saveValidationErrors.length > 0) { err = `검증 실패: ${saveValidationErrors.length}개 항목을 확인하세요.`; return; }
+
+      if (!window.projectB?.masterSave) { err = "masterSave API를 사용할 수 없습니다."; return; }
+
+      for (const row of rows) {
+        const relPath = `achievements/${row.category}/${row.id}.json`;
+        const r = await window.projectB.masterSave({ relPath, data: row, backup: false });
+        if (!r.ok) { err = `파일 저장 실패 [${row.id}]: ${r.error ?? "알 수 없는 오류"}`; return; }
       }
 
-      const payload = { version: 1, achievements: rows };
-      if (!window.projectB?.masterSave) {
-        err = "masterSave API를 사용할 수 없습니다. 개발자 모드/IPC 연결 상태를 확인하세요.";
-        return;
+      // manifest achievements 섹션 갱신
+      const current = await window.projectB?.masterFetch?.("_manifest.json") as Record<string, unknown> | null;
+      if (current) {
+        const byCategory: Record<string, string[]> = { baseball: [], growth: [], social: [], hidden: [] };
+        for (const row of rows) {
+          if (byCategory[row.category]) byCategory[row.category].push(row.id);
+          else byCategory[row.category] = [row.id];
+        }
+        const updated = { ...current, generatedAt: new Date().toISOString(), achievements: byCategory };
+        await window.projectB.masterSave({ relPath: "_manifest.json", data: updated, backup: false });
       }
-      const r = await window.projectB.masterSave({ relPath: REL_PATH, data: payload, backup: true });
-      if (!r.ok) { err = `파일 저장 실패: ${r.error ?? "알 수 없는 오류"}`; return; }
-      msg = "파일 저장 완료";
+
+      msg = `저장 완료 (${rows.length}건)`;
       await load();
     } catch (e) {
       err = `저장 실패: ${String((e as Error)?.message ?? e)}`;

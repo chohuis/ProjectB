@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-07T05:03:53.262Z",
+  "generated": "2026-05-07T05:20:01.883Z",
   "byLeague": {
     "LEAGUE_HIGHSCHOOL": [
       "MNG_00001",
@@ -194,8 +194,8 @@
       "PLY_00158",
       "PLY_00159",
       "PLY_00160",
-      "NPC_00001",
-      "NPC_00002"
+      "PLY_01541",
+      "COA_00167"
     ],
     "LEAGUE_UNIVERSITY": [
       "PLY_00161",
@@ -1808,7 +1808,7 @@
     ]
   },
   "contacts": [
-    "NPC_00001",
-    "NPC_00002"
+    "COA_00167",
+    "PLY_01541"
   ]
 }

@@ -44,12 +44,6 @@
     options?: Array<{ id: string; label: string; effects?: string[] }>;
   }
 
-  interface EventIndexFile {
-    files?: {
-      pools?: string[];
-    };
-  }
-
   interface PoolDraft {
     id: string;
     description: string;
@@ -83,11 +77,8 @@
 
   const dispatch = createEventDispatcher<{ close: void }>();
 
-  const EVENT_SAVE_PATHS: Record<EventType, string> = {
-    mandatory: "events/rules/mandatory.json",
-    conditional: "events/rules/conditional.json",
-    random: "events/rules/random.json"
-  };
+  // 이벤트 ID → relPath 매핑 (로드 시 채워짐, 저장 경로 결정에 사용)
+  let eventPaths = new Map<string, string>();
 
   let loading = false;
   let saving = false;
@@ -134,6 +125,41 @@
     await Promise.all([loadEvents(), loadReferenceLists()]);
   }
 
+  function getEventRelPath(ev: ManagedEvent): string {
+    const stored = eventPaths.get(ev.id);
+    if (stored) return stored;
+    if (ev.type === "mandatory") return `events/mandatory/${ev.id}.json`;
+    if (ev.type === "conditional") return `events/conditional/${ev.id}.json`;
+    const p = (ev.poolId ?? "").toUpperCase();
+    if (p.includes("MEDIA")) return `events/random/media/${ev.id}.json`;
+    if (p.includes("SOCIAL")) return `events/random/social/${ev.id}.json`;
+    return `events/random/team_life/${ev.id}.json`;
+  }
+
+  async function refreshManifestEvents() {
+    const current = await fetchJsonSafe<Record<string, unknown>>("/data/master/_manifest.json");
+    if (!current || !window.projectB?.masterSave) return;
+    const mandatory: string[] = [];
+    const conditional: string[] = [];
+    const media: string[] = [];
+    const social: string[] = [];
+    const teamLife: string[] = [];
+    for (const ev of events) {
+      const path = getEventRelPath(ev);
+      if (path.startsWith("events/mandatory")) mandatory.push(ev.id);
+      else if (path.startsWith("events/conditional")) conditional.push(ev.id);
+      else if (path.startsWith("events/random/media")) media.push(ev.id);
+      else if (path.startsWith("events/random/social")) social.push(ev.id);
+      else teamLife.push(ev.id);
+    }
+    const updated = {
+      ...current,
+      generatedAt: new Date().toISOString(),
+      events: { mandatory, conditional, random: { media, social, team_life: teamLife } }
+    };
+    await window.projectB.masterSave({ relPath: "_manifest.json", data: updated, backup: false });
+  }
+
   async function saveEvents() {
     saveMessage = "";
     saveError = "";
@@ -149,27 +175,29 @@
         return;
       }
 
-      const byType: Record<EventType, ManagedEvent[]> = { mandatory: [], conditional: [], random: [] };
-      for (const ev of events) {
-        byType[ev.type]?.push(ev);
-      }
-
       if (!window.projectB?.masterSave) {
         saveError = "masterSave API를 사용할 수 없습니다. 개발자 모드/IPC 연결 상태를 확인하세요.";
         return;
       }
-      const results = await Promise.all(
-        (Object.entries(byType) as [EventType, ManagedEvent[]][]).map(([type, evs]) =>
-          window.projectB!.masterSave({ relPath: EVENT_SAVE_PATHS[type], data: { events: evs }, backup: true })
-        )
-      );
-      const failed = results.find((r) => !r?.ok);
-      if (failed) {
-        saveError = `파일 저장 실패: ${failed.error ?? "알 수 없는 오류"}`;
-      } else {
-        saveMessage = `저장 완료 (mandatory ${byType.mandatory.length}건 / conditional ${byType.conditional.length}건 / random ${byType.random.length}건, 백업 생성)`;
-        await loadAll();
+
+      for (const ev of events) {
+        const relPath = getEventRelPath(ev);
+        eventPaths.set(ev.id, relPath);
+        const result = await window.projectB.masterSave({ relPath, data: ev, backup: false });
+        if (!result?.ok) {
+          saveError = `파일 저장 실패 [${ev.id}]: ${result?.error ?? "알 수 없는 오류"}`;
+          return;
+        }
       }
+
+      await refreshManifestEvents();
+
+      const byType = events.reduce(
+        (acc, ev) => { acc[ev.type] = (acc[ev.type] ?? 0) + 1; return acc; },
+        {} as Record<string, number>
+      );
+      saveMessage = `저장 완료 (mandatory ${byType.mandatory ?? 0}건 / conditional ${byType.conditional ?? 0}건 / random ${byType.random ?? 0}건)`;
+      await loadAll();
     } catch (error) {
       saveError = `저장 실패: ${String((error as Error)?.message ?? error)}`;
     } finally {
@@ -177,36 +205,49 @@
     }
   }
 
-  // 마스터 이벤트 JSON(필수/조건/랜덤)을 병합 로드
+  // 마스터 이벤트를 manifest 기반 개별 파일에서 병합 로드
   async function loadEvents() {
     loading = true;
     errorMessage = "";
+    eventPaths = new Map();
 
     try {
-      const paths = [
-        "/data/master/events/rules/mandatory.json",
-        "/data/master/events/rules/conditional.json",
-        "/data/master/events/rules/random.json"
+      const manifest = await fetchJsonSafe<{
+        events?: {
+          mandatory?: string[];
+          conditional?: string[];
+          random?: { media?: string[]; social?: string[]; team_life?: string[] };
+        };
+      }>("/data/master/_manifest.json");
+
+      if (!manifest?.events) {
+        errorMessage = "_manifest.json을 불러오지 못했습니다. gen:manifest를 실행하세요.";
+        events = buildFallbackEvents();
+        selectedId = events[0]?.id ?? "";
+        return;
+      }
+
+      type PathEntry = { id: string; path: string };
+      const toLoad: PathEntry[] = [
+        ...(manifest.events.mandatory ?? []).map((id) => ({ id, path: `/data/master/events/mandatory/${id}.json` })),
+        ...(manifest.events.conditional ?? []).map((id) => ({ id, path: `/data/master/events/conditional/${id}.json` })),
+        ...(manifest.events.random?.media ?? []).map((id) => ({ id, path: `/data/master/events/random/media/${id}.json` })),
+        ...(manifest.events.random?.social ?? []).map((id) => ({ id, path: `/data/master/events/random/social/${id}.json` })),
+        ...(manifest.events.random?.team_life ?? []).map((id) => ({ id, path: `/data/master/events/random/team_life/${id}.json` })),
       ];
 
       const loaded = await Promise.all(
-        paths.map(async (path) => {
-          const response = await fetch(path);
-          if (!response.ok) return [] as ManagedEvent[];
-          const data = (await response.json()) as EventFile;
-          return data.events ?? [];
+        toLoad.map(async ({ id, path }) => {
+          const data = await fetchJsonSafe<ManagedEvent>(path);
+          if (!data) return null;
+          const relPath = path.replace("/data/master/", "");
+          eventPaths.set(id, relPath);
+          return { ...data, title: typeof data.title === "string" && data.title.trim() ? data.title : data.id };
         })
       );
 
-      const merged = loaded.flat().map((event) => ({
-        ...event,
-        title: typeof event.title === "string" && event.title.trim() ? event.title : event.id
-      }));
-
-      events = merged;
-      if (!selectedId && events.length > 0) {
-        selectedId = events[0].id;
-      }
+      events = loaded.filter((e): e is ManagedEvent => e !== null);
+      if (!selectedId && events.length > 0) selectedId = events[0].id;
     } catch (error) {
       console.warn("[EventManagerModal] failed to load event files", error);
       errorMessage = "이벤트 파일을 불러오지 못했습니다. 더미 데이터로 표시합니다.";
@@ -254,18 +295,6 @@
   }
 
   async function resolvePoolPaths(): Promise<string[]> {
-    try {
-      const data = await fetchJsonSafe<EventIndexFile>("/data/master/events/index.json");
-      if (data) {
-        const pools = data.files?.pools ?? [];
-        if (pools.length > 0) {
-          return pools.map((path) => (path.startsWith("/") ? path : `/${path}`));
-        }
-      }
-    } catch {
-      // fallback below
-    }
-
     return [
       "/data/master/events/pools/media.json",
       "/data/master/events/pools/social.json",

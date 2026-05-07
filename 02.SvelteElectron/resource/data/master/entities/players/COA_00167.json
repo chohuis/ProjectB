@@ -1,0 +1,151 @@
+{
+  "id": "COA_00167",
+  "name": "오지경",
+  "role": "coach",
+  "age": 42,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "notes": "투수 코치. 슬라이더 계열 전문가.",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 0,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 50,
+        "velocity": 50,
+        "command": 50,
+        "control": 50,
+        "movement": 50,
+        "mentality": 50,
+        "recovery": 50
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 50,
+        "power": 50,
+        "eye": 50,
+        "discipline": 50,
+        "speed": 50,
+        "fielding": 50,
+        "arm": 50,
+        "battingClutch": 50
+      },
+      "developmentRate": 50,
+      "potentialHidden": 65
+    },
+    "coach": {
+      "specialty": "투구",
+      "experienceYears": 15,
+      "stats": {
+        "teaching": 80,
+        "analysis": 72,
+        "communication": 65,
+        "discipline": 70,
+        "leadership": 68
+      },
+      "trainingBuffs": "구속 훈련 +3%, 무브먼트 훈련 +2%"
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": { "tactics": 50, "decision": 50, "rotationMgmt": 50, "bullpenMgmt": 50, "moraleMgmt": 50 },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": { "budgetSupport": 50, "patience": 50, "prInfluence": 50, "facilityInvestment": 50, "staffTrust": 50 },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  },
+  "contact": {
+    "category": "team",
+    "relation": "투수 코치",
+    "initialAffinity": 30,
+    "arcs": [
+      {
+        "id": "arc_intro",
+        "trigger": { "weekInSeason": 1, "careerStage": "highschool", "careerYear": 0 },
+        "flag": "arc_intro_done",
+        "script": {
+          "startStepId": "s1",
+          "steps": [
+            { "id": "s1", "from": "contact", "text": "이번 시즌 잘 부탁해. 처음이라 많이 긴장되지?", "next": "s2" },
+            {
+              "id": "s2",
+              "from": "player",
+              "options": [
+                { "id": "o1", "text": "네, 잘 부탁드립니다!", "affinityDelta": 5, "next": "s3a" },
+                { "id": "o2", "text": "괜찮습니다. 자신 있습니다.", "affinityDelta": 2, "next": "s3b" }
+              ]
+            },
+            { "id": "s3a", "from": "contact", "text": "좋아, 그 마음가짐이면 충분해. 모르는 거 있으면 바로 물어봐.", "next": null },
+            { "id": "s3b", "from": "contact", "text": "그래, 그 자신감이 중요하지. 하지만 방심하지 마.", "next": null }
+          ]
+        }
+      },
+      {
+        "id": "arc_trust",
+        "trigger": { "affinityGte": 60 },
+        "flag": "arc_trust_done",
+        "script": {
+          "startStepId": "s1",
+          "steps": [
+            { "id": "s1", "from": "contact", "text": "너 슬라이더 던져본 적 있어? 네 팔 각도라면 잘 맞을 것 같은데.", "next": "s2" },
+            {
+              "id": "s2",
+              "from": "player",
+              "options": [
+                { "id": "o1", "text": "가르쳐 주실 수 있나요?", "affinityDelta": 6, "next": "s3a" },
+                { "id": "o2", "text": "지금은 직구 위주로 가고 싶어요.", "affinityDelta": 1, "next": "s3b" }
+              ]
+            },
+            { "id": "s3a", "from": "contact", "text": "좋아. 다음 훈련 때 같이 해보자. 네 무기가 하나 늘 거야.", "effects": { "unlockPitchId": "PITCH_SLIDER" }, "next": null },
+            { "id": "s3b", "from": "contact", "text": "그것도 좋은 판단이야. 나중에 마음 바뀌면 언제든 말해.", "next": null }
+          ]
+        }
+      }
+    ],
+    "chat": {
+      "advice": [
+        { "condition": { "affinityLt": 40 }, "lines": ["오늘 불펜 피칭 봤어. 팔꿈치 각도 신경 써봐.", "릴리스 포인트 일정하게 가져가는 게 먼저야."] },
+        { "condition": { "affinityGte": 40, "affinityLt": 60 }, "lines": ["구속은 나오는데 커맨드가 아직 흔들려. 그게 관건이야.", "타자 눈을 속이려면 폼이 같아야 해. 거기서부터야."] },
+        {
+          "condition": { "affinityGte": 60, "flagNotSet": "coach_slider_tip" },
+          "flag": "coach_slider_tip",
+          "prompt": "슬라이더 그립 하나 알려줄까? 네 손가락 길이에 딱 맞는 게 있어.",
+          "options": [
+            { "id": "learn", "text": "꼭 배우고 싶습니다!", "reply": "좋아. 연습장에서 같이 해보자. 감각 잡히면 금방이야.", "affinityDelta": 7, "effects": { "unlockPitchId": "PITCH_SLIDER" } },
+            { "id": "later", "text": "조금 더 직구를 다듬고 싶어요.", "reply": "그것도 맞아. 직구가 기본이지. 준비되면 말해.", "affinityDelta": 2 }
+          ]
+        },
+        { "condition": { "affinityGte": 60, "flagSet": "coach_slider_tip" }, "lines": ["슬라이더 감 잡혔어? 처음엔 다 어색하니까 조급해하지 마.", "요즘 공이 살아있더라. 그 느낌 계속 가져가봐."] }
+      ]
+    },
+    "messengerScript": {
+      "startStepId": "s1",
+      "steps": [
+        { "id": "s1", "from": "contact", "text": "이번 시즌 잘 부탁해. 처음이라 많이 긴장되지?", "next": "s2" },
+        {
+          "id": "s2",
+          "from": "player",
+          "options": [
+            { "id": "o1", "text": "네, 잘 부탁드립니다!", "affinityDelta": 5, "next": "s3a" },
+            { "id": "o2", "text": "괜찮습니다. 자신 있습니다.", "affinityDelta": 2, "next": "s3b" }
+          ]
+        },
+        { "id": "s3a", "from": "contact", "text": "좋아, 그 마음가짐이면 충분해. 모르는 거 있으면 바로 물어봐.", "next": null },
+        { "id": "s3b", "from": "contact", "text": "그래, 그 자신감이 중요하지. 하지만 방심하지 마.", "next": null }
+      ]
+    }
+  }
+}

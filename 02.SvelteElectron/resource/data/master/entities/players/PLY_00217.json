@@ -80,5 +80,12 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
   }
 }
