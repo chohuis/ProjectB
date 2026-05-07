@@ -161,11 +161,10 @@ writeJson(INDEX_PATH, index);
 
 // ── 6. 전체 PLY/COA/MNG 파일에 빈 contact 구조 추가 ─────────
 const finalIds = Object.values(index.byLeague).flat();
-const CONTACT_ROLES = new Set(["player", "coach", "manager"]);
+const CONTACT_ROLES = new Set(["player", "coach", "manager", "owner"]);
 let addedCount = 0;
 
 for (const id of finalIds) {
-  if (id.startsWith("OWN_")) continue; // 구단주는 제외
   const p = join(PLY_DIR, `${id}.json`);
   if (!existsSync(p)) continue;
   const ply = readJson(p);
