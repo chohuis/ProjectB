@@ -87,6 +87,11 @@ const DEFAULT_PROTAGONIST: ProtagonistSave = {
   scoutScore: 15,
   proServiceYears: 0,
   militaryUnit: null,
+  militaryServiceWeeks: 0,
+  militaryRecoveryWeeks: 0,
+  tradeAdaptationWeeks: 0,
+  faNegotiationRound: 0,
+  faUnsignedWeeks: 0,
 };
 
 const DEFAULT_TRAINING_PLAN: TrainingPlanState = {
@@ -836,6 +841,9 @@ function createGameStore() {
           careerStage: leagueStage,
           teamId: contract.teamId,
           leagueId: contract.leagueId,
+          faNegotiationRound: 0,
+          faUnsignedWeeks: 0,
+          tradeAdaptationWeeks: 0,
         };
         const unlockedIds = new Set(
           contactDefs.filter((c) => c.category === "team").map((c) => c.id),
@@ -849,6 +857,202 @@ function createGameStore() {
           player: toPlayerCompat(protagonist),
           school: toSchoolCompat(protagonist.careerStage, s.schoolState),
           contacts,
+        };
+      });
+    },
+
+    applyTradeTransfer(toTeamId: string, contactDefs: ContactDef[]) {
+      update((s) => {
+        const current = s.protagonist.contract;
+        const protagonist: ProtagonistSave = {
+          ...s.protagonist,
+          teamId: toTeamId,
+          tradeAdaptationWeeks: 3,
+          contract: current
+            ? {
+                ...current,
+                teamId: toTeamId,
+              }
+            : current,
+        };
+        const unlockedIds = new Set(
+          contactDefs.filter((c) => c.category === "team").map((c) => c.id),
+        );
+        const contacts = s.contacts.map((c) =>
+          unlockedIds.has(c.id) ? { ...c, unlocked: true } : c,
+        );
+        return {
+          ...s,
+          protagonist,
+          player: toPlayerCompat(protagonist),
+          contacts,
+          logs: [`트레이드 이적: ${toTeamId}`, ...s.logs].slice(0, 30),
+        };
+      });
+    },
+
+    enlistMilitary(unit: "sports" | "general") {
+      update((s) => {
+        const protagonist: ProtagonistSave = {
+          ...s.protagonist,
+          careerStage: "military",
+          militaryUnit: unit,
+          militaryServiceWeeks: 0,
+          militaryRecoveryWeeks: 0,
+        };
+        return {
+          ...s,
+          protagonist,
+          player: toPlayerCompat(protagonist),
+          school: toSchoolCompat(protagonist.careerStage, s.schoolState),
+        };
+      });
+    },
+
+    advanceMilitaryWeek() {
+      update((s) => ({
+        ...s,
+        protagonist: {
+          ...s.protagonist,
+          militaryServiceWeeks: s.protagonist.militaryServiceWeeks + 1,
+        },
+      }));
+    },
+
+    completeMilitaryService() {
+      update((s) => {
+        const stage =
+          s.protagonist.leagueId === "LEAGUE_ABL"
+            ? "pro_abl"
+            : s.protagonist.leagueId === "LEAGUE_KBL"
+            ? "pro_kbl"
+            : "independent";
+        const protagonist: ProtagonistSave = {
+          ...s.protagonist,
+          careerStage: stage,
+          militaryUnit: null,
+          militaryServiceWeeks: 0,
+          militaryRecoveryWeeks: s.protagonist.militaryUnit === "sports" ? 2 : 6,
+        };
+        return {
+          ...s,
+          protagonist,
+          player: toPlayerCompat(protagonist),
+          school: toSchoolCompat(protagonist.careerStage, s.schoolState),
+        };
+      });
+    },
+
+    applySeasonContractProgress() {
+      update((s) => {
+        const current = s.protagonist.contract;
+        if (!current) return s;
+        const remainingYears = Math.max(0, current.remainingYears - 1);
+        const status = remainingYears > 0 ? "active" : "expired";
+        return {
+          ...s,
+          protagonist: {
+            ...s.protagonist,
+            contract: {
+              ...current,
+              remainingYears,
+              status,
+            },
+          },
+        };
+      });
+    },
+
+    incrementFaNegotiationRound() {
+      update((s) => ({
+        ...s,
+        protagonist: {
+          ...s.protagonist,
+          faNegotiationRound: Math.min(2, (s.protagonist.faNegotiationRound ?? 0) + 1),
+        },
+      }));
+    },
+
+    incrementFaUnsignedWeek() {
+      update((s) => ({
+        ...s,
+        protagonist: {
+          ...s.protagonist,
+          faUnsignedWeeks: (s.protagonist.faUnsignedWeeks ?? 0) + 1,
+        },
+      }));
+    },
+
+    resetFaProgress() {
+      update((s) => ({
+        ...s,
+        protagonist: {
+          ...s.protagonist,
+          faNegotiationRound: 0,
+          faUnsignedWeeks: 0,
+        },
+      }));
+    },
+
+    advanceMilitaryRecoveryWeek() {
+      update((s) => ({
+        ...s,
+        protagonist: {
+          ...s.protagonist,
+          militaryRecoveryWeeks: Math.max(0, (s.protagonist.militaryRecoveryWeeks ?? 0) - 1),
+        },
+      }));
+    },
+
+    advanceTradeAdaptationWeek() {
+      update((s) => ({
+        ...s,
+        protagonist: {
+          ...s.protagonist,
+          tradeAdaptationWeeks: Math.max(0, (s.protagonist.tradeAdaptationWeeks ?? 0) - 1),
+        },
+      }));
+    },
+
+    applyOptionResult(payload: {
+      exercised: boolean;
+      nextSalary: number;
+      optionType: "team" | "player";
+    }) {
+      update((s) => {
+        const current = s.protagonist.contract;
+        if (!current) return s;
+        if (!payload.exercised) {
+          return {
+            ...s,
+            protagonist: {
+              ...s.protagonist,
+              contract: {
+                ...current,
+                status: "expired",
+              },
+            },
+          };
+        }
+        return {
+          ...s,
+          protagonist: {
+            ...s.protagonist,
+            contract: {
+              ...current,
+              salary: payload.nextSalary,
+              remainingYears: 1,
+              status: "active",
+              teamOptionYears:
+                payload.optionType === "team"
+                  ? Math.max(0, current.teamOptionYears - 1)
+                  : current.teamOptionYears,
+              playerOptionYears:
+                payload.optionType === "player"
+                  ? Math.max(0, current.playerOptionYears - 1)
+                  : current.playerOptionYears,
+            },
+          },
         };
       });
     },
@@ -886,6 +1090,39 @@ function createGameStore() {
           trainingPitchState: { ...ts, progress },
         };
         return { ...s, protagonist: p };
+      });
+    },
+
+    // 시즌 종료 후 주인공 상태 갱신 (나이+1, 학년+1, 프로연차+1, 오프시즌 회복)
+    advanceSeasonYear() {
+      update((s) => {
+        const p = s.protagonist;
+        const isPro = ["pro", "pro_kbl", "pro_abl"].includes(p.careerStage);
+        const isStudent = ["highschool", "university"].includes(p.careerStage);
+        const newGrade =
+          isStudent && p.grade && p.grade < 3
+            ? ((p.grade + 1) as 1 | 2 | 3)
+            : p.grade;
+        const draftTriggeredReset =
+          p.careerStage === "highschool" && newGrade === 3;
+        const protagonist: ProtagonistSave = {
+          ...p,
+          age: p.age + 1,
+          grade: newGrade,
+          proServiceYears: isPro ? p.proServiceYears + 1 : p.proServiceYears,
+          condition: Math.min(100, p.condition + 20),
+          fatigue: Math.max(0, p.fatigue - 30),
+        };
+        const schoolState = draftTriggeredReset
+          ? { ...s.schoolState, draftTriggered: false }
+          : s.schoolState;
+        return {
+          ...s,
+          protagonist,
+          player: toPlayerCompat(protagonist),
+          school: toSchoolCompat(protagonist.careerStage, schoolState),
+          schoolState,
+        };
       });
     },
 

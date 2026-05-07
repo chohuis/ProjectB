@@ -89,6 +89,11 @@ export interface ProtagonistSave {
   scoutScore: number;
   proServiceYears: number;
   militaryUnit: "sports" | "general" | null;
+  militaryServiceWeeks: number;
+  militaryRecoveryWeeks: number;
+  tradeAdaptationWeeks: number;
+  faNegotiationRound: number;
+  faUnsignedWeeks: number;
   contract?: ProContract;
 }
 

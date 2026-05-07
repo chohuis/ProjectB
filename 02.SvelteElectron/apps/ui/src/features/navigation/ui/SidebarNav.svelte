@@ -6,6 +6,7 @@
   export let unreadMessageCount = 0;
   export let pendingAchievementCount = 0;
   export let showAcademicsTab = false;
+  export let militaryCountdownLabel = "";
   export let onSelectTab: (tab: MainTabId) => void;
   let settingsOpen = false;
 
@@ -51,6 +52,9 @@
 <svelte:window on:click={closeSettings} on:keydown={(e) => e.key === "Escape" && closeSettings()} />
 
 <nav class="nav">
+  {#if militaryCountdownLabel}
+    <div class="military-chip">{militaryCountdownLabel}</div>
+  {/if}
   <div class="tab-list">
     {#each visibleTabs as tab}
       <button class:active={tab.id === currentTab} on:click={() => onSelectTab(tab.id)}>
@@ -104,6 +108,16 @@
     align-content: start;
     min-height: 0;
     overflow: hidden;
+  }
+
+  .military-chip {
+    background: #3a2f14;
+    border: 1px solid #8d6f2d;
+    color: #ffe8aa;
+    border-radius: 8px;
+    padding: 8px 9px;
+    font-size: 12px;
+    line-height: 1.35;
   }
 
   button {

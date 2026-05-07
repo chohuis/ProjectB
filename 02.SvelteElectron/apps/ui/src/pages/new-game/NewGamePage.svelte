@@ -132,6 +132,16 @@
       tags: preset.tags,
       pitchingXP: {},
       learnedPitchIds: ["PITCH_FASTBALL"],
+      money: 1200,
+      fame: 5,
+      scoutScore: 15,
+      proServiceYears: 0,
+      militaryUnit: null,
+      militaryServiceWeeks: 0,
+      militaryRecoveryWeeks: 0,
+      tradeAdaptationWeeks: 0,
+      faNegotiationRound: 0,
+      faUnsignedWeeks: 0,
     };
 
     gameStore.initNew(protagonist);

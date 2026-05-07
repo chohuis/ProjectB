@@ -6,6 +6,8 @@ import { calcTrainingGrowth } from "../utils/growthEngine";
 import { runEventEngine } from "../utils/eventEngine";
 import { applyWeeklyStudy, calcExamResult, getUniversityEffBonus, getUniversityExamGainMult } from "../utils/academicsEngine";
 import { checkAchievements, computeMetrics } from "../utils/achievementEngine";
+import { calcOfferedSalaryForProtagonist, calcSeasonRating } from "../utils/salaryEngine";
+import { isFaEligible } from "../utils/faEngine";
 import type { MatchResult, WeekAdvanceResult } from "../types/season";
 import type { EventContext } from "../types/event";
 import type { MessageItem } from "../types/main";
@@ -100,20 +102,146 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     };
   }
 
+  const hasMilitaryPending = s.pendingActions.some((a) => a.type === "militaryEnlist");
+  if (
+    !hasMilitaryPending &&
+    g.protagonist.careerStage !== "military" &&
+    g.protagonist.age >= 28 &&
+    (g.protagonist.careerStage === "pro_kbl" ||
+      g.protagonist.careerStage === "pro_abl" ||
+      g.protagonist.careerStage === "independent")
+  ) {
+    const action = { type: "militaryEnlist" as const };
+    seasonStore.pushPendingAction(action);
+    return {
+      processedWeek: s.currentWeek,
+      logs: ["입영 대상: 군 복무 진행이 필요합니다."],
+      newMessages: [],
+      matchResults: [],
+      stoppedBy: action,
+    };
+  }
+
   // 2. ?쒖쫵 醫낅즺 泥댄겕
   const nextWeek = s.currentWeek + 1;
   if (nextWeek > s.totalWeeks) {
+    if (g.protagonist.careerStage === "military") {
+      gameStore.completeMilitaryService();
+      const contract = g.protagonist.contract;
+      if (contract) {
+        const action = {
+          type: "salaryNegotiation" as const,
+          teamId: contract.teamId,
+          leagueId: contract.leagueId,
+          offeredSalary: contract.salary,
+          durationYears: Math.max(1, contract.remainingYears),
+          signingBonus: 0,
+        };
+        seasonStore.pushPendingAction(action);
+        return {
+          processedWeek: s.currentWeek,
+          logs: ["전역: 복귀 계약 협상을 진행하세요."],
+          newMessages: [],
+          matchResults: [],
+          stoppedBy: action,
+        };
+      }
+      return {
+        processedWeek: s.currentWeek,
+        logs: ["전역 완료"],
+        newMessages: [],
+        matchResults: [],
+        stoppedBy: null,
+      };
+    }
     const isProStage =
       g.protagonist.careerStage === "pro_kbl" || g.protagonist.careerStage === "pro_abl";
+    const hasOptionPending = s.pendingActions.some((a) => a.type === "optionClause");
     const hasSalaryPending = s.pendingActions.some((a) => a.type === "salaryNegotiation");
-    if (isProStage && g.protagonist.contract && !hasSalaryPending) {
-      const offeredSalary = Math.round(g.protagonist.contract.salary * 1.05);
+    if (isProStage && g.protagonist.contract && !hasOptionPending && !hasSalaryPending) {
+      gameStore.applySeasonContractProgress();
+      const gAfter = get(gameStore);
+      const contract = gAfter.protagonist.contract;
+      if (!contract) {
+        return {
+          processedWeek: s.currentWeek,
+          logs: ["시즌이 종료되었습니다."],
+          newMessages: [],
+          matchResults: [],
+          stoppedBy: null,
+        };
+      }
+      const myStats = (s.stats[g.protagonist.id] ?? null) as import("../types/save").PitcherSeasonStats | null;
+      const seasonRating = calcSeasonRating(myStats);
+      const offeredSalary = calcOfferedSalaryForProtagonist(g.protagonist, myStats);
+      if (contract.remainingYears === 0) {
+        if (contract.teamOptionYears > 0) {
+          const exercised = seasonRating >= 60;
+          const action = {
+            type: "optionClause" as const,
+            optionType: "team" as const,
+            exercised,
+            nextSalary: offeredSalary,
+          };
+          seasonStore.pushPendingAction(action);
+          return {
+            processedWeek: s.currentWeek,
+            logs: ["시즌 종료: 팀 옵션 조항이 처리됩니다."],
+            newMessages: [],
+            matchResults: [],
+            stoppedBy: action,
+          };
+        }
+        if (contract.playerOptionYears > 0) {
+          const action = {
+            type: "optionClause" as const,
+            optionType: "player" as const,
+            exercised: false,
+            nextSalary: offeredSalary,
+          };
+          seasonStore.pushPendingAction(action);
+          return {
+            processedWeek: s.currentWeek,
+            logs: ["시즌 종료: 선수 옵션 선택이 필요합니다."],
+            newMessages: [],
+            matchResults: [],
+            stoppedBy: action,
+          };
+        }
+        if (isFaEligible(g.protagonist, g.schoolState.attendsUniversity)) {
+          const action = { type: "faMarket" as const };
+          seasonStore.pushPendingAction(action);
+          return {
+            processedWeek: s.currentWeek,
+            logs: ["시즌 종료: 계약 만료로 FA 시장에 진입합니다."],
+            newMessages: [],
+            matchResults: [],
+            stoppedBy: action,
+          };
+        }
+        const action = {
+          type: "salaryNegotiation" as const,
+          teamId: contract.teamId,
+          leagueId: contract.leagueId,
+          offeredSalary,
+          durationYears: 1,
+          signingBonus: 0,
+        };
+        seasonStore.pushPendingAction(action);
+        return {
+          processedWeek: s.currentWeek,
+          logs: ["시즌 종료: FA 자격 미충족으로 연봉 협상을 진행합니다."],
+          newMessages: [],
+          matchResults: [],
+          stoppedBy: action,
+        };
+      }
       const action = {
         type: "salaryNegotiation" as const,
-        teamId: g.protagonist.contract.teamId,
-        leagueId: g.protagonist.contract.leagueId,
+        teamId: contract.teamId,
+        leagueId: contract.leagueId,
         offeredSalary,
-        durationYears: Math.max(1, g.protagonist.contract.remainingYears),
+        durationYears: Math.max(1, contract.remainingYears),
         signingBonus: 0,
       };
       seasonStore.pushPendingAction(action);
@@ -135,6 +263,85 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
   }
 
   seasonStore.advanceWeek();
+
+  if (g.protagonist.careerStage === "military") {
+    gameStore.advanceMilitaryWeek();
+    const isSportsUnit = g.protagonist.militaryUnit === "sports";
+    const militaryEvents = get(masterStore).militaryEvents;
+    if (militaryEvents.length > 0 && Math.random() < 0.35) {
+      const evt = militaryEvents[Math.floor(Math.random() * militaryEvents.length)];
+      seasonStore.pushPendingAction({
+        type: "event",
+        eventId: evt.id,
+        title: evt.title,
+        description: evt.description,
+        choices: [
+          {
+            id: "ok",
+            label: "확인",
+            effects: {
+              moraleDelta: evt.moraleDelta ?? 0,
+              fatigueDelta: evt.fatigueDelta ?? 0,
+            },
+          },
+        ],
+      });
+    }
+    const pitching = { ...g.protagonist.pitching };
+    if (isSportsUnit) {
+      pitching.stamina = Math.min(99, pitching.stamina + 1);
+      pitching.recovery = Math.min(99, pitching.recovery + 1);
+      pitching.command = Math.min(99, pitching.command + (Math.random() < 0.4 ? 1 : 0));
+    } else {
+      pitching.command = Math.max(1, pitching.command - (Math.random() < 0.5 ? 1 : 0));
+      pitching.control = Math.max(1, pitching.control - (Math.random() < 0.45 ? 1 : 0));
+      pitching.recovery = Math.max(1, pitching.recovery - (Math.random() < 0.35 ? 1 : 0));
+    }
+    gameStore.applyWeekResult(
+      {
+        morale: Math.max(0, Math.min(100, g.protagonist.morale + (isSportsUnit ? 1 : -1))),
+        fatigue: Math.max(0, Math.min(100, g.protagonist.fatigue + (isSportsUnit ? -2 : 2))),
+        pitching,
+      },
+      [isSportsUnit ? "군 복무(체육부대): 훈련 루틴 유지" : "군 복무(일반부대): 기본 근무 수행"],
+      [],
+      nextWeek,
+    );
+    gameStore.save();
+    seasonStore.save();
+    return {
+      processedWeek: nextWeek,
+      logs: [isSportsUnit ? "군 복무(체육부대)" : "군 복무(일반부대)"],
+      newMessages: [],
+      matchResults: [],
+      stoppedBy: null,
+    };
+  }
+
+  if ((g.protagonist.militaryRecoveryWeeks ?? 0) > 0) {
+    gameStore.advanceMilitaryRecoveryWeek();
+    gameStore.applyWeekResult(
+      {
+        condition: Math.min(100, g.protagonist.condition + 2),
+        fatigue: Math.max(0, g.protagonist.fatigue - 3),
+      },
+      ["전역 후 재활 진행"],
+      [],
+      nextWeek,
+    );
+  }
+  if ((g.protagonist.tradeAdaptationWeeks ?? 0) > 0) {
+    gameStore.advanceTradeAdaptationWeek();
+    gameStore.applyWeekResult(
+      {
+        condition: Math.max(0, g.protagonist.condition - 2),
+        morale: Math.max(0, g.protagonist.morale - 2),
+      },
+      ["이적 적응 기간: 컨디션/사기 패널티 적용"],
+      [],
+      nextWeek,
+    );
+  }
 
   // ?? 3. 二쇨컙 ?숈뾽 ?④낵 + ?덈젴 ?⑥쑉 怨꾩궛 ????????????????????????
   const isUniversity = g.protagonist.careerStage === "university";
@@ -314,6 +521,45 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     seasonStore.pushPendingAction({ type: "draft" });
   }
 
+  // 10. 프로 트레이드 판정
+  const gTrade = get(gameStore);
+  if (
+    (gTrade.protagonist.careerStage === "pro_kbl" || gTrade.protagonist.careerStage === "pro_abl") &&
+    gTrade.protagonist.contract &&
+    !get(seasonStore).pendingActions.some((a) => a.type === "trade")
+  ) {
+    const myStats = (get(seasonStore).stats[gTrade.protagonist.id] ?? null) as import("../types/save").PitcherSeasonStats | null;
+    const myEra = myStats?.era ?? 4.2;
+    const standings = get(seasonStore).standings;
+    const myRank = [...standings]
+      .sort((a, b) => b.winPct - a.winPct || b.wins - a.wins)
+      .findIndex((sRow) => sRow.teamId === gTrade.protagonist.teamId) + 1;
+    const bottomTeam = myRank > 0 && myRank >= standings.length - 1;
+    const poorPerf = myEra >= 5.0;
+    const elitePerf = myEra <= 2.5;
+    const shouldCheck = weekInYear >= 12 && weekInYear <= 40 && weekInYear % 4 === 0;
+    if (shouldCheck && (poorPerf || elitePerf || bottomTeam)) {
+      const sameLeagueTeams = m.teams
+        .filter((t) => t.leagueId === gTrade.protagonist.leagueId && t.id !== gTrade.protagonist.teamId)
+        .map((t) => t.id);
+      if (sameLeagueTeams.length > 0 && Math.random() < 0.24) {
+        const toTeamId = sameLeagueTeams[Math.floor(Math.random() * sameLeagueTeams.length)];
+        seasonStore.pushPendingAction({
+          type: "event",
+          eventId: "EVT_TRADE_RUMOR",
+          title: "트레이드 루머",
+          description: "타 구단에서 관심을 보이고 있다는 소문이 돌고 있습니다.",
+          choices: [{ id: "ok", label: "확인" }],
+        });
+        seasonStore.pushPendingAction({
+          type: "trade",
+          fromTeamId: gTrade.protagonist.teamId,
+          toTeamId,
+        });
+      }
+    }
+  }
+
   const newMessages = evResult.newMessages.map((msg) => msg.id);
 
   gameStore.applyWeekResult(growth.protagonistPatch, logs, [], nextWeek);
@@ -350,4 +596,3 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     stoppedBy,
   };
 }
-

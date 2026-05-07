@@ -15,6 +15,7 @@
 
   onMount(async () => {
     await masterStore.load();
+    masterStore.setupContentWatcher();
 
     try {
       const saved = await window.projectB?.gameLoad?.();

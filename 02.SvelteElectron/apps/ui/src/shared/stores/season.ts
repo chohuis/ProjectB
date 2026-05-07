@@ -50,6 +50,14 @@ function createSeasonStore() {
       set(makeEmptySeason(leagueId, seasonYear, totalWeeks, teamIds));
     },
 
+    // 시즌 종료 후 다음 시즌으로 전환 (같은 팀, 연도+1, 주차 리셋)
+    startNewSeason() {
+      update((s) => {
+        const teamIds = s.standings.map((st) => st.teamId);
+        return makeEmptySeason(s.leagueId, s.seasonYear + 1, s.totalWeeks, teamIds);
+      });
+    },
+
     // 시즌 일정 설정 (일정 생성기가 호출)
     setSchedule(schedule: ScheduleEntry[]) {
       update((s) => ({ ...s, schedule }));
@@ -88,6 +96,12 @@ function createSeasonStore() {
           if (a.type === "event"        && type === "event")        return a.eventId    !== id;
           if (a.type === "careerChoice"    && type === "careerChoice")    return false;
           if (a.type === "messengerScript" && type === "messengerScript") return id !== undefined && a.arcId !== id;
+          if (a.type === "draft"           && type === "draft")           return false;
+          if (a.type === "salaryNegotiation" && type === "salaryNegotiation") return false;
+          if (a.type === "faMarket"        && type === "faMarket")        return false;
+          if (a.type === "militaryEnlist"  && type === "militaryEnlist")  return false;
+          if (a.type === "optionClause"    && type === "optionClause")    return false;
+          if (a.type === "trade"           && type === "trade")           return false;
           return true;
         }),
       }));

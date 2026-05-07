@@ -25,4 +25,8 @@ contextBridge.exposeInMainWorld("projectB", {
   tuningApply: (payload) => ipcRenderer.invoke("tuning:apply", payload),
   tuningSave: (payload) => ipcRenderer.invoke("tuning:save", payload),
   tuningSmoke: (payload) => ipcRenderer.invoke("tuning:smoke", payload),
+
+  // ── 콘텐츠 파일 변경 알림 (개발 환경 핫리로드) ──────────────────────
+  onContentChanged: (cb) =>
+    ipcRenderer.on("master:content-changed", (_event, data) => cb(data)),
 });

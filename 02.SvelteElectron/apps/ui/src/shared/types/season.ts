@@ -87,7 +87,25 @@ export type PendingAction =
   | { type: "message";         messageId: string }
   | { type: "event";           eventId: string; title: string; description: string; choices?: EventChoice[] }
   | { type: "careerChoice" }
-  | { type: "messengerScript"; contactId: string; arcId: string };
+  | { type: "messengerScript"; contactId: string; arcId: string }
+  | { type: "draft" }
+  | {
+      type: "salaryNegotiation";
+      teamId: string;
+      leagueId: string;
+      offeredSalary: number;
+      durationYears: number;
+      signingBonus: number;
+    }
+  | { type: "faMarket" }
+  | { type: "trade"; fromTeamId: string; toTeamId: string }
+  | { type: "militaryEnlist" }
+  | {
+      type: "optionClause";
+      optionType: "team" | "player";
+      exercised: boolean;
+      nextSalary: number;
+    };
 
 // ── 주 진행 결과 (advanceWeek 반환값) ──────────────────────────
 export interface WeekAdvanceResult {

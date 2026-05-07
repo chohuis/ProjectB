@@ -72,3 +72,58 @@ export function generateSchedule(
 
   return entries;
 }
+
+export function generateProSchedule(
+  teamIds: string[],
+  protagonistTeamId: string,
+): ScheduleEntry[] {
+  if (teamIds.length < 2) return [];
+
+  const rounds = roundRobinPairs(teamIds);
+  const entries: ScheduleEntry[] = [];
+  let gameSeq = 0;
+
+  // W7-W40 regular season
+  for (let week = 7; week <= 40; week++) {
+    const roundIdx = (week - 7) % rounds.length;
+    const flip = Math.floor((week - 7) / rounds.length) % 2 === 1;
+    const pairs = rounds[roundIdx];
+    const phase: SeasonPhase = "season";
+    for (const [a, b] of pairs) {
+      const [home, away] = flip ? [b, a] : [a, b];
+      gameSeq++;
+      entries.push({
+        id: `SCH_W${String(week).padStart(2, "0")}_G${String(gameSeq).padStart(3, "0")}`,
+        week,
+        homeTeamId: home,
+        awayTeamId: away,
+        isProtagonistGame: home === protagonistTeamId || away === protagonistTeamId,
+        phase,
+      });
+    }
+  }
+
+  // W41-W48 postseason: top 4 placeholder bracket
+  const playoffTeams = teamIds.slice(0, Math.min(4, teamIds.length));
+  if (playoffTeams.length >= 4) {
+    const bracket: Array<[string, string]> = [
+      [playoffTeams[0], playoffTeams[3]],
+      [playoffTeams[1], playoffTeams[2]],
+    ];
+    for (let week = 41; week <= 48; week++) {
+      for (const [home, away] of bracket) {
+        gameSeq++;
+        entries.push({
+          id: `SCH_W${String(week).padStart(2, "0")}_G${String(gameSeq).padStart(3, "0")}`,
+          week,
+          homeTeamId: home,
+          awayTeamId: away,
+          isProtagonistGame: home === protagonistTeamId || away === protagonistTeamId,
+          phase: "postseason",
+        });
+      }
+    }
+  }
+
+  return entries;
+}

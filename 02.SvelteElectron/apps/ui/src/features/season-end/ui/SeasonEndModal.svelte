@@ -14,6 +14,12 @@
   function tName(id: string): string {
     return $teamMap.get(id)?.name ?? id;
   }
+
+  function handleNewSeason() {
+    gameStore.advanceSeasonYear();
+    seasonStore.startNewSeason();
+    // $seasonEnded가 false로 바뀌며 모달 자동 닫힘
+  }
 </script>
 
 <div class="overlay">
@@ -70,7 +76,7 @@
 
     <footer class="actions">
       <button class="btn-exit" on:click={onExit}>타이틀로 돌아가기</button>
-      <button class="btn-next" disabled>새 시즌 (준비 중)</button>
+      <button class="btn-next" on:click={handleNewSeason}>새 시즌 시작</button>
     </footer>
   </div>
 </div>
@@ -209,13 +215,16 @@
 
   .btn-next {
     padding: 10px 24px;
-    background: #1a2840;
-    color: #4a6888;
-    border: 1px solid #2e4060;
+    background: #1a4a2a;
+    color: #60e890;
+    border: 1px solid #2e8050;
     border-radius: 10px;
     font-size: 14px;
-    cursor: not-allowed;
+    font-weight: 600;
+    cursor: pointer;
   }
+
+  .btn-next:hover { background: #235c34; }
 
   p { margin: 0; }
 </style>
