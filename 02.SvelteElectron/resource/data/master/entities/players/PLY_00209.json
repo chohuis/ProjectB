@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00209",
+  "name": "허태준",
+  "nameEn": "Woo Jae-yun",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_UNIVERSITY",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "TEAM_UNIV_YONSEI",
+  "teamId": "TEAM_UNIV_YONSEI",
+  "schoolId": "SCHOOL_UNIV_YONSEI",
+  "grade": 2,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 9,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 41,
+        "velocity": 55,
+        "command": 49,
+        "control": 55,
+        "movement": 49,
+        "mentality": 50,
+        "recovery": 48
+      },
+      "batting": {
+        "ovr": 31,
+        "contact": 28,
+        "power": 30,
+        "eye": 23,
+        "discipline": 24,
+        "speed": 29,
+        "fielding": 25,
+        "arm": 24,
+        "battingClutch": 31
+      },
+      "developmentRate": 57,
+      "potentialHidden": 74
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

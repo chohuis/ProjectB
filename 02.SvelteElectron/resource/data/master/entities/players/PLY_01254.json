@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01254",
+  "name": "무어 크리스토퍼",
+  "nameEn": "Moore Christopher",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_NYM",
+  "teamId": "TEAM_ABL_NYM_AAA",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:도미니카",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 44,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 74,
+        "velocity": 70,
+        "command": 65,
+        "control": 65,
+        "movement": 64,
+        "mentality": 70,
+        "recovery": 68
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 43,
+        "power": 42,
+        "eye": 48,
+        "discipline": 42,
+        "speed": 42,
+        "fielding": 41,
+        "arm": 47,
+        "battingClutch": 45
+      },
+      "developmentRate": 43,
+      "potentialHidden": 83
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

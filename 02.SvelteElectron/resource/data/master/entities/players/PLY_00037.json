@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00037",
+  "name": "이정우",
+  "nameEn": "Woo Hyun-woo",
+  "role": "player",
+  "age": 17,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "grade": 2,
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 17,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 71,
+        "velocity": 57,
+        "command": 59,
+        "control": 59,
+        "movement": 58,
+        "mentality": 54,
+        "recovery": 61
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 60,
+        "power": 55,
+        "eye": 57,
+        "discipline": 54,
+        "speed": 64,
+        "fielding": 58,
+        "arm": 50,
+        "battingClutch": 66
+      },
+      "developmentRate": 68,
+      "potentialHidden": 62
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

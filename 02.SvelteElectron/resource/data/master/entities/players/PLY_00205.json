@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00205",
+  "name": "허건우",
+  "nameEn": "Ko Ju-won",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_UNIVERSITY",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "TEAM_UNIV_YONSEI",
+  "teamId": "TEAM_UNIV_YONSEI",
+  "schoolId": "SCHOOL_UNIV_YONSEI",
+  "grade": 1,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 5,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 71,
+        "velocity": 81,
+        "command": 79,
+        "control": 76,
+        "movement": 77,
+        "mentality": 72,
+        "recovery": 70
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 56,
+        "power": 52,
+        "eye": 48,
+        "discipline": 54,
+        "speed": 47,
+        "fielding": 51,
+        "arm": 55,
+        "battingClutch": 52
+      },
+      "developmentRate": 58,
+      "potentialHidden": 87
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

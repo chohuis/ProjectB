@@ -1,0 +1,10 @@
+{
+  "id": "ACH_BASEBALL_200_STRIKEOUTS",
+  "title": "200삼진",
+  "category": "baseball",
+  "status": "active",
+  "metricKey": "strikeoutTotal",
+  "targetValue": 200,
+  "hidden": false,
+  "reward": "명성 +10"
+}

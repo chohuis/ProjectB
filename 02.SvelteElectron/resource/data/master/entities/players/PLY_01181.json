@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01181",
+  "name": "테일러 이선",
+  "nameEn": "Taylor Ethan",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_PHI",
+  "teamId": "TEAM_ABL_PHI",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:미국",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 1,
+      "pitching": {
+        "ovr": 97,
+        "stamina": 94,
+        "velocity": 92,
+        "command": 98,
+        "control": 96,
+        "movement": 95,
+        "mentality": 90,
+        "recovery": 89
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 64,
+        "power": 63,
+        "eye": 67,
+        "discipline": 68,
+        "speed": 62,
+        "fielding": 61,
+        "arm": 66,
+        "battingClutch": 63
+      },
+      "developmentRate": 35,
+      "potentialHidden": 84
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

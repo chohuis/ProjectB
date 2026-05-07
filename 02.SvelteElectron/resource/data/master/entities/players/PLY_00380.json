@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00380",
+  "name": "조동혁",
+  "nameEn": "Park Jae-won",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_GWANGJU_STORM",
+  "teamId": "TEAM_IND_GWANGJU_STORM",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "DH",
+      "jerseyNumber": 20,
+      "pitching": {
+        "ovr": 31,
+        "stamina": 26,
+        "velocity": 35,
+        "command": 29,
+        "control": 28,
+        "movement": 26,
+        "mentality": 26,
+        "recovery": 30
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 66,
+        "power": 70,
+        "eye": 66,
+        "discipline": 63,
+        "speed": 55,
+        "fielding": 58,
+        "arm": 58,
+        "battingClutch": 62
+      },
+      "developmentRate": 45,
+      "potentialHidden": 74
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

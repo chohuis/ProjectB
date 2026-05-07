@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00200",
+  "name": "손승현",
+  "nameEn": "Jeon Jeong-woo",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_UNIVERSITY",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "TEAM_UNIV_KNU",
+  "teamId": "TEAM_UNIV_KNU",
+  "schoolId": "SCHOOL_UNIV_KNU",
+  "grade": 4,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "DH",
+      "jerseyNumber": 20,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 32,
+        "velocity": 35,
+        "command": 34,
+        "control": 32,
+        "movement": 39,
+        "mentality": 32,
+        "recovery": 39
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 65,
+        "power": 72,
+        "eye": 68,
+        "discipline": 61,
+        "speed": 56,
+        "fielding": 57,
+        "arm": 58,
+        "battingClutch": 62
+      },
+      "developmentRate": 58,
+      "potentialHidden": 80
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

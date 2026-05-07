@@ -1,0 +1,10 @@
+{
+  "id": "ACH_BASEBALL_5_GAMES",
+  "title": "5경기 출전",
+  "category": "baseball",
+  "status": "active",
+  "metricKey": "gamesPlayedTotal",
+  "targetValue": 5,
+  "hidden": false,
+  "reward": "명성 +1"
+}

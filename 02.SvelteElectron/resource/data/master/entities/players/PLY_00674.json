@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00674",
+  "name": "최태민",
+  "nameEn": "Cho Seong-min",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_KBL",
+  "clubId": "CLUB_KBL_KT",
+  "teamId": "TEAM_KBL_KT_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 39,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 49,
+        "velocity": 64,
+        "command": 64,
+        "control": 67,
+        "movement": 58,
+        "mentality": 61,
+        "recovery": 61
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 40,
+        "power": 39,
+        "eye": 39,
+        "discipline": 38,
+        "speed": 40,
+        "fielding": 43,
+        "arm": 41,
+        "battingClutch": 41
+      },
+      "developmentRate": 47,
+      "potentialHidden": 69
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

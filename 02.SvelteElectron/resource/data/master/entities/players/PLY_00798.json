@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00798",
+  "name": "백시우",
+  "nameEn": "Kwak Seung-woo",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_KBL",
+  "clubId": "CLUB_KBL_HANWHA",
+  "teamId": "TEAM_KBL_HANWHA_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "DH",
+      "jerseyNumber": 23,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 55,
+        "velocity": 62,
+        "command": 59,
+        "control": 54,
+        "movement": 56,
+        "mentality": 54,
+        "recovery": 53
+      },
+      "batting": {
+        "ovr": 82,
+        "contact": 84,
+        "power": 84,
+        "eye": 76,
+        "discipline": 74,
+        "speed": 69,
+        "fielding": 70,
+        "arm": 78,
+        "battingClutch": 83
+      },
+      "developmentRate": 40,
+      "potentialHidden": 64
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

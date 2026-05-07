@@ -1,0 +1,10 @@
+{
+  "id": "ACH_BASEBALL_100_GAMES",
+  "title": "백 경기",
+  "category": "baseball",
+  "status": "active",
+  "metricKey": "gamesPlayedTotal",
+  "targetValue": 100,
+  "hidden": false,
+  "reward": "명성 +15"
+}

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00757",
+  "name": "문준호",
+  "nameEn": "Heo Tae-jun",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_KBL",
+  "clubId": "CLUB_KBL_LOTTE",
+  "teamId": "TEAM_KBL_LOTTE_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 32,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 60,
+        "velocity": 62,
+        "command": 59,
+        "control": 58,
+        "movement": 57,
+        "mentality": 57,
+        "recovery": 54
+      },
+      "batting": {
+        "ovr": 21,
+        "contact": 23,
+        "power": 22,
+        "eye": 20,
+        "discipline": 23,
+        "speed": 25,
+        "fielding": 22,
+        "arm": 19,
+        "battingClutch": 22
+      },
+      "developmentRate": 45,
+      "potentialHidden": 72
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

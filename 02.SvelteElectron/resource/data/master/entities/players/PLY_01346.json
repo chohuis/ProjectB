@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01346",
+  "name": "스콧 케빈",
+  "nameEn": "Scott Kevin",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_STL",
+  "teamId": "TEAM_ABL_STL_AAA",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:쿠바",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 46,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 60,
+        "velocity": 65,
+        "command": 67,
+        "control": 60,
+        "movement": 60,
+        "mentality": 66,
+        "recovery": 61
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 49,
+        "power": 45,
+        "eye": 42,
+        "discipline": 48,
+        "speed": 44,
+        "fielding": 47,
+        "arm": 46,
+        "battingClutch": 42
+      },
+      "developmentRate": 38,
+      "potentialHidden": 78
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

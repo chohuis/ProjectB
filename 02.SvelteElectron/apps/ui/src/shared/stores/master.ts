@@ -105,6 +105,13 @@ export interface MasterState {
   achievements: import("../utils/achievementEngine").MasterAchievement[];
   contactReplies: ContactReplies;
   contactDefs: ContactDef[];
+  militaryEvents: Array<{
+    id: string;
+    title: string;
+    description: string;
+    moraleDelta?: number;
+    fatigueDelta?: number;
+  }>;
 }
 
 // ── masterFetch 래퍼 (IPC 우선, fetch 폴백) ───────────────────
@@ -252,6 +259,31 @@ function parseEventPool(raw: Record<string, any>): EventPool {
   };
 }
 
+// ── Manifest 타입 ─────────────────────────────────────────────
+interface Manifest {
+  generatedAt: string;
+  events: {
+    mandatory:   string[];
+    conditional: string[];
+    random: { media: string[]; social: string[]; team_life: string[] };
+  };
+  achievements: { baseball: string[]; growth: string[]; social: string[]; hidden: string[] };
+  characters:   string[];
+}
+
+// entities/players/_index.json 구조
+interface EntityIndex {
+  generated: string;
+  byLeague: Record<string, string[]>;
+}
+
+// ── batchFetch 헬퍼 ───────────────────────────────────────────
+async function batchFetch<T>(ids: string[], pathFn: (id: string) => string): Promise<T[]> {
+  if (ids.length === 0) return [];
+  const results = await Promise.all(ids.map((id) => fetchMaster<T>(pathFn(id))));
+  return results.filter((r): r is NonNullable<typeof r> => r !== null) as T[];
+}
+
 // ── 스토어 생성 ───────────────────────────────────────────────
 function createMasterStore() {
   const { subscribe, update } = writable<MasterState>({
@@ -271,16 +303,54 @@ function createMasterStore() {
     achievements: [],
     contactReplies: {},
     contactDefs: [],
+    militaryEvents: [],
   });
+
+  // ── manifest 기반 이벤트 로드 ──────────────────────────────
+  async function loadEventsFromManifest(m: Manifest): Promise<EventRule[]> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const [mandatory, conditional, media, social, teamLife] = await Promise.all([
+      batchFetch<Record<string, unknown>>(m.events.mandatory,   (id) => `events/mandatory/${id}.json`),
+      batchFetch<Record<string, unknown>>(m.events.conditional, (id) => `events/conditional/${id}.json`),
+      batchFetch<Record<string, unknown>>(m.events.random.media,     (id) => `events/random/media/${id}.json`),
+      batchFetch<Record<string, unknown>>(m.events.random.social,    (id) => `events/random/social/${id}.json`),
+      batchFetch<Record<string, unknown>>(m.events.random.team_life, (id) => `events/random/team_life/${id}.json`),
+    ]);
+    return [...mandatory, ...conditional, ...media, ...social, ...teamLife]
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .map((r) => parseEventRule(r as Record<string, any>));
+  }
+
+  // ── manifest 기반 업적 로드 ───────────────────────────────
+  async function loadAchievementsFromManifest(
+    m: Manifest,
+  ): Promise<import("../utils/achievementEngine").MasterAchievement[]> {
+    const all = await Promise.all([
+      batchFetch(m.achievements.baseball, (id) => `achievements/baseball/${id}.json`),
+      batchFetch(m.achievements.growth,   (id) => `achievements/growth/${id}.json`),
+      batchFetch(m.achievements.social,   (id) => `achievements/social/${id}.json`),
+      batchFetch(m.achievements.hidden,   (id) => `achievements/hidden/${id}.json`),
+    ]);
+    return all.flat() as import("../utils/achievementEngine").MasterAchievement[];
+  }
+
+  // ── manifest 기반 contactDefs 로드 (arcs는 캐릭터 파일에 포함) ──
+  async function loadContactDefsFromManifest(m: Manifest): Promise<ContactDef[]> {
+    const results = await batchFetch<ContactDef>(
+      m.characters,
+      (id) => `characters/${id}.json`,
+    );
+    return results.map((r) => ({ arcs: [], ...r }));
+  }
 
   async function load() {
     try {
+      // ── 공통 데이터 (변경 없음) ────────────────────────────
       const [
         trainingData, pitchData, unlockData, refsData,
-        mandatoryData, conditionalData, randomData,
         msgTmplData, decisionTmplData,
-        poolMedia, poolSocial, poolTeamLife,
-        achievementsData, contactRepliesData, contactIndexData,
+        poolMedia, poolSocial, poolTeamLife, militaryPoolData,
+        contactRepliesData, manifest,
       ] = await Promise.all([
         fetchMaster<{ programs: TrainingProgram[] }>("training/programs_pitcher.json"),
         fetchMaster<{ pitches: PitchEntry[] }>("training/pitch_catalog.json"),
@@ -288,12 +358,6 @@ function createMasterStore() {
         fetchMaster<{ leagues: LeagueRef[]; schools: SchoolRef[]; clubs: ClubRef[]; teams: TeamRef[] }>(
           "entities/refs.json"
         ),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        fetchMaster<{ events: Record<string, any>[] }>("events/rules/mandatory.json"),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        fetchMaster<{ events: Record<string, any>[] }>("events/rules/conditional.json"),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        fetchMaster<{ events: Record<string, any>[] }>("events/rules/random.json"),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         fetchMaster<{ templates: Record<string, any>[] }>("messages/templates.json"),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -304,34 +368,65 @@ function createMasterStore() {
         fetchMaster<Record<string, any>>("events/pools/social.json"),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         fetchMaster<Record<string, any>>("events/pools/team_life.json"),
-        fetchMaster<{ achievements: import("../utils/achievementEngine").MasterAchievement[] }>(
-          "achievements/achievements.json"
+        fetchMaster<{ events: Array<{ id: string; title: string; description: string; moraleDelta?: number; fatigueDelta?: number }> }>(
+          "events/pools/military.json"
         ),
         fetchMaster<{ replies: ContactReplies }>("messenger/contact_replies.json"),
-        fetchMaster<{ contacts: string[] }>("contacts/index.json"),
+        fetchMaster<Manifest>("_manifest.json"),
       ]);
 
-      // 이벤트 규칙 병합 + 파싱
-      const rawRules = [
-        ...(mandatoryData?.events ?? []),
-        ...(conditionalData?.events ?? []),
-        ...(randomData?.events ?? []),
-      ];
-      const eventRules = rawRules.map(parseEventRule);
-
-      // 템플릿 파싱
-      const messageTmpls = (msgTmplData?.templates ?? []).map(parseMessageTemplate);
+      const messageTmpls  = (msgTmplData?.templates  ?? []).map(parseMessageTemplate);
       const decisionTmpls = (decisionTmplData?.decisions ?? []).map(parseDecisionTemplate);
-
-      // 풀 병합 (null 제거)
-      const rawPools = [poolMedia, poolSocial, poolTeamLife].filter(
+      const rawPools      = [poolMedia, poolSocial, poolTeamLife].filter(
         (p): p is Record<string, unknown> => p !== null && typeof p === "object"
       );
       const eventPools = rawPools.map(parseEventPool);
 
+      // ── manifest 기반 로드 (이벤트·업적·캐릭터) ──────────
+      let eventRules:  EventRule[] = [];
+      let achievements: import("../utils/achievementEngine").MasterAchievement[] = [];
+      let contactDefs: ContactDef[] = [];
+
+      if (manifest) {
+        [eventRules, achievements, contactDefs] = await Promise.all([
+          loadEventsFromManifest(manifest),
+          loadAchievementsFromManifest(manifest),
+          loadContactDefsFromManifest(manifest),
+        ]);
+      } else {
+        // ── 레거시 폴백 (manifest 없을 때) ───────────────────
+        console.warn("[masterStore] _manifest.json 없음 — 레거시 로딩");
+        const [mandatoryData, conditionalData, randomData, achData, contactIndexData] =
+          await Promise.all([
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            fetchMaster<{ events: Record<string, any>[] }>("events/rules/mandatory.json"),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            fetchMaster<{ events: Record<string, any>[] }>("events/rules/conditional.json"),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            fetchMaster<{ events: Record<string, any>[] }>("events/rules/random.json"),
+            fetchMaster<{ achievements: import("../utils/achievementEngine").MasterAchievement[] }>(
+              "achievements/achievements.json"
+            ),
+            fetchMaster<{ contacts: string[] }>("contacts/index.json"),
+          ]);
+        const rawRules = [
+          ...(mandatoryData?.events ?? []),
+          ...(conditionalData?.events ?? []),
+          ...(randomData?.events ?? []),
+        ];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        eventRules  = rawRules.map((r) => parseEventRule(r as Record<string, any>));
+        achievements = achData?.achievements ?? [];
+        const contactIds = contactIndexData?.contacts ?? [];
+        const cFiles = await Promise.all(
+          contactIds.map((id) => fetchMaster<ContactDef>(`contacts/${id}.json`))
+        );
+        contactDefs = cFiles.filter((d): d is ContactDef => d !== null);
+      }
+
       update((s) => ({
         ...s,
-        loaded: true,
+        loaded:          true,
         trainingPrograms: trainingData?.programs  ?? [],
         pitchCatalog:     pitchData?.pitches      ?? [],
         pitchUnlockRules: unlockData?.rules       ?? [],
@@ -343,57 +438,82 @@ function createMasterStore() {
         messageTmpls,
         decisionTmpls,
         eventPools,
-        achievements:   achievementsData?.achievements ?? [],
-        contactReplies: contactRepliesData?.replies   ?? {},
-        contactDefs:    [],
+        achievements,
+        contactReplies: contactRepliesData?.replies ?? {},
+        contactDefs,
+        militaryEvents: militaryPoolData?.events ?? [],
       }));
-
-      // contact 파일 개별 로드 (index.json의 ID 목록 기준)
-      const contactIds = contactIndexData?.contacts ?? [];
-      if (contactIds.length > 0) {
-        const contactFiles = await Promise.all(
-          contactIds.map((id) => fetchMaster<ContactDef>(`contacts/${id}.json`))
-        );
-        const contactDefs = contactFiles.filter((d): d is ContactDef => d !== null);
-        update((s) => ({ ...s, contactDefs }));
-      }
     } catch (e) {
       console.warn("[masterStore] load failed", e);
       update((s) => ({ ...s, loaded: true }));
     }
   }
 
-  // 특정 리그의 인물 엔티티 로드
-  async function loadEntities(leagueId: string) {
-    const fileMap: Record<string, string> = {
-      LEAGUE_HIGHSCHOOL:  "entities/people_hs.json",
-      LEAGUE_UNIVERSITY:  "entities/people_univ.json",
-      LEAGUE_INDEPENDENT: "entities/people_ind.json",
-      LEAGUE_KBL:         "entities/people_kbl.json",
-      LEAGUE_ABL:         "entities/people_abl.json",
-    };
-    const relPath = fileMap[leagueId];
-    if (!relPath) return;
+  // ── 부분 재로드 (파일 드롭 핫리로드용) ───────────────────
+  async function reloadEvents() {
+    const manifest = await fetchMaster<Manifest>("_manifest.json");
+    if (!manifest) return;
+    const eventRules = await loadEventsFromManifest(manifest);
+    update((s) => ({ ...s, eventRules }));
+  }
 
-    const data = await fetchMaster<{ entities: EntityRow[] }>(relPath);
-    update((s) => ({ ...s, entities: data?.entities ?? [] }));
+  async function reloadAchievements() {
+    const manifest = await fetchMaster<Manifest>("_manifest.json");
+    if (!manifest) return;
+    const achievements = await loadAchievementsFromManifest(manifest);
+    update((s) => ({ ...s, achievements }));
+  }
+
+  async function reloadArcs(contactId?: string) {
+    if (contactId) {
+      // 특정 캐릭터만 재로드 (arcs는 캐릭터 파일 안에 포함)
+      const updated = await fetchMaster<ContactDef>(`characters/${contactId}.json`);
+      if (!updated) return;
+      update((s) => ({
+        ...s,
+        contactDefs: s.contactDefs.map((c) => c.id === contactId ? { arcs: [], ...updated } : c),
+      }));
+    } else {
+      const manifest = await fetchMaster<Manifest>("_manifest.json");
+      if (!manifest) return;
+      const contactDefs = await loadContactDefsFromManifest(manifest);
+      update((s) => ({ ...s, contactDefs }));
+    }
+  }
+
+  async function loadEntities(leagueId: string) {
+    const index = await fetchMaster<EntityIndex>("entities/players/_index.json");
+    if (!index?.byLeague) return;
+    const ids = index.byLeague[leagueId] ?? [];
+    const rows = await batchFetch<EntityRow>(ids, (id) => `entities/players/${id}.json`);
+    update((s) => ({ ...s, entities: rows }));
   }
 
   async function reloadContacts() {
-    const indexData = await fetchMaster<{ contacts: string[] }>("contacts/index.json");
-    const contactIds = indexData?.contacts ?? [];
-    if (contactIds.length === 0) {
-      update((s) => ({ ...s, contactDefs: [] }));
-      return;
-    }
-    const contactFiles = await Promise.all(
-      contactIds.map((id) => fetchMaster<ContactDef>(`contacts/${id}.json`))
-    );
-    const contactDefs = contactFiles.filter((d): d is ContactDef => d !== null);
-    update((s) => ({ ...s, contactDefs }));
+    await reloadArcs();
   }
 
-  return { subscribe, load, loadEntities, reloadContacts };
+  // ── 핫리로드 리스너 (개발 환경: 파일 드롭 → 자동 반영) ──
+  function setupContentWatcher() {
+    const api = (window as Window & typeof globalThis & { projectB?: { onContentChanged?: (cb: (data: { filename: string }) => void) => void } }).projectB;
+    if (!api?.onContentChanged) return;
+    api.onContentChanged(({ filename }) => {
+      if (filename.includes("events/")) {
+        reloadEvents().catch(console.warn);
+      } else if (filename.includes("achievements/")) {
+        reloadAchievements().catch(console.warn);
+      } else if (filename.includes("characters/")) {
+        const contactId = filename.split("/").pop()?.replace(".json", "");
+        reloadArcs(contactId || undefined).catch(console.warn);
+      }
+    });
+  }
+
+  return {
+    subscribe, load, loadEntities, reloadContacts,
+    reloadEvents, reloadAchievements, reloadArcs,
+    setupContentWatcher,
+  };
 }
 
 export const masterStore = createMasterStore();

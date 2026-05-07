@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00241",
+  "name": "안성현",
+  "nameEn": "You Jae-yun",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_UNIVERSITY",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "TEAM_UNIV_HANYANG",
+  "teamId": "TEAM_UNIV_HANYANG",
+  "schoolId": "SCHOOL_UNIV_HANYANG",
+  "grade": 1,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 1,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 67,
+        "velocity": 62,
+        "command": 66,
+        "control": 66,
+        "movement": 57,
+        "mentality": 59,
+        "recovery": 65
+      },
+      "batting": {
+        "ovr": 33,
+        "contact": 35,
+        "power": 36,
+        "eye": 29,
+        "discipline": 31,
+        "speed": 31,
+        "fielding": 28,
+        "arm": 34,
+        "battingClutch": 33
+      },
+      "developmentRate": 59,
+      "potentialHidden": 74
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

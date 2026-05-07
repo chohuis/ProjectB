@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00853",
+  "name": "스콧 오스틴",
+  "nameEn": "Scott Austin",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_LAD",
+  "teamId": "TEAM_ABL_LAD_AAA",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:도미니카",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "RP",
+      "jerseyNumber": 48,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 76,
+        "velocity": 83,
+        "command": 79,
+        "control": 81,
+        "movement": 78,
+        "mentality": 82,
+        "recovery": 77
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 56,
+        "power": 60,
+        "eye": 55,
+        "discipline": 56,
+        "speed": 60,
+        "fielding": 60,
+        "arm": 56,
+        "battingClutch": 56
+      },
+      "developmentRate": 35,
+      "potentialHidden": 59
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

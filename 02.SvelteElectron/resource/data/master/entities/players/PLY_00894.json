@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00894",
+  "name": "미첼 로건",
+  "nameEn": "Mitchell Logan",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_NYY",
+  "teamId": "TEAM_ABL_NYY_AAA",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:쿠바",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 44,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 75,
+        "velocity": 70,
+        "command": 69,
+        "control": 73,
+        "movement": 69,
+        "mentality": 73,
+        "recovery": 69
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 56,
+        "power": 51,
+        "eye": 53,
+        "discipline": 51,
+        "speed": 49,
+        "fielding": 54,
+        "arm": 55,
+        "battingClutch": 50
+      },
+      "developmentRate": 32,
+      "potentialHidden": 60
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

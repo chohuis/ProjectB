@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00254",
+  "name": "남찬영",
+  "nameEn": "Min Hyun-seo",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_UNIVERSITY",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "TEAM_UNIV_HANYANG",
+  "teamId": "TEAM_UNIV_HANYANG",
+  "schoolId": "SCHOOL_UNIV_HANYANG",
+  "grade": 3,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 14,
+      "pitching": {
+        "ovr": 39,
+        "stamina": 39,
+        "velocity": 43,
+        "command": 44,
+        "control": 41,
+        "movement": 41,
+        "mentality": 43,
+        "recovery": 42
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 65,
+        "power": 63,
+        "eye": 66,
+        "discipline": 59,
+        "speed": 62,
+        "fielding": 65,
+        "arm": 67,
+        "battingClutch": 67
+      },
+      "developmentRate": 63,
+      "potentialHidden": 67
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "id": "ACH_BASEBALL_FIRST_WIN",
+  "title": "첫 승리",
+  "category": "baseball",
+  "status": "active",
+  "metricKey": "winsTotal",
+  "targetValue": 1,
+  "hidden": false,
+  "reward": "명성 +1"
+}

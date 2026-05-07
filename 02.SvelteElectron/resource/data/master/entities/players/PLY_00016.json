@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00016",
+  "name": "전재윤",
+  "nameEn": "Cho Yong-jun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "grade": 3,
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 16,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 80,
+        "velocity": 68,
+        "command": 57,
+        "control": 70,
+        "movement": 58,
+        "mentality": 76,
+        "recovery": 73
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 63,
+        "power": 66,
+        "eye": 73,
+        "discipline": 61,
+        "speed": 61,
+        "fielding": 59,
+        "arm": 77,
+        "battingClutch": 74
+      },
+      "developmentRate": 52,
+      "potentialHidden": 67
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

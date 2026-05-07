@@ -1,0 +1,19 @@
+{
+  "id": "EVT_COND_TEAM_SUCCESS",
+  "type": "conditional",
+  "category": "team",
+  "priority": 700,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "team_rank_lte",
+      "value": 2
+    },
+    {
+      "type": "week_gte",
+      "value": 10
+    }
+  ],
+  "messageTemplateId": "MSG_COND_TEAM_SUCCESS",
+  "decisionTemplateId": null
+}

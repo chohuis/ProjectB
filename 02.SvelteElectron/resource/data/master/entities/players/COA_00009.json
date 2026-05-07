@@ -1,0 +1,83 @@
+{
+  "id": "COA_00009",
+  "name": "임재훈",
+  "nameEn": "Oh Tae-hyun",
+  "role": "coach",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 0,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 50,
+        "velocity": 50,
+        "command": 50,
+        "control": 50,
+        "movement": 50,
+        "mentality": 50,
+        "recovery": 50
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 50,
+        "power": 50,
+        "eye": 50,
+        "discipline": 50,
+        "speed": 50,
+        "fielding": 50,
+        "arm": 50,
+        "battingClutch": 50
+      },
+      "developmentRate": 50,
+      "potentialHidden": 65
+    },
+    "coach": {
+      "specialty": "투구",
+      "experienceYears": 3,
+      "stats": {
+        "teaching": 54,
+        "analysis": 63,
+        "communication": 52,
+        "discipline": 64,
+        "leadership": 68
+      },
+      "trainingBuffs": "구속 훈련 +2%"
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

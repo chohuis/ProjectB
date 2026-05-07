@@ -1,0 +1,10 @@
+{
+  "id": "ACH_BASEBALL_10_STRIKEOUTS",
+  "title": "삼진 10개",
+  "category": "baseball",
+  "status": "active",
+  "metricKey": "strikeoutTotal",
+  "targetValue": 10,
+  "hidden": false,
+  "reward": "명성 +1"
+}

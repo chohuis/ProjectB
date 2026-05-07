@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01061",
+  "name": "무어 조너선",
+  "nameEn": "Moore Jonathan",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_HOU",
+  "teamId": "TEAM_ABL_HOU",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:베네수엘라",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 16,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 72,
+        "velocity": 74,
+        "command": 69,
+        "control": 69,
+        "movement": 74,
+        "mentality": 71,
+        "recovery": 72
+      },
+      "batting": {
+        "ovr": 94,
+        "contact": 93,
+        "power": 100,
+        "eye": 88,
+        "discipline": 92,
+        "speed": 88,
+        "fielding": 94,
+        "arm": 92,
+        "battingClutch": 93
+      },
+      "developmentRate": 34,
+      "potentialHidden": 85
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

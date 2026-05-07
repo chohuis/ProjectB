@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00416",
+  "name": "하기준",
+  "nameEn": "Noh Jae-hyun",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_INCHEON_ORCAS",
+  "teamId": "TEAM_IND_INCHEON_ORCAS",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 16,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 50,
+        "velocity": 48,
+        "command": 46,
+        "control": 49,
+        "movement": 48,
+        "mentality": 44,
+        "recovery": 45
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 75,
+        "power": 72,
+        "eye": 72,
+        "discipline": 74,
+        "speed": 73,
+        "fielding": 79,
+        "arm": 73,
+        "battingClutch": 77
+      },
+      "developmentRate": 49,
+      "potentialHidden": 56
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

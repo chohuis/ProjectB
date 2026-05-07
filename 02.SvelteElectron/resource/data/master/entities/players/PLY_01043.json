@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01043",
+  "name": "홀 빅터",
+  "nameEn": "Hall Victor",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_SEA",
+  "teamId": "TEAM_ABL_SEA_AAA",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:쿠바",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 58,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 44,
+        "velocity": 56,
+        "command": 52,
+        "control": 53,
+        "movement": 45,
+        "mentality": 53,
+        "recovery": 45
+      },
+      "batting": {
+        "ovr": 76,
+        "contact": 77,
+        "power": 76,
+        "eye": 74,
+        "discipline": 74,
+        "speed": 79,
+        "fielding": 79,
+        "arm": 77,
+        "battingClutch": 79
+      },
+      "developmentRate": 32,
+      "potentialHidden": 75
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

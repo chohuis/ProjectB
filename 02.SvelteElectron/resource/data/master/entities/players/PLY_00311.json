@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00311",
+  "name": "안성우",
+  "nameEn": "Hwang Dong-jun",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_SEOUL_PIONEERS",
+  "teamId": "TEAM_IND_SEOUL_PIONEERS",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 11,
+      "pitching": {
+        "ovr": 37,
+        "stamina": 36,
+        "velocity": 35,
+        "command": 37,
+        "control": 33,
+        "movement": 35,
+        "mentality": 40,
+        "recovery": 38
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 59,
+        "power": 65,
+        "eye": 65,
+        "discipline": 59,
+        "speed": 63,
+        "fielding": 63,
+        "arm": 64,
+        "battingClutch": 60
+      },
+      "developmentRate": 52,
+      "potentialHidden": 75
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

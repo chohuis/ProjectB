@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00146",
+  "name": "문준우",
+  "nameEn": "Choi Jin-woo",
+  "role": "player",
+  "age": 17,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "grade": 1,
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 6,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 53,
+        "velocity": 54,
+        "command": 43,
+        "control": 37,
+        "movement": 42,
+        "mentality": 48,
+        "recovery": 36
+      },
+      "batting": {
+        "ovr": 32,
+        "contact": 40,
+        "power": 44,
+        "eye": 45,
+        "discipline": 32,
+        "speed": 53,
+        "fielding": 40,
+        "arm": 46,
+        "battingClutch": 45
+      },
+      "developmentRate": 52,
+      "potentialHidden": 81
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

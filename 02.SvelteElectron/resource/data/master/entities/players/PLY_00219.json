@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00219",
+  "name": "최상현",
+  "nameEn": "Sung Ji-hoon",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_UNIVERSITY",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "TEAM_UNIV_YONSEI",
+  "teamId": "TEAM_UNIV_YONSEI",
+  "schoolId": "SCHOOL_UNIV_YONSEI",
+  "grade": 4,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 19,
+      "pitching": {
+        "ovr": 31,
+        "stamina": 29,
+        "velocity": 34,
+        "command": 26,
+        "control": 31,
+        "movement": 22,
+        "mentality": 29,
+        "recovery": 29
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 52,
+        "power": 55,
+        "eye": 53,
+        "discipline": 55,
+        "speed": 56,
+        "fielding": 54,
+        "arm": 52,
+        "battingClutch": 51
+      },
+      "developmentRate": 57,
+      "potentialHidden": 89
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01312",
+  "name": "해리스 호세",
+  "nameEn": "Harris Jose",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_CHC",
+  "teamId": "TEAM_ABL_CHC_AAA",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:도미니카",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 57,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 43,
+        "velocity": 49,
+        "command": 47,
+        "control": 48,
+        "movement": 41,
+        "mentality": 41,
+        "recovery": 46
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 70,
+        "power": 74,
+        "eye": 66,
+        "discipline": 66,
+        "speed": 70,
+        "fielding": 68,
+        "arm": 68,
+        "battingClutch": 66
+      },
+      "developmentRate": 50,
+      "potentialHidden": 85
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

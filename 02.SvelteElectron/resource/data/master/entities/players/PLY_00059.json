@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00059",
+  "name": "송동준",
+  "nameEn": "Yoon Chan-woo",
+  "role": "player",
+  "age": 17,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "grade": 1,
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 19,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 52,
+        "velocity": 60,
+        "command": 49,
+        "control": 43,
+        "movement": 40,
+        "mentality": 49,
+        "recovery": 49
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 42,
+        "power": 53,
+        "eye": 52,
+        "discipline": 42,
+        "speed": 54,
+        "fielding": 63,
+        "arm": 45,
+        "battingClutch": 55
+      },
+      "developmentRate": 58,
+      "potentialHidden": 86
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

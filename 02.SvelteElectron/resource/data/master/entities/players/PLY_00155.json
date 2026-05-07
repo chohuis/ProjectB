@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00155",
+  "name": "윤준서",
+  "nameEn": "Min Chan-woo",
+  "role": "player",
+  "age": 17,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "grade": 1,
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 15,
+      "pitching": {
+        "ovr": 25,
+        "stamina": 49,
+        "velocity": 39,
+        "command": 43,
+        "control": 36,
+        "movement": 34,
+        "mentality": 36,
+        "recovery": 46
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 51,
+        "power": 29,
+        "eye": 47,
+        "discipline": 37,
+        "speed": 39,
+        "fielding": 40,
+        "arm": 44,
+        "battingClutch": 33
+      },
+      "developmentRate": 49,
+      "potentialHidden": 66
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

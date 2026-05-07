@@ -1,0 +1,20 @@
+{
+  "id": "EVT_COND_PEAK_FORM",
+  "type": "conditional",
+  "category": "training",
+  "priority": 800,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "conditions": [
+    {
+      "type": "condition_gte",
+      "value": 88
+    },
+    {
+      "type": "morale_gte",
+      "value": 70
+    }
+  ],
+  "messageTemplateId": "MSG_COND_PEAK_FORM",
+  "decisionTemplateId": "DEC_COND_PEAK_FORM"
+}

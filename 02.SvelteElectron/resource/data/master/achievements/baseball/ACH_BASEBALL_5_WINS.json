@@ -1,0 +1,10 @@
+{
+  "id": "ACH_BASEBALL_5_WINS",
+  "title": "5승 달성",
+  "category": "baseball",
+  "status": "active",
+  "metricKey": "winsTotal",
+  "targetValue": 5,
+  "hidden": false,
+  "reward": "명성 +2"
+}

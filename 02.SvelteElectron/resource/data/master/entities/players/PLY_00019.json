@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00019",
+  "name": "조지성",
+  "nameEn": "Hong Sang-min",
+  "role": "player",
+  "age": 17,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 19,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 58,
+        "velocity": 58,
+        "command": 58,
+        "control": 59,
+        "movement": 44,
+        "mentality": 66,
+        "recovery": 62
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 58,
+        "power": 51,
+        "eye": 60,
+        "discipline": 62,
+        "speed": 65,
+        "fielding": 54,
+        "arm": 63,
+        "battingClutch": 52
+      },
+      "developmentRate": 64,
+      "potentialHidden": 65
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00027",
+  "name": "나상민",
+  "nameEn": "Son Do-yun",
+  "role": "player",
+  "age": 15,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "grade": 3,
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "CP",
+      "jerseyNumber": 7,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 59,
+        "velocity": 69,
+        "command": 57,
+        "control": 68,
+        "movement": 53,
+        "mentality": 74,
+        "recovery": 64
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 57,
+        "power": 57,
+        "eye": 59,
+        "discipline": 65,
+        "speed": 68,
+        "fielding": 61,
+        "arm": 63,
+        "battingClutch": 54
+      },
+      "developmentRate": 52,
+      "potentialHidden": 61
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

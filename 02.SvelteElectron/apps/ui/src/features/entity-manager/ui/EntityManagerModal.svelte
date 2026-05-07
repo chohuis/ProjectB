@@ -137,16 +137,8 @@
   const dispatch = createEventDispatcher<{ close: void }>();
   const ENTITY_REFS_PATH = "entities/refs.json";
 
-  // 리그별 파일 맵. 추후 KBO/ABL 확장 시 추가
-  const ENTITY_FILE_MAP: Record<string, { rel: string; local: string }> = {
-    LEAGUE_HIGHSCHOOL:  { rel: "entities/people_hs.json",   local: "dev_entities_people_hs" },
-    LEAGUE_UNIVERSITY:  { rel: "entities/people_univ.json",  local: "dev_entities_people_univ" },
-    LEAGUE_INDEPENDENT: { rel: "entities/people_ind.json",   local: "dev_entities_people_ind" },
-    LEAGUE_KBL:         { rel: "entities/people_kbl.json",   local: "dev_entities_people_kbl" },
-    LEAGUE_ABL:         { rel: "entities/people_abl.json",   local: "dev_entities_people_abl" }
-  };
-
   let activeLeagueFile = "LEAGUE_HIGHSCHOOL";
+  let entityIndex: Record<string, string[]> = {};
 
   const FALLBACK_LEAGUES: LeagueRef[] = [
     { id: "LEAGUE_HIGHSCHOOL",  name: "고교 리그", nameEn: "High School League" },
@@ -336,13 +328,13 @@
 
   function nextId(role: EntityTab): string {
     const prefix = role === "player" ? "PLY" : role === "coach" ? "COA" : role === "manager" ? "MNG" : "OWN";
-    const existingNums = rows
-      .filter((row) => row.role === role)
-      .map((row) => parseInt(row.id.replace(`${prefix}_`, ""), 10))
+    const allIds = Object.values(entityIndex).flat();
+    const existingNums = allIds
+      .filter((id) => id.startsWith(`${prefix}_`))
+      .map((id) => parseInt(id.slice(prefix.length + 1), 10))
       .filter((n) => !isNaN(n));
-    let n = existingNums.length > 0 ? Math.max(...existingNums) + 1 : 1;
-    while (rows.some((row) => row.id === `${prefix}_${String(n).padStart(3, "0")}`)) n += 1;
-    return `${prefix}_${String(n).padStart(3, "0")}`;
+    const n = existingNums.length > 0 ? Math.max(...existingNums) + 1 : 1;
+    return `${prefix}_${String(n).padStart(5, "0")}`;
   }
 
   function defaultTeamId(leagueId: string): string {
@@ -522,26 +514,25 @@
     };
   }
 
-  function currentFile() {
-    return ENTITY_FILE_MAP[activeLeagueFile] ?? ENTITY_FILE_MAP["LEAGUE_HIGHSCHOOL"];
-  }
-
   async function loadEntities() {
     persistMessage = "";
     persistError = "";
     persistValidationErrors = [];
-    const { rel } = currentFile();
     try {
-      const remote = await window.projectB?.masterFetch?.(rel);
-      const maybe = remote as { entities?: unknown[] } | null | undefined;
-      if (maybe?.entities && Array.isArray(maybe.entities)) {
-        rows = maybe.entities.map((item) => normalizeEntity(item));
-        persistMessage = `[${rel}] 파일에서 ${rows.length}건을 불러왔습니다.`;
+      const indexData = await window.projectB?.masterFetch?.("entities/players/_index.json");
+      const maybe = indexData as { byLeague?: Record<string, string[]> } | null | undefined;
+      if (maybe?.byLeague) entityIndex = maybe.byLeague;
+      const ids = entityIndex[activeLeagueFile] ?? [];
+      if (ids.length === 0) {
+        rows = [];
+        persistMessage = `[${activeLeagueFile}] 등록된 데이터가 없습니다. 추가 버튼으로 새 항목을 등록하세요.`;
         return;
       }
-
-      rows = [];
-      persistMessage = `[${rel}] 등록된 데이터가 없습니다. 추가 버튼으로 새 항목을 등록하세요.`;
+      const fetched = await Promise.all(
+        ids.map((id) => window.projectB?.masterFetch?.(`entities/players/${id}.json`))
+      );
+      rows = fetched.filter(Boolean).map((item) => normalizeEntity(item));
+      persistMessage = `[${activeLeagueFile}] ${rows.length}건 로드됨`;
     } catch (error) {
       persistError = `불러오기 실패: ${String((error as Error)?.message ?? error)}`;
     }
@@ -551,7 +542,6 @@
     persistMessage = "";
     persistError = "";
     persistValidationErrors = [];
-    const { rel } = currentFile();
     try {
       const invalidRows = rows
         .map((row) => ({ id: row.id, issues: validateEntity(row, false) }))
@@ -562,19 +552,31 @@
         return;
       }
 
-      const payload = { version: 1, sourceLeague: activeLeagueFile, entities: rows };
-
       if (!window.projectB?.masterSave) {
         persistError = "masterSave API를 사용할 수 없습니다. 개발자 모드/IPC 연결 상태를 확인하세요.";
         return;
       }
-      const result = await window.projectB.masterSave({ relPath: rel, data: payload, backup: true });
-      if (!result?.ok) {
-        persistError = `파일 저장 실패: ${result?.error ?? "알 수 없는 오류"}`;
+
+      for (const row of rows) {
+        const result = await window.projectB.masterSave({ relPath: `entities/players/${row.id}.json`, data: row, backup: false });
+        if (!result?.ok) {
+          persistError = `파일 저장 실패 [${row.id}]: ${result?.error ?? "알 수 없는 오류"}`;
+          return;
+        }
+      }
+
+      const idxRaw = await window.projectB?.masterFetch?.("entities/players/_index.json");
+      const idx = (idxRaw as { generated?: string; byLeague?: Record<string, string[]> }) ?? { generated: "", byLeague: {} };
+      if (!idx.byLeague) idx.byLeague = {};
+      idx.byLeague[activeLeagueFile] = rows.map((r) => r.id);
+      idx.generated = new Date().toISOString();
+      entityIndex = { ...idx.byLeague };
+      const idxResult = await window.projectB.masterSave({ relPath: "entities/players/_index.json", data: idx, backup: false });
+      if (!idxResult?.ok) {
+        persistError = `인덱스 저장 실패: ${idxResult?.error ?? "알 수 없는 오류"}`;
         return;
       }
-      persistMessage = `[${rel}] 저장 완료 (${rows.length}건, 백업 생성)`;
-      await loadEntities();
+      persistMessage = `[${activeLeagueFile}] 저장 완료 (${rows.length}건)`;
     } catch (error) {
       persistError = `저장 실패: ${String((error as Error)?.message ?? error)}`;
     }
@@ -672,8 +674,8 @@
             bind:value={activeLeagueFile}
             on:change={loadEntities}
           >
-            {#each Object.keys(ENTITY_FILE_MAP) as leagueId}
-              <option value={leagueId}>{leagues.find((l) => l.id === leagueId)?.name ?? leagueId}</option>
+            {#each FALLBACK_LEAGUES as league}
+              <option value={league.id}>{leagues.find((l) => l.id === league.id)?.name ?? league.id}</option>
             {/each}
           </select>
         </div>

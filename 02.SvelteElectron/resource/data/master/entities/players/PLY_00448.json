@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00448",
+  "name": "윤상현",
+  "nameEn": "Kang Ji-ho",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_ULSAN_PHOENIX",
+  "teamId": "TEAM_IND_ULSAN_PHOENIX",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 8,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 46,
+        "velocity": 57,
+        "command": 56,
+        "control": 55,
+        "movement": 53,
+        "mentality": 57,
+        "recovery": 58
+      },
+      "batting": {
+        "ovr": 25,
+        "contact": 26,
+        "power": 28,
+        "eye": 27,
+        "discipline": 22,
+        "speed": 22,
+        "fielding": 23,
+        "arm": 22,
+        "battingClutch": 22
+      },
+      "developmentRate": 42,
+      "potentialHidden": 86
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

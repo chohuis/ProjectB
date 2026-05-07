@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00290",
+  "name": "최준호",
+  "nameEn": "Kim Jun-woo",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_UNIVERSITY",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "TEAM_UNIV_DONGGUK",
+  "teamId": "TEAM_UNIV_DONGGUK",
+  "schoolId": "SCHOOL_UNIV_DONGGUK",
+  "grade": 2,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 10,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 50,
+        "velocity": 71,
+        "command": 63,
+        "control": 65,
+        "movement": 67,
+        "mentality": 65,
+        "recovery": 68
+      },
+      "batting": {
+        "ovr": 35,
+        "contact": 40,
+        "power": 37,
+        "eye": 32,
+        "discipline": 34,
+        "speed": 34,
+        "fielding": 38,
+        "arm": 34,
+        "battingClutch": 39
+      },
+      "developmentRate": 60,
+      "potentialHidden": 89
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00391",
+  "name": "서재원",
+  "nameEn": "Ku Jae-hyun",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_DAEJEON_HUNTERS",
+  "teamId": "TEAM_IND_DAEJEON_HUNTERS",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 11,
+      "pitching": {
+        "ovr": 30,
+        "stamina": 24,
+        "velocity": 25,
+        "command": 29,
+        "control": 23,
+        "movement": 24,
+        "mentality": 24,
+        "recovery": 26
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 51,
+        "power": 58,
+        "eye": 52,
+        "discipline": 56,
+        "speed": 54,
+        "fielding": 51,
+        "arm": 53,
+        "battingClutch": 51
+      },
+      "developmentRate": 45,
+      "potentialHidden": 57
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

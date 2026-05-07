@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00072",
+  "name": "정기준",
+  "nameEn": "Moon Ji-hoo",
+  "role": "player",
+  "age": 15,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "grade": 3,
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 12,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 58,
+        "velocity": 64,
+        "command": 60,
+        "control": 63,
+        "movement": 64,
+        "mentality": 57,
+        "recovery": 56
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 64,
+        "power": 63,
+        "eye": 61,
+        "discipline": 56,
+        "speed": 53,
+        "fielding": 68,
+        "arm": 62,
+        "battingClutch": 61
+      },
+      "developmentRate": 55,
+      "potentialHidden": 66
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00249",
+  "name": "송민준",
+  "nameEn": "Cho Tae-woo",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_UNIVERSITY",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "TEAM_UNIV_HANYANG",
+  "teamId": "TEAM_UNIV_HANYANG",
+  "schoolId": "SCHOOL_UNIV_HANYANG",
+  "grade": 2,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "CP",
+      "jerseyNumber": 9,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 55,
+        "velocity": 68,
+        "command": 63,
+        "control": 63,
+        "movement": 65,
+        "mentality": 62,
+        "recovery": 58
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 34,
+        "power": 39,
+        "eye": 34,
+        "discipline": 33,
+        "speed": 37,
+        "fielding": 38,
+        "arm": 32,
+        "battingClutch": 37
+      },
+      "developmentRate": 62,
+      "potentialHidden": 69
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

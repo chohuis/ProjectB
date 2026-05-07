@@ -1,0 +1,22 @@
+{
+  "id": "EVT_RAND_SPORTS_MEDIA",
+  "type": "random",
+  "category": "media",
+  "priority": 280,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "weight": 20,
+  "poolId": "POOL_MEDIA_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "pitching_ovr_gte",
+      "value": 60
+    }
+  ],
+  "messageTemplateId": "MSG_RAND_SPORTS_MEDIA",
+  "decisionTemplateId": null
+}

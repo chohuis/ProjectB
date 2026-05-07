@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00017",
+  "name": "고우진",
+  "nameEn": "Han Tae-hyun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "grade": 2,
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 17,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 67,
+        "velocity": 56,
+        "command": 66,
+        "control": 63,
+        "movement": 56,
+        "mentality": 57,
+        "recovery": 68
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 70,
+        "power": 58,
+        "eye": 58,
+        "discipline": 63,
+        "speed": 59,
+        "fielding": 57,
+        "arm": 69,
+        "battingClutch": 55
+      },
+      "developmentRate": 64,
+      "potentialHidden": 63
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

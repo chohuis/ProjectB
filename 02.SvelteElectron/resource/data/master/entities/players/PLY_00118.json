@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00118",
+  "name": "정재원",
+  "nameEn": "Oh Yeon-woo",
+  "role": "player",
+  "age": 17,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "grade": 2,
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 18,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 60,
+        "velocity": 54,
+        "command": 48,
+        "control": 50,
+        "movement": 44,
+        "mentality": 65,
+        "recovery": 58
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 43,
+        "power": 48,
+        "eye": 59,
+        "discipline": 41,
+        "speed": 64,
+        "fielding": 50,
+        "arm": 64,
+        "battingClutch": 45
+      },
+      "developmentRate": 74,
+      "potentialHidden": 61
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00213",
+  "name": "김태현",
+  "nameEn": "Choi Woo-jin",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_UNIVERSITY",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "TEAM_UNIV_YONSEI",
+  "teamId": "TEAM_UNIV_YONSEI",
+  "schoolId": "SCHOOL_UNIV_YONSEI",
+  "grade": 3,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 13,
+      "pitching": {
+        "ovr": 31,
+        "stamina": 28,
+        "velocity": 32,
+        "command": 29,
+        "control": 35,
+        "movement": 31,
+        "mentality": 34,
+        "recovery": 28
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 64,
+        "power": 71,
+        "eye": 64,
+        "discipline": 59,
+        "speed": 57,
+        "fielding": 60,
+        "arm": 61,
+        "battingClutch": 60
+      },
+      "developmentRate": 51,
+      "potentialHidden": 64
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

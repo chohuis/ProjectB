@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01497",
+  "name": "스미스 크리스토퍼",
+  "nameEn": "Smith Christopher",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_BAL",
+  "teamId": "TEAM_ABL_BAL",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:한국",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 2,
+      "pitching": {
+        "ovr": 87,
+        "stamina": 91,
+        "velocity": 88,
+        "command": 85,
+        "control": 83,
+        "movement": 86,
+        "mentality": 81,
+        "recovery": 85
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 57,
+        "power": 55,
+        "eye": 57,
+        "discipline": 54,
+        "speed": 58,
+        "fielding": 57,
+        "arm": 54,
+        "battingClutch": 60
+      },
+      "developmentRate": 46,
+      "potentialHidden": 76
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

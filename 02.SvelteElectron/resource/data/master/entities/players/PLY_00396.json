@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00396",
+  "name": "홍재윤",
+  "nameEn": "Oh Min-hyuk",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_DAEJEON_HUNTERS",
+  "teamId": "TEAM_IND_DAEJEON_HUNTERS",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 16,
+      "pitching": {
+        "ovr": 22,
+        "stamina": 22,
+        "velocity": 27,
+        "command": 22,
+        "control": 20,
+        "movement": 20,
+        "mentality": 24,
+        "recovery": 19
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 60,
+        "power": 52,
+        "eye": 58,
+        "discipline": 57,
+        "speed": 56,
+        "fielding": 58,
+        "arm": 51,
+        "battingClutch": 59
+      },
+      "developmentRate": 40,
+      "potentialHidden": 57
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

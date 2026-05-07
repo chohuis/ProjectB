@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01328",
+  "name": "토레스 앤서니",
+  "nameEn": "Torres Anthony",
+  "role": "player",
+  "age": 42,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_STL",
+  "teamId": "TEAM_ABL_STL",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:한국",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 13,
+      "pitching": {
+        "ovr": 90,
+        "stamina": 83,
+        "velocity": 96,
+        "command": 95,
+        "control": 93,
+        "movement": 96,
+        "mentality": 96,
+        "recovery": 91
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 68,
+        "power": 64,
+        "eye": 70,
+        "discipline": 69,
+        "speed": 70,
+        "fielding": 70,
+        "arm": 66,
+        "battingClutch": 68
+      },
+      "developmentRate": 35,
+      "potentialHidden": 76
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

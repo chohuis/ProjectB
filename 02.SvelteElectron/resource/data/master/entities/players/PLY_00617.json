@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00617",
+  "name": "하정우",
+  "nameEn": "Kim Jun-woo",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_KBL",
+  "clubId": "CLUB_KBL_DOOSAN",
+  "teamId": "TEAM_KBL_DOOSAN_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 22,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 56,
+        "velocity": 55,
+        "command": 56,
+        "control": 52,
+        "movement": 51,
+        "mentality": 50,
+        "recovery": 56
+      },
+      "batting": {
+        "ovr": 85,
+        "contact": 90,
+        "power": 87,
+        "eye": 88,
+        "discipline": 89,
+        "speed": 89,
+        "fielding": 86,
+        "arm": 83,
+        "battingClutch": 87
+      },
+      "developmentRate": 39,
+      "potentialHidden": 79
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

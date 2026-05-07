@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00066",
+  "name": "오재민",
+  "nameEn": "Jung Won-jun",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "grade": 1,
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 6,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 46,
+        "velocity": 43,
+        "command": 54,
+        "control": 46,
+        "movement": 53,
+        "mentality": 57,
+        "recovery": 46
+      },
+      "batting": {
+        "ovr": 30,
+        "contact": 47,
+        "power": 49,
+        "eye": 50,
+        "discipline": 38,
+        "speed": 49,
+        "fielding": 53,
+        "arm": 50,
+        "battingClutch": 43
+      },
+      "developmentRate": 65,
+      "potentialHidden": 60
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

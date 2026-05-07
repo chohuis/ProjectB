@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01396",
+  "name": "영 루카스",
+  "nameEn": "Young Lucas",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_SD",
+  "teamId": "TEAM_ABL_SD_AAA",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:도미니카",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 51,
+      "pitching": {
+        "ovr": 35,
+        "stamina": 28,
+        "velocity": 35,
+        "command": 31,
+        "control": 30,
+        "movement": 33,
+        "mentality": 32,
+        "recovery": 30
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 64,
+        "power": 68,
+        "eye": 69,
+        "discipline": 63,
+        "speed": 67,
+        "fielding": 71,
+        "arm": 68,
+        "battingClutch": 69
+      },
+      "developmentRate": 50,
+      "potentialHidden": 77
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

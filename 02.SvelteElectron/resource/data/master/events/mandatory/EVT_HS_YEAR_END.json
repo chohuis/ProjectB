@@ -1,0 +1,19 @@
+{
+  "id": "EVT_HS_YEAR_END",
+  "type": "mandatory",
+  "category": "season",
+  "priority": 900,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "week_eq",
+      "value": 50
+    },
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    }
+  ],
+  "messageTemplateId": "MSG_HS_YEAR_END",
+  "decisionTemplateId": null
+}

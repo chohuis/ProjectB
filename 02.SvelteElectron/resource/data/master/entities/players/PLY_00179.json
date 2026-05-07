@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00179",
+  "name": "우지성",
+  "nameEn": "Kang Ji-hoon",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_UNIVERSITY",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "TEAM_UNIV_KNSU",
+  "teamId": "TEAM_UNIV_KNSU",
+  "schoolId": "SCHOOL_UNIV_KNSU",
+  "grade": 4,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 19,
+      "pitching": {
+        "ovr": 34,
+        "stamina": 27,
+        "velocity": 35,
+        "command": 29,
+        "control": 29,
+        "movement": 27,
+        "mentality": 32,
+        "recovery": 32
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 54,
+        "power": 59,
+        "eye": 58,
+        "discipline": 59,
+        "speed": 56,
+        "fielding": 56,
+        "arm": 53,
+        "battingClutch": 54
+      },
+      "developmentRate": 63,
+      "potentialHidden": 69
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

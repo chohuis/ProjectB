@@ -1,0 +1,10 @@
+{
+  "id": "ACH_BASEBALL_FIRST_STRIKEOUT",
+  "title": "첫 삼진",
+  "category": "baseball",
+  "status": "active",
+  "metricKey": "strikeoutTotal",
+  "targetValue": 1,
+  "hidden": false,
+  "reward": "명성 +1"
+}

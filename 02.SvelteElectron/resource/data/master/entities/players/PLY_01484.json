@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01484",
+  "name": "리 마르코",
+  "nameEn": "Lee Marco",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_ARI",
+  "teamId": "TEAM_ABL_ARI_AAA",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:도미니카",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 49,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 58,
+        "velocity": 75,
+        "command": 75,
+        "control": 73,
+        "movement": 75,
+        "mentality": 70,
+        "recovery": 73
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 49,
+        "power": 47,
+        "eye": 43,
+        "discipline": 40,
+        "speed": 48,
+        "fielding": 44,
+        "arm": 40,
+        "battingClutch": 41
+      },
+      "developmentRate": 47,
+      "potentialHidden": 78
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

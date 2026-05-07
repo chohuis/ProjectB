@@ -1,0 +1,13 @@
+{
+  "id": "EVT_RAND_SOCIAL_MEDIA_MENTION",
+  "type": "random",
+  "category": "social",
+  "priority": 260,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 1,
+  "weight": 25,
+  "poolId": "POOL_SOCIAL_DAILY",
+  "conditions": [],
+  "messageTemplateId": "MSG_RAND_SOCIAL_MEDIA_MENTION",
+  "decisionTemplateId": null
+}

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00489",
+  "name": "주현우",
+  "nameEn": "Moon Won-jun",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_KBL",
+  "clubId": "CLUB_KBL_KIA",
+  "teamId": "TEAM_KBL_KIA_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 34,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 58,
+        "velocity": 63,
+        "command": 62,
+        "control": 60,
+        "movement": 57,
+        "mentality": 56,
+        "recovery": 57
+      },
+      "batting": {
+        "ovr": 32,
+        "contact": 35,
+        "power": 37,
+        "eye": 36,
+        "discipline": 36,
+        "speed": 35,
+        "fielding": 30,
+        "arm": 38,
+        "battingClutch": 32
+      },
+      "developmentRate": 48,
+      "potentialHidden": 68
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00049",
+  "name": "우준영",
+  "nameEn": "Kang Yong-jun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "grade": 2,
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 9,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 67,
+        "velocity": 53,
+        "command": 58,
+        "control": 50,
+        "movement": 50,
+        "mentality": 62,
+        "recovery": 61
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 60,
+        "power": 45,
+        "eye": 44,
+        "discipline": 58,
+        "speed": 52,
+        "fielding": 63,
+        "arm": 49,
+        "battingClutch": 46
+      },
+      "developmentRate": 75,
+      "potentialHidden": 69
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "id": "EVT_HS_SEASON_OPEN",
+  "type": "mandatory",
+  "category": "season",
+  "priority": 1000,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "week_eq",
+      "value": 4
+    },
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    }
+  ],
+  "messageTemplateId": "MSG_HS_SEASON_OPEN",
+  "decisionTemplateId": null
+}

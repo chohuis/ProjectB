@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00420",
+  "name": "신지후",
+  "nameEn": "Nam Jae-min",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_INCHEON_ORCAS",
+  "teamId": "TEAM_IND_INCHEON_ORCAS",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "DH",
+      "jerseyNumber": 20,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 47,
+        "velocity": 52,
+        "command": 46,
+        "control": 45,
+        "movement": 44,
+        "mentality": 48,
+        "recovery": 42
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 78,
+        "power": 75,
+        "eye": 75,
+        "discipline": 69,
+        "speed": 66,
+        "fielding": 66,
+        "arm": 73,
+        "battingClutch": 74
+      },
+      "developmentRate": 48,
+      "potentialHidden": 61
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

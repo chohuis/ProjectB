@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01139",
+  "name": "스미스 후안",
+  "nameEn": "Smith Juan",
+  "role": "player",
+  "age": 37,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_ATL",
+  "teamId": "TEAM_ABL_ATL",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:도미니카",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 4,
+      "pitching": {
+        "ovr": 89,
+        "stamina": 87,
+        "velocity": 94,
+        "command": 86,
+        "control": 87,
+        "movement": 85,
+        "mentality": 85,
+        "recovery": 84
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 66,
+        "power": 67,
+        "eye": 64,
+        "discipline": 64,
+        "speed": 60,
+        "fielding": 62,
+        "arm": 68,
+        "battingClutch": 69
+      },
+      "developmentRate": 35,
+      "potentialHidden": 70
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

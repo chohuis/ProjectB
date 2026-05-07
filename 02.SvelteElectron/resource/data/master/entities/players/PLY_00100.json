@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00100",
+  "name": "안동우",
+  "nameEn": "Choi Jae-hoon",
+  "role": "player",
+  "age": 15,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "grade": 3,
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "DH",
+      "jerseyNumber": 20,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 56,
+        "velocity": 59,
+        "command": 51,
+        "control": 61,
+        "movement": 59,
+        "mentality": 57,
+        "recovery": 67
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 60,
+        "power": 51,
+        "eye": 48,
+        "discipline": 53,
+        "speed": 53,
+        "fielding": 51,
+        "arm": 67,
+        "battingClutch": 48
+      },
+      "developmentRate": 51,
+      "potentialHidden": 68
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

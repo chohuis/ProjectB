@@ -64,6 +64,32 @@
       ],
       "messageTemplateId": "MSG_COND_TEAM_SUCCESS",
       "decisionTemplateId": null
+    },
+    {
+      "id": "EVT_TRADE_RUMOR",
+      "type": "conditional",
+      "category": "career",
+      "priority": 640,
+      "oncePolicy": "repeatable",
+      "cooldownWeeks": 4,
+      "conditions": [
+        { "type": "week_gte", "value": 12 }
+      ],
+      "messageTemplateId": null,
+      "decisionTemplateId": null
+    },
+    {
+      "id": "EVT_TRADE_CONFIRMED",
+      "type": "conditional",
+      "category": "career",
+      "priority": 650,
+      "oncePolicy": "repeatable",
+      "cooldownWeeks": 4,
+      "conditions": [
+        { "type": "week_gte", "value": 12 }
+      ],
+      "messageTemplateId": null,
+      "decisionTemplateId": null
     }
   ]
 }

@@ -1,0 +1,16 @@
+{
+  "id": "EVT_COND_SLUMP",
+  "type": "conditional",
+  "category": "mental",
+  "priority": 850,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 4,
+  "conditions": [
+    {
+      "type": "morale_lte",
+      "value": 38
+    }
+  ],
+  "messageTemplateId": "MSG_COND_SLUMP",
+  "decisionTemplateId": "DEC_COND_SLUMP"
+}

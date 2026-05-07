@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00061",
+  "name": "허준혁",
+  "nameEn": "Cho Tae-woo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "grade": 3,
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 1,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 68,
+        "velocity": 59,
+        "command": 53,
+        "control": 62,
+        "movement": 53,
+        "mentality": 62,
+        "recovery": 59
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 62,
+        "power": 54,
+        "eye": 66,
+        "discipline": 58,
+        "speed": 63,
+        "fielding": 60,
+        "arm": 55,
+        "battingClutch": 51
+      },
+      "developmentRate": 63,
+      "potentialHidden": 82
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

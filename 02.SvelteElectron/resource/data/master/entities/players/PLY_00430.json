@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00430",
+  "name": "성준서",
+  "nameEn": "Na Hyun-woo",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_SUWON_BLAZE",
+  "teamId": "TEAM_IND_SUWON_BLAZE",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "CP",
+      "jerseyNumber": 10,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 49,
+        "velocity": 65,
+        "command": 62,
+        "control": 61,
+        "movement": 59,
+        "mentality": 59,
+        "recovery": 56
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 41,
+        "power": 39,
+        "eye": 32,
+        "discipline": 39,
+        "speed": 38,
+        "fielding": 34,
+        "arm": 33,
+        "battingClutch": 36
+      },
+      "developmentRate": 52,
+      "potentialHidden": 85
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

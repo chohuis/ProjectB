@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00519",
+  "name": "곽동우",
+  "nameEn": "Noh Sang-hyun",
+  "role": "player",
+  "age": 36,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_KBL",
+  "clubId": "CLUB_KBL_SAMSUNG",
+  "teamId": "TEAM_KBL_SAMSUNG_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 14,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 42,
+        "velocity": 43,
+        "command": 47,
+        "control": 45,
+        "movement": 46,
+        "mentality": 40,
+        "recovery": 39
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 73,
+        "power": 79,
+        "eye": 74,
+        "discipline": 74,
+        "speed": 67,
+        "fielding": 74,
+        "arm": 74,
+        "battingClutch": 71
+      },
+      "developmentRate": 47,
+      "potentialHidden": 89
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

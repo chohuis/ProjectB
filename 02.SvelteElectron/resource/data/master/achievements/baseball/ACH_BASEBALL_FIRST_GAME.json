@@ -1,0 +1,10 @@
+{
+  "id": "ACH_BASEBALL_FIRST_GAME",
+  "title": "첫 출전",
+  "category": "baseball",
+  "status": "active",
+  "metricKey": "gamesPlayedTotal",
+  "targetValue": 1,
+  "hidden": false,
+  "reward": "경험 +1"
+}

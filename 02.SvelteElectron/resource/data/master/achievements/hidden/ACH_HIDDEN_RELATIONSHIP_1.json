@@ -1,0 +1,10 @@
+{
+  "id": "ACH_HIDDEN_RELATIONSHIP_1",
+  "title": "첫 고백",
+  "category": "hidden",
+  "status": "blocked",
+  "metricKey": "relationshipStep",
+  "targetValue": 1,
+  "hidden": true,
+  "reward": "특수 이벤트 해금"
+}

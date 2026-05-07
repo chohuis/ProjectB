@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00586",
+  "name": "권주원",
+  "nameEn": "Lee Jun-young",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_KBL",
+  "clubId": "CLUB_KBL_LG",
+  "teamId": "TEAM_KBL_LG_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 41,
+      "pitching": {
+        "ovr": 36,
+        "stamina": 33,
+        "velocity": 40,
+        "command": 35,
+        "control": 41,
+        "movement": 34,
+        "mentality": 40,
+        "recovery": 40
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 71,
+        "power": 73,
+        "eye": 73,
+        "discipline": 75,
+        "speed": 66,
+        "fielding": 73,
+        "arm": 79,
+        "battingClutch": 68
+      },
+      "developmentRate": 44,
+      "potentialHidden": 71
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

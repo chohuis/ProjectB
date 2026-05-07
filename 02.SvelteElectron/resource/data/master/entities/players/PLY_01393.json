@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01393",
+  "name": "윌슨 앤서니",
+  "nameEn": "Wilson Anthony",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_SD",
+  "teamId": "TEAM_ABL_SD_AAA",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 48,
+      "pitching": {
+        "ovr": 82,
+        "stamina": 75,
+        "velocity": 79,
+        "command": 75,
+        "control": 76,
+        "movement": 74,
+        "mentality": 82,
+        "recovery": 77
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 51,
+        "power": 53,
+        "eye": 48,
+        "discipline": 51,
+        "speed": 55,
+        "fielding": 48,
+        "arm": 53,
+        "battingClutch": 56
+      },
+      "developmentRate": 47,
+      "potentialHidden": 82
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

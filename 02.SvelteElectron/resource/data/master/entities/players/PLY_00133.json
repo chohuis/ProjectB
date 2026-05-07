@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00133",
+  "name": "양지성",
+  "nameEn": "You Sang-hyun",
+  "role": "player",
+  "age": 17,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "grade": 2,
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 13,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 54,
+        "velocity": 62,
+        "command": 46,
+        "control": 49,
+        "movement": 50,
+        "mentality": 47,
+        "recovery": 52
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 46,
+        "power": 51,
+        "eye": 56,
+        "discipline": 56,
+        "speed": 48,
+        "fielding": 54,
+        "arm": 57,
+        "battingClutch": 58
+      },
+      "developmentRate": 50,
+      "potentialHidden": 69
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

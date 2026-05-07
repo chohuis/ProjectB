@@ -1,0 +1,10 @@
+{
+  "id": "ACH_GROWTH_WEEK_52",
+  "title": "1년 훈련",
+  "category": "growth",
+  "status": "active",
+  "metricKey": "trainingWeeksTotal",
+  "targetValue": 52,
+  "hidden": false,
+  "reward": "잠재력 +1"
+}

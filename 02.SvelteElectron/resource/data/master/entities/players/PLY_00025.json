@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00025",
+  "name": "고태준",
+  "nameEn": "Jung Seung-min",
+  "role": "player",
+  "age": 17,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "grade": 2,
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 5,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 65,
+        "velocity": 58,
+        "command": 61,
+        "control": 49,
+        "movement": 51,
+        "mentality": 62,
+        "recovery": 61
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 56,
+        "power": 59,
+        "eye": 57,
+        "discipline": 53,
+        "speed": 51,
+        "fielding": 67,
+        "arm": 53,
+        "battingClutch": 56
+      },
+      "developmentRate": 74,
+      "potentialHidden": 60
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

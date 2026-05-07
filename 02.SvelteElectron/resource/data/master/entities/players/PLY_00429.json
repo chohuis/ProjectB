@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00429",
+  "name": "심준혁",
+  "nameEn": "Cha Ju-won",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_SUWON_BLAZE",
+  "teamId": "TEAM_IND_SUWON_BLAZE",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 9,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 58,
+        "velocity": 76,
+        "command": 69,
+        "control": 68,
+        "movement": 67,
+        "mentality": 68,
+        "recovery": 64
+      },
+      "batting": {
+        "ovr": 34,
+        "contact": 35,
+        "power": 36,
+        "eye": 38,
+        "discipline": 38,
+        "speed": 35,
+        "fielding": 36,
+        "arm": 35,
+        "battingClutch": 36
+      },
+      "developmentRate": 49,
+      "potentialHidden": 84
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

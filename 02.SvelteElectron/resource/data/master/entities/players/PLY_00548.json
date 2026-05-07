@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00548",
+  "name": "송준호",
+  "nameEn": "Cha Won-jun",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_KBL",
+  "clubId": "CLUB_KBL_SAMSUNG",
+  "teamId": "TEAM_KBL_SAMSUNG_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 48,
+      "pitching": {
+        "ovr": 30,
+        "stamina": 29,
+        "velocity": 35,
+        "command": 29,
+        "control": 31,
+        "movement": 31,
+        "mentality": 26,
+        "recovery": 31
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 59,
+        "power": 55,
+        "eye": 55,
+        "discipline": 57,
+        "speed": 65,
+        "fielding": 56,
+        "arm": 58,
+        "battingClutch": 56
+      },
+      "developmentRate": 51,
+      "potentialHidden": 79
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

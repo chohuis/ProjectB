@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00922",
+  "name": "윌슨 브랜던",
+  "nameEn": "Wilson Brandon",
+  "role": "player",
+  "age": 36,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_BOS",
+  "teamId": "TEAM_ABL_BOS",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:베네수엘라",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 12,
+      "pitching": {
+        "ovr": 93,
+        "stamina": 78,
+        "velocity": 100,
+        "command": 93,
+        "control": 99,
+        "movement": 96,
+        "mentality": 93,
+        "recovery": 95
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 68,
+        "power": 75,
+        "eye": 71,
+        "discipline": 68,
+        "speed": 71,
+        "fielding": 67,
+        "arm": 71,
+        "battingClutch": 70
+      },
+      "developmentRate": 33,
+      "potentialHidden": 58
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

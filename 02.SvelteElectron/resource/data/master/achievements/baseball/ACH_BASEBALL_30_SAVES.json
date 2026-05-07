@@ -1,0 +1,10 @@
+{
+  "id": "ACH_BASEBALL_30_SAVES",
+  "title": "믿을 수 있는 마무리",
+  "category": "baseball",
+  "status": "active",
+  "metricKey": "saveTotal",
+  "targetValue": 30,
+  "hidden": false,
+  "reward": "명성 +12"
+}

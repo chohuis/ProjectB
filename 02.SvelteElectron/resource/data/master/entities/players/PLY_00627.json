@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00627",
+  "name": "고도윤",
+  "nameEn": "You Seong-woo",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_KBL",
+  "clubId": "CLUB_KBL_DOOSAN",
+  "teamId": "TEAM_KBL_DOOSAN_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 37,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 54,
+        "velocity": 68,
+        "command": 58,
+        "control": 57,
+        "movement": 62,
+        "mentality": 60,
+        "recovery": 60
+      },
+      "batting": {
+        "ovr": 24,
+        "contact": 29,
+        "power": 24,
+        "eye": 28,
+        "discipline": 24,
+        "speed": 25,
+        "fielding": 25,
+        "arm": 23,
+        "battingClutch": 25
+      },
+      "developmentRate": 47,
+      "potentialHidden": 82
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

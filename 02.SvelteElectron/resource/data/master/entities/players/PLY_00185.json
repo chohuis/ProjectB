@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00185",
+  "name": "송재민",
+  "nameEn": "Min Jae-won",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_UNIVERSITY",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "TEAM_UNIV_KNU",
+  "teamId": "TEAM_UNIV_KNU",
+  "schoolId": "SCHOOL_UNIV_KNU",
+  "grade": 1,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 5,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 42,
+        "velocity": 57,
+        "command": 51,
+        "control": 49,
+        "movement": 53,
+        "mentality": 54,
+        "recovery": 48
+      },
+      "batting": {
+        "ovr": 21,
+        "contact": 23,
+        "power": 21,
+        "eye": 22,
+        "discipline": 23,
+        "speed": 27,
+        "fielding": 22,
+        "arm": 26,
+        "battingClutch": 23
+      },
+      "developmentRate": 49,
+      "potentialHidden": 82
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

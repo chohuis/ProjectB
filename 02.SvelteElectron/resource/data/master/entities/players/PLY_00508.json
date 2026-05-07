@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00508",
+  "name": "차현준",
+  "nameEn": "Kwak Ji-ho",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_KBL",
+  "clubId": "CLUB_KBL_SAMSUNG",
+  "teamId": "TEAM_KBL_SAMSUNG_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 3,
+      "pitching": {
+        "ovr": 81,
+        "stamina": 88,
+        "velocity": 85,
+        "command": 84,
+        "control": 84,
+        "movement": 79,
+        "mentality": 83,
+        "recovery": 78
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 53,
+        "power": 51,
+        "eye": 50,
+        "discipline": 48,
+        "speed": 52,
+        "fielding": 50,
+        "arm": 51,
+        "battingClutch": 51
+      },
+      "developmentRate": 42,
+      "potentialHidden": 56
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00657",
+  "name": "성하준",
+  "nameEn": "Na Jae-hoon",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_KBL",
+  "clubId": "CLUB_KBL_KT",
+  "teamId": "TEAM_KBL_KT_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 17,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 62,
+        "velocity": 63,
+        "command": 63,
+        "control": 58,
+        "movement": 55,
+        "mentality": 63,
+        "recovery": 59
+      },
+      "batting": {
+        "ovr": 83,
+        "contact": 86,
+        "power": 79,
+        "eye": 85,
+        "discipline": 83,
+        "speed": 85,
+        "fielding": 84,
+        "arm": 81,
+        "battingClutch": 85
+      },
+      "developmentRate": 39,
+      "potentialHidden": 83
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

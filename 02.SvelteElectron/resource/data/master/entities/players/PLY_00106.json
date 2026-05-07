@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00106",
+  "name": "안지원",
+  "nameEn": "Jung Dong-hyun",
+  "role": "player",
+  "age": 17,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "RP",
+      "jerseyNumber": 6,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 51,
+        "velocity": 51,
+        "command": 50,
+        "control": 54,
+        "movement": 40,
+        "mentality": 45,
+        "recovery": 53
+      },
+      "batting": {
+        "ovr": 33,
+        "contact": 55,
+        "power": 38,
+        "eye": 49,
+        "discipline": 37,
+        "speed": 43,
+        "fielding": 48,
+        "arm": 60,
+        "battingClutch": 56
+      },
+      "developmentRate": 74,
+      "potentialHidden": 70
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00473",
+  "name": "성태민",
+  "nameEn": "Oh Tae-hyun",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_KBL",
+  "clubId": "CLUB_KBL_KIA",
+  "teamId": "TEAM_KBL_KIA_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "CP",
+      "jerseyNumber": 13,
+      "pitching": {
+        "ovr": 89,
+        "stamina": 69,
+        "velocity": 94,
+        "command": 84,
+        "control": 89,
+        "movement": 82,
+        "mentality": 81,
+        "recovery": 79
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 56,
+        "power": 54,
+        "eye": 49,
+        "discipline": 53,
+        "speed": 56,
+        "fielding": 52,
+        "arm": 55,
+        "battingClutch": 52
+      },
+      "developmentRate": 36,
+      "potentialHidden": 57
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

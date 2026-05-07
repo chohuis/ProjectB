@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00105",
+  "name": "남재원",
+  "nameEn": "Sim Tae-min",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "grade": 2,
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 5,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 55,
+        "velocity": 60,
+        "command": 45,
+        "control": 61,
+        "movement": 58,
+        "mentality": 62,
+        "recovery": 63
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 56,
+        "power": 56,
+        "eye": 51,
+        "discipline": 54,
+        "speed": 51,
+        "fielding": 64,
+        "arm": 52,
+        "battingClutch": 49
+      },
+      "developmentRate": 65,
+      "potentialHidden": 82
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

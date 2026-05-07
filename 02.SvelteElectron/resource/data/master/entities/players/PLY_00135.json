@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00135",
+  "name": "성도윤",
+  "nameEn": "Sim Ju-won",
+  "role": "player",
+  "age": 17,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 15,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 51,
+        "velocity": 55,
+        "command": 38,
+        "control": 50,
+        "movement": 38,
+        "mentality": 41,
+        "recovery": 49
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 42,
+        "power": 48,
+        "eye": 48,
+        "discipline": 35,
+        "speed": 50,
+        "fielding": 41,
+        "arm": 42,
+        "battingClutch": 50
+      },
+      "developmentRate": 63,
+      "potentialHidden": 64
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "id": "EVT_RAND_BULLPEN_EXTRA",
+  "type": "random",
+  "category": "training",
+  "priority": 310,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 1,
+  "weight": 25,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "conditions": [
+    {
+      "type": "fatigue_lte",
+      "value": 65
+    },
+    {
+      "type": "condition_gte",
+      "value": 70
+    }
+  ],
+  "messageTemplateId": "MSG_RAND_BULLPEN_EXTRA",
+  "decisionTemplateId": "DEC_RAND_BULLPEN_EXTRA"
+}

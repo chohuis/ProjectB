@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00136",
+  "name": "최승민",
+  "nameEn": "Jang Geon-woo",
+  "role": "player",
+  "age": 15,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "grade": 3,
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 16,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 59,
+        "velocity": 64,
+        "command": 53,
+        "control": 50,
+        "movement": 57,
+        "mentality": 59,
+        "recovery": 67
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 60,
+        "power": 58,
+        "eye": 45,
+        "discipline": 55,
+        "speed": 57,
+        "fielding": 55,
+        "arm": 55,
+        "battingClutch": 59
+      },
+      "developmentRate": 45,
+      "potentialHidden": 85
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

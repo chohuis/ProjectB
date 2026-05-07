@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01331",
+  "name": "토머스 라이언",
+  "nameEn": "Thomas Ryan",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_STL",
+  "teamId": "TEAM_ABL_STL",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:도미니카",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 16,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 52,
+        "velocity": 57,
+        "command": 48,
+        "control": 48,
+        "movement": 48,
+        "mentality": 48,
+        "recovery": 51
+      },
+      "batting": {
+        "ovr": 77,
+        "contact": 73,
+        "power": 80,
+        "eye": 75,
+        "discipline": 71,
+        "speed": 67,
+        "fielding": 73,
+        "arm": 70,
+        "battingClutch": 71
+      },
+      "developmentRate": 51,
+      "potentialHidden": 91
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

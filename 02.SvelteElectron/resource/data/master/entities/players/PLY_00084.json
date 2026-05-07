@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00084",
+  "name": "주민준",
+  "nameEn": "Oh Ji-sung",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "grade": 2,
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 4,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 57,
+        "velocity": 64,
+        "command": 53,
+        "control": 49,
+        "movement": 40,
+        "mentality": 58,
+        "recovery": 62
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 45,
+        "power": 40,
+        "eye": 50,
+        "discipline": 59,
+        "speed": 56,
+        "fielding": 62,
+        "arm": 56,
+        "battingClutch": 61
+      },
+      "developmentRate": 64,
+      "potentialHidden": 66
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

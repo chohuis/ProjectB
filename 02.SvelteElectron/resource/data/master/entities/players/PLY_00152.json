@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00152",
+  "name": "김동우",
+  "nameEn": "Shin Hyun-jun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "grade": 3,
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 12,
+      "pitching": {
+        "ovr": 37,
+        "stamina": 65,
+        "velocity": 61,
+        "command": 45,
+        "control": 50,
+        "movement": 60,
+        "mentality": 61,
+        "recovery": 56
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 59,
+        "power": 56,
+        "eye": 45,
+        "discipline": 53,
+        "speed": 60,
+        "fielding": 57,
+        "arm": 54,
+        "battingClutch": 60
+      },
+      "developmentRate": 45,
+      "potentialHidden": 92
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

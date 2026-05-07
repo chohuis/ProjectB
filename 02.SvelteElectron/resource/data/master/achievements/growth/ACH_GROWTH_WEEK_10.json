@@ -1,0 +1,10 @@
+{
+  "id": "ACH_GROWTH_WEEK_10",
+  "title": "훈련 10주",
+  "category": "growth",
+  "status": "active",
+  "metricKey": "trainingWeeksTotal",
+  "targetValue": 10,
+  "hidden": false,
+  "reward": "훈련 효율 +1%"
+}

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01304",
+  "name": "윌리엄스 앤드류",
+  "nameEn": "Williams Andrew",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_CHC",
+  "teamId": "TEAM_ABL_CHC_AAA",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:한국",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 49,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 61,
+        "velocity": 83,
+        "command": 81,
+        "control": 77,
+        "movement": 79,
+        "mentality": 79,
+        "recovery": 77
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 57,
+        "power": 55,
+        "eye": 55,
+        "discipline": 57,
+        "speed": 56,
+        "fielding": 50,
+        "arm": 57,
+        "battingClutch": 50
+      },
+      "developmentRate": 39,
+      "potentialHidden": 68
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

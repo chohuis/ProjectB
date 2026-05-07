@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01047",
+  "name": "라이트 브랜던",
+  "nameEn": "Wright Brandon",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_HOU",
+  "teamId": "TEAM_ABL_HOU",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:도미니카",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 2,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 76,
+        "velocity": 70,
+        "command": 70,
+        "control": 70,
+        "movement": 68,
+        "mentality": 75,
+        "recovery": 73
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 42,
+        "power": 44,
+        "eye": 38,
+        "discipline": 35,
+        "speed": 35,
+        "fielding": 38,
+        "arm": 39,
+        "battingClutch": 42
+      },
+      "developmentRate": 32,
+      "potentialHidden": 59
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00036",
+  "name": "주재윤",
+  "nameEn": "Heo Gi-hoon",
+  "role": "player",
+  "age": 15,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "grade": 3,
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 16,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 65,
+        "velocity": 59,
+        "command": 68,
+        "control": 69,
+        "movement": 66,
+        "mentality": 69,
+        "recovery": 67
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 68,
+        "power": 60,
+        "eye": 63,
+        "discipline": 65,
+        "speed": 69,
+        "fielding": 71,
+        "arm": 56,
+        "battingClutch": 60
+      },
+      "developmentRate": 71,
+      "potentialHidden": 67
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

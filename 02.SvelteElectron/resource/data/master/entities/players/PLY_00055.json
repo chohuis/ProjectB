@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00055",
+  "name": "전상현",
+  "nameEn": "Noh Ji-sung",
+  "role": "player",
+  "age": 17,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "grade": 1,
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 15,
+      "pitching": {
+        "ovr": 34,
+        "stamina": 54,
+        "velocity": 58,
+        "command": 52,
+        "control": 43,
+        "movement": 49,
+        "mentality": 55,
+        "recovery": 59
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 46,
+        "power": 39,
+        "eye": 48,
+        "discipline": 43,
+        "speed": 48,
+        "fielding": 44,
+        "arm": 50,
+        "battingClutch": 56
+      },
+      "developmentRate": 55,
+      "potentialHidden": 78
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

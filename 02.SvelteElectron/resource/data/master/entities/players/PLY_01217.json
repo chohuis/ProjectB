@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01217",
+  "name": "마틴 매튜",
+  "nameEn": "Martin Matthew",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_PHI",
+  "teamId": "TEAM_ABL_PHI_AAA",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 52,
+      "pitching": {
+        "ovr": 36,
+        "stamina": 32,
+        "velocity": 35,
+        "command": 33,
+        "control": 31,
+        "movement": 30,
+        "mentality": 31,
+        "recovery": 31
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 64,
+        "power": 61,
+        "eye": 60,
+        "discipline": 67,
+        "speed": 63,
+        "fielding": 62,
+        "arm": 65,
+        "battingClutch": 63
+      },
+      "developmentRate": 34,
+      "potentialHidden": 82
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

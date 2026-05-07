@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00366",
+  "name": "백재훈",
+  "nameEn": "Lim Ji-hoon",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_GWANGJU_STORM",
+  "teamId": "TEAM_IND_GWANGJU_STORM",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "RP",
+      "jerseyNumber": 6,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 53,
+        "velocity": 67,
+        "command": 59,
+        "control": 61,
+        "movement": 61,
+        "mentality": 56,
+        "recovery": 57
+      },
+      "batting": {
+        "ovr": 30,
+        "contact": 31,
+        "power": 28,
+        "eye": 33,
+        "discipline": 29,
+        "speed": 33,
+        "fielding": 26,
+        "arm": 33,
+        "battingClutch": 28
+      },
+      "developmentRate": 48,
+      "potentialHidden": 66
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

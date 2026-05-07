@@ -1,0 +1,16 @@
+{
+  "id": "EVT_COND_FATIGUE_WARNING",
+  "type": "conditional",
+  "category": "health",
+  "priority": 900,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "conditions": [
+    {
+      "type": "fatigue_gte",
+      "value": 75
+    }
+  ],
+  "messageTemplateId": "MSG_COND_FATIGUE_WARNING",
+  "decisionTemplateId": "DEC_COND_FATIGUE_WARNING"
+}

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00235",
+  "name": "남준호",
+  "nameEn": "Kim Ju-won",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_UNIVERSITY",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "TEAM_UNIV_KOREA",
+  "teamId": "TEAM_UNIV_KOREA",
+  "schoolId": "SCHOOL_UNIV_KOREA",
+  "grade": 3,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 15,
+      "pitching": {
+        "ovr": 30,
+        "stamina": 33,
+        "velocity": 31,
+        "command": 31,
+        "control": 32,
+        "movement": 27,
+        "mentality": 29,
+        "recovery": 28
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 54,
+        "power": 60,
+        "eye": 50,
+        "discipline": 54,
+        "speed": 48,
+        "fielding": 51,
+        "arm": 60,
+        "battingClutch": 56
+      },
+      "developmentRate": 45,
+      "potentialHidden": 86
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

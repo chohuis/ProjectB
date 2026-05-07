@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00409",
+  "name": "신준영",
+  "nameEn": "Sim Do-yun",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_INCHEON_ORCAS",
+  "teamId": "TEAM_IND_INCHEON_ORCAS",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 9,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 51,
+        "velocity": 66,
+        "command": 67,
+        "control": 65,
+        "movement": 59,
+        "mentality": 63,
+        "recovery": 59
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 38,
+        "power": 36,
+        "eye": 33,
+        "discipline": 29,
+        "speed": 32,
+        "fielding": 35,
+        "arm": 37,
+        "battingClutch": 34
+      },
+      "developmentRate": 46,
+      "potentialHidden": 86
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

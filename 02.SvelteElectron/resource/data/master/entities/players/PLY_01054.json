@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01054",
+  "name": "클라크 카를로스",
+  "nameEn": "Clark Carlos",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_HOU",
+  "teamId": "TEAM_ABL_HOU",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:도미니카",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 9,
+      "pitching": {
+        "ovr": 97,
+        "stamina": 83,
+        "velocity": 98,
+        "command": 96,
+        "control": 91,
+        "movement": 95,
+        "mentality": 90,
+        "recovery": 91
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 65,
+        "power": 57,
+        "eye": 62,
+        "discipline": 57,
+        "speed": 58,
+        "fielding": 61,
+        "arm": 57,
+        "battingClutch": 65
+      },
+      "developmentRate": 32,
+      "potentialHidden": 77
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01132",
+  "name": "윌슨 앤드류",
+  "nameEn": "Wilson Andrew",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_TEX",
+  "teamId": "TEAM_ABL_TEX_AAA",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:쿠바",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 57,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 48,
+        "velocity": 46,
+        "command": 46,
+        "control": 45,
+        "movement": 41,
+        "mentality": 43,
+        "recovery": 45
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 72,
+        "power": 67,
+        "eye": 65,
+        "discipline": 70,
+        "speed": 63,
+        "fielding": 66,
+        "arm": 67,
+        "battingClutch": 68
+      },
+      "developmentRate": 34,
+      "potentialHidden": 60
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

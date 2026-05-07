@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00433",
+  "name": "윤기준",
+  "nameEn": "Hwang Jae-min",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_SUWON_BLAZE",
+  "teamId": "TEAM_IND_SUWON_BLAZE",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 13,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 42,
+        "velocity": 49,
+        "command": 41,
+        "control": 47,
+        "movement": 43,
+        "mentality": 41,
+        "recovery": 41
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 73,
+        "power": 76,
+        "eye": 74,
+        "discipline": 77,
+        "speed": 73,
+        "fielding": 69,
+        "arm": 68,
+        "battingClutch": 72
+      },
+      "developmentRate": 58,
+      "potentialHidden": 59
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

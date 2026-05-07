@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00786",
+  "name": "송지훈",
+  "nameEn": "Seo Min-jae",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_KBL",
+  "clubId": "CLUB_KBL_HANWHA",
+  "teamId": "TEAM_KBL_HANWHA_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 11,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 63,
+        "velocity": 75,
+        "command": 79,
+        "control": 74,
+        "movement": 77,
+        "mentality": 71,
+        "recovery": 74
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 43,
+        "power": 42,
+        "eye": 42,
+        "discipline": 39,
+        "speed": 37,
+        "fielding": 36,
+        "arm": 41,
+        "battingClutch": 45
+      },
+      "developmentRate": 54,
+      "potentialHidden": 67
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

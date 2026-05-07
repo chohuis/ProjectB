@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01243",
+  "name": "미첼 노아",
+  "nameEn": "Mitchell Noah",
+  "role": "player",
+  "age": 39,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_NYM",
+  "teamId": "TEAM_ABL_NYM",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 18,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 61,
+        "velocity": 64,
+        "command": 63,
+        "control": 62,
+        "movement": 62,
+        "mentality": 68,
+        "recovery": 64
+      },
+      "batting": {
+        "ovr": 91,
+        "contact": 94,
+        "power": 96,
+        "eye": 89,
+        "discipline": 87,
+        "speed": 86,
+        "fielding": 91,
+        "arm": 89,
+        "battingClutch": 93
+      },
+      "developmentRate": 51,
+      "potentialHidden": 70
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

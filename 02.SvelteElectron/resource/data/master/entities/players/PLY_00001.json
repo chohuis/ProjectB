@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00001",
+  "name": "박동혁",
+  "nameEn": "Na Hyun-seo",
+  "role": "player",
+  "age": 15,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "grade": 3,
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 1,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 63,
+        "velocity": 68,
+        "command": 75,
+        "control": 55,
+        "movement": 61,
+        "mentality": 76,
+        "recovery": 74
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 60,
+        "power": 66,
+        "eye": 61,
+        "discipline": 67,
+        "speed": 74,
+        "fielding": 68,
+        "arm": 76,
+        "battingClutch": 55
+      },
+      "developmentRate": 74,
+      "potentialHidden": 60
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

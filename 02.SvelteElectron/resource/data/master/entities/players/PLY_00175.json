@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00175",
+  "name": "임지원",
+  "nameEn": "Kwak Seong-hyun",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_UNIVERSITY",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "TEAM_UNIV_KNSU",
+  "teamId": "TEAM_UNIV_KNSU",
+  "schoolId": "SCHOOL_UNIV_KNSU",
+  "grade": 3,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 15,
+      "pitching": {
+        "ovr": 36,
+        "stamina": 39,
+        "velocity": 38,
+        "command": 40,
+        "control": 39,
+        "movement": 33,
+        "mentality": 37,
+        "recovery": 36
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 63,
+        "power": 62,
+        "eye": 58,
+        "discipline": 59,
+        "speed": 58,
+        "fielding": 62,
+        "arm": 61,
+        "battingClutch": 60
+      },
+      "developmentRate": 62,
+      "potentialHidden": 73
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

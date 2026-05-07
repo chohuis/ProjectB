@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00579",
+  "name": "차시우",
+  "nameEn": "Sim Tae-woo",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_KBL",
+  "clubId": "CLUB_KBL_LG",
+  "teamId": "TEAM_KBL_LG_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 34,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 57,
+        "velocity": 62,
+        "command": 57,
+        "control": 62,
+        "movement": 58,
+        "mentality": 58,
+        "recovery": 60
+      },
+      "batting": {
+        "ovr": 33,
+        "contact": 33,
+        "power": 34,
+        "eye": 40,
+        "discipline": 36,
+        "speed": 37,
+        "fielding": 36,
+        "arm": 36,
+        "battingClutch": 36
+      },
+      "developmentRate": 45,
+      "potentialHidden": 89
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

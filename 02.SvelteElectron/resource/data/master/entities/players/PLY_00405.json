@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00405",
+  "name": "남현진",
+  "nameEn": "Oh Dong-hyun",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_INCHEON_ORCAS",
+  "teamId": "TEAM_IND_INCHEON_ORCAS",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 5,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 52,
+        "velocity": 67,
+        "command": 61,
+        "control": 59,
+        "movement": 58,
+        "mentality": 57,
+        "recovery": 60
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 42,
+        "power": 39,
+        "eye": 39,
+        "discipline": 35,
+        "speed": 34,
+        "fielding": 39,
+        "arm": 39,
+        "battingClutch": 35
+      },
+      "developmentRate": 40,
+      "potentialHidden": 63
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

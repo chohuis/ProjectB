@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00417",
+  "name": "한정우",
+  "nameEn": "Son Jun-seo",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_INCHEON_ORCAS",
+  "teamId": "TEAM_IND_INCHEON_ORCAS",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 17,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 37,
+        "velocity": 40,
+        "command": 41,
+        "control": 43,
+        "movement": 39,
+        "mentality": 37,
+        "recovery": 39
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 70,
+        "power": 76,
+        "eye": 73,
+        "discipline": 69,
+        "speed": 67,
+        "fielding": 69,
+        "arm": 68,
+        "battingClutch": 69
+      },
+      "developmentRate": 45,
+      "potentialHidden": 80
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

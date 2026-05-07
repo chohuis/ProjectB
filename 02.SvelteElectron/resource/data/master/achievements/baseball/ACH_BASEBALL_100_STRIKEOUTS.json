@@ -1,0 +1,10 @@
+{
+  "id": "ACH_BASEBALL_100_STRIKEOUTS",
+  "title": "백삼진",
+  "category": "baseball",
+  "status": "active",
+  "metricKey": "strikeoutTotal",
+  "targetValue": 100,
+  "hidden": false,
+  "reward": "명성 +5"
+}

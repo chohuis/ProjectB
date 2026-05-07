@@ -1,0 +1,18 @@
+{
+  "id": "EVT_RAND_FRIEND_VISIT",
+  "type": "random",
+  "category": "social",
+  "priority": 280,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 35,
+  "poolId": "POOL_SOCIAL_DAILY",
+  "conditions": [
+    {
+      "type": "fatigue_lte",
+      "value": 60
+    }
+  ],
+  "messageTemplateId": "MSG_RAND_FRIEND_VISIT",
+  "decisionTemplateId": null
+}

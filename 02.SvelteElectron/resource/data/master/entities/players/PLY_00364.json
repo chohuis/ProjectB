@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00364",
+  "name": "남서준",
+  "nameEn": "Kang Hyun-woo",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_GWANGJU_STORM",
+  "teamId": "TEAM_IND_GWANGJU_STORM",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 4,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 58,
+        "velocity": 56,
+        "command": 54,
+        "control": 52,
+        "movement": 58,
+        "mentality": 55,
+        "recovery": 57
+      },
+      "batting": {
+        "ovr": 32,
+        "contact": 30,
+        "power": 27,
+        "eye": 33,
+        "discipline": 27,
+        "speed": 29,
+        "fielding": 31,
+        "arm": 32,
+        "battingClutch": 30
+      },
+      "developmentRate": 45,
+      "potentialHidden": 60
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

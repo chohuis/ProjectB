@@ -1,0 +1,10 @@
+{
+  "id": "ACH_BASEBALL_500_STRIKEOUTS",
+  "title": "탈삼진 기계",
+  "category": "baseball",
+  "status": "active",
+  "metricKey": "strikeoutTotal",
+  "targetValue": 500,
+  "hidden": false,
+  "reward": "명성 +20"
+}

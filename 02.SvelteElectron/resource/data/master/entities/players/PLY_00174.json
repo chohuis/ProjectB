@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00174",
+  "name": "임승현",
+  "nameEn": "Cha Hyun-woo",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_UNIVERSITY",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "TEAM_UNIV_KNSU",
+  "teamId": "TEAM_UNIV_KNSU",
+  "schoolId": "SCHOOL_UNIV_KNSU",
+  "grade": 3,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 14,
+      "pitching": {
+        "ovr": 36,
+        "stamina": 35,
+        "velocity": 46,
+        "command": 40,
+        "control": 35,
+        "movement": 41,
+        "mentality": 43,
+        "recovery": 38
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 72,
+        "power": 69,
+        "eye": 65,
+        "discipline": 64,
+        "speed": 73,
+        "fielding": 68,
+        "arm": 68,
+        "battingClutch": 69
+      },
+      "developmentRate": 46,
+      "potentialHidden": 65
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

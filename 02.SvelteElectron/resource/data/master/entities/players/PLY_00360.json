@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00360",
+  "name": "신민재",
+  "nameEn": "Park Min-seok",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_DAEGU_FALCONS",
+  "teamId": "TEAM_IND_DAEGU_FALCONS",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "DH",
+      "jerseyNumber": 20,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 39,
+        "velocity": 41,
+        "command": 36,
+        "control": 37,
+        "movement": 39,
+        "mentality": 38,
+        "recovery": 33
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 66,
+        "power": 71,
+        "eye": 61,
+        "discipline": 62,
+        "speed": 55,
+        "fielding": 59,
+        "arm": 57,
+        "battingClutch": 68
+      },
+      "developmentRate": 47,
+      "potentialHidden": 76
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

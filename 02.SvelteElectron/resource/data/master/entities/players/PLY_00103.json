@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00103",
+  "name": "우동우",
+  "nameEn": "Hwang Seong-jun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "grade": 2,
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 3,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 59,
+        "velocity": 49,
+        "command": 53,
+        "control": 48,
+        "movement": 57,
+        "mentality": 55,
+        "recovery": 52
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 47,
+        "power": 54,
+        "eye": 43,
+        "discipline": 57,
+        "speed": 56,
+        "fielding": 51,
+        "arm": 49,
+        "battingClutch": 46
+      },
+      "developmentRate": 58,
+      "potentialHidden": 78
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00253",
+  "name": "최현우",
+  "nameEn": "Yang Ji-hoo",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_UNIVERSITY",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "TEAM_UNIV_HANYANG",
+  "teamId": "TEAM_UNIV_HANYANG",
+  "schoolId": "SCHOOL_UNIV_HANYANG",
+  "grade": 3,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 13,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 37,
+        "velocity": 45,
+        "command": 39,
+        "control": 38,
+        "movement": 39,
+        "mentality": 45,
+        "recovery": 45
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 63,
+        "power": 67,
+        "eye": 64,
+        "discipline": 61,
+        "speed": 58,
+        "fielding": 65,
+        "arm": 64,
+        "battingClutch": 64
+      },
+      "developmentRate": 54,
+      "potentialHidden": 89
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

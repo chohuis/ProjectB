@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01296",
+  "name": "로빈슨 라이언",
+  "nameEn": "Robinson Ryan",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_CHC",
+  "teamId": "TEAM_ABL_CHC_AAA",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 41,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 71,
+        "velocity": 73,
+        "command": 69,
+        "control": 70,
+        "movement": 70,
+        "mentality": 67,
+        "recovery": 71
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 33,
+        "power": 37,
+        "eye": 38,
+        "discipline": 38,
+        "speed": 34,
+        "fielding": 33,
+        "arm": 40,
+        "battingClutch": 34
+      },
+      "developmentRate": 43,
+      "potentialHidden": 76
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

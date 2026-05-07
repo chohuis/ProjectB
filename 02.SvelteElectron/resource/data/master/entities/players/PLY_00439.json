@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00439",
+  "name": "황태준",
+  "nameEn": "Park Jun-young",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_SUWON_BLAZE",
+  "teamId": "TEAM_IND_SUWON_BLAZE",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 19,
+      "pitching": {
+        "ovr": 22,
+        "stamina": 23,
+        "velocity": 24,
+        "command": 24,
+        "control": 17,
+        "movement": 20,
+        "mentality": 17,
+        "recovery": 21
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 47,
+        "power": 56,
+        "eye": 50,
+        "discipline": 53,
+        "speed": 48,
+        "fielding": 42,
+        "arm": 45,
+        "battingClutch": 52
+      },
+      "developmentRate": 52,
+      "potentialHidden": 58
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00395",
+  "name": "손태양",
+  "nameEn": "Sung Tae-hyun",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_DAEJEON_HUNTERS",
+  "teamId": "TEAM_IND_DAEJEON_HUNTERS",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 15,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 43,
+        "velocity": 45,
+        "command": 45,
+        "control": 43,
+        "movement": 38,
+        "mentality": 38,
+        "recovery": 43
+      },
+      "batting": {
+        "ovr": 74,
+        "contact": 75,
+        "power": 76,
+        "eye": 71,
+        "discipline": 69,
+        "speed": 68,
+        "fielding": 72,
+        "arm": 77,
+        "battingClutch": 73
+      },
+      "developmentRate": 44,
+      "potentialHidden": 65
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

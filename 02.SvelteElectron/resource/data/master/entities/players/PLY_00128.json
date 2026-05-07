@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00128",
+  "name": "배기훈",
+  "nameEn": "Nam Min-jun",
+  "role": "player",
+  "age": 15,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "grade": 3,
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 8,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 70,
+        "velocity": 66,
+        "command": 57,
+        "control": 56,
+        "movement": 47,
+        "mentality": 48,
+        "recovery": 63
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 46,
+        "power": 55,
+        "eye": 51,
+        "discipline": 62,
+        "speed": 52,
+        "fielding": 64,
+        "arm": 68,
+        "battingClutch": 47
+      },
+      "developmentRate": 54,
+      "potentialHidden": 79
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

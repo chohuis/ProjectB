@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00456",
+  "name": "홍준우",
+  "nameEn": "Oh Min-jun",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_ULSAN_PHOENIX",
+  "teamId": "TEAM_IND_ULSAN_PHOENIX",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 16,
+      "pitching": {
+        "ovr": 24,
+        "stamina": 22,
+        "velocity": 21,
+        "command": 24,
+        "control": 17,
+        "movement": 14,
+        "mentality": 15,
+        "recovery": 17
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 56,
+        "power": 50,
+        "eye": 48,
+        "discipline": 55,
+        "speed": 54,
+        "fielding": 49,
+        "arm": 52,
+        "battingClutch": 56
+      },
+      "developmentRate": 56,
+      "potentialHidden": 71
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

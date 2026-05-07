@@ -5,7 +5,7 @@
       "id": "SCRIPT_HS_W1_COACH",
       "contact": {
         "id": "CONTACT_COACH_JI",
-        "name": "투수 코치 오지경",
+        "name": "오지경",
         "category": "team",
         "relation": "투수 코치",
         "unlocked": false,
@@ -47,7 +47,7 @@
       "id": "SCRIPT_HS_W2_CAPTAIN",
       "contact": {
         "id": "CONTACT_CAPTAIN_PARK",
-        "name": "주장 박정훈",
+        "name": "박정훈",
         "category": "team",
         "relation": "팀 주장",
         "unlocked": false,

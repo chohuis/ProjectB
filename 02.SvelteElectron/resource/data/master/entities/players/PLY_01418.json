@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01418",
+  "name": "그린 앤서니",
+  "nameEn": "Green Anthony",
+  "role": "player",
+  "age": 39,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_SF",
+  "teamId": "TEAM_ABL_SF",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:미국",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 13,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 66,
+        "velocity": 83,
+        "command": 71,
+        "control": 76,
+        "movement": 75,
+        "mentality": 71,
+        "recovery": 74
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 38,
+        "power": 38,
+        "eye": 40,
+        "discipline": 40,
+        "speed": 44,
+        "fielding": 39,
+        "arm": 44,
+        "battingClutch": 43
+      },
+      "developmentRate": 44,
+      "potentialHidden": 77
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

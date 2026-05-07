@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01131",
+  "name": "마틴 리엄",
+  "nameEn": "Martin Liam",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_TEX",
+  "teamId": "TEAM_ABL_TEX_AAA",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:쿠바",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 56,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 55,
+        "velocity": 63,
+        "command": 56,
+        "control": 61,
+        "movement": 54,
+        "mentality": 61,
+        "recovery": 54
+      },
+      "batting": {
+        "ovr": 82,
+        "contact": 83,
+        "power": 80,
+        "eye": 76,
+        "discipline": 76,
+        "speed": 79,
+        "fielding": 81,
+        "arm": 83,
+        "battingClutch": 83
+      },
+      "developmentRate": 51,
+      "potentialHidden": 80
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

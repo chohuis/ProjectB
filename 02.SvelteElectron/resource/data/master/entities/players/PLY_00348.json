@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00348",
+  "name": "오민우",
+  "nameEn": "Woo Jun-woo",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_DAEGU_FALCONS",
+  "teamId": "TEAM_IND_DAEGU_FALCONS",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 8,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 64,
+        "velocity": 77,
+        "command": 70,
+        "control": 71,
+        "movement": 64,
+        "mentality": 65,
+        "recovery": 70
+      },
+      "batting": {
+        "ovr": 35,
+        "contact": 43,
+        "power": 35,
+        "eye": 35,
+        "discipline": 36,
+        "speed": 34,
+        "fielding": 33,
+        "arm": 34,
+        "battingClutch": 35
+      },
+      "developmentRate": 53,
+      "potentialHidden": 84
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

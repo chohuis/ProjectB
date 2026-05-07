@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01353",
+  "name": "카스티요 제임스",
+  "nameEn": "Castillo James",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_STL",
+  "teamId": "TEAM_ABL_STL_AAA",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:쿠바",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 53,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 39,
+        "velocity": 43,
+        "command": 42,
+        "control": 40,
+        "movement": 45,
+        "mentality": 45,
+        "recovery": 38
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 76,
+        "power": 81,
+        "eye": 79,
+        "discipline": 73,
+        "speed": 75,
+        "fielding": 73,
+        "arm": 77,
+        "battingClutch": 78
+      },
+      "developmentRate": 48,
+      "potentialHidden": 70
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

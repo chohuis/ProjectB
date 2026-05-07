@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00387",
+  "name": "하상민",
+  "nameEn": "Sim Hyun-seo",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_DAEJEON_HUNTERS",
+  "teamId": "TEAM_IND_DAEJEON_HUNTERS",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 7,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 45,
+        "velocity": 64,
+        "command": 57,
+        "control": 57,
+        "movement": 51,
+        "mentality": 53,
+        "recovery": 58
+      },
+      "batting": {
+        "ovr": 30,
+        "contact": 36,
+        "power": 32,
+        "eye": 29,
+        "discipline": 34,
+        "speed": 29,
+        "fielding": 28,
+        "arm": 36,
+        "battingClutch": 35
+      },
+      "developmentRate": 53,
+      "potentialHidden": 54
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

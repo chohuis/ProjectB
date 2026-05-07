@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01324",
+  "name": "스미스 에이든",
+  "nameEn": "Smith Aiden",
+  "role": "player",
+  "age": 37,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_STL",
+  "teamId": "TEAM_ABL_STL",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:베네수엘라",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "RP",
+      "jerseyNumber": 9,
+      "pitching": {
+        "ovr": 80,
+        "stamina": 73,
+        "velocity": 86,
+        "command": 86,
+        "control": 80,
+        "movement": 78,
+        "mentality": 80,
+        "recovery": 81
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 55,
+        "power": 57,
+        "eye": 54,
+        "discipline": 51,
+        "speed": 54,
+        "fielding": 57,
+        "arm": 58,
+        "battingClutch": 59
+      },
+      "developmentRate": 41,
+      "potentialHidden": 77
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

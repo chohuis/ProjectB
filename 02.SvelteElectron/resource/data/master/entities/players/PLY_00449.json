@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00449",
+  "name": "이기훈",
+  "nameEn": "Son Jae-won",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_ULSAN_PHOENIX",
+  "teamId": "TEAM_IND_ULSAN_PHOENIX",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 9,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 57,
+        "velocity": 73,
+        "command": 63,
+        "control": 64,
+        "movement": 65,
+        "mentality": 68,
+        "recovery": 67
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 40,
+        "power": 40,
+        "eye": 44,
+        "discipline": 39,
+        "speed": 43,
+        "fielding": 44,
+        "arm": 42,
+        "battingClutch": 44
+      },
+      "developmentRate": 46,
+      "potentialHidden": 76
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

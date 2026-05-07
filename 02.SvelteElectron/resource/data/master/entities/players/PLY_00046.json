@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00046",
+  "name": "남민혁",
+  "nameEn": "Bae Seung-woo",
+  "role": "player",
+  "age": 17,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "grade": 1,
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "RP",
+      "jerseyNumber": 6,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 54,
+        "velocity": 49,
+        "command": 56,
+        "control": 53,
+        "movement": 40,
+        "mentality": 44,
+        "recovery": 63
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 43,
+        "power": 45,
+        "eye": 50,
+        "discipline": 39,
+        "speed": 52,
+        "fielding": 56,
+        "arm": 56,
+        "battingClutch": 46
+      },
+      "developmentRate": 45,
+      "potentialHidden": 66
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

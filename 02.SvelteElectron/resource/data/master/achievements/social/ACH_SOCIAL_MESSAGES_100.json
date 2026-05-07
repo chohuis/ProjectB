@@ -1,0 +1,10 @@
+{
+  "id": "ACH_SOCIAL_MESSAGES_100",
+  "title": "소통의 달인",
+  "category": "social",
+  "status": "active",
+  "metricKey": "messagesReadTotal",
+  "targetValue": 100,
+  "hidden": false,
+  "reward": "관계도 +5"
+}

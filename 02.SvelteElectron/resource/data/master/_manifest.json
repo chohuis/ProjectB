@@ -1,0 +1,85 @@
+{
+  "generatedAt": "2026-05-07T04:04:29.892Z",
+  "events": {
+    "mandatory": [
+      "EVT_HS_FINAL",
+      "EVT_HS_MIDTERM",
+      "EVT_HS_SEASON_OPEN",
+      "EVT_HS_SUMMER_CAMP",
+      "EVT_HS_YEAR_END"
+    ],
+    "conditional": [
+      "EVT_COND_FATIGUE_WARNING",
+      "EVT_COND_PEAK_FORM",
+      "EVT_COND_SLUMP",
+      "EVT_COND_STAT_MILESTONE",
+      "EVT_COND_TEAM_SUCCESS",
+      "EVT_TRADE_CONFIRMED",
+      "EVT_TRADE_RUMOR"
+    ],
+    "random": {
+      "media": [
+        "EVT_RAND_LOCAL_INTERVIEW",
+        "EVT_RAND_SPORTS_MEDIA"
+      ],
+      "social": [
+        "EVT_RAND_FRIEND_VISIT",
+        "EVT_RAND_SOCIAL_MEDIA_MENTION"
+      ],
+      "team_life": [
+        "EVT_RAND_BULLPEN_EXTRA",
+        "EVT_RAND_SENIOR_ADVICE",
+        "EVT_RAND_TEAM_MEAL"
+      ]
+    }
+  },
+  "achievements": {
+    "baseball": [
+      "ACH_BASEBALL_100_GAMES",
+      "ACH_BASEBALL_100_STRIKEOUTS",
+      "ACH_BASEBALL_10_GAMES",
+      "ACH_BASEBALL_10_SAVES",
+      "ACH_BASEBALL_10_STRIKEOUTS",
+      "ACH_BASEBALL_10_WINS",
+      "ACH_BASEBALL_10_WINS_CAREER",
+      "ACH_BASEBALL_200_STRIKEOUTS",
+      "ACH_BASEBALL_20_GAMES",
+      "ACH_BASEBALL_20_WINS",
+      "ACH_BASEBALL_30_SAVES",
+      "ACH_BASEBALL_30_WINS",
+      "ACH_BASEBALL_30_WINS_CAREER",
+      "ACH_BASEBALL_500_STRIKEOUTS",
+      "ACH_BASEBALL_50_GAMES",
+      "ACH_BASEBALL_50_STRIKEOUTS",
+      "ACH_BASEBALL_50_WINS",
+      "ACH_BASEBALL_5_GAMES",
+      "ACH_BASEBALL_5_SAVES",
+      "ACH_BASEBALL_5_WINS",
+      "ACH_BASEBALL_FIRST_GAME",
+      "ACH_BASEBALL_FIRST_SAVE",
+      "ACH_BASEBALL_FIRST_STRIKEOUT",
+      "ACH_BASEBALL_FIRST_WIN",
+      "ACH_BASEBALL_FIRST_WIN_CAREER"
+    ],
+    "growth": [
+      "ACH_GROWTH_WEEK_10",
+      "ACH_GROWTH_WEEK_104",
+      "ACH_GROWTH_WEEK_156",
+      "ACH_GROWTH_WEEK_26",
+      "ACH_GROWTH_WEEK_52"
+    ],
+    "social": [
+      "ACH_SOCIAL_FIRST_KAKAO",
+      "ACH_SOCIAL_MESSAGES_10",
+      "ACH_SOCIAL_MESSAGES_100",
+      "ACH_SOCIAL_MESSAGES_50"
+    ],
+    "hidden": [
+      "ACH_HIDDEN_RELATIONSHIP_1"
+    ]
+  },
+  "characters": [
+    "CONTACT_CAPTAIN_PARK",
+    "CONTACT_COACH_JI"
+  ]
+}

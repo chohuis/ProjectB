@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00476",
+  "name": "구준호",
+  "nameEn": "Ahn Tae-hyun",
+  "role": "player",
+  "age": 36,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_KBL",
+  "clubId": "CLUB_KBL_KIA",
+  "teamId": "TEAM_KBL_KIA_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 16,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 49,
+        "velocity": 56,
+        "command": 53,
+        "control": 50,
+        "movement": 53,
+        "mentality": 53,
+        "recovery": 52
+      },
+      "batting": {
+        "ovr": 79,
+        "contact": 86,
+        "power": 90,
+        "eye": 84,
+        "discipline": 81,
+        "speed": 77,
+        "fielding": 78,
+        "arm": 84,
+        "battingClutch": 80
+      },
+      "developmentRate": 43,
+      "potentialHidden": 56
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

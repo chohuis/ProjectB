@@ -298,10 +298,7 @@
       const saver = (window as any).projectB?.masterSave;
       if (!saver) { alert("masterSave IPC 없음"); return; }
 
-      await saver({ relPath: `contacts/${editing.id}.json`, data: editing, backup: false });
-
-      const allIds = contacts.map((c) => c.id);
-      await saver({ relPath: "contacts/index.json", data: { contacts: allIds }, backup: false });
+      await saver({ relPath: `characters/${editing.id}.json`, data: editing, backup: false });
 
       await masterStore.reloadContacts();
       isDirty = false;

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00707",
+  "name": "송민우",
+  "nameEn": "Moon Dong-hyuk",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_KBL",
+  "clubId": "CLUB_KBL_SSG",
+  "teamId": "TEAM_KBL_SSG_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 22,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 54,
+        "velocity": 54,
+        "command": 52,
+        "control": 53,
+        "movement": 53,
+        "mentality": 51,
+        "recovery": 57
+      },
+      "batting": {
+        "ovr": 86,
+        "contact": 90,
+        "power": 85,
+        "eye": 85,
+        "discipline": 84,
+        "speed": 87,
+        "fielding": 80,
+        "arm": 86,
+        "battingClutch": 86
+      },
+      "developmentRate": 48,
+      "potentialHidden": 88
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

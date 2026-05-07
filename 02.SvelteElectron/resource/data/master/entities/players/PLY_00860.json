@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00860",
+  "name": "존슨 윌리엄",
+  "nameEn": "Johnson William",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_LAD",
+  "teamId": "TEAM_ABL_LAD_AAA",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:한국",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 55,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 53,
+        "velocity": 60,
+        "command": 63,
+        "control": 61,
+        "movement": 61,
+        "mentality": 55,
+        "recovery": 55
+      },
+      "batting": {
+        "ovr": 79,
+        "contact": 80,
+        "power": 83,
+        "eye": 79,
+        "discipline": 86,
+        "speed": 84,
+        "fielding": 78,
+        "arm": 81,
+        "battingClutch": 83
+      },
+      "developmentRate": 48,
+      "potentialHidden": 87
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

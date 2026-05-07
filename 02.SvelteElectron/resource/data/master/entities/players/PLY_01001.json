@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01001",
+  "name": "스미스 빅터",
+  "nameEn": "Smith Victor",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_SEA",
+  "teamId": "TEAM_ABL_SEA",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:미국",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 1,
+      "pitching": {
+        "ovr": 88,
+        "stamina": 94,
+        "velocity": 97,
+        "command": 93,
+        "control": 86,
+        "movement": 85,
+        "mentality": 88,
+        "recovery": 87
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 58,
+        "power": 58,
+        "eye": 58,
+        "discipline": 58,
+        "speed": 58,
+        "fielding": 55,
+        "arm": 56,
+        "battingClutch": 57
+      },
+      "developmentRate": 51,
+      "potentialHidden": 67
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

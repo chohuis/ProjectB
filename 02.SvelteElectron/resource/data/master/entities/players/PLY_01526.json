@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01526",
+  "name": "산체스 라이언",
+  "nameEn": "Sanchez Ryan",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_BAL",
+  "teamId": "TEAM_ABL_BAL_AAA",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:미국",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 46,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 55,
+        "velocity": 67,
+        "command": 68,
+        "control": 65,
+        "movement": 59,
+        "mentality": 66,
+        "recovery": 67
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 42,
+        "power": 42,
+        "eye": 42,
+        "discipline": 42,
+        "speed": 40,
+        "fielding": 38,
+        "arm": 40,
+        "battingClutch": 43
+      },
+      "developmentRate": 48,
+      "potentialHidden": 81
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

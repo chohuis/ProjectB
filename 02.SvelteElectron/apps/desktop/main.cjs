@@ -211,14 +211,54 @@ function createWindow() {
   if (devServerUrl) {
     win.loadURL(devServerUrl);
     win.webContents.openDevTools({ mode: "detach" });
-    return;
+  } else {
+    win.loadFile(path.resolve(__dirname, "../../dist/ui/index.html"));
+  }
+  return win;
+}
+
+// ── 콘텐츠 파일 와처 (개발 환경 전용) ────────────────────────
+let _watchDebounceTimer = null;
+let _mainWindow = null;
+
+function startContentWatcher(resourceBase, rootDir) {
+  const watchDirs = ["events", "achievements", "characters", "entities/players"];
+  let activeWatchers = [];
+
+  function regenerateAndNotify(filename) {
+    clearTimeout(_watchDebounceTimer);
+    _watchDebounceTimer = setTimeout(() => {
+      const scriptPath = path.resolve(rootDir, "scripts/gen-manifest.mjs");
+      const { spawn } = require("node:child_process");
+      const child = spawn(process.execPath, [scriptPath], { cwd: rootDir, stdio: "inherit" });
+      child.on("close", (code) => {
+        if (code === 0 && _mainWindow && !_mainWindow.isDestroyed()) {
+          _mainWindow.webContents.send("master:content-changed", { filename: filename ?? "" });
+        }
+      });
+    }, 200);
   }
 
-  win.loadFile(path.resolve(__dirname, "../../dist/ui/index.html"));
+  for (const dir of watchDirs) {
+    const fullDir = path.join(resourceBase, dir);
+    try {
+      const w = fs.watch(fullDir, { recursive: true }, (_event, filename) => {
+        if (!filename || !filename.endsWith(".json") || filename.startsWith("_")) return;
+        console.log(`[content-watcher] 변경 감지: ${dir}/${filename}`);
+        regenerateAndNotify(`${dir}/${filename}`);
+      });
+      activeWatchers.push(w);
+    } catch {
+      // 디렉토리가 아직 없으면 무시
+    }
+  }
+
+  return activeWatchers;
 }
 
 app.whenReady().then(() => {
   const resourceBase = path.resolve(__dirname, "../../resource/data/master");
+  const rootDir      = path.resolve(__dirname, "../../");
   const tuningSchema = loadTuningSchema(resourceBase);
 
   applyTuningFromFile(resourceBase, tuningSchema).then((res) => {
@@ -439,11 +479,17 @@ app.whenReady().then(() => {
     }
   });
 
-  createWindow();
+  _mainWindow = createWindow();
+
+  // 개발 환경에서만 콘텐츠 파일 와처 활성화
+  if (process.env.VITE_DEV_SERVER_URL) {
+    startContentWatcher(resourceBase, rootDir);
+    console.log("[content-watcher] 활성화 (events / achievements / characters / entities/players)");
+  }
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
+      _mainWindow = createWindow();
     }
   });
 });

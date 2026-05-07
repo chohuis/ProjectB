@@ -1,0 +1,10 @@
+{
+  "id": "ACH_BASEBALL_50_STRIKEOUTS",
+  "title": "50삼진",
+  "category": "baseball",
+  "status": "active",
+  "metricKey": "strikeoutTotal",
+  "targetValue": 50,
+  "hidden": false,
+  "reward": "명성 +3"
+}

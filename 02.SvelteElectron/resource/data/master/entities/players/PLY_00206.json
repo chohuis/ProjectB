@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00206",
+  "name": "강준혁",
+  "nameEn": "Jung Chan-young",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_UNIVERSITY",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "TEAM_UNIV_YONSEI",
+  "teamId": "TEAM_UNIV_YONSEI",
+  "schoolId": "SCHOOL_UNIV_YONSEI",
+  "grade": 2,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 6,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 57,
+        "velocity": 64,
+        "command": 65,
+        "control": 57,
+        "movement": 60,
+        "mentality": 58,
+        "recovery": 55
+      },
+      "batting": {
+        "ovr": 33,
+        "contact": 34,
+        "power": 33,
+        "eye": 26,
+        "discipline": 27,
+        "speed": 28,
+        "fielding": 25,
+        "arm": 32,
+        "battingClutch": 34
+      },
+      "developmentRate": 52,
+      "potentialHidden": 86
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

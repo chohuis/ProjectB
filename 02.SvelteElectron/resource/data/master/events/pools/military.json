@@ -1,0 +1,39 @@
+{
+  "events": [
+    {
+      "id": "MIL_EVT_DRILL_EXCELLENCE",
+      "title": "훈련 우수자 선정",
+      "description": "기초 체력 훈련에서 상위 평가를 받았습니다.\n규율을 지키며 컨디션을 잘 관리했습니다.",
+      "moraleDelta": 3,
+      "fatigueDelta": -2
+    },
+    {
+      "id": "MIL_EVT_FIELD_FATIGUE",
+      "title": "야외 훈련 강행군",
+      "description": "강도 높은 야외 훈련이 이어졌습니다.\n피로가 누적되지만 정신력이 단단해집니다.",
+      "moraleDelta": -1,
+      "fatigueDelta": 4
+    },
+    {
+      "id": "MIL_EVT_UNIT_SUPPORT",
+      "title": "부대 동료와의 협력",
+      "description": "동료들과 협력해 임무를 완수했습니다.\n팀워크가 좋아져 심리적으로 안정감을 얻었습니다.",
+      "moraleDelta": 2,
+      "fatigueDelta": 1
+    },
+    {
+      "id": "MIL_EVT_REST_WINDOW",
+      "title": "짧은 휴식 기간",
+      "description": "일정 사이 휴식 기간이 주어졌습니다.\n몸 상태를 회복하고 루틴을 정리할 수 있었습니다.",
+      "moraleDelta": 1,
+      "fatigueDelta": -4
+    },
+    {
+      "id": "MIL_EVT_COMMAND_PRESSURE",
+      "title": "지휘관 특별 점검",
+      "description": "특별 점검으로 긴장감이 높아졌습니다.\n작은 실수도 허용되지 않는 주간이었습니다.",
+      "moraleDelta": -2,
+      "fatigueDelta": 2
+    }
+  ]
+}

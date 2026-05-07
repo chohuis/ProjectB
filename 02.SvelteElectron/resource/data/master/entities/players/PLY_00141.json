@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00141",
+  "name": "홍상현",
+  "nameEn": "Choi Jae-min",
+  "role": "player",
+  "age": 15,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "grade": 3,
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 1,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 51,
+        "velocity": 49,
+        "command": 46,
+        "control": 52,
+        "movement": 45,
+        "mentality": 52,
+        "recovery": 53
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 47,
+        "power": 53,
+        "eye": 55,
+        "discipline": 54,
+        "speed": 64,
+        "fielding": 52,
+        "arm": 57,
+        "battingClutch": 62
+      },
+      "developmentRate": 70,
+      "potentialHidden": 80
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "id": "EVT_RAND_TEAM_MEAL",
+  "type": "random",
+  "category": "team_life",
+  "priority": 290,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 35,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "conditions": [
+    {
+      "type": "morale_lte",
+      "value": 72
+    }
+  ],
+  "messageTemplateId": "MSG_RAND_TEAM_MEAL",
+  "decisionTemplateId": "DEC_RAND_TEAM_MEAL"
+}

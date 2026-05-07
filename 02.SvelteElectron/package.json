@@ -12,17 +12,20 @@
     "build:contracts": "npm run -w @projectb/contracts build",
     "build:core": "npm run -w @projectb/core build",
     "build:packages": "npm run build:contracts && npm run build:core",
-    "dev:ui": "vite --config vite.config.ts",
+    "gen:manifest": "node scripts/gen-manifest.mjs",
+    "dev:ui": "npm run gen:manifest && vite --config vite.config.ts",
     "dev:desktop": "npm run build:packages && node scripts/wait-for-port.cjs 5173 && cross-env VITE_DEV_SERVER_URL=http://localhost:5173 electron apps/desktop/main.cjs",
     "dev": "concurrently -k \"npm:dev:ui\" \"npm:dev:desktop\"",
-    "build:ui": "vite build --config vite.config.ts",
+    "build:ui": "npm run gen:manifest && vite build --config vite.config.ts",
     "build": "npm run build:packages && npm run build:ui",
     "preview:ui": "vite preview --config vite.config.ts",
     "start": "electron apps/desktop/main.cjs",
     "check:i18n:keys": "node scripts/check-i18n-keys.mjs",
     "check:mojibake": "node scripts/check-mojibake.mjs",
     "check:encoding": "npm run check:mojibake",
-    "gen:npc": "node scripts/generate-npc-people.mjs"
+    "gen:npc": "node scripts/generate-npc-people.mjs",
+    "deploy": "node scripts/deploy-staging.mjs",
+    "migrate:entities": "node scripts/migrate-entities.mjs"
   },
   "dependencies": {
     "svelte": "^5.38.7"

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00287",
+  "name": "조태양",
+  "nameEn": "Woo Woo-jin",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_UNIVERSITY",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "TEAM_UNIV_DONGGUK",
+  "teamId": "TEAM_UNIV_DONGGUK",
+  "schoolId": "SCHOOL_UNIV_DONGGUK",
+  "grade": 2,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 7,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 57,
+        "velocity": 63,
+        "command": 60,
+        "control": 57,
+        "movement": 63,
+        "mentality": 59,
+        "recovery": 63
+      },
+      "batting": {
+        "ovr": 27,
+        "contact": 31,
+        "power": 30,
+        "eye": 27,
+        "discipline": 27,
+        "speed": 26,
+        "fielding": 27,
+        "arm": 26,
+        "battingClutch": 30
+      },
+      "developmentRate": 47,
+      "potentialHidden": 60
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

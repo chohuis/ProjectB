@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00339",
+  "name": "최상민",
+  "nameEn": "Ha Jin-woo",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_BUSAN_TEMPEST",
+  "teamId": "TEAM_IND_BUSAN_TEMPEST",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 19,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 31,
+        "velocity": 37,
+        "command": 40,
+        "control": 38,
+        "movement": 36,
+        "mentality": 36,
+        "recovery": 34
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 65,
+        "power": 63,
+        "eye": 58,
+        "discipline": 63,
+        "speed": 59,
+        "fielding": 58,
+        "arm": 58,
+        "battingClutch": 61
+      },
+      "developmentRate": 54,
+      "potentialHidden": 73
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

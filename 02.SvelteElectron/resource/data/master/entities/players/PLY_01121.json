@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01121",
+  "name": "톰프슨 호세",
+  "nameEn": "Thompson Jose",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_TEX",
+  "teamId": "TEAM_ABL_TEX_AAA",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:쿠바",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 46,
+      "pitching": {
+        "ovr": 79,
+        "stamina": 69,
+        "velocity": 84,
+        "command": 84,
+        "control": 77,
+        "movement": 81,
+        "mentality": 77,
+        "recovery": 78
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 49,
+        "power": 52,
+        "eye": 52,
+        "discipline": 53,
+        "speed": 47,
+        "fielding": 45,
+        "arm": 45,
+        "battingClutch": 51
+      },
+      "developmentRate": 43,
+      "potentialHidden": 75
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

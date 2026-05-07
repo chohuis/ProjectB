@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00480",
+  "name": "강시우",
+  "nameEn": "Nam Sang-min",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_KBL",
+  "clubId": "CLUB_KBL_KIA",
+  "teamId": "TEAM_KBL_KIA_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 20,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 42,
+        "velocity": 45,
+        "command": 45,
+        "control": 49,
+        "movement": 43,
+        "mentality": 47,
+        "recovery": 44
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 75,
+        "power": 74,
+        "eye": 67,
+        "discipline": 65,
+        "speed": 72,
+        "fielding": 64,
+        "arm": 68,
+        "battingClutch": 71
+      },
+      "developmentRate": 49,
+      "potentialHidden": 72
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

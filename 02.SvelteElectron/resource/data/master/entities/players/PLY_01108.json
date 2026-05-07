@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01108",
+  "name": "페레스 존",
+  "nameEn": "Perez John",
+  "role": "player",
+  "age": 39,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_TEX",
+  "teamId": "TEAM_ABL_TEX",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:도미니카",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 18,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 57,
+        "velocity": 55,
+        "command": 52,
+        "control": 59,
+        "movement": 51,
+        "mentality": 56,
+        "recovery": 56
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 81,
+        "power": 81,
+        "eye": 72,
+        "discipline": 72,
+        "speed": 78,
+        "fielding": 78,
+        "arm": 77,
+        "battingClutch": 74
+      },
+      "developmentRate": 31,
+      "potentialHidden": 58
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

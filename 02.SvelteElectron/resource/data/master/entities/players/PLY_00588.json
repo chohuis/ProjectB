@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00588",
+  "name": "성준서",
+  "nameEn": "Kwon Min-seok",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_KBL",
+  "clubId": "CLUB_KBL_LG",
+  "teamId": "TEAM_KBL_LG_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 43,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 44,
+        "velocity": 47,
+        "command": 48,
+        "control": 42,
+        "movement": 41,
+        "mentality": 43,
+        "recovery": 47
+      },
+      "batting": {
+        "ovr": 77,
+        "contact": 75,
+        "power": 75,
+        "eye": 76,
+        "discipline": 69,
+        "speed": 71,
+        "fielding": 72,
+        "arm": 68,
+        "battingClutch": 73
+      },
+      "developmentRate": 47,
+      "potentialHidden": 72
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

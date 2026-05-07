@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00782",
+  "name": "성승민",
+  "nameEn": "Heo Ye-jun",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_KBL",
+  "clubId": "CLUB_KBL_HANWHA",
+  "teamId": "TEAM_KBL_HANWHA_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "RP",
+      "jerseyNumber": 7,
+      "pitching": {
+        "ovr": 84,
+        "stamina": 81,
+        "velocity": 92,
+        "command": 83,
+        "control": 83,
+        "movement": 82,
+        "mentality": 80,
+        "recovery": 84
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 54,
+        "power": 58,
+        "eye": 52,
+        "discipline": 55,
+        "speed": 56,
+        "fielding": 49,
+        "arm": 49,
+        "battingClutch": 56
+      },
+      "developmentRate": 46,
+      "potentialHidden": 81
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

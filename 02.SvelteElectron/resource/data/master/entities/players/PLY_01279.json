@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01279",
+  "name": "마르티네스 앤드류",
+  "nameEn": "Martinez Andrew",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_CHC",
+  "teamId": "TEAM_ABL_CHC",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:한국",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "RP",
+      "jerseyNumber": 9,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 66,
+        "velocity": 74,
+        "command": 73,
+        "control": 75,
+        "movement": 66,
+        "mentality": 68,
+        "recovery": 68
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 47,
+        "power": 45,
+        "eye": 47,
+        "discipline": 42,
+        "speed": 46,
+        "fielding": 41,
+        "arm": 46,
+        "battingClutch": 44
+      },
+      "developmentRate": 45,
+      "potentialHidden": 79
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

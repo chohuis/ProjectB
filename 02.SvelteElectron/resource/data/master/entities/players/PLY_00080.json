@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00080",
+  "name": "강건우",
+  "nameEn": "Ha Tae-yang",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "grade": 3,
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "DH",
+      "jerseyNumber": 20,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 61,
+        "velocity": 63,
+        "command": 66,
+        "control": 54,
+        "movement": 57,
+        "mentality": 54,
+        "recovery": 67
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 51,
+        "power": 63,
+        "eye": 60,
+        "discipline": 63,
+        "speed": 61,
+        "fielding": 67,
+        "arm": 66,
+        "battingClutch": 66
+      },
+      "developmentRate": 66,
+      "potentialHidden": 66
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

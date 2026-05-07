@@ -1,0 +1,10 @@
+{
+  "id": "ACH_BASEBALL_FIRST_WIN_CAREER",
+  "title": "커리어 첫 승",
+  "category": "baseball",
+  "status": "active",
+  "metricKey": "gamesWonTotal",
+  "targetValue": 1,
+  "hidden": false,
+  "reward": "자신감 +1"
+}

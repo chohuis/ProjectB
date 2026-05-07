@@ -1,0 +1,10 @@
+{
+  "id": "ACH_SOCIAL_FIRST_KAKAO",
+  "title": "첫 카톡",
+  "category": "social",
+  "status": "active",
+  "metricKey": "kakaoFirstContact",
+  "targetValue": 1,
+  "hidden": false,
+  "reward": "관계도 +1"
+}

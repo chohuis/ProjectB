@@ -1,0 +1,10 @@
+{
+  "id": "ACH_BASEBALL_5_SAVES",
+  "title": "세이브 5회",
+  "category": "baseball",
+  "status": "active",
+  "metricKey": "saveTotal",
+  "targetValue": 5,
+  "hidden": false,
+  "reward": "명성 +3"
+}

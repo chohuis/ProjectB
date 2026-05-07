@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00305",
+  "name": "배재민",
+  "nameEn": "Son Won-jun",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_SEOUL_PIONEERS",
+  "teamId": "TEAM_IND_SEOUL_PIONEERS",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "RP",
+      "jerseyNumber": 5,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 53,
+        "velocity": 65,
+        "command": 62,
+        "control": 64,
+        "movement": 61,
+        "mentality": 62,
+        "recovery": 59
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 40,
+        "power": 37,
+        "eye": 36,
+        "discipline": 39,
+        "speed": 42,
+        "fielding": 36,
+        "arm": 38,
+        "battingClutch": 35
+      },
+      "developmentRate": 55,
+      "potentialHidden": 72
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

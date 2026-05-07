@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01050",
+  "name": "미첼 조너선",
+  "nameEn": "Mitchell Jonathan",
+  "role": "player",
+  "age": 41,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_HOU",
+  "teamId": "TEAM_ABL_HOU",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:베네수엘라",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 5,
+      "pitching": {
+        "ovr": 80,
+        "stamina": 82,
+        "velocity": 78,
+        "command": 77,
+        "control": 80,
+        "movement": 77,
+        "mentality": 75,
+        "recovery": 74
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 50,
+        "power": 55,
+        "eye": 52,
+        "discipline": 49,
+        "speed": 48,
+        "fielding": 50,
+        "arm": 48,
+        "battingClutch": 55
+      },
+      "developmentRate": 36,
+      "potentialHidden": 89
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

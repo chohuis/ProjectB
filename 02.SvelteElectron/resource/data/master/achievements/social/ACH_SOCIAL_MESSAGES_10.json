@@ -1,0 +1,10 @@
+{
+  "id": "ACH_SOCIAL_MESSAGES_10",
+  "title": "메시지 확인",
+  "category": "social",
+  "status": "active",
+  "metricKey": "messagesReadTotal",
+  "targetValue": 10,
+  "hidden": false,
+  "reward": "관계도 +1"
+}

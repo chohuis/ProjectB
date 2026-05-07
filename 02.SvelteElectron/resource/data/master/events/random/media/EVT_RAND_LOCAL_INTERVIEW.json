@@ -1,0 +1,18 @@
+{
+  "id": "EVT_RAND_LOCAL_INTERVIEW",
+  "type": "random",
+  "category": "media",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 30,
+  "poolId": "POOL_MEDIA_DAILY",
+  "conditions": [
+    {
+      "type": "fatigue_lte",
+      "value": 70
+    }
+  ],
+  "messageTemplateId": "MSG_RAND_LOCAL_INTERVIEW",
+  "decisionTemplateId": "DEC_RAND_LOCAL_INTERVIEW"
+}

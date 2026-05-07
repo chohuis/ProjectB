@@ -1,0 +1,10 @@
+{
+  "id": "ACH_BASEBALL_20_GAMES",
+  "title": "20경기 출전",
+  "category": "baseball",
+  "status": "active",
+  "metricKey": "gamesPlayedTotal",
+  "targetValue": 20,
+  "hidden": false,
+  "reward": "명성 +3"
+}

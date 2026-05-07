@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01241",
+  "name": "존스 노아",
+  "nameEn": "Jones Noah",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_NYM",
+  "teamId": "TEAM_ABL_NYM",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:미국",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 16,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 43,
+        "velocity": 52,
+        "command": 45,
+        "control": 51,
+        "movement": 43,
+        "mentality": 50,
+        "recovery": 45
+      },
+      "batting": {
+        "ovr": 76,
+        "contact": 76,
+        "power": 78,
+        "eye": 75,
+        "discipline": 72,
+        "speed": 71,
+        "fielding": 69,
+        "arm": 70,
+        "battingClutch": 75
+      },
+      "developmentRate": 52,
+      "potentialHidden": 75
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

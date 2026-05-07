@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00302",
+  "name": "우재윤",
+  "nameEn": "Hwang Seong-hyun",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_SEOUL_PIONEERS",
+  "teamId": "TEAM_IND_SEOUL_PIONEERS",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 2,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 65,
+        "velocity": 68,
+        "command": 59,
+        "control": 63,
+        "movement": 61,
+        "mentality": 59,
+        "recovery": 61
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 29,
+        "power": 36,
+        "eye": 33,
+        "discipline": 28,
+        "speed": 29,
+        "fielding": 33,
+        "arm": 35,
+        "battingClutch": 32
+      },
+      "developmentRate": 48,
+      "potentialHidden": 75
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

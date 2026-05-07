@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00359",
+  "name": "허지훈",
+  "nameEn": "Kang Jae-min",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_DAEGU_FALCONS",
+  "teamId": "TEAM_IND_DAEGU_FALCONS",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 19,
+      "pitching": {
+        "ovr": 31,
+        "stamina": 28,
+        "velocity": 33,
+        "command": 26,
+        "control": 31,
+        "movement": 30,
+        "mentality": 31,
+        "recovery": 24
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 64,
+        "power": 65,
+        "eye": 56,
+        "discipline": 61,
+        "speed": 63,
+        "fielding": 53,
+        "arm": 57,
+        "battingClutch": 64
+      },
+      "developmentRate": 42,
+      "potentialHidden": 83
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

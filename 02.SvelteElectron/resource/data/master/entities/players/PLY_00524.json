@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00524",
+  "name": "오준영",
+  "nameEn": "Sung Dong-hyuk",
+  "role": "player",
+  "age": 37,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_KBL",
+  "clubId": "CLUB_KBL_SAMSUNG",
+  "teamId": "TEAM_KBL_SAMSUNG_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 19,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 59,
+        "velocity": 55,
+        "command": 57,
+        "control": 59,
+        "movement": 59,
+        "mentality": 52,
+        "recovery": 54
+      },
+      "batting": {
+        "ovr": 87,
+        "contact": 86,
+        "power": 87,
+        "eye": 89,
+        "discipline": 85,
+        "speed": 91,
+        "fielding": 87,
+        "arm": 91,
+        "battingClutch": 91
+      },
+      "developmentRate": 43,
+      "potentialHidden": 79
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

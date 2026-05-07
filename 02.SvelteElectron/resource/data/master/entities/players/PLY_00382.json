@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00382",
+  "name": "민지호",
+  "nameEn": "Cha Ji-ho",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_DAEJEON_HUNTERS",
+  "teamId": "TEAM_IND_DAEJEON_HUNTERS",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 2,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 53,
+        "velocity": 53,
+        "command": 53,
+        "control": 51,
+        "movement": 48,
+        "mentality": 49,
+        "recovery": 48
+      },
+      "batting": {
+        "ovr": 23,
+        "contact": 24,
+        "power": 24,
+        "eye": 26,
+        "discipline": 26,
+        "speed": 22,
+        "fielding": 28,
+        "arm": 23,
+        "battingClutch": 23
+      },
+      "developmentRate": 57,
+      "potentialHidden": 82
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

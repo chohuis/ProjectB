@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00183",
+  "name": "박재민",
+  "nameEn": "Joo Seung-woo",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_UNIVERSITY",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "TEAM_UNIV_KNU",
+  "teamId": "TEAM_UNIV_KNU",
+  "schoolId": "SCHOOL_UNIV_KNU",
+  "grade": 1,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 3,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 78,
+        "velocity": 76,
+        "command": 74,
+        "control": 74,
+        "movement": 67,
+        "mentality": 76,
+        "recovery": 70
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 46,
+        "power": 46,
+        "eye": 46,
+        "discipline": 48,
+        "speed": 41,
+        "fielding": 45,
+        "arm": 41,
+        "battingClutch": 48
+      },
+      "developmentRate": 59,
+      "potentialHidden": 82
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00121",
+  "name": "오지후",
+  "nameEn": "Kwon Seong-min",
+  "role": "player",
+  "age": 15,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "grade": 3,
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 1,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 56,
+        "velocity": 52,
+        "command": 53,
+        "control": 50,
+        "movement": 48,
+        "mentality": 50,
+        "recovery": 65
+      },
+      "batting": {
+        "ovr": 33,
+        "contact": 46,
+        "power": 43,
+        "eye": 53,
+        "discipline": 50,
+        "speed": 55,
+        "fielding": 55,
+        "arm": 57,
+        "battingClutch": 49
+      },
+      "developmentRate": 53,
+      "potentialHidden": 80
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

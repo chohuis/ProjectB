@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00667",
+  "name": "박현우",
+  "nameEn": "Han Tae-jun",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_KBL",
+  "clubId": "CLUB_KBL_KT",
+  "teamId": "TEAM_KBL_KT_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 32,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 70,
+        "velocity": 71,
+        "command": 72,
+        "control": 69,
+        "movement": 63,
+        "mentality": 68,
+        "recovery": 70
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 44,
+        "power": 43,
+        "eye": 48,
+        "discipline": 46,
+        "speed": 45,
+        "fielding": 43,
+        "arm": 43,
+        "battingClutch": 48
+      },
+      "developmentRate": 49,
+      "potentialHidden": 77
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

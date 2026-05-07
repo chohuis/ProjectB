@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00071",
+  "name": "강용준",
+  "nameEn": "Yoon Hyun-jun",
+  "role": "player",
+  "age": 15,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "grade": 3,
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 11,
+      "pitching": {
+        "ovr": 39,
+        "stamina": 71,
+        "velocity": 64,
+        "command": 54,
+        "control": 62,
+        "movement": 47,
+        "mentality": 72,
+        "recovery": 52
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 62,
+        "power": 65,
+        "eye": 65,
+        "discipline": 64,
+        "speed": 54,
+        "fielding": 67,
+        "arm": 60,
+        "battingClutch": 49
+      },
+      "developmentRate": 66,
+      "potentialHidden": 85
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

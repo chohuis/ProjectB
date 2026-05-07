@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00742",
+  "name": "남재원",
+  "nameEn": "Cho Dong-jun",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_KBL",
+  "clubId": "CLUB_KBL_LOTTE",
+  "teamId": "TEAM_KBL_LOTTE_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 12,
+      "pitching": {
+        "ovr": 84,
+        "stamina": 71,
+        "velocity": 88,
+        "command": 89,
+        "control": 85,
+        "movement": 81,
+        "mentality": 85,
+        "recovery": 83
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 61,
+        "power": 61,
+        "eye": 59,
+        "discipline": 59,
+        "speed": 62,
+        "fielding": 56,
+        "arm": 60,
+        "battingClutch": 65
+      },
+      "developmentRate": 37,
+      "potentialHidden": 57
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

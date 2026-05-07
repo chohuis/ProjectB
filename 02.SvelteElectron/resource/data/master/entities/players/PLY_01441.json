@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01441",
+  "name": "미첼 디에고",
+  "nameEn": "Mitchell Diego",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_SF",
+  "teamId": "TEAM_ABL_SF_AAA",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 51,
+      "pitching": {
+        "ovr": 36,
+        "stamina": 38,
+        "velocity": 43,
+        "command": 42,
+        "control": 39,
+        "movement": 38,
+        "mentality": 41,
+        "recovery": 39
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 64,
+        "power": 66,
+        "eye": 63,
+        "discipline": 70,
+        "speed": 62,
+        "fielding": 64,
+        "arm": 66,
+        "battingClutch": 65
+      },
+      "developmentRate": 44,
+      "potentialHidden": 69
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

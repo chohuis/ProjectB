@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00003",
+  "name": "문찬우",
+  "nameEn": "You Seong-woo",
+  "role": "player",
+  "age": 17,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "grade": 2,
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 3,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 58,
+        "velocity": 67,
+        "command": 55,
+        "control": 58,
+        "movement": 63,
+        "mentality": 60,
+        "recovery": 64
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 65,
+        "power": 53,
+        "eye": 50,
+        "discipline": 64,
+        "speed": 72,
+        "fielding": 57,
+        "arm": 70,
+        "battingClutch": 52
+      },
+      "developmentRate": 71,
+      "potentialHidden": 75
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

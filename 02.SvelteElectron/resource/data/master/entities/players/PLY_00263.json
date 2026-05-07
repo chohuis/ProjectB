@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00263",
+  "name": "임지호",
+  "nameEn": "Noh Ji-sung",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_UNIVERSITY",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "TEAM_UNIV_CHUNGBUK",
+  "teamId": "TEAM_UNIV_CHUNGBUK",
+  "schoolId": "SCHOOL_UNIV_CHUNGBUK",
+  "grade": 1,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 3,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 59,
+        "velocity": 54,
+        "command": 58,
+        "control": 51,
+        "movement": 48,
+        "mentality": 57,
+        "recovery": 52
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 30,
+        "power": 33,
+        "eye": 27,
+        "discipline": 32,
+        "speed": 28,
+        "fielding": 26,
+        "arm": 27,
+        "battingClutch": 29
+      },
+      "developmentRate": 60,
+      "potentialHidden": 58
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

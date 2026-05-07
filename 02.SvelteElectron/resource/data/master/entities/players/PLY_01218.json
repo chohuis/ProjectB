@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01218",
+  "name": "톰프슨 루이스",
+  "nameEn": "Thompson Luis",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_PHI",
+  "teamId": "TEAM_ABL_PHI_AAA",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:쿠바",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 53,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 42,
+        "velocity": 48,
+        "command": 46,
+        "control": 48,
+        "movement": 45,
+        "mentality": 45,
+        "recovery": 42
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 72,
+        "power": 75,
+        "eye": 74,
+        "discipline": 72,
+        "speed": 70,
+        "fielding": 74,
+        "arm": 72,
+        "battingClutch": 76
+      },
+      "developmentRate": 50,
+      "potentialHidden": 74
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

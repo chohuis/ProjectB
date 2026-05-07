@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00353",
+  "name": "박찬우",
+  "nameEn": "Han Jae-hyun",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_DAEGU_FALCONS",
+  "teamId": "TEAM_IND_DAEGU_FALCONS",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 13,
+      "pitching": {
+        "ovr": 37,
+        "stamina": 34,
+        "velocity": 43,
+        "command": 35,
+        "control": 40,
+        "movement": 39,
+        "mentality": 37,
+        "recovery": 32
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 57,
+        "power": 64,
+        "eye": 61,
+        "discipline": 54,
+        "speed": 52,
+        "fielding": 59,
+        "arm": 57,
+        "battingClutch": 55
+      },
+      "developmentRate": 47,
+      "potentialHidden": 84
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

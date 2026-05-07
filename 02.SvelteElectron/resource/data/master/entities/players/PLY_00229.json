@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00229",
+  "name": "이성민",
+  "nameEn": "Lee Hyun-jin",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_UNIVERSITY",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "TEAM_UNIV_KOREA",
+  "teamId": "TEAM_UNIV_KOREA",
+  "schoolId": "SCHOOL_UNIV_KOREA",
+  "grade": 2,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 9,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 48,
+        "velocity": 66,
+        "command": 61,
+        "control": 60,
+        "movement": 58,
+        "mentality": 56,
+        "recovery": 54
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 36,
+        "power": 30,
+        "eye": 29,
+        "discipline": 33,
+        "speed": 33,
+        "fielding": 27,
+        "arm": 32,
+        "battingClutch": 34
+      },
+      "developmentRate": 59,
+      "potentialHidden": 71
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

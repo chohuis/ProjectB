@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00242",
+  "name": "우우진",
+  "nameEn": "Moon Seong-jun",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_UNIVERSITY",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "TEAM_UNIV_HANYANG",
+  "teamId": "TEAM_UNIV_HANYANG",
+  "schoolId": "SCHOOL_UNIV_HANYANG",
+  "grade": 1,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 2,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 55,
+        "velocity": 56,
+        "command": 52,
+        "control": 55,
+        "movement": 52,
+        "mentality": 52,
+        "recovery": 50
+      },
+      "batting": {
+        "ovr": 31,
+        "contact": 32,
+        "power": 28,
+        "eye": 29,
+        "discipline": 30,
+        "speed": 27,
+        "fielding": 24,
+        "arm": 26,
+        "battingClutch": 33
+      },
+      "developmentRate": 46,
+      "potentialHidden": 72
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

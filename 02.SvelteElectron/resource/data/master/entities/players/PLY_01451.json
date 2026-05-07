@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01451",
+  "name": "산체스 윌리엄",
+  "nameEn": "Sanchez William",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_ARI",
+  "teamId": "TEAM_ABL_ARI",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:미국",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 1,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 81,
+        "velocity": 75,
+        "command": 75,
+        "control": 77,
+        "movement": 79,
+        "mentality": 72,
+        "recovery": 78
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 46,
+        "power": 45,
+        "eye": 51,
+        "discipline": 49,
+        "speed": 48,
+        "fielding": 45,
+        "arm": 43,
+        "battingClutch": 46
+      },
+      "developmentRate": 45,
+      "potentialHidden": 73
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

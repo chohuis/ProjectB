@@ -1,0 +1,18 @@
+{
+  "id": "EVT_RAND_SENIOR_ADVICE",
+  "type": "random",
+  "category": "team_life",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 30,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "conditions": [
+    {
+      "type": "fatigue_lte",
+      "value": 75
+    }
+  ],
+  "messageTemplateId": "MSG_RAND_SENIOR_ADVICE",
+  "decisionTemplateId": "DEC_RAND_SENIOR_ADVICE"
+}

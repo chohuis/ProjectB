@@ -1,0 +1,15 @@
+{
+  "id": "EVT_COND_STAT_MILESTONE",
+  "type": "conditional",
+  "category": "career",
+  "priority": 750,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "season_wins_gte",
+      "value": 5
+    }
+  ],
+  "messageTemplateId": "MSG_COND_STAT_MILESTONE",
+  "decisionTemplateId": null
+}

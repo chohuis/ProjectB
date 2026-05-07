@@ -1,0 +1,19 @@
+{
+  "id": "EVT_HS_SUMMER_CAMP",
+  "type": "mandatory",
+  "category": "training",
+  "priority": 900,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "week_eq",
+      "value": 20
+    },
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    }
+  ],
+  "messageTemplateId": "MSG_HS_SUMMER_CAMP",
+  "decisionTemplateId": "DEC_HS_SUMMER_CAMP"
+}

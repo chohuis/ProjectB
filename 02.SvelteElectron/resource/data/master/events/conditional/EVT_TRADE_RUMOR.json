@@ -1,0 +1,16 @@
+{
+  "id": "EVT_TRADE_RUMOR",
+  "type": "conditional",
+  "category": "career",
+  "priority": 640,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 4,
+  "conditions": [
+    {
+      "type": "week_gte",
+      "value": 12
+    }
+  ],
+  "messageTemplateId": null,
+  "decisionTemplateId": null
+}

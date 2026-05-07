@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00379",
+  "name": "권건우",
+  "nameEn": "Cho Dong-hyuk",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_GWANGJU_STORM",
+  "teamId": "TEAM_IND_GWANGJU_STORM",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 19,
+      "pitching": {
+        "ovr": 35,
+        "stamina": 34,
+        "velocity": 37,
+        "command": 35,
+        "control": 35,
+        "movement": 38,
+        "mentality": 34,
+        "recovery": 31
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 65,
+        "power": 66,
+        "eye": 60,
+        "discipline": 61,
+        "speed": 61,
+        "fielding": 55,
+        "arm": 61,
+        "battingClutch": 61
+      },
+      "developmentRate": 52,
+      "potentialHidden": 71
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

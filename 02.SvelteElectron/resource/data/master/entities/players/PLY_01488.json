@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01488",
+  "name": "애덤스 다니엘",
+  "nameEn": "Adams Daniel",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_ARI",
+  "teamId": "TEAM_ABL_ARI_AAA",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:도미니카",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 53,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 53,
+        "velocity": 59,
+        "command": 52,
+        "control": 53,
+        "movement": 48,
+        "mentality": 48,
+        "recovery": 53
+      },
+      "batting": {
+        "ovr": 82,
+        "contact": 77,
+        "power": 80,
+        "eye": 77,
+        "discipline": 78,
+        "speed": 75,
+        "fielding": 74,
+        "arm": 73,
+        "battingClutch": 82
+      },
+      "developmentRate": 51,
+      "potentialHidden": 60
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

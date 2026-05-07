@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00428",
+  "name": "전성현",
+  "nameEn": "Noh Dong-jun",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_SUWON_BLAZE",
+  "teamId": "TEAM_IND_SUWON_BLAZE",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 8,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 60,
+        "velocity": 68,
+        "command": 69,
+        "control": 66,
+        "movement": 61,
+        "mentality": 64,
+        "recovery": 69
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 41,
+        "power": 44,
+        "eye": 39,
+        "discipline": 42,
+        "speed": 46,
+        "fielding": 39,
+        "arm": 40,
+        "battingClutch": 41
+      },
+      "developmentRate": 54,
+      "potentialHidden": 72
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

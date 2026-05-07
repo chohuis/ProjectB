@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00269",
+  "name": "남용준",
+  "nameEn": "Heo Jun-young",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_UNIVERSITY",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "TEAM_UNIV_CHUNGBUK",
+  "teamId": "TEAM_UNIV_CHUNGBUK",
+  "schoolId": "SCHOOL_UNIV_CHUNGBUK",
+  "grade": 2,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "CP",
+      "jerseyNumber": 9,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 39,
+        "velocity": 58,
+        "command": 49,
+        "control": 58,
+        "movement": 51,
+        "mentality": 50,
+        "recovery": 50
+      },
+      "batting": {
+        "ovr": 35,
+        "contact": 33,
+        "power": 33,
+        "eye": 31,
+        "discipline": 30,
+        "speed": 36,
+        "fielding": 29,
+        "arm": 35,
+        "battingClutch": 29
+      },
+      "developmentRate": 57,
+      "potentialHidden": 69
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00226",
+  "name": "남민준",
+  "nameEn": "Baek Tae-jun",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_UNIVERSITY",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "TEAM_UNIV_KOREA",
+  "teamId": "TEAM_UNIV_KOREA",
+  "schoolId": "SCHOOL_UNIV_KOREA",
+  "grade": 2,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 6,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 56,
+        "velocity": 72,
+        "command": 68,
+        "control": 69,
+        "movement": 64,
+        "mentality": 65,
+        "recovery": 66
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 43,
+        "power": 45,
+        "eye": 45,
+        "discipline": 48,
+        "speed": 40,
+        "fielding": 47,
+        "arm": 40,
+        "battingClutch": 49
+      },
+      "developmentRate": 52,
+      "potentialHidden": 62
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

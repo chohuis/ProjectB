@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00441",
+  "name": "하준영",
+  "nameEn": "Song Seong-woo",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "clubId": "TEAM_IND_ULSAN_PHOENIX",
+  "teamId": "TEAM_IND_ULSAN_PHOENIX",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 1,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 78,
+        "velocity": 77,
+        "command": 75,
+        "control": 74,
+        "movement": 74,
+        "mentality": 74,
+        "recovery": 74
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 41,
+        "power": 39,
+        "eye": 44,
+        "discipline": 45,
+        "speed": 43,
+        "fielding": 43,
+        "arm": 37,
+        "battingClutch": 43
+      },
+      "developmentRate": 48,
+      "potentialHidden": 73
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

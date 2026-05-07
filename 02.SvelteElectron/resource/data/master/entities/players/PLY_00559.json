@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00559",
+  "name": "백재현",
+  "nameEn": "Kim Seong-hyun",
+  "role": "player",
+  "age": 36,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_KBL",
+  "clubId": "CLUB_KBL_LG",
+  "teamId": "TEAM_KBL_LG_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 9,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 69,
+        "velocity": 74,
+        "command": 75,
+        "control": 70,
+        "movement": 72,
+        "mentality": 72,
+        "recovery": 76
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 44,
+        "power": 43,
+        "eye": 43,
+        "discipline": 39,
+        "speed": 36,
+        "fielding": 42,
+        "arm": 38,
+        "battingClutch": 41
+      },
+      "developmentRate": 51,
+      "potentialHidden": 57
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_01201",
+  "name": "토머스 오스틴",
+  "nameEn": "Thomas Austin",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_PHI",
+  "teamId": "TEAM_ABL_PHI",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:미국",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 21,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 59,
+        "velocity": 67,
+        "command": 64,
+        "control": 60,
+        "movement": 57,
+        "mentality": 59,
+        "recovery": 60
+      },
+      "batting": {
+        "ovr": 95,
+        "contact": 96,
+        "power": 90,
+        "eye": 90,
+        "discipline": 89,
+        "speed": 98,
+        "fielding": 93,
+        "arm": 94,
+        "battingClutch": 92
+      },
+      "developmentRate": 45,
+      "potentialHidden": 68
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

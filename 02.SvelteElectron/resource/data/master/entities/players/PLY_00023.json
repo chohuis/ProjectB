@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00023",
+  "name": "안현진",
+  "nameEn": "Song Tae-yang",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "grade": 2,
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 3,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 73,
+        "velocity": 54,
+        "command": 49,
+        "control": 58,
+        "movement": 60,
+        "mentality": 69,
+        "recovery": 52
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 56,
+        "power": 43,
+        "eye": 63,
+        "discipline": 45,
+        "speed": 68,
+        "fielding": 59,
+        "arm": 60,
+        "battingClutch": 66
+      },
+      "developmentRate": 62,
+      "potentialHidden": 62
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_00170",
+  "name": "장진우",
+  "nameEn": "Joo Geon-woo",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_UNIVERSITY",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "TEAM_UNIV_KNSU",
+  "teamId": "TEAM_UNIV_KNSU",
+  "schoolId": "SCHOOL_UNIV_KNSU",
+  "grade": 2,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 10,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 37,
+        "velocity": 57,
+        "command": 56,
+        "control": 52,
+        "movement": 52,
+        "mentality": 55,
+        "recovery": 49
+      },
+      "batting": {
+        "ovr": 25,
+        "contact": 26,
+        "power": 25,
+        "eye": 23,
+        "discipline": 22,
+        "speed": 25,
+        "fielding": 21,
+        "arm": 22,
+        "battingClutch": 25
+      },
+      "developmentRate": 49,
+      "potentialHidden": 78
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}
