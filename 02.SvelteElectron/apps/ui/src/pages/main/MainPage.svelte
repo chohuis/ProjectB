@@ -1,4 +1,4 @@
-﻿<script lang="ts">
+<script lang="ts">
   import type { MainTabId } from "../../shared/types/main";
   import { gameStore, unreadCount, showAcademicsTab } from "../../shared/stores/game";
   import { seasonStore, nextPendingAction, seasonEnded } from "../../shared/stores/season";
@@ -75,7 +75,7 @@
     currentTab = "home";
   }
 
-  // 硫붿떆吏 寃곗젙 pendingAction ??硫붿떆吏 ???먮룞 ?꾪솚 (理쒖큹 1??
+  // 메시지 결정 pendingAction 시 메시지 탭 자동 전환 (최대 1회)
   let handledMessageId: string | null = null;
   $: {
     const pa = $nextPendingAction;
@@ -86,10 +86,10 @@
     if (!pa || pa.type !== "message") handledMessageId = null;
   }
 
-  // ?대깽??pendingAction
+  // 이벤트 pendingAction
   $: pendingEvent = $nextPendingAction?.type === "event" ? $nextPendingAction : null;
 
-  // 吏꾨줈 ?좏깮 pendingAction
+  // 진로 선택 pendingAction
   $: pendingCareerChoice = $nextPendingAction?.type === "careerChoice";
   $: pendingDraft = $nextPendingAction?.type === "draft";
   $: pendingSalaryNegotiation = $nextPendingAction?.type === "salaryNegotiation" ? $nextPendingAction : null;
@@ -98,16 +98,16 @@
   $: pendingFaMarket = $nextPendingAction?.type === "faMarket";
   $: pendingMilitaryEnlist = $nextPendingAction?.type === "militaryEnlist";
 
-  // 硫붿떊? ?ㅽ겕由쏀듃 pendingAction
+  // 메신저 스크립트 pendingAction
   $: pendingScript = $nextPendingAction?.type === "messengerScript" ? $nextPendingAction : null;
 
-  // 寃쎄린 pendingAction ???대떦 ?쇱젙 ??ぉ
+  // 경기 pendingAction 과 해당 일정 찾기
   $: pendingGame = $nextPendingAction?.type === "game" ? $nextPendingAction : null;
   $: pendingGameEntry = pendingGame
     ? $seasonStore.schedule.find((e) => e.id === pendingGame!.scheduleId) ?? null
     : null;
 
-  // 寃쎄린 ?먮룞 ?쒕? ??pendingAction ?댁젣
+  // 경기 자동 시뮬 후 pendingAction 제거
   function autoSimGame() {
     if (!pendingGameEntry) return;
     const p = $gameStore.protagonist;
@@ -159,7 +159,7 @@
       createdAt: `W${pendingGameEntry.week}`,
       readAt: null,
     });
-    // 寃쎄린 ???낆쟻 泥댄겕
+    // 경기 후 업적 처리
     const achMetrics = computeMetrics(
       $gameStore.achievementMetrics,
       $gameStore.mailbox,
@@ -176,11 +176,11 @@
     seasonStore.save();
   }
 
-  // ?낆쟻 諭껋? 移댁슫??
+  // 업적 알림 배지 갱신
   $: pendingAchievementCount = $gameStore.pendingAchievements.length;
   $: militaryCountdownLabel =
     $gameStore.protagonist.careerStage === "military"
-      ? `援?蹂듬Т ${Math.max(0, 104 - $gameStore.protagonist.militaryServiceWeeks)}二??⑥쓬`
+      ? `전역까지 ${Math.max(0, 104 - $gameStore.protagonist.militaryServiceWeeks)}주 남음`
       : "";
 
   $: canVoluntaryEnlist =
@@ -199,7 +199,7 @@
     currentTab = "home";
   }
 
-  // 媛쒕컻???대깽??愿由??꾧뎄 ?⑥텞?? Ctrl+Q (硫붿씤 ?덉씠?꾩썐?먯꽌留??숈옉)
+  // 키보드 이벤트 핸들러 - Ctrl+Q (메인 페이지에서만 동작)
   function handleGlobalShortcut(event: KeyboardEvent) {
     if (currentTab === "test") return;
     if (!(event.ctrlKey || event.metaKey)) return;
@@ -373,7 +373,7 @@
 {#if pendingGameEntry}
   <div class="game-overlay">
     <div class="game-modal">
-      <p class="week-badge">W{pendingGameEntry.week} 寃쎄린</p>
+      <p class="week-badge">W{pendingGameEntry.week} 경기</p>
       <div class="matchup">
         <span class:my-team={pendingGameEntry.homeTeamId === $gameStore.protagonist.teamId}>
           {tName(pendingGameEntry.homeTeamId)}
@@ -384,8 +384,8 @@
         </span>
       </div>
       <div class="game-actions">
-        <button class="btn-auto" on:click={autoSimGame}>?먮룞 ?쒕?</button>
-        <button class="btn-play" disabled>吏곸젒 ?뚮젅??(以鍮?以?</button>
+        <button class="btn-auto" on:click={autoSimGame}>자동 시뮬</button>
+        <button class="btn-play" disabled>직접 플레이 (준비 중)</button>
       </div>
     </div>
   </div>
@@ -462,7 +462,7 @@
     }
   }
 
-  /* ?? 寃쎄린 ?湲?紐⑤떖 ?? */
+  /* ── 경기 오버레이 ── */
   .game-overlay {
     position: fixed;
     inset: 0;
