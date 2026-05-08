@@ -3,6 +3,14 @@
   createBatter,
   createRunner,
   createInitialMatchState,
+  FIELDER_DEFAULT_POSITIONS,
+  type AnimationCue,
+  type BallHitType,
+  type BallInPlay,
+  type BatterStats,
+  type FieldPosition,
+  type FielderStats,
+  type FieldingResult,
   type HalfInning,
   type MatchCount,
   type MatchRunners,
@@ -31,6 +39,9 @@ export interface PitchOutcome {
   resultCode: PitchResultCode;
   quality: number;
   comment: string;
+  ballInPlay?: BallInPlay;
+  fieldingResult?: FieldingResult;
+  animationCues: AnimationCue[];
 }
 
 export interface MatchStepResult {
@@ -58,7 +69,7 @@ export function finishMatch(state: MatchState): { nextState: MatchState; summary
 
 export function stepPitch(state: MatchState, decision: PitchDecision): MatchStepResult {
   if (state.isFinished) {
-    const outcome: PitchOutcome = { resultCode: "GAME_OVER", quality: 0, comment: "이미 종료된 경기입니다." };
+    const outcome: PitchOutcome = { resultCode: "GAME_OVER", quality: 0, comment: "이미 종료된 경기입니다.", animationCues: [] };
     return { nextState: state, outcome };
   }
 
@@ -81,6 +92,15 @@ export function stepPitch(state: MatchState, decision: PitchDecision): MatchStep
   // ── 2. 투구 결과 결정 ──────────────────────────────────────────────────────
   const quality = calculatePitchQuality(preState, decision);
   let resultCode = applyHitUpgrade(resolvePitchResult(quality, decision), preState.batter.power, preState.weather);
+  const ballInPlay = resolveBallInPlay(resultCode, decision, quality);
+
+  // ── Phase 4: 수비 처리 (INPLAY_OUT 케이스에서만) ───────────────────────────
+  let fieldingResult: FieldingResult | undefined;
+  if (ballInPlay && resultCode === "INPLAY_OUT") {
+    const fd = resolveFieldingResult(ballInPlay, preState.fielders);
+    fieldingResult = fd.fieldingResult;
+    resultCode = fd.adjustedResultCode;
+  }
 
   let nextCount = { ...preState.count };
   let nextOuts = preState.outs;
@@ -95,7 +115,7 @@ export function stepPitch(state: MatchState, decision: PitchDecision): MatchStep
     if (nextCount.balls >= 4) {
       resultCode = "WALK";
       nextCount = { balls: 0, strikes: 0 };
-      const walkRun = advanceOnWalk(nextRunners, createRunner(preState.batterMean));
+      const walkRun = advanceOnWalk(nextRunners, createRunner(preState.batter));
       nextRunners = walkRun.runners;
       nextScore = addRuns(nextScore, nextHalf, walkRun.runs);
     }
@@ -114,13 +134,37 @@ export function stepPitch(state: MatchState, decision: PitchDecision): MatchStep
       nextRunners = gidpResult.runners;
       runningLogs.push("병살타!");
     }
+  } else if (resultCode === "FIELDING_ERROR") {
+    // 실책: 아웃 없음 — 타자 1루 출루, 기존 주자 진루
+    nextCount = { balls: 0, strikes: 0 };
+    const errResult = advanceOnHit(nextRunners, "HIT_SINGLE", createRunner(preState.batter));
+    nextRunners = errResult.runners;
+    nextScore = addRuns(nextScore, nextHalf, errResult.runs);
+    nextOuts += errResult.extraOuts;
+    const errName = fieldingResult?.fielder.name ?? "수비수";
+    runningLogs.push(`실책! (${errName})`);
   } else {
-    const hitResult = advanceOnHit(nextRunners, resultCode, createRunner(preState.batterMean));
+    const hitResult = advanceOnHit(nextRunners, resultCode, createRunner(preState.batter));
     nextRunners = hitResult.runners;
     nextScore = addRuns(nextScore, nextHalf, hitResult.runs);
     nextOuts += hitResult.extraOuts;
     nextCount = { balls: 0, strikes: 0 };
     runningLogs.push(...hitResult.logs);
+  }
+
+  // defenseStat 업데이트
+  const nextDefenseStat = { ...preState.defenseStat };
+  if (fieldingResult) {
+    if (fieldingResult.isError) {
+      nextDefenseStat.errors += 1;
+    } else {
+      if (fieldingResult.throwResult === "out") {
+        nextDefenseStat.throwOuts += 1;
+        nextDefenseStat.assists += 1;
+      } else if (fieldingResult.throwResult === "safe") {
+        nextDefenseStat.throwSafes += 1;
+      }
+    }
   }
 
   if (nextOuts >= 3) {
@@ -155,14 +199,28 @@ export function stepPitch(state: MatchState, decision: PitchDecision): MatchStep
 
   // ── 4. 타자 교체 / 패턴 히스토리 ────────────────────────────────────────────
   const isKOut = (resultCode === "STRIKE_LOOK" || resultCode === "STRIKE_SWING") && preState.count.strikes === 2;
-  const abEnded = isKOut || resultCode === "WALK" || resultCode === "INPLAY_OUT" ||
+  const abEnded = isKOut || resultCode === "WALK" || resultCode === "INPLAY_OUT" || resultCode === "FIELDING_ERROR" ||
     resultCode === "HIT_SINGLE" || resultCode === "HIT_DOUBLE" || resultCode === "HIT_TRIPLE" || resultCode === "HOME_RUN";
-  const nextBatter = abEnded ? createBatter(preState.batterMean) : preState.batter;
+  let nextBatter: BatterStats = preState.batter;
+  let nextLineupIndex = preState.lineupIndex;
+  if (abEnded) {
+    nextLineupIndex = (preState.lineupIndex + 1) % preState.opponentLineup.length;
+    nextBatter = { ...preState.opponentLineup[nextLineupIndex] };
+  }
   const nextLastPitchTypes = [...preState.lastPitchTypes, decision.pitchType].slice(-5);
 
   // ── 5. 로그 조합 ──────────────────────────────────────────────────────────
   const pitchLog = buildPitchLog(preState, decision, resultCode, quality);
   const allNewLogs = [...stealResult.stealLogs, pitchLog, ...runningLogs];
+
+  // ── 6. AnimationCue 생성 ──────────────────────────────────────────────────
+  const animationCues = buildAnimationCues({
+    decision,
+    resultCode,
+    ballInPlay,
+    fieldingResult,
+    preRunners: preState.runners,
+  });
 
   let nextState: MatchState = {
     ...preState,
@@ -176,7 +234,9 @@ export function stepPitch(state: MatchState, decision: PitchDecision): MatchStep
     stamina: Number(nextStamina.toFixed(1)),
     mental: Number(nextMental.toFixed(1)),
     batter: nextBatter,
+    lineupIndex: nextLineupIndex,
     lastPitchTypes: nextLastPitchTypes,
+    defenseStat: nextDefenseStat,
     logs: [...state.logs, ...allNewLogs]
   };
 
@@ -184,7 +244,7 @@ export function stepPitch(state: MatchState, decision: PitchDecision): MatchStep
     nextState = { ...nextState, isFinished: true, logs: [...nextState.logs, finishLog(nextState)] };
   }
 
-  const outcome: PitchOutcome = { resultCode, quality, comment: getResultComment(resultCode) };
+  const outcome: PitchOutcome = { resultCode, quality, comment: getResultComment(resultCode), ballInPlay, fieldingResult, animationCues };
   return { nextState, outcome };
 }
 
@@ -333,6 +393,303 @@ function resolveStrikeType(decision: PitchDecision, roll: number): "STRIKE_LOOK"
   if (decision.location === 5) lookProb -= 0.10;
 
   return roll < clamp(lookProb, 0.15, 0.85) ? "STRIKE_LOOK" : "STRIKE_SWING";
+}
+
+// ── Phase 3: Ball-in-play 탐지 엔진 ───────────────────────────────────────────
+
+const INPLAY_CODES = new Set<PitchResultCode>(["INPLAY_OUT", "FIELDING_ERROR", "HIT_SINGLE", "HIT_DOUBLE", "HIT_TRIPLE", "HOME_RUN"]);
+
+function resolveBallInPlay(
+  resultCode: PitchResultCode,
+  decision: PitchDecision,
+  quality: number
+): BallInPlay | undefined {
+  if (!INPLAY_CODES.has(resultCode)) return undefined;
+  const hitType = resolveHitType(resultCode, decision, quality);
+  const zone    = resolveZone(hitType, decision.location);
+  const hardness = resolveHardness(resultCode, decision, quality);
+  return { hitType, zone, hardness };
+}
+
+function resolveHitType(
+  resultCode: PitchResultCode,
+  decision: PitchDecision,
+  quality: number
+): BallHitType {
+  // 번트: safe 전략 + low 파워
+  if (decision.strategy === "safe" && decision.power === "low") return "bunt";
+
+  // 홈런: 항상 flyBall
+  if (resultCode === "HOME_RUN") return "flyBall";
+  // 3루타: 갭 타구 — flyBall 또는 lineDrive
+  if (resultCode === "HIT_TRIPLE") return Math.random() < 0.70 ? "flyBall" : "lineDrive";
+  // 2루타: 직선 또는 뜬공
+  if (resultCode === "HIT_DOUBLE") return Math.random() < 0.55 ? "lineDrive" : "flyBall";
+
+  // 내야 플라이: quality 높을 때(실투 아님) INPLAY_OUT 중 30% 확률
+  if (resultCode === "INPLAY_OUT" && quality >= 60 && Math.random() < 0.30) return "popup";
+
+  // 투구 종류별 타구 경향
+  const gbPitches = new Set<PitchType>(["sinker", "cutter", "slider"]);
+  const fbPitches = new Set<PitchType>(["changeup", "curve", "forkball", "screwball", "knuckleball"]);
+  const roll = Math.random();
+
+  if (gbPitches.has(decision.pitchType)) {
+    if (roll < 0.68) return "groundBall";
+    if (roll < 0.85) return "lineDrive";
+    return "flyBall";
+  }
+  if (fbPitches.has(decision.pitchType)) {
+    if (roll < 0.15) return "groundBall";
+    if (roll < 0.48) return "lineDrive";
+    return "flyBall";
+  }
+  // fastball / splitter: 균형
+  if (roll < 0.38) return "groundBall";
+  if (roll < 0.68) return "lineDrive";
+  return "flyBall";
+}
+
+function resolveZone(hitType: BallHitType, location: PitchLocation): FieldPosition {
+  // 투수 시점: 좌(1,4,7)=타자 당겨치기→우측방향, 우(3,6,9)=밀어치기→좌측방향, 중(2,5,8)=센터
+  const isLeft   = (location === 1 || location === 4 || location === 7);
+  const isRight  = (location === 3 || location === 6 || location === 9);
+
+  if (hitType === "bunt") {
+    const zones: FieldPosition[] = ["P", "C", "1B", "3B"];
+    return zones[Math.floor(Math.random() * zones.length)];
+  }
+  if (hitType === "popup") {
+    const zones: FieldPosition[] = ["C", "1B", "2B", "3B", "SS"];
+    return zones[Math.floor(Math.random() * zones.length)];
+  }
+  if (hitType === "groundBall") {
+    if (isLeft)  return Math.random() < 0.52 ? "3B" : "SS";
+    if (isRight) return Math.random() < 0.55 ? "1B" : "2B";
+    return Math.random() < 0.50 ? "SS" : "2B";
+  }
+  if (hitType === "flyBall") {
+    if (isLeft)  return Math.random() < 0.72 ? "RF" : "CF";
+    if (isRight) return Math.random() < 0.72 ? "LF" : "CF";
+    const r = Math.random();
+    return r < 0.60 ? "CF" : r < 0.80 ? "LF" : "RF";
+  }
+  // lineDrive: 내야~외야 혼합
+  if (isLeft)  return Math.random() < 0.45 ? "1B" : "RF";
+  if (isRight) return Math.random() < 0.45 ? "3B" : "LF";
+  return Math.random() < 0.45 ? "2B" : "CF";
+}
+
+function resolveHardness(
+  resultCode: PitchResultCode,
+  decision: PitchDecision,
+  quality: number
+): 1 | 2 | 3 | 4 | 5 {
+  let base: number;
+  switch (resultCode) {
+    case "HOME_RUN":    base = 5.0; break;
+    case "HIT_TRIPLE":  base = 4.2; break;
+    case "HIT_DOUBLE":  base = 3.5; break;
+    case "HIT_SINGLE":  base = 2.8; break;
+    default:            base = 2.0; // INPLAY_OUT, FIELDING_ERROR
+  }
+
+  if (decision.power === "high") base += 0.5;
+  if (decision.power === "low")  base -= 0.5;
+
+  // 낮은 quality = 실투 = 더 강하게 맞음
+  if (quality < 40) base += 0.5;
+  if (quality < 32) base += 0.5;
+
+  base += (Math.random() - 0.5) * 1.2; // ±0.6 노이즈
+  return clamp(Math.round(base), 1, 5) as 1 | 2 | 3 | 4 | 5;
+}
+
+// ── Phase 4: 수비 처리 엔진 ───────────────────────────────────────────────────
+
+function calcErrorProb(ballInPlay: BallInPlay, fielder: FielderStats): number {
+  const baseByHitType: Record<BallHitType, number> = {
+    popup:      0.04,
+    bunt:       0.08,
+    flyBall:    0.06,
+    groundBall: 0.11,
+    lineDrive:  0.09,
+  };
+  let prob = baseByHitType[ballInPlay.hitType];
+  // 강한 타구일수록 실책 확률 증가
+  prob += (ballInPlay.hardness - 3) * 0.025;
+  // fielding 능력치 보정
+  prob -= (fielder.fielding - 50) * 0.003;
+  return clamp(prob, 0.01, 0.40);
+}
+
+function makeDefaultFielder(position: FieldPosition): FielderStats {
+  return { position, name: position, fielding: 50, arm: 50, speed: 50, x: 50, y: 50 };
+}
+
+function resolveFieldingResult(
+  ballInPlay: BallInPlay,
+  fielders: FielderStats[],
+): { fieldingResult: FieldingResult; adjustedResultCode: PitchResultCode } {
+  const fielder = fielders.find(f => f.position === ballInPlay.zone) ?? makeDefaultFielder(ballInPlay.zone);
+
+  const isError = Math.random() < calcErrorProb(ballInPlay, fielder);
+
+  let threwTo: FieldPosition | undefined;
+  let throwResult: "out" | "safe" | undefined;
+  let adjustedResultCode: PitchResultCode = isError ? "FIELDING_ERROR" : "INPLAY_OUT";
+
+  if (!isError) {
+    // 땅볼·라인드라이브·번트: 1루 송구 필요 (1루수 본인이면 제외)
+    const needsThrow = ballInPlay.hitType === "groundBall"
+      || ballInPlay.hitType === "lineDrive"
+      || ballInPlay.hitType === "bunt";
+    if (needsThrow && ballInPlay.zone !== "1B") {
+      threwTo = "1B";
+      const armMod = (fielder.arm - 50) * 0.004;
+      const hardnessPenalty = (ballInPlay.hardness - 3) * 0.02;
+      const successProb = clamp(0.88 + armMod - hardnessPenalty, 0.45, 0.97);
+      throwResult = Math.random() < successProb ? "out" : "safe";
+      if (throwResult === "safe") adjustedResultCode = "FIELDING_ERROR";
+    }
+    // flyBall·popup·1루수 직접처리: 송구 없이 아웃
+  }
+
+  return {
+    fieldingResult: {
+      fielder,
+      isError,
+      threwTo,
+      throwResult,
+      runnerExtraAdvance: isError ? 1 : 0,
+    },
+    adjustedResultCode,
+  };
+}
+
+// ── Phase 5: AnimationCue 생성 시스템 ────────────────────────────────────────
+
+// 0-100 좌표계 내 주요 지점
+const MOUND_POS  = { x: 50, y: 62 } as const;
+const HOME_POS   = { x: 50, y: 88 } as const;
+const BASE_POS = {
+  "1B":  { x: 78, y: 70 },
+  "2B":  { x: 50, y: 52 },
+  "3B":  { x: 22, y: 70 },
+  "home": { x: 50, y: 88 },
+} as const;
+
+function getResultTone(code: PitchResultCode): "good" | "bad" | "neutral" {
+  switch (code) {
+    case "STRIKE_SWING": case "STRIKE_LOOK": case "INPLAY_OUT": return "good";
+    case "HIT_SINGLE": case "HIT_DOUBLE": case "HIT_TRIPLE":
+    case "HOME_RUN":   case "WALK":       case "FIELDING_ERROR": return "bad";
+    default: return "neutral";
+  }
+}
+
+function battedDuration(hitType: BallHitType): number {
+  switch (hitType) {
+    case "bunt":      return 280;
+    case "popup":     return 520;
+    case "groundBall": return 380;
+    case "lineDrive": return 330;
+    case "flyBall":   return 680;
+  }
+}
+
+function battedArc(hitType: BallHitType): number {
+  switch (hitType) {
+    case "popup":     return 0.85;
+    case "flyBall":   return 0.60;
+    case "lineDrive": return 0.15;
+    case "groundBall": return 0.05;
+    case "bunt":      return 0.08;
+  }
+}
+
+function buildRunnerAdvanceCues(code: PitchResultCode, pre: MatchRunners): AnimationCue[] {
+  const cues: AnimationCue[] = [];
+
+  const push = (id: "batter" | "first" | "second" | "third", base: "1B" | "2B" | "3B" | "home", ms: number) =>
+    cues.push({ type: "runner_advance", runnerId: id, toBase: base, duration: ms });
+
+  if (code === "HOME_RUN") {
+    push("batter", "home", 600);
+    if (pre.third)  push("third",  "home", 380);
+    if (pre.second) push("second", "home", 460);
+    if (pre.first)  push("first",  "home", 540);
+  } else if (code === "HIT_TRIPLE") {
+    push("batter", "3B", 580);
+    if (pre.third)  push("third",  "home", 360);
+    if (pre.second) push("second", "home", 440);
+    if (pre.first)  push("first",  "home", 520);
+  } else if (code === "HIT_DOUBLE") {
+    push("batter", "2B", 520);
+    if (pre.third)  push("third",  "home", 360);
+    if (pre.second) push("second", "home", 440);
+    if (pre.first)  push("first",  "3B",   520);
+  } else if (code === "HIT_SINGLE" || code === "FIELDING_ERROR") {
+    push("batter", "1B", 440);
+    if (pre.third)  push("third",  "home", 320);
+    if (pre.second) push("second", "3B",   400);
+    if (pre.first)  push("first",  "2B",   480);
+  } else if (code === "WALK") {
+    push("batter", "1B", 380);
+    if (pre.first)  push("first",  "2B",   420);
+    if (pre.first && pre.second) push("second", "3B", 460);
+    if (pre.first && pre.second && pre.third) push("third", "home", 380);
+  }
+
+  return cues;
+}
+
+function buildAnimationCues(params: {
+  decision:      PitchDecision;
+  resultCode:    PitchResultCode;
+  ballInPlay?:   BallInPlay;
+  fieldingResult?: FieldingResult;
+  preRunners:    MatchRunners;
+}): AnimationCue[] {
+  const { decision, resultCode, ballInPlay, fieldingResult, preRunners } = params;
+  const cues: AnimationCue[] = [];
+
+  // 1. 투구 궤적 (항상)
+  const pitchDuration = decision.power === "high" ? 240 : decision.power === "low" ? 340 : 290;
+  cues.push({ type: "ball_pitch", from: { ...MOUND_POS }, to: { ...HOME_POS }, duration: pitchDuration });
+
+  if (!ballInPlay) {
+    // 2a. 비인플레이: 결과 오버레이만
+    cues.push({ type: "show_result", text: getResultComment(resultCode), tone: getResultTone(resultCode), x: 50, y: 50 });
+    return cues;
+  }
+
+  // 2b. 인플레이: 타구 궤적
+  const zonePos = { ...FIELDER_DEFAULT_POSITIONS[ballInPlay.zone] };
+  const arc     = battedArc(ballInPlay.hitType);
+  const bDur    = battedDuration(ballInPlay.hitType);
+  cues.push({ type: "ball_batted", from: { ...HOME_POS }, to: zonePos, arc, hitType: ballInPlay.hitType, duration: bDur });
+
+  // 3. 수비수 이동 (타구 방향으로)
+  cues.push({ type: "fielder_move", position: ballInPlay.zone, to: zonePos, duration: Math.round(bDur * 0.85) });
+
+  // 4. 송구 궤적 (있을 때)
+  if (fieldingResult?.threwTo) {
+    const throwTo = { ...FIELDER_DEFAULT_POSITIONS[fieldingResult.threwTo] };
+    const throwDur = Math.round(200 + (100 - (fieldingResult.fielder.arm ?? 50)) * 1.2);
+    cues.push({ type: "ball_throw", from: zonePos, to: throwTo, duration: throwDur });
+  }
+
+  // 5. 주자 이동
+  cues.push(...buildRunnerAdvanceCues(resultCode, preRunners));
+
+  // 6. 결과 표시
+  const resultText = resultCode === "FIELDING_ERROR"
+    ? `실책! (${fieldingResult?.fielder.name ?? ""})`
+    : getResultComment(resultCode);
+  cues.push({ type: "show_result", text: resultText, tone: getResultTone(resultCode), x: 50, y: 40 });
+
+  return cues;
 }
 
 function advanceOnWalk(
@@ -526,6 +883,8 @@ function resolveMentalDelta(resultCode: PitchResultCode): number {
       return 0.5;
     case "INPLAY_OUT":
       return 0.8;
+    case "FIELDING_ERROR":
+      return -1.2;
     case "BALL":
       return -0.4;
     case "FOUL":
@@ -576,6 +935,8 @@ function getResultComment(resultCode: PitchResultCode): string {
       return "파울";
     case "INPLAY_OUT":
       return "타구 아웃";
+    case "FIELDING_ERROR":
+      return "실책";
     case "WALK":
       return "볼넷";
     case "HIT_SINGLE":

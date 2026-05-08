@@ -518,9 +518,12 @@ function toSnapshotDto(state) {
     stamina: state.stamina,
     mental: state.mental,
     batter: state.batter,
+    lineupIndex: state.lineupIndex,
     weather: state.weather,
     park: state.park,
     isFinished: state.isFinished,
-    recentLogs: state.logs.slice(-30)
+    recentLogs: state.logs.slice(-30),
+    fielders: state.fielders ?? [],
+    defenseStat: state.defenseStat ?? { errors: 0, assists: 0, throwOuts: 0, throwSafes: 0 },
   };
 }

@@ -18,14 +18,25 @@ declare global {
           velocity?: number;
           staminaCap?: number;
           mentalResil?: number;
+          control?: number;
+          movement?: number;
+          clutch?: number;
+          holdRunners?: number;
         };
         batterMean?: number;
+        opponentLineup?: MatchBatterStats[];
         weather?: "sunny" | "cloudy" | "rainy" | "windy_in" | "windy_out";
         park?: "neutral" | "pitcher_park" | "hitter_park" | "dome";
+        fielders?: MatchFielderStats[];
       }) => Promise<{ snapshot: MatchSnapshot }>;
       matchStep: (decision: PitchDecision) => Promise<{
         snapshot: MatchSnapshot;
-        outcome: { resultCode: string; quality: number; comment: string };
+        outcome: {
+          resultCode: string;
+          quality: number;
+          comment: string;
+          animationCues: MatchAnimationCue[];
+        };
       }>;
       matchFinish: () => Promise<{ snapshot: MatchSnapshot; summary: string }>;
       // ── 게임 저장/불러오기 ──────────────────────────────────
@@ -104,6 +115,36 @@ export interface PitchDecision {
   power: "low" | "normal" | "high";
 }
 
+export interface MatchBatterStats {
+  contact: number;
+  power: number;
+  eye: number;
+  discipline: number;
+  battingClutch: number;
+  platoon: number;
+  speed: number;
+  baseInstinct: number;
+  fielding: number;
+  arm: number;
+}
+
+export interface MatchFielderStats {
+  position: "P" | "C" | "1B" | "2B" | "3B" | "SS" | "LF" | "CF" | "RF";
+  name: string;
+  fielding: number;
+  arm: number;
+  speed: number;
+  x: number;
+  y: number;
+}
+
+export interface MatchDefenseStat {
+  errors: number;
+  assists: number;
+  throwOuts: number;
+  throwSafes: number;
+}
+
 export interface MatchSnapshot {
   matchId: string;
   inning: number;
@@ -116,12 +157,26 @@ export interface MatchSnapshot {
   pitchCount: number;
   stamina: number;
   mental: number;
-  batter: { contact: number; power: number; eye: number };
+  batter: MatchBatterStats;
+  lineupIndex: number;
   weather: "sunny" | "cloudy" | "rainy" | "windy_in" | "windy_out";
   park: "neutral" | "pitcher_park" | "hitter_park" | "dome";
   isFinished: boolean;
   recentLogs: string[];
+  fielders: MatchFielderStats[];
+  defenseStat: MatchDefenseStat;
 }
+
+export type MatchFieldPos = "P" | "C" | "1B" | "2B" | "3B" | "SS" | "LF" | "CF" | "RF";
+export type MatchBallHitType = "groundBall" | "flyBall" | "lineDrive" | "popup" | "bunt";
+
+export type MatchAnimationCue =
+  | { type: "ball_pitch";   from: { x: number; y: number }; to: { x: number; y: number }; duration: number }
+  | { type: "ball_batted";  from: { x: number; y: number }; to: { x: number; y: number }; arc: number; hitType: MatchBallHitType; duration: number }
+  | { type: "fielder_move"; position: MatchFieldPos; to: { x: number; y: number }; duration: number }
+  | { type: "ball_throw";   from: { x: number; y: number }; to: { x: number; y: number }; duration: number }
+  | { type: "runner_advance"; runnerId: "first" | "second" | "third" | "batter"; toBase: "1B" | "2B" | "3B" | "home"; duration: number }
+  | { type: "show_result";  text: string; tone: "good" | "bad" | "neutral"; x: number; y: number };
 
 export interface MatchEngineTuningPayload {
   version?: number;

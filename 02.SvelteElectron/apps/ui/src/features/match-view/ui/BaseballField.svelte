@@ -115,6 +115,9 @@
     return fieldingTeam === 'home' ? '#4a78d8' : '#d84a4a';
   }
 
+  export let activeFielderPos: string | null = null;
+  export let errorFlashPos: string | null = null;
+
   let selectedPos = "";
   let hoveredPos = "";
 
@@ -360,6 +363,22 @@
               {player.x+24},{player.y+12} {player.x+12},{player.y+24}
               {player.x-12},{player.y+24} {player.x-24},{player.y+12}"
               fill="none" stroke="#4aa8ff" stroke-width="2" class="dot-select-ring" shape-rendering="crispEdges"/>
+          {/if}
+          {#if activeFielderPos === player.pos}
+            <polygon points="
+              {player.x-28},{player.y-14} {player.x-14},{player.y-28}
+              {player.x+14},{player.y-28} {player.x+28},{player.y-14}
+              {player.x+28},{player.y+14} {player.x+14},{player.y+28}
+              {player.x-14},{player.y+28} {player.x-28},{player.y+14}"
+              fill="rgba(255,220,50,0.25)" stroke="#ffd032" stroke-width="2" class="active-fielder-dot-ring" shape-rendering="crispEdges"/>
+          {/if}
+          {#if errorFlashPos === player.pos}
+            <polygon points="
+              {player.x-32},{player.y-16} {player.x-16},{player.y-32}
+              {player.x+16},{player.y-32} {player.x+32},{player.y-16}
+              {player.x+32},{player.y+16} {player.x+16},{player.y+32}
+              {player.x-16},{player.y+32} {player.x-32},{player.y+16}"
+              fill="rgba(255,50,50,0.25)" stroke="#ff4040" stroke-width="2" class="error-fielder-dot-ring" shape-rendering="crispEdges"/>
           {/if}
           <!-- 그림자 -->
           <polygon points="
@@ -638,6 +657,12 @@
           {#if selectedPos === player.pos}
             <circle cx={player.x} cy={player.y} r="40" class="select-ring" />
           {/if}
+          {#if activeFielderPos === player.pos}
+            <circle cx={player.x} cy={player.y} r="36" class="active-fielder-ring" />
+          {/if}
+          {#if errorFlashPos === player.pos}
+            <circle cx={player.x} cy={player.y} r="44" class="error-fielder-ring" />
+          {/if}
           <circle cx={player.x} cy={player.y + 8} r="28" fill="rgba(7, 11, 18, 0.35)" />
           <circle cx={player.x} cy={player.y} r="28" class="player-dot" />
           <text
@@ -752,6 +777,46 @@
     transform-origin: center;
     animation: selectPulse 1.5s ease-in-out infinite;
     pointer-events: none;
+  }
+
+  .active-fielder-ring {
+    fill: rgba(255, 220, 50, 0.18);
+    stroke: #ffd032;
+    stroke-width: 2;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: fielderPulse 0.6s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+
+  .active-fielder-dot-ring {
+    animation: fielderPulse 0.6s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+
+  .error-fielder-ring {
+    fill: rgba(255, 50, 50, 0.22);
+    stroke: #ff4040;
+    stroke-width: 2.5;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: errorFlash 0.28s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+
+  .error-fielder-dot-ring {
+    animation: errorFlash 0.28s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+
+  @keyframes errorFlash {
+    from { opacity: 0.35; }
+    to   { opacity: 1.0; }
+  }
+
+  @keyframes fielderPulse {
+    from { opacity: 0.5; }
+    to   { opacity: 1.0; }
   }
 
   @keyframes selectPulse {

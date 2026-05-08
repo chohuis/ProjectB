@@ -5,6 +5,8 @@
   import SettingsPanel from "../../features/settings/ui/SettingsPanel.svelte";
   import { fieldStyleStore, type FieldStyle } from "../../shared/stores/settings";
   import { gameStore } from "../../shared/stores/game";
+  import { masterStore } from "../../shared/stores/master";
+  import type { EntityRow } from "../../shared/stores/master";
 
   let fieldStyle: FieldStyle = 'digital';
   fieldStyleStore.subscribe(v => { fieldStyle = v; });
@@ -21,6 +23,7 @@
     | "BALL"
     | "FOUL"
     | "INPLAY_OUT"
+    | "FIELDING_ERROR"
     | "HIT_SINGLE"
     | "HIT_DOUBLE"
     | "HIT_TRIPLE"
@@ -50,6 +53,8 @@
     batter?: { contact: number; power: number; eye: number };
     weather?: WeatherType;
     park?: ParkType;
+    isFinished?: boolean;
+    defenseStat?: { errors: number; assists: number; throwOuts: number; throwSafes: number };
   }
 
   const WEATHER_LABEL: Record<WeatherType, string> = {
@@ -227,7 +232,8 @@
     };
   }
 
-  const defenseNormal = [
+  // 수비수 기본 위치 (SVG 좌표 1000x920)
+  const DEFENSE_NORMAL_BASE = [
     { pos: "P",  x: 500, y: 645 },
     { pos: "C",  x: 500, y: 800 },
     { pos: "1B", x: 650, y: 675 },
@@ -237,10 +243,9 @@
     { pos: "LF", x: 330, y: 600 },
     { pos: "CF", x: 500, y: 510 },
     { pos: "RF", x: 670, y: 600 }
-  ];
+  ] as { pos: string; x: number; y: number }[];
 
-  // 레트로 이미지 기준 수비 위치 (probaseball.gif 좌표계)
-  const defenseRetro = [
+  const DEFENSE_RETRO_BASE = [
     { pos: "P",  x: 497, y: 530 },
     { pos: "C",  x: 497, y: 800 },
     { pos: "1B", x: 710, y: 588 },
@@ -250,7 +255,84 @@
     { pos: "LF", x: 242, y: 518 },
     { pos: "CF", x: 497, y: 434 },
     { pos: "RF", x: 752, y: 518 }
-  ];
+  ] as { pos: string; x: number; y: number }[];
+
+  // Reactive — 애니메이션 중 위치 변경 가능
+  let defenseNormal = DEFENSE_NORMAL_BASE.map(d => ({ ...d }));
+  let defenseRetro  = DEFENSE_RETRO_BASE.map(d => ({ ...d }));
+
+  // 현재 이동 중인 수비수 포지션
+  let activeFielderPos: string | null = null;
+  // 실책 발생 수비수 포지션 (플래시 표시용)
+  let errorFlashPos: string | null = null;
+
+  let totalStrikeouts = 0;
+  let matchDefenseStat = { errors: 0, assists: 0, throwOuts: 0, throwSafes: 0 };
+
+  interface GameResult {
+    awayScore: number; homeScore: number;
+    pitchCount: number; strikeouts: number; errors: number;
+    won: boolean; summary: string;
+  }
+  let isGameOver = false;
+  let gameResult: GameResult = { awayScore: 0, homeScore: 0, pitchCount: 0, strikeouts: 0, errors: 0, won: false, summary: '' };
+
+  // 엔진 0-100 좌표 → SVG 포지션별 lookup (ball_batted / ball_throw to 좌표 역매핑용)
+  const FIELD_ENGINE_REF: Record<string, { x: number; y: number }> = {
+    "P":  { x: 50, y: 62 }, "C":  { x: 50, y: 90 },
+    "1B": { x: 78, y: 70 }, "2B": { x: 63, y: 55 },
+    "3B": { x: 22, y: 70 }, "SS": { x: 37, y: 55 },
+    "LF": { x: 18, y: 28 }, "CF": { x: 50, y: 16 }, "RF": { x: 82, y: 28 },
+    "home": { x: 50, y: 88 }, "1B_base": { x: 78, y: 70 },
+    "2B_base": { x: 50, y: 52 }, "3B_base": { x: 22, y: 70 },
+  };
+
+  function enginePosToSvg(p: { x: number; y: number }): FieldPoint {
+    // 가장 가까운 알려진 포지션의 SVG 좌표로 매핑
+    const base = fieldStyle === 'retro' ? DEFENSE_RETRO_BASE : DEFENSE_NORMAL_BASE;
+    let minDist = Infinity;
+    let best = base[0];
+    for (const ref of base) {
+      const eng = FIELD_ENGINE_REF[ref.pos];
+      if (!eng) continue;
+      const dx = p.x - eng.x, dy = p.y - eng.y;
+      const d = dx * dx + dy * dy;
+      if (d < minDist) { minDist = d; best = ref; }
+    }
+    return { x: best.x, y: best.y };
+  }
+
+  function toLeagueId(stage: string): string {
+    if (stage === 'university') return 'LEAGUE_UNIVERSITY';
+    if (stage === 'pro_kbl')   return 'LEAGUE_KBL';
+    if (stage === 'pro_abl')   return 'LEAGUE_ABL';
+    return 'LEAGUE_HIGHSCHOOL';
+  }
+
+  function buildOpponentLineup(): import('../../shared/types/projectb').MatchBatterStats[] {
+    const entities = get(masterStore).entities;
+    const myTeamId = get(gameStore).player.team;
+    const pitcherPos = ['SP', 'RP', 'CP'];
+    const opponents = entities.filter((e: EntityRow) =>
+      e.teamId !== myTeamId &&
+      e.role === 'player' &&
+      !pitcherPos.includes(String((e.details as any)?.player?.position ?? ''))
+    );
+    if (opponents.length < 9) return [];
+    const sorted = [...opponents].sort((a: EntityRow, b: EntityRow) =>
+      ((b.details as any)?.player?.batting?.ovr ?? 0) - ((a.details as any)?.player?.batting?.ovr ?? 0)
+    );
+    return sorted.slice(0, 9).map((e: EntityRow) => {
+      const bat = (e.details as any)?.player?.batting ?? {};
+      return {
+        contact: bat.contact ?? 50, power: bat.power ?? 50,
+        eye: bat.eye ?? 50, discipline: bat.discipline ?? 50,
+        battingClutch: bat.battingClutch ?? 50, platoon: bat.platoon ?? 50,
+        speed: bat.speed ?? 50, baseInstinct: bat.baseInstinct ?? 50,
+        fielding: bat.fielding ?? 50, arm: bat.arm ?? 50,
+      };
+    });
+  }
 
   const pitchTypes: { id: PitchType; label: string }[] = [
     { id: "fastball", label: "패스트볼" },
@@ -379,14 +461,20 @@
     }
 
     try {
-      const player = get(gameStore).player;
+      const state = get(gameStore);
+      const player = state.player;
+      if (get(masterStore).entities.length === 0) {
+        await masterStore.loadEntities(toLeagueId(state.protagonist.careerStage));
+      }
+      const opponentLineup = buildOpponentLineup();
       const response = await window.projectB.matchStart({
         initialStamina: player.condition,
         initialMental: 74,
         pitcher: player.pitcherStats,
         batterMean: 50,
         weather: matchWeather,
-        park: matchPark
+        park: matchPark,
+        ...(opponentLineup.length >= 9 ? { opponentLineup } : {}),
       });
       engineAvailable = true;
       engineStarted = true;
@@ -405,7 +493,7 @@
     if (code === 'STRIKE_SWING' || code === 'STRIKE_LOOK') return 'log-strike';
     if (code === 'FOUL') return 'log-foul';
     if (code === 'BALL') return 'log-ball';
-    if (code === 'INPLAY_OUT') return 'log-out';
+    if (code === 'INPLAY_OUT' || code === 'FIELDING_ERROR') return 'log-out';
     return '';
   }
 
@@ -455,6 +543,7 @@
     }
     if (snapshot.weather) matchWeather = snapshot.weather;
     if (snapshot.park) matchPark = snapshot.park;
+    if (snapshot.defenseStat) matchDefenseStat = { ...snapshot.defenseStat };
 
     updateScoreRows(snapshot.score.away, snapshot.score.home, resultCode);
 
@@ -510,6 +599,7 @@
       BALL:         { text: '볼',       color: '#7a8fa8' },
       FOUL:         { text: '파울',     color: '#ffd54f' },
       INPLAY_OUT:   { text: '아웃!',    color: '#ff8c42' },
+      FIELDING_ERROR: { text: '실책!',  color: '#ff4a4a' },
       HIT_SINGLE:   { text: '안타!',    color: '#ffd54f' },
       HIT_DOUBLE:   { text: '2루타!',   color: '#ffd54f' },
       HIT_TRIPLE:   { text: '3루타!',   color: '#ff9800' },
@@ -649,16 +739,76 @@
     }, 2200);
   }
 
+  async function animateFielderMove(pos: string, svgTo: FieldPoint, duration: number) {
+    const arr = fieldStyle === 'retro' ? defenseRetro : defenseNormal;
+    const idx = arr.findIndex(d => d.pos === pos);
+    if (idx < 0) return;
+    const from = { x: arr[idx].x, y: arr[idx].y };
+    const steps = Math.max(1, Math.round(duration / 16));
+    activeFielderPos = pos;
+    for (let i = 1; i <= steps; i++) {
+      const t = i / steps;
+      const eased = 1 - (1 - t) * (1 - t);
+      arr[idx] = { ...arr[idx], x: Math.round(from.x + (svgTo.x - from.x) * eased), y: Math.round(from.y + (svgTo.y - from.y) * eased) };
+      if (fieldStyle === 'retro') defenseRetro = [...arr];
+      else defenseNormal = [...arr];
+      await sleep(16);
+    }
+    await sleep(200);
+    // 원위치 복귀
+    const base = fieldStyle === 'retro' ? DEFENSE_RETRO_BASE : DEFENSE_NORMAL_BASE;
+    const orig = base.find(d => d.pos === pos);
+    if (orig) {
+      arr[idx] = { ...arr[idx], x: orig.x, y: orig.y };
+      if (fieldStyle === 'retro') defenseRetro = [...arr];
+      else defenseNormal = [...arr];
+    }
+    activeFielderPos = null;
+  }
+
+  async function playAnimationCues(
+    cues: import('../../shared/types/projectb').MatchAnimationCue[],
+    code: PitchResultCode,
+    prevRunners: { first: boolean; second: boolean; third: boolean }
+  ) {
+    const runnerCues: typeof cues = [];
+    let lastFielderMovePos: string | null = null;
+
+    for (const cue of cues) {
+      if (cue.type === "ball_pitch") {
+        await tweenBall(clickedFieldPos, cue.duration);
+      } else if (cue.type === "ball_batted" || cue.type === "ball_throw") {
+        const svgTo = enginePosToSvg(cue.to);
+        await tweenBall(svgTo, cue.duration);
+      } else if (cue.type === "fielder_move") {
+        lastFielderMovePos = cue.position;
+        const svgTo = enginePosToSvg(cue.to);
+        void animateFielderMove(cue.position, svgTo, cue.duration);
+      } else if (cue.type === "runner_advance") {
+        runnerCues.push(cue);
+      } else if (cue.type === "show_result") {
+        if (code === 'FIELDING_ERROR' && lastFielderMovePos) {
+          errorFlashPos = lastFielderMovePos;
+          setTimeout(() => { errorFlashPos = null; }, 1200);
+        }
+        if (fieldStyle === 'retro' && runnerCues.length > 0) {
+          await animateRetroRunners(code, prevRunners);
+          syncRetroPositions();
+        }
+        showResultOverlay(code);
+      }
+    }
+
+    await tweenBall(activeMound, 180);
+  }
+
   async function runPitch() {
     if (isPitching) return;
 
     isPitching = true;
     const prevRunners = { first: runners.first, second: runners.second, third: runners.third };
     const pitchedAt = { ...zoneClickPct };
-    const zoneTarget = { ...clickedFieldPos };
     ballPos = { ...activeMound };
-
-    await tweenBall(zoneTarget, 220);
 
     let resultCode: PitchResultCode;
     let line: string;
@@ -683,41 +833,122 @@
 
       resultCode = response.outcome.resultCode as PitchResultCode;
       line = `${inningHalfLabel} ${pitchTypes.find((p) => p.id === selectedPitchType)?.label} ${response.outcome.comment}`;
+      const prevOuts = count.out;
       applySnapshot(response.snapshot, line, resultCode);
+
+      // 삼진 누적
+      if ((resultCode === 'STRIKE_SWING' || resultCode === 'STRIKE_LOOK') && count.out > prevOuts) {
+        totalStrikeouts++;
+      }
+
+      if (response.outcome.animationCues?.length) {
+        await playAnimationCues(response.outcome.animationCues, resultCode, prevRunners);
+        if (fieldStyle === 'retro') {
+          const atBatEnded = resultCode !== 'STRIKE_SWING' && resultCode !== 'STRIKE_LOOK'
+            && resultCode !== 'FOUL' && resultCode !== 'BALL';
+          if (atBatEnded) batter = { handedness: Math.random() < 0.32 ? 'L' : 'R' };
+          syncRetroPositions();
+        }
+      } else {
+        await tweenBall(clickedFieldPos, 220);
+        showResultOverlay(resultCode);
+        if (resultCode === "INPLAY_OUT" || resultCode === "HIT_SINGLE" || resultCode === "HIT_DOUBLE" || resultCode === "HIT_TRIPLE" || resultCode === "HOME_RUN") {
+          await tweenBall(getBattedTarget(resultCode), 300);
+        }
+        if (fieldStyle === 'retro') {
+          await animateRetroRunners(resultCode, prevRunners);
+          const atBatEnded = resultCode !== 'STRIKE_SWING' && resultCode !== 'STRIKE_LOOK'
+            && resultCode !== 'FOUL' && resultCode !== 'BALL';
+          if (atBatEnded) batter = { handedness: Math.random() < 0.32 ? 'L' : 'R' };
+          syncRetroPositions();
+        }
+        await tweenBall(activeMound, 180);
+      }
+
+      if (response.snapshot.isFinished && !isGameOver) {
+        await handleGameOver();
+        lastPitchPct = pitchedAt;
+        isPitching = false;
+        return;
+      }
     } else {
+      await tweenBall(clickedFieldPos, 220);
       resultCode = rollLocalResult();
       const local = applyLocalResult(resultCode);
       resultCode = local.resolvedCode;
       line = `${inningHalfLabel} ${pitchTypes.find((p) => p.id === selectedPitchType)?.label} ${localComment(resultCode)}`;
       applySnapshot(local.snapshot, line, resultCode);
       if (local.inningChange) {
+        if (local.snapshot.inning > 9 && !isGameOver) {
+          await handleGameOver();
+          lastPitchPct = pitchedAt;
+          isPitching = false;
+          return;
+        }
         const newHalf = local.snapshot.half === 'top' ? '초' : '말';
         pushLog(`──── ${local.snapshot.inning}회 ${newHalf} ────`, 'log-separator');
         showChangeAlert();
       }
-    }
 
-    showResultOverlay(resultCode);
-
-    if (resultCode === "INPLAY_OUT" || resultCode === "HIT_SINGLE" || resultCode === "HIT_DOUBLE" || resultCode === "HIT_TRIPLE" || resultCode === "HOME_RUN") {
-      await tweenBall(getBattedTarget(resultCode), 300);
-    }
-
-    // 공 애니메이션 이후 주자/타자 이동 (레트로 전용)
-    if (fieldStyle === 'retro') {
-      await animateRetroRunners(resultCode, prevRunners);
-      // 타석 종료 결과면 다음 타자 핸드니스 랜덤 결정
-      const atBatEnded = resultCode !== 'STRIKE_SWING' && resultCode !== 'STRIKE_LOOK'
-        && resultCode !== 'FOUL' && resultCode !== 'BALL';
-      if (atBatEnded) {
-        batter = { handedness: Math.random() < 0.32 ? 'L' : 'R' };
+      showResultOverlay(resultCode);
+      if (resultCode === "INPLAY_OUT" || resultCode === "HIT_SINGLE" || resultCode === "HIT_DOUBLE" || resultCode === "HIT_TRIPLE" || resultCode === "HOME_RUN") {
+        await tweenBall(getBattedTarget(resultCode), 300);
       }
-      syncRetroPositions();
+      if (fieldStyle === 'retro') {
+        await animateRetroRunners(resultCode, prevRunners);
+        const atBatEnded = resultCode !== 'STRIKE_SWING' && resultCode !== 'STRIKE_LOOK'
+          && resultCode !== 'FOUL' && resultCode !== 'BALL';
+        if (atBatEnded) batter = { handedness: Math.random() < 0.32 ? 'L' : 'R' };
+        syncRetroPositions();
+      }
+      await tweenBall(activeMound, 180);
     }
 
-    await tweenBall(activeMound, 180);
     lastPitchPct = pitchedAt;
     isPitching = false;
+  }
+
+  async function handleGameOver() {
+    if (isGameOver) return;
+    isGameOver = true;
+
+    let summary = '';
+    if (window.projectB?.matchFinish) {
+      try {
+        const result = await window.projectB.matchFinish();
+        summary = result.summary;
+      } catch { /* ignore */ }
+    }
+
+    const awayScore = scoreRows[0].r;
+    const homeScore = scoreRows[1].r;
+    const won = homeScore > awayScore;
+
+    gameResult = {
+      awayScore, homeScore,
+      pitchCount: localEngineState.pitchCount,
+      strikeouts: totalStrikeouts,
+      errors: matchDefenseStat.errors,
+      won, summary,
+    };
+
+    gameStore.recordBaseballAchievementMetric({ strikeouts: totalStrikeouts, won });
+
+    const staminaUsed = Math.max(0, 82 - pitcherState.stamina);
+    const condDelta = -Math.round(staminaUsed / 4);
+    const protagonist = get(gameStore).protagonist;
+    const resultLabel = won ? '승리' : awayScore === homeScore ? '무승부' : '패배';
+    gameStore.applyWeekResult(
+      { condition: Math.max(5, protagonist.condition + condDelta) },
+      [`경기 ${resultLabel} — ${awayScore}:${homeScore} (${totalStrikeouts}K/${matchDefenseStat.errors}E)`],
+      [],
+      1
+    );
+  }
+
+  function handleExitAfterGame() {
+    isGameOver = false;
+    onExit();
   }
 
   function localComment(code: PitchResultCode): string {
@@ -742,6 +973,8 @@
         return "홈런";
       case "WALK":
         return "볼넷";
+      case "FIELDING_ERROR":
+        return "실책";
       default:
         return "플레이";
     }
@@ -817,6 +1050,8 @@
               {batter}
               batterAnimPos={fieldStyle === 'retro' ? retroBatterPos : null}
               runnerAnimPositions={fieldStyle === 'retro' ? retroRunnerPositions : [null, null, null]}
+              {activeFielderPos}
+              {errorFlashPos}
               on:selectPosition={(event) => (selectedDefPosition = event.detail.pos)}
             />
             {#if resultOverlay.visible}
@@ -1019,6 +1254,35 @@
       </div>
     </div>
   </div>
+
+  {#if isGameOver}
+    <div class="gameover-overlay">
+      <div class="gameover-box">
+        <h2 class="gameover-title">경기 종료</h2>
+        <div class="gameover-score">
+          <span class="score-label">원정</span>
+          <span class="score-num">{gameResult.awayScore}</span>
+          <span class="score-sep">:</span>
+          <span class="score-num home-score">{gameResult.homeScore}</span>
+          <span class="score-label">홈</span>
+        </div>
+        <div class="gameover-result" class:won={gameResult.won} class:lost={!gameResult.won && gameResult.awayScore !== gameResult.homeScore}>
+          {gameResult.won ? '승리' : gameResult.awayScore === gameResult.homeScore ? '무승부' : '패배'}
+        </div>
+        <ul class="gameover-stats">
+          <li><span>투구 수</span><strong>{gameResult.pitchCount}</strong></li>
+          <li><span>삼진</span><strong>{gameResult.strikeouts} K</strong></li>
+          <li><span>실책</span><strong>{gameResult.errors} E</strong></li>
+        </ul>
+        {#if gameResult.summary}
+          <p class="gameover-summary">{gameResult.summary}</p>
+        {/if}
+        <button class="gameover-exit-btn" type="button" on:click={handleExitAfterGame}>
+          경기장 나가기
+        </button>
+      </div>
+    </div>
+  {/if}
 </section>
 
 <style>
@@ -1789,5 +2053,153 @@
     .pair-row {
       grid-template-columns: 1fr;
     }
+  }
+
+  /* ── 게임오버 모달 ───────────────────────────────────────────── */
+  .gameover-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.82);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    animation: fadeIn 0.4s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .gameover-box {
+    background: #0e1a2e;
+    border: 2px solid #2a4070;
+    border-radius: 16px;
+    padding: 36px 44px;
+    min-width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 8px 48px rgba(0, 0, 0, 0.7);
+    animation: popIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0.7); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+
+  .gameover-title {
+    margin: 0;
+    font-size: 22px;
+    color: #d3e4ff;
+    letter-spacing: 0.06em;
+  }
+
+  .gameover-score {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .score-label {
+    font-size: 13px;
+    color: #6a8aaa;
+  }
+
+  .score-num {
+    font-size: 52px;
+    font-weight: 900;
+    color: #edf2ff;
+    line-height: 1;
+    min-width: 48px;
+    text-align: center;
+  }
+
+  .home-score { color: #7ecfff; }
+
+  .score-sep {
+    font-size: 36px;
+    color: #4a6080;
+    font-weight: 300;
+  }
+
+  .gameover-result {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    color: #7a8fa8;
+    padding: 6px 24px;
+    border-radius: 999px;
+    border: 2px solid #2a3f5c;
+  }
+
+  .gameover-result.won {
+    color: #37d67a;
+    border-color: #2a5a3a;
+    background: rgba(55, 214, 122, 0.08);
+  }
+
+  .gameover-result.lost {
+    color: #ff4a4a;
+    border-color: #5a2a2a;
+    background: rgba(255, 74, 74, 0.08);
+  }
+
+  .gameover-stats {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+  }
+
+  .gameover-stats li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .gameover-stats li span {
+    font-size: 11px;
+    color: #6a8aaa;
+  }
+
+  .gameover-stats li strong {
+    font-size: 20px;
+    font-weight: 700;
+    color: #c8d8f0;
+  }
+
+  .gameover-summary {
+    margin: 0;
+    font-size: 13px;
+    color: #7a9ab8;
+    text-align: center;
+    max-width: 280px;
+    line-height: 1.5;
+  }
+
+  .gameover-exit-btn {
+    margin-top: 8px;
+    padding: 12px 36px;
+    background: linear-gradient(180deg, #3a6abf 0%, #2050a0 100%);
+    border: none;
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    box-shadow: 0 4px 16px rgba(50, 100, 200, 0.4);
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+
+  .gameover-exit-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 22px rgba(50, 100, 200, 0.55);
   }
 </style>
