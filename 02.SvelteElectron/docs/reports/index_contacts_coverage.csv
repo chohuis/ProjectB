@@ -1,0 +1,3 @@
+id,inIndexContacts,role,leagueId,name,hasContact,hasArcs,arcCount,hasChat,hasMessengerScript
+COA_00167,true,coach,LEAGUE_HIGHSCHOOL,오지경,true,true,2,true,true
+PLY_01541,true,player,LEAGUE_HIGHSCHOOL,박정훈,true,true,2,true,true

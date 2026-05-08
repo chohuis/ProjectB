@@ -1,0 +1,1796 @@
+leagueId,id,role,name,teamId,hasContact,hasArcs,arcCount,hasChat,hasMessengerScript
+LEAGUE_HIGHSCHOOL,MNG_00001,manager,윤기훈,TEAM_HS_SEOUL_INNOVATION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,COA_00001,coach,하연우,TEAM_HS_SEOUL_INNOVATION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,COA_00002,coach,오동준,TEAM_HS_SEOUL_INNOVATION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,OWN_00001,owner,유하준,TEAM_HS_SEOUL_INNOVATION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00001,player,박동혁,TEAM_HS_SEOUL_INNOVATION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00002,player,허지성,TEAM_HS_SEOUL_INNOVATION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00003,player,문찬우,TEAM_HS_SEOUL_INNOVATION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00004,player,한성우,TEAM_HS_SEOUL_INNOVATION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00005,player,유동혁,TEAM_HS_SEOUL_INNOVATION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00006,player,손민석,TEAM_HS_SEOUL_INNOVATION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00007,player,홍준우,TEAM_HS_SEOUL_INNOVATION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00008,player,하우진,TEAM_HS_SEOUL_INNOVATION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00009,player,권성민,TEAM_HS_SEOUL_INNOVATION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00010,player,장민혁,TEAM_HS_SEOUL_INNOVATION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00011,player,오상민,TEAM_HS_SEOUL_INNOVATION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00012,player,윤성민,TEAM_HS_SEOUL_INNOVATION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00013,player,손승우,TEAM_HS_SEOUL_INNOVATION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00014,player,한기준,TEAM_HS_SEOUL_INNOVATION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00015,player,하민혁,TEAM_HS_SEOUL_INNOVATION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00016,player,전재윤,TEAM_HS_SEOUL_INNOVATION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00017,player,고우진,TEAM_HS_SEOUL_INNOVATION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00018,player,황지원,TEAM_HS_SEOUL_INNOVATION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00019,player,조지성,TEAM_HS_SEOUL_INNOVATION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00020,player,오준혁,TEAM_HS_SEOUL_INNOVATION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,MNG_00002,manager,양정우,TEAM_HS_BUSAN_WAVE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,COA_00003,coach,백태민,TEAM_HS_BUSAN_WAVE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,COA_00004,coach,손원준,TEAM_HS_BUSAN_WAVE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,OWN_00002,owner,고민우,TEAM_HS_BUSAN_WAVE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00021,player,한현준,TEAM_HS_BUSAN_WAVE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00022,player,신재훈,TEAM_HS_BUSAN_WAVE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00023,player,안현진,TEAM_HS_BUSAN_WAVE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00024,player,안민준,TEAM_HS_BUSAN_WAVE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00025,player,고태준,TEAM_HS_BUSAN_WAVE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00026,player,조기준,TEAM_HS_BUSAN_WAVE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00027,player,나상민,TEAM_HS_BUSAN_WAVE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00028,player,심성준,TEAM_HS_BUSAN_WAVE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00029,player,백서준,TEAM_HS_BUSAN_WAVE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00030,player,신성우,TEAM_HS_BUSAN_WAVE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00031,player,우재원,TEAM_HS_BUSAN_WAVE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00032,player,조준혁,TEAM_HS_BUSAN_WAVE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00033,player,심상현,TEAM_HS_BUSAN_WAVE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00034,player,성상민,TEAM_HS_BUSAN_WAVE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00035,player,강기준,TEAM_HS_BUSAN_WAVE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00036,player,주재윤,TEAM_HS_BUSAN_WAVE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00037,player,이정우,TEAM_HS_BUSAN_WAVE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00038,player,강동혁,TEAM_HS_BUSAN_WAVE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00039,player,하민재,TEAM_HS_BUSAN_WAVE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00040,player,양시우,TEAM_HS_BUSAN_WAVE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,MNG_00003,manager,나민준,TEAM_HS_DAEGU_HEAT,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,COA_00005,coach,고준호,TEAM_HS_DAEGU_HEAT,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,COA_00006,coach,차태양,TEAM_HS_DAEGU_HEAT,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,OWN_00003,owner,신민혁,TEAM_HS_DAEGU_HEAT,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00041,player,전재윤,TEAM_HS_DAEGU_HEAT,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00042,player,민태준,TEAM_HS_DAEGU_HEAT,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00043,player,오예준,TEAM_HS_DAEGU_HEAT,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00044,player,손민준,TEAM_HS_DAEGU_HEAT,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00045,player,서준호,TEAM_HS_DAEGU_HEAT,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00046,player,남민혁,TEAM_HS_DAEGU_HEAT,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00047,player,안태민,TEAM_HS_DAEGU_HEAT,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00048,player,남성현,TEAM_HS_DAEGU_HEAT,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00049,player,우준영,TEAM_HS_DAEGU_HEAT,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00050,player,전용준,TEAM_HS_DAEGU_HEAT,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00051,player,문원준,TEAM_HS_DAEGU_HEAT,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00052,player,강성준,TEAM_HS_DAEGU_HEAT,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00053,player,우태현,TEAM_HS_DAEGU_HEAT,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00054,player,안도윤,TEAM_HS_DAEGU_HEAT,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00055,player,전상현,TEAM_HS_DAEGU_HEAT,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00056,player,신재윤,TEAM_HS_DAEGU_HEAT,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00057,player,양동준,TEAM_HS_DAEGU_HEAT,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00058,player,주지후,TEAM_HS_DAEGU_HEAT,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00059,player,송동준,TEAM_HS_DAEGU_HEAT,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00060,player,성상현,TEAM_HS_DAEGU_HEAT,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,MNG_00004,manager,신찬우,TEAM_HS_GWANGJU_VISION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,COA_00007,coach,황민석,TEAM_HS_GWANGJU_VISION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,COA_00008,coach,강승우,TEAM_HS_GWANGJU_VISION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,OWN_00004,owner,조현우,TEAM_HS_GWANGJU_VISION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00061,player,허준혁,TEAM_HS_GWANGJU_VISION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00062,player,백성준,TEAM_HS_GWANGJU_VISION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00063,player,조동현,TEAM_HS_GWANGJU_VISION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00064,player,심민준,TEAM_HS_GWANGJU_VISION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00065,player,정성준,TEAM_HS_GWANGJU_VISION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00066,player,오재민,TEAM_HS_GWANGJU_VISION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00067,player,주준우,TEAM_HS_GWANGJU_VISION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00068,player,유서준,TEAM_HS_GWANGJU_VISION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00069,player,장준혁,TEAM_HS_GWANGJU_VISION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00070,player,손태우,TEAM_HS_GWANGJU_VISION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00071,player,강용준,TEAM_HS_GWANGJU_VISION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00072,player,정기준,TEAM_HS_GWANGJU_VISION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00073,player,박재훈,TEAM_HS_GWANGJU_VISION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00074,player,나우진,TEAM_HS_GWANGJU_VISION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00075,player,곽기훈,TEAM_HS_GWANGJU_VISION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00076,player,하승민,TEAM_HS_GWANGJU_VISION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00077,player,최상현,TEAM_HS_GWANGJU_VISION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00078,player,백동준,TEAM_HS_GWANGJU_VISION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00079,player,최승민,TEAM_HS_GWANGJU_VISION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00080,player,강건우,TEAM_HS_GWANGJU_VISION,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,MNG_00005,manager,심현우,TEAM_HS_DAEJEON_RISE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,COA_00009,coach,임재훈,TEAM_HS_DAEJEON_RISE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,COA_00010,coach,안서준,TEAM_HS_DAEJEON_RISE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,OWN_00005,owner,민진우,TEAM_HS_DAEJEON_RISE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00081,player,주성우,TEAM_HS_DAEJEON_RISE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00082,player,서재원,TEAM_HS_DAEJEON_RISE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00083,player,이동혁,TEAM_HS_DAEJEON_RISE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00084,player,주민준,TEAM_HS_DAEJEON_RISE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00085,player,우동현,TEAM_HS_DAEJEON_RISE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00086,player,성재원,TEAM_HS_DAEJEON_RISE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00087,player,권상민,TEAM_HS_DAEJEON_RISE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00088,player,허현준,TEAM_HS_DAEJEON_RISE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00089,player,홍지후,TEAM_HS_DAEJEON_RISE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00090,player,남준혁,TEAM_HS_DAEJEON_RISE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00091,player,노서준,TEAM_HS_DAEJEON_RISE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00092,player,최상현,TEAM_HS_DAEJEON_RISE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00093,player,임상민,TEAM_HS_DAEJEON_RISE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00094,player,문재민,TEAM_HS_DAEJEON_RISE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00095,player,조승민,TEAM_HS_DAEJEON_RISE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00096,player,장승민,TEAM_HS_DAEJEON_RISE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00097,player,백찬영,TEAM_HS_DAEJEON_RISE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00098,player,권진우,TEAM_HS_DAEJEON_RISE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00099,player,남도현,TEAM_HS_DAEJEON_RISE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00100,player,안동우,TEAM_HS_DAEJEON_RISE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,MNG_00006,manager,정재윤,TEAM_HS_INCHEON_HARBOR,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,COA_00011,coach,정승민,TEAM_HS_INCHEON_HARBOR,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,COA_00012,coach,유연우,TEAM_HS_INCHEON_HARBOR,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,OWN_00006,owner,곽민석,TEAM_HS_INCHEON_HARBOR,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00101,player,최현서,TEAM_HS_INCHEON_HARBOR,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00102,player,나현우,TEAM_HS_INCHEON_HARBOR,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00103,player,우동우,TEAM_HS_INCHEON_HARBOR,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00104,player,이서준,TEAM_HS_INCHEON_HARBOR,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00105,player,남재원,TEAM_HS_INCHEON_HARBOR,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00106,player,안지원,TEAM_HS_INCHEON_HARBOR,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00107,player,곽태민,TEAM_HS_INCHEON_HARBOR,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00108,player,백동준,TEAM_HS_INCHEON_HARBOR,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00109,player,노상민,TEAM_HS_INCHEON_HARBOR,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00110,player,성지성,TEAM_HS_INCHEON_HARBOR,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00111,player,황준호,TEAM_HS_INCHEON_HARBOR,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00112,player,박기훈,TEAM_HS_INCHEON_HARBOR,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00113,player,황재윤,TEAM_HS_INCHEON_HARBOR,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00114,player,정민석,TEAM_HS_INCHEON_HARBOR,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00115,player,홍진우,TEAM_HS_INCHEON_HARBOR,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00116,player,허승민,TEAM_HS_INCHEON_HARBOR,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00117,player,조동우,TEAM_HS_INCHEON_HARBOR,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00118,player,정재원,TEAM_HS_INCHEON_HARBOR,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00119,player,권성준,TEAM_HS_INCHEON_HARBOR,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00120,player,남찬우,TEAM_HS_INCHEON_HARBOR,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,MNG_00007,manager,고재민,TEAM_HS_ULSAN_CHARGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,COA_00013,coach,나동우,TEAM_HS_ULSAN_CHARGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,COA_00014,coach,민성현,TEAM_HS_ULSAN_CHARGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,OWN_00007,owner,백연우,TEAM_HS_ULSAN_CHARGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00121,player,오지후,TEAM_HS_ULSAN_CHARGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00122,player,배지호,TEAM_HS_ULSAN_CHARGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00123,player,하우진,TEAM_HS_ULSAN_CHARGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00124,player,윤서준,TEAM_HS_ULSAN_CHARGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00125,player,문지원,TEAM_HS_ULSAN_CHARGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00126,player,민민재,TEAM_HS_ULSAN_CHARGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00127,player,오예준,TEAM_HS_ULSAN_CHARGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00128,player,배기훈,TEAM_HS_ULSAN_CHARGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00129,player,박민혁,TEAM_HS_ULSAN_CHARGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00130,player,나재원,TEAM_HS_ULSAN_CHARGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00131,player,김지호,TEAM_HS_ULSAN_CHARGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00132,player,이승민,TEAM_HS_ULSAN_CHARGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00133,player,양지성,TEAM_HS_ULSAN_CHARGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00134,player,유현진,TEAM_HS_ULSAN_CHARGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00135,player,성도윤,TEAM_HS_ULSAN_CHARGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00136,player,최승민,TEAM_HS_ULSAN_CHARGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00137,player,유지후,TEAM_HS_ULSAN_CHARGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00138,player,차재훈,TEAM_HS_ULSAN_CHARGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00139,player,민찬영,TEAM_HS_ULSAN_CHARGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00140,player,민우진,TEAM_HS_ULSAN_CHARGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,MNG_00008,manager,주주원,TEAM_HS_SUWON_EDGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,COA_00015,coach,성주원,TEAM_HS_SUWON_EDGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,COA_00016,coach,한준서,TEAM_HS_SUWON_EDGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,OWN_00008,owner,전지호,TEAM_HS_SUWON_EDGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00141,player,홍상현,TEAM_HS_SUWON_EDGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00142,player,오동우,TEAM_HS_SUWON_EDGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00143,player,유민혁,TEAM_HS_SUWON_EDGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00144,player,권서준,TEAM_HS_SUWON_EDGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00145,player,신현우,TEAM_HS_SUWON_EDGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00146,player,문준우,TEAM_HS_SUWON_EDGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00147,player,심찬영,TEAM_HS_SUWON_EDGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00148,player,손도윤,TEAM_HS_SUWON_EDGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00149,player,신민재,TEAM_HS_SUWON_EDGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00150,player,최재윤,TEAM_HS_SUWON_EDGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00151,player,백승우,TEAM_HS_SUWON_EDGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00152,player,김동우,TEAM_HS_SUWON_EDGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00153,player,남태우,TEAM_HS_SUWON_EDGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00154,player,한하준,TEAM_HS_SUWON_EDGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00155,player,윤준서,TEAM_HS_SUWON_EDGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00156,player,문승민,TEAM_HS_SUWON_EDGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00157,player,장현준,TEAM_HS_SUWON_EDGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00158,player,배도현,TEAM_HS_SUWON_EDGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00159,player,백준우,TEAM_HS_SUWON_EDGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_00160,player,오현진,TEAM_HS_SUWON_EDGE,true,false,0,false,false
+LEAGUE_HIGHSCHOOL,PLY_01541,player,박정훈,TEAM_HS_SEOUL_INNOVATION,true,true,2,true,true
+LEAGUE_HIGHSCHOOL,COA_00167,coach,오지경,TEAM_HS_SEOUL_INNOVATION,true,true,2,true,true
+LEAGUE_UNIVERSITY,PLY_00161,player,황연우,TEAM_UNIV_KNSU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00162,player,성민준,TEAM_UNIV_KNSU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00163,player,한시우,TEAM_UNIV_KNSU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00164,player,홍찬영,TEAM_UNIV_KNSU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00165,player,장준호,TEAM_UNIV_KNSU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00166,player,민현우,TEAM_UNIV_KNSU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00167,player,배성준,TEAM_UNIV_KNSU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00168,player,전도현,TEAM_UNIV_KNSU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00169,player,차우진,TEAM_UNIV_KNSU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00170,player,장진우,TEAM_UNIV_KNSU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00171,player,심시우,TEAM_UNIV_KNSU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00172,player,이태준,TEAM_UNIV_KNSU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00173,player,구우진,TEAM_UNIV_KNSU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00174,player,임승현,TEAM_UNIV_KNSU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00175,player,임지원,TEAM_UNIV_KNSU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00176,player,정재윤,TEAM_UNIV_KNSU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00177,player,윤태현,TEAM_UNIV_KNSU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00178,player,하현서,TEAM_UNIV_KNSU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00179,player,우지성,TEAM_UNIV_KNSU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00180,player,양현진,TEAM_UNIV_KNSU,true,false,0,false,false
+LEAGUE_UNIVERSITY,COA_00017,coach,권태준,TEAM_UNIV_KNSU,true,false,0,false,false
+LEAGUE_UNIVERSITY,COA_00018,coach,유현진,TEAM_UNIV_KNSU,true,false,0,false,false
+LEAGUE_UNIVERSITY,MNG_00009,manager,황상민,TEAM_UNIV_KNSU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00181,player,황용준,TEAM_UNIV_KNU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00182,player,배상민,TEAM_UNIV_KNU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00183,player,박재민,TEAM_UNIV_KNU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00184,player,양동우,TEAM_UNIV_KNU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00185,player,송재민,TEAM_UNIV_KNU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00186,player,양상민,TEAM_UNIV_KNU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00187,player,신승우,TEAM_UNIV_KNU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00188,player,민도현,TEAM_UNIV_KNU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00189,player,한태우,TEAM_UNIV_KNU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00190,player,민용준,TEAM_UNIV_KNU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00191,player,황성준,TEAM_UNIV_KNU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00192,player,곽지훈,TEAM_UNIV_KNU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00193,player,나성준,TEAM_UNIV_KNU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00194,player,최용준,TEAM_UNIV_KNU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00195,player,박연우,TEAM_UNIV_KNU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00196,player,곽도윤,TEAM_UNIV_KNU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00197,player,한민재,TEAM_UNIV_KNU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00198,player,신지후,TEAM_UNIV_KNU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00199,player,고태양,TEAM_UNIV_KNU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00200,player,손승현,TEAM_UNIV_KNU,true,false,0,false,false
+LEAGUE_UNIVERSITY,COA_00019,coach,양준영,TEAM_UNIV_KNU,true,false,0,false,false
+LEAGUE_UNIVERSITY,COA_00020,coach,김지호,TEAM_UNIV_KNU,true,false,0,false,false
+LEAGUE_UNIVERSITY,MNG_00010,manager,최지원,TEAM_UNIV_KNU,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00201,player,황준호,TEAM_UNIV_YONSEI,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00202,player,권찬우,TEAM_UNIV_YONSEI,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00203,player,차승민,TEAM_UNIV_YONSEI,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00204,player,백하준,TEAM_UNIV_YONSEI,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00205,player,허건우,TEAM_UNIV_YONSEI,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00206,player,강준혁,TEAM_UNIV_YONSEI,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00207,player,박민우,TEAM_UNIV_YONSEI,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00208,player,문예준,TEAM_UNIV_YONSEI,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00209,player,허태준,TEAM_UNIV_YONSEI,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00210,player,심민준,TEAM_UNIV_YONSEI,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00211,player,박진우,TEAM_UNIV_YONSEI,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00212,player,배기훈,TEAM_UNIV_YONSEI,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00213,player,김태현,TEAM_UNIV_YONSEI,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00214,player,나재현,TEAM_UNIV_YONSEI,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00215,player,주용준,TEAM_UNIV_YONSEI,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00216,player,홍민재,TEAM_UNIV_YONSEI,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00217,player,신준영,TEAM_UNIV_YONSEI,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00218,player,차상현,TEAM_UNIV_YONSEI,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00219,player,최상현,TEAM_UNIV_YONSEI,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00220,player,배민우,TEAM_UNIV_YONSEI,true,false,0,false,false
+LEAGUE_UNIVERSITY,COA_00021,coach,심민우,TEAM_UNIV_YONSEI,true,false,0,false,false
+LEAGUE_UNIVERSITY,COA_00022,coach,신원준,TEAM_UNIV_YONSEI,true,false,0,false,false
+LEAGUE_UNIVERSITY,MNG_00011,manager,곽기훈,TEAM_UNIV_YONSEI,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00221,player,황승우,TEAM_UNIV_KOREA,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00222,player,강동현,TEAM_UNIV_KOREA,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00223,player,백태양,TEAM_UNIV_KOREA,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00224,player,남민재,TEAM_UNIV_KOREA,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00225,player,주민재,TEAM_UNIV_KOREA,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00226,player,남민준,TEAM_UNIV_KOREA,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00227,player,하진우,TEAM_UNIV_KOREA,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00228,player,최예준,TEAM_UNIV_KOREA,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00229,player,이성민,TEAM_UNIV_KOREA,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00230,player,고민혁,TEAM_UNIV_KOREA,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00231,player,남정우,TEAM_UNIV_KOREA,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00232,player,황승현,TEAM_UNIV_KOREA,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00233,player,이성우,TEAM_UNIV_KOREA,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00234,player,성준영,TEAM_UNIV_KOREA,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00235,player,남준호,TEAM_UNIV_KOREA,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00236,player,조정우,TEAM_UNIV_KOREA,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00237,player,안지훈,TEAM_UNIV_KOREA,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00238,player,안우진,TEAM_UNIV_KOREA,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00239,player,유주원,TEAM_UNIV_KOREA,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00240,player,백우진,TEAM_UNIV_KOREA,true,false,0,false,false
+LEAGUE_UNIVERSITY,COA_00023,coach,구현진,TEAM_UNIV_KOREA,true,false,0,false,false
+LEAGUE_UNIVERSITY,COA_00024,coach,양태민,TEAM_UNIV_KOREA,true,false,0,false,false
+LEAGUE_UNIVERSITY,MNG_00012,manager,문현준,TEAM_UNIV_KOREA,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00241,player,안성현,TEAM_UNIV_HANYANG,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00242,player,우우진,TEAM_UNIV_HANYANG,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00243,player,송상현,TEAM_UNIV_HANYANG,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00244,player,곽건우,TEAM_UNIV_HANYANG,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00245,player,정지호,TEAM_UNIV_HANYANG,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00246,player,오재현,TEAM_UNIV_HANYANG,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00247,player,고지호,TEAM_UNIV_HANYANG,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00248,player,배준우,TEAM_UNIV_HANYANG,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00249,player,송민준,TEAM_UNIV_HANYANG,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00250,player,한도윤,TEAM_UNIV_HANYANG,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00251,player,권재윤,TEAM_UNIV_HANYANG,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00252,player,윤태우,TEAM_UNIV_HANYANG,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00253,player,최현우,TEAM_UNIV_HANYANG,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00254,player,남찬영,TEAM_UNIV_HANYANG,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00255,player,문승우,TEAM_UNIV_HANYANG,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00256,player,차재현,TEAM_UNIV_HANYANG,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00257,player,전동혁,TEAM_UNIV_HANYANG,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00258,player,나찬영,TEAM_UNIV_HANYANG,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00259,player,한용준,TEAM_UNIV_HANYANG,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00260,player,백동혁,TEAM_UNIV_HANYANG,true,false,0,false,false
+LEAGUE_UNIVERSITY,COA_00025,coach,정동우,TEAM_UNIV_HANYANG,true,false,0,false,false
+LEAGUE_UNIVERSITY,COA_00026,coach,노시우,TEAM_UNIV_HANYANG,true,false,0,false,false
+LEAGUE_UNIVERSITY,MNG_00013,manager,한성현,TEAM_UNIV_HANYANG,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00261,player,안찬영,TEAM_UNIV_CHUNGBUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00262,player,허시우,TEAM_UNIV_CHUNGBUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00263,player,임지호,TEAM_UNIV_CHUNGBUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00264,player,나동현,TEAM_UNIV_CHUNGBUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00265,player,민태현,TEAM_UNIV_CHUNGBUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00266,player,구상민,TEAM_UNIV_CHUNGBUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00267,player,임정우,TEAM_UNIV_CHUNGBUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00268,player,노동준,TEAM_UNIV_CHUNGBUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00269,player,남용준,TEAM_UNIV_CHUNGBUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00270,player,임성현,TEAM_UNIV_CHUNGBUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00271,player,민태민,TEAM_UNIV_CHUNGBUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00272,player,송준혁,TEAM_UNIV_CHUNGBUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00273,player,문찬영,TEAM_UNIV_CHUNGBUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00274,player,김승우,TEAM_UNIV_CHUNGBUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00275,player,남승민,TEAM_UNIV_CHUNGBUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00276,player,민동현,TEAM_UNIV_CHUNGBUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00277,player,하찬우,TEAM_UNIV_CHUNGBUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00278,player,권성우,TEAM_UNIV_CHUNGBUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00279,player,강성우,TEAM_UNIV_CHUNGBUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00280,player,주민준,TEAM_UNIV_CHUNGBUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,COA_00027,coach,정태양,TEAM_UNIV_CHUNGBUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,COA_00028,coach,황동우,TEAM_UNIV_CHUNGBUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,MNG_00014,manager,강성민,TEAM_UNIV_CHUNGBUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00281,player,안태우,TEAM_UNIV_DONGGUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00282,player,송승민,TEAM_UNIV_DONGGUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00283,player,김민혁,TEAM_UNIV_DONGGUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00284,player,우지훈,TEAM_UNIV_DONGGUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00285,player,민현서,TEAM_UNIV_DONGGUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00286,player,강도현,TEAM_UNIV_DONGGUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00287,player,조태양,TEAM_UNIV_DONGGUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00288,player,임원준,TEAM_UNIV_DONGGUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00289,player,구성준,TEAM_UNIV_DONGGUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00290,player,최준호,TEAM_UNIV_DONGGUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00291,player,구용준,TEAM_UNIV_DONGGUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00292,player,권동혁,TEAM_UNIV_DONGGUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00293,player,양민혁,TEAM_UNIV_DONGGUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00294,player,구준호,TEAM_UNIV_DONGGUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00295,player,곽주원,TEAM_UNIV_DONGGUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00296,player,고성민,TEAM_UNIV_DONGGUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00297,player,조동우,TEAM_UNIV_DONGGUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00298,player,손현준,TEAM_UNIV_DONGGUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00299,player,곽재원,TEAM_UNIV_DONGGUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,PLY_00300,player,고준영,TEAM_UNIV_DONGGUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,COA_00029,coach,구현우,TEAM_UNIV_DONGGUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,COA_00030,coach,신지원,TEAM_UNIV_DONGGUK,true,false,0,false,false
+LEAGUE_UNIVERSITY,MNG_00015,manager,하상현,TEAM_UNIV_DONGGUK,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00301,player,하하준,TEAM_IND_SEOUL_PIONEERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00302,player,우재윤,TEAM_IND_SEOUL_PIONEERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00303,player,김도현,TEAM_IND_SEOUL_PIONEERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00304,player,홍승우,TEAM_IND_SEOUL_PIONEERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00305,player,배재민,TEAM_IND_SEOUL_PIONEERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00306,player,우서준,TEAM_IND_SEOUL_PIONEERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00307,player,주현우,TEAM_IND_SEOUL_PIONEERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00308,player,장상민,TEAM_IND_SEOUL_PIONEERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00309,player,권현준,TEAM_IND_SEOUL_PIONEERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00310,player,신승우,TEAM_IND_SEOUL_PIONEERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00311,player,안성우,TEAM_IND_SEOUL_PIONEERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00312,player,박성우,TEAM_IND_SEOUL_PIONEERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00313,player,민준서,TEAM_IND_SEOUL_PIONEERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00314,player,김민석,TEAM_IND_SEOUL_PIONEERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00315,player,임지훈,TEAM_IND_SEOUL_PIONEERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00316,player,남성준,TEAM_IND_SEOUL_PIONEERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00317,player,고도윤,TEAM_IND_SEOUL_PIONEERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00318,player,배준혁,TEAM_IND_SEOUL_PIONEERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00319,player,홍준혁,TEAM_IND_SEOUL_PIONEERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00320,player,오성민,TEAM_IND_SEOUL_PIONEERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,COA_00031,coach,배민준,TEAM_IND_SEOUL_PIONEERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,COA_00032,coach,강재윤,TEAM_IND_SEOUL_PIONEERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,MNG_00016,manager,권재원,TEAM_IND_SEOUL_PIONEERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00321,player,하도현,TEAM_IND_BUSAN_TEMPEST,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00322,player,유민석,TEAM_IND_BUSAN_TEMPEST,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00323,player,곽기준,TEAM_IND_BUSAN_TEMPEST,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00324,player,양재훈,TEAM_IND_BUSAN_TEMPEST,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00325,player,성건우,TEAM_IND_BUSAN_TEMPEST,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00326,player,홍기준,TEAM_IND_BUSAN_TEMPEST,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00327,player,배연우,TEAM_IND_BUSAN_TEMPEST,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00328,player,심상민,TEAM_IND_BUSAN_TEMPEST,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00329,player,노동우,TEAM_IND_BUSAN_TEMPEST,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00330,player,최예준,TEAM_IND_BUSAN_TEMPEST,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00331,player,박준혁,TEAM_IND_BUSAN_TEMPEST,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00332,player,성준호,TEAM_IND_BUSAN_TEMPEST,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00333,player,김연우,TEAM_IND_BUSAN_TEMPEST,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00334,player,주기훈,TEAM_IND_BUSAN_TEMPEST,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00335,player,박태양,TEAM_IND_BUSAN_TEMPEST,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00336,player,황상현,TEAM_IND_BUSAN_TEMPEST,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00337,player,손동준,TEAM_IND_BUSAN_TEMPEST,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00338,player,강민준,TEAM_IND_BUSAN_TEMPEST,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00339,player,최상민,TEAM_IND_BUSAN_TEMPEST,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00340,player,서재훈,TEAM_IND_BUSAN_TEMPEST,true,false,0,false,false
+LEAGUE_INDEPENDENT,COA_00033,coach,곽하준,TEAM_IND_BUSAN_TEMPEST,true,false,0,false,false
+LEAGUE_INDEPENDENT,COA_00034,coach,권동현,TEAM_IND_BUSAN_TEMPEST,true,false,0,false,false
+LEAGUE_INDEPENDENT,MNG_00017,manager,차준혁,TEAM_IND_BUSAN_TEMPEST,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00341,player,하현준,TEAM_IND_DAEGU_FALCONS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00342,player,송태민,TEAM_IND_DAEGU_FALCONS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00343,player,손서준,TEAM_IND_DAEGU_FALCONS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00344,player,백지성,TEAM_IND_DAEGU_FALCONS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00345,player,박민재,TEAM_IND_DAEGU_FALCONS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00346,player,박도현,TEAM_IND_DAEGU_FALCONS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00347,player,신동준,TEAM_IND_DAEGU_FALCONS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00348,player,오민우,TEAM_IND_DAEGU_FALCONS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00349,player,조승우,TEAM_IND_DAEGU_FALCONS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00350,player,차상현,TEAM_IND_DAEGU_FALCONS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00351,player,심승민,TEAM_IND_DAEGU_FALCONS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00352,player,백준서,TEAM_IND_DAEGU_FALCONS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00353,player,박찬우,TEAM_IND_DAEGU_FALCONS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00354,player,노지성,TEAM_IND_DAEGU_FALCONS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00355,player,주재원,TEAM_IND_DAEGU_FALCONS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00356,player,최승민,TEAM_IND_DAEGU_FALCONS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00357,player,백서준,TEAM_IND_DAEGU_FALCONS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00358,player,유준호,TEAM_IND_DAEGU_FALCONS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00359,player,허지훈,TEAM_IND_DAEGU_FALCONS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00360,player,신민재,TEAM_IND_DAEGU_FALCONS,true,false,0,false,false
+LEAGUE_INDEPENDENT,COA_00035,coach,민예준,TEAM_IND_DAEGU_FALCONS,true,false,0,false,false
+LEAGUE_INDEPENDENT,COA_00036,coach,손민준,TEAM_IND_DAEGU_FALCONS,true,false,0,false,false
+LEAGUE_INDEPENDENT,MNG_00018,manager,신재민,TEAM_IND_DAEGU_FALCONS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00361,player,하승현,TEAM_IND_GWANGJU_STORM,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00362,player,장태양,TEAM_IND_GWANGJU_STORM,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00363,player,황준혁,TEAM_IND_GWANGJU_STORM,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00364,player,남서준,TEAM_IND_GWANGJU_STORM,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00365,player,한지호,TEAM_IND_GWANGJU_STORM,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00366,player,백재훈,TEAM_IND_GWANGJU_STORM,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00367,player,박민석,TEAM_IND_GWANGJU_STORM,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00368,player,성기훈,TEAM_IND_GWANGJU_STORM,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00369,player,문건우,TEAM_IND_GWANGJU_STORM,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00370,player,배민재,TEAM_IND_GWANGJU_STORM,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00371,player,황성민,TEAM_IND_GWANGJU_STORM,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00372,player,안준영,TEAM_IND_GWANGJU_STORM,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00373,player,권기훈,TEAM_IND_GWANGJU_STORM,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00374,player,신동현,TEAM_IND_GWANGJU_STORM,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00375,player,유태준,TEAM_IND_GWANGJU_STORM,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00376,player,윤지호,TEAM_IND_GWANGJU_STORM,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00377,player,손진우,TEAM_IND_GWANGJU_STORM,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00378,player,손용준,TEAM_IND_GWANGJU_STORM,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00379,player,권건우,TEAM_IND_GWANGJU_STORM,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00380,player,조동혁,TEAM_IND_GWANGJU_STORM,true,false,0,false,false
+LEAGUE_INDEPENDENT,COA_00037,coach,최지원,TEAM_IND_GWANGJU_STORM,true,false,0,false,false
+LEAGUE_INDEPENDENT,COA_00038,coach,최재민,TEAM_IND_GWANGJU_STORM,true,false,0,false,false
+LEAGUE_INDEPENDENT,MNG_00019,manager,구성민,TEAM_IND_GWANGJU_STORM,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00381,player,하재민,TEAM_IND_DAEJEON_HUNTERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00382,player,민지호,TEAM_IND_DAEJEON_HUNTERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00383,player,윤찬영,TEAM_IND_DAEJEON_HUNTERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00384,player,하준우,TEAM_IND_DAEJEON_HUNTERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00385,player,홍민준,TEAM_IND_DAEJEON_HUNTERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00386,player,장승현,TEAM_IND_DAEJEON_HUNTERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00387,player,하상민,TEAM_IND_DAEJEON_HUNTERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00388,player,노동준,TEAM_IND_DAEJEON_HUNTERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00389,player,신상현,TEAM_IND_DAEJEON_HUNTERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00390,player,조태민,TEAM_IND_DAEJEON_HUNTERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00391,player,서재원,TEAM_IND_DAEJEON_HUNTERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00392,player,하찬영,TEAM_IND_DAEJEON_HUNTERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00393,player,황재민,TEAM_IND_DAEJEON_HUNTERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00394,player,문기준,TEAM_IND_DAEJEON_HUNTERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00395,player,손태양,TEAM_IND_DAEJEON_HUNTERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00396,player,홍재윤,TEAM_IND_DAEJEON_HUNTERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00397,player,우도현,TEAM_IND_DAEJEON_HUNTERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00398,player,차동현,TEAM_IND_DAEJEON_HUNTERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00399,player,오상민,TEAM_IND_DAEJEON_HUNTERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00400,player,서예준,TEAM_IND_DAEJEON_HUNTERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,COA_00039,coach,임지호,TEAM_IND_DAEJEON_HUNTERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,COA_00040,coach,주도윤,TEAM_IND_DAEJEON_HUNTERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,MNG_00020,manager,남지훈,TEAM_IND_DAEJEON_HUNTERS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00401,player,하동준,TEAM_IND_INCHEON_ORCAS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00402,player,심지성,TEAM_IND_INCHEON_ORCAS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00403,player,나우진,TEAM_IND_INCHEON_ORCAS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00404,player,차현준,TEAM_IND_INCHEON_ORCAS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00405,player,남현진,TEAM_IND_INCHEON_ORCAS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00406,player,하진우,TEAM_IND_INCHEON_ORCAS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00407,player,홍동우,TEAM_IND_INCHEON_ORCAS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00408,player,우재훈,TEAM_IND_INCHEON_ORCAS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00409,player,신준영,TEAM_IND_INCHEON_ORCAS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00410,player,강현준,TEAM_IND_INCHEON_ORCAS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00411,player,남민재,TEAM_IND_INCHEON_ORCAS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00412,player,민승민,TEAM_IND_INCHEON_ORCAS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00413,player,조재원,TEAM_IND_INCHEON_ORCAS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00414,player,노재훈,TEAM_IND_INCHEON_ORCAS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00415,player,고태우,TEAM_IND_INCHEON_ORCAS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00416,player,하기준,TEAM_IND_INCHEON_ORCAS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00417,player,한정우,TEAM_IND_INCHEON_ORCAS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00418,player,정준혁,TEAM_IND_INCHEON_ORCAS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00419,player,임태양,TEAM_IND_INCHEON_ORCAS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00420,player,신지후,TEAM_IND_INCHEON_ORCAS,true,false,0,false,false
+LEAGUE_INDEPENDENT,COA_00041,coach,송민재,TEAM_IND_INCHEON_ORCAS,true,false,0,false,false
+LEAGUE_INDEPENDENT,COA_00042,coach,주승우,TEAM_IND_INCHEON_ORCAS,true,false,0,false,false
+LEAGUE_INDEPENDENT,MNG_00021,manager,심동우,TEAM_IND_INCHEON_ORCAS,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00421,player,하태준,TEAM_IND_SUWON_BLAZE,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00422,player,고준영,TEAM_IND_SUWON_BLAZE,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00423,player,노승우,TEAM_IND_SUWON_BLAZE,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00424,player,나정우,TEAM_IND_SUWON_BLAZE,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00425,player,구재훈,TEAM_IND_SUWON_BLAZE,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00426,player,권동준,TEAM_IND_SUWON_BLAZE,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00427,player,장지후,TEAM_IND_SUWON_BLAZE,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00428,player,전성현,TEAM_IND_SUWON_BLAZE,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00429,player,심준혁,TEAM_IND_SUWON_BLAZE,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00430,player,성준서,TEAM_IND_SUWON_BLAZE,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00431,player,나현우,TEAM_IND_SUWON_BLAZE,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00432,player,허찬영,TEAM_IND_SUWON_BLAZE,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00433,player,윤기준,TEAM_IND_SUWON_BLAZE,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00434,player,차기훈,TEAM_IND_SUWON_BLAZE,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00435,player,황도윤,TEAM_IND_SUWON_BLAZE,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00436,player,나성준,TEAM_IND_SUWON_BLAZE,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00437,player,백승민,TEAM_IND_SUWON_BLAZE,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00438,player,홍동현,TEAM_IND_SUWON_BLAZE,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00439,player,황태준,TEAM_IND_SUWON_BLAZE,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00440,player,우민우,TEAM_IND_SUWON_BLAZE,true,false,0,false,false
+LEAGUE_INDEPENDENT,COA_00043,coach,윤동혁,TEAM_IND_SUWON_BLAZE,true,false,0,false,false
+LEAGUE_INDEPENDENT,COA_00044,coach,배성준,TEAM_IND_SUWON_BLAZE,true,false,0,false,false
+LEAGUE_INDEPENDENT,MNG_00022,manager,장재민,TEAM_IND_SUWON_BLAZE,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00441,player,하준영,TEAM_IND_ULSAN_PHOENIX,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00442,player,오동준,TEAM_IND_ULSAN_PHOENIX,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00443,player,양주원,TEAM_IND_ULSAN_PHOENIX,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00444,player,이민혁,TEAM_IND_ULSAN_PHOENIX,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00445,player,전승민,TEAM_IND_ULSAN_PHOENIX,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00446,player,조서준,TEAM_IND_ULSAN_PHOENIX,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00447,player,이재훈,TEAM_IND_ULSAN_PHOENIX,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00448,player,윤상현,TEAM_IND_ULSAN_PHOENIX,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00449,player,이기훈,TEAM_IND_ULSAN_PHOENIX,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00450,player,유진우,TEAM_IND_ULSAN_PHOENIX,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00451,player,조건우,TEAM_IND_ULSAN_PHOENIX,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00452,player,양민석,TEAM_IND_ULSAN_PHOENIX,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00453,player,김지성,TEAM_IND_ULSAN_PHOENIX,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00454,player,차지호,TEAM_IND_ULSAN_PHOENIX,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00455,player,차용준,TEAM_IND_ULSAN_PHOENIX,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00456,player,홍준우,TEAM_IND_ULSAN_PHOENIX,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00457,player,권정우,TEAM_IND_ULSAN_PHOENIX,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00458,player,하정우,TEAM_IND_ULSAN_PHOENIX,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00459,player,서동준,TEAM_IND_ULSAN_PHOENIX,true,false,0,false,false
+LEAGUE_INDEPENDENT,PLY_00460,player,권재윤,TEAM_IND_ULSAN_PHOENIX,true,false,0,false,false
+LEAGUE_INDEPENDENT,COA_00045,coach,이재현,TEAM_IND_ULSAN_PHOENIX,true,false,0,false,false
+LEAGUE_INDEPENDENT,COA_00046,coach,심도현,TEAM_IND_ULSAN_PHOENIX,true,false,0,false,false
+LEAGUE_INDEPENDENT,MNG_00023,manager,홍용준,TEAM_IND_ULSAN_PHOENIX,true,false,0,false,false
+LEAGUE_KBL,PLY_00461,player,배동우,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00462,player,유지원,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00463,player,하성현,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00464,player,홍민재,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00465,player,안재훈,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00466,player,최상현,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00467,player,최시우,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00468,player,나태우,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00469,player,차지훈,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00470,player,김현서,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00471,player,권민재,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00472,player,민원준,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00473,player,성태민,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00474,player,허준영,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00475,player,장성준,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00476,player,구준호,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00477,player,양지후,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00478,player,조민우,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00479,player,하재윤,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00480,player,강시우,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00481,player,주현진,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00482,player,윤동혁,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00483,player,권준혁,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00484,player,권현우,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00485,player,허준서,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,COA_00047,coach,허지후,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,COA_00048,coach,홍승민,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,COA_00049,coach,홍동우,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,MNG_00024,manager,양예준,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,OWN_00009,owner,한현진,TEAM_KBL_KIA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00486,player,서도현,TEAM_KBL_KIA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00487,player,곽동현,TEAM_KBL_KIA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00488,player,최재현,TEAM_KBL_KIA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00489,player,주현우,TEAM_KBL_KIA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00490,player,성현서,TEAM_KBL_KIA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00491,player,성원준,TEAM_KBL_KIA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00492,player,신민혁,TEAM_KBL_KIA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00493,player,이성민,TEAM_KBL_KIA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00494,player,오동준,TEAM_KBL_KIA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00495,player,구준영,TEAM_KBL_KIA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00496,player,곽예준,TEAM_KBL_KIA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00497,player,윤태준,TEAM_KBL_KIA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00498,player,홍승우,TEAM_KBL_KIA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00499,player,송태현,TEAM_KBL_KIA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00500,player,조지성,TEAM_KBL_KIA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00501,player,윤시우,TEAM_KBL_KIA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00502,player,유도현,TEAM_KBL_KIA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00503,player,정준영,TEAM_KBL_KIA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00504,player,한재윤,TEAM_KBL_KIA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00505,player,양태민,TEAM_KBL_KIA_2,true,false,0,false,false
+LEAGUE_KBL,COA_00050,coach,문태준,TEAM_KBL_KIA_2,true,false,0,false,false
+LEAGUE_KBL,COA_00051,coach,손성민,TEAM_KBL_KIA_2,true,false,0,false,false
+LEAGUE_KBL,MNG_00025,manager,허도현,TEAM_KBL_KIA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00506,player,배주원,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00507,player,전지호,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00508,player,차현준,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00509,player,하준혁,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00510,player,박태민,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00511,player,홍재민,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00512,player,백상현,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00513,player,우민재,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00514,player,박찬영,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00515,player,황성민,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00516,player,허재훈,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00517,player,조원준,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00518,player,노민혁,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00519,player,곽동우,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00520,player,박기훈,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00521,player,나용준,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00522,player,배용준,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00523,player,홍준우,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00524,player,오준영,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00525,player,곽지원,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00526,player,주진우,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00527,player,양현우,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00528,player,양도윤,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00529,player,고지호,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00530,player,서정우,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,COA_00052,coach,박서준,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,COA_00053,coach,배지원,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,COA_00054,coach,차재민,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,MNG_00026,manager,송동우,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,OWN_00010,owner,강태준,TEAM_KBL_SAMSUNG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00531,player,손시우,TEAM_KBL_SAMSUNG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00532,player,신성우,TEAM_KBL_SAMSUNG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00533,player,정승민,TEAM_KBL_SAMSUNG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00534,player,황승민,TEAM_KBL_SAMSUNG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00535,player,허동혁,TEAM_KBL_SAMSUNG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00536,player,곽재윤,TEAM_KBL_SAMSUNG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00537,player,한성민,TEAM_KBL_SAMSUNG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00538,player,주재윤,TEAM_KBL_SAMSUNG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00539,player,정현준,TEAM_KBL_SAMSUNG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00540,player,민지후,TEAM_KBL_SAMSUNG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00541,player,이승우,TEAM_KBL_SAMSUNG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00542,player,박동현,TEAM_KBL_SAMSUNG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00543,player,최준우,TEAM_KBL_SAMSUNG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00544,player,주성현,TEAM_KBL_SAMSUNG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00545,player,민상민,TEAM_KBL_SAMSUNG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00546,player,서동혁,TEAM_KBL_SAMSUNG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00547,player,정용준,TEAM_KBL_SAMSUNG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00548,player,송준호,TEAM_KBL_SAMSUNG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00549,player,허태우,TEAM_KBL_SAMSUNG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00550,player,전태양,TEAM_KBL_SAMSUNG_2,true,false,0,false,false
+LEAGUE_KBL,COA_00055,coach,우성현,TEAM_KBL_SAMSUNG_2,true,false,0,false,false
+LEAGUE_KBL,COA_00056,coach,우민혁,TEAM_KBL_SAMSUNG_2,true,false,0,false,false
+LEAGUE_KBL,MNG_00027,manager,차준우,TEAM_KBL_SAMSUNG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00551,player,배준우,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00552,player,장원준,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00553,player,권준호,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00554,player,허용준,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00555,player,차현서,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00556,player,임승민,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00557,player,고승현,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00558,player,이원준,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00559,player,백재현,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00560,player,문기준,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00561,player,유지후,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00562,player,양주원,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00563,player,우동우,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00564,player,황동우,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00565,player,차상현,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00566,player,오태우,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00567,player,남지호,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00568,player,임태우,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00569,player,나태준,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00570,player,조동우,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00571,player,임시우,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00572,player,배민석,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00573,player,한찬우,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00574,player,조예준,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00575,player,우태양,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,COA_00057,coach,박준영,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,COA_00058,coach,백주원,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,COA_00059,coach,유동우,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,MNG_00028,manager,민찬우,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,OWN_00011,owner,오재원,TEAM_KBL_LG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00576,player,황기준,TEAM_KBL_LG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00577,player,김우진,TEAM_KBL_LG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00578,player,배태우,TEAM_KBL_LG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00579,player,차시우,TEAM_KBL_LG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00580,player,우현준,TEAM_KBL_LG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00581,player,유민우,TEAM_KBL_LG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00582,player,구건우,TEAM_KBL_LG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00583,player,유동현,TEAM_KBL_LG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00584,player,구연우,TEAM_KBL_LG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00585,player,백준호,TEAM_KBL_LG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00586,player,권주원,TEAM_KBL_LG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00587,player,박성우,TEAM_KBL_LG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00588,player,성준서,TEAM_KBL_LG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00589,player,임재원,TEAM_KBL_LG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00590,player,홍시우,TEAM_KBL_LG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00591,player,박동우,TEAM_KBL_LG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00592,player,신태우,TEAM_KBL_LG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00593,player,이동준,TEAM_KBL_LG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00594,player,손태준,TEAM_KBL_LG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00595,player,문상현,TEAM_KBL_LG_2,true,false,0,false,false
+LEAGUE_KBL,COA_00060,coach,심하준,TEAM_KBL_LG_2,true,false,0,false,false
+LEAGUE_KBL,COA_00061,coach,서지호,TEAM_KBL_LG_2,true,false,0,false,false
+LEAGUE_KBL,MNG_00029,manager,이기준,TEAM_KBL_LG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00596,player,배우진,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00597,player,민태현,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00598,player,조성우,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00599,player,심재현,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00600,player,최동현,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00601,player,곽재민,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00602,player,임성준,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00603,player,손지성,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00604,player,이현준,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00605,player,오지후,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00606,player,신준호,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00607,player,신승우,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00608,player,나민재,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00609,player,한하준,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00610,player,유재훈,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00611,player,양동우,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00612,player,강준영,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00613,player,김상민,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00614,player,남민우,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00615,player,조재훈,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00616,player,심찬우,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00617,player,하정우,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00618,player,손재윤,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00619,player,남현진,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00620,player,심민혁,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,COA_00062,coach,차재원,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,COA_00063,coach,윤지후,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,COA_00064,coach,박상민,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,MNG_00030,manager,황성준,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,OWN_00012,owner,곽찬영,TEAM_KBL_DOOSAN_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00621,player,최성현,TEAM_KBL_DOOSAN_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00622,player,고태민,TEAM_KBL_DOOSAN_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00623,player,조태현,TEAM_KBL_DOOSAN_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00624,player,오태양,TEAM_KBL_DOOSAN_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00625,player,심민석,TEAM_KBL_DOOSAN_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00626,player,남동혁,TEAM_KBL_DOOSAN_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00627,player,고도윤,TEAM_KBL_DOOSAN_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00628,player,곽지후,TEAM_KBL_DOOSAN_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00629,player,허성우,TEAM_KBL_DOOSAN_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00630,player,조주원,TEAM_KBL_DOOSAN_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00631,player,이지훈,TEAM_KBL_DOOSAN_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00632,player,장태민,TEAM_KBL_DOOSAN_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00633,player,유서준,TEAM_KBL_DOOSAN_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00634,player,우주원,TEAM_KBL_DOOSAN_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00635,player,주준혁,TEAM_KBL_DOOSAN_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00636,player,민준우,TEAM_KBL_DOOSAN_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00637,player,안정우,TEAM_KBL_DOOSAN_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00638,player,정주원,TEAM_KBL_DOOSAN_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00639,player,나상현,TEAM_KBL_DOOSAN_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00640,player,오정우,TEAM_KBL_DOOSAN_2,true,false,0,false,false
+LEAGUE_KBL,COA_00065,coach,이성현,TEAM_KBL_DOOSAN_2,true,false,0,false,false
+LEAGUE_KBL,COA_00066,coach,조재현,TEAM_KBL_DOOSAN_2,true,false,0,false,false
+LEAGUE_KBL,MNG_00031,manager,구서준,TEAM_KBL_DOOSAN_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00641,player,백건우,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00642,player,노동준,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00643,player,나정우,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00644,player,곽준영,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00645,player,서성민,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00646,player,황도윤,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00647,player,나승우,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00648,player,정지성,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00649,player,송진우,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00650,player,박승우,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00651,player,김서준,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00652,player,강민재,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00653,player,민용준,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00654,player,강지훈,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00655,player,고재윤,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00656,player,허태양,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00657,player,성하준,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00658,player,서하준,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00659,player,강준혁,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00660,player,장승민,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00661,player,배현우,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00662,player,박태준,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00663,player,윤상민,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00664,player,나지호,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00665,player,윤준혁,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,COA_00067,coach,송성민,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,COA_00068,coach,신연우,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,COA_00069,coach,황준서,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,MNG_00032,manager,박현서,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,OWN_00013,owner,차원준,TEAM_KBL_KT_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00666,player,이태준,TEAM_KBL_KT_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00667,player,박현우,TEAM_KBL_KT_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00668,player,서찬우,TEAM_KBL_KT_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00669,player,우민우,TEAM_KBL_KT_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00670,player,노상민,TEAM_KBL_KT_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00671,player,김원준,TEAM_KBL_KT_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00672,player,김정우,TEAM_KBL_KT_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00673,player,우준혁,TEAM_KBL_KT_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00674,player,최태민,TEAM_KBL_KT_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00675,player,김기훈,TEAM_KBL_KT_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00676,player,윤동현,TEAM_KBL_KT_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00677,player,우성준,TEAM_KBL_KT_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00678,player,한기준,TEAM_KBL_KT_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00679,player,김동준,TEAM_KBL_KT_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00680,player,허상민,TEAM_KBL_KT_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00681,player,백태현,TEAM_KBL_KT_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00682,player,권승우,TEAM_KBL_KT_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00683,player,신주원,TEAM_KBL_KT_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00684,player,김현진,TEAM_KBL_KT_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00685,player,심기준,TEAM_KBL_KT_2,true,false,0,false,false
+LEAGUE_KBL,COA_00070,coach,나준호,TEAM_KBL_KT_2,true,false,0,false,false
+LEAGUE_KBL,COA_00071,coach,남승민,TEAM_KBL_KT_2,true,false,0,false,false
+LEAGUE_KBL,MNG_00033,manager,김민우,TEAM_KBL_KT_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00686,player,백동현,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00687,player,우태민,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00688,player,박재윤,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00689,player,문용준,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00690,player,이태현,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00691,player,임재윤,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00692,player,권도현,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00693,player,황지원,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00694,player,오상현,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00695,player,노우진,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00696,player,고상현,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00697,player,홍예준,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00698,player,권재현,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00699,player,권동우,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00700,player,나재현,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00701,player,권지원,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00702,player,송태민,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00703,player,조도윤,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00704,player,신현서,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00705,player,권기준,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00706,player,남동현,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00707,player,송민우,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00708,player,양재원,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00709,player,박준서,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00710,player,신민우,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,COA_00072,coach,곽정우,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,COA_00073,coach,한태양,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,COA_00074,coach,한준호,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,MNG_00034,manager,고성민,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,OWN_00014,owner,안하준,TEAM_KBL_SSG_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00711,player,홍기준,TEAM_KBL_SSG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00712,player,오도윤,TEAM_KBL_SSG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00713,player,성동혁,TEAM_KBL_SSG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00714,player,곽진우,TEAM_KBL_SSG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00715,player,허주원,TEAM_KBL_SSG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00716,player,송찬영,TEAM_KBL_SSG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00717,player,최민준,TEAM_KBL_SSG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00718,player,우하준,TEAM_KBL_SSG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00719,player,최민재,TEAM_KBL_SSG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00720,player,김재민,TEAM_KBL_SSG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00721,player,조준우,TEAM_KBL_SSG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00722,player,전용준,TEAM_KBL_SSG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00723,player,성태양,TEAM_KBL_SSG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00724,player,곽현우,TEAM_KBL_SSG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00725,player,문준영,TEAM_KBL_SSG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00726,player,나동준,TEAM_KBL_SSG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00727,player,최지호,TEAM_KBL_SSG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00728,player,최현준,TEAM_KBL_SSG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00729,player,손찬우,TEAM_KBL_SSG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00730,player,구상민,TEAM_KBL_SSG_2,true,false,0,false,false
+LEAGUE_KBL,COA_00075,coach,고승민,TEAM_KBL_SSG_2,true,false,0,false,false
+LEAGUE_KBL,COA_00076,coach,민지성,TEAM_KBL_SSG_2,true,false,0,false,false
+LEAGUE_KBL,MNG_00035,manager,하태민,TEAM_KBL_SSG_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00731,player,백민혁,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00732,player,오준우,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00733,player,문민재,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00734,player,나동우,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00735,player,노하준,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00736,player,문지훈,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00737,player,황진우,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00738,player,윤승민,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00739,player,장건우,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00740,player,손동혁,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00741,player,신원준,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00742,player,남재원,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00743,player,박진우,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00744,player,차상민,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00745,player,배도윤,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00746,player,안현우,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00747,player,오찬우,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00748,player,김도윤,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00749,player,정재현,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00750,player,허태민,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00751,player,백연우,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00752,player,성예준,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00753,player,손지훈,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00754,player,정민재,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00755,player,권민석,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,COA_00077,coach,최승민,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,COA_00078,coach,박재원,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,COA_00079,coach,권재윤,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,MNG_00036,manager,신승현,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,OWN_00015,owner,홍태현,TEAM_KBL_LOTTE_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00756,player,이예준,TEAM_KBL_LOTTE_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00757,player,문준호,TEAM_KBL_LOTTE_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00758,player,성성준,TEAM_KBL_LOTTE_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00759,player,이준호,TEAM_KBL_LOTTE_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00760,player,홍지호,TEAM_KBL_LOTTE_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00761,player,손준우,TEAM_KBL_LOTTE_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00762,player,윤상현,TEAM_KBL_LOTTE_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00763,player,노태민,TEAM_KBL_LOTTE_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00764,player,박태양,TEAM_KBL_LOTTE_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00765,player,이현우,TEAM_KBL_LOTTE_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00766,player,송동현,TEAM_KBL_LOTTE_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00767,player,양태준,TEAM_KBL_LOTTE_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00768,player,한준혁,TEAM_KBL_LOTTE_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00769,player,신재윤,TEAM_KBL_LOTTE_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00770,player,황하준,TEAM_KBL_LOTTE_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00771,player,장태우,TEAM_KBL_LOTTE_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00772,player,양찬우,TEAM_KBL_LOTTE_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00773,player,전성현,TEAM_KBL_LOTTE_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00774,player,한동우,TEAM_KBL_LOTTE_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00775,player,강승우,TEAM_KBL_LOTTE_2,true,false,0,false,false
+LEAGUE_KBL,COA_00080,coach,우상민,TEAM_KBL_LOTTE_2,true,false,0,false,false
+LEAGUE_KBL,COA_00081,coach,백원준,TEAM_KBL_LOTTE_2,true,false,0,false,false
+LEAGUE_KBL,MNG_00037,manager,신현우,TEAM_KBL_LOTTE_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00776,player,백찬우,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00777,player,임준혁,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00778,player,유준우,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00779,player,송성우,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00780,player,이승현,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00781,player,배준호,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00782,player,성승민,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00783,player,손용준,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00784,player,임하준,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00785,player,홍용준,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00786,player,송지훈,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00787,player,안민재,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00788,player,박민우,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00789,player,오성우,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00790,player,나현서,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00791,player,황찬영,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00792,player,남현우,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00793,player,구지원,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00794,player,강민석,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00795,player,김재윤,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00796,player,곽성준,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00797,player,한민준,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00798,player,백시우,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00799,player,성동준,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00800,player,이민석,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,COA_00082,coach,조동준,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,COA_00083,coach,문찬우,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,COA_00084,coach,백재원,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,MNG_00038,manager,하지원,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,OWN_00016,owner,손민우,TEAM_KBL_HANWHA_1,true,false,0,false,false
+LEAGUE_KBL,PLY_00801,player,우상현,TEAM_KBL_HANWHA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00802,player,홍상현,TEAM_KBL_HANWHA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00803,player,전재원,TEAM_KBL_HANWHA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00804,player,구지호,TEAM_KBL_HANWHA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00805,player,정지호,TEAM_KBL_HANWHA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00806,player,최재훈,TEAM_KBL_HANWHA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00807,player,홍승현,TEAM_KBL_HANWHA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00808,player,하준호,TEAM_KBL_HANWHA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00809,player,임상민,TEAM_KBL_HANWHA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00810,player,유승우,TEAM_KBL_HANWHA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00811,player,홍서준,TEAM_KBL_HANWHA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00812,player,윤정우,TEAM_KBL_HANWHA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00813,player,윤재원,TEAM_KBL_HANWHA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00814,player,우시우,TEAM_KBL_HANWHA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00815,player,안지원,TEAM_KBL_HANWHA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00816,player,성민재,TEAM_KBL_HANWHA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00817,player,서용준,TEAM_KBL_HANWHA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00818,player,고재현,TEAM_KBL_HANWHA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00819,player,이태양,TEAM_KBL_HANWHA_2,true,false,0,false,false
+LEAGUE_KBL,PLY_00820,player,남태현,TEAM_KBL_HANWHA_2,true,false,0,false,false
+LEAGUE_KBL,COA_00085,coach,심도윤,TEAM_KBL_HANWHA_2,true,false,0,false,false
+LEAGUE_KBL,COA_00086,coach,김재현,TEAM_KBL_HANWHA_2,true,false,0,false,false
+LEAGUE_KBL,MNG_00039,manager,민재훈,TEAM_KBL_HANWHA_2,true,false,0,false,false
+LEAGUE_ABL,PLY_00821,player,클라크 다니엘,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,PLY_00822,player,워커 존,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,PLY_00823,player,루이스 조너선,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,PLY_00824,player,애덤스 제임스,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,PLY_00825,player,토머스 케빈,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,PLY_00826,player,존슨 메이슨,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,PLY_00827,player,토머스 윌리엄,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,PLY_00828,player,화이트 하비에르,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,PLY_00829,player,리 로건,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,PLY_00830,player,애덤스 데이비드,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,PLY_00831,player,윌리엄스 호세,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,PLY_00832,player,존슨 다니엘,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,PLY_00833,player,테일러 저스틴,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,PLY_00834,player,가르시아 제이컵,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,PLY_00835,player,스콧 루카스,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,PLY_00836,player,테일러 존,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,PLY_00837,player,킹 로버트,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,PLY_00838,player,데이비스 데이비드,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,PLY_00839,player,윌슨 오스틴,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,PLY_00840,player,스미스 앤드류,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,PLY_00841,player,데이비스 브랜던,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,PLY_00842,player,데이비스 루카스,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,PLY_00843,player,리 리엄,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,PLY_00844,player,클라크 앤드류,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,PLY_00845,player,해리스 조너선,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,COA_00087,coach,존스 앤서니,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,COA_00088,coach,앤더슨 앤서니,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,COA_00089,coach,스미스 마이클,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,MNG_00040,manager,존슨 데이비드,TEAM_ABL_LAD,true,false,0,false,false
+LEAGUE_ABL,PLY_00846,player,잭슨 저스틴,TEAM_ABL_LAD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00847,player,로빈슨 카를로스,TEAM_ABL_LAD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00848,player,윌슨 존,TEAM_ABL_LAD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00849,player,그린 로버트,TEAM_ABL_LAD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00850,player,스미스 데이비드,TEAM_ABL_LAD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00851,player,무어 로버트,TEAM_ABL_LAD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00852,player,가르시아 프란시스코,TEAM_ABL_LAD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00853,player,스콧 오스틴,TEAM_ABL_LAD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00854,player,브라운 크리스토퍼,TEAM_ABL_LAD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00855,player,해리스 타일러,TEAM_ABL_LAD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00856,player,테일러 로버트,TEAM_ABL_LAD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00857,player,데이비스 라이언,TEAM_ABL_LAD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00858,player,윌리엄스 다니엘,TEAM_ABL_LAD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00859,player,스미스 노아,TEAM_ABL_LAD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00860,player,존슨 윌리엄,TEAM_ABL_LAD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00861,player,로빈슨 애드리언,TEAM_ABL_LAD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00862,player,가르시아 애드리언,TEAM_ABL_LAD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00863,player,존슨 조너선,TEAM_ABL_LAD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00864,player,밀러 로건,TEAM_ABL_LAD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00865,player,잭슨 브랜던,TEAM_ABL_LAD_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00090,coach,영 존,TEAM_ABL_LAD_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00091,coach,스콧 조너선,TEAM_ABL_LAD_AAA,true,false,0,false,false
+LEAGUE_ABL,MNG_00041,manager,카터 루카스,TEAM_ABL_LAD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00866,player,홀 알레한드로,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,PLY_00867,player,화이트 빅터,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,PLY_00868,player,잭슨 조셉,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,PLY_00869,player,루이스 벤자민,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,PLY_00870,player,존슨 알레한드로,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,PLY_00871,player,윌슨 데이비드,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,PLY_00872,player,홀 일라이저,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,PLY_00873,player,넬슨 크리스토퍼,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,PLY_00874,player,앤더슨 로버트,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,PLY_00875,player,무어 제임스,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,PLY_00876,player,스미스 제임스,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,PLY_00877,player,존스 라이언,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,PLY_00878,player,앤더슨 라이언,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,PLY_00879,player,베이커 로건,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,PLY_00880,player,토머스 크리스토퍼,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,PLY_00881,player,마르티네스 크리스토퍼,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,PLY_00882,player,라미레스 저스틴,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,PLY_00883,player,영 앤서니,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,PLY_00884,player,존스 조너선,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,PLY_00885,player,마틴 윌리엄,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,PLY_00886,player,라미레스 메이슨,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,PLY_00887,player,윌슨 제이컵,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,PLY_00888,player,애덤스 앤드류,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,PLY_00889,player,스미스 루카스,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,PLY_00890,player,마틴 노아,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,COA_00092,coach,화이트 조셉,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,COA_00093,coach,존슨 벤자민,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,COA_00094,coach,스미스 메이슨,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,MNG_00042,manager,페레스 알레한드로,TEAM_ABL_NYY,true,false,0,false,false
+LEAGUE_ABL,PLY_00891,player,영 앤드류,TEAM_ABL_NYY_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00892,player,잭슨 니콜라스,TEAM_ABL_NYY_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00893,player,스콧 앤서니,TEAM_ABL_NYY_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00894,player,미첼 로건,TEAM_ABL_NYY_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00895,player,스미스 리엄,TEAM_ABL_NYY_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00896,player,윌슨 벤자민,TEAM_ABL_NYY_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00897,player,라미레스 이선,TEAM_ABL_NYY_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00898,player,잭슨 마르코,TEAM_ABL_NYY_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00899,player,스미스 저스틴,TEAM_ABL_NYY_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00900,player,베이커 조셉,TEAM_ABL_NYY_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00901,player,윌리엄스 제이컵,TEAM_ABL_NYY_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00902,player,브라운 빅터,TEAM_ABL_NYY_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00903,player,윌리엄스 조셉,TEAM_ABL_NYY_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00904,player,로드리게스 노아,TEAM_ABL_NYY_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00905,player,잭슨 윌리엄,TEAM_ABL_NYY_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00906,player,앤더슨 제임스,TEAM_ABL_NYY_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00907,player,카스티요 존,TEAM_ABL_NYY_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00908,player,로드리게스 로건,TEAM_ABL_NYY_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00909,player,윌리엄스 애드리언,TEAM_ABL_NYY_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00910,player,넬슨 일라이저,TEAM_ABL_NYY_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00095,coach,미첼 알레한드로,TEAM_ABL_NYY_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00096,coach,윌리엄스 크리스토퍼,TEAM_ABL_NYY_AAA,true,false,0,false,false
+LEAGUE_ABL,MNG_00043,manager,존스 루이스,TEAM_ABL_NYY_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00911,player,그린 오스틴,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,PLY_00912,player,데이비스 일라이저,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,PLY_00913,player,클라크 노아,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,PLY_00914,player,톰프슨 조셉,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,PLY_00915,player,앤더슨 크리스토퍼,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,PLY_00916,player,브라운 로건,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,PLY_00917,player,브라운 루카스,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,PLY_00918,player,테일러 조너선,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,PLY_00919,player,화이트 존,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,PLY_00920,player,리 존,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,PLY_00921,player,존슨 마르코,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,PLY_00922,player,윌슨 브랜던,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,PLY_00923,player,밀러 케빈,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,PLY_00924,player,스콧 매튜,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,PLY_00925,player,로빈슨 다니엘,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,PLY_00926,player,스미스 니콜라스,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,PLY_00927,player,톰프슨 하비에르,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,PLY_00928,player,루이스 마르코,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,PLY_00929,player,브라운 제임스,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,PLY_00930,player,앨런 제이컵,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,PLY_00931,player,미첼 빅터,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,PLY_00932,player,잭슨 데이비드,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,PLY_00933,player,로빈슨 오스틴,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,PLY_00934,player,넬슨 존,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,PLY_00935,player,토머스 마이클,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,COA_00097,coach,킹 다니엘,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,COA_00098,coach,앤더슨 메이슨,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,COA_00099,coach,토머스 빅터,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,MNG_00044,manager,킹 마이클,TEAM_ABL_BOS,true,false,0,false,false
+LEAGUE_ABL,PLY_00936,player,스미스 제이컵,TEAM_ABL_BOS_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00937,player,윌리엄스 프란시스코,TEAM_ABL_BOS_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00938,player,미첼 브랜던,TEAM_ABL_BOS_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00939,player,가르시아 에이든,TEAM_ABL_BOS_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00940,player,윌슨 조셉,TEAM_ABL_BOS_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00941,player,밀러 매튜,TEAM_ABL_BOS_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00942,player,존슨 타일러,TEAM_ABL_BOS_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00943,player,화이트 카를로스,TEAM_ABL_BOS_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00944,player,스미스 매튜,TEAM_ABL_BOS_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00945,player,루이스 호세,TEAM_ABL_BOS_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00946,player,브라운 벤자민,TEAM_ABL_BOS_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00947,player,가르시아 앤서니,TEAM_ABL_BOS_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00948,player,톰프슨 마이클,TEAM_ABL_BOS_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00949,player,존슨 에이든,TEAM_ABL_BOS_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00950,player,루이스 타일러,TEAM_ABL_BOS_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00951,player,윌슨 에이든,TEAM_ABL_BOS_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00952,player,앤더슨 매튜,TEAM_ABL_BOS_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00953,player,잭슨 타일러,TEAM_ABL_BOS_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00954,player,로드리게스 오스틴,TEAM_ABL_BOS_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00955,player,라이트 제임스,TEAM_ABL_BOS_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00100,coach,브라운 니콜라스,TEAM_ABL_BOS_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00101,coach,테일러 브랜던,TEAM_ABL_BOS_AAA,true,false,0,false,false
+LEAGUE_ABL,MNG_00045,manager,윌슨 다니엘,TEAM_ABL_BOS_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00956,player,라미레스 매튜,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,PLY_00957,player,존슨 케빈,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,PLY_00958,player,존슨 미겔,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,PLY_00959,player,무어 조셉,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,PLY_00960,player,데이비스 저스틴,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,PLY_00961,player,영 제임스,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,PLY_00962,player,무어 노아,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,PLY_00963,player,마르티네스 존,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,PLY_00964,player,그린 조셉,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,PLY_00965,player,윌슨 호세,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,PLY_00966,player,윌리엄스 노아,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,PLY_00967,player,워커 조셉,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,PLY_00968,player,토머스 디에고,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,PLY_00969,player,스미스 로건,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,PLY_00970,player,마틴 제임스,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,PLY_00971,player,라미레스 조너선,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,PLY_00972,player,밀러 조너선,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,PLY_00973,player,윌리엄스 메이슨,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,PLY_00974,player,윌리엄스 조너선,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,PLY_00975,player,넬슨 앤서니,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,PLY_00976,player,클라크 조셉,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,PLY_00977,player,클라크 제임스,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,PLY_00978,player,가르시아 케빈,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,PLY_00979,player,로드리게스 후안,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,PLY_00980,player,리 이선,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,COA_00102,coach,테일러 리엄,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,COA_00103,coach,베이커 매튜,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,COA_00104,coach,클라크 라이언,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,MNG_00046,manager,카터 이선,TEAM_ABL_TOR,true,false,0,false,false
+LEAGUE_ABL,PLY_00981,player,워커 앤서니,TEAM_ABL_TOR_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00982,player,곤살레스 로버트,TEAM_ABL_TOR_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00983,player,가르시아 로버트,TEAM_ABL_TOR_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00984,player,화이트 루카스,TEAM_ABL_TOR_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00985,player,홀 데이비드,TEAM_ABL_TOR_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00986,player,데이비스 매튜,TEAM_ABL_TOR_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00987,player,미첼 니콜라스,TEAM_ABL_TOR_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00988,player,잭슨 제임스,TEAM_ABL_TOR_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00989,player,앤더슨 니콜라스,TEAM_ABL_TOR_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00990,player,리 하비에르,TEAM_ABL_TOR_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00991,player,로드리게스 마이클,TEAM_ABL_TOR_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00992,player,존슨 프란시스코,TEAM_ABL_TOR_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00993,player,데이비스 로버트,TEAM_ABL_TOR_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00994,player,윌슨 케빈,TEAM_ABL_TOR_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00995,player,리 제임스,TEAM_ABL_TOR_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00996,player,해리스 로건,TEAM_ABL_TOR_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00997,player,클라크 데이비드,TEAM_ABL_TOR_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00998,player,리 조셉,TEAM_ABL_TOR_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_00999,player,윌슨 제임스,TEAM_ABL_TOR_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01000,player,토머스 브랜던,TEAM_ABL_TOR_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00105,coach,스미스 존,TEAM_ABL_TOR_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00106,coach,베이커 제임스,TEAM_ABL_TOR_AAA,true,false,0,false,false
+LEAGUE_ABL,MNG_00047,manager,클라크 벤자민,TEAM_ABL_TOR_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01001,player,스미스 빅터,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,PLY_01002,player,킹 앤드류,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,PLY_01003,player,스콧 리엄,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,PLY_01004,player,브라운 마이클,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,PLY_01005,player,카터 루이스,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,PLY_01006,player,스미스 라이언,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,PLY_01007,player,밀러 존,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,PLY_01008,player,그린 타일러,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,PLY_01009,player,그린 프란시스코,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,PLY_01010,player,가르시아 타일러,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,PLY_01011,player,테일러 마이클,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,PLY_01012,player,브라운 다니엘,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,PLY_01013,player,무어 에이든,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,PLY_01014,player,브라운 앤드류,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,PLY_01015,player,앨런 호세,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,PLY_01016,player,데이비스 타일러,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,PLY_01017,player,토머스 타일러,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,PLY_01018,player,데이비스 조너선,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,PLY_01019,player,밀러 앤서니,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,PLY_01020,player,킹 루카스,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,PLY_01021,player,토머스 존,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,PLY_01022,player,존스 저스틴,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,PLY_01023,player,가르시아 마르코,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,PLY_01024,player,윌리엄스 윌리엄,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,PLY_01025,player,스미스 카를로스,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,COA_00107,coach,브라운 앤서니,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,COA_00108,coach,스콧 윌리엄,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,COA_00109,coach,무어 데이비드,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,MNG_00048,manager,플로레스 매튜,TEAM_ABL_SEA,true,false,0,false,false
+LEAGUE_ABL,PLY_01026,player,무어 앤서니,TEAM_ABL_SEA_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01027,player,라이트 로버트,TEAM_ABL_SEA_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01028,player,토레스 이선,TEAM_ABL_SEA_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01029,player,가르시아 조너선,TEAM_ABL_SEA_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01030,player,킹 존,TEAM_ABL_SEA_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01031,player,앤더슨 존,TEAM_ABL_SEA_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01032,player,스미스 벤자민,TEAM_ABL_SEA_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01033,player,영 다니엘,TEAM_ABL_SEA_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01034,player,테일러 라이언,TEAM_ABL_SEA_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01035,player,톰프슨 메이슨,TEAM_ABL_SEA_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01036,player,마르티네스 타일러,TEAM_ABL_SEA_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01037,player,워커 제임스,TEAM_ABL_SEA_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01038,player,무어 존,TEAM_ABL_SEA_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01039,player,윌리엄스 로버트,TEAM_ABL_SEA_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01040,player,윌리엄스 카를로스,TEAM_ABL_SEA_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01041,player,워커 마르코,TEAM_ABL_SEA_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01042,player,미첼 타일러,TEAM_ABL_SEA_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01043,player,홀 빅터,TEAM_ABL_SEA_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01044,player,워커 제이컵,TEAM_ABL_SEA_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01045,player,영 케빈,TEAM_ABL_SEA_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00110,coach,잭슨 로버트,TEAM_ABL_SEA_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00111,coach,윌슨 루카스,TEAM_ABL_SEA_AAA,true,false,0,false,false
+LEAGUE_ABL,MNG_00049,manager,윌슨 니콜라스,TEAM_ABL_SEA_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01046,player,애덤스 노아,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,PLY_01047,player,라이트 브랜던,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,PLY_01048,player,라미레스 케빈,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,PLY_01049,player,워커 디에고,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,PLY_01050,player,미첼 조너선,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,PLY_01051,player,존슨 크리스토퍼,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,PLY_01052,player,스미스 조셉,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,PLY_01053,player,넬슨 니콜라스,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,PLY_01054,player,클라크 카를로스,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,PLY_01055,player,미첼 루이스,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,PLY_01056,player,해리스 크리스토퍼,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,PLY_01057,player,홀 매튜,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,PLY_01058,player,루이스 카를로스,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,PLY_01059,player,그린 애드리언,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,PLY_01060,player,홀 크리스토퍼,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,PLY_01061,player,무어 조너선,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,PLY_01062,player,데이비스 존,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,PLY_01063,player,스콧 카를로스,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,PLY_01064,player,스미스 로버트,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,PLY_01065,player,브라운 데이비드,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,PLY_01066,player,테일러 디에고,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,PLY_01067,player,톰프슨 제임스,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,PLY_01068,player,클라크 호세,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,PLY_01069,player,산체스 조셉,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,PLY_01070,player,윌리엄스 이선,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,COA_00112,coach,브라운 카를로스,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,COA_00113,coach,잭슨 존,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,COA_00114,coach,브라운 케빈,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,MNG_00050,manager,잭슨 라이언,TEAM_ABL_HOU,true,false,0,false,false
+LEAGUE_ABL,PLY_01071,player,밀러 빅터,TEAM_ABL_HOU_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01072,player,마틴 로버트,TEAM_ABL_HOU_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01073,player,밀러 호세,TEAM_ABL_HOU_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01074,player,로드리게스 카를로스,TEAM_ABL_HOU_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01075,player,마르티네스 조셉,TEAM_ABL_HOU_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01076,player,무어 하비에르,TEAM_ABL_HOU_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01077,player,밀러 벤자민,TEAM_ABL_HOU_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01078,player,데이비스 앤서니,TEAM_ABL_HOU_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01079,player,데이비스 빅터,TEAM_ABL_HOU_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01080,player,로빈슨 루이스,TEAM_ABL_HOU_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01081,player,토머스 다니엘,TEAM_ABL_HOU_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01082,player,카터 마이클,TEAM_ABL_HOU_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01083,player,해리스 앤드류,TEAM_ABL_HOU_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01084,player,스미스 미겔,TEAM_ABL_HOU_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01085,player,밀러 카를로스,TEAM_ABL_HOU_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01086,player,마르티네스 제임스,TEAM_ABL_HOU_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01087,player,루이스 케빈,TEAM_ABL_HOU_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01088,player,토머스 제임스,TEAM_ABL_HOU_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01089,player,카터 제임스,TEAM_ABL_HOU_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01090,player,라이트 케빈,TEAM_ABL_HOU_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00115,coach,브라운 브랜던,TEAM_ABL_HOU_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00116,coach,토머스 로버트,TEAM_ABL_HOU_AAA,true,false,0,false,false
+LEAGUE_ABL,MNG_00051,manager,로드리게스 에이든,TEAM_ABL_HOU_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01091,player,존스 크리스토퍼,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,PLY_01092,player,브라운 일라이저,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,PLY_01093,player,페레스 루이스,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,PLY_01094,player,윌리엄스 미겔,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,PLY_01095,player,카스티요 조너선,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,PLY_01096,player,로빈슨 니콜라스,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,PLY_01097,player,클라크 니콜라스,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,PLY_01098,player,산체스 조너선,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,PLY_01099,player,밀러 이선,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,PLY_01100,player,존슨 앤드류,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,PLY_01101,player,라이트 호세,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,PLY_01102,player,리 제이컵,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,PLY_01103,player,클라크 메이슨,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,PLY_01104,player,앨런 벤자민,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,PLY_01105,player,페레스 마이클,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,PLY_01106,player,가르시아 조셉,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,PLY_01107,player,클라크 매튜,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,PLY_01108,player,페레스 존,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,PLY_01109,player,홀 조너선,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,PLY_01110,player,리 브랜던,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,PLY_01111,player,애덤스 조셉,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,PLY_01112,player,존슨 존,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,PLY_01113,player,리 크리스토퍼,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,PLY_01114,player,잭슨 오스틴,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,PLY_01115,player,가르시아 데이비드,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,COA_00117,coach,윌슨 후안,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,COA_00118,coach,윌리엄스 데이비드,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,COA_00119,coach,존스 다니엘,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,MNG_00052,manager,존슨 저스틴,TEAM_ABL_TEX,true,false,0,false,false
+LEAGUE_ABL,PLY_01116,player,리 케빈,TEAM_ABL_TEX_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01117,player,토머스 프란시스코,TEAM_ABL_TEX_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01118,player,홀 하비에르,TEAM_ABL_TEX_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01119,player,라미레스 제임스,TEAM_ABL_TEX_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01120,player,무어 라이언,TEAM_ABL_TEX_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01121,player,톰프슨 호세,TEAM_ABL_TEX_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01122,player,라이트 다니엘,TEAM_ABL_TEX_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01123,player,애덤스 마르코,TEAM_ABL_TEX_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01124,player,화이트 데이비드,TEAM_ABL_TEX_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01125,player,테일러 다니엘,TEAM_ABL_TEX_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01126,player,킹 노아,TEAM_ABL_TEX_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01127,player,톰프슨 카를로스,TEAM_ABL_TEX_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01128,player,스미스 앤서니,TEAM_ABL_TEX_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01129,player,워커 매튜,TEAM_ABL_TEX_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01130,player,앤더슨 루카스,TEAM_ABL_TEX_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01131,player,마틴 리엄,TEAM_ABL_TEX_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01132,player,윌슨 앤드류,TEAM_ABL_TEX_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01133,player,윌슨 마르코,TEAM_ABL_TEX_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01134,player,앨런 리엄,TEAM_ABL_TEX_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01135,player,로빈슨 노아,TEAM_ABL_TEX_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00120,coach,밀러 마이클,TEAM_ABL_TEX_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00121,coach,화이트 브랜던,TEAM_ABL_TEX_AAA,true,false,0,false,false
+LEAGUE_ABL,MNG_00053,manager,윌슨 저스틴,TEAM_ABL_TEX_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01136,player,라미레스 애드리언,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,PLY_01137,player,존슨 노아,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,PLY_01138,player,앨런 조너선,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,PLY_01139,player,스미스 후안,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,PLY_01140,player,애덤스 앤서니,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,PLY_01141,player,존스 윌리엄,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,PLY_01142,player,해리스 케빈,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,PLY_01143,player,존스 후안,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,PLY_01144,player,해리스 알레한드로,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,PLY_01145,player,리 노아,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,PLY_01146,player,톰프슨 마르코,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,PLY_01147,player,존슨 빅터,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,PLY_01148,player,라이트 메이슨,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,PLY_01149,player,브라운 호세,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,PLY_01150,player,존스 매튜,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,PLY_01151,player,밀러 제임스,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,PLY_01152,player,앨런 마이클,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,PLY_01153,player,해리스 메이슨,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,PLY_01154,player,잭슨 앤드류,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,PLY_01155,player,존스 빅터,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,PLY_01156,player,무어 니콜라스,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,PLY_01157,player,테일러 타일러,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,PLY_01158,player,존스 존,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,PLY_01159,player,윌리엄스 케빈,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,PLY_01160,player,로드리게스 조셉,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,COA_00122,coach,존슨 루이스,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,COA_00123,coach,해리스 벤자민,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,COA_00124,coach,윌리엄스 마이클,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,MNG_00054,manager,홀 카를로스,TEAM_ABL_ATL,true,false,0,false,false
+LEAGUE_ABL,PLY_01161,player,윌리엄스 존,TEAM_ABL_ATL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01162,player,스미스 케빈,TEAM_ABL_ATL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01163,player,킹 제임스,TEAM_ABL_ATL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01164,player,밀러 저스틴,TEAM_ABL_ATL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01165,player,해리스 제임스,TEAM_ABL_ATL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01166,player,스미스 이선,TEAM_ABL_ATL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01167,player,해리스 마르코,TEAM_ABL_ATL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01168,player,넬슨 앤드류,TEAM_ABL_ATL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01169,player,홀 앤드류,TEAM_ABL_ATL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01170,player,마틴 데이비드,TEAM_ABL_ATL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01171,player,데이비스 메이슨,TEAM_ABL_ATL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01172,player,존스 조셉,TEAM_ABL_ATL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01173,player,화이트 다니엘,TEAM_ABL_ATL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01174,player,영 노아,TEAM_ABL_ATL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01175,player,화이트 마이클,TEAM_ABL_ATL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01176,player,존슨 라이언,TEAM_ABL_ATL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01177,player,앨런 마르코,TEAM_ABL_ATL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01178,player,베이커 앤드류,TEAM_ABL_ATL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01179,player,영 저스틴,TEAM_ABL_ATL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01180,player,영 타일러,TEAM_ABL_ATL_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00125,coach,존슨 로버트,TEAM_ABL_ATL_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00126,coach,존슨 마이클,TEAM_ABL_ATL_AAA,true,false,0,false,false
+LEAGUE_ABL,MNG_00055,manager,화이트 오스틴,TEAM_ABL_ATL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01181,player,테일러 이선,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,PLY_01182,player,넬슨 로건,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,PLY_01183,player,카스티요 호세,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,PLY_01184,player,윌리엄스 제임스,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,PLY_01185,player,윌리엄스 오스틴,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,PLY_01186,player,루이스 데이비드,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,PLY_01187,player,밀러 라이언,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,PLY_01188,player,앤더슨 마이클,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,PLY_01189,player,윌리엄스 마르코,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,PLY_01190,player,밀러 데이비드,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,PLY_01191,player,루이스 조셉,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,PLY_01192,player,마틴 앤서니,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,PLY_01193,player,베이커 존,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,PLY_01194,player,마틴 조셉,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,PLY_01195,player,베이커 케빈,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,PLY_01196,player,로빈슨 마이클,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,PLY_01197,player,미첼 로버트,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,PLY_01198,player,마틴 다니엘,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,PLY_01199,player,토레스 제임스,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,PLY_01200,player,클라크 마이클,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,PLY_01201,player,토머스 오스틴,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,PLY_01202,player,페레스 프란시스코,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,PLY_01203,player,밀러 일라이저,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,PLY_01204,player,미첼 메이슨,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,PLY_01205,player,밀러 리엄,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,COA_00127,coach,브라운 미겔,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,COA_00128,coach,루이스 존,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,COA_00129,coach,잭슨 로건,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,MNG_00056,manager,앨런 오스틴,TEAM_ABL_PHI,true,false,0,false,false
+LEAGUE_ABL,PLY_01206,player,마르티네스 앤서니,TEAM_ABL_PHI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01207,player,미첼 윌리엄,TEAM_ABL_PHI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01208,player,넬슨 마르코,TEAM_ABL_PHI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01209,player,브라운 오스틴,TEAM_ABL_PHI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01210,player,리베라 제임스,TEAM_ABL_PHI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01211,player,존슨 제이컵,TEAM_ABL_PHI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01212,player,화이트 앤드류,TEAM_ABL_PHI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01213,player,로드리게스 크리스토퍼,TEAM_ABL_PHI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01214,player,넬슨 조너선,TEAM_ABL_PHI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01215,player,무어 마이클,TEAM_ABL_PHI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01216,player,토머스 니콜라스,TEAM_ABL_PHI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01217,player,마틴 매튜,TEAM_ABL_PHI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01218,player,톰프슨 루이스,TEAM_ABL_PHI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01219,player,영 데이비드,TEAM_ABL_PHI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01220,player,토머스 조너선,TEAM_ABL_PHI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01221,player,스콧 에이든,TEAM_ABL_PHI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01222,player,앤더슨 다니엘,TEAM_ABL_PHI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01223,player,넬슨 데이비드,TEAM_ABL_PHI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01224,player,테일러 조셉,TEAM_ABL_PHI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01225,player,카스티요 앤드류,TEAM_ABL_PHI_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00130,coach,가르시아 존,TEAM_ABL_PHI_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00131,coach,가르시아 오스틴,TEAM_ABL_PHI_AAA,true,false,0,false,false
+LEAGUE_ABL,MNG_00057,manager,로빈슨 존,TEAM_ABL_PHI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01226,player,브라운 조너선,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,PLY_01227,player,마틴 디에고,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,PLY_01228,player,로드리게스 로버트,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,PLY_01229,player,무어 매튜,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,PLY_01230,player,토레스 호세,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,PLY_01231,player,앤더슨 데이비드,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,PLY_01232,player,존스 앤드류,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,PLY_01233,player,산체스 이선,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,PLY_01234,player,존슨 제임스,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,PLY_01235,player,브라운 매튜,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,PLY_01236,player,윌슨 크리스토퍼,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,PLY_01237,player,로빈슨 제임스,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,PLY_01238,player,테일러 에이든,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,PLY_01239,player,플로레스 크리스토퍼,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,PLY_01240,player,윌리엄스 저스틴,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,PLY_01241,player,존스 노아,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,PLY_01242,player,베이커 니콜라스,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,PLY_01243,player,미첼 노아,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,PLY_01244,player,리베라 앤서니,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,PLY_01245,player,존슨 이선,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,PLY_01246,player,라이트 마르코,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,PLY_01247,player,화이트 알레한드로,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,PLY_01248,player,스콧 이선,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,PLY_01249,player,로빈슨 로버트,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,PLY_01250,player,존슨 오스틴,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,COA_00132,coach,잭슨 에이든,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,COA_00133,coach,미첼 제임스,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,COA_00134,coach,스콧 존,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,MNG_00058,manager,애덤스 하비에르,TEAM_ABL_NYM,true,false,0,false,false
+LEAGUE_ABL,PLY_01251,player,리베라 호세,TEAM_ABL_NYM_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01252,player,로빈슨 브랜던,TEAM_ABL_NYM_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01253,player,앤더슨 오스틴,TEAM_ABL_NYM_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01254,player,무어 크리스토퍼,TEAM_ABL_NYM_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01255,player,마틴 마이클,TEAM_ABL_NYM_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01256,player,가르시아 라이언,TEAM_ABL_NYM_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01257,player,스미스 타일러,TEAM_ABL_NYM_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01258,player,존스 니콜라스,TEAM_ABL_NYM_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01259,player,잭슨 리엄,TEAM_ABL_NYM_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01260,player,영 마르코,TEAM_ABL_NYM_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01261,player,밀러 로버트,TEAM_ABL_NYM_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01262,player,라이트 앤드류,TEAM_ABL_NYM_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01263,player,스콧 호세,TEAM_ABL_NYM_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01264,player,가르시아 일라이저,TEAM_ABL_NYM_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01265,player,베이커 벤자민,TEAM_ABL_NYM_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01266,player,미첼 크리스토퍼,TEAM_ABL_NYM_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01267,player,밀러 크리스토퍼,TEAM_ABL_NYM_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01268,player,윌리엄스 매튜,TEAM_ABL_NYM_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01269,player,리 일라이저,TEAM_ABL_NYM_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01270,player,데이비스 벤자민,TEAM_ABL_NYM_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00135,coach,존슨 로건,TEAM_ABL_NYM_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00136,coach,페레스 디에고,TEAM_ABL_NYM_AAA,true,false,0,false,false
+LEAGUE_ABL,MNG_00059,manager,루이스 윌리엄,TEAM_ABL_NYM_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01271,player,존슨 애드리언,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,PLY_01272,player,미첼 라이언,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,PLY_01273,player,존스 로건,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,PLY_01274,player,토머스 에이든,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,PLY_01275,player,앤더슨 조너선,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,PLY_01276,player,앨런 노아,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,PLY_01277,player,홀 호세,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,PLY_01278,player,밀러 브랜던,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,PLY_01279,player,마르티네스 앤드류,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,PLY_01280,player,킹 빅터,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,PLY_01281,player,데이비스 제임스,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,PLY_01282,player,해리스 제이컵,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,PLY_01283,player,애덤스 마이클,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,PLY_01284,player,브라운 저스틴,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,PLY_01285,player,앤더슨 호세,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,PLY_01286,player,브라운 윌리엄,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,PLY_01287,player,화이트 이선,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,PLY_01288,player,워커 벤자민,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,PLY_01289,player,앤더슨 조셉,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,PLY_01290,player,클라크 하비에르,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,PLY_01291,player,테일러 벤자민,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,PLY_01292,player,라미레스 에이든,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,PLY_01293,player,리 카를로스,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,PLY_01294,player,토머스 벤자민,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,PLY_01295,player,브라운 하비에르,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,COA_00137,coach,킹 리엄,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,COA_00138,coach,존스 데이비드,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,COA_00139,coach,베이커 앤서니,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,MNG_00060,manager,로드리게스 매튜,TEAM_ABL_CHC,true,false,0,false,false
+LEAGUE_ABL,PLY_01296,player,로빈슨 라이언,TEAM_ABL_CHC_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01297,player,밀러 미겔,TEAM_ABL_CHC_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01298,player,존스 메이슨,TEAM_ABL_CHC_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01299,player,톰프슨 벤자민,TEAM_ABL_CHC_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01300,player,윌리엄스 에이든,TEAM_ABL_CHC_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01301,player,존슨 매튜,TEAM_ABL_CHC_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01302,player,워커 타일러,TEAM_ABL_CHC_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01303,player,토머스 데이비드,TEAM_ABL_CHC_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01304,player,윌리엄스 앤드류,TEAM_ABL_CHC_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01305,player,테일러 제임스,TEAM_ABL_CHC_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01306,player,톰프슨 저스틴,TEAM_ABL_CHC_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01307,player,워커 이선,TEAM_ABL_CHC_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01308,player,잭슨 디에고,TEAM_ABL_CHC_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01309,player,루이스 제임스,TEAM_ABL_CHC_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01310,player,밀러 에이든,TEAM_ABL_CHC_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01311,player,해리스 이선,TEAM_ABL_CHC_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01312,player,해리스 호세,TEAM_ABL_CHC_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01313,player,무어 로건,TEAM_ABL_CHC_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01314,player,넬슨 케빈,TEAM_ABL_CHC_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01315,player,윌리엄스 알레한드로,TEAM_ABL_CHC_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00140,coach,토레스 메이슨,TEAM_ABL_CHC_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00141,coach,산체스 카를로스,TEAM_ABL_CHC_AAA,true,false,0,false,false
+LEAGUE_ABL,MNG_00061,manager,마틴 프란시스코,TEAM_ABL_CHC_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01316,player,클라크 일라이저,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,PLY_01317,player,존스 마이클,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,PLY_01318,player,워커 앤드류,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,PLY_01319,player,스미스 다니엘,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,PLY_01320,player,앨런 매튜,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,PLY_01321,player,잭슨 마이클,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,PLY_01322,player,로빈슨 데이비드,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,PLY_01323,player,로드리게스 저스틴,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,PLY_01324,player,스미스 에이든,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,PLY_01325,player,그린 데이비드,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,PLY_01326,player,그린 앤드류,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,PLY_01327,player,워커 니콜라스,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,PLY_01328,player,토레스 앤서니,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,PLY_01329,player,앤더슨 일라이저,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,PLY_01330,player,라미레스 노아,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,PLY_01331,player,토머스 라이언,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,PLY_01332,player,플로레스 다니엘,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,PLY_01333,player,무어 프란시스코,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,PLY_01334,player,잭슨 다니엘,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,PLY_01335,player,영 마이클,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,PLY_01336,player,테일러 앤서니,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,PLY_01337,player,데이비스 조셉,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,PLY_01338,player,앤더슨 후안,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,PLY_01339,player,스미스 프란시스코,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,PLY_01340,player,리 윌리엄,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,COA_00142,coach,카터 조셉,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,COA_00143,coach,베이커 노아,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,COA_00144,coach,잭슨 이선,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,MNG_00062,manager,페레스 루카스,TEAM_ABL_STL,true,false,0,false,false
+LEAGUE_ABL,PLY_01341,player,잭슨 카를로스,TEAM_ABL_STL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01342,player,잭슨 노아,TEAM_ABL_STL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01343,player,루이스 루이스,TEAM_ABL_STL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01344,player,홀 마이클,TEAM_ABL_STL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01345,player,무어 브랜던,TEAM_ABL_STL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01346,player,스콧 케빈,TEAM_ABL_STL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01347,player,토머스 노아,TEAM_ABL_STL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01348,player,윌슨 조너선,TEAM_ABL_STL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01349,player,페레스 오스틴,TEAM_ABL_STL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01350,player,화이트 로버트,TEAM_ABL_STL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01351,player,브라운 루이스,TEAM_ABL_STL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01352,player,테일러 카를로스,TEAM_ABL_STL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01353,player,카스티요 제임스,TEAM_ABL_STL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01354,player,카터 데이비드,TEAM_ABL_STL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01355,player,브라운 에이든,TEAM_ABL_STL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01356,player,스미스 브랜던,TEAM_ABL_STL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01357,player,브라운 조셉,TEAM_ABL_STL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01358,player,킹 앤서니,TEAM_ABL_STL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01359,player,로드리게스 이선,TEAM_ABL_STL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01360,player,워커 케빈,TEAM_ABL_STL_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00145,coach,가르시아 리엄,TEAM_ABL_STL_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00146,coach,플로레스 로버트,TEAM_ABL_STL_AAA,true,false,0,false,false
+LEAGUE_ABL,MNG_00063,manager,리 저스틴,TEAM_ABL_STL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01361,player,홀 라이언,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,PLY_01362,player,라미레스 루이스,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,PLY_01363,player,라이트 크리스토퍼,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,PLY_01364,player,앤더슨 타일러,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,PLY_01365,player,윌리엄스 브랜던,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,PLY_01366,player,페레스 조너선,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,PLY_01367,player,로빈슨 마르코,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,PLY_01368,player,토머스 루이스,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,PLY_01369,player,마르티네스 매튜,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,PLY_01370,player,클라크 앤서니,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,PLY_01371,player,영 로버트,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,PLY_01372,player,밀러 프란시스코,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,PLY_01373,player,밀러 루이스,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,PLY_01374,player,해리스 애드리언,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,PLY_01375,player,미첼 존,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,PLY_01376,player,톰프슨 루카스,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,PLY_01377,player,넬슨 메이슨,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,PLY_01378,player,토레스 제이컵,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,PLY_01379,player,그린 라이언,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,PLY_01380,player,가르시아 앤드류,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,PLY_01381,player,클라크 크리스토퍼,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,PLY_01382,player,톰프슨 알레한드로,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,PLY_01383,player,잭슨 크리스토퍼,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,PLY_01384,player,앤더슨 윌리엄,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,PLY_01385,player,넬슨 매튜,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,COA_00147,coach,존스 호세,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,COA_00148,coach,곤살레스 빅터,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,COA_00149,coach,킹 오스틴,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,MNG_00064,manager,홀 조셉,TEAM_ABL_SD,true,false,0,false,false
+LEAGUE_ABL,PLY_01386,player,브라운 노아,TEAM_ABL_SD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01387,player,윌리엄스 벤자민,TEAM_ABL_SD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01388,player,스콧 제이컵,TEAM_ABL_SD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01389,player,홀 애드리언,TEAM_ABL_SD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01390,player,존스 에이든,TEAM_ABL_SD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01391,player,앨런 데이비드,TEAM_ABL_SD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01392,player,마르티네스 호세,TEAM_ABL_SD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01393,player,윌슨 앤서니,TEAM_ABL_SD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01394,player,루이스 애드리언,TEAM_ABL_SD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01395,player,앨런 윌리엄,TEAM_ABL_SD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01396,player,영 루카스,TEAM_ABL_SD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01397,player,카터 다니엘,TEAM_ABL_SD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01398,player,토머스 앤서니,TEAM_ABL_SD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01399,player,윌슨 메이슨,TEAM_ABL_SD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01400,player,로드리게스 케빈,TEAM_ABL_SD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01401,player,존슨 조셉,TEAM_ABL_SD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01402,player,해리스 다니엘,TEAM_ABL_SD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01403,player,홀 메이슨,TEAM_ABL_SD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01404,player,존스 카를로스,TEAM_ABL_SD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01405,player,라미레스 카를로스,TEAM_ABL_SD_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00150,coach,브라운 로버트,TEAM_ABL_SD_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00151,coach,해리스 일라이저,TEAM_ABL_SD_AAA,true,false,0,false,false
+LEAGUE_ABL,MNG_00065,manager,앨런 존,TEAM_ABL_SD_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01406,player,브라운 애드리언,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,PLY_01407,player,앨런 로버트,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,PLY_01408,player,밀러 조셉,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,PLY_01409,player,화이트 노아,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,PLY_01410,player,무어 이선,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,PLY_01411,player,톰프슨 존,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,PLY_01412,player,윌슨 이선,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,PLY_01413,player,톰프슨 다니엘,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,PLY_01414,player,데이비스 이선,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,PLY_01415,player,그린 윌리엄,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,PLY_01416,player,앨런 제임스,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,PLY_01417,player,넬슨 마이클,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,PLY_01418,player,그린 앤서니,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,PLY_01419,player,클라크 로건,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,PLY_01420,player,해리스 조셉,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,PLY_01421,player,베이커 메이슨,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,PLY_01422,player,워커 일라이저,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,PLY_01423,player,스미스 마르코,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,PLY_01424,player,마틴 빅터,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,PLY_01425,player,존슨 일라이저,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,PLY_01426,player,해리스 로버트,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,PLY_01427,player,킹 벤자민,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,PLY_01428,player,그린 일라이저,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,PLY_01429,player,워커 로버트,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,PLY_01430,player,화이트 일라이저,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,COA_00152,coach,앤더슨 앤드류,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,COA_00153,coach,스미스 애드리언,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,COA_00154,coach,토레스 라이언,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,MNG_00066,manager,톰프슨 로건,TEAM_ABL_SF,true,false,0,false,false
+LEAGUE_ABL,PLY_01431,player,미첼 조셉,TEAM_ABL_SF_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01432,player,톰프슨 데이비드,TEAM_ABL_SF_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01433,player,킹 데이비드,TEAM_ABL_SF_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01434,player,테일러 앤드류,TEAM_ABL_SF_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01435,player,가르시아 로건,TEAM_ABL_SF_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01436,player,테일러 루카스,TEAM_ABL_SF_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01437,player,밀러 다니엘,TEAM_ABL_SF_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01438,player,마르티네스 카를로스,TEAM_ABL_SF_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01439,player,밀러 타일러,TEAM_ABL_SF_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01440,player,스콧 데이비드,TEAM_ABL_SF_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01441,player,미첼 디에고,TEAM_ABL_SF_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01442,player,존슨 앤서니,TEAM_ABL_SF_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01443,player,넬슨 다니엘,TEAM_ABL_SF_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01444,player,마틴 조너선,TEAM_ABL_SF_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01445,player,카스티요 루카스,TEAM_ABL_SF_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01446,player,라이트 오스틴,TEAM_ABL_SF_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01447,player,로드리게스 데이비드,TEAM_ABL_SF_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01448,player,윌리엄스 니콜라스,TEAM_ABL_SF_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01449,player,윌슨 리엄,TEAM_ABL_SF_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01450,player,로빈슨 미겔,TEAM_ABL_SF_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00155,coach,마르티네스 이선,TEAM_ABL_SF_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00156,coach,밀러 디에고,TEAM_ABL_SF_AAA,true,false,0,false,false
+LEAGUE_ABL,MNG_00067,manager,로드리게스 타일러,TEAM_ABL_SF_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01451,player,산체스 윌리엄,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,PLY_01452,player,테일러 일라이저,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,PLY_01453,player,로빈슨 매튜,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,PLY_01454,player,존스 벤자민,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,PLY_01455,player,존스 브랜던,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,PLY_01456,player,미첼 카를로스,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,PLY_01457,player,로드리게스 제임스,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,PLY_01458,player,데이비스 미겔,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,PLY_01459,player,애덤스 크리스토퍼,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,PLY_01460,player,토머스 이선,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,PLY_01461,player,카터 앤드류,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,PLY_01462,player,존스 오스틴,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,PLY_01463,player,마틴 알레한드로,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,PLY_01464,player,마틴 케빈,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,PLY_01465,player,클라크 윌리엄,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,PLY_01466,player,마틴 타일러,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,PLY_01467,player,화이트 벤자민,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,PLY_01468,player,워커 크리스토퍼,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,PLY_01469,player,리 로버트,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,PLY_01470,player,넬슨 후안,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,PLY_01471,player,카터 하비에르,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,PLY_01472,player,애덤스 브랜던,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,PLY_01473,player,해리스 데이비드,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,PLY_01474,player,가르시아 매튜,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,PLY_01475,player,스콧 로버트,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,COA_00157,coach,앨런 타일러,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,COA_00158,coach,윌리엄스 타일러,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,COA_00159,coach,미첼 앤드류,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,MNG_00068,manager,미첼 리엄,TEAM_ABL_ARI,true,false,0,false,false
+LEAGUE_ABL,PLY_01476,player,해리스 니콜라스,TEAM_ABL_ARI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01477,player,로드리게스 벤자민,TEAM_ABL_ARI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01478,player,로빈슨 빅터,TEAM_ABL_ARI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01479,player,로빈슨 호세,TEAM_ABL_ARI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01480,player,가르시아 저스틴,TEAM_ABL_ARI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01481,player,화이트 케빈,TEAM_ABL_ARI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01482,player,루이스 마이클,TEAM_ABL_ARI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01483,player,홀 브랜던,TEAM_ABL_ARI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01484,player,리 마르코,TEAM_ABL_ARI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01485,player,앨런 조셉,TEAM_ABL_ARI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01486,player,로빈슨 케빈,TEAM_ABL_ARI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01487,player,무어 마르코,TEAM_ABL_ARI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01488,player,애덤스 다니엘,TEAM_ABL_ARI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01489,player,로빈슨 로건,TEAM_ABL_ARI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01490,player,스콧 마이클,TEAM_ABL_ARI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01491,player,로빈슨 윌리엄,TEAM_ABL_ARI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01492,player,리베라 애드리언,TEAM_ABL_ARI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01493,player,화이트 디에고,TEAM_ABL_ARI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01494,player,로드리게스 다니엘,TEAM_ABL_ARI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01495,player,브라운 리엄,TEAM_ABL_ARI_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00160,coach,톰프슨 매튜,TEAM_ABL_ARI_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00161,coach,페레스 매튜,TEAM_ABL_ARI_AAA,true,false,0,false,false
+LEAGUE_ABL,MNG_00069,manager,워커 데이비드,TEAM_ABL_ARI_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01496,player,스미스 조너선,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,PLY_01497,player,스미스 크리스토퍼,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,PLY_01498,player,토머스 호세,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,PLY_01499,player,리베라 노아,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,PLY_01500,player,토머스 로건,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,PLY_01501,player,무어 알레한드로,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,PLY_01502,player,토레스 니콜라스,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,PLY_01503,player,앨런 하비에르,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,PLY_01504,player,클라크 제이컵,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,PLY_01505,player,무어 디에고,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,PLY_01506,player,베이커 마르코,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,PLY_01507,player,윌슨 노아,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,PLY_01508,player,카터 크리스토퍼,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,PLY_01509,player,스콧 저스틴,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,PLY_01510,player,존슨 리엄,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,PLY_01511,player,존스 제임스,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,PLY_01512,player,브라운 마르코,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,PLY_01513,player,잭슨 루이스,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,PLY_01514,player,라이트 벤자민,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,PLY_01515,player,스미스 윌리엄,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,PLY_01516,player,홀 제임스,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,PLY_01517,player,영 리엄,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,PLY_01518,player,카터 마르코,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,PLY_01519,player,톰프슨 빅터,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,PLY_01520,player,스미스 호세,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,COA_00162,coach,밀러 노아,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,COA_00163,coach,잭슨 케빈,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,COA_00164,coach,리 벤자민,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,MNG_00070,manager,윌리엄스 디에고,TEAM_ABL_BAL,true,false,0,false,false
+LEAGUE_ABL,PLY_01521,player,앤더슨 제이컵,TEAM_ABL_BAL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01522,player,존슨 호세,TEAM_ABL_BAL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01523,player,화이트 루이스,TEAM_ABL_BAL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01524,player,화이트 리엄,TEAM_ABL_BAL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01525,player,워커 노아,TEAM_ABL_BAL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01526,player,산체스 라이언,TEAM_ABL_BAL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01527,player,무어 케빈,TEAM_ABL_BAL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01528,player,스콧 벤자민,TEAM_ABL_BAL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01529,player,카터 에이든,TEAM_ABL_BAL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01530,player,라미레스 하비에르,TEAM_ABL_BAL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01531,player,라이트 카를로스,TEAM_ABL_BAL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01532,player,데이비스 하비에르,TEAM_ABL_BAL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01533,player,톰프슨 노아,TEAM_ABL_BAL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01534,player,리 라이언,TEAM_ABL_BAL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01535,player,윌슨 마이클,TEAM_ABL_BAL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01536,player,리 알레한드로,TEAM_ABL_BAL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01537,player,미첼 데이비드,TEAM_ABL_BAL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01538,player,산체스 리엄,TEAM_ABL_BAL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01539,player,킹 저스틴,TEAM_ABL_BAL_AAA,true,false,0,false,false
+LEAGUE_ABL,PLY_01540,player,카터 브랜던,TEAM_ABL_BAL_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00165,coach,라이트 조셉,TEAM_ABL_BAL_AAA,true,false,0,false,false
+LEAGUE_ABL,COA_00166,coach,카터 로건,TEAM_ABL_BAL_AAA,true,false,0,false,false
+LEAGUE_ABL,MNG_00071,manager,마르티네스 애드리언,TEAM_ABL_BAL_AAA,true,false,0,false,false
