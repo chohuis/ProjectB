@@ -257,9 +257,33 @@ function buildInitialState(): GameStoreState {
   };
 }
 
+// ── 구버전 세이브 → 새 필드 기본값 채우기 ─────────────────────
+function migrateProtagonist(p: ProtagonistSave): ProtagonistSave {
+  const def = DEFAULT_PROTAGONIST;
+  return {
+    ...p,
+    pitching: {
+      ...p.pitching,
+      clutch:      p.pitching.clutch      ?? def.pitching.clutch,
+      holdRunners: p.pitching.holdRunners ?? def.pitching.holdRunners,
+    },
+    batting: {
+      ...p.batting,
+      baseInstinct: p.batting.baseInstinct ?? def.batting.baseInstinct,
+      bunting:      p.batting.bunting      ?? def.batting.bunting,
+      platoon:      p.batting.platoon      ?? def.batting.platoon,
+    },
+    primaryPosition: p.primaryPosition ?? def.primaryPosition,
+    positionRatings: p.positionRatings  ?? def.positionRatings,
+    diligence:  p.diligence  ?? def.diligence,
+    popularity: p.popularity ?? def.popularity,
+    battingXP:  p.battingXP  ?? {},
+  };
+}
+
 // ── SaveGame → 스토어 상태 변환 ───────────────────────────────
 function fromSaveGame(saved: SaveGame): GameStoreState {
-  const p = saved.protagonist;
+  const p = migrateProtagonist(saved.protagonist);
   const metrics = { ...DEFAULT_ACHIEVEMENT_METRICS, ...(saved.achievementMetrics ?? {}) };
   const achievements = saved.achievements ?? DEFAULT_ACHIEVEMENTS;
   return {
