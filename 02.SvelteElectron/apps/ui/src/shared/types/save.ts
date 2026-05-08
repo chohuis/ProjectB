@@ -142,6 +142,7 @@ export interface ProtagonistSave {
   faNegotiationRound: number;
   faUnsignedWeeks: number;
   contract?: ProContract;
+  consecutiveLowMoraleWeeks: number; // 사기 35 미만 연속 주차 카운터
 }
 
 // ── 시즌 스탯 (선수 1명분) ─────────────────────────────────────

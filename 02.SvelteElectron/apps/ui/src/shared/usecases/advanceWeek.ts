@@ -358,9 +358,36 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
 
   // 대학 전공 훈련 효율 보너스
   const majorEffBonus = isUniversity ? getUniversityEffBonus(g.schoolState.universityMajor) : 0;
-  const finalEffMod = studyResult.efficiencyMod * (1 + majorEffBonus);
+
+  // 코치 스탯 기반 효율 보너스 (teaching 50 기준, +1% per 5 points above)
+  const master = get(masterStore);
+  const pitchCoach = master.entities.find(
+    (e) => e.role === "coach" && e.teamId === g.protagonist.teamId &&
+           (e.details as import("../stores/master").EntityDetails)?.coach?.specialty === "pitching"
+  );
+  const coachTeaching = (pitchCoach?.details as import("../stores/master").EntityDetails)?.coach?.stats?.teaching ?? 50;
+  const coachEffBonus = Math.max(-0.10, Math.min(0.20, (coachTeaching - 50) * 0.004));
+
+  // 사기 슬럼프 페널티: 사기 35 미만 3주 연속 → 훈련 효율 -30%
+  const prevLowMoraleWeeks = g.protagonist.consecutiveLowMoraleWeeks ?? 0;
+  const isLowMorale        = g.protagonist.morale < 35;
+  const newLowMoraleWeeks  = isLowMorale ? prevLowMoraleWeeks + 1 : 0;
+  const slumpPenalty       = newLowMoraleWeeks >= 3 ? 0.70 : 1.0;
+
+  const finalEffMod = studyResult.efficiencyMod * (1 + majorEffBonus + coachEffBonus) * slumpPenalty;
 
   const growth = calcTrainingGrowth(g.protagonist, g.trainingPlan, finalEffMod);
+
+  // 슬럼프/코치 로그
+  if (newLowMoraleWeeks >= 3) {
+    growth.logs.push(`[슬럼프] 사기 저하 ${newLowMoraleWeeks}주 연속 — 훈련 효율 -30%`);
+  }
+  if (coachEffBonus > 0.01) {
+    growth.logs.push(`[코치] 투수 코치 지도 보너스 +${Math.round(coachEffBonus * 100)}%`);
+  }
+
+  // 슬럼프 카운터 갱신
+  growth.protagonistPatch.consecutiveLowMoraleWeeks = newLowMoraleWeeks;
 
   gameStore.applyMoneyChange(calcWeeklyNet(g.protagonist));
   gameStore.recordTrainingWeek();

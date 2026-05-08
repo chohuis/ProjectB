@@ -103,8 +103,11 @@ function weekXP(
   diligence: number,
 ): number {
   const condFactor = condition / 100;
-  const fatFactor  = Math.max(0.3, 1 - fatigue / 120);
-  const devFactor  = devRate / 62;
+  // 피로 단계별 XP 페널티: 70+ → ×0.7, 85+ → ×0.5
+  const fatFactor  = fatigue >= 85 ? 0.50
+                   : fatigue >= 70 ? 0.70
+                   : Math.max(0.80, 1 - fatigue / 200);
+  const devFactor       = devRate / 62;
   const diligenceFactor = 0.6 + (diligence / 99) * 0.8; // 0.6~1.4
   return base * condFactor * fatFactor * devFactor * diligenceFactor;
 }

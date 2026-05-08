@@ -38,23 +38,33 @@
   };
 
   // growthEngine TRAINING_MAP과 동일한 ID 사용
-  const mainPrograms: ProgramCard[] = [
-    { id: "TRN_CMD_BASE",  title: "커맨드 기초",    focus: "커맨드/릴리스",      gains: "커맨드, 제구",      fatigue: 8,  risk: 2 },
-    { id: "TRN_VEL_POWER", title: "구위 파워",       focus: "구속/하체 드라이브", gains: "구위, 스태미나",     fatigue: 14, risk: 6 },
-    { id: "TRN_CTRL_MECH", title: "제구 메커니즘",   focus: "제구/릴리스 일관성", gains: "제구, 커맨드",       fatigue: 8,  risk: 2 },
-    { id: "TRN_MVT_PITCH", title: "변화구 연습",     focus: "무브먼트/구종",      gains: "무브먼트, 제구",     fatigue: 9,  risk: 3 },
-    { id: "TRN_MNT_FOCUS", title: "멘탈 집중 훈련", focus: "압박 대응/집중",     gains: "멘탈",              fatigue: 5,  risk: 0 },
-    { id: "TRN_STA_COND",  title: "체력 강화",       focus: "스태미나/지구력",    gains: "스태미나, 회복력",   fatigue: 12, risk: 4 },
-    { id: "TRN_CLUTCH",    title: "위기집중 훈련",   focus: "집중력/압박 상황",   gains: "위기집중력, 멘탈",   fatigue: 6,  risk: 0 },
-    { id: "TRN_HOLD",      title: "견제 훈련",       focus: "주자 관리/견제",     gains: "견제력, 제구",       fatigue: 7,  risk: 1 },
-    { id: "TRN_PITCH_DEV", title: "구종 개발",       focus: "구종 숙련도/신규 습득", gains: "진행중 구종 progress +20", fatigue: 10, risk: 0 },
+  const pitcherPrograms: ProgramCard[] = [
+    { id: "TRN_CMD_BASE",  title: "커맨드 기초",    focus: "커맨드/릴리스",         gains: "커맨드, 제구",      fatigue: 8,  risk: 2 },
+    { id: "TRN_VEL_POWER", title: "구위 파워",       focus: "구속/하체 드라이브",    gains: "구위, 스태미나",    fatigue: 14, risk: 6 },
+    { id: "TRN_CTRL_MECH", title: "제구 메커니즘",   focus: "제구/릴리스 일관성",    gains: "제구, 커맨드",      fatigue: 8,  risk: 2 },
+    { id: "TRN_MVT_PITCH", title: "변화구 연습",     focus: "무브먼트/구종",         gains: "무브먼트, 제구",    fatigue: 9,  risk: 3 },
+    { id: "TRN_MNT_FOCUS", title: "멘탈 집중 훈련", focus: "압박 대응/집중",        gains: "멘탈",              fatigue: 5,  risk: 0 },
+    { id: "TRN_STA_COND",  title: "체력 강화",       focus: "스태미나/지구력",       gains: "스태미나, 회복력",  fatigue: 12, risk: 4 },
+    { id: "TRN_CLUTCH",    title: "위기집중 훈련",   focus: "집중력/압박 상황",      gains: "위기집중력, 멘탈",  fatigue: 6,  risk: 0 },
+    { id: "TRN_HOLD",      title: "견제 훈련",       focus: "주자 관리/견제",        gains: "견제력, 제구",      fatigue: 7,  risk: 1 },
+    { id: "TRN_PITCH_DEV", title: "구종 개발",       focus: "구종 숙련도/신규 습득", gains: "진행중 구종 +20%",  fatigue: 10, risk: 0 },
+  ];
+
+  const batterPrograms: ProgramCard[] = [
+    { id: "TRN_CONTACT",  title: "컨택 훈련",    focus: "타격 밀착/배트 컨트롤",  gains: "컨택, 선구안",    fatigue: 8,  risk: 2 },
+    { id: "TRN_POWER",    title: "파워 훈련",    focus: "하체 드라이브/장타",      gains: "장타력, 컨택",    fatigue: 12, risk: 4 },
+    { id: "TRN_EYE",      title: "선구안 훈련",  focus: "볼/스트라이크 판단",      gains: "선구안, 극기",    fatigue: 6,  risk: 0 },
+    { id: "TRN_SPEED",    title: "주루 훈련",    focus: "스피드/베이스러닝",       gains: "주력, 주루판단",  fatigue: 10, risk: 3 },
+    { id: "TRN_FIELDING", title: "수비 훈련",    focus: "글러브 워크/포지셔닝",    gains: "수비, 어깨",      fatigue: 9,  risk: 2 },
+    { id: "TRN_BUNTING",  title: "번트 훈련",    focus: "상황 번트/정밀 타격",     gains: "번트, 컨택",      fatigue: 5,  risk: 0 },
+    { id: "TRN_MNT_FOCUS",title: "멘탈 집중",   focus: "압박 대응/집중",          gains: "멘탈",            fatigue: 5,  risk: 0 },
+    { id: "TRN_STA_COND", title: "체력 강화",   focus: "스태미나/지구력",         gains: "스태미나, 회복력",fatigue: 12, risk: 4 },
+    { id: "TRN_BCLUTCH",  title: "클러치 훈련", focus: "득점권/결정적 상황 타격", gains: "클러치, 극기",    fatigue: 6,  risk: 0 },
   ];
 
   const recoveryPrograms: ProgramCard[] = [
     { id: "TRN_RECOVERY", title: "컨디셔닝 회복", focus: "회복/유연성", gains: "피로 ↓, 컨디션 ↑", fatigue: -8, risk: 0 },
   ];
-
-  const allPrograms = [...mainPrograms, ...recoveryPrograms];
 
   $: selectedMain     = $gameStore.trainingPlan.primaryProgramId   ?? "TRN_CMD_BASE";
   $: selectedSub      = $gameStore.trainingPlan.secondaryProgramId ?? "TRN_CTRL_MECH";
@@ -65,8 +75,25 @@
   $: realFatigue    = protagonist.fatigue;
   $: realMorale     = protagonist.morale;
 
-  const coachMod    = { fatigue: 0.95, risk: 0.9 };
+  $: isBatter = protagonist.playerType === "batter";
+  $: mainPrograms = isBatter ? batterPrograms : pitcherPrograms;
+  $: allPrograms  = [...mainPrograms, ...recoveryPrograms];
+
+  // 코치 스탯 기반 동적 coachMod
+  $: pitchCoach = $masterStore.entities.find(
+    (e) => e.role === "coach" && e.teamId === protagonist.teamId &&
+           (e.details as import("../../shared/stores/master").EntityDetails)?.coach?.specialty === "pitching"
+  );
+  $: coachTeaching = (pitchCoach?.details as import("../../shared/stores/master").EntityDetails)?.coach?.stats?.teaching ?? 50;
+  $: coachFatMod  = Math.max(0.88, 1.0 - coachTeaching * 0.0024);   // 50→0.88, 75→0.82 → clamp 0.88
+  $: coachRiskMod = Math.max(0.85, 1.0 - coachTeaching * 0.003);    // 50→0.85, 75→0.775 → clamp 0.85
+  $: coachMod     = { fatigue: coachFatMod, risk: coachRiskMod };
+
   const facilityMod = { fatigue: 0.90, risk: 0.95 };
+
+  // 사기 슬럼프 상태
+  $: lowMoraleWeeks = protagonist.consecutiveLowMoraleWeeks ?? 0;
+  $: isSlump        = lowMoraleWeeks >= 3;
 
   // ── 구종 시스템 ──────────────────────────────────────────────
   const STAT_LABEL: Record<string, string> = {
@@ -288,10 +315,19 @@
         <aside class="panel">
           <h3>적용 보정</h3>
           <ul>
+            <li>
+              <span>투수 코치{pitchCoach ? ` (${pitchCoach.name})` : ""}</span>
+              <strong>지도 {coachTeaching}</strong>
+            </li>
             <li><span>코치 피로 보정</span><strong>x{coachMod.fatigue.toFixed(2)}</strong></li>
             <li><span>시설 피로 보정</span><strong>x{facilityMod.fatigue.toFixed(2)}</strong></li>
             <li><span>시설 리스크 보정</span><strong>x{facilityMod.risk.toFixed(2)}</strong></li>
           </ul>
+          {#if isSlump}
+            <p class="risk-note danger">슬럼프 진행중 ({lowMoraleWeeks}주) — 훈련 효율 -30%</p>
+          {:else if lowMoraleWeeks > 0}
+            <p class="risk-note warn">사기 저하 {lowMoraleWeeks}주차 — 3주 연속 시 슬럼프 진입</p>
+          {/if}
 
           <h3>예상 결과</h3>
           <ul>
@@ -432,10 +468,17 @@
 
           <h3>자동 경고 룰</h3>
           <ul>
-            <li>피로 70 이상: 훈련 XP -30% 페널티</li>
-            <li>피로 85 이상 × 2주 연속: 긴급 이벤트</li>
-            <li>사기 35 미만 × 3주: 슬럼프 진입</li>
+            <li>피로 70+: 훈련 XP ×0.70 페널티</li>
+            <li>피로 85+: 훈련 XP ×0.50 페널티</li>
+            <li>사기 35 미만 3주 연속: 슬럼프 (훈련 효율 -30%)</li>
           </ul>
+          {#if isSlump}
+            <p class="risk-note danger">슬럼프 진행중 ({lowMoraleWeeks}주 연속) — 즉시 사기 회복 필요</p>
+          {:else if lowMoraleWeeks > 0}
+            <p class="risk-note warn">사기 저하 {lowMoraleWeeks}주 연속 (3주 달성 시 슬럼프)</p>
+          {:else}
+            <p class="risk-note safe">사기 정상 — 슬럼프 위험 없음</p>
+          {/if}
         </section>
 
         <aside class="panel">

@@ -98,6 +98,7 @@ const DEFAULT_PROTAGONIST: ProtagonistSave = {
   tradeAdaptationWeeks: 0,
   faNegotiationRound: 0,
   faUnsignedWeeks: 0,
+  consecutiveLowMoraleWeeks: 0,
 };
 
 const DEFAULT_TRAINING_PLAN: TrainingPlanState = {
@@ -290,6 +291,7 @@ function migrateProtagonist(p: ProtagonistSave & { learnedPitchIds?: string[] })
     popularity: p.popularity ?? def.popularity,
     battingXP:  p.battingXP  ?? {},
     pitches,
+    consecutiveLowMoraleWeeks: p.consecutiveLowMoraleWeeks ?? 0,
   };
 }
 
