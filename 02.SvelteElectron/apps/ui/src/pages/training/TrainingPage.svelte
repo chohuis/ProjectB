@@ -1,10 +1,10 @@
-﻿<script lang="ts">
+<script lang="ts">
   import { t } from "../../shared/i18n";
   import { gameStore } from "../../shared/stores/game";
   import { masterStore, pitchUnlockRuleMap } from "../../shared/stores/master";
 
-  type TrainingTab = "daily" | "weekly" | "risk";
-  type PitchStatus = "discovered" | "training" | "learned";
+  type TrainingTab = "plan" | "pitch" | "risk";
+  type PitchStatus = "grading" | "learned" | "training" | "discovered" | "locked";
 
   type ProgramCard = {
     id: string;
@@ -19,11 +19,23 @@
     id: string;
     name: string;
     status: PitchStatus;
+    grade: number;
     progress: number;
     requirements: Array<{ label: string; required: number; current: number }>;
   };
 
-  let tab: TrainingTab = "daily";
+  let tab: TrainingTab = "plan";
+
+  const PITCH_NAMES: Record<string, string> = {
+    PITCH_FASTBALL: "패스트볼", PITCH_SINKER: "싱커", PITCH_CUTTER: "커터",
+    PITCH_SLIDER: "슬라이더", PITCH_CURVE: "커브", PITCH_CHANGEUP: "체인지업",
+    PITCH_SPLITTER: "스플리터", PITCH_FORKBALL: "포크볼",
+    PITCH_SCREWBALL: "스크루볼", PITCH_KNUCKLEBALL: "너클볼",
+  };
+
+  const GRADE_LABEL: Record<number, string> = {
+    1: "습득중", 2: "기초", 3: "보통", 4: "능숙", 5: "마스터",
+  };
 
   // growthEngine TRAINING_MAP과 동일한 ID 사용
   const mainPrograms: ProgramCard[] = [
@@ -33,6 +45,9 @@
     { id: "TRN_MVT_PITCH", title: "변화구 연습",     focus: "무브먼트/구종",      gains: "무브먼트, 제구",     fatigue: 9,  risk: 3 },
     { id: "TRN_MNT_FOCUS", title: "멘탈 집중 훈련", focus: "압박 대응/집중",     gains: "멘탈",              fatigue: 5,  risk: 0 },
     { id: "TRN_STA_COND",  title: "체력 강화",       focus: "스태미나/지구력",    gains: "스태미나, 회복력",   fatigue: 12, risk: 4 },
+    { id: "TRN_CLUTCH",    title: "위기집중 훈련",   focus: "집중력/압박 상황",   gains: "위기집중력, 멘탈",   fatigue: 6,  risk: 0 },
+    { id: "TRN_HOLD",      title: "견제 훈련",       focus: "주자 관리/견제",     gains: "견제력, 제구",       fatigue: 7,  risk: 1 },
+    { id: "TRN_PITCH_DEV", title: "구종 개발",       focus: "구종 숙련도/신규 습득", gains: "진행중 구종 progress +20", fatigue: 10, risk: 0 },
   ];
 
   const recoveryPrograms: ProgramCard[] = [
@@ -45,25 +60,15 @@
   $: selectedSub      = $gameStore.trainingPlan.secondaryProgramId ?? "TRN_CTRL_MECH";
   $: selectedRecovery = $gameStore.trainingPlan.recoveryProgramId  ?? "TRN_RECOVERY";
 
-  // 실제 주인공 상태
-  $: protagonist = $gameStore.protagonist;
-  $: realCondition = protagonist.condition;
-  $: realFatigue   = protagonist.fatigue;
-  $: realMorale    = protagonist.morale;
+  $: protagonist    = $gameStore.protagonist;
+  $: realCondition  = protagonist.condition;
+  $: realFatigue    = protagonist.fatigue;
+  $: realMorale     = protagonist.morale;
 
   const coachMod    = { fatigue: 0.95, risk: 0.9 };
   const facilityMod = { fatigue: 0.90, risk: 0.95 };
 
-  let weeklyMix = {
-    bullpen: 25,
-    gameSim: 20,
-    strength: 20,
-    analysis: 15,
-    recovery: 10,
-    pitchDev: 10
-  };
-
-  // 구종 시스템 — masterStore + protagonist 실데이터
+  // ── 구종 시스템 ──────────────────────────────────────────────
   const STAT_LABEL: Record<string, string> = {
     command:   "커맨드",
     control:   "제구",
@@ -89,33 +94,62 @@
     return map[statKey] ?? 0;
   }
 
-  function isPitchUnlocked(pitch: { unlockRuleId: string }, p: typeof protagonist): boolean {
+  function isPitchEligible(pitch: { unlockRuleId: string }, p: typeof protagonist): boolean {
     const rule = $pitchUnlockRuleMap.get(pitch.unlockRuleId);
     if (!rule || rule.type === "always") return true;
     if (rule.type === "min_stat" && rule.params.stat && rule.params.value !== undefined) {
       return getStatValue(rule.params.stat, p) >= rule.params.value;
     }
+    if (rule.type === "multi_stat" && rule.params.conditions) {
+      return rule.params.conditions.every((c: { stat: string; value: number }) =>
+        getStatValue(c.stat, p) >= c.value
+      );
+    }
     return false;
   }
 
-  $: learnedIds       = new Set(protagonist.learnedPitchIds ?? ["PITCH_FASTBALL"]);
-  $: trainingPitchSt  = protagonist.trainingPitchState ?? null;
+  $: learnedIds      = new Set((protagonist.pitches ?? []).map((e) => e.id));
+  $: trainingPitchSt = protagonist.trainingPitchState ?? null;
 
   $: pitchCandidates = $masterStore.pitchCatalog.map((pitch) => {
-    const learned = learnedIds.has(pitch.id);
-    const inTraining = !learned && trainingPitchSt?.id === pitch.id;
+    const pitchEntry   = (protagonist.pitches ?? []).find((e) => e.id === pitch.id);
+    const learned      = !!pitchEntry;
+    const inTraining   = trainingPitchSt?.id === pitch.id;
+    const eligible     = isPitchEligible(pitch, protagonist);
+
     const rule = $pitchUnlockRuleMap.get(pitch.unlockRuleId);
-    const requirements = (rule?.type === "min_stat" && rule.params.stat && rule.params.value !== undefined)
-      ? [{ label: STAT_LABEL[rule.params.stat] ?? rule.params.stat, required: rule.params.value, current: getStatValue(rule.params.stat, protagonist) }]
-      : [];
+    let requirements: Array<{ label: string; required: number; current: number }> = [];
+    if (rule?.type === "min_stat" && rule.params.stat && rule.params.value !== undefined) {
+      requirements = [{ label: STAT_LABEL[rule.params.stat] ?? rule.params.stat, required: rule.params.value, current: getStatValue(rule.params.stat, protagonist) }];
+    } else if (rule?.type === "multi_stat" && rule.params.conditions) {
+      requirements = rule.params.conditions.map((c: { stat: string; value: number }) => ({
+        label:    STAT_LABEL[c.stat] ?? c.stat,
+        required: c.value,
+        current:  getStatValue(c.stat, protagonist),
+      }));
+    }
+
+    let status: PitchStatus;
+    if (learned && inTraining)  status = "grading";
+    else if (learned)           status = "learned";
+    else if (inTraining)        status = "training";
+    else if (eligible)          status = "discovered";
+    else                        status = "locked";
+
     return {
-      id:           pitch.id,
-      name:         pitch.name,
-      status:       learned ? "learned" : inTraining ? "training" : "discovered",
-      progress:     inTraining ? trainingPitchSt!.progress : learned ? 100 : 0,
+      id:       pitch.id,
+      name:     pitch.nameKo ?? pitch.name,
+      status,
+      grade:    pitchEntry?.grade ?? 0,
+      progress: inTraining ? trainingPitchSt!.progress : 0,
       requirements,
     } as PitchCandidate;
   });
+
+  $: learnedPitches     = pitchCandidates.filter((p) => p.status === "learned" || p.status === "grading");
+  $: trainingPitch      = pitchCandidates.find((p) => p.status === "training" || p.status === "grading") ?? null;
+  $: eligiblePitches    = pitchCandidates.filter((p) => p.status === "discovered");
+  $: lockedPitches      = pitchCandidates.filter((p) => p.status === "locked");
 
   $: mainCard     = allPrograms.find((p) => p.id === selectedMain);
   $: subCard      = allPrograms.find((p) => p.id === selectedSub);
@@ -125,36 +159,21 @@
   $: rawFatigueDelta = selectedCards.reduce((sum, c) => sum + c.fatigue, 0);
   $: rawRiskDelta    = selectedCards.reduce((sum, c) => sum + c.risk,    0);
 
-  // 기본 주간 회복 (-5 fatigue, +3 condition) 포함
   $: finalFatigueDelta   = Math.round(rawFatigueDelta * coachMod.fatigue * facilityMod.fatigue) - 5;
   $: finalRiskDelta      = Math.round(rawRiskDelta    * coachMod.risk    * facilityMod.risk);
 
-  $: projectedFatigue   = Math.max(0,   Math.min(100, realFatigue   + finalFatigueDelta));
-  $: projectedCondition = Math.max(0,   Math.min(100, realCondition - Math.max(0, finalFatigueDelta) * 0.4 + 3));
-  $: projectedRisk      = Math.max(0,   Math.round(Math.max(0, projectedFatigue - 60) * 0.8));
-
-  $: weeklyTotal =
-    weeklyMix.bullpen + weeklyMix.gameSim + weeklyMix.strength +
-    weeklyMix.analysis + weeklyMix.recovery + weeklyMix.pitchDev;
-
-  $: learnedPitches    = pitchCandidates.filter((p) => p.status === "learned");
-  $: trainingPitch     = pitchCandidates.find((p) => p.status === "training") ?? null;
-  $: discoveredPitches = pitchCandidates.filter((p) => p.status === "discovered");
-  $: pitchDevGain      = Math.max(0, Math.round(weeklyMix.pitchDev * 0.6));
-  $: projectedTrainingProgress = trainingPitch
-    ? Math.min(100, trainingPitch.progress + pitchDevGain)
-    : 0;
+  $: projectedFatigue   = Math.max(0, Math.min(100, realFatigue   + finalFatigueDelta));
+  $: projectedCondition = Math.max(0, Math.min(100, realCondition - Math.max(0, finalFatigueDelta) * 0.4 + 3));
+  $: projectedRisk      = Math.max(0, Math.round(Math.max(0, projectedFatigue - 60) * 0.8));
 
   $: recentLogs = $gameStore.logs.slice(0, 5);
+
+  $: pitchDevSelected = selectedMain === "TRN_PITCH_DEV" || selectedSub === "TRN_PITCH_DEV";
 
   function riskTone(value: number): "safe" | "warn" | "danger" {
     if (value >= 20) return "danger";
     if (value >= 10) return "warn";
     return "safe";
-  }
-
-  function isEligible(pitch: PitchCandidate): boolean {
-    return pitch.requirements.every((req) => req.current >= req.required);
   }
 
   function unmetRequirementText(pitch: PitchCandidate): string {
@@ -163,14 +182,23 @@
     return unmet.map((req) => `${req.label} ${req.required} 필요 (현재 ${req.current})`).join(" · ");
   }
 
-  function canStartLearning(pitch: PitchCandidate): boolean {
-    return pitch.status === "discovered" && isEligible(pitch) && !trainingPitch && projectedFatigue < 80;
+  function canStart(pitch: PitchCandidate): boolean {
+    return !trainingPitch && projectedFatigue < 80 &&
+      (pitch.status === "discovered" || (pitch.status === "learned" && pitch.grade < 5));
   }
 
-  function startPitchLearning(pitchId: string) {
-    if (!canStartLearning(pitchCandidates.find((p) => p.id === pitchId)!)) return;
+  function startTraining(pitchId: string) {
+    const pitch = pitchCandidates.find((p) => p.id === pitchId);
+    if (!pitch || !canStart(pitch)) return;
     gameStore.startPitchTraining(pitchId);
     gameStore.save();
+  }
+
+  function gradeTone(grade: number): string {
+    if (grade >= 5) return "g5";
+    if (grade >= 4) return "g4";
+    if (grade >= 3) return "g3";
+    return "g1";
   }
 </script>
 
@@ -180,9 +208,9 @@
   <article class="card board">
     <header class="top-row">
       <div class="tabs">
-        <button class:active={tab === "daily"} on:click={() => (tab = "daily")}>일간 계획</button>
-        <button class:active={tab === "weekly"} on:click={() => (tab = "weekly")}>주간 설정</button>
-        <button class:active={tab === "risk"} on:click={() => (tab = "risk")}>리스크/로그</button>
+        <button class:active={tab === "plan"}  on:click={() => (tab = "plan")}>훈련 계획</button>
+        <button class:active={tab === "pitch"} on:click={() => (tab = "pitch")}>구종 개발</button>
+        <button class:active={tab === "risk"}  on:click={() => (tab = "risk")}>리스크/로그</button>
       </div>
 
       <div class="kpis">
@@ -192,10 +220,10 @@
       </div>
     </header>
 
-    {#if tab === "daily"}
+    {#if tab === "plan"}
       <div class="content-grid">
         <section class="panel daily-plan">
-          <h3>오늘의 3슬롯</h3>
+          <h3>훈련 슬롯 (3슬롯)</h3>
 
           <label>
             <span>주훈련</span>
@@ -232,6 +260,18 @@
               {/each}
             </select>
           </label>
+
+          {#if pitchDevSelected}
+            <div class="pitch-dev-notice">
+              {#if trainingPitch}
+                <span class="notice-label">구종 개발 대상</span>
+                <strong>{trainingPitch.name}</strong>
+                <span class="progress-text">{trainingPitch.progress.toFixed(0)}% 진행</span>
+              {:else}
+                <span class="notice-warn">⚠ 구종 개발 탭에서 훈련할 구종을 먼저 선택하세요.</span>
+              {/if}
+            </div>
+          {/if}
 
           <div class="slot-cards">
             {#each selectedCards as card}
@@ -271,73 +311,114 @@
           </p>
         </aside>
       </div>
-    {:else if tab === "weekly"}
-      <div class="content-grid weekly-grid">
+
+    {:else if tab === "pitch"}
+      <div class="pitch-grid">
+
+        <!-- 보유 구종 -->
         <section class="panel">
-          <h3>주간 훈련 비율 (투수 전용)</h3>
-          <div class="mix-grid">
-            <label><span>불펜 제구</span><input type="number" min="0" max="100" bind:value={weeklyMix.bullpen} /></label>
-            <label><span>실전 피칭</span><input type="number" min="0" max="100" bind:value={weeklyMix.gameSim} /></label>
-            <label><span>피지컬/구속</span><input type="number" min="0" max="100" bind:value={weeklyMix.strength} /></label>
-            <label><span>영상/전술</span><input type="number" min="0" max="100" bind:value={weeklyMix.analysis} /></label>
-            <label><span>회복/멘탈</span><input type="number" min="0" max="100" bind:value={weeklyMix.recovery} /></label>
-            <label><span>구종 개발</span><input type="number" min="0" max="100" bind:value={weeklyMix.pitchDev} /></label>
-          </div>
-          <p class:warn={weeklyTotal !== 100}>현재 합계: {weeklyTotal}% (권장 100%)</p>
-        </section>
-
-        <section class="panel pitch-dev-panel">
-          <h3>구종 개발 (전체 비공개 탐색형)</h3>
-          <p class="sub">미발견 구종: {hiddenPitchCount}개</p>
-
-          <div class="pitch-block">
-            <h4>보유 구종</h4>
-            <div class="chips">
+          <h3>보유 구종 <span class="count">{learnedPitches.length}</span></h3>
+          {#if learnedPitches.length === 0}
+            <p class="empty-text">아직 습득한 구종이 없습니다.</p>
+          {:else}
+            <div class="pitch-learned-list">
               {#each learnedPitches as pitch}
-                <span class="chip learned">{pitch.name}</span>
-              {/each}
-            </div>
-          </div>
-
-          <div class="pitch-block">
-            <h4>훈련 진행중</h4>
-            {#if trainingPitch}
-              <div class="training-card">
-                <strong>{trainingPitch.name}</strong>
-                <p>현재 진행률 {trainingPitch.progress}%</p>
-                <p class="gain">주간 구종 개발 비중 {weeklyMix.pitchDev}% -> 진행률 +{pitchDevGain}%</p>
-                <p>주차 종료 예상 {projectedTrainingProgress}%</p>
-                <div class="progress-wrap"><div class="progress" style={`width:${trainingPitch.progress}%`}></div></div>
-              </div>
-            {:else}
-              <p class="empty-text">현재 진행중인 구종 훈련이 없습니다.</p>
-            {/if}
-          </div>
-
-          <div class="pitch-block">
-            <h4>습득 후보</h4>
-            <div class="candidate-list">
-              {#each discoveredPitches as pitch}
-                <article>
-                  <div class="row-head">
+                <article class="learned-card grade-{gradeTone(pitch.grade)}">
+                  <div class="learned-head">
                     <strong>{pitch.name}</strong>
-                    <button
-                      disabled={!canStartLearning(pitch)}
-                      on:click={() => startPitchLearning(pitch.id)}
-                    >
-                      습득 가능
-                    </button>
+                    <span class="grade-badge grade-{gradeTone(pitch.grade)}">{GRADE_LABEL[pitch.grade] ?? pitch.grade}</span>
                   </div>
-                  <p>{unmetRequirementText(pitch)}</p>
-                  {#if trainingPitch && trainingPitch.id !== pitch.id}
-                    <p class="hint">다른 구종 훈련이 진행중이라 대기해야 합니다.</p>
+                  {#if pitch.status === "grading"}
+                    <div class="progress-row">
+                      <span class="progress-label">숙련도 향상 중</span>
+                      <span class="progress-val">{pitch.progress.toFixed(0)}%</span>
+                    </div>
+                    <div class="progress-wrap"><div class="progress-bar" style="width:{pitch.progress}%"></div></div>
+                  {:else if pitch.grade < 5}
+                    <button
+                      class="grade-up-btn"
+                      disabled={!!trainingPitch || projectedFatigue >= 80}
+                      on:click={() => startTraining(pitch.id)}
+                    >숙련도 향상 훈련 시작</button>
+                  {:else}
+                    <span class="mastered">마스터 완료</span>
                   {/if}
                 </article>
               {/each}
             </div>
-          </div>
+          {/if}
+        </section>
+
+        <!-- 신규 습득 훈련중 -->
+        <section class="panel">
+          <h3>신규 습득 훈련중</h3>
+          {#if trainingPitch && trainingPitch.status === "training"}
+            <article class="training-card">
+              <strong>{trainingPitch.name}</strong>
+              <div class="progress-row">
+                <span class="progress-label">진행률</span>
+                <span class="progress-val">{trainingPitch.progress.toFixed(0)}%</span>
+              </div>
+              <div class="progress-wrap"><div class="progress-bar" style="width:{trainingPitch.progress}%"></div></div>
+              <p class="hint">TRN_PITCH_DEV 슬롯 선택 시 매주 +20% 진행</p>
+            </article>
+          {:else}
+            <p class="empty-text">진행중인 신규 습득 훈련이 없습니다.</p>
+          {/if}
+
+          <!-- 해금 가능 구종 -->
+          <h3 style="margin-top:12px">해금 가능 <span class="count">{eligiblePitches.length}</span></h3>
+          {#if eligiblePitches.length === 0}
+            <p class="empty-text">조건을 충족한 신규 구종이 없습니다.</p>
+          {:else}
+            <div class="candidate-list">
+              {#each eligiblePitches as pitch}
+                <article>
+                  <div class="row-head">
+                    <strong>{pitch.name}</strong>
+                    <button
+                      disabled={!!trainingPitch || projectedFatigue >= 80}
+                      on:click={() => startTraining(pitch.id)}
+                    >습득 시작</button>
+                  </div>
+                  {#if trainingPitch}
+                    <p class="hint">다른 구종 훈련이 진행중입니다.</p>
+                  {/if}
+                </article>
+              {/each}
+            </div>
+          {/if}
+        </section>
+
+        <!-- 조건 미충족 -->
+        <section class="panel">
+          <h3>조건 미충족 <span class="count">{lockedPitches.length}</span></h3>
+          {#if lockedPitches.length === 0}
+            <p class="empty-text">모든 구종 조건을 충족했습니다.</p>
+          {:else}
+            <div class="locked-list">
+              {#each lockedPitches as pitch}
+                <article class="locked-card">
+                  <strong>{pitch.name}</strong>
+                  <p class="req-text">{unmetRequirementText(pitch)}</p>
+                  <div class="req-bars">
+                    {#each pitch.requirements as req}
+                      <div class="req-row">
+                        <span>{req.label}</span>
+                        <div class="req-bar-wrap">
+                          <div class="req-bar" style="width:{Math.min(100, req.current / req.required * 100)}%"></div>
+                        </div>
+                        <span class="req-val {req.current >= req.required ? 'ok' : 'no'}">{req.current}/{req.required}</span>
+                      </div>
+                    {/each}
+                  </div>
+                </article>
+              {/each}
+            </div>
+          {/if}
         </section>
       </div>
+
     {:else}
       <div class="content-grid">
         <section class="panel">
@@ -380,16 +461,8 @@
     overflow: hidden;
   }
 
-  h2,
-  h3,
-  h4,
-  p {
-    margin: 0;
-  }
-
-  h2 {
-    font-size: 22px;
-  }
+  h2, h3, h4, p { margin: 0; }
+  h2 { font-size: 22px; }
 
   .card {
     background: #161f33;
@@ -413,35 +486,24 @@
     gap: 10px;
   }
 
-  .tabs,
-  .kpis {
+  .tabs, .kpis {
     display: flex;
     gap: 6px;
     align-items: center;
     flex-wrap: wrap;
   }
 
-  .tabs button,
-  select,
-  input,
-  .candidate-list button {
+  .tabs button, select, .candidate-list button, .grade-up-btn {
     border: 1px solid #355182;
     background: #1f2f4f;
     color: #dbe8ff;
     border-radius: 8px;
     padding: 5px 10px;
     font-size: 12px;
-  }
-
-  .tabs button,
-  .candidate-list button {
     cursor: pointer;
   }
 
-  .tabs button.active {
-    background: #3262b0;
-    border-color: #6da1f7;
-  }
+  .tabs button.active { background: #3262b0; border-color: #6da1f7; }
 
   .kpis p {
     border: 1px solid #2e486f;
@@ -453,19 +515,17 @@
   }
 
   .kpis strong { margin-left: 4px; color: #f3f7ff; }
-  .kpis strong.safe { color: #7be4a6; }
-  .kpis strong.warn { color: #ffd78a; }
+  .kpis strong.safe   { color: #7be4a6; }
+  .kpis strong.warn   { color: #ffd78a; }
   .kpis strong.danger { color: #ff9b8a; }
 
+  /* ── 훈련 계획 탭 ─────────────────── */
   .content-grid {
     min-height: 0;
     display: grid;
     grid-template-columns: minmax(0, 1.35fr) minmax(260px, 1fr);
     gap: 10px;
-  }
-
-  .weekly-grid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    overflow: hidden;
   }
 
   .panel {
@@ -474,34 +534,57 @@
     background: #13223d;
     padding: 10px;
     min-height: 0;
-    overflow: hidden;
+    overflow-y: auto;
     display: grid;
     align-content: start;
     gap: 8px;
   }
 
-  .daily-plan label,
-  .mix-grid label {
+  .daily-plan label {
     display: grid;
     gap: 4px;
   }
 
-  .daily-plan label span,
-  .mix-grid span,
-  .sub {
+  .daily-plan label span {
     color: #aac0e4;
     font-size: 12px;
   }
 
-  .slot-cards {
-    display: grid;
-    gap: 6px;
-    margin-top: 4px;
+  .pitch-dev-notice {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #2f6f58;
+    border-radius: 8px;
+    background: #0f2a22;
+    padding: 8px 10px;
+    font-size: 13px;
+    flex-wrap: wrap;
   }
 
-  .slot-cards article,
-  .candidate-list article,
-  .training-card {
+  .notice-label {
+    color: #7ecfb8;
+    font-size: 12px;
+  }
+
+  .pitch-dev-notice strong {
+    color: #c0f0e0;
+  }
+
+  .progress-text {
+    color: #7ecfb8;
+    font-size: 12px;
+    margin-left: auto;
+  }
+
+  .notice-warn {
+    color: #ffd78a;
+    font-size: 12px;
+  }
+
+  .slot-cards { display: grid; gap: 6px; margin-top: 4px; }
+
+  .slot-cards article, .training-card {
     border: 1px solid #2d4a76;
     border-radius: 8px;
     background: #152b4f;
@@ -510,27 +593,12 @@
     gap: 4px;
   }
 
-  .slot-cards strong,
-  .candidate-list strong,
-  .training-card strong {
-    color: #eef5ff;
-    font-size: 13px;
-  }
-
-  .slot-cards p,
-  .candidate-list p,
-  .training-card p {
-    color: #bfd2f3;
-    font-size: 12px;
-  }
-
+  .slot-cards strong, .training-card strong { color: #eef5ff; font-size: 13px; }
+  .slot-cards p, .training-card p { color: #bfd2f3; font-size: 12px; }
   .slot-cards .gain { color: #83e6ad; }
-  .training-card .gain { color: #83e6ad; }
 
-  ul,
-  ol {
-    margin: 0;
-    padding: 0;
+  ul, ol {
+    margin: 0; padding: 0;
     list-style: none;
     display: grid;
     gap: 6px;
@@ -558,64 +626,121 @@
     font-size: 12px;
   }
 
-  .risk-note.safe { border-color: #3c7a5a; color: #98e5bd; background: #1a3a2c; }
-  .risk-note.warn { border-color: #8a6f3a; color: #ffe0a2; background: #3d311a; }
+  .risk-note.safe   { border-color: #3c7a5a; color: #98e5bd; background: #1a3a2c; }
+  .risk-note.warn   { border-color: #8a6f3a; color: #ffe0a2; background: #3d311a; }
   .risk-note.danger { border-color: #8d4a3f; color: #ffc0b6; background: #3b1f1b; }
 
-  .mix-grid {
+  ol li { justify-content: flex-start; }
+
+  /* ── 구종 개발 탭 ─────────────────── */
+  .pitch-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .count {
+    display: inline-block;
+    margin-left: 6px;
+    background: #253d65;
+    color: #aac6f5;
+    border-radius: 999px;
+    font-size: 11px;
+    padding: 1px 7px;
+    font-weight: 400;
+  }
+
+  .pitch-learned-list, .candidate-list, .locked-list {
+    display: grid;
     gap: 6px;
   }
 
-  .warn { color: #ffd78a; }
-
-  .pitch-dev-panel {
-    grid-template-rows: auto auto auto auto;
-  }
-
-  .pitch-block {
+  /* 보유 구종 카드 */
+  .learned-card {
+    border: 1px solid #2e486f;
+    border-radius: 8px;
+    background: #152b4f;
+    padding: 8px 10px;
     display: grid;
     gap: 6px;
   }
 
-  .chips {
+  .learned-card.grade-g5 { border-color: #c8a030; background: #2a1e06; }
+  .learned-card.grade-g4 { border-color: #3a7ad8; background: #0e2040; }
+  .learned-card.grade-g3 { border-color: #3a7a5a; background: #0e2a20; }
+
+  .learned-head {
     display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
   }
 
-  .chip {
-    border: 1px solid #406aa7;
+  .learned-head strong { color: #eef5ff; font-size: 13px; }
+
+  /* grade 뱃지 */
+  .grade-badge {
+    font-size: 11px;
     border-radius: 999px;
     padding: 2px 8px;
-    color: #d2e3ff;
-    font-size: 12px;
-    background: #1d3660;
+    border: 1px solid #2e486f;
+    background: #152b4f;
+    color: #9ab8e0;
   }
 
-  .chip.learned {
-    border-color: #4e8b65;
-    background: #234634;
-    color: #bfe8d0;
+  .grade-badge.grade-g5 { border-color: #c8a030; background: #2a1e06; color: #f0c860; }
+  .grade-badge.grade-g4 { border-color: #3a7ad8; background: #0e2040; color: #88b8f8; }
+  .grade-badge.grade-g3 { border-color: #3a7a5a; background: #0e2a20; color: #7adfb8; }
+
+  .grade-up-btn {
+    width: 100%;
+    padding: 5px;
+    font-size: 12px;
   }
+
+  .grade-up-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  .mastered {
+    font-size: 12px;
+    color: #f0c860;
+    text-align: center;
+    padding: 4px 0;
+  }
+
+  /* progress 바 공용 */
+  .progress-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+  }
+
+  .progress-label { color: #9eb6de; }
+  .progress-val   { color: #c8e0ff; }
 
   .progress-wrap {
-    height: 8px;
+    height: 6px;
     border-radius: 999px;
     background: #20375c;
     overflow: hidden;
   }
 
-  .progress {
+  .progress-bar {
     height: 100%;
     border-radius: inherit;
     background: #79aaff;
+    transition: width 0.3s;
   }
 
-  .candidate-list {
+  /* 해금 가능 */
+  .candidate-list article {
+    border: 1px solid #2d4a76;
+    border-radius: 8px;
+    background: #152b4f;
+    padding: 8px 10px;
     display: grid;
-    gap: 6px;
+    gap: 4px;
   }
 
   .row-head {
@@ -625,26 +750,58 @@
     gap: 8px;
   }
 
-  .candidate-list button:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
+  .candidate-list strong { color: #eef5ff; font-size: 13px; }
+  .candidate-list button { padding: 4px 10px; }
+  .candidate-list button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  /* 조건 미충족 */
+  .locked-card {
+    border: 1px solid #2d3a58;
+    border-radius: 8px;
+    background: #111c32;
+    padding: 8px 10px;
+    display: grid;
+    gap: 6px;
+    opacity: 0.85;
   }
 
-  .hint,
-  .empty-text {
-    color: #9fb5db;
-    font-size: 12px;
+  .locked-card strong { color: #8a9dbf; font-size: 13px; }
+
+  .req-text { color: #8299c0; font-size: 11px; }
+
+  .req-bars { display: grid; gap: 4px; }
+
+  .req-row {
+    display: grid;
+    grid-template-columns: 60px 1fr 56px;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #7a90b8;
   }
 
-  ol li { justify-content: flex-start; }
+  .req-bar-wrap {
+    height: 4px;
+    border-radius: 999px;
+    background: #1e3054;
+    overflow: hidden;
+  }
+
+  .req-bar {
+    height: 100%;
+    border-radius: inherit;
+    background: #4a78c0;
+  }
+
+  .req-val { text-align: right; }
+  .req-val.ok { color: #7be4a6; }
+  .req-val.no { color: #ff9b8a; }
+
+  .empty-text { color: #6a85b0; font-size: 12px; }
+  .hint       { color: #9fb5db; font-size: 12px; }
 
   @media (max-width: 1180px) {
-    .content-grid,
-    .weekly-grid,
-    .mix-grid {
-      grid-template-columns: 1fr;
-    }
+    .content-grid { grid-template-columns: 1fr; }
+    .pitch-grid   { grid-template-columns: 1fr; }
   }
 </style>
-
-

@@ -19,6 +19,7 @@ export interface TrainingProgram {
 export interface PitchEntry {
   id: string;
   name: string;
+  nameKo?: string;
   group: string;
   unlockRuleId: string;
 }
