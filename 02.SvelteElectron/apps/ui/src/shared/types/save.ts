@@ -10,6 +10,8 @@ export interface PitchingAttributes {
   movement: number;
   mentality: number;
   recovery: number;
+  clutch: number;       // 위기 집중력: 후반 접전/득점권 압박 시 quality 보정
+  holdRunners: number;  // 견제력: 도루 시도율 억제 계수
 }
 
 export type PitchingStatKey = Exclude<keyof PitchingAttributes, "ovr">;
@@ -21,9 +23,37 @@ export interface BattingAttributes {
   eye: number;
   discipline: number;
   speed: number;
+  baseInstinct: number; // 주루 판단: 여분 베이스 진루 시도 빈도
+  bunting: number;      // 번트: 번트 타구 품질 보정
+  platoon: number;      // 플래툰 내성: 반대 손 투수 대응 능력 (50=평균)
   fielding: number;
   arm: number;
   battingClutch: number;
+}
+
+export type BattingStatKey = Exclude<keyof BattingAttributes, "ovr">;
+
+// ── 포지션 숙련도 ────────────────────────────────────────────────
+export type PositionKey = "C" | "1B" | "2B" | "3B" | "SS" | "LF" | "CF" | "RF" | "SP" | "RP";
+export type PositionRatings = Partial<Record<PositionKey, number>>;
+
+// ── 감독 능력치 ────────────────────────────────────────────────
+export interface ManagerAttributes {
+  motivation: number;       // 선수 모랄 주간 보정
+  development: number;      // 팀 전체 devFactor 보정
+  strategy: number;         // 경기 전술 의사결정
+  handlePressure: number;   // 중요 경기·위기 대응
+  handlePersonnel: number;  // 선수 기용·로테이션·불펜 운용
+}
+
+// ── 코치 능력치 ────────────────────────────────────────────────
+export type CoachSpecialty = "pitching" | "batting" | "fielding" | "running";
+
+export interface CoachAttributes {
+  teaching: number;   // XP 획득량 보정 계수
+  analytics: number;  // 상대 분석 능력
+  experience: number; // 레벨 1~5
+  specialty: CoachSpecialty;
 }
 
 // ── 주인공 저장 데이터 ─────────────────────────────────────────
@@ -71,6 +101,14 @@ export interface ProtagonistSave {
   pitching: PitchingAttributes;
   batting: BattingAttributes;
 
+  // 포지션 숙련도
+  primaryPosition: PositionKey;
+  positionRatings: PositionRatings;
+
+  // 캐릭터 속성
+  diligence: number;   // 성실함 1–99: growthEngine devFactor 보정
+  popularity: number;  // 인기도 0–100: 스카우트 관심도·팬 반응
+
   // 잠재력·성장
   developmentRate: number;           // 45–75
   potentialHidden: number;           // 60–99 (숨겨진 잠재력)
@@ -80,6 +118,7 @@ export interface ProtagonistSave {
 
   // XP 누적 (주간 성장 엔진용)
   pitchingXP: Partial<Record<PitchingStatKey, number>>;
+  battingXP: Partial<Record<BattingStatKey, number>>;
 
   // 구종 시스템
   learnedPitchIds: string[];                           // 보유 구종 ID 목록

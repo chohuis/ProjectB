@@ -1,8 +1,10 @@
 import { derived, writable } from "svelte/store";
 import type { EventRule, EventPool, MessageTemplate, DecisionTemplate, DecisionTemplateOption } from "../types/event";
-import type { CareerStage } from "../types/save";
+import type { CareerStage, ManagerAttributes, CoachAttributes, CoachSpecialty } from "../types/save";
 import type { DecisionEffect } from "../types/main";
 import type { ContactDef, ContactFields } from "../types/messenger";
+
+export type { ManagerAttributes, CoachAttributes, CoachSpecialty };
 
 // ── 훈련·구종 타입 ─────────────────────────────────────────────
 export interface TrainingProgram {
@@ -52,6 +54,24 @@ export interface TeamProfile {
   desc: string;
   tags: string[];
   strengths: string[];
+  funding?: "풍부" | "보통" | "부족";
+  difficulty?: "최상" | "상" | "중" | "하" | "최하";
+}
+
+export interface TeamRecord {
+  year: number;
+  national: string;
+  regional: string;
+  note?: string;
+}
+
+export interface TeamHistory {
+  founded: number;
+  summary: string;
+  proPlayers: number;
+  nationalTitles: number;
+  recentRecords: TeamRecord[];
+  rival?: string;
 }
 
 export interface TeamRef {
@@ -63,6 +83,59 @@ export interface TeamRef {
   schoolId?: string;
   tier?: string;
   profile?: TeamProfile;
+  history?: TeamHistory;
+}
+
+// ── 인물 엔티티 상세 타입 ──────────────────────────────────────
+export interface EntityManagerStats {
+  motivation: number;
+  development: number;
+  strategy: number;
+  handlePressure: number;
+  handlePersonnel: number;
+}
+
+export interface EntityManagerDetails {
+  style: string;
+  experienceYears: number;
+  stats: EntityManagerStats;
+  gamePlanBias: string;
+  riskTolerance: number;
+}
+
+export interface EntityCoachStats {
+  teaching: number;
+  analytics: number;
+  experience: number; // 레벨 1~5
+}
+
+export interface EntityCoachDetails {
+  specialty: CoachSpecialty | "-";
+  experienceYears: number;
+  stats: EntityCoachStats;
+  trainingBuffs: string;
+}
+
+export interface EntityPlayerDetails {
+  playerType: "pitcher" | "batter" | "twoWay";
+  handedness: "L" | "R";
+  position: string;
+  jerseyNumber: number;
+  pitching: import("../types/save").PitchingAttributes;
+  batting: import("../types/save").BattingAttributes;
+  positionRatings?: import("../types/save").PositionRatings;
+  primaryPosition?: import("../types/save").PositionKey;
+  diligence?: number;
+  popularity?: number;
+  developmentRate: number;
+  potentialHidden: number;
+}
+
+export interface EntityDetails {
+  player: EntityPlayerDetails;
+  coach: EntityCoachDetails;
+  manager: EntityManagerDetails;
+  owner: Record<string, unknown>;
 }
 
 // ── 인물 엔티티 타입 (people_*.json 구조) ─────────────────────
@@ -81,7 +154,7 @@ export interface EntityRow {
   schoolId: string;
   grade?: 1 | 2 | 3;
   notes: string;
-  details: Record<string, unknown>;
+  details: EntityDetails;
   contact?: ContactFields;
 }
 

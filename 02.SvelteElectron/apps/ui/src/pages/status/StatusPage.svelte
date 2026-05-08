@@ -14,34 +14,52 @@
   function buildStatGroups(p: typeof $gameStore.protagonist): StatGroup[] {
     const pit = p.pitching;
     const bat = p.batting;
-    return [
-      {
+    const groups: StatGroup[] = [];
+
+    if (p.playerType === "pitcher" || p.playerType === "twoWay") {
+      groups.push({
         title: "투구",
         items: [
-          { label: "OVR",    value: pit.ovr },
-          { label: "구위",   value: pit.velocity },
-          { label: "커맨드", value: pit.command },
-          { label: "제구",   value: pit.control },
+          { label: "OVR",      value: pit.ovr },
+          { label: "구위",     value: pit.velocity },
+          { label: "커맨드",   value: pit.command },
+          { label: "제구",     value: pit.control },
           { label: "무브먼트", value: pit.movement },
-          { label: "멘탈",  value: pit.mentality },
+          { label: "멘탈",     value: pit.mentality },
           { label: "스태미나", value: pit.stamina },
-          { label: "회복력", value: pit.recovery },
+          { label: "회복력",   value: pit.recovery },
+          { label: "위기집중", value: pit.clutch },
+          { label: "견제력",   value: pit.holdRunners },
         ],
-      },
-      {
+      });
+    }
+
+    if (p.playerType === "batter" || p.playerType === "twoWay") {
+      groups.push({
         title: "타격",
         items: [
-          { label: "컨택",  value: bat.contact },
-          { label: "파워",  value: bat.power },
+          { label: "OVR",    value: bat.ovr },
+          { label: "컨택",   value: bat.contact },
+          { label: "장타력", value: bat.power },
           { label: "선구안", value: bat.eye },
-          { label: "선구력", value: bat.discipline },
-          { label: "스피드", value: bat.speed },
-          { label: "수비",  value: bat.fielding },
-          { label: "어깨",  value: bat.arm },
+          { label: "극기",   value: bat.discipline },
           { label: "클러치", value: bat.battingClutch },
+          { label: "플래툰", value: bat.platoon },
+          { label: "번트",   value: bat.bunting },
         ],
-      },
-    ];
+      });
+      groups.push({
+        title: "주루·수비",
+        items: [
+          { label: "주력",     value: bat.speed },
+          { label: "주루판단", value: bat.baseInstinct },
+          { label: "수비",     value: bat.fielding },
+          { label: "어깨",     value: bat.arm },
+        ],
+      });
+    }
+
+    return groups;
   }
 
   function statTone(value: number): "good" | "mid" | "low" {
@@ -92,14 +110,14 @@
     {#each statGroups as group}
       <article class="card stat-card">
         <h3>{group.title}</h3>
-        <ul class="stat-list">
+        <div class="stat-list">
           {#each group.items as stat}
-            <li>
+            <div class="stat-item">
               <span class="label">{stat.label}</span>
               <span class={`value ${statTone(stat.value)}`}>{stat.value}</span>
-            </li>
+            </div>
           {/each}
-        </ul>
+        </div>
       </article>
     {/each}
   </section>
@@ -208,13 +226,13 @@
 
   .stats-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 12px;
     overflow: hidden;
   }
 
   .stat-card {
-    overflow-y: auto;
+    overflow: hidden;
   }
 
   .stat-card h3 {
@@ -223,34 +241,36 @@
     color: #ebf2ff;
   }
 
-  .stat-list,
   .changes-list {
     list-style: none;
     margin: 0;
     padding: 0;
   }
 
-  .stat-list li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    border-top: 1px solid #253451;
+  .stat-list {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
   }
 
-  .stat-list li:first-child {
-    border-top: 0;
-    padding-top: 0;
+  .stat-item {
+    border: 1px solid #2e486f;
+    border-radius: 8px;
+    background: #152b4f;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
   }
 
   .label {
-    color: #cfddf9;
-    font-size: 14px;
+    color: #9eb6de;
+    font-size: 11px;
   }
 
   .value {
-    min-width: 36px;
-    text-align: right;
+    font-size: 18px;
     font-weight: 700;
   }
 

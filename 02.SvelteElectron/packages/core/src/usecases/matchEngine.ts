@@ -206,11 +206,22 @@ function calculatePitchQuality(state: MatchState, decision: PitchDecision): numb
     decision.pitchType === "fastball"
       ? (state.pitcher.velocity - 50) * 0.12
       : (state.pitcher.velocity - 50) * 0.03;
+  // control: 제구 → 볼카운트가 투수 불리할수록 control 가치 상승
+  const controlBonus = (state.pitcher.control - 50) * 0.06;
+  // movement: 변화구에서만 추가 quality 보정
+  const movementBonus =
+    decision.pitchType !== "fastball"
+      ? (state.pitcher.movement - 50) * 0.08
+      : 0;
 
   // 타자 페널티: 컨택이 높을수록 투구 유효성 감소, 선구안이 높을수록 볼 판단력 향상
   const contactPenalty = (state.batter.contact - 50) * 0.10;
   const eyePenalty = (state.batter.eye - 50) * 0.06;
-  const batterPenalty = contactPenalty + eyePenalty;
+  // discipline: 높을수록 헛스윙(STRIKE_SWING) 유도가 어려워짐 → quality 소폭 페널티
+  const disciplinePenalty = (state.batter.discipline - 50) * 0.04;
+  // platoon: 반대 손 투수 상대 시 페널티 (현재 matchState는 손 정보 없으므로 중립 처리)
+  // 향후 투수 handedness 추가 시 활성화; 지금은 platoon 50 기준 보정 없음
+  const batterPenalty = contactPenalty + eyePenalty + disciplinePenalty;
 
   // 볼카운트 보정: 투수/타자 유리 상황에 따른 Quality 조정
   const countMod = countModifier(state.count);
@@ -241,6 +252,8 @@ function calculatePitchQuality(state: MatchState, decision: PitchDecision): numb
       locationBonus[decision.location] +
       commandBonus +
       velocityBonus +
+      controlBonus +
+      movementBonus +
       countMod +
       fullCountNoise -
       batterPenalty +
@@ -456,10 +469,13 @@ function attemptSteals(
   let outs = state.outs;
   const stealLogs: string[] = [];
 
+  // holdRunners: 투수 견제력 — 도루 시도율 억제 (50 기준, 높을수록 억제)
+  const holdFactor = clamp(1 - (state.pitcher.holdRunners - 50) * 0.008, 0.4, 1.6);
+
   // 1루→2루 도루: 1루주자 있고 2루 비어있음
   if (first && !second) {
     const r = first;
-    const attemptProb = clamp((r.speed - 40) * 0.008 * (r.instinct / 50), 0, 0.28);
+    const attemptProb = clamp((r.speed - 40) * 0.008 * (r.instinct / 50) * holdFactor, 0, 0.28);
     if (Math.random() < attemptProb) {
       const successRate = clamp(0.28 + (r.speed - 50) * 0.007, 0.15, 0.90);
       if (Math.random() < successRate) {
@@ -477,7 +493,7 @@ function attemptSteals(
   // 2루→3루 도루: 2루주자 있고 3루 비어있음 (발 빠른 주자만 시도)
   if (second && !third && second.speed > 68) {
     const r = second;
-    const attemptProb = clamp((r.speed - 58) * 0.006 * (r.instinct / 55), 0, 0.14);
+    const attemptProb = clamp((r.speed - 58) * 0.006 * (r.instinct / 55) * holdFactor, 0, 0.14);
     if (Math.random() < attemptProb) {
       const successRate = clamp(0.22 + (r.speed - 65) * 0.008, 0.10, 0.78);
       if (Math.random() < successRate) {
@@ -680,7 +696,7 @@ function tryDoublePlay(
 }
 
 // 상황 압박: 득점권 주자(2루/3루) + 2아웃 시 quality 추가 노이즈 (투수에게 불리한 방향)
-// 압박이 클수록 평균은 유지하되 변동폭이 커짐 (= 나쁜 쪽으로 기댓값 편향)
+// battingClutch가 높은 타자는 득점권에서 추가 저항력 발휘 (압박 가중)
 function jamPressureModifier(state: MatchState): number {
   const hasScoringPosition = !!(state.runners.second || state.runners.third);
   const isTwoOut = state.outs === 2;
@@ -697,10 +713,14 @@ function jamPressureModifier(state: MatchState): number {
   if (state.mental < 30) pressure -= 1.5;
   else if (state.mental < 50) pressure -= 0.5;
 
+  // battingClutch: 타자가 득점권에서 강할수록 투수 추가 압박 (최대 ±1)
+  pressure -= (state.batter.battingClutch - 50) * 0.02;
+
   return pressure;
 }
 
 // 이닝 압박: 후반부 접전일수록 투수에게 추가 부담
+// clutch 스탯이 높으면 압박 감소폭이 작아짐 (위기에 강함)
 function clutchModifier(state: MatchState): number {
   const inningRatio = state.inning / state.inningLimit; // 0~1+
   if (inningRatio < 0.67) return 0; // 전반부는 영향 없음
@@ -711,7 +731,11 @@ function clutchModifier(state: MatchState): number {
   // 후반 + 접전: 점수차가 좁을수록, 이닝이 늦을수록 압박 증가
   const inningPressure = (inningRatio - 0.67) * 6; // 최대 ~2
   const scorePressure = Math.max(0, (3 - scoreDiff) * 0.5); // 0~1.5
-  return -(inningPressure + scorePressure) * 0.8;
+  const rawPressure = -(inningPressure + scorePressure) * 0.8;
+
+  // clutch 스탯: 50 기준, 높을수록 압박 완화 (최대 ±40%)
+  const clutchFactor = 1 - clamp((state.pitcher.clutch - 50) * 0.008, -0.3, 0.3);
+  return rawPressure * clutchFactor;
 }
 
 function buildPitchLog(state: MatchState, decision: PitchDecision, resultCode: PitchResultCode, quality: number): string {

@@ -19,17 +19,19 @@
       "position": "SP",
       "jerseyNumber": 41,
       "pitching": {
-        "ovr": 73,
+        "ovr": 70,
         "stamina": 80,
         "velocity": 82,
         "command": 75,
         "control": 72,
         "movement": 72,
         "mentality": 79,
-        "recovery": 71
+        "recovery": 71,
+        "clutch": 50,
+        "holdRunners": 50
       },
       "batting": {
-        "ovr": 49,
+        "ovr": 46,
         "contact": 42,
         "power": 42,
         "eye": 46,
@@ -37,10 +39,17 @@
         "speed": 48,
         "fielding": 47,
         "arm": 47,
-        "battingClutch": 48
+        "battingClutch": 48,
+        "baseInstinct": 50,
+        "bunting": 45,
+        "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "primaryPosition": "SP",
+      "positionRatings": {
+        "SP": 70
+      }
     },
     "coach": {
       "specialty": "-",
@@ -87,5 +96,7 @@
     "initialAffinity": 0,
     "arcs": [],
     "chat": {}
-  }
+  },
+  "diligence": 60,
+  "popularity": 30
 }

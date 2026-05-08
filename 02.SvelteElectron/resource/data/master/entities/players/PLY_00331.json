@@ -26,7 +26,9 @@
         "control": 33,
         "movement": 30,
         "mentality": 32,
-        "recovery": 33
+        "recovery": 33,
+        "clutch": 50,
+        "holdRunners": 50
       },
       "batting": {
         "ovr": 61,
@@ -37,10 +39,17 @@
         "speed": 55,
         "fielding": 65,
         "arm": 67,
-        "battingClutch": 57
+        "battingClutch": 57,
+        "baseInstinct": 50,
+        "bunting": 45,
+        "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "primaryPosition": "C",
+      "positionRatings": {
+        "C": 61
+      }
     },
     "coach": {
       "specialty": "-",
@@ -87,5 +96,7 @@
     "initialAffinity": 0,
     "arcs": [],
     "chat": {}
-  }
+  },
+  "diligence": 60,
+  "popularity": 30
 }

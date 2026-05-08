@@ -7,16 +7,23 @@ export type WeatherType = "sunny" | "cloudy" | "rainy" | "windy_in" | "windy_out
 export type ParkType = "neutral" | "pitcher_park" | "hitter_park" | "dome";
 
 export interface PitcherStats {
-  command: number;    // 제구력: 로케이션 정확도 및 루킹 스트라이크 빈도
-  velocity: number;  // 구속: 패스트볼 Quality 보정 중심
-  staminaCap: number; // 체력 내구: 투구당 스태미나 소모율 감소
-  mentalResil: number; // 멘탈 회복력: 결과에 따른 멘탈 진폭 완화
+  command: number;      // 제구력: 로케이션 정확도 및 루킹 스트라이크 빈도
+  velocity: number;     // 구속: 패스트볼 Quality 보정 중심
+  staminaCap: number;   // 체력 내구: 투구당 스태미나 소모율 감소
+  mentalResil: number;  // 멘탈 회복력: 결과에 따른 멘탈 진폭 완화
+  control: number;      // 제구: 볼카운트 조절, 볼넷 억제
+  movement: number;     // 무브먼트: 변화구(slider/curve/changeup) Quality 보정
+  clutch: number;       // 위기 집중력: clutchModifier에서 mental과 병용
+  holdRunners: number;  // 견제력: 도루 시도율 억제 계수
 }
 
 export interface BatterStats {
-  contact: number; // 컨택: 공을 맞추는 능력 → Quality 페널티
-  power: number;   // 장타력: 안타의 종류 업그레이드 확률
-  eye: number;     // 선구안: 볼/스트라이크 판단 → Quality 추가 페널티
+  contact: number;       // 컨택: 공을 맞추는 능력 → Quality 페널티
+  power: number;         // 장타력: 안타의 종류 업그레이드 확률
+  eye: number;           // 선구안: 볼/스트라이크 판단 → Quality 추가 페널티
+  discipline: number;    // 극기: STRIKE_SWING 확률 감소
+  battingClutch: number; // 클러치: jamPressureModifier 타자 저항력
+  platoon: number;       // 플래툰 내성: 반대 손 투수 대응 (50=평균)
 }
 
 export type PitchResultCode =
@@ -88,10 +95,14 @@ export interface MatchStartOptions {
 
 export function createInitialMatchState(options: MatchStartOptions = {}): MatchState {
   const pitcher: PitcherStats = {
-    command: options.pitcher?.command ?? 50,
-    velocity: options.pitcher?.velocity ?? 52,
-    staminaCap: options.pitcher?.staminaCap ?? 55,
-    mentalResil: options.pitcher?.mentalResil ?? 48,
+    command:      options.pitcher?.command      ?? 50,
+    velocity:     options.pitcher?.velocity     ?? 52,
+    staminaCap:   options.pitcher?.staminaCap   ?? 55,
+    mentalResil:  options.pitcher?.mentalResil  ?? 48,
+    control:      options.pitcher?.control      ?? 50,
+    movement:     options.pitcher?.movement     ?? 50,
+    clutch:       options.pitcher?.clutch       ?? 50,
+    holdRunners:  options.pitcher?.holdRunners  ?? 50,
   };
   const batterMean = options.batterMean ?? 50;
   const batter: BatterStats = createBatter(batterMean);
@@ -121,7 +132,14 @@ export function createInitialMatchState(options: MatchStartOptions = {}): MatchS
 export function createBatter(mean: number): BatterStats {
   const spread = 18;
   const rand = () => clamp(mean + Math.round((Math.random() * 2 - 1) * spread), 10, 95);
-  return { contact: rand(), power: rand(), eye: rand() };
+  return {
+    contact:      rand(),
+    power:        rand(),
+    eye:          rand(),
+    discipline:   rand(),
+    battingClutch: rand(),
+    platoon:      50, // 기본값 평균 — 플래툰 편향 없음
+  };
 }
 
 export function createRunner(mean: number): RunnerStats {

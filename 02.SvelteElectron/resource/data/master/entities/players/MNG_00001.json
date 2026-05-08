@@ -25,7 +25,9 @@
         "control": 50,
         "movement": 50,
         "mentality": 50,
-        "recovery": 50
+        "recovery": 50,
+        "clutch": 50,
+        "holdRunners": 50
       },
       "batting": {
         "ovr": 50,
@@ -36,10 +38,17 @@
         "speed": 50,
         "fielding": 50,
         "arm": 50,
-        "battingClutch": 50
+        "battingClutch": 50,
+        "baseInstinct": 50,
+        "bunting": 45,
+        "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 65
+      "potentialHidden": 65,
+      "primaryPosition": "SP",
+      "positionRatings": {
+        "SP": 50
+      }
     },
     "coach": {
       "specialty": "-",
@@ -57,11 +66,11 @@
       "style": "베테랑 중심",
       "experienceYears": 5,
       "stats": {
-        "tactics": 63,
-        "decision": 80,
-        "rotationMgmt": 69,
-        "bullpenMgmt": 65,
-        "moraleMgmt": 72
+        "motivation": 72,
+        "development": 50,
+        "strategy": 63,
+        "handlePressure": 80,
+        "handlePersonnel": 69
       },
       "gamePlanBias": "",
       "riskTolerance": 55
@@ -86,5 +95,7 @@
     "initialAffinity": 0,
     "arcs": [],
     "chat": {}
-  }
+  },
+  "diligence": 60,
+  "popularity": 30
 }

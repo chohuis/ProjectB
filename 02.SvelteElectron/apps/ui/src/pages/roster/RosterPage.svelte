@@ -8,9 +8,12 @@
   type RosterTab = "all" | "pitcher" | "batter" | "staff";
   type RoleTab = "player" | "coach" | "manager" | "owner";
 
+  export let filterTeamId: string = "";
+
   let tab: RosterTab = "all";
   let keyword = "";
   let selectedId = "";
+  let modalEntityId = "";
 
   function toLeagueId(stage: string): string {
     if (stage === "highschool") return "LEAGUE_HIGHSCHOOL";
@@ -52,7 +55,9 @@
   }
 
   $: myTeamId = $gameStore.protagonist.teamId;
-  $: teamRows = $masterStore.entities.filter((e) => e.teamId === myTeamId);
+  $: activeTeamId = filterTeamId || myTeamId;
+  $: teamRows = $masterStore.entities.filter((e) => e.teamId === activeTeamId);
+  $: modalEntity = modalEntityId ? $masterStore.entities.find((e) => e.id === modalEntityId) ?? null : null;
   $: normalized = keyword.trim().toLowerCase();
   $: searchedRows = teamRows.filter((e) => e.name.toLowerCase().includes(normalized));
 
@@ -64,11 +69,24 @@
     return true;
   });
 
-  $: sortedRows = [...filteredRows].sort((a, b) => a.name.localeCompare(b.name, "ko"));
+  const ROLE_ORDER: Record<string, number> = { owner: 0, manager: 1, coach: 2, player: 3 };
+
+  $: sortedRows = [...filteredRows].sort((a, b) => {
+    const roleDiff = (ROLE_ORDER[a.role] ?? 9) - (ROLE_ORDER[b.role] ?? 9);
+    if (roleDiff !== 0) return roleDiff;
+    return a.name.localeCompare(b.name, "ko");
+  });
   $: if (sortedRows.length > 0 && !sortedRows.some((x) => x.id === selectedId)) selectedId = sortedRows[0].id;
   $: selected = sortedRows.find((x) => x.id === selectedId) ?? null;
 
   $: selectedStats = selected ? $seasonStore.stats[selected.id] ?? null : null;
+  $: modalStats = modalEntity ? $seasonStore.stats[modalEntity.id] ?? null : null;
+
+  function statTone(v: number): string {
+    if (v >= 70) return "good";
+    if (v >= 50) return "mid";
+    return "low";
+  }
 </script>
 
 <section class="page">
@@ -100,7 +118,13 @@
           {:else}
             {#each sortedRows as row}
               {@const p = (row.details as any)?.player}
-              <button class="data-row" class:selected={selected?.id === row.id} on:click={() => (selectedId = row.id)}>
+              <button
+                class="data-row"
+                class:selected={selected?.id === row.id}
+                on:click={() => (selectedId = row.id)}
+                on:dblclick={() => (modalEntityId = row.id)}
+                title="더블클릭: 상세 보기"
+              >
                 <strong>{row.name}</strong>
                 <span>{roleLabel(row.role as RoleTab)}</span>
                 <span>{row.role === "player" ? (p?.position ?? "-") : "-"}</span>
@@ -158,8 +182,15 @@
               <h4>스태프 정보</h4>
               <div class="ability-grid">
                 <div><span>전문</span><strong>{c?.specialty ?? m?.style ?? "-"}</strong></div>
-                <div><span>리더십</span><strong>{c?.stats?.leadership ?? m?.stats?.moraleMgmt ?? "-"}</strong></div>
-                <div><span>메모</span><strong>{selected.notes || "-"}</strong></div>
+                {#if selected.role === "coach"}
+                  <div><span>지도력</span><strong>{c?.stats?.teaching ?? "-"}</strong></div>
+                  <div><span>경험</span><strong>Lv.{c?.stats?.experience ?? "-"}</strong></div>
+                {:else if selected.role === "manager"}
+                  <div><span>전술</span><strong>{m?.stats?.strategy ?? "-"}</strong></div>
+                  <div><span>동기부여</span><strong>{m?.stats?.motivation ?? "-"}</strong></div>
+                {:else}
+                  <div><span>메모</span><strong>{selected.notes || "-"}</strong></div>
+                {/if}
               </div>
             </section>
           {/if}
@@ -170,6 +201,172 @@
     </div>
   </article>
 </section>
+
+{#if modalEntity}
+  {@const mp = (modalEntity.details as any)?.player}
+  {@const mc = (modalEntity.details as any)?.coach}
+  {@const mm = (modalEntity.details as any)?.manager}
+  <div class="modal-overlay" on:click|self={() => (modalEntityId = "")}>
+    <div class="modal-box">
+      <button class="modal-close" on:click={() => (modalEntityId = "")}>✕</button>
+      <h3 class="modal-name">{modalEntity.name}</h3>
+      <p class="modal-meta">
+        {roleLabel(modalEntity.role as RoleTab)} · {modalEntity.age}세
+        {#if mp?.position} · {mp.position}{/if}
+        {#if mp?.handedness} · {mp.handedness}투{/if}
+      </p>
+      {#if modalEntity.notes}
+        <p class="modal-notes">{modalEntity.notes}</p>
+      {/if}
+
+      {#if modalEntity.role === "player" && mp}
+        {@const isPitcher = mp.playerType === "pitcher" || mp.playerType === "twoWay"}
+        {@const isBatter  = mp.playerType === "batter"  || mp.playerType === "twoWay"}
+
+        {#if isPitcher}
+          <section class="modal-section">
+            <h4>투구 능력치</h4>
+            <div class="modal-stat-grid">
+              {#each [
+                ["OVR",    mp.pitching?.ovr],
+                ["구위",   mp.pitching?.velocity],
+                ["커맨드", mp.pitching?.command],
+                ["제구",   mp.pitching?.control],
+                ["무브먼트", mp.pitching?.movement],
+                ["멘탈",   mp.pitching?.mentality],
+                ["스태미나", mp.pitching?.stamina],
+                ["회복력", mp.pitching?.recovery],
+                ["위기집중", mp.pitching?.clutch],
+                ["견제력", mp.pitching?.holdRunners],
+              ] as [lbl, val]}
+                <div class="modal-stat-item">
+                  <span class="ms-label">{lbl}</span>
+                  <span class="ms-value {statTone(typeof val === 'number' ? val : 50)}">{val ?? "-"}</span>
+                </div>
+              {/each}
+            </div>
+          </section>
+        {/if}
+
+        {#if isBatter}
+          <section class="modal-section">
+            <h4>타격 능력치</h4>
+            <div class="modal-stat-grid">
+              {#each [
+                ["OVR",    mp.batting?.ovr],
+                ["컨택",   mp.batting?.contact],
+                ["장타력", mp.batting?.power],
+                ["선구안", mp.batting?.eye],
+                ["극기",   mp.batting?.discipline],
+                ["클러치", mp.batting?.battingClutch],
+                ["플래툰", mp.batting?.platoon],
+                ["번트",   mp.batting?.bunting],
+              ] as [lbl, val]}
+                <div class="modal-stat-item">
+                  <span class="ms-label">{lbl}</span>
+                  <span class="ms-value {statTone(typeof val === 'number' ? val : 50)}">{val ?? "-"}</span>
+                </div>
+              {/each}
+            </div>
+          </section>
+          <section class="modal-section">
+            <h4>주루·수비</h4>
+            <div class="modal-stat-grid">
+              {#each [
+                ["주력",     mp.batting?.speed],
+                ["주루판단", mp.batting?.baseInstinct],
+                ["수비",     mp.batting?.fielding],
+                ["어깨",     mp.batting?.arm],
+              ] as [lbl, val]}
+                <div class="modal-stat-item">
+                  <span class="ms-label">{lbl}</span>
+                  <span class="ms-value {statTone(typeof val === 'number' ? val : 50)}">{val ?? "-"}</span>
+                </div>
+              {/each}
+            </div>
+          </section>
+        {/if}
+
+        <section class="modal-section">
+          <h4>시즌 누적</h4>
+          {#if modalStats?.type === "pitcher"}
+            <div class="modal-stat-grid">
+              {#each [
+                ["G",    modalStats.g],
+                ["IP",   modalStats.ip],
+                ["ERA",  modalStats.era?.toFixed(2)],
+                ["WHIP", modalStats.whip?.toFixed(2)],
+                ["K",    modalStats.k],
+                ["BB",   modalStats.bb],
+              ] as [lbl, val]}
+                <div class="modal-stat-item">
+                  <span class="ms-label">{lbl}</span>
+                  <span class="ms-value mid">{val ?? "-"}</span>
+                </div>
+              {/each}
+            </div>
+          {:else if modalStats?.type === "batter"}
+            <div class="modal-stat-grid">
+              {#each [
+                ["G",   modalStats.g],
+                ["AVG", modalStats.avg?.toFixed(3)],
+                ["OPS", modalStats.ops?.toFixed(3)],
+                ["HR",  modalStats.hr],
+                ["RBI", modalStats.rbi],
+                ["SB",  modalStats.sb],
+              ] as [lbl, val]}
+                <div class="modal-stat-item">
+                  <span class="ms-label">{lbl}</span>
+                  <span class="ms-value mid">{val ?? "-"}</span>
+                </div>
+              {/each}
+            </div>
+          {:else}
+            <p class="modal-pending">집계 중</p>
+          {/if}
+        </section>
+      {:else if modalEntity.role === "coach" && mc}
+        <section class="modal-section">
+          <h4>코치 능력치</h4>
+          <div class="modal-stat-grid">
+            {#each [
+              ["전문",     mc.specialty],
+              ["지도력",   mc.stats?.teaching],
+              ["분석",     mc.stats?.analytics],
+              ["경험레벨", mc.stats?.experience],
+            ] as [lbl, val]}
+              <div class="modal-stat-item">
+                <span class="ms-label">{lbl}</span>
+                <span class="ms-value {typeof val === 'number' ? statTone(val) : 'mid'}">{val ?? "-"}</span>
+              </div>
+            {/each}
+          </div>
+          {#if mc.trainingBuffs}
+            <p class="modal-buff">{mc.trainingBuffs}</p>
+          {/if}
+        </section>
+      {:else if modalEntity.role === "manager" && mm}
+        <section class="modal-section">
+          <h4>감독 능력치</h4>
+          <div class="modal-stat-grid">
+            {#each [
+              ["동기부여",   mm.stats?.motivation],
+              ["선수육성",   mm.stats?.development],
+              ["전술",       mm.stats?.strategy],
+              ["위기대처",   mm.stats?.handlePressure],
+              ["선수기용",   mm.stats?.handlePersonnel],
+            ] as [lbl, val]}
+              <div class="modal-stat-item">
+                <span class="ms-label">{lbl}</span>
+                <span class="ms-value {typeof val === 'number' ? statTone(val) : 'mid'}">{val ?? "-"}</span>
+              </div>
+            {/each}
+          </div>
+        </section>
+      {/if}
+    </div>
+  </div>
+{/if}
 
 <style>
   .page { display:grid; grid-template-rows:auto minmax(0,1fr); gap:12px; height:100%; min-height:0; overflow:hidden; }
@@ -200,5 +397,42 @@
   .pending { color:#9db2d8; font-size:12px; }
   .empty { color:#9db2d8; font-size:12px; padding:8px; }
   @media (max-width:1180px){ .content-grid { grid-template-columns:1fr; } .detail-card { display:none; } }
+
+  /* ── 상세 모달 ── */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 200;
+  }
+  .modal-box {
+    position: relative;
+    background: #111d34; border: 1px solid #3a5a96; border-radius: 14px;
+    padding: 24px 28px; width: 520px; max-width: 90vw; max-height: 80vh;
+    overflow-y: auto; display: grid; gap: 10px;
+  }
+  .modal-close {
+    position: absolute; top: 12px; right: 14px;
+    background: none; border: none; color: #7a9ac8; font-size: 16px; cursor: pointer;
+  }
+  .modal-name { margin: 0; font-size: 20px; font-weight: 700; color: #f1f6ff; }
+  .modal-meta { margin: 0; color: #aebddd; font-size: 13px; }
+  .modal-notes { margin: 0; color: #8ca8cc; font-size: 12px; font-style: italic; }
+  .modal-buff { margin: 0; color: #8acf9a; font-size: 12px; }
+  .modal-pending { margin: 0; color: #9db2d8; font-size: 12px; }
+  .modal-section { display: grid; gap: 8px; }
+  .modal-section h4 { margin: 0; color: #dbe8ff; font-size: 13px; border-bottom: 1px solid #253451; padding-bottom: 4px; }
+  .modal-stat-grid {
+    display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 6px;
+  }
+  .modal-stat-item {
+    border: 1px solid #2e486f; border-radius: 8px; background: #152b4f;
+    padding: 8px 6px; display: flex; flex-direction: column; align-items: center; gap: 3px;
+  }
+  .ms-label { color: #9eb6de; font-size: 10px; }
+  .ms-value { font-size: 16px; font-weight: 700; }
+  .ms-value.good { color: #68de92; }
+  .ms-value.mid { color: #d8e8ff; }
+  .ms-value.low { color: #ffb58a; }
 </style>
 
