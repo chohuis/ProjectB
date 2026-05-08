@@ -13,6 +13,21 @@ import type { EventContext } from "../types/event";
 import type { MessageItem } from "../types/main";
 import type { ProtagonistSave } from "../types/save";
 
+// ── 시설 레벨 → 훈련 효율 계수 ──────────────────────────────────────────────
+function calcFacilityEffMod(p: ProtagonistSave, teamTier?: string): number {
+  switch (p.careerStage) {
+    case "highschool":  return 0.92;
+    case "university":  return 0.95;
+    case "military":    return 0.88;
+    case "independent": return 0.85;
+    case "pro":
+    case "pro_kbl":
+    case "pro_abl":
+      return teamTier === "1군" ? 1.05 : 0.95;
+    default: return 0.92;
+  }
+}
+
 // ── 주간 순수입 계산 (임시 - 실제 지출 나중에 연결) ──────────────────────────
 function calcWeeklyNet(p: ProtagonistSave): number {
   switch (p.careerStage) {
@@ -359,7 +374,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
   // 대학 전공 훈련 효율 보너스
   const majorEffBonus = isUniversity ? getUniversityEffBonus(g.schoolState.universityMajor) : 0;
 
-  // 코치 스탯 기반 효율 보너스 (teaching 50 기준, +1% per 5 points above)
+  // 코치 스탯 기반 효율 보너스 (teaching 50 기준, +4%/10pt)
   const master = get(masterStore);
   const pitchCoach = master.entities.find(
     (e) => e.role === "coach" && e.teamId === g.protagonist.teamId &&
@@ -368,26 +383,71 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
   const coachTeaching = (pitchCoach?.details as import("../stores/master").EntityDetails)?.coach?.stats?.teaching ?? 50;
   const coachEffBonus = Math.max(-0.10, Math.min(0.20, (coachTeaching - 50) * 0.004));
 
+  // 시설 레벨 효율 계수
+  const teamRef       = master.teams.find((t) => t.id === g.protagonist.teamId);
+  const facilityEffMod = calcFacilityEffMod(g.protagonist, teamRef?.tier);
+
   // 사기 슬럼프 페널티: 사기 35 미만 3주 연속 → 훈련 효율 -30%
   const prevLowMoraleWeeks = g.protagonist.consecutiveLowMoraleWeeks ?? 0;
   const isLowMorale        = g.protagonist.morale < 35;
   const newLowMoraleWeeks  = isLowMorale ? prevLowMoraleWeeks + 1 : 0;
   const slumpPenalty       = newLowMoraleWeeks >= 3 ? 0.70 : 1.0;
 
-  const finalEffMod = studyResult.efficiencyMod * (1 + majorEffBonus + coachEffBonus) * slumpPenalty;
+  // 부상 카운터 + 부상 발생 판정
+  const prevHighFatigueWeeks  = g.protagonist.consecutiveHighFatigueWeeks ?? 0;
+  const isHighFatigue         = g.protagonist.fatigue >= 85;
+  const newHighFatigueWeeks   = isHighFatigue ? prevHighFatigueWeeks + 1 : 0;
+  const alreadyInjured        = !!g.protagonist.injury;
+
+  let injuryUpdate: ProtagonistSave["injury"] | undefined = g.protagonist.injury;
+  let injuryJustOccurred = false;
+  let injuryJustHealed   = false;
+
+  if (!alreadyInjured && newHighFatigueWeeks >= 2) {
+    const chance = Math.min(0.60, 0.25 * (newHighFatigueWeeks - 1));
+    if (Math.random() < chance) {
+      const type = g.protagonist.fatigue >= 95 ? "moderate" : "light";
+      injuryUpdate       = { type, recoveryWeeksLeft: type === "moderate" ? 3 : 2 };
+      injuryJustOccurred = true;
+    }
+  } else if (alreadyInjured && g.protagonist.injury) {
+    const weeksLeft = g.protagonist.injury.recoveryWeeksLeft - 1;
+    if (weeksLeft <= 0) {
+      injuryUpdate      = undefined;
+      injuryJustHealed  = true;
+    } else {
+      injuryUpdate = { ...g.protagonist.injury, recoveryWeeksLeft: weeksLeft };
+    }
+  }
+
+  // 부상 중 훈련 효율 -80%
+  const injuryEffMod = alreadyInjured && !injuryJustHealed ? 0.20 : 1.0;
+
+  const finalEffMod = studyResult.efficiencyMod * (1 + majorEffBonus + coachEffBonus)
+    * facilityEffMod * slumpPenalty * injuryEffMod;
 
   const growth = calcTrainingGrowth(g.protagonist, g.trainingPlan, finalEffMod);
 
-  // 슬럼프/코치 로그
+  // 슬럼프/코치/시설/부상 로그
   if (newLowMoraleWeeks >= 3) {
     growth.logs.push(`[슬럼프] 사기 저하 ${newLowMoraleWeeks}주 연속 — 훈련 효율 -30%`);
   }
   if (coachEffBonus > 0.01) {
     growth.logs.push(`[코치] 투수 코치 지도 보너스 +${Math.round(coachEffBonus * 100)}%`);
   }
+  if (injuryJustOccurred && injuryUpdate) {
+    const label = injuryUpdate.type === "moderate" ? "중상" : "경상";
+    growth.logs.push(`[부상] ${label} 발생 — ${injuryUpdate.recoveryWeeksLeft}주 회복 필요. 훈련 제한 적용`);
+  } else if (alreadyInjured && !injuryJustHealed && injuryUpdate) {
+    growth.logs.push(`[부상] 회복 중 (${injuryUpdate.recoveryWeeksLeft}주 남음) — 훈련 효율 -80%`);
+  } else if (injuryJustHealed) {
+    growth.logs.push(`[부상] 회복 완료 — 정상 훈련 재개`);
+  }
 
-  // 슬럼프 카운터 갱신
-  growth.protagonistPatch.consecutiveLowMoraleWeeks = newLowMoraleWeeks;
+  // 카운터·부상 상태 갱신
+  growth.protagonistPatch.consecutiveLowMoraleWeeks   = newLowMoraleWeeks;
+  growth.protagonistPatch.consecutiveHighFatigueWeeks  = injuryJustOccurred ? 0 : newHighFatigueWeeks;
+  growth.protagonistPatch.injury                       = injuryUpdate;
 
   gameStore.applyMoneyChange(calcWeeklyNet(g.protagonist));
   gameStore.recordTrainingWeek();

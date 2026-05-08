@@ -89,11 +89,39 @@
   $: coachRiskMod = Math.max(0.85, 1.0 - coachTeaching * 0.003);    // 50→0.85, 75→0.775 → clamp 0.85
   $: coachMod     = { fatigue: coachFatMod, risk: coachRiskMod };
 
-  const facilityMod = { fatigue: 0.90, risk: 0.95 };
+  // 시설 레벨 기반 동적 facilityMod
+  $: teamRef = $masterStore.teams.find((t) => t.id === protagonist.teamId);
+  $: facilityFatMod = (() => {
+    switch (protagonist.careerStage) {
+      case "highschool":  return 0.92;
+      case "university":  return 0.95;
+      case "military":    return 0.90;
+      case "independent": return 0.88;
+      default: return teamRef?.tier === "1군" ? 0.88 : 0.94;
+    }
+  })();
+  $: facilityRiskMod = (() => {
+    switch (protagonist.careerStage) {
+      case "highschool":  return 0.97;
+      case "university":  return 0.96;
+      case "military":    return 0.98;
+      case "independent": return 0.99;
+      default: return teamRef?.tier === "1군" ? 0.90 : 0.95;
+    }
+  })();
+  $: facilityMod = { fatigue: facilityFatMod, risk: facilityRiskMod };
 
   // 사기 슬럼프 상태
   $: lowMoraleWeeks = protagonist.consecutiveLowMoraleWeeks ?? 0;
   $: isSlump        = lowMoraleWeeks >= 3;
+
+  // 부상 상태
+  $: injury        = protagonist.injury;
+  $: isInjured     = !!injury;
+  $: highFatWeeks  = protagonist.consecutiveHighFatigueWeeks ?? 0;
+
+  // 훈련 히스토리: logs에서 [훈련] 항목 추출
+  $: trainingHistoryLogs = $gameStore.logs.filter((l) => l.startsWith("[훈련]")).slice(0, 6);
 
   // ── 구종 시스템 ──────────────────────────────────────────────
   const STAT_LABEL: Record<string, string> = {
@@ -210,7 +238,7 @@
   }
 
   function canStart(pitch: PitchCandidate): boolean {
-    return !trainingPitch && projectedFatigue < 80 &&
+    return !trainingPitch && !isInjured && projectedFatigue < 80 &&
       (pitch.status === "discovered" || (pitch.status === "learned" && pitch.grade < 5));
   }
 
@@ -250,6 +278,20 @@
     {#if tab === "plan"}
       <div class="content-grid">
         <section class="panel daily-plan">
+          {#if isInjured && injury}
+            <div class="injury-banner">
+              <span class="injury-icon">🩹</span>
+              <span>
+                <strong>{injury.type === "moderate" ? "중상" : injury.type === "severe" ? "중증" : "경상"}</strong>
+                회복 중 — 잔여 <strong>{injury.recoveryWeeksLeft}주</strong> · 훈련 효율 -80%
+              </span>
+            </div>
+          {:else if highFatWeeks >= 2}
+            <div class="injury-risk-banner">
+              피로 위험 구간 {highFatWeeks}주 연속 — 부상 위험 상승 중
+            </div>
+          {/if}
+
           <h3>훈련 슬롯 (3슬롯)</h3>
 
           <label>
@@ -458,33 +500,54 @@
     {:else}
       <div class="content-grid">
         <section class="panel">
-          <h3>리스크 추적</h3>
+          <h3>현재 상태</h3>
           <ul>
-            <li><span>현재 피로도</span><strong class={riskTone(realFatigue >= 70 ? 20 : realFatigue >= 50 ? 13 : 0)}>{realFatigue}</strong></li>
-            <li><span>현재 컨디션</span><strong>{realCondition}</strong></li>
-            <li><span>현재 사기</span><strong>{realMorale}</strong></li>
-            <li><span>부상 위험 추정</span><strong class={riskTone(projectedRisk)}>{projectedRisk}%</strong></li>
+            <li><span>피로도</span><strong class={riskTone(realFatigue >= 70 ? 20 : realFatigue >= 50 ? 13 : 0)}>{realFatigue}</strong></li>
+            <li><span>컨디션</span><strong>{realCondition}</strong></li>
+            <li><span>사기</span><strong>{realMorale}</strong></li>
+            <li><span>부상 위험</span><strong class={riskTone(projectedRisk)}>{projectedRisk}%</strong></li>
+            <li><span>시설 등급</span><strong>{teamRef?.tier ?? protagonist.careerStage}</strong></li>
+            <li><span>시설 피로 보정</span><strong>×{facilityMod.fatigue.toFixed(2)}</strong></li>
           </ul>
 
-          <h3>자동 경고 룰</h3>
+          {#if isInjured && injury}
+            <p class="risk-note danger">
+              부상 중 ({injury.type === "moderate" ? "중상" : injury.type === "severe" ? "중증" : "경상"}) — {injury.recoveryWeeksLeft}주 회복 필요
+            </p>
+          {:else if highFatWeeks >= 2}
+            <p class="risk-note warn">피로 위험 {highFatWeeks}주 연속 — 부상 발생 가능</p>
+          {/if}
+
+          <h3>경고 룰</h3>
           <ul>
-            <li>피로 70+: 훈련 XP ×0.70 페널티</li>
-            <li>피로 85+: 훈련 XP ×0.50 페널티</li>
-            <li>사기 35 미만 3주 연속: 슬럼프 (훈련 효율 -30%)</li>
+            <li>피로 70+: XP ×0.70 / 85+: XP ×0.50</li>
+            <li>피로 85+ 2주 연속: 부상 위험 25%+</li>
+            <li>사기 35 미만 3주 연속: 슬럼프 (-30%)</li>
           </ul>
           {#if isSlump}
-            <p class="risk-note danger">슬럼프 진행중 ({lowMoraleWeeks}주 연속) — 즉시 사기 회복 필요</p>
+            <p class="risk-note danger">슬럼프 진행중 ({lowMoraleWeeks}주 연속)</p>
           {:else if lowMoraleWeeks > 0}
-            <p class="risk-note warn">사기 저하 {lowMoraleWeeks}주 연속 (3주 달성 시 슬럼프)</p>
+            <p class="risk-note warn">사기 저하 {lowMoraleWeeks}주차</p>
           {:else}
-            <p class="risk-note safe">사기 정상 — 슬럼프 위험 없음</p>
+            <p class="risk-note safe">정상 상태 — 슬럼프 위험 없음</p>
           {/if}
         </section>
 
         <aside class="panel">
-          <h3>최근 활동 로그</h3>
+          <h3>훈련 히스토리</h3>
+          {#if trainingHistoryLogs.length > 0}
+            <ol class="history-list">
+              {#each trainingHistoryLogs as log}
+                <li>{log.replace("[훈련] ", "")}</li>
+              {/each}
+            </ol>
+          {:else}
+            <p class="empty-text">아직 훈련 기록이 없습니다.</p>
+          {/if}
+
+          <h3 style="margin-top:10px">최근 활동</h3>
           <ol>
-            {#each recentLogs as log}
+            {#each recentLogs.slice(0, 4) as log}
               <li>{log}</li>
             {/each}
           </ol>
@@ -842,6 +905,43 @@
 
   .empty-text { color: #6a85b0; font-size: 12px; }
   .hint       { color: #9fb5db; font-size: 12px; }
+
+  /* 부상 배너 */
+  .injury-banner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #8d4a3f;
+    border-radius: 8px;
+    background: #3b1f1b;
+    padding: 8px 10px;
+    font-size: 13px;
+    color: #ffc0b6;
+  }
+
+  .injury-icon { font-size: 16px; }
+
+  .injury-risk-banner {
+    border: 1px solid #8a6f3a;
+    border-radius: 8px;
+    background: #3d311a;
+    padding: 7px 10px;
+    font-size: 12px;
+    color: #ffe0a2;
+  }
+
+  .history-list {
+    display: grid;
+    gap: 5px;
+  }
+
+  .history-list li {
+    border-color: #2a4a6f;
+    background: #0f1e38;
+    font-size: 12px;
+    color: #b8d0f5;
+    justify-content: flex-start;
+  }
 
   @media (max-width: 1180px) {
     .content-grid { grid-template-columns: 1fr; }

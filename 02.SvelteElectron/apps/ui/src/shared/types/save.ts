@@ -142,7 +142,12 @@ export interface ProtagonistSave {
   faNegotiationRound: number;
   faUnsignedWeeks: number;
   contract?: ProContract;
-  consecutiveLowMoraleWeeks: number; // 사기 35 미만 연속 주차 카운터
+  consecutiveLowMoraleWeeks: number;  // 사기 35 미만 연속 주차 카운터
+  consecutiveHighFatigueWeeks: number; // 피로 85 이상 연속 주차 카운터
+  injury?: {
+    type: "light" | "moderate" | "severe";
+    recoveryWeeksLeft: number;
+  };
 }
 
 // ── 시즌 스탯 (선수 1명분) ─────────────────────────────────────
