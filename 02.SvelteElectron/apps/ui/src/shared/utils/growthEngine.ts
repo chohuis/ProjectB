@@ -1,4 +1,6 @@
 import type {
+  PitchEntry,
+  PitchGrade,
   PitchingAttributes,
   PitchingStatKey,
   BattingAttributes,
@@ -6,6 +8,13 @@ import type {
   ProtagonistSave,
   TrainingPlanState,
 } from "../types/save";
+
+const PITCH_NAMES: Record<string, string> = {
+  PITCH_FASTBALL: "패스트볼", PITCH_SINKER: "싱커", PITCH_CUTTER: "커터",
+  PITCH_SLIDER: "슬라이더", PITCH_CURVE: "커브", PITCH_CHANGEUP: "체인지업",
+  PITCH_SPLITTER: "스플리터", PITCH_FORKBALL: "포크볼",
+  PITCH_SCREWBALL: "스크루볼", PITCH_KNUCKLEBALL: "너클볼",
+};
 
 // ── 투수 스탯 레이블 ───────────────────────────────────────────
 const PITCHING_LABELS: Record<PitchingStatKey, string> = {
@@ -43,6 +52,8 @@ interface ProgramConfig {
   fatigueCost: number;
   conditionCost: number;
   isRecovery?: boolean;
+  isPitchDev?: boolean;      // 구종 개발 전용
+  progressPerWeek?: number;  // 주당 progress 획득량
   type: "pitching" | "batting" | "shared";
 }
 
@@ -64,6 +75,8 @@ const TRAINING_MAP: Record<string, ProgramConfig> = {
   TRN_FIELDING:    { type: "batting",  primaryStat: "fielding",     secondaryStat: "arm",          baseXP: 3.0, fatigueCost: 9,   conditionCost: 3 },
   TRN_BUNTING:     { type: "batting",  primaryStat: "bunting",      secondaryStat: "contact",      baseXP: 2.0, fatigueCost: 5,   conditionCost: 2 },
   TRN_BCLUTCH:     { type: "batting",  primaryStat: "battingClutch",secondaryStat: "discipline",   baseXP: 2.5, fatigueCost: 5,   conditionCost: 2 },
+  // 구종 개발 (trainingPitchState 대상 구종의 progress 누적)
+  TRN_PITCH_DEV:   { type: "pitching", primaryStat: "command",                                     baseXP: 0,   fatigueCost: 10,  conditionCost: 2,   isPitchDev: true, progressPerWeek: 20 },
   // 공용 회복
   TRN_RECOVERY:    { type: "shared",   primaryStat: "recovery",                                    baseXP: 0,   fatigueCost: -8,  conditionCost: -10, isRecovery: true },
 };
@@ -191,6 +204,7 @@ export function calcTrainingGrowth(
 
   let fatigueDelta   = -5;
   let conditionDelta =  3;
+  let pitchDevGain   = 0;
 
   function applyProgram(id: string | null, mult: number) {
     if (!id) return;
@@ -199,6 +213,13 @@ export function calcTrainingGrowth(
     fatigueDelta   += cfg.fatigueCost   * mult;
     conditionDelta -= cfg.conditionCost * mult;
     if (cfg.isRecovery) return;
+    if (cfg.isPitchDev) {
+      // 컨디션·피로 보정 적용
+      const condFactor = protagonist.condition / 100;
+      const fatFactor  = Math.max(0.3, 1 - protagonist.fatigue / 120);
+      pitchDevGain += (cfg.progressPerWeek ?? 20) * mult * condFactor * fatFactor * efficiencyMod;
+      return;
+    }
 
     const xp = weekXP(
       cfg.baseXP,
@@ -230,7 +251,41 @@ export function calcTrainingGrowth(
   const newBatting = { ...protagonist.batting, ...battingPatch };
   if (Object.keys(battingPatch).length > 0) newBatting.ovr = calcBattingOvr(newBatting);
 
-  const allLogs = [...pLogs, ...bLogs];
+  // ── 구종 개발 progress 처리 ────────────────────────────────────
+  let pitchesPatch: PitchEntry[] | undefined;
+  let trainingPitchStatePatch: ProtagonistSave["trainingPitchState"] | undefined;
+  const pitchLogs: string[] = [];
+
+  if (pitchDevGain > 0 && protagonist.trainingPitchState) {
+    const ts = protagonist.trainingPitchState;
+    const newProgress = ts.progress + pitchDevGain;
+    const pitchName   = PITCH_NAMES[ts.id] ?? ts.id;
+
+    if (newProgress >= 100) {
+      const currentPitches = [...(protagonist.pitches ?? [])];
+      const existingIdx = currentPitches.findIndex((p) => p.id === ts.id);
+
+      if (existingIdx >= 0) {
+        const cur = currentPitches[existingIdx];
+        if (cur.grade < 5) {
+          const nextGrade = (cur.grade + 1) as PitchGrade;
+          currentPitches[existingIdx] = { ...cur, grade: nextGrade };
+          pitchLogs.push(`${pitchName} 숙련도 ${cur.grade}→${nextGrade}`);
+        } else {
+          pitchLogs.push(`${pitchName} 이미 마스터`);
+        }
+      } else {
+        currentPitches.push({ id: ts.id, grade: 1 });
+        pitchLogs.push(`${pitchName} 습득!`);
+      }
+      pitchesPatch = currentPitches;
+      trainingPitchStatePatch = undefined;
+    } else {
+      trainingPitchStatePatch = { ...ts, progress: newProgress };
+    }
+  }
+
+  const allLogs = [...pLogs, ...bLogs, ...pitchLogs];
 
   return {
     protagonistPatch: {
@@ -240,6 +295,10 @@ export function calcTrainingGrowth(
       battingXP:   updatedBattingXP,
       fatigue:     clamp(protagonist.fatigue   + fatigueDelta,   0, 100),
       condition:   clamp(protagonist.condition + conditionDelta, 0, 100),
+      ...(pitchesPatch          !== undefined ? { pitches: pitchesPatch }                       : {}),
+      ...(pitchDevGain > 0 && protagonist.trainingPitchState
+          ? { trainingPitchState: trainingPitchStatePatch }
+          : {}),
     },
     logs: allLogs.length > 0 ? [`[훈련] ${allLogs.join(", ")}`] : [],
     fameDelta: 0,

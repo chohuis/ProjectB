@@ -87,6 +87,17 @@
     if (v >= 50) return "mid";
     return "low";
   }
+
+  const PITCH_NAMES: Record<string, string> = {
+    PITCH_FASTBALL: "패스트볼", PITCH_SINKER: "싱커", PITCH_CUTTER: "커터",
+    PITCH_SLIDER: "슬라이더", PITCH_CURVE: "커브", PITCH_CHANGEUP: "체인지업",
+    PITCH_SPLITTER: "스플리터", PITCH_FORKBALL: "포크볼",
+    PITCH_SCREWBALL: "스크루볼", PITCH_KNUCKLEBALL: "너클볼",
+  };
+
+  const GRADE_LABEL: Record<number, string> = {
+    1: "습득중", 2: "기초", 3: "보통", 4: "능숙", 5: "마스터",
+  };
 </script>
 
 <section class="page">
@@ -287,6 +298,20 @@
           </section>
         {/if}
 
+        {#if isPitcher && (mp.pitches ?? []).length > 0}
+          <section class="modal-section">
+            <h4>보유 구종</h4>
+            <div class="pitch-badge-list">
+              {#each mp.pitches as pitch}
+                <span class="pitch-badge grade-{pitch.grade}">
+                  {PITCH_NAMES[pitch.id] ?? pitch.id}
+                  <span class="badge-grade">{GRADE_LABEL[pitch.grade] ?? pitch.grade}</span>
+                </span>
+              {/each}
+            </div>
+          </section>
+        {/if}
+
         <section class="modal-section">
           <h4>시즌 누적</h4>
           {#if modalStats?.type === "pitcher"}
@@ -434,5 +459,23 @@
   .ms-value.good { color: #68de92; }
   .ms-value.mid { color: #d8e8ff; }
   .ms-value.low { color: #ffb58a; }
+
+  .pitch-badge-list { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .pitch-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: #152b4f; border: 1px solid #2e486f;
+    border-radius: 6px; padding: 4px 9px; font-size: 12px;
+    font-weight: 600; color: #d5e2fd;
+  }
+
+  .badge-grade { font-size: 10px; color: #7a9ac8; font-weight: 400; }
+
+  .pitch-badge.grade-5 { border-color: #c8a030; background: #2a1e06; color: #f0c860; }
+  .pitch-badge.grade-5 .badge-grade { color: #c8a030; }
+  .pitch-badge.grade-4 { border-color: #3a7ad8; background: #0e2040; color: #88b8f8; }
+  .pitch-badge.grade-4 .badge-grade { color: #5a8fd8; }
+  .pitch-badge.grade-1 { border-color: #3a4060; background: #10142a; color: #6878a8; }
+  .pitch-badge.grade-1 .badge-grade { color: #485878; }
 </style>
 

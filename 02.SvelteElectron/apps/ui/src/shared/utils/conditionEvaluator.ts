@@ -67,7 +67,7 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
 
     // ── 구종 ──────────────────────────────────────────────────────
     case "pitch_learned":
-      return protagonist.learnedPitchIds.includes(cond.pitchId);
+      return protagonist.pitches.some((e) => e.id === cond.pitchId);
 
     case "pitch_training":
       return protagonist.trainingPitchState?.id === cond.pitchId;

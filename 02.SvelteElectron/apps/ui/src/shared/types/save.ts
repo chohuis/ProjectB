@@ -56,6 +56,14 @@ export interface CoachAttributes {
   specialty: CoachSpecialty;
 }
 
+// ── 구종 시스템 ───────────────────────────────────────────────
+export type PitchGrade = 1 | 2 | 3 | 4 | 5; // 1=습득중 2=기초 3=보통 4=능숙 5=마스터
+
+export interface PitchEntry {
+  id: string;
+  grade: PitchGrade;
+}
+
 // ── 주인공 저장 데이터 ─────────────────────────────────────────
 export type CareerStage  = "highschool" | "university" | "pro" | "independent" | "military" | "pro_kbl" | "pro_abl";
 export type PlayerType   = "pitcher" | "batter" | "twoWay";
@@ -121,7 +129,7 @@ export interface ProtagonistSave {
   battingXP: Partial<Record<BattingStatKey, number>>;
 
   // 구종 시스템
-  learnedPitchIds: string[];                           // 보유 구종 ID 목록
+  pitches: PitchEntry[];                               // 보유 구종 목록 (id + 숙련도)
   trainingPitchState?: { id: string; progress: number }; // 현재 훈련 중인 구종
   money: number;
   fame: number;

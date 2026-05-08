@@ -1,5 +1,5 @@
 export interface MatchEngineTuning {
-  pitchBase: Record<"fastball" | "slider" | "curve" | "changeup", number>;
+  pitchBase: Record<"fastball" | "sinker" | "cutter" | "slider" | "curve" | "changeup" | "splitter" | "forkball" | "screwball" | "knuckleball", number>;
   strategyBonus: Record<"aggressive" | "balanced" | "safe", number>;
   powerBonus: Record<"low" | "normal" | "high", number>;
   locationBonus: Record<1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9, number>;
@@ -23,7 +23,12 @@ export interface MatchEngineTuning {
 }
 
 export const DEFAULT_MATCH_ENGINE_TUNING: MatchEngineTuning = {
-  pitchBase: { fastball: 63, slider: 60, curve: 58, changeup: 57 },
+  pitchBase: {
+    fastball: 63, sinker: 61, cutter: 60,
+    slider: 60, curve: 58,
+    changeup: 57, splitter: 58, forkball: 57,
+    screwball: 56, knuckleball: 54,
+  },
   strategyBonus: { aggressive: 2, balanced: 0, safe: -2 },
   powerBonus: { low: -1.5, normal: 0, high: 2.8 },
   locationBonus: { 1: 3, 2: 0, 3: 3, 4: 0, 5: -4, 6: 0, 7: 3, 8: 0, 9: 3 },

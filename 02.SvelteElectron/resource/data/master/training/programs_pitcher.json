@@ -55,6 +55,15 @@
       "intensity": "low",
       "fatigueCost": -8,
       "risk": 0
+    },
+    {
+      "id": "TRN_PITCH_DEV",
+      "name": "구종 개발",
+      "focus": "pitch_dev",
+      "intensity": "medium",
+      "fatigueCost": 10,
+      "risk": 2,
+      "progressPerWeek": 20
     }
   ]
 }

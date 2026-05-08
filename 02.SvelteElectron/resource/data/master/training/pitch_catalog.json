@@ -2,21 +2,73 @@
   "pitches": [
     {
       "id": "PITCH_FASTBALL",
+      "nameKo": "패스트볼",
       "name": "Fastball",
       "group": "fastball",
       "unlockRuleId": "PITCH_UNLOCK_DEFAULT"
     },
     {
+      "id": "PITCH_SINKER",
+      "nameKo": "싱커",
+      "name": "Sinker",
+      "group": "fastball",
+      "unlockRuleId": "PITCH_UNLOCK_SINKER"
+    },
+    {
+      "id": "PITCH_CUTTER",
+      "nameKo": "커터",
+      "name": "Cutter",
+      "group": "fastball",
+      "unlockRuleId": "PITCH_UNLOCK_CUTTER"
+    },
+    {
       "id": "PITCH_SLIDER",
+      "nameKo": "슬라이더",
       "name": "Slider",
       "group": "breaking",
       "unlockRuleId": "PITCH_UNLOCK_SLIDER"
     },
     {
+      "id": "PITCH_CURVE",
+      "nameKo": "커브",
+      "name": "Curveball",
+      "group": "breaking",
+      "unlockRuleId": "PITCH_UNLOCK_CURVE"
+    },
+    {
       "id": "PITCH_CHANGEUP",
+      "nameKo": "체인지업",
       "name": "Changeup",
       "group": "offspeed",
       "unlockRuleId": "PITCH_UNLOCK_CHANGEUP"
+    },
+    {
+      "id": "PITCH_SPLITTER",
+      "nameKo": "스플리터",
+      "name": "Splitter",
+      "group": "offspeed",
+      "unlockRuleId": "PITCH_UNLOCK_SPLITTER"
+    },
+    {
+      "id": "PITCH_FORKBALL",
+      "nameKo": "포크볼",
+      "name": "Forkball",
+      "group": "offspeed",
+      "unlockRuleId": "PITCH_UNLOCK_FORKBALL"
+    },
+    {
+      "id": "PITCH_SCREWBALL",
+      "nameKo": "스크루볼",
+      "name": "Screwball",
+      "group": "offspeed",
+      "unlockRuleId": "PITCH_UNLOCK_SCREWBALL"
+    },
+    {
+      "id": "PITCH_KNUCKLEBALL",
+      "nameKo": "너클볼",
+      "name": "Knuckleball",
+      "group": "special",
+      "unlockRuleId": "PITCH_UNLOCK_KNUCKLEBALL"
     }
   ]
 }

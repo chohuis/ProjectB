@@ -49,7 +49,21 @@
       "primaryPosition": "SP",
       "positionRatings": {
         "SP": 78
-      }
+      },
+      "pitches": [
+        {
+          "id": "PITCH_FASTBALL",
+          "grade": 5
+        },
+        {
+          "id": "PITCH_FORKBALL",
+          "grade": 5
+        },
+        {
+          "id": "PITCH_SCREWBALL",
+          "grade": 5
+        }
+      ]
     },
     "coach": {
       "specialty": "-",

@@ -67,6 +67,17 @@
     if (value >= 50) return "mid";
     return "low";
   }
+
+  const PITCH_NAMES: Record<string, string> = {
+    PITCH_FASTBALL: "패스트볼", PITCH_SINKER: "싱커", PITCH_CUTTER: "커터",
+    PITCH_SLIDER: "슬라이더", PITCH_CURVE: "커브", PITCH_CHANGEUP: "체인지업",
+    PITCH_SPLITTER: "스플리터", PITCH_FORKBALL: "포크볼",
+    PITCH_SCREWBALL: "스크루볼", PITCH_KNUCKLEBALL: "너클볼",
+  };
+
+  const GRADE_LABEL: Record<number, string> = {
+    1: "습득중", 2: "기초", 3: "보통", 4: "능숙", 5: "마스터",
+  };
 </script>
 
 <section class="page">
@@ -122,6 +133,22 @@
     {/each}
   </section>
 
+  {#if $gameStore.protagonist.playerType === "pitcher" || $gameStore.protagonist.playerType === "twoWay"}
+    {#if ($gameStore.protagonist.pitches ?? []).length > 0}
+      <article class="card pitches-card">
+        <h3>보유 구종</h3>
+        <div class="pitch-list">
+          {#each $gameStore.protagonist.pitches as pitch}
+            <div class="pitch-item grade-{pitch.grade}">
+              <span class="pitch-name">{PITCH_NAMES[pitch.id] ?? pitch.id}</span>
+              <span class="pitch-grade">{GRADE_LABEL[pitch.grade] ?? pitch.grade}</span>
+            </div>
+          {/each}
+        </div>
+      </article>
+    {/if}
+  {/if}
+
   <article class="card changes-card">
     <h3>최근 활동</h3>
     <ul class="changes-list">
@@ -137,7 +164,7 @@
 <style>
   .page {
     display: grid;
-    grid-template-rows: auto auto minmax(0, 1fr) auto;
+    grid-template-rows: auto auto minmax(0, 1fr) auto auto;
     gap: 12px;
     height: 100%;
     min-height: 0;
@@ -304,6 +331,51 @@
     color: #e4edff;
     font-size: 14px;
   }
+
+  .pitches-card h3 {
+    margin-bottom: 10px;
+  }
+
+  .pitch-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .pitch-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    background: #152b4f;
+    border: 1px solid #2e486f;
+    border-radius: 8px;
+    padding: 8px 12px;
+    min-width: 72px;
+  }
+
+  .pitch-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #d5e2fd;
+  }
+
+  .pitch-grade {
+    font-size: 11px;
+    color: #7a9ac8;
+  }
+
+  .pitch-item.grade-5 { border-color: #c8a030; background: #2a1e06; }
+  .pitch-item.grade-5 .pitch-name { color: #f0c860; }
+  .pitch-item.grade-5 .pitch-grade { color: #c8a030; }
+
+  .pitch-item.grade-4 { border-color: #3a7ad8; background: #0e2040; }
+  .pitch-item.grade-4 .pitch-name { color: #88b8f8; }
+  .pitch-item.grade-4 .pitch-grade { color: #5a8fd8; }
+
+  .pitch-item.grade-1 { border-color: #3a4060; background: #10142a; }
+  .pitch-item.grade-1 .pitch-name { color: #6878a8; }
+  .pitch-item.grade-1 .pitch-grade { color: #485878; }
 
   @media (max-width: 960px) {
     .profile-card {

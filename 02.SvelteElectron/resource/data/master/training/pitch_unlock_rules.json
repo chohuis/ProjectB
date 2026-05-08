@@ -1,15 +1,59 @@
 {
   "rules": [
-    { "id": "PITCH_UNLOCK_DEFAULT", "type": "always", "params": {} },
+    {
+      "id": "PITCH_UNLOCK_DEFAULT",
+      "type": "always",
+      "params": {}
+    },
+    {
+      "id": "PITCH_UNLOCK_SINKER",
+      "type": "min_stat",
+      "params": { "stat": "movement", "value": 50 }
+    },
+    {
+      "id": "PITCH_UNLOCK_CUTTER",
+      "type": "min_stat",
+      "params": { "stat": "command", "value": 55 }
+    },
     {
       "id": "PITCH_UNLOCK_SLIDER",
       "type": "min_stat",
       "params": { "stat": "command", "value": 52 }
     },
     {
+      "id": "PITCH_UNLOCK_CURVE",
+      "type": "min_stat",
+      "params": { "stat": "movement", "value": 52 }
+    },
+    {
       "id": "PITCH_UNLOCK_CHANGEUP",
       "type": "min_stat",
-      "params": { "stat": "mental", "value": 50 }
+      "params": { "stat": "mentality", "value": 50 }
+    },
+    {
+      "id": "PITCH_UNLOCK_SPLITTER",
+      "type": "min_stat",
+      "params": { "stat": "control", "value": 55 }
+    },
+    {
+      "id": "PITCH_UNLOCK_FORKBALL",
+      "type": "min_stat",
+      "params": { "stat": "control", "value": 58 }
+    },
+    {
+      "id": "PITCH_UNLOCK_SCREWBALL",
+      "type": "multi_stat",
+      "params": {
+        "conditions": [
+          { "stat": "movement", "value": 60 },
+          { "stat": "command", "value": 55 }
+        ]
+      }
+    },
+    {
+      "id": "PITCH_UNLOCK_KNUCKLEBALL",
+      "type": "min_stat",
+      "params": { "stat": "command", "value": 65 }
     }
   ]
 }

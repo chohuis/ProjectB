@@ -49,7 +49,17 @@
       "primaryPosition": "RP",
       "positionRatings": {
         "RP": 49
-      }
+      },
+      "pitches": [
+        {
+          "id": "PITCH_FASTBALL",
+          "grade": 1
+        },
+        {
+          "id": "PITCH_SINKER",
+          "grade": 2
+        }
+      ]
     },
     "coach": {
       "specialty": "-",

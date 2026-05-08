@@ -3,7 +3,7 @@
   import { gameStore } from "../../shared/stores/game";
   import { seasonStore } from "../../shared/stores/season";
   import { generateSchedule } from "../../shared/utils/scheduleGen";
-  import type { Handedness, PitchingForm, ProtagonistSave } from "../../shared/types/save";
+  import type { Handedness, PitchEntry, PitchingForm, ProtagonistSave } from "../../shared/types/save";
 
   export let onComplete: () => void;
 
@@ -49,36 +49,47 @@
   $: teamPlayers = teamEntities.filter((e) => e.role === "player").slice(0, 4);
 
   // ── Step 3 상태 ────────────────────────────────────────────────
-  type PresetKey = "balanced" | "power" | "control" | "movement";
+  type PresetKey = "balanced" | "power" | "control" | "stamina" | "crafty";
   let selectedPreset: PresetKey = "balanced";
 
   const PRESETS: Record<
     PresetKey,
-    { label: string; desc: string; tags: string[]; pitching: ProtagonistSave["pitching"] }
+    { label: string; desc: string; tags: string[]; pitching: ProtagonistSave["pitching"]; pitches: PitchEntry[] }
   > = {
     balanced: {
       label: "균형형",
-      desc: "모든 능력치가 고르게 발달한 정통파 투수",
+      desc: "모든 부분이 고르게 발달. 성장 방향 자유도가 가장 높음",
       tags: ["정통파", "균형형"],
-      pitching: { ovr: 55, velocity: 55, command: 58, control: 55, movement: 53, mentality: 55, stamina: 56, recovery: 54, clutch: 50, holdRunners: 50 },
+      pitching: { ovr: 53, velocity: 56, command: 56, control: 54, movement: 52, mentality: 55, stamina: 55, recovery: 53, clutch: 50, holdRunners: 50 },
+      pitches: [{ id: "PITCH_FASTBALL", grade: 1 }],
     },
     power: {
       label: "파워피처",
-      desc: "강속구가 무기. 아직 제구는 거칠지만 잠재력은 최상",
+      desc: "속도 하나로 승부. 제구는 미완성이지만 잠재력은 최상",
       tags: ["급성장", "파워피처"],
-      pitching: { ovr: 52, velocity: 68, command: 48, control: 45, movement: 50, mentality: 52, stamina: 52, recovery: 48, clutch: 48, holdRunners: 45 },
+      pitching: { ovr: 50, velocity: 70, command: 45, control: 42, movement: 48, mentality: 50, stamina: 54, recovery: 46, clutch: 48, holdRunners: 45 },
+      pitches: [{ id: "PITCH_FASTBALL", grade: 2 }],
     },
     control: {
       label: "제구형",
-      desc: "정밀한 제구와 커맨드로 타자를 요리하는 스마트 피처",
+      desc: "커맨드와 제구로 타자를 요리. 체인지업으로 타이밍을 뺏기 시작",
       tags: ["멘탈관리", "제구형"],
-      pitching: { ovr: 58, velocity: 48, command: 68, control: 65, movement: 58, mentality: 58, stamina: 54, recovery: 56, clutch: 55, holdRunners: 52 },
+      pitching: { ovr: 56, velocity: 47, command: 68, control: 65, movement: 56, mentality: 58, stamina: 52, recovery: 55, clutch: 55, holdRunners: 52 },
+      pitches: [{ id: "PITCH_FASTBALL", grade: 1 }, { id: "PITCH_CHANGEUP", grade: 1 }],
     },
-    movement: {
-      label: "무브먼트형",
-      desc: "날카롭게 꺾이는 변화구로 땅볼을 유도하는 피네스 피처",
-      tags: ["무브먼트", "피네스"],
-      pitching: { ovr: 55, velocity: 52, command: 55, control: 52, movement: 68, mentality: 55, stamina: 50, recovery: 52, clutch: 50, holdRunners: 50 },
+    stamina: {
+      label: "체력형",
+      desc: "이닝이터 스타일. 멘탈과 체력이 강점, 후반까지 무너지지 않음",
+      tags: ["체력형", "이닝이터"],
+      pitching: { ovr: 56, velocity: 53, command: 52, control: 50, movement: 50, mentality: 65, stamina: 68, recovery: 65, clutch: 52, holdRunners: 50 },
+      pitches: [{ id: "PITCH_FASTBALL", grade: 1 }],
+    },
+    crafty: {
+      label: "기교파",
+      desc: "변화구와 두뇌로 승부. 직구는 느리지만 무브먼트와 멘탈로 커버",
+      tags: ["기교파", "두뇌파"],
+      pitching: { ovr: 55, velocity: 46, command: 60, control: 58, movement: 66, mentality: 62, stamina: 50, recovery: 52, clutch: 55, holdRunners: 50 },
+      pitches: [{ id: "PITCH_FASTBALL", grade: 1 }, { id: "PITCH_SLIDER", grade: 1 }],
     },
   };
 
@@ -136,7 +147,7 @@
       tags: preset.tags,
       pitchingXP: {},
       battingXP: {},
-      learnedPitchIds: ["PITCH_FASTBALL"],
+      pitches: preset.pitches,
       money: 1200,
       fame: 5,
       scoutScore: 15,
@@ -156,6 +167,13 @@
 
     onComplete();
   }
+
+  const PITCH_NAMES: Record<string, string> = {
+    PITCH_FASTBALL: "패스트볼", PITCH_SINKER: "싱커", PITCH_CUTTER: "커터",
+    PITCH_SLIDER: "슬라이더", PITCH_CURVE: "커브", PITCH_CHANGEUP: "체인지업",
+    PITCH_SPLITTER: "스플리터", PITCH_FORKBALL: "포크볼",
+    PITCH_SCREWBALL: "스크루볼", PITCH_KNUCKLEBALL: "너클볼",
+  };
 
   // ── 팀 이름 표시 ───────────────────────────────────────────────
   $: selectedTeamName = hsTeams.find((t) => t.id === selectedTeamId)?.name ?? "";
@@ -466,6 +484,14 @@
           <div class="summary-row">
             <span class="key">프리셋</span>
             <span class="val">{PRESETS[selectedPreset].label}</span>
+          </div>
+          <div class="summary-row">
+            <span class="key">초기 구종</span>
+            <span class="val pitch-summary">
+              {#each PRESETS[selectedPreset].pitches as p}
+                <span class="pitch-chip">{PITCH_NAMES[p.id]} Lv.{p.grade}</span>
+              {/each}
+            </span>
           </div>
           <div class="summary-row">
             <span class="key">리그</span>
@@ -1116,7 +1142,7 @@
   /* ── 프리셋 그리드 ── */
   .preset-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 12px;
   }
 
@@ -1255,5 +1281,21 @@
 
   .btn.start:hover {
     background: #22854f;
+  }
+
+  .pitch-summary {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .pitch-chip {
+    background: #0e2040;
+    border: 1px solid #2a4878;
+    border-radius: 6px;
+    padding: 3px 9px;
+    font-size: 13px;
+    color: #88b8f8;
+    font-weight: 600;
   }
 </style>

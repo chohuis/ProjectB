@@ -5,6 +5,7 @@ import type {
   AchievementRuntime,
   ChatContact,
   ChatMessage,
+  PitchEntry,
   PitchingStatKey,
   ProtagonistSave,
   SaveGame,
@@ -86,7 +87,7 @@ const DEFAULT_PROTAGONIST: ProtagonistSave = {
   tags: ["급성장", "멘탈관리", "선발 로테이션"],
   pitchingXP: {},
   battingXP: {},
-  learnedPitchIds: ["PITCH_FASTBALL"],
+  pitches: [{ id: "PITCH_FASTBALL", grade: 3 }],
   money: 1200,
   fame: 5,
   scoutScore: 15,
@@ -258,8 +259,18 @@ function buildInitialState(): GameStoreState {
 }
 
 // ── 구버전 세이브 → 새 필드 기본값 채우기 ─────────────────────
-function migrateProtagonist(p: ProtagonistSave): ProtagonistSave {
+function migrateProtagonist(p: ProtagonistSave & { learnedPitchIds?: string[] }): ProtagonistSave {
   const def = DEFAULT_PROTAGONIST;
+
+  // learnedPitchIds (구버전) → pitches 배열로 변환
+  let pitches: PitchEntry[] = p.pitches ?? [];
+  if (pitches.length === 0 && p.learnedPitchIds && p.learnedPitchIds.length > 0) {
+    pitches = p.learnedPitchIds.map((id) => ({ id, grade: 3 as const }));
+  }
+  if (pitches.length === 0) {
+    pitches = def.pitches;
+  }
+
   return {
     ...p,
     pitching: {
@@ -278,6 +289,7 @@ function migrateProtagonist(p: ProtagonistSave): ProtagonistSave {
     diligence:  p.diligence  ?? def.diligence,
     popularity: p.popularity ?? def.popularity,
     battingXP:  p.battingXP  ?? {},
+    pitches,
   };
 }
 
@@ -605,11 +617,11 @@ function createGameStore() {
             }
           }
         }
-        let learnedPitchIds = p.learnedPitchIds;
-        if (effect.unlockPitchId && !learnedPitchIds.includes(effect.unlockPitchId)) {
-          learnedPitchIds = [...learnedPitchIds, effect.unlockPitchId];
+        let pitches = p.pitches;
+        if (effect.unlockPitchId && !pitches.some((e) => e.id === effect.unlockPitchId)) {
+          pitches = [...pitches, { id: effect.unlockPitchId, grade: 1 }];
         }
-        const updated: ProtagonistSave = { ...p, condition, fatigue, morale, money, pitchingXP, pitching, learnedPitchIds };
+        const updated: ProtagonistSave = { ...p, condition, fatigue, morale, money, pitchingXP, pitching, pitches };
         return { ...s, protagonist: updated, player: toPlayerCompat(updated) };
       });
     },
@@ -1097,11 +1109,19 @@ function createGameStore() {
     // 구종 습득 완료 (progress >= 100)
     completePitchLearning(pitchId: string) {
       update((s) => {
-        const learned = s.protagonist.learnedPitchIds ?? ["PITCH_FASTBALL"];
-        if (learned.includes(pitchId)) return s;
+        const pitches = s.protagonist.pitches ?? [{ id: "PITCH_FASTBALL", grade: 3 as const }];
+        const existing = pitches.find((e) => e.id === pitchId);
+        if (existing) {
+          // 이미 보유 중이면 grade +1 (최대 5)
+          const updated = pitches.map((e) =>
+            e.id === pitchId ? { ...e, grade: Math.min(5, e.grade + 1) as PitchEntry["grade"] } : e
+          );
+          const p: ProtagonistSave = { ...s.protagonist, pitches: updated, trainingPitchState: undefined };
+          return { ...s, protagonist: p };
+        }
         const p: ProtagonistSave = {
           ...s.protagonist,
-          learnedPitchIds: [...learned, pitchId],
+          pitches: [...pitches, { id: pitchId, grade: 1 }],
           trainingPitchState: undefined,
         };
         return { ...s, protagonist: p };

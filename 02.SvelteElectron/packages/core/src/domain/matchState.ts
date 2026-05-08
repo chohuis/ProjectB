@@ -1,5 +1,15 @@
 export type HalfInning = "top" | "bottom";
-export type PitchType = "fastball" | "slider" | "curve" | "changeup";
+export type PitchType =
+  | "fastball"
+  | "sinker"
+  | "cutter"
+  | "slider"
+  | "curve"
+  | "changeup"
+  | "splitter"
+  | "forkball"
+  | "screwball"
+  | "knuckleball";
 export type PitchStrategy = "aggressive" | "balanced" | "safe";
 export type PitchPower = "low" | "normal" | "high";
 export type PitchLocation = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
