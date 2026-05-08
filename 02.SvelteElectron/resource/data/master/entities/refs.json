@@ -67,59 +67,25 @@
       "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_SEOUL_INNOVATION", "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
       "profile": {
         "style": "균형형",
-        "desc": "서울 도심의 전통 명문 야구부. 분석적인 작전야구와 안정적인 수비가 강점이며, 매 시즌 꾸준히 상위권을 유지한다.",
-        "tags": ["균형형", "작전야구", "수비적"],
-        "strengths": ["투수력", "수비"]
-      }
-    },
-    {
-      "id": "TEAM_HS_BUSAN_WAVE", "name": "부산 웨이브", "nameEn": "Busan Wave",
-      "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_BUSAN_WAVE", "schoolId": "SCHOOL_HS_BUSAN_WAVE",
-      "profile": {
-        "style": "공격형",
-        "desc": "바다처럼 거센 공격이 트레이드마크. 강타선을 앞세운 폭발적인 득점력이 리그 최상위권이다.",
-        "tags": ["공격형", "장타", "적극적"],
-        "strengths": ["타격", "장타력"]
-      }
-    },
-    {
-      "id": "TEAM_HS_DAEGU_HEAT", "name": "대구 히트", "nameEn": "Daegu Heat",
-      "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_DAEGU_HEAT", "schoolId": "SCHOOL_HS_DAEGU_HEAT",
-      "profile": {
-        "style": "투수형",
-        "desc": "제구력 중심의 정통 투수야구팀. 에이스급 선발진을 중심으로 낮은 실점으로 경기를 지배한다.",
-        "tags": ["투수형", "제구 중심", "로우스코어"],
-        "strengths": ["선발 투수", "제구력"]
-      }
-    },
-    {
-      "id": "TEAM_HS_GWANGJU_VISION", "name": "광주 비전", "nameEn": "Gwangju Vision",
-      "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_GWANGJU_VISION", "schoolId": "SCHOOL_HS_GWANGJU_VISION",
-      "profile": {
-        "style": "수비형",
-        "desc": "철통 수비와 끈끈한 팀워크로 승부하는 팀. 실책이 적고 실점을 극도로 줄이는 야구를 구사한다.",
-        "tags": ["수비형", "팀워크", "안정적"],
-        "strengths": ["수비력", "팀 결속"]
-      }
-    },
-    {
-      "id": "TEAM_HS_DAEJEON_RISE", "name": "대전 라이즈", "nameEn": "Daejeon Rise",
-      "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_DAEJEON_RISE", "schoolId": "SCHOOL_HS_DAEJEON_RISE",
-      "profile": {
-        "style": "파워형",
-        "desc": "강속구 투수진과 파워히터들로 구성된 팀. 타격과 투구 모두 힘으로 밀어붙이는 호쾌한 야구가 특징이다.",
-        "tags": ["파워형", "강속구", "호쾌"],
-        "strengths": ["구속", "장타"]
-      }
-    },
-    {
-      "id": "TEAM_HS_INCHEON_HARBOR", "name": "인천 하버", "nameEn": "Incheon Harbor",
-      "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_INCHEON_HARBOR", "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
-      "profile": {
-        "style": "균형형",
-        "desc": "항구도시의 끈기를 닮은 팀. 두터운 선수층과 치열한 내부 경쟁으로 꾸준하고 안정적인 성적을 낸다.",
-        "tags": ["균형형", "두터운 선수층", "끈기"],
-        "strengths": ["선수층", "계투진"]
+        "desc": "서울 도심의 전통 야구 명가. 풍부한 재원과 체계적인 코칭 시스템을 바탕으로 매 시즌 상위권을 독점하며, 역대 47명의 프로 선수를 배출한 고교야구의 절대 강자다. 입단 즉시 프로 스카우터들의 주목을 받는 환경이 갖춰져 있다.",
+        "tags": ["야구 명가", "작전야구", "프로 산실"],
+        "strengths": ["투수력", "수비", "코칭"],
+        "funding": "풍부",
+        "difficulty": "최상"
+      },
+      "history": {
+        "founded": 1971,
+        "summary": "전국 최다 우승을 보유한 고교야구의 절대 강자",
+        "proPlayers": 47,
+        "nationalTitles": 18,
+        "recentRecords": [
+          { "year": 2021, "national": "우승",   "regional": "1위", "note": "박준호 KBL 드래프트 1라운드 1순위 지명" },
+          { "year": 2022, "national": "준우승", "regional": "1위", "note": "울산과 결승 연장 10회 끝에 석패" },
+          { "year": 2023, "national": "우승",   "regional": "1위", "note": "3년 연속 결승 진출, 설욕 성공" },
+          { "year": 2024, "national": "우승",   "regional": "1위", "note": "에이스 트리오 전원 KBL 1라운드 지명" },
+          { "year": 2025, "national": "4강",    "regional": "1위", "note": "세대교체 과도기, 내년 반등 예고" }
+        ],
+        "rival": "TEAM_HS_ULSAN_CHARGE"
       }
     },
     {
@@ -127,9 +93,153 @@
       "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_ULSAN_CHARGE", "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
       "profile": {
         "style": "파워형",
-        "desc": "리그에서 손꼽히는 장타력을 보유한 팀. 한 방을 믿는 공격적인 야구와 강력한 불펜이 무기다.",
-        "tags": ["파워형", "장타 중심", "공격적"],
-        "strengths": ["장타력", "불펜"]
+        "desc": "서울 이노베이션의 최대 라이벌. 기업 후원을 등에 업고 강속구 투수진과 장타 타선을 구축해 최근 3년간 전국 우승 경쟁을 이끌고 있다. 단단한 조직력과 승부욕이 팀의 정체성이다.",
+        "tags": ["파워형", "강속구", "우승 경쟁권"],
+        "strengths": ["구속", "장타력", "불펜"],
+        "funding": "풍부",
+        "difficulty": "상"
+      },
+      "history": {
+        "founded": 1998,
+        "summary": "서울 이노베이션의 숙적, 최근 3년간 가장 뜨거운 팀",
+        "proPlayers": 18,
+        "nationalTitles": 6,
+        "recentRecords": [
+          { "year": 2021, "national": "4강",    "regional": "1위", "note": "창단 이래 첫 4강 진출" },
+          { "year": 2022, "national": "우승",   "regional": "1위", "note": "서울 꺾고 창단 첫 전국 우승" },
+          { "year": 2023, "national": "4강",    "regional": "1위", "note": "우승 멤버 졸업 후 재정비" },
+          { "year": 2024, "national": "준우승", "regional": "1위", "note": "서울과 결승 재격돌, 설욕 실패" },
+          { "year": 2025, "national": "우승",   "regional": "1위", "note": "강력한 에이스 라인업으로 2년 만에 재제패" }
+        ],
+        "rival": "TEAM_HS_SEOUL_INNOVATION"
+      }
+    },
+    {
+      "id": "TEAM_HS_BUSAN_WAVE", "name": "부산 웨이브", "nameEn": "Busan Wave",
+      "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_BUSAN_WAVE", "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+      "profile": {
+        "style": "공격형",
+        "desc": "한때 전국을 호령했던 영남의 명문. 재원은 여전히 풍부하지만 에이스 계보가 끊기며 전국 무대에서 힘을 잃었다. 지역대회에서는 여전히 독보적인 1위를 유지하며 부활을 노리고 있다.",
+        "tags": ["과거 명문", "지역 최강", "재건 중"],
+        "strengths": ["타격", "지역 경험"],
+        "funding": "풍부",
+        "difficulty": "중"
+      },
+      "history": {
+        "founded": 1982,
+        "summary": "한때 전국을 호령했던 명문, 지금은 지역 패권자로 명맥 유지",
+        "proPlayers": 31,
+        "nationalTitles": 9,
+        "recentRecords": [
+          { "year": 2021, "national": "준우승", "regional": "1위", "note": "마지막 전성기, 에이스 이강호 졸업 후 내리막" },
+          { "year": 2022, "national": "8강",    "regional": "1위", "note": "주전 타선 전원 졸업, 전력 급하락" },
+          { "year": 2023, "national": "8강",    "regional": "1위", "note": "지역 강자 지위는 유지 중" },
+          { "year": 2024, "national": "16강",   "regional": "1위", "note": "전국 무대에서 힘 못 쓰는 모습" },
+          { "year": 2025, "national": "8강",    "regional": "1위", "note": "재정 투입으로 부분 회복세" }
+        ],
+        "rival": null
+      }
+    },
+    {
+      "id": "TEAM_HS_DAEGU_HEAT", "name": "대구 히트", "nameEn": "Daegu Heat",
+      "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_DAEGU_HEAT", "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+      "profile": {
+        "style": "투수형",
+        "desc": "화려함은 없지만 흔들림도 없는 팀. 제구력 중심의 정통 투수야구로 매 시즌 꾸준하게 8강 이상을 유지한다. 극단적인 업세트는 없지만 언제나 만만치 않은 상대로 통한다.",
+        "tags": ["꾸준함", "투수형", "안정적"],
+        "strengths": ["선발 투수", "제구력"],
+        "funding": "보통",
+        "difficulty": "중"
+      },
+      "history": {
+        "founded": 1990,
+        "summary": "화려함은 없지만 한 번도 8강 밑으로 처진 적 없는 꾸준한 팀",
+        "proPlayers": 14,
+        "nationalTitles": 2,
+        "recentRecords": [
+          { "year": 2021, "national": "8강",  "regional": "2위", "note": "" },
+          { "year": 2022, "national": "4강",  "regional": "1위", "note": "팀 최고 성적, 준결승서 서울에 석패" },
+          { "year": 2023, "national": "8강",  "regional": "2위", "note": "" },
+          { "year": 2024, "national": "8강",  "regional": "2위", "note": "" },
+          { "year": 2025, "national": "8강",  "regional": "1위", "note": "" }
+        ],
+        "rival": null
+      }
+    },
+    {
+      "id": "TEAM_HS_GWANGJU_VISION", "name": "광주 비전", "nameEn": "Gwangju Vision",
+      "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_GWANGJU_VISION", "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+      "profile": {
+        "style": "투지형",
+        "desc": "돈도 시설도 없지만 열정만큼은 리그 최고인 야구부. 매년 예산 삭감 위기를 겪으면서도 선수들의 순수한 야구 사랑으로 버텨온 팀이다. 언더독의 반란을 노리는 이들에게 최적의 선택지.",
+        "tags": ["열정", "언더독", "투지"],
+        "strengths": ["팀 결속", "투지"],
+        "funding": "부족",
+        "difficulty": "최하"
+      },
+      "history": {
+        "founded": 1988,
+        "summary": "돈도 시설도 없지만 열정만큼은 리그 최고인 야구부",
+        "proPlayers": 3,
+        "nationalTitles": 0,
+        "recentRecords": [
+          { "year": 2021, "national": "16강",    "regional": "3위", "note": "예산 삭감 위기 속에서도 전국 진출" },
+          { "year": 2022, "national": "예선 탈락", "regional": "4위", "note": "핵심 선수 부상으로 예선 탈락" },
+          { "year": 2023, "national": "16강",    "regional": "3위", "note": "투지로 다시 전국 무대 복귀" },
+          { "year": 2024, "national": "예선 탈락", "regional": "4위", "note": "주전 3명 이탈, 전력 공백" },
+          { "year": 2025, "national": "16강",    "regional": "3위", "note": "열정으로 다시 전국 무대" }
+        ],
+        "rival": null
+      }
+    },
+    {
+      "id": "TEAM_HS_DAEJEON_RISE", "name": "대전 라이즈", "nameEn": "Daejeon Rise",
+      "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_DAEJEON_RISE", "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+      "profile": {
+        "style": "파워형",
+        "desc": "2023년 대기업 후원으로 창단된 신생팀. 창단 3년 만에 전국 8강까지 오르며 고교야구계를 놀라게 했다. 풍부한 재원과 열정적인 선수들이 만들어내는 무서운 성장세가 특징이다.",
+        "tags": ["신생 팀", "급성장", "열심히"],
+        "strengths": ["구속", "체력"],
+        "funding": "풍부",
+        "difficulty": "하"
+      },
+      "history": {
+        "founded": 2023,
+        "summary": "기업 후원으로 창단, 3년 만에 전국 8강 달성한 신흥 강팀",
+        "proPlayers": 0,
+        "nationalTitles": 0,
+        "recentRecords": [
+          { "year": 2023, "national": "예선 탈락", "regional": "4위", "note": "창단 첫 시즌, 첫 전국 데뷔" },
+          { "year": 2024, "national": "16강",     "regional": "2위", "note": "창단 2년차, 급성장 신호" },
+          { "year": 2025, "national": "8강",      "regional": "2위", "note": "창단 3년차, 전국 무대 존재감 각인" }
+        ],
+        "rival": null
+      }
+    },
+    {
+      "id": "TEAM_HS_INCHEON_HARBOR", "name": "인천 하버", "nameEn": "Incheon Harbor",
+      "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_INCHEON_HARBOR", "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+      "profile": {
+        "style": "균형형",
+        "desc": "항구도시의 끈기를 닮은 팀. 두터운 선수층과 치열한 내부 경쟁으로 꾸준하고 안정적인 성적을 낸다. 매 시즌 수원 엣지와의 라이벌전이 지역 최대 이슈로, 그 승패가 지역 1위를 결정짓는다.",
+        "tags": ["균형형", "라이벌전", "끈기"],
+        "strengths": ["선수층", "계투진"],
+        "funding": "보통",
+        "difficulty": "중하"
+      },
+      "history": {
+        "founded": 1994,
+        "summary": "수원 엣지와의 라이벌전이 매 시즌 지역의 최대 관심사인 팀",
+        "proPlayers": 9,
+        "nationalTitles": 1,
+        "recentRecords": [
+          { "year": 2021, "national": "8강",  "regional": "1위", "note": "수원 엣지 꺾고 지역 1위" },
+          { "year": 2022, "national": "16강", "regional": "2위", "note": "라이벌전 패배, 지역 2위" },
+          { "year": 2023, "national": "8강",  "regional": "1위", "note": "설욕 성공, 지역 1위 탈환" },
+          { "year": 2024, "national": "16강", "regional": "2위", "note": "라이벌전 다시 패배" },
+          { "year": 2025, "national": "8강",  "regional": "1위", "note": "3번째 설욕, 지역 1위 탈환" }
+        ],
+        "rival": "TEAM_HS_SUWON_EDGE"
       }
     },
     {
@@ -137,9 +247,25 @@
       "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_SUWON_EDGE", "schoolId": "SCHOOL_HS_SUWON_EDGE",
       "profile": {
         "style": "피네스형",
-        "desc": "날카로운 변화구로 승부하는 피네스 피처들의 팀. 다양한 구종으로 타자를 요리하는 기술야구를 구사한다.",
-        "tags": ["피네스형", "변화구", "기술적"],
-        "strengths": ["무브먼트", "구종 다양성"]
+        "desc": "날카로운 변화구로 승부하는 기술야구 팀. 인천 하버와의 라이벌전이 곧 수원 야구의 전부로 불릴 만큼, 매 시즌 지역 결정전에 모든 것을 쏟아붓는다. 두 팀의 역대 전적은 박빙 그 자체다.",
+        "tags": ["피네스형", "라이벌전", "변화구"],
+        "strengths": ["무브먼트", "구종 다양성"],
+        "funding": "보통",
+        "difficulty": "중하"
+      },
+      "history": {
+        "founded": 1997,
+        "summary": "인천 하버와의 라이벌전이 곧 수원 야구의 전부인 팀",
+        "proPlayers": 8,
+        "nationalTitles": 1,
+        "recentRecords": [
+          { "year": 2021, "national": "16강", "regional": "2위", "note": "라이벌전 패배" },
+          { "year": 2022, "national": "8강",  "regional": "1위", "note": "라이벌전 설욕, 첫 8강" },
+          { "year": 2023, "national": "8강",  "regional": "2위", "note": "라이벌전 패배했지만 전국 8강 유지" },
+          { "year": 2024, "national": "8강",  "regional": "1위", "note": "라이벌전 설욕, 지역 1위" },
+          { "year": 2025, "national": "16강", "regional": "2위", "note": "라이벌전 패배, 지역 2위" }
+        ],
+        "rival": "TEAM_HS_INCHEON_HARBOR"
       }
     },
 

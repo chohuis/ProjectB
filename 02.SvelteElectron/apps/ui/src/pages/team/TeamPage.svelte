@@ -1,8 +1,11 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
   import { t } from "../../shared/i18n";
   import { gameStore } from "../../shared/stores/game";
   import { seasonStore } from "../../shared/stores/season";
   import { masterStore } from "../../shared/stores/master";
+
+  const dispatch = createEventDispatcher<{ gotoRoster: { teamId: string } }>();
 
   type TeamTab = "my" | "all";
   type TeamSortField = "rank" | "winPct" | "name";
@@ -94,7 +97,12 @@
           </div>
           <div class="team-rows">
             {#each visible as team}
-              <button class:selected={selected?.id === team.id} on:click={() => (selectedTeamId = team.id)}>
+              <button
+                class:selected={selected?.id === team.id}
+                on:click={() => (selectedTeamId = team.id)}
+                on:dblclick={() => dispatch("gotoRoster", { teamId: team.id })}
+                title="더블클릭: 로스터 보기"
+              >
                 <strong>{team.name}</strong>
                 <span>{team.rank}</span>
                 <span>{team.wins}-{team.losses}-{team.draws}</span>

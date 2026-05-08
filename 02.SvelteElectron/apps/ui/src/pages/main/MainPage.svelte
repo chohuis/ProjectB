@@ -49,6 +49,7 @@
   export let onSeasonEnd: () => void = () => {};
 
   let currentTab: MainTabId = "home";
+  let rosterTeamId = "";
   let devToolsHubOpen = false;
   let eventManagerOpen = false;
   let entityManagerOpen = false;
@@ -269,7 +270,7 @@
           {:else if currentTab === "academics"}
             <AcademicsPage />
           {:else if currentTab === "roster"}
-            <RosterPage />
+            <RosterPage filterTeamId={rosterTeamId} />
           {:else if currentTab === "schedule"}
             <SchedulePage />
           {:else if currentTab === "training"}
@@ -285,7 +286,7 @@
           {:else if currentTab === "messenger"}
             <MessengerPage />
           {:else if currentTab === "team"}
-            <TeamPage />
+            <TeamPage on:gotoRoster={(e) => { rosterTeamId = e.detail.teamId; currentTab = "roster"; }} />
           {:else}
             <section class="placeholder">
               {$t("main.placeholderPreparing", { tab: $t(tabPageKey[currentTab]) })}
