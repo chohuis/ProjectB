@@ -1,0 +1,17 @@
+{
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "narrativeAngle": "최약체 학교 출신 투수가 진정한 다크호스 역전 서사를 써내는 이야기. 아무도 주목하지 않는 곳에서 시작해 전국을 뒤흔드는 에이스가 된다.",
+  "protagonistRoles": {
+    "seniorMentors":   ["PLY_00141", "PLY_00142"],
+    "seniorCaptain":   "PLY_00152",
+    "classmateRivals": ["PLY_00143", "PLY_00144"],
+    "batteryPartner":  "PLY_00149",
+    "promisingJunior": "PLY_00146"
+  },
+  "mainRivalSchool": "SCHOOL_HS_DAEJEON_RISE",
+  "rivalAces": ["PLY_00081", "PLY_00061"],
+  "initialZone0Npcs": [
+    "PLY_00141", "PLY_00142", "PLY_00152",
+    "PLY_00143", "PLY_00144", "PLY_00149", "PLY_00146"
+  ]
+}

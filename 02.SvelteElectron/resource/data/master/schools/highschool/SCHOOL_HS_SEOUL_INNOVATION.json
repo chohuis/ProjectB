@@ -1,0 +1,19 @@
+{
+  "id": "SCHOOL_HS_SEOUL_INNOVATION",
+  "name": "서울 이노베이션 고등학교",
+  "shortName": "서울 이노베이션",
+  "region": "서울",
+  "tier": "S",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "gradeLevels": 3,
+  "annualRosterSize": 25,
+  "namedNpcPerYear": 3,
+  "template": {
+    "pitching": { "ovrMin": 58, "ovrMax": 78 },
+    "batting": { "ovrMin": 53, "ovrMax": 73 },
+    "developmentRate": { "min": 58, "max": 76 },
+    "potentialHidden": { "min": 70, "max": 99 }
+  },
+  "color": "#1A3A6B",
+  "notes": "주인공 소속 학교. 전국 최상위권 야구 명문."
+}

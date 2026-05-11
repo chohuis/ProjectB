@@ -1,0 +1,17 @@
+{
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "narrativeAngle": "전국 최상위 명문 고교에서 에이스 자리를 두고 경쟁하는 서사. 이미 완성된 선배들 사이에서 자신의 가치를 증명해야 한다.",
+  "protagonistRoles": {
+    "seniorMentors":   ["PLY_00001", "PLY_00002"],
+    "seniorCaptain":   "PLY_00012",
+    "classmateRivals": ["PLY_00003", "PLY_00004"],
+    "batteryPartner":  "PLY_00009",
+    "promisingJunior": "PLY_00006"
+  },
+  "mainRivalSchool": "SCHOOL_HS_BUSAN_WAVE",
+  "rivalAces": ["PLY_00021", "PLY_00041"],
+  "initialZone0Npcs": [
+    "PLY_00001", "PLY_00002", "PLY_00012",
+    "PLY_00003", "PLY_00004", "PLY_00009", "PLY_00006"
+  ]
+}

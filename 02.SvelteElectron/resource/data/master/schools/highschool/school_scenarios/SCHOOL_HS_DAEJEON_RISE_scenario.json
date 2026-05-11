@@ -1,0 +1,17 @@
+{
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "narrativeAngle": "성장세를 타는 중위권 학교에서 처음으로 전국대회 돌풍을 일으키는 서사. 이 학교에서 나온 최초의 프로 에이스가 되는 이야기.",
+  "protagonistRoles": {
+    "seniorMentors":   ["PLY_00081", "PLY_00082"],
+    "seniorCaptain":   "PLY_00092",
+    "classmateRivals": ["PLY_00083", "PLY_00084"],
+    "batteryPartner":  "PLY_00089",
+    "promisingJunior": "PLY_00086"
+  },
+  "mainRivalSchool": "SCHOOL_HS_SUWON_EDGE",
+  "rivalAces": ["PLY_00141", "PLY_00121"],
+  "initialZone0Npcs": [
+    "PLY_00081", "PLY_00082", "PLY_00092",
+    "PLY_00083", "PLY_00084", "PLY_00089", "PLY_00086"
+  ]
+}

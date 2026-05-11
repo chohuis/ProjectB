@@ -262,6 +262,125 @@ export interface ChatContact {
   flags: string[];            // 완료한 아크·특별 대화 ID 목록
 }
 
+// ── 학교 마스터 타입 ──────────────────────────────────────────
+export type SchoolTier = "S" | "A" | "B" | "C";
+export type ProPotentialTier = "S" | "A" | "B" | "C";
+
+export interface HighSchoolMaster {
+  id: string;
+  name: string;
+  shortName: string;
+  region: string;
+  tier: SchoolTier;
+  teamId: string;
+  gradeLevels: number;
+  annualRosterSize: number;
+  namedNpcPerYear: number;
+  template: {
+    pitching: { ovrMin: number; ovrMax: number };
+    batting: { ovrMin: number; ovrMax: number };
+    developmentRate: { min: number; max: number };
+    potentialHidden: { min: number; max: number };
+  };
+  color: string;
+  notes: string;
+}
+
+export interface NamedNpcMeta {
+  npcId: string;
+  schoolId: string;
+  trait: string;
+  proPotentialTier: ProPotentialTier;
+  storyHooks: string[];
+  notes: string;
+}
+
+export interface SchoolScenario {
+  schoolId: string;
+  narrativeAngle: string;
+  protagonistRoles: {
+    seniorMentors: string[];    // 3학년 선배 멘토 NPC ID 목록
+    seniorCaptain: string;      // 3학년 주장 NPC ID
+    classmateRivals: string[];  // 2학년 동기 라이벌 NPC ID 목록
+    batteryPartner: string;     // 2학년 배터리 파트너 C NPC ID
+    promisingJunior: string;    // 1학년 기대주 NPC ID
+  };
+  mainRivalSchool: string;      // 주 라이벌 학교 ID
+  rivalAces: string[];          // 타 학교 에이스 NPC ID (최대 2명)
+  initialZone0Npcs: string[];   // 신규 게임 시작 시 Zone 0으로 자동 배정될 NPC ID 목록
+}
+
+// ── 드래프트 타입 ────────────────────────────────────────────
+export interface DraftPick {
+  round: number;
+  pick: number;    // 전체 픽 순번
+  teamId: string;
+  npcId: string;
+}
+
+export interface DraftSimResult {
+  year: number;
+  picks: DraftPick[];
+  undraftedIds: string[];
+}
+
+export interface ProtagonistDraftOutcome {
+  drafted: boolean;
+  round?: number;
+  pick?: number;
+  teamId?: string;
+}
+
+// ── NPC Zone & 런타임 상태 ────────────────────────────────────
+export type NpcZone = 0 | 1 | 2 | 3;
+export type MilitaryStatus = "미필" | "현역" | "군필" | "면제";
+export type NpcCareerStatus = "active" | "military" | "injured" | "retired";
+
+export interface NpcCareerEntry {
+  year: number;
+  leagueId: string;
+  teamId: string;
+  statLine: string;     // "15승 3패 ERA 2.41" | "타율 .312 12홈런"
+  highlights: string[]; // ["신인상", "올스타"]
+}
+
+export interface NpcSaveState {
+  npcId: string;
+  name: string;
+  nameEn?: string;
+  playerType: PlayerType;
+  position: string;
+
+  // Zone 분류
+  zone: NpcZone;
+  zoneDowngradedAt?: number; // Zone 3 전환된 시즌 연도
+
+  // 기본 정보
+  age: number;
+  grade?: 1 | 2 | 3;        // 고교/대학 재학 중일 때만 존재
+  schoolId: string;
+  graduationYear: number;
+
+  // 현재 소속
+  careerStatus: NpcCareerStatus;
+  currentLeague: string;
+  currentTeam: string;
+
+  // 군적
+  militaryStatus: MilitaryStatus;
+  militaryEnlistYear?: number;
+  militaryDischargeYear?: number;
+
+  // 능력치 (Zone 0/1: 전체, Zone 2/3: 마지막 스냅샷)
+  pitching?: PitchingAttributes;
+  batting?: BattingAttributes;
+  developmentRate: number; // 경량 시뮬 성장계수
+
+  // 커리어 기록
+  careerHistory: NpcCareerEntry[];
+  achievements: string[]; // ["2025 신인상", "2027 MVP"]
+}
+
 // ── save_game.json 전체 구조 ───────────────────────────────────
 export interface SaveGame {
   version: number;          // 저장 포맷 버전 (마이그레이션용)
@@ -275,9 +394,10 @@ export interface SaveGame {
   contacts: ChatContact[];
   recentLogs: string[];     // 최근 30개 활동 로그
   recentUpcoming: string[]; // 다음 예정 이벤트 목록
+  npcs: NpcSaveState[];     // NPC 런타임 상태 (Zone 0~3)
 }
 
-export const SAVE_GAME_VERSION = 1;
+export const SAVE_GAME_VERSION = 2;
 
 export function makeSaveGame(
   protagonist: ProtagonistSave,
@@ -289,6 +409,7 @@ export function makeSaveGame(
   recentLogs: string[],
   recentUpcoming: string[],
   contacts: ChatContact[],
+  npcs: NpcSaveState[] = [],
 ): SaveGame {
   return {
     version: SAVE_GAME_VERSION,
@@ -302,5 +423,15 @@ export function makeSaveGame(
     contacts,
     recentLogs,
     recentUpcoming,
+    npcs,
   };
+}
+
+export function migrateSaveGame(raw: Record<string, unknown>): SaveGame {
+  const v = (raw.version as number) ?? 0;
+  if (v < 2) {
+    raw.npcs = [];
+    raw.version = 2;
+  }
+  return raw as unknown as SaveGame;
 }

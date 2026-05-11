@@ -1,0 +1,19 @@
+{
+  "id": "SCHOOL_HS_ULSAN_CHARGE",
+  "name": "울산 차지 고등학교",
+  "shortName": "울산 차지",
+  "region": "울산",
+  "tier": "B",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "gradeLevels": 3,
+  "annualRosterSize": 18,
+  "namedNpcPerYear": 2,
+  "template": {
+    "pitching": { "ovrMin": 42, "ovrMax": 62 },
+    "batting": { "ovrMin": 37, "ovrMax": 57 },
+    "developmentRate": { "min": 45, "max": 65 },
+    "potentialHidden": { "min": 50, "max": 80 }
+  },
+  "color": "#FF6600",
+  "notes": "울산 공업지역 출신. 체력 좋은 파워 타자 배출 학교."
+}

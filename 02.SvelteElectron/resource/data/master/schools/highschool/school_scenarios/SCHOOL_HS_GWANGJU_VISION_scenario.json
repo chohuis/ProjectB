@@ -1,0 +1,17 @@
+{
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "narrativeAngle": "비주류 중위권 학교에서 전국 무대에 이름을 알리는 서사. 재원은 부족하지만 서로 의지하며 상위권 강호들에게 도전한다.",
+  "protagonistRoles": {
+    "seniorMentors":   ["PLY_00061", "PLY_00062"],
+    "seniorCaptain":   "PLY_00072",
+    "classmateRivals": ["PLY_00063", "PLY_00064"],
+    "batteryPartner":  "PLY_00069",
+    "promisingJunior": "PLY_00066"
+  },
+  "mainRivalSchool": "SCHOOL_HS_ULSAN_CHARGE",
+  "rivalAces": ["PLY_00121", "PLY_00081"],
+  "initialZone0Npcs": [
+    "PLY_00061", "PLY_00062", "PLY_00072",
+    "PLY_00063", "PLY_00064", "PLY_00069", "PLY_00066"
+  ]
+}

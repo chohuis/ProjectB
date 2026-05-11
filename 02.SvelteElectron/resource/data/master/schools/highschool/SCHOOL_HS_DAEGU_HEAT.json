@@ -1,0 +1,19 @@
+{
+  "id": "SCHOOL_HS_DAEGU_HEAT",
+  "name": "대구 히트 고등학교",
+  "shortName": "대구 히트",
+  "region": "대구",
+  "tier": "A",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "gradeLevels": 3,
+  "annualRosterSize": 22,
+  "namedNpcPerYear": 3,
+  "template": {
+    "pitching": { "ovrMin": 50, "ovrMax": 70 },
+    "batting": { "ovrMin": 45, "ovrMax": 65 },
+    "developmentRate": { "min": 52, "max": 72 },
+    "potentialHidden": { "min": 60, "max": 90 }
+  },
+  "color": "#C8102E",
+  "notes": "대구 야구 강호. 타자 배출로 유명."
+}

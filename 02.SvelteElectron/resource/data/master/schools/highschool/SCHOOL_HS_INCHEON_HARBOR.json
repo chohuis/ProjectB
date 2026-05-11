@@ -1,0 +1,19 @@
+{
+  "id": "SCHOOL_HS_INCHEON_HARBOR",
+  "name": "인천 하버 고등학교",
+  "shortName": "인천 하버",
+  "region": "인천",
+  "tier": "A",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "gradeLevels": 3,
+  "annualRosterSize": 20,
+  "namedNpcPerYear": 3,
+  "template": {
+    "pitching": { "ovrMin": 50, "ovrMax": 70 },
+    "batting": { "ovrMin": 45, "ovrMax": 65 },
+    "developmentRate": { "min": 50, "max": 70 },
+    "potentialHidden": { "min": 60, "max": 88 }
+  },
+  "color": "#005BAC",
+  "notes": "인천 항구 도시 출신 강팀. 수비 안정성이 높은 선수 다수 배출."
+}

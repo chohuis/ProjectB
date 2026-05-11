@@ -1,0 +1,19 @@
+{
+  "id": "SCHOOL_HS_GWANGJU_VISION",
+  "name": "광주 비전 고등학교",
+  "shortName": "광주 비전",
+  "region": "광주",
+  "tier": "B",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "gradeLevels": 3,
+  "annualRosterSize": 18,
+  "namedNpcPerYear": 2,
+  "template": {
+    "pitching": { "ovrMin": 42, "ovrMax": 62 },
+    "batting": { "ovrMin": 37, "ovrMax": 57 },
+    "developmentRate": { "min": 45, "max": 65 },
+    "potentialHidden": { "min": 50, "max": 80 }
+  },
+  "color": "#2E8B57",
+  "notes": "광주 중위권 학교. 간간이 숨은 재능이 나오는 학교."
+}

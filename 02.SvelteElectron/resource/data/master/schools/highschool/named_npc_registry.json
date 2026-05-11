@@ -1,0 +1,356 @@
+{
+  "_comment": "명명 NPC 메타데이터. PLY 파일 수정 없이 trait/tier/hooks를 별도 관리. notes는 캐릭터 자체 묘사만 (주인공 시점 제거).",
+  "storyHookDefs": {
+    "hs_rival_pitcher":  "동 세대 라이벌 투수와의 대결 이벤트 트리거",
+    "hs_mentor_senior":  "후배를 이끄는 선배 이벤트 트리거",
+    "hs_classmate_bond": "동기와의 유대/갈등 이벤트 트리거",
+    "hs_draft_prospect": "드래프트 유망주 관련 이벤트 트리거",
+    "hs_injury_setback": "부상 위기 이벤트 트리거",
+    "hs_underdog_rise":  "숨겨진 재능이 드러나는 이벤트 트리거"
+  },
+  "npcs": [
+    {
+      "npcId": "PLY_00001", "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+      "trait": "냉정한 에이스", "proPotentialTier": "A",
+      "storyHooks": ["hs_draft_prospect", "hs_mentor_senior"],
+      "notes": "냉정하고 과묵한 SP. 말수는 적지만 마운드에서 존재감이 압도적. 드래프트 1라운드 유력."
+    },
+    {
+      "npcId": "PLY_00002", "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+      "trait": "파이터", "proPotentialTier": "B",
+      "storyHooks": ["hs_mentor_senior", "hs_draft_prospect"],
+      "notes": "구속보다 투지로 압도하는 타입. 위기 상황일수록 더 강해지는 기질."
+    },
+    {
+      "npcId": "PLY_00003", "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+      "trait": "파이터 SP", "proPotentialTier": "B",
+      "storyHooks": ["hs_classmate_bond", "hs_rival_pitcher"],
+      "notes": "지지 않는 성격의 동학년 SP. 선발 로테이션 자리를 놓고 경쟁하는 구도."
+    },
+    {
+      "npcId": "PLY_00004", "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+      "trait": "노력파", "proPotentialTier": "B",
+      "storyHooks": ["hs_classmate_bond"],
+      "notes": "타고난 재능보다 훈련량으로 버티는 성실형 동학년 SP."
+    },
+    {
+      "npcId": "PLY_00009", "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+      "trait": "천재형 포수", "proPotentialTier": "A",
+      "storyHooks": ["hs_classmate_bond"],
+      "notes": "타고난 리드 감각을 지닌 동학년 C. 게임 리딩 능력이 탁월."
+    },
+    {
+      "npcId": "PLY_00006", "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+      "trait": "숨은 재능", "proPotentialTier": "S",
+      "storyHooks": ["hs_underdog_rise"],
+      "notes": "평범해 보이지만 잠재력이 폭발하면 에이스급으로 성장할 1학년 RP."
+    },
+    {
+      "npcId": "PLY_00012", "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+      "trait": "카리스마 주장", "proPotentialTier": "B",
+      "storyHooks": ["hs_mentor_senior"],
+      "notes": "팀을 이끄는 리더십 있는 3학년 SS. 조언을 아끼지 않는 선배 기질."
+    },
+
+    {
+      "npcId": "PLY_00021", "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+      "trait": "카리스마 에이스", "proPotentialTier": "A",
+      "storyHooks": ["hs_rival_pitcher", "hs_draft_prospect"],
+      "notes": "부산 웨이브 간판 3학년 SP. 카리스마 있는 투구로 상대를 압도."
+    },
+    {
+      "npcId": "PLY_00022", "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+      "trait": "기술형 SP", "proPotentialTier": "B",
+      "storyHooks": ["hs_mentor_senior", "hs_draft_prospect"],
+      "notes": "구속보다 변화구와 제구로 승부하는 3학년 SP."
+    },
+    {
+      "npcId": "PLY_00023", "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+      "trait": "천재형", "proPotentialTier": "A",
+      "storyHooks": ["hs_rival_pitcher", "hs_classmate_bond"],
+      "notes": "재능이 넘치는 동학년 SP. 아직 성장 중이라 폭발력이 더 클 수 있는 인물."
+    },
+    {
+      "npcId": "PLY_00024", "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+      "trait": "노력파", "proPotentialTier": "B",
+      "storyHooks": ["hs_classmate_bond"],
+      "notes": "성실하게 훈련에 임하는 동학년 SP. 눈에 띄는 재능보다 꾸준함이 강점."
+    },
+    {
+      "npcId": "PLY_00029", "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+      "trait": "전략형 포수", "proPotentialTier": "A",
+      "storyHooks": ["hs_classmate_bond"],
+      "notes": "동학년 C. 경기 흐름을 읽는 눈이 탁월한 전략가 기질."
+    },
+    {
+      "npcId": "PLY_00026", "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+      "trait": "숨은 재능", "proPotentialTier": "A",
+      "storyHooks": ["hs_underdog_rise"],
+      "notes": "1학년 RP. 구위가 이미 3학년을 능가하는 수준이지만 아직 무명."
+    },
+    {
+      "npcId": "PLY_00032", "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+      "trait": "카리스마 주장", "proPotentialTier": "B",
+      "storyHooks": ["hs_mentor_senior"],
+      "notes": "부산 웨이브 팀 정신적 지주 역할을 하는 3학년 SS."
+    },
+
+    {
+      "npcId": "PLY_00041", "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+      "trait": "냉정한 에이스", "proPotentialTier": "A",
+      "storyHooks": ["hs_draft_prospect", "hs_rival_pitcher"],
+      "notes": "대구 히트 간판 3학년 SP. 냉철한 경기 운영과 안정된 제구가 특기."
+    },
+    {
+      "npcId": "PLY_00042", "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+      "trait": "파이터", "proPotentialTier": "B",
+      "storyHooks": ["hs_mentor_senior", "hs_draft_prospect"],
+      "notes": "승부근성이 강한 3학년 SP. 점수를 내줘도 무너지지 않는 정신력."
+    },
+    {
+      "npcId": "PLY_00043", "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+      "trait": "반골기질", "proPotentialTier": "B",
+      "storyHooks": ["hs_classmate_bond", "hs_rival_pitcher"],
+      "notes": "독특한 투구 폼으로 타자를 혼란시키는 개성 있는 동학년 SP."
+    },
+    {
+      "npcId": "PLY_00044", "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+      "trait": "노력파", "proPotentialTier": "B",
+      "storyHooks": ["hs_classmate_bond"],
+      "notes": "조용하게 훈련하는 동학년 SP. 화려하지 않지만 꾸준한 성장세."
+    },
+    {
+      "npcId": "PLY_00049", "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+      "trait": "전략형 포수", "proPotentialTier": "B",
+      "storyHooks": ["hs_classmate_bond"],
+      "notes": "동학년 C. 투수를 잘 리드하는 경기 운영 감각이 뛰어남."
+    },
+    {
+      "npcId": "PLY_00046", "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+      "trait": "숨은 재능", "proPotentialTier": "A",
+      "storyHooks": ["hs_underdog_rise"],
+      "notes": "1학년 RP. 아직 거칠지만 잠재력이 넘치는 원석."
+    },
+    {
+      "npcId": "PLY_00052", "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+      "trait": "카리스마 주장", "proPotentialTier": "B",
+      "storyHooks": ["hs_mentor_senior"],
+      "notes": "대구 히트 팀 분위기를 이끄는 3학년 SS. 타격도 준수."
+    },
+
+    {
+      "npcId": "PLY_00061", "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+      "trait": "숨은 재능", "proPotentialTier": "B",
+      "storyHooks": ["hs_draft_prospect", "hs_underdog_rise"],
+      "notes": "B티어 학교 출신이라 스카우트 관심이 낮지만 실전 능력은 상위권인 3학년 SP."
+    },
+    {
+      "npcId": "PLY_00062", "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+      "trait": "파이터", "proPotentialTier": "B",
+      "storyHooks": ["hs_mentor_senior", "hs_draft_prospect"],
+      "notes": "끈기 있는 승부를 펼치는 3학년 SP. 약체 학교를 혼자 이끄는 에이스."
+    },
+    {
+      "npcId": "PLY_00063", "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+      "trait": "파이터 SP", "proPotentialTier": "C",
+      "storyHooks": ["hs_classmate_bond", "hs_rival_pitcher"],
+      "notes": "재능은 평범하지만 포기를 모르는 동학년 SP."
+    },
+    {
+      "npcId": "PLY_00064", "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+      "trait": "노력파", "proPotentialTier": "C",
+      "storyHooks": ["hs_classmate_bond"],
+      "notes": "묵묵히 훈련에 임하는 성실한 동학년 SP."
+    },
+    {
+      "npcId": "PLY_00069", "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+      "trait": "리더형 포수", "proPotentialTier": "C",
+      "storyHooks": ["hs_classmate_bond"],
+      "notes": "팀 분위기를 다독이는 동학년 C. 수비 안정성이 강점."
+    },
+    {
+      "npcId": "PLY_00066", "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+      "trait": "잠재력", "proPotentialTier": "B",
+      "storyHooks": ["hs_underdog_rise"],
+      "notes": "1학년 RP. 광주 학교에선 보기 드문 구위를 지닌 기대주."
+    },
+    {
+      "npcId": "PLY_00072", "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+      "trait": "카리스마 주장", "proPotentialTier": "B",
+      "storyHooks": ["hs_mentor_senior"],
+      "notes": "광주 비전 팀을 이끄는 3학년 SS. 말보다 플레이로 보여주는 스타일."
+    },
+
+    {
+      "npcId": "PLY_00081", "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+      "trait": "파이터 에이스", "proPotentialTier": "B",
+      "storyHooks": ["hs_draft_prospect", "hs_rival_pitcher"],
+      "notes": "끈질긴 승부근성으로 상위권 학교를 자주 흔드는 3학년 SP."
+    },
+    {
+      "npcId": "PLY_00082", "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+      "trait": "기술형 SP", "proPotentialTier": "B",
+      "storyHooks": ["hs_mentor_senior", "hs_draft_prospect"],
+      "notes": "다양한 변화구를 구사하는 3학년 SP. 제구력이 팀 내 최고 수준."
+    },
+    {
+      "npcId": "PLY_00083", "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+      "trait": "천재형", "proPotentialTier": "B",
+      "storyHooks": ["hs_classmate_bond", "hs_rival_pitcher"],
+      "notes": "조용하지만 직접 대면하면 범상치 않음을 느끼게 하는 동학년 SP."
+    },
+    {
+      "npcId": "PLY_00084", "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+      "trait": "노력파", "proPotentialTier": "C",
+      "storyHooks": ["hs_classmate_bond"],
+      "notes": "꾸준한 훈련으로 팀 내 존재감을 높여가는 동학년 SP."
+    },
+    {
+      "npcId": "PLY_00089", "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+      "trait": "전략형 포수", "proPotentialTier": "C",
+      "storyHooks": ["hs_classmate_bond"],
+      "notes": "경기 흐름을 빠르게 읽는 동학년 C. 투수 리드에 강점."
+    },
+    {
+      "npcId": "PLY_00086", "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+      "trait": "숨은 재능", "proPotentialTier": "B",
+      "storyHooks": ["hs_underdog_rise"],
+      "notes": "1학년 RP. 대전에서 좀처럼 나오지 않는 타입의 구위 소유자."
+    },
+    {
+      "npcId": "PLY_00092", "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+      "trait": "카리스마 주장", "proPotentialTier": "B",
+      "storyHooks": ["hs_mentor_senior"],
+      "notes": "대전 라이즈 팀을 정신적으로 지탱하는 3학년 SS."
+    },
+
+    {
+      "npcId": "PLY_00101", "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+      "trait": "냉정한 에이스", "proPotentialTier": "A",
+      "storyHooks": ["hs_draft_prospect", "hs_rival_pitcher"],
+      "notes": "안정적인 제구와 냉정한 투구 스타일로 스카우트 주목을 받는 3학년 SP."
+    },
+    {
+      "npcId": "PLY_00102", "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+      "trait": "파이터", "proPotentialTier": "B",
+      "storyHooks": ["hs_mentor_senior", "hs_draft_prospect"],
+      "notes": "강한 정신력으로 끝까지 물고 늘어지는 3학년 SP."
+    },
+    {
+      "npcId": "PLY_00103", "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+      "trait": "노력파", "proPotentialTier": "B",
+      "storyHooks": ["hs_classmate_bond", "hs_rival_pitcher"],
+      "notes": "타고난 재능보다 훈련량으로 실력을 쌓아온 동학년 SP."
+    },
+    {
+      "npcId": "PLY_00104", "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+      "trait": "기술형 SP", "proPotentialTier": "B",
+      "storyHooks": ["hs_classmate_bond"],
+      "notes": "다양한 구종을 갖춘 동학년 SP. 변화구 제구가 팀 내 최고."
+    },
+    {
+      "npcId": "PLY_00109", "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+      "trait": "전략형 포수", "proPotentialTier": "B",
+      "storyHooks": ["hs_classmate_bond"],
+      "notes": "인천 지역 유소년 리그 시절부터 알려진 리드 능력자 동학년 C."
+    },
+    {
+      "npcId": "PLY_00106", "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+      "trait": "숨은 재능", "proPotentialTier": "A",
+      "storyHooks": ["hs_underdog_rise"],
+      "notes": "1학년 RP. 이미 선배들보다 빠른 구속을 찍고 있는 기대주."
+    },
+    {
+      "npcId": "PLY_00112", "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+      "trait": "카리스마 주장", "proPotentialTier": "B",
+      "storyHooks": ["hs_mentor_senior"],
+      "notes": "인천 지역 야구 팬들 사이엔 이미 유명한 3학년 SS."
+    },
+
+    {
+      "npcId": "PLY_00121", "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+      "trait": "파워 에이스", "proPotentialTier": "B",
+      "storyHooks": ["hs_draft_prospect", "hs_rival_pitcher"],
+      "notes": "강한 구속과 파워로 상대를 압도하는 3학년 SP. 울산 파워 야구의 상징."
+    },
+    {
+      "npcId": "PLY_00122", "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+      "trait": "파이터", "proPotentialTier": "B",
+      "storyHooks": ["hs_mentor_senior", "hs_draft_prospect"],
+      "notes": "거칠지만 승부욕이 넘치는 3학년 SP. 뒤처진 상황에서 더 강해지는 타입."
+    },
+    {
+      "npcId": "PLY_00123", "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+      "trait": "기술형 SP", "proPotentialTier": "B",
+      "storyHooks": ["hs_classmate_bond", "hs_rival_pitcher"],
+      "notes": "파워형 팀원들 사이에서 제구와 기술로 차별화하는 동학년 SP."
+    },
+    {
+      "npcId": "PLY_00124", "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+      "trait": "노력파", "proPotentialTier": "B",
+      "storyHooks": ["hs_classmate_bond"],
+      "notes": "팀에서 가장 일찍 훈련장에 나오는 것으로 알려진 성실형 동학년 SP."
+    },
+    {
+      "npcId": "PLY_00129", "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+      "trait": "수비형 포수", "proPotentialTier": "C",
+      "storyHooks": ["hs_classmate_bond"],
+      "notes": "블로킹과 송구가 탁월한 동학년 C. 투수 리드보단 수비에 강점."
+    },
+    {
+      "npcId": "PLY_00126", "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+      "trait": "잠재력", "proPotentialTier": "B",
+      "storyHooks": ["hs_underdog_rise"],
+      "notes": "1학년 RP. 구위는 이미 팀 내 최고 수준에 가까운 원석."
+    },
+    {
+      "npcId": "PLY_00132", "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+      "trait": "카리스마 주장", "proPotentialTier": "B",
+      "storyHooks": ["hs_mentor_senior"],
+      "notes": "울산 팀 분위기를 주도하는 3학년 SS. 강한 자기주장이 특징."
+    },
+
+    {
+      "npcId": "PLY_00141", "schoolId": "SCHOOL_HS_SUWON_EDGE",
+      "trait": "숨은 재능", "proPotentialTier": "A",
+      "storyHooks": ["hs_underdog_rise", "hs_draft_prospect"],
+      "notes": "C티어 학교 출신 최대 다크호스 3학년 SP. 아무도 모르지만 잠재력 S급."
+    },
+    {
+      "npcId": "PLY_00142", "schoolId": "SCHOOL_HS_SUWON_EDGE",
+      "trait": "반골기질", "proPotentialTier": "B",
+      "storyHooks": ["hs_mentor_senior", "hs_draft_prospect"],
+      "notes": "약체 학교에서 홀로 분전하는 개성 있는 3학년 SP. 독특한 투구 스타일."
+    },
+    {
+      "npcId": "PLY_00143", "schoolId": "SCHOOL_HS_SUWON_EDGE",
+      "trait": "반골기질", "proPotentialTier": "B",
+      "storyHooks": ["hs_classmate_bond", "hs_rival_pitcher"],
+      "notes": "상위권 학교 에이스를 상대로도 기죽지 않는 승부욕 강한 동학년 SP."
+    },
+    {
+      "npcId": "PLY_00144", "schoolId": "SCHOOL_HS_SUWON_EDGE",
+      "trait": "노력파", "proPotentialTier": "C",
+      "storyHooks": ["hs_classmate_bond"],
+      "notes": "불리한 환경에서도 꾸준히 성장하는 동학년 SP."
+    },
+    {
+      "npcId": "PLY_00149", "schoolId": "SCHOOL_HS_SUWON_EDGE",
+      "trait": "냉정한 포수", "proPotentialTier": "B",
+      "storyHooks": ["hs_classmate_bond"],
+      "notes": "팀 내에서 가장 냉정한 판단을 하는 동학년 C. 배터리 궁합이 독특함."
+    },
+    {
+      "npcId": "PLY_00146", "schoolId": "SCHOOL_HS_SUWON_EDGE",
+      "trait": "숨은 재능 (다크호스)", "proPotentialTier": "A",
+      "storyHooks": ["hs_underdog_rise"],
+      "notes": "1학년 RP. 수원 엣지 역사상 가장 큰 재능이라 불릴 수 있는 원석. 아직 무명."
+    },
+    {
+      "npcId": "PLY_00152", "schoolId": "SCHOOL_HS_SUWON_EDGE",
+      "trait": "끈질긴 주장", "proPotentialTier": "B",
+      "storyHooks": ["hs_mentor_senior"],
+      "notes": "약체 학교를 혼자서 이끌어가는 정신적 지주 3학년 SS."
+    }
+  ]
+}

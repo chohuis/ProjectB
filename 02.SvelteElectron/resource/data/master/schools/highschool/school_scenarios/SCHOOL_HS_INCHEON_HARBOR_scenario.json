@@ -1,0 +1,17 @@
+{
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "narrativeAngle": "수도권 인근 전통 강팀에서 숙명의 지역 라이벌과 패권을 다투는 서사. 안정적인 팀 기반 위에서 전국 무대 정상을 노린다.",
+  "protagonistRoles": {
+    "seniorMentors":   ["PLY_00101", "PLY_00102"],
+    "seniorCaptain":   "PLY_00112",
+    "classmateRivals": ["PLY_00103", "PLY_00104"],
+    "batteryPartner":  "PLY_00109",
+    "promisingJunior": "PLY_00106"
+  },
+  "mainRivalSchool": "SCHOOL_HS_DAEGU_HEAT",
+  "rivalAces": ["PLY_00041", "PLY_00001"],
+  "initialZone0Npcs": [
+    "PLY_00101", "PLY_00102", "PLY_00112",
+    "PLY_00103", "PLY_00104", "PLY_00109", "PLY_00106"
+  ]
+}

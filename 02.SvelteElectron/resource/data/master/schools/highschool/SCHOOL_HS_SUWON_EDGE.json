@@ -1,0 +1,19 @@
+{
+  "id": "SCHOOL_HS_SUWON_EDGE",
+  "name": "수원 엣지 고등학교",
+  "shortName": "수원 엣지",
+  "region": "수원",
+  "tier": "C",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "gradeLevels": 3,
+  "annualRosterSize": 15,
+  "namedNpcPerYear": 2,
+  "template": {
+    "pitching": { "ovrMin": 35, "ovrMax": 55 },
+    "batting": { "ovrMin": 30, "ovrMax": 50 },
+    "developmentRate": { "min": 40, "max": 60 },
+    "potentialHidden": { "min": 40, "max": 72 }
+  },
+  "color": "#6A0DAD",
+  "notes": "신흥 약체. 드물게 숨겨진 재능이 나오는 다크호스 학교."
+}

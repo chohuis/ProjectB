@@ -5,6 +5,7 @@ import type {
   AchievementRuntime,
   ChatContact,
   ChatMessage,
+  NpcSaveState,
   PitchEntry,
   PitchingStatKey,
   ProtagonistSave,
@@ -12,7 +13,25 @@ import type {
   SchoolState,
   TrainingPlanState,
 } from "../types/save";
-import { makeSaveGame } from "../types/save";
+import { makeSaveGame, migrateSaveGame } from "../types/save";
+import {
+  advanceHighSchoolGrades,
+  advanceProtagonistGrade,
+  generateFreshmenNpcs,
+  initHighSchoolNpcs,
+} from "../utils/gradeAdvance";
+import {
+  applyDraftToNpcs,
+  determineProtagonistDraft,
+  runDraftSimulation,
+} from "../utils/draftSystem";
+import type {
+  DraftSimResult,
+  HighSchoolMaster,
+  NamedNpcMeta,
+  ProtagonistDraftOutcome,
+  SchoolScenario,
+} from "../types/save";
 import type { ContactDef, ContactEffect } from "../types/messenger";
 import type { CoreGameState } from "../types/projectb.d";
 import type { ProContract } from "../types/save";
@@ -26,6 +45,8 @@ export interface GameStoreState {
   achievements: AchievementRuntime[];
   achievementMetrics: AchievementMetrics;
   contacts: ChatContact[];
+  npcs: NpcSaveState[];
+  pendingDraft: NpcSaveState[];    // 드래프트 대기 졸업생 (비저장, 시즌 종료 시 채워짐)
   pendingAchievements: string[];   // 미확인 신규 달성 (비저장)
   dayLabel: string;
   logs: string[];
@@ -251,6 +272,8 @@ function buildInitialState(): GameStoreState {
     achievements: DEFAULT_ACHIEVEMENTS,
     achievementMetrics: DEFAULT_ACHIEVEMENT_METRICS,
     contacts:     [],
+    npcs:         [],
+    pendingDraft: [],
     pendingAchievements: [],
     dayLabel:     computeWeekLabel(1, p.grade ?? 1),
     logs:         ["훈련 루틴 설정 완료", "코치 면담으로 제구 +1", "팀 분위기 안정"],
@@ -310,6 +333,8 @@ function fromSaveGame(saved: SaveGame): GameStoreState {
     achievements,
     achievementMetrics: metrics,
     contacts:     (saved.contacts ?? []).map((c) => ({ ...c, flags: c.flags ?? [] })),
+    npcs:         saved.npcs ?? [],
+    pendingDraft: [],
     pendingAchievements: [],
     dayLabel:     computeWeekLabel(1, p.grade ?? 1),
     logs:         saved.recentLogs,
@@ -388,8 +413,8 @@ function createGameStore() {
     // 앱 시작 시 save_game.json에서 복원
     async load() {
       try {
-        const saved = await window.projectB?.gameLoad?.();
-        if (saved) set(fromSaveGame(saved));
+        const raw = await window.projectB?.gameLoad?.();
+        if (raw) set(fromSaveGame(migrateSaveGame(raw as unknown as Record<string, unknown>)));
       } catch (e) {
         console.warn("[gameStore] load failed, using defaults", e);
       }
@@ -401,7 +426,7 @@ function createGameStore() {
       const data = makeSaveGame(
         s.protagonist, s.mailbox, s.trainingPlan,
         s.schoolState, s.achievements, s.achievementMetrics, s.logs, s.upcoming,
-        s.contacts,
+        s.contacts, s.npcs,
       );
       try {
         await window.projectB?.gameSave?.(data);
@@ -1200,6 +1225,8 @@ function createGameStore() {
         achievements: DEFAULT_ACHIEVEMENTS,
         achievementMetrics: DEFAULT_ACHIEVEMENT_METRICS,
         contacts: [],
+        npcs: [],
+        pendingDraft: [],
         pendingAchievements: [],
         dayLabel: computeWeekLabel(1, protagonist.grade ?? 1),
         logs: [],
@@ -1207,6 +1234,91 @@ function createGameStore() {
         player: toPlayerCompat(protagonist),
         school: toSchoolCompat(protagonist.careerStage, DEFAULT_SCHOOL),
       });
+    },
+
+    // 새 게임 시작 시 고교 NPC 초기화 (마스터 entities + 시나리오 파일 기반)
+    initNpcsForNewGame(
+      entities: import("../stores/master").EntityRow[],
+      scenario: SchoolScenario,
+      seasonYear: number,
+    ) {
+      update((s) => ({
+        ...s,
+        npcs: initHighSchoolNpcs(entities, scenario, seasonYear),
+      }));
+    },
+
+    // 시즌 종료 처리: 학년 진급 + 졸업 + 신입생 생성
+    processSeasonEnd(
+      seasonYear: number,
+      school: HighSchoolMaster,
+      namedRegistry: NamedNpcMeta[],
+      namedEntities: import("../stores/master").EntityRow[],
+      genIdOffset: number,
+    ) {
+      update((s) => {
+        // 1. 학년 진급 + 졸업
+        const { updated, graduated } = advanceHighSchoolGrades(s.npcs, seasonYear);
+
+        // 2. 주인공 학년 진급
+        const proto = s.protagonist;
+        const gradeResult = proto.grade != null && proto.careerStage === "highschool"
+          ? advanceProtagonistGrade(proto.grade, proto.age)
+          : null;
+
+        // 3. 신입생 생성 (이번 학교의 Grade 1 명명 NPC 필터링)
+        const namedGrade1 = namedRegistry.filter(
+          m => m.schoolId === school.id &&
+               namedEntities.some(e => e.id === m.npcId && e.grade === 1)
+        );
+        const freshmen = generateFreshmenNpcs(
+          school, namedGrade1, namedEntities, seasonYear + 1, genIdOffset
+        );
+
+        const updatedProto = gradeResult
+          ? { ...proto, ...gradeResult.patch }
+          : proto;
+
+        return {
+          ...s,
+          npcs: [...updated, ...freshmen],
+          protagonist: updatedProto,
+          pendingDraft: graduated,
+        };
+      });
+    },
+
+    // 드래프트 시뮬레이션 실행 → NPC 반영 + 주인공 결과 반환
+    processDraft(
+      namedMetas: NamedNpcMeta[],
+      year: number,
+    ): { simResult: DraftSimResult; protagonistOutcome: ProtagonistDraftOutcome } {
+      const s = get({ subscribe });
+
+      // 1. NPC 드래프트 시뮬레이션
+      const simResult = runDraftSimulation(s.pendingDraft, namedMetas, year);
+
+      // 2. 주인공 드래프트 결과 (고교 졸업 시즌에만)
+      const isGraduating = s.protagonist.careerStage === "highschool"
+        && s.pendingDraft.length > 0;
+      const protagonistOutcome: ProtagonistDraftOutcome = isGraduating
+        ? determineProtagonistDraft(
+            s.protagonist.scoutScore,
+            s.protagonist.pitching.ovr,
+            year,
+          )
+        : { drafted: false };
+
+      // 3. NpcSaveState에 드래프트 결과 반영
+      const updatedNpcs = applyDraftToNpcs(s.npcs, simResult);
+
+      update(st => ({
+        ...st,
+        npcs:         updatedNpcs,
+        pendingDraft: [],
+      }));
+
+      return { simResult, protagonistOutcome };
     },
 
     // 하위 호환: App.svelte의 hydrate 호출 유지

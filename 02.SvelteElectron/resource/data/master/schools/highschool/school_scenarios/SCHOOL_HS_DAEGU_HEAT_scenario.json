@@ -1,0 +1,17 @@
+{
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "narrativeAngle": "타자 배출로 유명한 학교에서 투수로서 자기증명을 하는 서사. 타자 중심 문화 속에서 투수로 팀의 에이스가 되는 이야기.",
+  "protagonistRoles": {
+    "seniorMentors":   ["PLY_00041", "PLY_00042"],
+    "seniorCaptain":   "PLY_00052",
+    "classmateRivals": ["PLY_00043", "PLY_00044"],
+    "batteryPartner":  "PLY_00049",
+    "promisingJunior": "PLY_00046"
+  },
+  "mainRivalSchool": "SCHOOL_HS_INCHEON_HARBOR",
+  "rivalAces": ["PLY_00101", "PLY_00021"],
+  "initialZone0Npcs": [
+    "PLY_00041", "PLY_00042", "PLY_00052",
+    "PLY_00043", "PLY_00044", "PLY_00049", "PLY_00046"
+  ]
+}

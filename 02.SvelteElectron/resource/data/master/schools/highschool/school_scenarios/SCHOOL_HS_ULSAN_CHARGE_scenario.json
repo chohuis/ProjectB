@@ -1,0 +1,17 @@
+{
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "narrativeAngle": "파워 야구로 유명한 학교에서 기술형 투수로 자기증명을 하는 서사. 힘이 전부가 아님을 증명하며 팀의 에이스로 성장하는 이야기.",
+  "protagonistRoles": {
+    "seniorMentors":   ["PLY_00121", "PLY_00122"],
+    "seniorCaptain":   "PLY_00132",
+    "classmateRivals": ["PLY_00123", "PLY_00124"],
+    "batteryPartner":  "PLY_00129",
+    "promisingJunior": "PLY_00126"
+  },
+  "mainRivalSchool": "SCHOOL_HS_GWANGJU_VISION",
+  "rivalAces": ["PLY_00061", "PLY_00141"],
+  "initialZone0Npcs": [
+    "PLY_00121", "PLY_00122", "PLY_00132",
+    "PLY_00123", "PLY_00124", "PLY_00129", "PLY_00126"
+  ]
+}

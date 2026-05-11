@@ -1,0 +1,19 @@
+{
+  "id": "SCHOOL_HS_BUSAN_WAVE",
+  "name": "부산 웨이브 고등학교",
+  "shortName": "부산 웨이브",
+  "region": "부산",
+  "tier": "A",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "gradeLevels": 3,
+  "annualRosterSize": 22,
+  "namedNpcPerYear": 3,
+  "template": {
+    "pitching": { "ovrMin": 50, "ovrMax": 70 },
+    "batting": { "ovrMin": 45, "ovrMax": 65 },
+    "developmentRate": { "min": 52, "max": 72 },
+    "potentialHidden": { "min": 60, "max": 90 }
+  },
+  "color": "#0057A8",
+  "notes": "부산 전통 야구 강호. 투수 육성에 특화."
+}

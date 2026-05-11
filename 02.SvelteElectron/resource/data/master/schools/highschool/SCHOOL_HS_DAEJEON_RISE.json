@@ -1,0 +1,19 @@
+{
+  "id": "SCHOOL_HS_DAEJEON_RISE",
+  "name": "대전 라이즈 고등학교",
+  "shortName": "대전 라이즈",
+  "region": "대전",
+  "tier": "B",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "gradeLevels": 3,
+  "annualRosterSize": 18,
+  "namedNpcPerYear": 2,
+  "template": {
+    "pitching": { "ovrMin": 42, "ovrMax": 62 },
+    "batting": { "ovrMin": 37, "ovrMax": 57 },
+    "developmentRate": { "min": 45, "max": 65 },
+    "potentialHidden": { "min": 50, "max": 80 }
+  },
+  "color": "#8B4513",
+  "notes": "대전 중위권 학교. 최근 성장세."
+}

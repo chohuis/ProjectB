@@ -1,0 +1,17 @@
+{
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "narrativeAngle": "전통 강호 학교에서 전국 제패를 노리는 서사. 강한 선배들의 등 뒤에서 자신의 차례를 준비하다 마침내 팀의 에이스로 올라서는 이야기.",
+  "protagonistRoles": {
+    "seniorMentors":   ["PLY_00021", "PLY_00022"],
+    "seniorCaptain":   "PLY_00032",
+    "classmateRivals": ["PLY_00023", "PLY_00024"],
+    "batteryPartner":  "PLY_00029",
+    "promisingJunior": "PLY_00026"
+  },
+  "mainRivalSchool": "SCHOOL_HS_SEOUL_INNOVATION",
+  "rivalAces": ["PLY_00001", "PLY_00041"],
+  "initialZone0Npcs": [
+    "PLY_00021", "PLY_00022", "PLY_00032",
+    "PLY_00023", "PLY_00024", "PLY_00029", "PLY_00026"
+  ]
+}
