@@ -1,6 +1,4 @@
-<script lang="ts">
-  // NOTE: 이 페이지는 UI/UX 실험용 테스트 매치 화면입니다.
-  // 실제 시즌 pending game 연동은 pages/match/MatchPage.svelte에서 처리합니다.
+﻿<script lang="ts">
   import { onMount } from "svelte";
   import { get } from "svelte/store";
   import BaseballField from "../../features/match-view/ui/BaseballField.svelte";
@@ -9,15 +7,17 @@
   import { gameStore } from "../../shared/stores/game";
   import { masterStore } from "../../shared/stores/master";
   import type { EntityRow } from "../../shared/stores/master";
+  import type { InteractiveMatchContext, InteractiveMatchResult } from "../../shared/types/season";
 
   let fieldStyle: FieldStyle = 'digital';
   fieldStyleStore.subscribe(v => { fieldStyle = v; });
   let settingsOpen = false;
 
-  export let onExit: () => void = () => {};
-  // true일 때만 gameStore에 경기 결과를 반영한다.
-  // 기본값 false: 테스트 화면은 UI/UX 검증 전용으로 동작.
-  export let experimentalCommit = false;
+  export let matchContext: InteractiveMatchContext | null = null;
+  export let onComplete: (result: InteractiveMatchResult) => void = () => {};
+  export let onCancel: () => void = () => {};
+  // 실전 MatchPage는 기본적으로 로컬 데모 백업 모드를 사용하지 않음
+  export let allowLocalFallback = false;
 
   type PitchType = "fastball" | "slider" | "curve" | "changeup";
   type PitchStrategy = "aggressive" | "balanced" | "safe";
@@ -63,23 +63,23 @@
   }
 
   const WEATHER_LABEL: Record<WeatherType, string> = {
-    sunny: "☀️ 맑음",
-    cloudy: "☁️ 흐림",
-    rainy: "🌧️ 비",
-    windy_in: "💨 역풍",
-    windy_out: "💨 순풍"
+    sunny: "맑음",
+    cloudy: "흐림",
+    rainy: "비",
+    windy_in: "맞바람",
+    windy_out: "뒷바람"
   };
   const PARK_LABEL: Record<ParkType, string> = {
-    neutral: "중립구장",
-    pitcher_park: "투수유리구장",
-    hitter_park: "타자유리구장",
-    dome: "돔구장"
+    neutral: "중립 구장",
+    pitcher_park: "투수 친화 구장",
+    hitter_park: "타자 친화 구장",
+    dome: "돔 구장"
   };
 
   const teamHeader = "팀";
   const innings = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   const sectionTitle = "경기 내용";
-  const sceneTitle = "경기화면";
+  const sceneTitle = "경기 화면";
   const awayLineupTitle = "원정 라인업";
   const homeLineupTitle = "홈 라인업";
   const baseStatusTitle = "진루 상황";
@@ -97,7 +97,7 @@
     first:  { x: 650, y: 670 },
     second: { x: 500, y: 520 },
     third:  { x: 350, y: 670 },
-    mound:  { x: 500, y: 645 }
+    mound:  { x: 500, y: 668 }
   };
 
   // 레트로 이미지 좌표 (probaseball.gif 기준)
@@ -106,30 +106,48 @@
     first:  { x: 715, y: 580 },
     second: { x: 497, y: 454 },
     third:  { x: 280, y: 580 },
-    mound:  { x: 497, y: 530 }
+    mound:  { x: 497, y: 548 }
   };
 
   $: activeMound = fieldStyle === 'retro' ? retroField.mound : baseField.mound;
 
-  // ── 타자 / 주자 애니메이션 (레트로 전용) ─────────────────────────────
+  function runnerOffset(base: 'first' | 'second' | 'third'): FieldPoint {
+    if (fieldStyle === 'retro') {
+      if (base === 'first') return { x: 14, y: -18 };
+      if (base === 'second') return { x: 0, y: -20 };
+      return { x: -14, y: -18 };
+    }
+    if (base === 'first') return { x: 18, y: -14 };
+    if (base === 'second') return { x: 0, y: -18 };
+    return { x: -18, y: -14 };
+  }
+
+  function runnerPoint(base: 'first' | 'second' | 'third'): FieldPoint {
+    const f = fieldStyle === 'retro' ? retroField : baseField;
+    const b = f[base];
+    const o = runnerOffset(base);
+    return { x: b.x + o.x, y: b.y + o.y };
+  }
+
+  // 타자/주자 애니메이션 상태 (레트로 전용)
   let batter: { handedness: 'L' | 'R' } = { handedness: 'R' };
 
   function getBatterPlatePos(handedness: 'L' | 'R'): FieldPoint {
-    // 우타: 좌타석(플레이트 왼쪽 오프셋), 좌타: 우타석(플레이트 오른쪽)
+    // 우타: 홈플레이트 왼쪽 오프셋, 좌타: 홈플레이트 오른쪽 오프셋
     const offset = handedness === 'R' ? -34 : 34;
     return { x: retroField.home.x + offset, y: retroField.home.y - 22 };
   }
 
   let retroBatterPos: FieldPoint | null = getBatterPlatePos('R');
-  // [first, second, third] 슬롯; 초기 runners 상태({ first:true })에 맞춰 설정
-  let retroRunnerPositions: (FieldPoint | null)[] = [{ ...retroField.first }, null, null];
+  // [1루, 2루, 3루] 슬롯; 초기 주자 상태({ first:true })에 맞춰 설정
+  let retroRunnerPositions: (FieldPoint | null)[] = [runnerPoint('first'), null, null];
 
   function syncRetroPositions() {
     retroBatterPos = getBatterPlatePos(batter.handedness);
     retroRunnerPositions = [
-      runners.first  ? { ...retroField.first }  : null,
-      runners.second ? { ...retroField.second } : null,
-      runners.third  ? { ...retroField.third }  : null,
+      runners.first  ? runnerPoint('first')  : null,
+      runners.second ? runnerPoint('second') : null,
+      runners.third  ? runnerPoint('third')  : null,
     ];
   }
 
@@ -143,17 +161,17 @@
     const bFrom = retroBatterPos ?? getBatterPlatePos(batter.handedness);
 
     if (resultCode === 'HIT_SINGLE') {
-      movements.push({ from: { ...bFrom }, to: { ...f.first } });
-      if (prevRunners.first)  movements.push({ from: { ...f.first },  to: { ...f.second } });
-      if (prevRunners.second) movements.push({ from: { ...f.second }, to: { ...f.third } });
+      movements.push({ from: { ...bFrom }, to: runnerPoint('first') });
+      if (prevRunners.first)  movements.push({ from: runnerPoint('first'),  to: runnerPoint('second') });
+      if (prevRunners.second) movements.push({ from: runnerPoint('second'), to: runnerPoint('third') });
       if (prevRunners.third)  movements.push({ from: { ...f.third },  to: { ...f.home } });
     } else if (resultCode === 'HIT_DOUBLE') {
-      movements.push({ from: { ...bFrom }, to: { ...f.second } });
-      if (prevRunners.first)  movements.push({ from: { ...f.first },  to: { ...f.third } });
+      movements.push({ from: { ...bFrom }, to: runnerPoint('second') });
+      if (prevRunners.first)  movements.push({ from: runnerPoint('first'),  to: runnerPoint('third') });
       if (prevRunners.second) movements.push({ from: { ...f.second }, to: { ...f.home } });
       if (prevRunners.third)  movements.push({ from: { ...f.third },  to: { ...f.home } });
     } else if (resultCode === 'HIT_TRIPLE') {
-      movements.push({ from: { ...bFrom }, to: { ...f.third } });
+      movements.push({ from: { ...bFrom }, to: runnerPoint('third') });
       if (prevRunners.first)  movements.push({ from: { ...f.first },  to: { ...f.home } });
       if (prevRunners.second) movements.push({ from: { ...f.second }, to: { ...f.home } });
       if (prevRunners.third)  movements.push({ from: { ...f.third },  to: { ...f.home } });
@@ -163,10 +181,10 @@
       if (prevRunners.second) movements.push({ from: { ...f.second }, to: { ...f.home } });
       if (prevRunners.third)  movements.push({ from: { ...f.third },  to: { ...f.home } });
     } else if (resultCode === 'WALK') {
-      movements.push({ from: { ...bFrom }, to: { ...f.first } });
-      if (prevRunners.first) movements.push({ from: { ...f.first }, to: { ...f.second } });
+      movements.push({ from: { ...bFrom }, to: runnerPoint('first') });
+      if (prevRunners.first) movements.push({ from: runnerPoint('first'), to: runnerPoint('second') });
       if (prevRunners.first && prevRunners.second)
-        movements.push({ from: { ...f.second }, to: { ...f.third } });
+        movements.push({ from: runnerPoint('second'), to: runnerPoint('third') });
       if (prevRunners.first && prevRunners.second && prevRunners.third)
         movements.push({ from: { ...f.third }, to: { ...f.home } });
     } else if (resultCode === 'INPLAY_OUT') {
@@ -177,7 +195,7 @@
     }
 
     if (movements.length === 0) return;
-    retroBatterPos = null; // 타자 이동 시작 → 타석 스프라이트 숨김
+    retroBatterPos = null; // 타자 이동 시작 시 타자 스프라이트 숨김
 
     const duration = 450;
     const frame = 16;
@@ -202,15 +220,15 @@
   let lastPitchPct: { px: number; py: number } | null = null;
   let zoneCanvasEl: HTMLDivElement | null = null;
 
-  // 캔버스 전체 → 필드 SVG 좌표 변환
-  // 스트라이크존 박스: 캔버스 x 10-90%, y 8-92% → 필드 x:470-530, y:730-790
-  // Ball 여백: 캔버스 각 방향 10%/8% → 필드 ±7.5/±5.7 유닛
+  // 캔버스 비율 좌표를 필드 SVG 좌표로 변환
+  // 스트라이크존 박스: 캔버스 x 10~90%, y 8~92% => 필드 x 470~530, y 730~790
+  // 볼 이동: 캔버스 각 방향 10%/8% 변화당 필드 약 7.5/5.7 이동
   $: clickedFieldPos = {
     x: Number((462.5 + zoneClickPct.px * 75).toFixed(1)),
     y: Number((724.3 + zoneClickPct.py * 71.4).toFixed(1))
   } as FieldPoint;
 
-  // 스트라이크존 내 정규화 비율로 zone 1-9 파생 (존 외곽 = 가장 가까운 변 존)
+  // 스트라이크존 상대 위치 비율로 zone 1~9 계산 (경계값은 가까운 칸으로 보정)
   function getZoneFromClick(px: number, py: number): (typeof zones)[number] {
     const normX = Math.max(0, Math.min(1, (px - 0.10) / 0.80));
     const normY = Math.max(0, Math.min(1, (py - 0.08) / 0.84));
@@ -237,9 +255,9 @@
     };
   }
 
-  // 수비수 기본 위치 (SVG 좌표 1000x920)
+  // 수비 기본 위치 (SVG 좌표 1000x920)
   const DEFENSE_NORMAL_BASE = [
-    { pos: "P",  x: 500, y: 645 },
+    { pos: "P",  x: 500, y: 668 },
     { pos: "C",  x: 500, y: 800 },
     { pos: "1B", x: 650, y: 675 },
     { pos: "2B", x: 590, y: 575 },
@@ -251,7 +269,7 @@
   ] as { pos: string; x: number; y: number }[];
 
   const DEFENSE_RETRO_BASE = [
-    { pos: "P",  x: 497, y: 530 },
+    { pos: "P",  x: 497, y: 548 },
     { pos: "C",  x: 497, y: 800 },
     { pos: "1B", x: 710, y: 588 },
     { pos: "2B", x: 600, y: 508 },
@@ -262,7 +280,7 @@
     { pos: "RF", x: 752, y: 518 }
   ] as { pos: string; x: number; y: number }[];
 
-  // Reactive — 애니메이션 중 위치 변경 가능
+  // 애니메이션 중 위치 변경을 반영하기 위한 상태
   let defenseNormal = DEFENSE_NORMAL_BASE.map(d => ({ ...d }));
   let defenseRetro  = DEFENSE_RETRO_BASE.map(d => ({ ...d }));
 
@@ -272,6 +290,9 @@
   let errorFlashPos: string | null = null;
 
   let totalStrikeouts = 0;
+  let totalHitsAllowed = 0;
+  let totalWalksAllowed = 0;
+  let totalOutsRecorded = 0;
   let matchDefenseStat = { errors: 0, assists: 0, throwOuts: 0, throwSafes: 0 };
 
   interface GameResult {
@@ -282,7 +303,7 @@
   let isGameOver = false;
   let gameResult: GameResult = { awayScore: 0, homeScore: 0, pitchCount: 0, strikeouts: 0, errors: 0, won: false, summary: '' };
 
-  // 엔진 0-100 좌표 → SVG 포지션별 lookup (ball_batted / ball_throw to 좌표 역매핑용)
+  // 엔진 0~100 좌표와 SVG 수비 좌표 매핑용 lookup
   const FIELD_ENGINE_REF: Record<string, { x: number; y: number }> = {
     "P":  { x: 50, y: 62 }, "C":  { x: 50, y: 90 },
     "1B": { x: 78, y: 70 }, "2B": { x: 63, y: 55 },
@@ -293,7 +314,7 @@
   };
 
   function enginePosToSvg(p: { x: number; y: number }): FieldPoint {
-    // 가장 가까운 알려진 포지션의 SVG 좌표로 매핑
+    // 가장 가까운 사전 정의 수비수 SVG 좌표로 매핑
     const base = fieldStyle === 'retro' ? DEFENSE_RETRO_BASE : DEFENSE_NORMAL_BASE;
     let minDist = Infinity;
     let best = base[0];
@@ -314,20 +335,52 @@
     return 'LEAGUE_HIGHSCHOOL';
   }
 
-  function buildOpponentLineup(): import('../../shared/types/projectb').MatchBatterStats[] {
+  function buildOpponentLineup(opponentTeamId: string): import('../../shared/types/projectb').MatchBatterStats[] {
     const entities = get(masterStore).entities;
-    const myTeamId = get(gameStore).player.team;
     const pitcherPos = ['SP', 'RP', 'CP'];
-    const opponents = entities.filter((e: EntityRow) =>
-      e.teamId !== myTeamId &&
+    const fieldOrder = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"];
+    const opponentsInTeam = entities.filter((e: EntityRow) =>
+      e.teamId === opponentTeamId &&
       e.role === 'player' &&
       !pitcherPos.includes(String((e.details as any)?.player?.position ?? ''))
     );
+
+    // 상대팀 타자 데이터가 9명 미만이면 리그 전체에서 대체 (seed/blank 대응)
+    const opponents =
+      opponentsInTeam.length >= 9
+        ? opponentsInTeam
+        : entities.filter((e: EntityRow) =>
+            e.role === 'player' &&
+            !pitcherPos.includes(String((e.details as any)?.player?.position ?? ''))
+          );
+
     if (opponents.length < 9) return [];
     const sorted = [...opponents].sort((a: EntityRow, b: EntityRow) =>
       ((b.details as any)?.player?.batting?.ovr ?? 0) - ((a.details as any)?.player?.batting?.ovr ?? 0)
     );
-    return sorted.slice(0, 9).map((e: EntityRow) => {
+
+    // 포지션 기반 우선 선발, 부족 인원은 OVR 상위로 채움
+    const picked: EntityRow[] = [];
+    const used = new Set<string>();
+    for (const pos of fieldOrder) {
+      const found = sorted.find((e) => {
+        if (used.has(e.id)) return false;
+        const p = String((e.details as any)?.player?.position ?? "");
+        return p === pos;
+      });
+      if (found) {
+        used.add(found.id);
+        picked.push(found);
+      }
+    }
+    for (const e of sorted) {
+      if (picked.length >= 9) break;
+      if (used.has(e.id)) continue;
+      used.add(e.id);
+      picked.push(e);
+    }
+
+    return picked.slice(0, 9).map((e: EntityRow) => {
       const bat = (e.details as any)?.player?.batting ?? {};
       return {
         contact: bat.contact ?? 50, power: bat.power ?? 50,
@@ -339,11 +392,43 @@
     });
   }
 
-  const pitchTypes: { id: PitchType; label: string }[] = [
-    { id: "fastball", label: "패스트볼" },
-    { id: "slider", label: "슬라이더" },
-    { id: "curve", label: "커브" },
-    { id: "changeup", label: "체인지업" }
+  function buildOpponentFielders(opponentTeamId: string): import('../../shared/types/projectb').MatchFielderStats[] {
+    const entities = get(masterStore).entities.filter(
+      (e: EntityRow) => e.teamId === opponentTeamId && e.role === "player"
+    );
+    const posOrder: Array<import('../../shared/types/projectb').MatchFielderStats["position"]> = ["P", "C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"];
+    const posToXY: Record<string, { x: number; y: number }> = {
+      P: { x: 50, y: 62 }, C: { x: 50, y: 90 }, "1B": { x: 78, y: 70 }, "2B": { x: 63, y: 55 },
+      "3B": { x: 22, y: 70 }, SS: { x: 37, y: 55 }, LF: { x: 18, y: 28 }, CF: { x: 50, y: 16 }, RF: { x: 82, y: 28 },
+    };
+    const pickByPos = (pos: string) =>
+      entities.find((e) => String((e.details as any)?.player?.position ?? "") === pos);
+    const pickPitcher = () =>
+      pickByPos("SP") ?? pickByPos("RP") ?? pickByPos("CP") ?? entities[0];
+
+    return posOrder.map((pos) => {
+      const source = pos === "P" ? pickPitcher() : pickByPos(pos);
+      const bat = (source?.details as any)?.player?.batting ?? {};
+      return {
+        position: pos,
+        name: source?.name ?? pos,
+        fielding: bat.fielding ?? 50,
+        arm: bat.arm ?? 50,
+        speed: bat.speed ?? 50,
+        x: posToXY[pos].x,
+        y: posToXY[pos].y,
+      };
+    });
+  }
+
+  const PITCH_ID_TO_ENGINE: Record<string, PitchType> = {
+    PITCH_FASTBALL: "fastball",
+    PITCH_SLIDER: "slider",
+    PITCH_CURVE: "curve",
+    PITCH_CHANGEUP: "changeup",
+  };
+  const fallbackPitchTypes: { id: PitchType; label: string }[] = [
+    { id: "fastball", label: "Fastball" }
   ];
 
   const strategies: { id: PitchStrategy; label: string }[] = [
@@ -358,13 +443,15 @@
     { id: "high", label: "강" }
   ];
 
-  let selectedPitchType: PitchType = pitchTypes[0].id;
+  let pitchTypes: { id: PitchType; label: string }[] = [...fallbackPitchTypes];
+  let selectedPitchType: PitchType = "fastball";
   let selectedStrategy: PitchStrategy = "balanced";
   let selectedPower: PitchPower = "normal";
 
   let engineAvailable = false;
   let engineStarted = false;
   let isPitching = false;
+  let engineErrorMsg = "";
 
   let inning = 1;
   let half: "top" | "bottom" = "top";
@@ -374,35 +461,62 @@
 
   let scoreRows = [
     {
-      team: "A팀",
-      inningScores: [0, 1, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0],
-      r: 4,
-      h: 9,
-      e: 1,
-      b: 3
+      team: "원정",
+      inningScores: Array(12).fill(0),
+      r: 0,
+      h: 0,
+      e: 0,
+      b: 0
     },
     {
-      team: "B팀",
-      inningScores: [1, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 0],
-      r: 4,
-      h: 8,
+      team: "홈",
+      inningScores: Array(12).fill(0),
+      r: 0,
+      h: 0,
       e: 0,
-      b: 2
+      b: 0
     }
   ];
+  $: {
+    const catalogNameById = new Map($masterStore.pitchCatalog.map((p) => [p.id, p.nameKo ?? p.name]));
+    const rawPitches = $gameStore.protagonist.pitches ?? [{ id: "PITCH_FASTBALL", grade: 3 as const }];
+    const mapped = rawPitches
+      .map((entry) => {
+        const id = PITCH_ID_TO_ENGINE[entry.id];
+        if (!id) return null;
+        return {
+          id,
+          label: catalogNameById.get(entry.id) ?? entry.id.replace("PITCH_", ""),
+        };
+      })
+      .filter((entry): entry is { id: PitchType; label: string } => Boolean(entry));
+    const deduped: { id: PitchType; label: string }[] = [];
+    for (const pitch of mapped) {
+      if (deduped.some((d) => d.id === pitch.id)) continue;
+      deduped.push(pitch);
+    }
+    pitchTypes = deduped.length > 0 ? deduped : [...fallbackPitchTypes];
+    if (!pitchTypes.some((p) => p.id === selectedPitchType)) {
+      selectedPitchType = pitchTypes[0].id;
+    }
+  }
+
+  $: if (matchContext) {
+    const teamById = new Map($masterStore.teams.map((t) => [t.id, t.name]));
+    scoreRows = [
+      { ...scoreRows[0], team: teamById.get(matchContext.awayTeamId) ?? matchContext.awayTeamId },
+      { ...scoreRows[1], team: teamById.get(matchContext.homeTeamId) ?? matchContext.homeTeamId },
+    ];
+  }
 
   let playByPlayLines: { text: string; cls: string }[] = [
-    { text: "견제로 1루 주자 압박 중.", cls: '' },
-    { text: "다음 타자 우전 안타로 출루.", cls: 'log-hit' },
-    { text: "3구째 헛스윙 삼진.", cls: 'log-strike' },
-    { text: "2구째 파울, 유리한 카운트.", cls: 'log-foul' },
-    { text: "1회초 선두타자, 초구 스트라이크.", cls: 'log-strike' }
+    { text: "매치 엔진 초기화 중...", cls: "" }
   ];
 
   let batterInfo = [
     { label: "컨택", value: "50" },
     { label: "파워", value: "50" },
-    { label: "선구안", value: "50" }
+    { label: "선구", value: "50" }
   ];
 
   let matchWeather: WeatherType = "sunny";
@@ -439,7 +553,7 @@
   };
 
   $: inningHalfLabel = `${inning}회 ${half === "top" ? "초" : "말"}`;
-  // 초: 원정 공격 → 홈팀 수비(파랑), 말: 홈 공격 → 원정팀 수비(빨강)
+  // 초: 원정 공격(홈 수비), 말: 홈 공격(원정 수비)
   $: fieldingTeam = (half === 'top' ? 'home' : 'away') as 'home' | 'away';
   $: staminaColor = pitcherState.stamina > 60 ? '#37d67a' : pitcherState.stamina > 30 ? '#ffd54f' : '#ff4a4a';
   $: mentalColor  = pitcherState.mental  > 60 ? '#5b9cf6' : pitcherState.mental  > 30 ? '#c47af5' : '#ff6b9d';
@@ -447,7 +561,7 @@
   function handleKeyDown(event: KeyboardEvent) {
     if (event.key === "Escape") {
       if (settingsOpen) { settingsOpen = false; return; }
-      onExit();
+      onCancel();
     }
   }
 
@@ -471,7 +585,12 @@
       if (get(masterStore).entities.length === 0) {
         await masterStore.loadEntities(toLeagueId(state.protagonist.careerStage));
       }
-      const opponentLineup = buildOpponentLineup();
+      const myTeamId = matchContext?.protagonistTeamId ?? state.protagonist.teamId;
+      const opponentTeamId = matchContext
+        ? (matchContext.homeTeamId === myTeamId ? matchContext.awayTeamId : matchContext.homeTeamId)
+        : "";
+      const opponentLineup = opponentTeamId ? buildOpponentLineup(opponentTeamId) : [];
+      const fielders = opponentTeamId ? buildOpponentFielders(opponentTeamId) : [];
       const response = await window.projectB.matchStart({
         initialStamina: player.condition,
         initialMental: 74,
@@ -480,14 +599,21 @@
         weather: matchWeather,
         park: matchPark,
         ...(opponentLineup.length >= 9 ? { opponentLineup } : {}),
+        ...(fielders.length >= 9 ? { fielders } : {}),
       });
       engineAvailable = true;
       engineStarted = true;
+      engineErrorMsg = "";
       applySnapshot(response.snapshot, "매치 엔진 연결 완료");
-    } catch {
+    } catch (e) {
       engineAvailable = false;
       engineStarted = false;
-      pushLog("로컬 시뮬레이터 모드로 동작합니다.");
+      engineErrorMsg = `매치 엔진 연결 실패: ${String((e as Error)?.message ?? e)}`;
+      if (allowLocalFallback) {
+        pushLog("로컬 시뮬레이터 모드로 동작합니다.");
+      } else {
+        pushLog("매치 엔진 연결 실패: 직접 플레이를 시작할 수 없습니다.");
+      }
     }
   }
 
@@ -506,11 +632,24 @@
     playByPlayLines = [{ text: line, cls }, ...playByPlayLines].slice(0, 20);
   }
 
-  function updateScoreRows(awayScore: number, homeScore: number, resultCode: PitchResultCode) {
+  function updateScoreRows(
+    awayScore: number,
+    homeScore: number,
+    resultCode: PitchResultCode,
+    snapshot: SnapshotLike,
+  ) {
+    const inningIndex = Math.max(0, Math.min(11, (snapshot.inning ?? 1) - 1));
+    const isTop = snapshot.half === "top";
+
     scoreRows = scoreRows.map((row, idx) => {
+      const nextInningScores = [...row.inningScores];
+      if (idx === 0 && isTop) nextInningScores[inningIndex] = awayScore;
+      if (idx === 1 && !isTop) nextInningScores[inningIndex] = homeScore;
+
       if (idx === 0) {
         return {
           ...row,
+          inningScores: nextInningScores,
           r: awayScore,
           h: row.h + (resultCode === "HIT_SINGLE" || resultCode === "HIT_DOUBLE" || resultCode === "HIT_TRIPLE" || resultCode === "HOME_RUN" ? 1 : 0),
           b: row.b + (resultCode === "WALK" ? 1 : 0)
@@ -519,6 +658,7 @@
 
       return {
         ...row,
+        inningScores: nextInningScores,
         r: homeScore
       };
     });
@@ -543,14 +683,14 @@
       batterInfo = [
         { label: "컨택", value: String(snapshot.batter.contact) },
         { label: "파워", value: String(snapshot.batter.power) },
-        { label: "선구안", value: String(snapshot.batter.eye) }
+        { label: "선구", value: String(snapshot.batter.eye) }
       ];
     }
     if (snapshot.weather) matchWeather = snapshot.weather;
     if (snapshot.park) matchPark = snapshot.park;
     if (snapshot.defenseStat) matchDefenseStat = { ...snapshot.defenseStat };
 
-    updateScoreRows(snapshot.score.away, snapshot.score.home, resultCode);
+    updateScoreRows(snapshot.score.away, snapshot.score.home, resultCode, snapshot);
 
     if (line) {
       pushLog(line, resultToCls(resultCode));
@@ -599,17 +739,17 @@
 
   function showResultOverlay(code: PitchResultCode) {
     const map: Partial<Record<PitchResultCode, { text: string; color: string }>> = {
-      STRIKE_SWING: { text: '헛스윙!',  color: '#37d67a' },
-      STRIKE_LOOK:  { text: '루킹!',    color: '#37d67a' },
-      BALL:         { text: '볼',       color: '#7a8fa8' },
-      FOUL:         { text: '파울',     color: '#ffd54f' },
-      INPLAY_OUT:   { text: '아웃!',    color: '#ff8c42' },
-      FIELDING_ERROR: { text: '실책!',  color: '#ff4a4a' },
-      HIT_SINGLE:   { text: '안타!',    color: '#ffd54f' },
-      HIT_DOUBLE:   { text: '2루타!',   color: '#ffd54f' },
-      HIT_TRIPLE:   { text: '3루타!',   color: '#ff9800' },
-      HOME_RUN:     { text: '홈런!!',   color: '#ff4a4a' },
-      WALK:         { text: '볼넷',     color: '#7a8fa8' },
+      STRIKE_SWING: { text: "헛스윙!", color: "#37d67a" },
+      STRIKE_LOOK: { text: "루킹!", color: "#37d67a" },
+      BALL: { text: "볼", color: "#7a8fa8" },
+      FOUL: { text: "파울", color: "#ffd54f" },
+      INPLAY_OUT: { text: "아웃!", color: "#ff8c42" },
+      FIELDING_ERROR: { text: "실책!", color: "#ff4a4a" },
+      HIT_SINGLE: { text: "안타!", color: "#ffd54f" },
+      HIT_DOUBLE: { text: "2루타!", color: "#ffd54f" },
+      HIT_TRIPLE: { text: "3루타!", color: "#ff9800" },
+      HOME_RUN: { text: "홈런!!", color: "#ff4a4a" },
+      WALK: { text: "볼넷", color: "#7a8fa8" },
     };
     const entry = map[code] ?? { text: code, color: '#ffffff' };
     if (overlayTimer) clearTimeout(overlayTimer);
@@ -809,6 +949,10 @@
 
   async function runPitch() {
     if (isPitching) return;
+    if (!engineAvailable && !allowLocalFallback) {
+      pushLog("엔진 미연결 상태입니다. 화면을 닫고 다시 시도해 주세요.");
+      return;
+    }
 
     isPitching = true;
     const prevRunners = { first: runners.first, second: runners.second, third: runners.third };
@@ -840,10 +984,18 @@
       line = `${inningHalfLabel} ${pitchTypes.find((p) => p.id === selectedPitchType)?.label} ${response.outcome.comment}`;
       const prevOuts = count.out;
       applySnapshot(response.snapshot, line, resultCode);
+      const outsGained = count.out >= prevOuts ? count.out - prevOuts : (3 - prevOuts) + count.out;
+      if (outsGained > 0) totalOutsRecorded += outsGained;
 
-      // 삼진 누적
+      // 개인 기록 집계
       if ((resultCode === 'STRIKE_SWING' || resultCode === 'STRIKE_LOOK') && count.out > prevOuts) {
         totalStrikeouts++;
+      }
+      if (resultCode === "HIT_SINGLE" || resultCode === "HIT_DOUBLE" || resultCode === "HIT_TRIPLE" || resultCode === "HOME_RUN") {
+        totalHitsAllowed += 1;
+      }
+      if (resultCode === "WALK") {
+        totalWalksAllowed += 1;
       }
 
       if (response.outcome.animationCues?.length) {
@@ -876,13 +1028,25 @@
         isPitching = false;
         return;
       }
-    } else {
+    } else if (allowLocalFallback) {
       await tweenBall(clickedFieldPos, 220);
       resultCode = rollLocalResult();
       const local = applyLocalResult(resultCode);
       resultCode = local.resolvedCode;
       line = `${inningHalfLabel} ${pitchTypes.find((p) => p.id === selectedPitchType)?.label} ${localComment(resultCode)}`;
+      const prevOuts = count.out;
       applySnapshot(local.snapshot, line, resultCode);
+      const outsGained = count.out >= prevOuts ? count.out - prevOuts : (3 - prevOuts) + count.out;
+      if (outsGained > 0) totalOutsRecorded += outsGained;
+      if ((resultCode === 'STRIKE_SWING' || resultCode === 'STRIKE_LOOK') && count.out > prevOuts) {
+        totalStrikeouts++;
+      }
+      if (resultCode === "HIT_SINGLE" || resultCode === "HIT_DOUBLE" || resultCode === "HIT_TRIPLE" || resultCode === "HOME_RUN") {
+        totalHitsAllowed += 1;
+      }
+      if (resultCode === "WALK") {
+        totalWalksAllowed += 1;
+      }
       if (local.inningChange) {
         if (local.snapshot.inning > 9 && !isGameOver) {
           await handleGameOver();
@@ -891,7 +1055,7 @@
           return;
         }
         const newHalf = local.snapshot.half === 'top' ? '초' : '말';
-        pushLog(`──── ${local.snapshot.inning}회 ${newHalf} ────`, 'log-separator');
+        pushLog(`이닝 교체: ${local.snapshot.inning}회 ${newHalf}`, 'log-separator');
         showChangeAlert();
       }
 
@@ -907,6 +1071,9 @@
         syncRetroPositions();
       }
       await tweenBall(activeMound, 180);
+    } else {
+      isPitching = false;
+      return;
     }
 
     lastPitchPct = pitchedAt;
@@ -937,25 +1104,38 @@
       won, summary,
     };
 
-    if (experimentalCommit) {
-      gameStore.recordBaseballAchievementMetric({ strikeouts: totalStrikeouts, won });
-
-      const staminaUsed = Math.max(0, 82 - pitcherState.stamina);
-      const condDelta = -Math.round(staminaUsed / 4);
-      const protagonist = get(gameStore).protagonist;
-      const resultLabel = won ? '승리' : awayScore === homeScore ? '무승부' : '패배';
-      gameStore.applyWeekResult(
-        { condition: Math.max(5, protagonist.condition + condDelta) },
-        [`경기 ${resultLabel} — ${awayScore}:${homeScore} (${totalStrikeouts}K/${matchDefenseStat.errors}E)`],
-        [],
-        1
-      );
-    }
+    const staminaUsed = Math.max(0, 82 - pitcherState.stamina);
+    const condDelta = -Math.round(staminaUsed / 4);
+    const protagonist = get(gameStore).protagonist;
+    const resultLabel = won ? '승리' : awayScore === homeScore ? '무승부' : '패배';
+    gameStore.applyWeekResult(
+      { condition: Math.max(5, protagonist.condition + condDelta) },
+      [`경기 ${resultLabel} - ${awayScore}:${homeScore} (${totalStrikeouts}K/${matchDefenseStat.errors}E)`],
+      [],
+      matchContext?.week ?? 1
+    );
   }
 
   function handleExitAfterGame() {
+    if (matchContext) {
+      onComplete({
+        scheduleId: matchContext.scheduleId,
+        week: matchContext.week,
+        homeTeamId: matchContext.homeTeamId,
+        awayTeamId: matchContext.awayTeamId,
+        homeScore: gameResult.homeScore,
+        awayScore: gameResult.awayScore,
+        strikeouts: gameResult.strikeouts,
+        hitsAllowed: totalHitsAllowed,
+        walksAllowed: totalWalksAllowed,
+        outsRecorded: totalOutsRecorded,
+        errors: gameResult.errors,
+        pitchCount: gameResult.pitchCount,
+        summary: gameResult.summary,
+      });
+    }
     isGameOver = false;
-    onExit();
+    onCancel();
   }
 
   function localComment(code: PitchResultCode): string {
@@ -969,7 +1149,7 @@
       case "FOUL":
         return "파울";
       case "INPLAY_OUT":
-        return "땅볼 아웃";
+        return "인플레이 아웃";
       case "HIT_SINGLE":
         return "안타";
       case "HIT_DOUBLE":
@@ -1030,7 +1210,7 @@
           {#if selectedDefPosition}
             <span class="pos-badge">선택: {selectedDefPosition}</span>
           {/if}
-          <button class="settings-btn" type="button" on:click={() => (settingsOpen = !settingsOpen)} title="환경설정">⚙</button>
+          <button class="settings-btn" type="button" on:click={() => (settingsOpen = !settingsOpen)} title="환경 설정">⚙</button>
         </div>
 
         <div class="scene-layout">
@@ -1054,6 +1234,7 @@
               {isPitching}
               {fieldStyle}
               {fieldingTeam}
+              runnerTeam={half === 'top' ? 'away' : 'home'}
               {batter}
               batterAnimPos={fieldStyle === 'retro' ? retroBatterPos : null}
               runnerAnimPositions={fieldStyle === 'retro' ? retroRunnerPositions : [null, null, null]}
@@ -1216,13 +1397,20 @@
             {/each}
           </div>
 
-          <button type="button" class="execute-btn" disabled={isPitching} on:click={runPitch}>
+          <button type="button" class="execute-btn" disabled={isPitching || (!engineAvailable && !allowLocalFallback)} on:click={runPitch}>
             {isPitching ? "투구 진행 중..." : "투구 실행"}
           </button>
 
           <p class="engine-state" class:on={engineAvailable}>
-            {engineAvailable ? "엔진 연동" : "로컬 시뮬레이터"}
+            {engineAvailable
+              ? "엔진 연동"
+              : allowLocalFallback
+              ? "로컬 시뮬레이터"
+              : "엔진 미연결"}
           </p>
+          {#if engineErrorMsg}
+            <p class="engine-state">{engineErrorMsg}</p>
+          {/if}
         </section>
       </div>
 
@@ -1278,14 +1466,14 @@
         </div>
         <ul class="gameover-stats">
           <li><span>투구 수</span><strong>{gameResult.pitchCount}</strong></li>
-          <li><span>삼진</span><strong>{gameResult.strikeouts} K</strong></li>
+          <li><span>탈삼진</span><strong>{gameResult.strikeouts} K</strong></li>
           <li><span>실책</span><strong>{gameResult.errors} E</strong></li>
         </ul>
         {#if gameResult.summary}
           <p class="gameover-summary">{gameResult.summary}</p>
         {/if}
         <button class="gameover-exit-btn" type="button" on:click={handleExitAfterGame}>
-          경기장 나가기
+          경기 나가기
         </button>
       </div>
     </div>
@@ -1723,7 +1911,7 @@
     opacity: 0.75;
   }
 
-  /* 스트라이크존 박스: 캔버스 x 10-90%, y 8-92% */
+  /* 스트라이크존 박스: 캔버스 x 10~90%, y 8~92% */
   .sz-inner-box {
     position: absolute;
     left: 10%;
@@ -1739,7 +1927,7 @@
     pointer-events: none;
   }
 
-  /* 조준 dot (파란색) */
+  /* 조준 dot (타겟) */
   .zone-target-dot {
     position: absolute;
     width: 18px;
@@ -1761,7 +1949,7 @@
     background: rgba(150, 210, 255, 0.5);
   }
 
-  /* 마지막 투구 위치 dot (노란색) */
+  /* 마지막 투구 위치 dot (흰색) */
   .zone-last-dot {
     position: absolute;
     width: 12px;
@@ -2062,7 +2250,7 @@
     }
   }
 
-  /* ── 게임오버 모달 ───────────────────────────────────────────── */
+  /* 게임 종료 모달 */
   .gameover-overlay {
     position: fixed;
     inset: 0;
@@ -2210,3 +2398,8 @@
     box-shadow: 0 6px 22px rgba(50, 100, 200, 0.55);
   }
 </style>
+
+
+
+
+

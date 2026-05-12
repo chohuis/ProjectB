@@ -6,7 +6,7 @@
   import { runSimpleGame } from "@core/usecases/matchEngine";
   import { calcGameGrowth } from "../../shared/utils/growthEngine";
   import { checkAchievements, computeMetrics } from "../../shared/utils/achievementEngine";
-  import type { MatchResult, PendingAction } from "../../shared/types/season";
+  import type { MatchResult, PendingAction, PitcherGameLine } from "../../shared/types/season";
   import { t } from "../../shared/i18n";
 
   function tName(id: string): string {
@@ -45,6 +45,8 @@
   import EntityManagerModal from "../../features/entity-manager/ui/EntityManagerModal.svelte";
   import AchievementManagerModal from "../../features/achievements/ui/AchievementManagerModal.svelte";
   import SeasonEndModal from "../../features/season-end/ui/SeasonEndModal.svelte";
+  import MatchPage from "../match/MatchPage.svelte";
+  import type { InteractiveMatchContext, InteractiveMatchResult } from "../../shared/types/season";
 
   export let onSeasonEnd: () => void = () => {};
 
@@ -56,6 +58,7 @@
   let achievementManagerOpen = false;
   let matchLabOpen = false;
   let messengerManagerOpen = false;
+  let activeMatchContext: InteractiveMatchContext | null = null;
   const tabPageKey: Record<MainTabId, string> = {
     home: "page.home",
     messages: "page.messages",
@@ -81,6 +84,9 @@
     title: string;
     detail: string;
   };
+
+  let committedMatchScheduleIds = new Set<string>();
+  let lastSeasonYear = 0;
 
   function tabForPending(action: PendingAction): MainTabId {
     switch (action.type) {
@@ -260,13 +266,12 @@
 
     const myTeamId = p.teamId;
     const isHome   = pendingGameEntry.homeTeamId === myTeamId;
-    const result: MatchResult = {
-      homeScore: gameSummary.homeScore,
-      awayScore: gameSummary.awayScore,
-      winnerId: gameSummary.homeScore > gameSummary.awayScore ? pendingGameEntry.homeTeamId : pendingGameEntry.awayTeamId,
-      loserId:  gameSummary.homeScore > gameSummary.awayScore ? pendingGameEntry.awayTeamId : pendingGameEntry.homeTeamId,
-      playerLines: [], events: [],
-    };
+    const result = buildTeamMatchResult(
+      pendingGameEntry.homeTeamId,
+      pendingGameEntry.awayTeamId,
+      gameSummary.homeScore,
+      gameSummary.awayScore,
+    );
     seasonStore.applyMatchResult(pendingGameEntry.id, result);
     seasonStore.resolvePendingAction("game", pendingGameEntry.id);
 
@@ -346,6 +351,10 @@
   }, {} as Partial<Record<MainTabId, number>>);
 
   $: currentTabQueue = pendingQueue.filter((item) => item.tab === currentTab);
+  $: if ($seasonStore.seasonYear !== lastSeasonYear) {
+    committedMatchScheduleIds = new Set<string>();
+    lastSeasonYear = $seasonStore.seasonYear;
+  }
 
   function goToQueueItem(item: QueueItem) {
     currentTab = item.tab;
@@ -368,6 +377,113 @@
 
   function closeMatchEngine() {
     currentTab = "home";
+  }
+
+  function startInteractiveMatch() {
+    if (!pendingGameEntry) return;
+    activeMatchContext = {
+      scheduleId: pendingGameEntry.id,
+      week: pendingGameEntry.week,
+      homeTeamId: pendingGameEntry.homeTeamId,
+      awayTeamId: pendingGameEntry.awayTeamId,
+      protagonistTeamId: $gameStore.protagonist.teamId,
+    };
+  }
+
+  function completeInteractiveMatch(result: InteractiveMatchResult) {
+    if (committedMatchScheduleIds.has(result.scheduleId)) {
+      activeMatchContext = null;
+      return;
+    }
+    committedMatchScheduleIds.add(result.scheduleId);
+
+    const myTeamId = $gameStore.protagonist.teamId;
+    const teamResult = buildTeamMatchResult(
+      result.homeTeamId,
+      result.awayTeamId,
+      result.homeScore,
+      result.awayScore,
+    );
+    const isDraw = teamResult.loserId === null;
+    const runsAllowed = result.homeTeamId === myTeamId ? result.awayScore : result.homeScore;
+    const inningsPitched = Number((Math.max(0, result.outsRecorded) / 3).toFixed(1));
+    const pitcherLine: PitcherGameLine = {
+      role: "pitcher",
+      playerId: $gameStore.protagonist.id,
+      ip: inningsPitched,
+      er: runsAllowed,
+      h: Math.max(0, result.hitsAllowed),
+      k: result.strikeouts,
+      bb: Math.max(0, result.walksAllowed),
+      decision:
+        teamResult.winnerId === myTeamId ? "W" : teamResult.loserId === myTeamId ? "L" : "ND",
+    };
+
+    const matchResult: MatchResult = { ...teamResult, playerLines: [pitcherLine] };
+
+    seasonStore.applyMatchResult(result.scheduleId, matchResult);
+    seasonStore.resolvePendingAction("game", result.scheduleId);
+
+    const won = teamResult.winnerId === myTeamId && !isDraw;
+    gameStore.recordBaseballAchievementMetric({
+      strikeouts: result.strikeouts,
+      won,
+    });
+    gameStore.addMessage({
+      id: `msg-game-w${result.week}-${Date.now()}`,
+      category: "system",
+      sender: "경기 시스템",
+      subject: `W${result.week} 경기 결과`,
+      preview: `${result.awayScore}:${result.homeScore} ${won ? "승리" : isDraw ? "무승부" : "패배"} / ${result.strikeouts}K / ${result.hitsAllowed}H / ${result.walksAllowed}BB`,
+      body:
+        result.summary ||
+        `W${result.week} ${result.awayTeamId} ${result.awayScore}:${result.homeScore} ${result.homeTeamId}\n` +
+          `기록: ${result.strikeouts}K / ${result.hitsAllowed}H / ${result.walksAllowed}BB / ${result.errors}E`,
+      createdAt: `W${result.week}`,
+      readAt: null,
+    });
+
+    // 직접 플레이 후 업적 체크 (자동 시뮬 경로와 동일 규칙)
+    const achMetrics = computeMetrics(
+      $gameStore.achievementMetrics,
+      $gameStore.mailbox,
+      $seasonStore.standings,
+      $seasonStore.schedule,
+      myTeamId,
+    );
+    const achResult = checkAchievements(
+      $masterStore.achievements,
+      $gameStore.achievements,
+      achMetrics,
+      `W${result.week}`,
+    );
+    if (
+      achResult.newlyUnlocked.length > 0 ||
+      achResult.updatedRuntime.some((r, i) => r.progress !== $gameStore.achievements[i]?.progress)
+    ) {
+      gameStore.applyAchievementCheck(achResult);
+    }
+
+    gameStore.save();
+    seasonStore.save();
+    activeMatchContext = null;
+  }
+
+  function buildTeamMatchResult(
+    homeTeamId: string,
+    awayTeamId: string,
+    homeScore: number,
+    awayScore: number,
+  ): MatchResult {
+    const isDraw = homeScore === awayScore;
+    return {
+      homeScore,
+      awayScore,
+      winnerId: isDraw ? homeTeamId : homeScore > awayScore ? homeTeamId : awayTeamId,
+      loserId: isDraw ? null : homeScore > awayScore ? awayTeamId : homeTeamId,
+      playerLines: [],
+      events: [],
+    };
   }
 
   // 키보드 이벤트 핸들러 - Ctrl+Q (메인 페이지에서만 동작)
@@ -399,7 +515,13 @@
 
 <svelte:window on:keydown={handleGlobalShortcut} />
 
-{#if currentTab === "test"}
+{#if activeMatchContext}
+  <MatchPage
+    matchContext={activeMatchContext}
+    onComplete={completeInteractiveMatch}
+    onCancel={() => { activeMatchContext = null; }}
+  />
+{:else if currentTab === "test"}
   <TestMatchPage onExit={closeMatchEngine} />
 {:else}
   <div class="layout">
@@ -570,7 +692,7 @@
   <MessengerScriptModal contactId={pendingScript.contactId} arcId={pendingScript.arcId} />
 {/if}
 
-{#if pendingGameEntry && currentTab === "messages" && pendingReady}
+{#if !activeMatchContext && pendingGameEntry && currentTab === "messages" && pendingReady}
   <div class="game-overlay">
     <div class="game-modal">
       <p class="week-badge">W{pendingGameEntry.week} 경기</p>
@@ -585,7 +707,7 @@
       </div>
       <div class="game-actions">
         <button class="btn-auto" on:click={autoSimGame}>자동 시뮬</button>
-        <button class="btn-play" disabled>직접 플레이 (준비 중)</button>
+        <button class="btn-play" on:click={startInteractiveMatch}>직접 플레이</button>
       </div>
     </div>
   </div>
@@ -801,12 +923,16 @@
 
   .btn-play {
     padding: 10px 20px;
-    background: #1a2840;
-    color: #4a6888;
-    border: 1px solid #2e4060;
+    background: #1d63d8;
+    color: #f2f8ff;
+    border: 1px solid #3e86ff;
     border-radius: 8px;
     font-size: 14px;
-    cursor: not-allowed;
+    cursor: pointer;
+  }
+
+  .btn-play:hover {
+    background: #2a72ea;
   }
 </style>
 

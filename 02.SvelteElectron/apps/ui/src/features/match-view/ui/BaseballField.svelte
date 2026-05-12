@@ -38,6 +38,7 @@
   export let isPitching = false;
   export let fieldStyle: 'digital' | 'dot' | 'retro' = 'digital';
   export let fieldingTeam: 'home' | 'away' = 'home';
+  export let runnerTeam: 'home' | 'away' = 'away';
   export let batter: { handedness: 'L' | 'R' } = { handedness: 'R' };
   export let batterAnimPos: Point | null = null;
   export let runnerAnimPositions: (Point | null)[] = [null, null, null];
@@ -72,7 +73,7 @@
     '.RR.R.',
     '.RR.R.',
   ];
-  function retroRunnerColor(): string { return '#e8e800'; }
+  function retroRunnerColor(): string { return runnerTeam === 'away' ? '#d83838' : '#2a7fff'; }
 
   function retroBatterColor(key: string): string {
     if (key === 'C') return '#781a1a';
@@ -113,6 +114,18 @@
   // 포지션 → 도트 스프라이트 색상
   function dotPlayerColor(_pos: string): string {
     return fieldingTeam === 'home' ? '#4a78d8' : '#d84a4a';
+  }
+
+  function runnerColor(): string {
+    return runnerTeam === 'away' ? '#d84a4a' : '#2a7fff';
+  }
+
+  function runnerPoint(base: "first" | "second" | "third"): Point {
+    const offset = fieldStyle === 'retro'
+      ? (base === "first" ? { x: 14, y: -18 } : base === "second" ? { x: 0, y: -20 } : { x: -14, y: -18 })
+      : (base === "first" ? { x: 18, y: -14 } : base === "second" ? { x: 0, y: -18 } : { x: -18, y: -14 });
+    const b = baseField[base];
+    return { x: b.x + offset.x, y: b.y + offset.y };
   }
 
   export let activeFielderPos: string | null = null;
@@ -416,16 +429,16 @@
 
       <!-- ── 주자 ── -->
       {#if runners.first}
-        <rect x={baseField.first.x - 12} y={baseField.first.y - 12} width="24" height="24"
-          fill="#2a7fff" stroke="#ffffff" stroke-width="2" shape-rendering="crispEdges" class="runner-dot"/>
+        <rect x={runnerPoint("first").x - 12} y={runnerPoint("first").y - 12} width="24" height="24"
+          fill={runnerColor()} stroke="#ffffff" stroke-width="2" shape-rendering="crispEdges" class="runner-dot"/>
       {/if}
       {#if runners.second}
-        <rect x={baseField.second.x - 12} y={baseField.second.y - 12} width="24" height="24"
-          fill="#2a7fff" stroke="#ffffff" stroke-width="2" shape-rendering="crispEdges" class="runner-dot"/>
+        <rect x={runnerPoint("second").x - 12} y={runnerPoint("second").y - 12} width="24" height="24"
+          fill={runnerColor()} stroke="#ffffff" stroke-width="2" shape-rendering="crispEdges" class="runner-dot"/>
       {/if}
       {#if runners.third}
-        <rect x={baseField.third.x - 12} y={baseField.third.y - 12} width="24" height="24"
-          fill="#2a7fff" stroke="#ffffff" stroke-width="2" shape-rendering="crispEdges" class="runner-dot"/>
+        <rect x={runnerPoint("third").x - 12} y={runnerPoint("third").y - 12} width="24" height="24"
+          fill={runnerColor()} stroke="#ffffff" stroke-width="2" shape-rendering="crispEdges" class="runner-dot"/>
       {/if}
 
       <!-- ── 공 궤적 & 공 ── -->
@@ -685,13 +698,13 @@
       {/each}
 
       {#if runners.first}
-        <circle cx={baseField.first.x} cy={baseField.first.y} r="18" class="runner-dot" />
+        <circle cx={runnerPoint("first").x} cy={runnerPoint("first").y} r="18" class="runner-dot" style="fill:{runnerColor()}" />
       {/if}
       {#if runners.second}
-        <circle cx={baseField.second.x} cy={baseField.second.y} r="18" class="runner-dot" />
+        <circle cx={runnerPoint("second").x} cy={runnerPoint("second").y} r="18" class="runner-dot" style="fill:{runnerColor()}" />
       {/if}
       {#if runners.third}
-        <circle cx={baseField.third.x} cy={baseField.third.y} r="18" class="runner-dot" />
+        <circle cx={runnerPoint("third").x} cy={runnerPoint("third").y} r="18" class="runner-dot" style="fill:{runnerColor()}" />
       {/if}
 
       {#each ballTrail as pos, i}

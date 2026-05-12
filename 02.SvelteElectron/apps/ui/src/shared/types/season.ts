@@ -116,6 +116,32 @@ export interface WeekAdvanceResult {
   stoppedBy: PendingAction | null;      // null = 주 완료, non-null = 중단됨
 }
 
+export interface InteractiveMatchContext {
+  scheduleId: string;
+  week: number;
+  homeTeamId: string;
+  awayTeamId: string;
+  protagonistTeamId: string;
+  weather?: "sunny" | "cloudy" | "rainy" | "windy_in" | "windy_out";
+  park?: "neutral" | "pitcher_park" | "hitter_park" | "dome";
+}
+
+export interface InteractiveMatchResult {
+  scheduleId: string;
+  week: number;
+  homeTeamId: string;
+  awayTeamId: string;
+  homeScore: number;
+  awayScore: number;
+  strikeouts: number;
+  hitsAllowed: number;
+  walksAllowed: number;
+  outsRecorded: number;
+  errors: number;
+  pitchCount: number;
+  summary: string;
+}
+
 // ── save_season.json 전체 구조 ─────────────────────────────────
 export interface SaveSeason {
   version: number;      // 저장 포맷 버전
