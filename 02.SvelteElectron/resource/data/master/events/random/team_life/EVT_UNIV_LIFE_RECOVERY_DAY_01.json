@@ -1,22 +1,22 @@
 {
-    "id":  "EVT_UNIV_LIFE_RECOVERY_DAY_01",
-    "type":  "random",
-    "messageTemplateId":  "MSG_HS_LIFE_RECOVERY_DAY_01",
-    "category":  "team_life",
-    "decisionTemplateId":  "DEC_RAND_TEAM_MEAL",
-    "weight":  15,
-    "cooldownWeeks":  2,
-    "priority":  290,
-    "oncePolicy":  "repeatable",
-    "poolId":  "POOL_TEAM_LIFE_DAILY",
-    "conditions":  [
-                       {
-                           "stage":  "university",
-                           "type":  "career_stage"
-                       },
-                       {
-                           "value":  65,
-                           "type":  "fatigue_lte"
-                       }
-                   ]
+  "id": "EVT_UNIV_LIFE_RECOVERY_DAY_01",
+  "type": "random",
+  "messageTemplateId": "MSG_UNIV_LIFE_RECOVERY_DAY_01",
+  "category": "team_life",
+  "decisionTemplateId": "DEC_RAND_TEAM_MEAL",
+  "weight": 15,
+  "cooldownWeeks": 2,
+  "priority": 290,
+  "oncePolicy": "repeatable",
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "conditions": [
+    {
+      "stage": "university",
+      "type": "career_stage"
+    },
+    {
+      "value": 65,
+      "type": "fatigue_lte"
+    }
+  ]
 }

@@ -1,0 +1,24 @@
+{
+    "conditions":  [
+                       {
+                           "stage":  "university",
+                           "type":  "career_stage"
+                       },
+                       {
+                           "value":  40,
+                           "type":  "week_gte"
+                       },
+                       {
+                           "value":  62,
+                           "type":  "pitching_ovr_gte"
+                       }
+                   ],
+    "id":  "EVT_UNIV_Y4_FINAL_PUSH",
+    "type":  "conditional",
+    "messageTemplateId":  "MSG_UNIV_SCOUT_FOCUS",
+    "category":  "career",
+    "decisionTemplateId":  null,
+    "cooldownWeeks":  4,
+    "oncePolicy":  "repeatable",
+    "priority":  790
+}

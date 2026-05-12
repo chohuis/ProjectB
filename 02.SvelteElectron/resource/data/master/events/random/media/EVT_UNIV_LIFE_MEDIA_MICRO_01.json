@@ -1,22 +1,22 @@
 {
-    "id":  "EVT_UNIV_LIFE_MEDIA_MICRO_01",
-    "type":  "random",
-    "messageTemplateId":  "MSG_RAND_SPORTS_MEDIA",
-    "category":  "media",
-    "decisionTemplateId":  null,
-    "weight":  18,
-    "cooldownWeeks":  2,
-    "priority":  280,
-    "oncePolicy":  "repeatable",
-    "poolId":  "POOL_MEDIA_DAILY",
-    "conditions":  [
-                       {
-                           "stage":  "university",
-                           "type":  "career_stage"
-                       },
-                       {
-                           "value":  55,
-                           "type":  "pitching_ovr_gte"
-                       }
-                   ]
+  "id": "EVT_UNIV_LIFE_MEDIA_MICRO_01",
+  "type": "random",
+  "messageTemplateId": "MSG_UNIV_LIFE_MEDIA_MICRO_01",
+  "category": "media",
+  "decisionTemplateId": null,
+  "weight": 18,
+  "cooldownWeeks": 2,
+  "priority": 280,
+  "oncePolicy": "repeatable",
+  "poolId": "POOL_MEDIA_DAILY",
+  "conditions": [
+    {
+      "stage": "university",
+      "type": "career_stage"
+    },
+    {
+      "value": 55,
+      "type": "pitching_ovr_gte"
+    }
+  ]
 }

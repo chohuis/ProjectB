@@ -1,0 +1,19 @@
+{
+    "id":  "EVT_UNIV_Y3_W34_DRAFT_TRACK",
+    "oncePolicy":  "once_per_stage_year",
+    "messageTemplateId":  "MSG_UNIV_DRAFT_STOCK_CHECK",
+    "category":  "career",
+    "type":  "mandatory",
+    "decisionTemplateId":  null,
+    "priority":  940,
+    "conditions":  [
+                       {
+                           "stage":  "university",
+                           "type":  "career_stage"
+                       },
+                       {
+                           "value":  34,
+                           "type":  "week_eq"
+                       }
+                   ]
+}

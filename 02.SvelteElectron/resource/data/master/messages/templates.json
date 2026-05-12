@@ -258,6 +258,48 @@
       "subject": "주목도 증가로 인한 심리 부하",
       "body": "미디어 노출과 스카우트 시선이 동시에 늘면서 심리적 압박이 커지고 있습니다.\n\n기록에 신경 쓰기보다는 이닝 당 집중력을 유지하는 것에 집중하세요.",
       "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_UNIV_LIFE_SLUMP_CHECK",
+      "category": "coach",
+      "subject": "대학 시즌 슬럼프 경고",
+      "body": "최근 등판에서 페이스 유지가 흔들리고 있습니다.\\n\\n훈련 양을 줄이거나 회복 루틴을 보강하여 다음 등판에 대비하세요.",
+      "decisionTemplateId": "DEC_COND_SLUMP"
+    },
+    {
+      "id": "MSG_UNIV_LIFE_PEAK_FORM",
+      "category": "coach",
+      "subject": "대학 시즌 피크 폼 알림",
+      "body": "컨디션과 구위 지표가 모두 상승한 상태입니다.\\n\\n집중 훈련으로 시즌 후반 경쟁력을 확대할 수 있습니다.",
+      "decisionTemplateId": "DEC_COND_PEAK_FORM"
+    },
+    {
+      "id": "MSG_UNIV_LIFE_LOCAL_INTERVIEW",
+      "category": "news",
+      "subject": "대학 리그 특집 인터뷰 요청",
+      "body": "대학 리그 특집 코너에서 인터뷰 요청이 들어왔습니다.\\n\\n미디어 대응은 심리적 부하와 홍보 효과를 함께 가져옵니다.",
+      "decisionTemplateId": "DEC_RAND_LOCAL_INTERVIEW"
+    },
+    {
+      "id": "MSG_UNIV_LIFE_MEDIA_MICRO_01",
+      "category": "news",
+      "subject": "대학 매체에서 투구 분석기사 게재",
+      "body": "최근 투구 패턴이 분석 기사로 게재되었습니다.\\n\\n등판 루틴을 유지하면서 안정적인 결과를 이어가세요.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_UNIV_LIFE_SOCIAL_MENTION",
+      "category": "news",
+      "subject": "교내 SNS에서 이름이 오르내렸습니다",
+      "body": "교내 SNS에서 훈련 장면과 경기 하이라이트가 공유되고 있습니다.\\n\\n직접적인 보상은 작지만 여론 흐름을 만들 수 있습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_UNIV_LIFE_RECOVERY_DAY_01",
+      "category": "system",
+      "subject": "방학기 회복일 선택",
+      "body": "훈련 스케줄에서 회복일을 어떻게 쓸지 결정하세요.\\n\\n짧은 회복이지만 다음 등판 컨디션에 큰 영향을 줄 수 있습니다.",
+      "decisionTemplateId": null
     }
   ]
 }

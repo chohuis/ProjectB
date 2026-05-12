@@ -1,0 +1,19 @@
+{
+    "id":  "EVT_UNIV_Y4_W50_CAREER_GATE",
+    "oncePolicy":  "once_per_stage_year",
+    "messageTemplateId":  "MSG_UNIV_YEAR_WRAP",
+    "category":  "career",
+    "type":  "mandatory",
+    "decisionTemplateId":  null,
+    "priority":  960,
+    "conditions":  [
+                       {
+                           "stage":  "university",
+                           "type":  "career_stage"
+                       },
+                       {
+                           "value":  50,
+                           "type":  "week_eq"
+                       }
+                   ]
+}

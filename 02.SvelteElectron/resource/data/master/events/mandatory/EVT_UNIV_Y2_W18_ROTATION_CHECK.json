@@ -1,0 +1,19 @@
+{
+    "id":  "EVT_UNIV_Y2_W18_ROTATION_CHECK",
+    "oncePolicy":  "once_per_stage_year",
+    "messageTemplateId":  "MSG_UNIV_ROLE_CHECK",
+    "category":  "team",
+    "type":  "mandatory",
+    "decisionTemplateId":  null,
+    "priority":  920,
+    "conditions":  [
+                       {
+                           "stage":  "university",
+                           "type":  "career_stage"
+                       },
+                       {
+                           "value":  18,
+                           "type":  "week_eq"
+                       }
+                   ]
+}
