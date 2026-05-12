@@ -598,7 +598,8 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
   const isHsDraftWeek =
     gDraft.protagonist.careerStage === "highschool" &&
     gDraft.protagonist.grade === 3 &&
-    weekInYear === 52;
+    gDraft.schoolState.draftIntent &&
+    weekInYear === 51;
   const isUnivDraftWeek =
     gDraft.protagonist.careerStage === "university" &&
     careerStageYear === 3 &&
@@ -606,6 +607,15 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
   if ((isHsDraftWeek || isUnivDraftWeek) && !gDraft.schoolState.draftTriggered) {
     gameStore.markDraftTriggered(true);
     seasonStore.pushPendingAction({ type: "draft" });
+  }
+
+  const needFallbackChoice =
+    gDraft.protagonist.careerStage === "highschool" &&
+    gDraft.protagonist.grade === 3 &&
+    weekInYear === 52 &&
+    gDraft.schoolState.fallbackSelectionPending;
+  if (needFallbackChoice && !get(seasonStore).pendingActions.some((a) => a.type === "careerChoice")) {
+    seasonStore.pushPendingAction({ type: "careerChoice" });
   }
 
   // 10. 프로 트레이드 판정

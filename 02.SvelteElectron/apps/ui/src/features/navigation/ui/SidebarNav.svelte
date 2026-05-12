@@ -5,6 +5,7 @@
   export let currentTab: MainTabId;
   export let unreadMessageCount = 0;
   export let pendingAchievementCount = 0;
+  export let pendingByTab: Partial<Record<MainTabId, number>> = {};
   export let showAcademicsTab = false;
   export let militaryCountdownLabel = "";
   export let onSelectTab: (tab: MainTabId) => void;
@@ -64,6 +65,9 @@
         {/if}
         {#if tab.id === "achievements" && pendingAchievementCount > 0}
           <strong class="badge badge-gold">{pendingAchievementCount > 99 ? "99+" : pendingAchievementCount}</strong>
+        {/if}
+        {#if (pendingByTab[tab.id] ?? 0) > 0}
+          <strong class="badge badge-red">{(pendingByTab[tab.id] ?? 0) > 99 ? "99+" : (pendingByTab[tab.id] ?? 0)}</strong>
         {/if}
       </button>
     {/each}
@@ -161,6 +165,12 @@
     background: #b87800;
     border-color: #e8a820;
     color: #fff8e0;
+  }
+
+  .badge-red {
+    background: #b7242e;
+    border-color: #f26a74;
+    color: #fff4f5;
   }
 
   .settings-wrap {

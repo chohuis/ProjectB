@@ -1,55 +1,86 @@
-<script lang="ts">
+﻿<script lang="ts">
   import { gameStore } from "../../../shared/stores/game";
   import { seasonStore } from "../../../shared/stores/season";
+  import { masterStore } from "../../../shared/stores/master";
   import { percentileToGrade } from "../../../shared/utils/academicsEngine";
-  import {
-    resolveChoice,
-    getStepView,
-    type CareerStep,
-  } from "../../../shared/utils/careerChain";
 
-  // OVR + 평균 등급 계산
-  $: ovr      = $gameStore.protagonist.pitching.ovr;
+  $: weekInYear = (($seasonStore.currentWeek - 1 + 52) % 52) + 1;
+  $: ovr = $gameStore.protagonist.pitching.ovr;
   $: subjects = Object.values($gameStore.schoolState.subjectScores);
-  $: avgPct   = subjects.length
-    ? subjects.reduce((a, s) => a + s.percentile, 0) / subjects.length
-    : 50;
+  $: avgPct = subjects.length ? subjects.reduce((a, s) => a + s.percentile, 0) / subjects.length : 50;
   $: avgGrade = percentileToGrade(avgPct);
 
-  let step: CareerStep = { type: "initial" };
-  $: view = getStepView(step);
+  $: isPrimaryChoice =
+    $gameStore.protagonist.careerStage === "highschool" &&
+    $gameStore.protagonist.grade === 3 &&
+    weekInYear === 50 &&
+    !$gameStore.schoolState.fallbackSelectionPending;
+
+  $: isFallbackChoice = $gameStore.schoolState.fallbackSelectionPending;
+  $: univPassed = $gameStore.schoolState.fallbackUniversityPassed;
+  $: indiePassed = $gameStore.schoolState.fallbackIndependentPassed;
+  $: sportsPassed = $gameStore.schoolState.fallbackSportsMilitaryPassed;
 
   let resolving = false;
 
-  function pick(choiceId: string) {
+  function teamName(teamId: string): string {
+    return $masterStore.teams.find((t) => t.id === teamId)?.name ?? teamId;
+  }
+
+  async function choosePrimary(choice: "draft" | "university" | "independent" | "military") {
     if (resolving) return;
     resolving = true;
 
-    const next = resolveChoice(step, choiceId, ovr, avgGrade);
-
-    // result 화면을 잠깐 보여준 뒤 자동 진행하지 않음 — 사용자가 OK 클릭
-    step = next;
-
-    if (step.type === "resolved") {
-      // 최종 결과 → 확인 버튼 클릭 시 finish()
+    if (choice === "draft") {
+      gameStore.setDraftIntent(true);
+      gameStore.markCareerChoiceTriggered();
+      seasonStore.resolvePendingAction("careerChoice");
+    } else if (choice === "university") {
+      gameStore.applyDraftDecision({
+        stage: "university",
+        leagueId: "LEAGUE_UNIVERSITY",
+        teamId: $masterStore.teams.find((t) => t.leagueId === "LEAGUE_UNIVERSITY")?.id ?? $gameStore.protagonist.teamId,
+      });
+      seasonStore.resolvePendingAction("careerChoice");
+    } else if (choice === "independent") {
+      gameStore.applyDraftDecision({
+        stage: "independent",
+        leagueId: "LEAGUE_INDEPENDENT",
+        teamId: $masterStore.teams.find((t) => t.leagueId === "LEAGUE_INDEPENDENT")?.id ?? $gameStore.protagonist.teamId,
+      });
+      seasonStore.resolvePendingAction("careerChoice");
+    } else {
+      gameStore.enlistMilitary("general");
+      seasonStore.resolvePendingAction("careerChoice");
     }
+
+    await gameStore.save();
+    await seasonStore.save();
     resolving = false;
   }
 
-  function finish() {
-    if (step.type !== "resolved") return;
-    gameStore.setCareerStage(step.stage);
-    seasonStore.resolvePendingAction("careerChoice");
-    gameStore.save();
-    seasonStore.save();
-  }
+  async function chooseFallback(kind: "university" | "independent" | "sports" | "general", teamId?: string) {
+    if (resolving) return;
+    resolving = true;
 
-  function stageKor(stage: string): string {
-    const map: Record<string, string> = {
-      pro: "프로 입단", university: "대학 진학",
-      independent: "독립리그 입단", military: "군 입대",
-    };
-    return map[stage] ?? stage;
+    if (kind === "university" && teamId) {
+      gameStore.applyDraftDecision({ stage: "university", leagueId: "LEAGUE_UNIVERSITY", teamId });
+    } else if (kind === "independent" && teamId) {
+      gameStore.applyDraftDecision({ stage: "independent", leagueId: "LEAGUE_INDEPENDENT", teamId });
+    } else if (kind === "sports") {
+      gameStore.enlistMilitary("sports");
+      gameStore.clearFallbackAdmissions();
+      gameStore.setDraftIntent(false);
+    } else {
+      gameStore.enlistMilitary("general");
+      gameStore.clearFallbackAdmissions();
+      gameStore.setDraftIntent(false);
+    }
+
+    seasonStore.resolvePendingAction("careerChoice");
+    await gameStore.save();
+    await seasonStore.save();
+    resolving = false;
   }
 </script>
 
@@ -57,45 +88,46 @@
   <div class="modal">
     <div class="modal-header">
       <span class="chip">진로 결정</span>
-      <h2>{view.title}</h2>
+      <h2>{isFallbackChoice ? "W52 결과 확인" : "고3 진로 1차 선택"}</h2>
     </div>
 
-    <p class="body-text">{view.body}</p>
-
-    {#if step.type === "initial"}
+    {#if isPrimaryChoice}
+      <p class="body-text">이번 주에 진로를 먼저 정합니다. 드래프트 참가를 고르면 다음 주(W51)에 드래프트를 진행합니다.</p>
       <div class="info-row">
         <span class="info-item">OVR <strong>{ovr}</strong></span>
         <span class="info-item">평균 등급 <strong>{avgGrade}등급</strong></span>
       </div>
-    {/if}
-
-    {#if view.isResultScreen}
-      <div class="result-box" class:success={view.resultSuccess} class:fail={!view.resultSuccess}>
-        {#if step.type === "resolved"}
-          <span class="result-label">확정: {stageKor(step.stage)}</span>
-        {:else if view.resultSuccess}
-          <span class="result-label">성공</span>
-        {:else}
-          <span class="result-label">실패</span>
+      <div class="options">
+        <button class="opt-btn" on:click={() => choosePrimary("draft")} type="button"><span class="opt-label">드래프트 참가</span></button>
+        <button class="opt-btn" on:click={() => choosePrimary("university")} type="button"><span class="opt-label">바로 대학 진학</span></button>
+        <button class="opt-btn" on:click={() => choosePrimary("independent")} type="button"><span class="opt-label">바로 독립리그</span></button>
+        <button class="opt-btn" on:click={() => choosePrimary("military")} type="button"><span class="opt-label">바로 군입대</span></button>
+      </div>
+    {:else if isFallbackChoice}
+      <p class="body-text">드래프트 탈락 후 지원 결과입니다. 가능한 경로 중 하나를 선택하세요.</p>
+      <div class="options">
+        {#each univPassed as teamId}
+          <button class="opt-btn" on:click={() => chooseFallback("university", teamId)} type="button">
+            <span class="opt-label">대학 합격: {teamName(teamId)}</span>
+          </button>
+        {/each}
+        {#each indiePassed as teamId}
+          <button class="opt-btn" on:click={() => chooseFallback("independent", teamId)} type="button">
+            <span class="opt-label">독립리그 합격: {teamName(teamId)}</span>
+          </button>
+        {/each}
+        {#if sportsPassed}
+          <button class="opt-btn" on:click={() => chooseFallback("sports")} type="button">
+            <span class="opt-label">체육부대 입대</span>
+          </button>
+        {/if}
+        {#if univPassed.length === 0 && indiePassed.length === 0 && !sportsPassed}
+          <button class="opt-btn ok-btn" on:click={() => chooseFallback("general")} type="button">
+            <span class="opt-label">전원 탈락: 현역 입대</span>
+          </button>
         {/if}
       </div>
     {/if}
-
-    <div class="options" class:single={view.options.length === 1}>
-      {#each view.options as opt}
-        <button
-          class="opt-btn"
-          class:ok-btn={opt.id === "ok" || step.type === "resolved"}
-          on:click={() => step.type === "resolved" ? finish() : (view.isResultScreen && opt.id === "ok") ? pick(opt.id) : pick(opt.id)}
-          type="button"
-        >
-          <span class="opt-label">{opt.label}</span>
-          {#if opt.desc}
-            <span class="opt-desc">{opt.desc}</span>
-          {/if}
-        </button>
-      {/each}
-    </div>
   </div>
 </div>
 
@@ -103,7 +135,7 @@
   .overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.80);
+    background: rgba(0, 0, 0, 0.8);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -170,38 +202,9 @@
     margin-left: 4px;
   }
 
-  .result-box {
-    border-radius: 8px;
-    padding: 12px 16px;
-    text-align: center;
-  }
-
-  .result-box.success {
-    background: #0d2a18;
-    border: 1px solid #2a6a38;
-  }
-
-  .result-box.fail {
-    background: #2a0e0e;
-    border: 1px solid #6a2020;
-  }
-
-  .result-label {
-    font-size: 15px;
-    font-weight: 700;
-    color: #e0f0ff;
-  }
-
-  .result-box.success .result-label { color: #70e898; }
-  .result-box.fail    .result-label { color: #ff9090; }
-
   .options {
     display: grid;
     gap: 8px;
-  }
-
-  .options.single {
-    grid-template-columns: 1fr;
   }
 
   .opt-btn {
@@ -222,24 +225,13 @@
   }
 
   .opt-btn.ok-btn {
-    background: #0d2a48;
-    border-color: #3a6090;
-    text-align: center;
-  }
-
-  .opt-btn.ok-btn:hover {
-    background: #1a3a60;
-    border-color: #5080c0;
+    background: #3a1f1f;
+    border-color: #804040;
   }
 
   .opt-label {
     font-size: 15px;
     font-weight: 600;
     color: #dceeff;
-  }
-
-  .opt-desc {
-    font-size: 12px;
-    color: #6a88b8;
   }
 </style>

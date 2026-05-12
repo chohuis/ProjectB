@@ -6,10 +6,11 @@
   export let dayLabel: string;
   export let teamName: string;
   export let playerName: string;
+  export let onOpenPending: () => void = () => {};
 
   let advancing = false;
 
-  $: btnDisabled = advancing || $hasPendingAction;
+  $: btnDisabled = advancing;
 
   $: btnLabel =
     $nextPendingAction?.type === "game"    ? "경기 대기 중" :
@@ -19,6 +20,10 @@
 
   async function handleAdvance() {
     if (btnDisabled) return;
+    if ($hasPendingAction) {
+      onOpenPending();
+      return;
+    }
     advancing = true;
     try {
       await advanceWeek();

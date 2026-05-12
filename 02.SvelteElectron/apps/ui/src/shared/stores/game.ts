@@ -141,6 +141,13 @@ const DEFAULT_SCHOOL: SchoolState = {
   warningCount: 0,
   careerChoiceTriggered: false,
   draftTriggered: false,
+  draftIntent: false,
+  fallbackSelectionPending: false,
+  fallbackUniversityChoices: [],
+  fallbackIndependentChoices: [],
+  fallbackUniversityPassed: [],
+  fallbackIndependentPassed: [],
+  fallbackSportsMilitaryPassed: false,
   universityWeek: 0,
   majorSelected: false,
   subjectScores: {
@@ -820,6 +827,49 @@ function createGameStore() {
       }));
     },
 
+    setDraftIntent(flag: boolean) {
+      update((s) => ({
+        ...s,
+        schoolState: { ...s.schoolState, draftIntent: flag },
+      }));
+    },
+
+    setFallbackAdmissions(payload: {
+      universityChoices: string[];
+      independentChoices: string[];
+      universityPassed: string[];
+      independentPassed: string[];
+      sportsMilitaryPassed: boolean;
+    }) {
+      update((s) => ({
+        ...s,
+        schoolState: {
+          ...s.schoolState,
+          fallbackSelectionPending: true,
+          fallbackUniversityChoices: payload.universityChoices,
+          fallbackIndependentChoices: payload.independentChoices,
+          fallbackUniversityPassed: payload.universityPassed,
+          fallbackIndependentPassed: payload.independentPassed,
+          fallbackSportsMilitaryPassed: payload.sportsMilitaryPassed,
+        },
+      }));
+    },
+
+    clearFallbackAdmissions() {
+      update((s) => ({
+        ...s,
+        schoolState: {
+          ...s.schoolState,
+          fallbackSelectionPending: false,
+          fallbackUniversityChoices: [],
+          fallbackIndependentChoices: [],
+          fallbackUniversityPassed: [],
+          fallbackIndependentPassed: [],
+          fallbackSportsMilitaryPassed: false,
+        },
+      }));
+    },
+
     // 대학 전공 선택 확정
     selectMajor(major: string) {
       update((s) => ({
@@ -885,6 +935,13 @@ function createGameStore() {
         const schoolState = {
           ...s.schoolState,
           attendsUniversity: payload.stage === "university",
+          draftIntent: false,
+          fallbackSelectionPending: false,
+          fallbackUniversityChoices: [],
+          fallbackIndependentChoices: [],
+          fallbackUniversityPassed: [],
+          fallbackIndependentPassed: [],
+          fallbackSportsMilitaryPassed: false,
           draftTriggered: payload.resetDraftTrigger ? false : s.schoolState.draftTriggered,
         };
         const logs = payload.teamName

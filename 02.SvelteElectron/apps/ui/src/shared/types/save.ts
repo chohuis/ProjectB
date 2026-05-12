@@ -218,6 +218,13 @@ export interface SchoolState {
   warningCount: number;             // 누적 수업 태만 경고
   careerChoiceTriggered: boolean;   // 진로 선택 이벤트 발동 여부
   draftTriggered: boolean;          // 드래프트 이벤트 발동 여부(중복 방지)
+  draftIntent: boolean;             // W50에서 드래프트 참가 의사 선택 여부
+  fallbackSelectionPending: boolean; // W52 폴백 선택 대기 여부
+  fallbackUniversityChoices: string[]; // 대학 지원 3곳
+  fallbackIndependentChoices: string[]; // 독립 지원 3팀
+  fallbackUniversityPassed: string[]; // 대학 합격 목록
+  fallbackIndependentPassed: string[]; // 독립 합격 목록
+  fallbackSportsMilitaryPassed: boolean; // 체육부대 합격 여부
   universityWeek: number;           // 대학 입학 후 경과 주차 (0 = 고교)
   majorSelected: boolean;           // 전공 확정 여부
 }

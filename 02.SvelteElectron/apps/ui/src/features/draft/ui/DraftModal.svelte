@@ -1,4 +1,4 @@
-<script lang="ts">
+﻿<script lang="ts">
   import { gameStore } from "../../../shared/stores/game";
   import { masterStore } from "../../../shared/stores/master";
   import { seasonStore } from "../../../shared/stores/season";
@@ -7,18 +7,32 @@
   let result: DraftRankResult | null = null;
   let resolving = false;
 
-  $: careerYear = Math.floor((Math.max(1, $seasonStore.currentWeek) - 1) / 52);
-  $: isUniversityEarlyDraft = $gameStore.protagonist.careerStage === "university" && careerYear < 3;
+  $: weekInYear = (($seasonStore.currentWeek - 1 + 52) % 52) + 1;
   $: teamName = result?.teamId
     ? $masterStore.teams.find((t) => t.id === result!.teamId)?.name ?? result.teamId
     : null;
-  $: defaultUniversityTeamId =
-    $masterStore.teams.find((t) => t.leagueId === "LEAGUE_UNIVERSITY")?.id ?? $gameStore.protagonist.teamId;
-  $: defaultIndependentTeamId =
-    $masterStore.teams.find((t) => t.leagueId === "LEAGUE_INDEPENDENT")?.id ?? $gameStore.protagonist.teamId;
 
   $: if (result === null) {
     result = calcDraftRank($gameStore.protagonist.scoutScore);
+  }
+
+  function pickTopTeams(leagueId: string, count: number): string[] {
+    return $masterStore.teams.filter((t) => t.leagueId === leagueId).slice(0, count).map((t) => t.id);
+  }
+
+  function evalUnivPass(ovr: number, avgPct: number, idx: number): boolean {
+    const base = 38 + (avgPct * 0.35) + (ovr * 0.35) - idx * 8;
+    return Math.random() * 100 < Math.max(10, Math.min(92, base));
+  }
+
+  function evalIndiePass(ovr: number, idx: number): boolean {
+    const base = 45 + (ovr * 0.45) - idx * 6;
+    return Math.random() * 100 < Math.max(15, Math.min(95, base));
+  }
+
+  function evalSportsMilitaryPass(ovr: number): boolean {
+    const base = 18 + ovr * 0.55;
+    return Math.random() * 100 < Math.max(5, Math.min(82, base));
   }
 
   async function finishAccept() {
@@ -34,38 +48,51 @@
       durationYears: 2,
       signingBonus: result.signingBonus,
     });
+    gameStore.setDraftIntent(false);
     await gameStore.save();
     await seasonStore.save();
     resolving = false;
   }
 
-  async function rejectDraft() {
+  async function processFailAndApply() {
     if (resolving) return;
     resolving = true;
-    if ($gameStore.protagonist.careerStage === "highschool") {
-      gameStore.applyDraftDecision({
-        stage: "university",
-        leagueId: "LEAGUE_UNIVERSITY",
-        teamId: defaultUniversityTeamId,
-      });
-    } else {
-      gameStore.applyDraftDecision({
-        stage: "independent",
-        leagueId: "LEAGUE_INDEPENDENT",
-        teamId: defaultIndependentTeamId,
-      });
-    }
+
+    const p = $gameStore.protagonist;
+    const subjects = Object.values($gameStore.schoolState.subjectScores);
+    const avgPct = subjects.length ? subjects.reduce((a, s) => a + s.percentile, 0) / subjects.length : 50;
+
+    const univChoices = pickTopTeams("LEAGUE_UNIVERSITY", 3);
+    const indieChoices = pickTopTeams("LEAGUE_INDEPENDENT", 3);
+
+    const univPassed = univChoices.filter((id, i) => evalUnivPass(p.pitching.ovr, avgPct, i));
+    const indiePassed = indieChoices.filter((id, i) => evalIndiePass(p.pitching.ovr, i));
+    const sportsPassed = evalSportsMilitaryPass(p.pitching.ovr);
+
+    gameStore.setFallbackAdmissions({
+      universityChoices: univChoices,
+      independentChoices: indieChoices,
+      universityPassed: univPassed,
+      independentPassed: indiePassed,
+      sportsMilitaryPassed: sportsPassed,
+    });
+
     seasonStore.resolvePendingAction("draft");
     await gameStore.save();
     await seasonStore.save();
     resolving = false;
   }
 
-  async function deferAndRedraft() {
+  async function rejectDirect() {
     if (resolving) return;
     resolving = true;
-    gameStore.markDraftTriggered(false);
+    gameStore.applyDraftDecision({
+      stage: "independent",
+      leagueId: "LEAGUE_INDEPENDENT",
+      teamId: pickTopTeams("LEAGUE_INDEPENDENT", 1)[0] ?? $gameStore.protagonist.teamId,
+    });
     seasonStore.resolvePendingAction("draft");
+    gameStore.setDraftIntent(false);
     await gameStore.save();
     await seasonStore.save();
     resolving = false;
@@ -82,7 +109,7 @@
     {#if result?.drafted}
       <div class="summary success">
         <p>{teamName ?? result.teamId} / {result.round}라운드 {result.pick}순위</p>
-        <p>계약금: {result.signingBonus.toLocaleString()}만원</p>
+        <p>계약금 {result.signingBonus.toLocaleString()}만원</p>
       </div>
     {:else}
       <div class="summary fail">
@@ -93,15 +120,10 @@
     <div class="actions">
       {#if result?.drafted}
         <button disabled={resolving} on:click={finishAccept}>수락</button>
-        {#if isUniversityEarlyDraft}
-          <button disabled={resolving} on:click={deferAndRedraft}>졸업 후 재지명</button>
-        {:else}
-          <button disabled={resolving} on:click={rejectDraft}>거부</button>
-        {/if}
+      {:else if $gameStore.protagonist.careerStage === "highschool" && $gameStore.protagonist.grade === 3 && weekInYear === 51}
+        <button disabled={resolving} on:click={processFailAndApply}>W52 지원 결과 보기</button>
       {:else}
-        <button disabled={resolving} on:click={rejectDraft}>
-          {$gameStore.protagonist.careerStage === "highschool" ? "대학 진학" : "독립리그"}
-        </button>
+        <button disabled={resolving} on:click={rejectDirect}>독립리그 진입</button>
       {/if}
     </div>
   </section>
