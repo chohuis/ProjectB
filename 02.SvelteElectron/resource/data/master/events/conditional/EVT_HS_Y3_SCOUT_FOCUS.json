@@ -1,0 +1,28 @@
+{
+  "id": "EVT_HS_Y3_SCOUT_FOCUS",
+  "type": "conditional",
+  "category": "career",
+  "priority": 800,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 4,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_gte",
+      "value": 109
+    },
+    {
+      "type": "week_lte",
+      "value": 122
+    },
+    {
+      "type": "pitching_ovr_gte",
+      "value": 55
+    }
+  ],
+  "messageTemplateId": "MSG_COND_STAT_MILESTONE",
+  "decisionTemplateId": null
+}

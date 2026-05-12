@@ -1,0 +1,19 @@
+{
+  "id": "EVT_HS_Y1_W42_FINAL",
+  "type": "mandatory",
+  "category": "academics",
+  "priority": 970,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_eq",
+      "value": 42
+    }
+  ],
+  "messageTemplateId": "MSG_HS_FINAL",
+  "decisionTemplateId": null
+}

@@ -1,0 +1,32 @@
+{
+  "id": "EVT_HS_LIFE_SLUMP_CHECK",
+  "type": "conditional",
+  "category": "mental",
+  "priority": 840,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 4,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_gte",
+      "value": 1
+    },
+    {
+      "type": "week_lte",
+      "value": 156
+    },
+    {
+      "type": "morale_lte",
+      "value": 34
+    },
+    {
+      "type": "condition_lte",
+      "value": 40
+    }
+  ],
+  "messageTemplateId": "MSG_COND_SLUMP",
+  "decisionTemplateId": "DEC_COND_SLUMP"
+}

@@ -1,0 +1,19 @@
+{
+  "id": "EVT_HS_Y3_W52_DRAFT_GATE",
+  "type": "mandatory",
+  "category": "season",
+  "priority": 980,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_eq",
+      "value": 156
+    }
+  ],
+  "messageTemplateId": "MSG_HS_YEAR_END",
+  "decisionTemplateId": null
+}

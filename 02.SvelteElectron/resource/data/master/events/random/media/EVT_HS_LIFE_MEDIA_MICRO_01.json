@@ -1,0 +1,22 @@
+{
+  "id": "EVT_HS_LIFE_MEDIA_MICRO_01",
+  "type": "random",
+  "category": "media",
+  "priority": 284,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 13,
+  "poolId": "POOL_MEDIA_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_gte",
+      "value": 12
+    }
+  ],
+  "messageTemplateId": "MSG_RAND_LOCAL_INTERVIEW",
+  "decisionTemplateId": "DEC_RAND_LOCAL_INTERVIEW"
+}

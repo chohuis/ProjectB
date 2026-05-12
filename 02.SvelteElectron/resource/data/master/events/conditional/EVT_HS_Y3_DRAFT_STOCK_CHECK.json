@@ -1,0 +1,28 @@
+{
+  "id": "EVT_HS_Y3_DRAFT_STOCK_CHECK",
+  "type": "conditional",
+  "category": "career",
+  "priority": 810,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 4,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_gte",
+      "value": 121
+    },
+    {
+      "type": "week_lte",
+      "value": 136
+    },
+    {
+      "type": "season_k_gte",
+      "value": 80
+    }
+  ],
+  "messageTemplateId": "MSG_COND_STAT_MILESTONE",
+  "decisionTemplateId": null
+}

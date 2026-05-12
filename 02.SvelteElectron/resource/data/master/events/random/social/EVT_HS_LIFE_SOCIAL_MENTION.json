@@ -1,0 +1,22 @@
+{
+  "id": "EVT_HS_LIFE_SOCIAL_MENTION",
+  "type": "random",
+  "category": "social",
+  "priority": 275,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 20,
+  "poolId": "POOL_SOCIAL_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_gte",
+      "value": 8
+    }
+  ],
+  "messageTemplateId": "MSG_RAND_SOCIAL_MEDIA_MENTION",
+  "decisionTemplateId": null
+}

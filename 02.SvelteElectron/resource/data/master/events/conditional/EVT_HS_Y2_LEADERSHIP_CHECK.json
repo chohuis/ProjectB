@@ -1,0 +1,28 @@
+{
+  "id": "EVT_HS_Y2_LEADERSHIP_CHECK",
+  "type": "conditional",
+  "category": "team",
+  "priority": 760,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 4,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_gte",
+      "value": 79
+    },
+    {
+      "type": "week_lte",
+      "value": 90
+    },
+    {
+      "type": "team_rank_lte",
+      "value": 4
+    }
+  ],
+  "messageTemplateId": "MSG_COND_TEAM_SUCCESS",
+  "decisionTemplateId": null
+}

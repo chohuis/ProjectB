@@ -1,0 +1,22 @@
+{
+  "id": "EVT_HS_LIFE_JUNIOR_MENTOR_01",
+  "type": "random",
+  "category": "team_life",
+  "priority": 291,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 15,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "pitching_ovr_gte",
+      "value": 55
+    }
+  ],
+  "messageTemplateId": "MSG_RAND_SENIOR_ADVICE",
+  "decisionTemplateId": "DEC_RAND_SENIOR_ADVICE"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "EVT_HS_LIFE_SCOUT_PRESSURE_03",
+  "type": "random",
+  "category": "media",
+  "priority": 298,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 15,
+  "poolId": "POOL_MEDIA_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_gte",
+      "value": 30
+    }
+  ],
+  "messageTemplateId": "MSG_RAND_LOCAL_INTERVIEW",
+  "decisionTemplateId": "DEC_RAND_LOCAL_INTERVIEW"
+}

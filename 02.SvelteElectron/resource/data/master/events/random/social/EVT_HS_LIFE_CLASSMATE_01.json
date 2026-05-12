@@ -1,0 +1,22 @@
+{
+  "id": "EVT_HS_LIFE_CLASSMATE_01",
+  "type": "random",
+  "category": "social",
+  "priority": 281,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 14,
+  "poolId": "POOL_SOCIAL_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "morale_lte",
+      "value": 58
+    }
+  ],
+  "messageTemplateId": "MSG_HS_LIFE_CLASSMATE_01",
+  "decisionTemplateId": null
+}

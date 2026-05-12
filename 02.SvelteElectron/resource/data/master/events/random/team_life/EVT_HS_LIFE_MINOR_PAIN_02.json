@@ -1,0 +1,22 @@
+{
+  "id": "EVT_HS_LIFE_MINOR_PAIN_02",
+  "type": "random",
+  "category": "team_life",
+  "priority": 289,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 15,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "fatigue_gte",
+      "value": 72
+    }
+  ],
+  "messageTemplateId": "MSG_COND_FATIGUE_WARNING",
+  "decisionTemplateId": "DEC_COND_FATIGUE_WARNING"
+}

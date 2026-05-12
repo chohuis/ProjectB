@@ -1,0 +1,22 @@
+{
+  "id": "EVT_HS_LIFE_RIVAL_MATCH_02",
+  "type": "random",
+  "category": "team_life",
+  "priority": 294,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 15,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "condition_gte",
+      "value": 50
+    }
+  ],
+  "messageTemplateId": "MSG_RAND_SENIOR_ADVICE",
+  "decisionTemplateId": "DEC_RAND_SENIOR_ADVICE"
+}

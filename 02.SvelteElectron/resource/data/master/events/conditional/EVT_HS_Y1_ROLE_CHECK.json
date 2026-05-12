@@ -1,0 +1,28 @@
+{
+  "id": "EVT_HS_Y1_ROLE_CHECK",
+  "type": "conditional",
+  "category": "team",
+  "priority": 760,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 4,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_gte",
+      "value": 18
+    },
+    {
+      "type": "week_lte",
+      "value": 22
+    },
+    {
+      "type": "morale_gte",
+      "value": 35
+    }
+  ],
+  "messageTemplateId": "MSG_COND_TEAM_SUCCESS",
+  "decisionTemplateId": null
+}

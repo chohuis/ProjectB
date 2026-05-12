@@ -1,0 +1,19 @@
+{
+  "id": "EVT_HS_Y2_W50_YEAR_WRAP",
+  "type": "mandatory",
+  "category": "season",
+  "priority": 940,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_eq",
+      "value": 102
+    }
+  ],
+  "messageTemplateId": "MSG_HS_YEAR_END",
+  "decisionTemplateId": null
+}

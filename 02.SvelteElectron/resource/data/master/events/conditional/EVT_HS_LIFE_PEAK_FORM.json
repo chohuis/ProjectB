@@ -1,0 +1,32 @@
+{
+  "id": "EVT_HS_LIFE_PEAK_FORM",
+  "type": "conditional",
+  "category": "training",
+  "priority": 820,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 4,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_gte",
+      "value": 1
+    },
+    {
+      "type": "week_lte",
+      "value": 156
+    },
+    {
+      "type": "condition_gte",
+      "value": 88
+    },
+    {
+      "type": "morale_gte",
+      "value": 70
+    }
+  ],
+  "messageTemplateId": "MSG_COND_PEAK_FORM",
+  "decisionTemplateId": "DEC_COND_PEAK_FORM"
+}

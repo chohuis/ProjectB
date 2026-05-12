@@ -1,0 +1,28 @@
+{
+  "id": "EVT_HS_Y2_SCOUT_RUMOR",
+  "type": "conditional",
+  "category": "career",
+  "priority": 780,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 4,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_gte",
+      "value": 67
+    },
+    {
+      "type": "week_lte",
+      "value": 76
+    },
+    {
+      "type": "pitching_ovr_gte",
+      "value": 50
+    }
+  ],
+  "messageTemplateId": "MSG_COND_STAT_MILESTONE",
+  "decisionTemplateId": null
+}

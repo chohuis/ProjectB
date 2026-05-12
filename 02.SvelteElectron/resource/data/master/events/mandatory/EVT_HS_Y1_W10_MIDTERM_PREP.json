@@ -1,0 +1,19 @@
+{
+  "id": "EVT_HS_Y1_W10_MIDTERM_PREP",
+  "type": "mandatory",
+  "category": "academics",
+  "priority": 960,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_eq",
+      "value": 10
+    }
+  ],
+  "messageTemplateId": "MSG_HS_MIDTERM",
+  "decisionTemplateId": null
+}

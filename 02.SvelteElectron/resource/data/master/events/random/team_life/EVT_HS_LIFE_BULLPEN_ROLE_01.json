@@ -1,0 +1,22 @@
+{
+  "id": "EVT_HS_LIFE_BULLPEN_ROLE_01",
+  "type": "random",
+  "category": "team_life",
+  "priority": 298,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 18,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "fatigue_lte",
+      "value": 75
+    }
+  ],
+  "messageTemplateId": "MSG_RAND_BULLPEN_EXTRA",
+  "decisionTemplateId": "DEC_RAND_BULLPEN_EXTRA"
+}

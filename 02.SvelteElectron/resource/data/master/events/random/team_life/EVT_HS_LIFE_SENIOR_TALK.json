@@ -1,0 +1,22 @@
+{
+  "id": "EVT_HS_LIFE_SENIOR_TALK",
+  "type": "random",
+  "category": "team_life",
+  "priority": 295,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 26,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_gte",
+      "value": 6
+    }
+  ],
+  "messageTemplateId": "MSG_RAND_SENIOR_ADVICE",
+  "decisionTemplateId": "DEC_RAND_SENIOR_ADVICE"
+}

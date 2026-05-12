@@ -1,0 +1,22 @@
+{
+  "id": "EVT_HS_LIFE_WEATHER_02",
+  "type": "random",
+  "category": "team_life",
+  "priority": 277,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 14,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_gte",
+      "value": 18
+    }
+  ],
+  "messageTemplateId": "MSG_RAND_TEAM_MEAL",
+  "decisionTemplateId": "DEC_RAND_TEAM_MEAL"
+}

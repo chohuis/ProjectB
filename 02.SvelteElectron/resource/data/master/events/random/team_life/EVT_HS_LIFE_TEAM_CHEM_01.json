@@ -1,0 +1,22 @@
+{
+  "id": "EVT_HS_LIFE_TEAM_CHEM_01",
+  "type": "random",
+  "category": "team_life",
+  "priority": 288,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 16,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_gte",
+      "value": 6
+    }
+  ],
+  "messageTemplateId": "MSG_RAND_TEAM_MEAL",
+  "decisionTemplateId": "DEC_RAND_TEAM_MEAL"
+}

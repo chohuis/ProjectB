@@ -1,0 +1,22 @@
+{
+  "id": "EVT_HS_LIFE_COACH_FEEDBACK_02",
+  "type": "random",
+  "category": "team_life",
+  "priority": 302,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 17,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "fatigue_gte",
+      "value": 65
+    }
+  ],
+  "messageTemplateId": "MSG_RAND_SENIOR_ADVICE",
+  "decisionTemplateId": "DEC_RAND_SENIOR_ADVICE"
+}

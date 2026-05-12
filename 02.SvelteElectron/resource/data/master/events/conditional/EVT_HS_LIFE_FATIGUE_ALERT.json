@@ -1,0 +1,28 @@
+{
+  "id": "EVT_HS_LIFE_FATIGUE_ALERT",
+  "type": "conditional",
+  "category": "health",
+  "priority": 860,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 4,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_gte",
+      "value": 1
+    },
+    {
+      "type": "week_lte",
+      "value": 156
+    },
+    {
+      "type": "fatigue_gte",
+      "value": 82
+    }
+  ],
+  "messageTemplateId": "MSG_COND_FATIGUE_WARNING",
+  "decisionTemplateId": "DEC_COND_FATIGUE_WARNING"
+}

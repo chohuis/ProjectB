@@ -1,0 +1,28 @@
+{
+  "id": "EVT_HS_Y1_RIVAL_NOTICE",
+  "type": "conditional",
+  "category": "career",
+  "priority": 740,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 4,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_gte",
+      "value": 30
+    },
+    {
+      "type": "week_lte",
+      "value": 38
+    },
+    {
+      "type": "season_k_gte",
+      "value": 30
+    }
+  ],
+  "messageTemplateId": "MSG_COND_STAT_MILESTONE",
+  "decisionTemplateId": null
+}

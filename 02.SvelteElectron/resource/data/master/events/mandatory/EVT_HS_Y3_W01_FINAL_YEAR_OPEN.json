@@ -1,0 +1,19 @@
+{
+  "id": "EVT_HS_Y3_W01_FINAL_YEAR_OPEN",
+  "type": "mandatory",
+  "category": "season",
+  "priority": 980,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_eq",
+      "value": 105
+    }
+  ],
+  "messageTemplateId": "MSG_HS_SEASON_OPEN",
+  "decisionTemplateId": null
+}

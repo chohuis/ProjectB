@@ -1,0 +1,22 @@
+{
+  "id": "EVT_HS_LIFE_TEACHER_ADVICE_01",
+  "type": "random",
+  "category": "social",
+  "priority": 282,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 14,
+  "poolId": "POOL_SOCIAL_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_gte",
+      "value": 20
+    }
+  ],
+  "messageTemplateId": "MSG_RAND_FRIEND_VISIT",
+  "decisionTemplateId": null
+}

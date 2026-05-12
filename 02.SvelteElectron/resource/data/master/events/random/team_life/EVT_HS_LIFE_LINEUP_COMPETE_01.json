@@ -1,0 +1,22 @@
+{
+  "id": "EVT_HS_LIFE_LINEUP_COMPETE_01",
+  "type": "random",
+  "category": "team_life",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 18,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_gte",
+      "value": 8
+    }
+  ],
+  "messageTemplateId": "MSG_HS_LIFE_LINEUP_COMPETE_01",
+  "decisionTemplateId": "DEC_RAND_BULLPEN_EXTRA"
+}

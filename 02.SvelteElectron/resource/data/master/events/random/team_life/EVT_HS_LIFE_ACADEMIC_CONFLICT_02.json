@@ -1,0 +1,22 @@
+{
+  "id": "EVT_HS_LIFE_ACADEMIC_CONFLICT_02",
+  "type": "random",
+  "category": "team_life",
+  "priority": 279,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 14,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_gte",
+      "value": 14
+    }
+  ],
+  "messageTemplateId": "MSG_HS_MIDTERM",
+  "decisionTemplateId": null
+}
