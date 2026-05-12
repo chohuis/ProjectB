@@ -1,0 +1,22 @@
+{
+  "id": "EVT_UNIV_LIFE_SCOUT_PRESSURE_01",
+  "type": "random",
+  "messageTemplateId": "MSG_UNIV_LIFE_SCOUT_PRESSURE_01",
+  "category": "media",
+  "decisionTemplateId": null,
+  "weight": 14,
+  "cooldownWeeks": 3,
+  "priority": 290,
+  "oncePolicy": "repeatable",
+  "poolId": "POOL_MEDIA_DAILY",
+  "conditions": [
+    {
+      "stage": "university",
+      "type": "career_stage"
+    },
+    {
+      "value": 30,
+      "type": "week_gte"
+    }
+  ]
+}

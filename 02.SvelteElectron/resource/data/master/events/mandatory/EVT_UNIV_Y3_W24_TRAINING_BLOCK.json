@@ -1,0 +1,19 @@
+{
+  "id": "EVT_UNIV_Y3_W24_TRAINING_BLOCK",
+  "oncePolicy": "once_per_stage_year",
+  "messageTemplateId": "MSG_UNIV_TRAINING_BLOCK",
+  "category": "training",
+  "type": "mandatory",
+  "decisionTemplateId": "DEC_HS_SUMMER_CAMP",
+  "priority": 900,
+  "conditions": [
+    {
+      "stage": "university",
+      "type": "career_stage"
+    },
+    {
+      "value": 24,
+      "type": "week_eq"
+    }
+  ]
+}

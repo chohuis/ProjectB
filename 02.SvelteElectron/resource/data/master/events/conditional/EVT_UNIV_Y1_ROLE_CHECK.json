@@ -1,0 +1,28 @@
+{
+  "conditions": [
+    {
+      "stage": "university",
+      "type": "career_stage"
+    },
+    {
+      "value": 14,
+      "type": "week_gte"
+    },
+    {
+      "value": 22,
+      "type": "week_lte"
+    },
+    {
+      "value": 35,
+      "type": "morale_gte"
+    }
+  ],
+  "id": "EVT_UNIV_Y1_ROLE_CHECK",
+  "type": "conditional",
+  "messageTemplateId": "MSG_UNIV_ROLE_CHECK",
+  "category": "team",
+  "decisionTemplateId": null,
+  "cooldownWeeks": 4,
+  "oncePolicy": "repeatable",
+  "priority": 760
+}

@@ -1,0 +1,19 @@
+{
+  "id": "EVT_UNIV_Y3_W12_MIDTERM",
+  "oncePolicy": "once_per_stage_year",
+  "messageTemplateId": "MSG_UNIV_MIDTERM",
+  "category": "academics",
+  "type": "mandatory",
+  "decisionTemplateId": null,
+  "priority": 940,
+  "conditions": [
+    {
+      "stage": "university",
+      "type": "career_stage"
+    },
+    {
+      "value": 12,
+      "type": "week_eq"
+    }
+  ]
+}

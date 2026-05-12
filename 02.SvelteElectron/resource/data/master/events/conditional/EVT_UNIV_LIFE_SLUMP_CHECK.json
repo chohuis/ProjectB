@@ -1,0 +1,20 @@
+{
+    "conditions":  [
+                       {
+                           "stage":  "university",
+                           "type":  "career_stage"
+                       },
+                       {
+                           "value":  40,
+                           "type":  "morale_lte"
+                       }
+                   ],
+    "id":  "EVT_UNIV_LIFE_SLUMP_CHECK",
+    "type":  "conditional",
+    "messageTemplateId":  "MSG_COND_SLUMP",
+    "category":  "mental",
+    "decisionTemplateId":  "DEC_COND_SLUMP",
+    "cooldownWeeks":  4,
+    "oncePolicy":  "repeatable",
+    "priority":  850
+}

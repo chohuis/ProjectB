@@ -1,0 +1,19 @@
+{
+  "id": "EVT_UNIV_Y3_W01_SEASON_OPEN",
+  "oncePolicy": "once_per_stage_year",
+  "messageTemplateId": "MSG_UNIV_SEASON_OPEN",
+  "category": "season",
+  "type": "mandatory",
+  "decisionTemplateId": null,
+  "priority": 980,
+  "conditions": [
+    {
+      "stage": "university",
+      "type": "career_stage"
+    },
+    {
+      "value": 1,
+      "type": "week_eq"
+    }
+  ]
+}

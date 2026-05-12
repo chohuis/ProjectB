@@ -118,6 +118,146 @@
       "subject": "추가 불펜 세션 제안",
       "body": "코치의 말: 오늘 컨디션이 좋아 보이는데, 저녁에 30구 추가 불펜 세션 어때요?\n\n선택에 따라 오늘 컨디션과 내일 훈련 효율이 달라집니다.",
       "decisionTemplateId": "DEC_RAND_BULLPEN_EXTRA"
+    },
+    {
+      "id": "MSG_HS_LIFE_LINEUP_COMPETE_01",
+      "category": "coach",
+      "subject": "선발 경쟁 주간 안내",
+      "body": "이번 주는 선발 경쟁 평가가 진행됩니다.\\n\\n코치진은 최근 컨디션과 투구 완성도를 함께 봅니다. 무리한 강행보다 안정적인 루틴 유지가 중요합니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_HS_LIFE_LINEUP_COMPETE_02",
+      "category": "coach",
+      "subject": "다음 경기 선발 후보 통보",
+      "body": "다음 경기 선발 후보로 이름이 올라왔습니다.\\n\\n이번 주 준비 방식에 따라 최종 결정이 달라질 수 있습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_HS_LIFE_COACH_FEEDBACK_01",
+      "category": "coach",
+      "subject": "코치 피드백: 투구 폼 교정",
+      "body": "코치가 릴리스 타이밍 교정을 제안했습니다.\\n\\n짧은 기간에는 어색할 수 있지만, 제구 안정에 도움이 된다는 평가입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_HS_LIFE_MINOR_PAIN_01",
+      "category": "coach",
+      "subject": "몸 상태 체크 필요",
+      "body": "어깨 주변 피로가 누적된 상태로 보입니다.\\n\\n이번 주는 회복 중심으로 갈지, 훈련 강도를 유지할지 판단이 필요합니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_HS_LIFE_RECOVERY_DAY_01",
+      "category": "system",
+      "subject": "회복일 운영 선택",
+      "body": "회복일을 어떻게 사용할지 선택할 수 있습니다.\\n\\n컨디션 회복과 기술 복습 중 어디에 비중을 둘지 정하세요.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_HS_LIFE_ACADEMIC_CONFLICT_01",
+      "category": "system",
+      "subject": "시험 준비와 훈련 일정 충돌",
+      "body": "시험 준비 시간과 야간 훈련 일정이 겹쳤습니다.\\n\\n이번 선택은 학업 성과와 주간 훈련 효율에 모두 영향을 줄 수 있습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_HS_LIFE_SCOUT_PRESSURE_01",
+      "category": "news",
+      "subject": "스카우트 참관 소식",
+      "body": "다음 경기장에 스카우트가 방문한다는 소식이 전해졌습니다.\\n\\n평소 루틴을 유지할지, 임팩트를 노릴지 선택의 순간입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_HS_LIFE_RIVAL_MATCH_01",
+      "category": "system",
+      "subject": "라이벌전 전야",
+      "body": "라이벌전이 하루 앞으로 다가왔습니다.\\n\\n긴장감이 큰 경기인 만큼 멘탈 관리와 컨디션 조절이 중요합니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_HS_LIFE_WEATHER_01",
+      "category": "system",
+      "subject": "우천으로 일정 변경",
+      "body": "비 예보로 오늘 일정이 조정되었습니다.\\n\\n실내 훈련으로 전환할지, 회복일로 활용할지 판단해 주세요.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_HS_LIFE_CLASSMATE_01",
+      "category": "social",
+      "subject": "동기와 관계 조정",
+      "body": "동기와의 분위기가 어색해졌습니다.\\n\\n먼저 대화를 시도할지, 당분간 거리를 둘지 선택할 수 있습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_UNIV_SEASON_OPEN",
+      "category": "system",
+      "subject": "대학 시즌이 시작되었습니다",
+      "body": "새 학기 시작과 함께 대학 시즌이 열렸습니다.\n\n훈련과 경기, 학업 관리를 균형 있게 유지하면서 성장해 보세요.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_UNIV_MIDTERM",
+      "category": "system",
+      "subject": "대학 중간고사 기간입니다",
+      "body": "이번 주는 대학 중간고사 기간입니다.\n\n학업 일정을 우선하면서도 최소한의 훈련 루틴은 유지하는 것이 좋습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_UNIV_TRAINING_BLOCK",
+      "category": "coach",
+      "subject": "방학기 집중 훈련 구간 시작",
+      "body": "방학기 집중 훈련 구간이 시작되었습니다.\n\n체력 관리를 합께 고려하며 투구 밸런스와 구종 완성도를 끌어올려 보세요.",
+      "decisionTemplateId": "DEC_HS_SUMMER_CAMP"
+    },
+    {
+      "id": "MSG_UNIV_YEAR_WRAP",
+      "category": "system",
+      "subject": "학년 마무리 보고",
+      "body": "한 학년의 시즌이 마무리되었습니다.\n\n기록과 성장 추이를 점검하고, 다음 학년 목표를 설정해 보세요.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_UNIV_ROLE_CHECK",
+      "category": "manager",
+      "subject": "보직 경쟁에 대한 코칭스태프 평가",
+      "body": "코칭스태프가 최근 훈련 테이터와 경기 후반 집중력을 함께 평가했습니다.\n\n오늘의 선택이 이번 달 운용 순서에 영향을 줄 수 있습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_UNIV_SCOUT_RUMOR",
+      "category": "news",
+      "subject": "스카우트 시선이 존재합니다",
+      "body": "대학 리그 관계자 사이에서 스카우트가 당신의 최근 경기를 집중 관찰한다는 소문이 돕니다.\n\n루틴을 유지하고 일관성 있는 투구를 보여주는 것이 중요합니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_UNIV_DRAFT_STOCK_CHECK",
+      "category": "system",
+      "subject": "드래프트 평가가 갱신되었습니다",
+      "body": "최근 투구 지표와 시즌 흐름을 기준으로 드래프트 평가가 업데이트되었습니다.\n\n안정적인 이닝 소화와 삼진 지표가 핵심 평가 요소입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_UNIV_SCOUT_FOCUS",
+      "category": "news",
+      "subject": "주요 구단 스카우트 집중 마크",
+      "body": "주요 구단 스카우트가 당신을 중점 관찰 명단에 올렸다는 정보가 들어왔습니다.\n\n매 등판에서 볼배합과 기본구 안정성을 유지하는 것이 핵심입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_UNIV_LIFE_CLASSMATE_01",
+      "category": "social",
+      "subject": "대학 동기와 협업 제안",
+      "body": "팀 동기가 운동 방법을 같이 바꿔 보자고 제안했습니다.\n\n짧은 협업이지만 시즌 중반 리듬에 의미 있는 변화를 줄 수 있습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_UNIV_LIFE_SCOUT_PRESSURE_01",
+      "category": "news",
+      "subject": "주목도 증가로 인한 심리 부하",
+      "body": "미디어 노출과 스카우트 시선이 동시에 늘면서 심리적 압박이 커지고 있습니다.\n\n기록에 신경 쓰기보다는 이닝 당 집중력을 유지하는 것에 집중하세요.",
+      "decisionTemplateId": null
     }
   ]
 }

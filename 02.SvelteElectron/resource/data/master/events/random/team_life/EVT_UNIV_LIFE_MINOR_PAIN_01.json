@@ -1,0 +1,22 @@
+{
+    "id":  "EVT_UNIV_LIFE_MINOR_PAIN_01",
+    "type":  "random",
+    "messageTemplateId":  "MSG_HS_LIFE_MINOR_PAIN_01",
+    "category":  "team_life",
+    "decisionTemplateId":  "DEC_COND_FATIGUE_WARNING",
+    "weight":  14,
+    "cooldownWeeks":  3,
+    "priority":  300,
+    "oncePolicy":  "repeatable",
+    "poolId":  "POOL_TEAM_LIFE_DAILY",
+    "conditions":  [
+                       {
+                           "stage":  "university",
+                           "type":  "career_stage"
+                       },
+                       {
+                           "value":  55,
+                           "type":  "fatigue_gte"
+                       }
+                   ]
+}

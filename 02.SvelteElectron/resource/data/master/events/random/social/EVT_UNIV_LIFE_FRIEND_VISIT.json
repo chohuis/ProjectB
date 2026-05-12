@@ -1,0 +1,22 @@
+{
+    "id":  "EVT_UNIV_LIFE_FRIEND_VISIT",
+    "type":  "random",
+    "messageTemplateId":  "MSG_RAND_FRIEND_VISIT",
+    "category":  "social",
+    "decisionTemplateId":  null,
+    "weight":  20,
+    "cooldownWeeks":  2,
+    "priority":  275,
+    "oncePolicy":  "repeatable",
+    "poolId":  "POOL_SOCIAL_DAILY",
+    "conditions":  [
+                       {
+                           "stage":  "university",
+                           "type":  "career_stage"
+                       },
+                       {
+                           "value":  70,
+                           "type":  "fatigue_lte"
+                       }
+                   ]
+}

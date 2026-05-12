@@ -1,0 +1,18 @@
+{
+  "id": "EVT_UNIV_LIFE_CLASSMATE_01",
+  "type": "random",
+  "messageTemplateId": "MSG_UNIV_LIFE_CLASSMATE_01",
+  "category": "social",
+  "decisionTemplateId": null,
+  "weight": 18,
+  "cooldownWeeks": 2,
+  "priority": 280,
+  "oncePolicy": "repeatable",
+  "poolId": "POOL_SOCIAL_DAILY",
+  "conditions": [
+    {
+      "stage": "university",
+      "type": "career_stage"
+    }
+  ]
+}
