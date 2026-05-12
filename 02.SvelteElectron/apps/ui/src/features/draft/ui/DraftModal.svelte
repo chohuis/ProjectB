@@ -28,18 +28,27 @@
   }
 
   function evalUnivPass(ovr: number, avgPct: number, idx: number): boolean {
-    const base = 38 + (avgPct * 0.35) + (ovr * 0.35) - idx * 8;
-    return Math.random() * 100 < Math.max(10, Math.min(92, base));
+    const cutByChoice = [58, 53, 48][idx] ?? 48;
+    const score = ovr * 0.62 + avgPct * 0.38;
+    if (score < cutByChoice - 8) return false;
+    const base = 28 + (score - cutByChoice) * 3.4;
+    const chance = Math.max(8, Math.min(94, base));
+    return Math.random() * 100 < chance;
   }
 
   function evalIndiePass(ovr: number, idx: number): boolean {
-    const base = 45 + (ovr * 0.45) - idx * 6;
-    return Math.random() * 100 < Math.max(15, Math.min(95, base));
+    const cutByChoice = [52, 48, 44][idx] ?? 44;
+    if (ovr < cutByChoice - 10) return false;
+    const base = 36 + (ovr - cutByChoice) * 3.2;
+    const chance = Math.max(12, Math.min(96, base));
+    return Math.random() * 100 < chance;
   }
 
   function evalSportsMilitaryPass(ovr: number): boolean {
-    const base = 18 + ovr * 0.55;
-    return Math.random() * 100 < Math.max(5, Math.min(82, base));
+    if (ovr < 56) return false;
+    const base = 22 + (ovr - 56) * 2.1;
+    const chance = Math.max(6, Math.min(84, base));
+    return Math.random() * 100 < chance;
   }
 
   async function finishAccept() {
@@ -82,6 +91,21 @@
       universityPassed: univPassed,
       independentPassed: indiePassed,
       sportsMilitaryPassed: sportsPassed,
+    });
+    gameStore.addMessage({
+      id: `msg-career-fallback-${Date.now()}`,
+      category: "system",
+      sender: "Career Office",
+      subject: "W52 fallback applications submitted",
+      preview: `University pass ${univPassed.length}, Independent pass ${indiePassed.length}, Sports military ${sportsPassed ? "pass" : "fail"}`,
+      body: [
+        "Draft not selected. Fallback applications were evaluated.",
+        `University pass: ${univPassed.length}`,
+        `Independent pass: ${indiePassed.length}`,
+        `Sports military: ${sportsPassed ? "pass" : "fail"}`,
+      ].join("\n"),
+      createdAt: `W${$seasonStore.currentWeek}`,
+      readAt: null,
     });
 
     seasonStore.resolvePendingAction("draft");

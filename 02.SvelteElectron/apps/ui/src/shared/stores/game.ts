@@ -410,6 +410,102 @@ function updateAchievementProgress(
   });
 }
 
+type RosterRule = { min: number; max: number };
+const ROSTER_RULES: Record<string, RosterRule> = {
+  LEAGUE_HIGHSCHOOL: { min: 18, max: 30 },
+  LEAGUE_UNIVERSITY: { min: 20, max: 40 },
+  LEAGUE_INDEPENDENT: { min: 18, max: 45 },
+  LEAGUE_KBL: { min: 40, max: 65 },
+  LEAGUE_ABL: { min: 50, max: 90 },
+};
+
+function npcCoreOvr(npc: NpcSaveState): number {
+  if (npc.playerType === "pitcher") return npc.pitching?.ovr ?? 0;
+  return npc.batting?.ovr ?? 0;
+}
+
+function normalizeOffseasonNpcs(npcs: NpcSaveState[], seasonYear: number): { next: NpcSaveState[]; logs: string[] } {
+  const logs: string[] = [];
+  const next = npcs.map((n) => ({ ...n }));
+
+  // 1) basic lifecycle pass: injury recovery + late-career retirement chance
+  for (let i = 0; i < next.length; i += 1) {
+    const npc = next[i];
+    if (npc.careerStatus === "injured") {
+      next[i] = { ...npc, careerStatus: "active" };
+      continue;
+    }
+    if (npc.careerStatus !== "active") continue;
+    if (npc.currentLeague === "LEAGUE_RETIRED") continue;
+    if (npc.age < 35) continue;
+
+    const ageOver = npc.age - 34;
+    const ovr = npcCoreOvr(npc);
+    const lowOvrPenalty = ovr < 55 ? (55 - ovr) * 0.01 : 0;
+    const retireChance = Math.min(0.72, 0.06 * ageOver + lowOvrPenalty);
+    if (Math.random() < retireChance) {
+      next[i] = {
+        ...npc,
+        careerStatus: "retired",
+        currentLeague: "LEAGUE_RETIRED",
+        currentTeam: "",
+        careerHistory: [
+          ...npc.careerHistory,
+          {
+            year: seasonYear,
+            leagueId: npc.currentLeague,
+            teamId: npc.currentTeam,
+            statLine: "retired",
+            highlights: [],
+          },
+        ],
+      };
+      logs.push(`${npc.name} retired`);
+    }
+  }
+
+  // 2) roster cap enforcement for active players
+  const byLeagueTeam = new Map<string, NpcSaveState[]>();
+  for (const npc of next) {
+    if (npc.careerStatus !== "active") continue;
+    const key = `${npc.currentLeague}::${npc.currentTeam}`;
+    const arr = byLeagueTeam.get(key) ?? [];
+    arr.push(npc);
+    byLeagueTeam.set(key, arr);
+  }
+
+  for (const [key, group] of byLeagueTeam.entries()) {
+    const [leagueId] = key.split("::");
+    const rule = ROSTER_RULES[leagueId];
+    if (!rule) continue;
+
+    if (group.length > rule.max) {
+      const overflow = group.length - rule.max;
+      const sorted = [...group].sort((a, b) => {
+        const o = npcCoreOvr(a) - npcCoreOvr(b);
+        if (o !== 0) return o;
+        return b.age - a.age;
+      });
+      const drop = new Set(sorted.slice(0, overflow).map((n) => n.npcId));
+      for (let i = 0; i < next.length; i += 1) {
+        const npc = next[i];
+        if (!drop.has(npc.npcId)) continue;
+        if (leagueId === "LEAGUE_KBL" || leagueId === "LEAGUE_ABL") {
+          next[i] = { ...npc, currentLeague: "LEAGUE_INDEPENDENT", currentTeam: "" };
+          logs.push(`${npc.name} moved to independent (roster cap)`);
+        } else {
+          next[i] = { ...npc, careerStatus: "retired", currentLeague: "LEAGUE_RETIRED", currentTeam: "" };
+          logs.push(`${npc.name} retired (roster cap)`);
+        }
+      }
+    } else if (group.length < rule.min) {
+      logs.push(`${key} below min roster (${group.length}/${rule.min})`);
+    }
+  }
+
+  return { next, logs };
+}
+
 // ── 스토어 생성 ───────────────────────────────────────────────
 function createGameStore() {
   const { subscribe, update, set } = writable<GameStoreState>(buildInitialState());
@@ -1229,7 +1325,7 @@ function createGameStore() {
     },
 
     // 시즌 종료 후 주인공 상태 갱신 (나이+1, 학년+1, 프로연차+1, 오프시즌 회복)
-    advanceSeasonYear() {
+    advanceSeasonYear(seasonYear?: number) {
       update((s) => {
         const p = s.protagonist;
         const isPro = ["pro", "pro_kbl", "pro_abl"].includes(p.careerStage);
@@ -1251,12 +1347,30 @@ function createGameStore() {
         const schoolState = draftTriggeredReset
           ? { ...s.schoolState, draftTriggered: false }
           : s.schoolState;
+        const lifecycle = normalizeOffseasonNpcs(s.npcs, seasonYear ?? new Date().getFullYear());
+        const lifecycleMsg: MessageItem | null =
+          lifecycle.logs.length > 0
+            ? {
+                id: `msg-offseason-${Date.now()}`,
+                category: "news",
+                sender: "Yearbook",
+                subject: "Offseason lifecycle report",
+                preview: lifecycle.logs[0],
+                body: lifecycle.logs.join("\n"),
+                createdAt: `Y${seasonYear ?? new Date().getFullYear()}`,
+                readAt: null,
+              }
+            : null;
+
         return {
           ...s,
           protagonist,
+          npcs: lifecycle.next,
           player: toPlayerCompat(protagonist),
           school: toSchoolCompat(protagonist.careerStage, schoolState),
           schoolState,
+          logs: [...lifecycle.logs, ...s.logs].slice(0, 30),
+          mailbox: lifecycleMsg ? trimMailbox([lifecycleMsg, ...s.mailbox]) : s.mailbox,
         };
       });
     },

@@ -2,23 +2,81 @@
   import { gameStore } from "../../../shared/stores/game";
   import { seasonStore, currentStandings } from "../../../shared/stores/season";
   import { teamMap } from "../../../shared/stores/master";
+  import type { EntityRow } from "../../../shared/stores/master";
+  import type { HighSchoolMaster, NamedNpcMeta, SchoolScenario } from "../../../shared/types/save";
 
   export let onExit: () => void;
 
-  $: p           = $gameStore.protagonist;
-  $: myTeamId    = p.teamId;
-  $: myStanding  = $seasonStore.standings.find((s) => s.teamId === myTeamId);
-  $: myRank      = $currentStandings.findIndex((s) => s.teamId === myTeamId) + 1;
-  $: totalTeams  = $seasonStore.standings.length;
+  $: p = $gameStore.protagonist;
+  $: myTeamId = p.teamId;
+  $: myStanding = $seasonStore.standings.find((s) => s.teamId === myTeamId);
+  $: myRank = $currentStandings.findIndex((s) => s.teamId === myTeamId) + 1;
+  $: totalTeams = $seasonStore.standings.length;
 
   function tName(id: string): string {
     return $teamMap.get(id)?.name ?? id;
   }
 
-  function handleNewSeason() {
-    gameStore.advanceSeasonYear();
+  async function loadHighschoolContext(schoolId: string): Promise<{
+    school: HighSchoolMaster;
+    scenario: SchoolScenario;
+    namedRegistry: NamedNpcMeta[];
+    entities: EntityRow[];
+  } | null> {
+    if (!window.projectB?.masterFetch) return null;
+    try {
+      const [school, scenario, namedWrap, entityIndex] = await Promise.all([
+        window.projectB.masterFetch(`schools/highschool/${schoolId}.json`) as Promise<HighSchoolMaster | null>,
+        window.projectB.masterFetch(`schools/highschool/school_scenarios/${schoolId}_scenario.json`) as Promise<SchoolScenario | null>,
+        window.projectB.masterFetch("schools/highschool/named_npc_registry.json") as Promise<{ list?: NamedNpcMeta[] } | NamedNpcMeta[] | null>,
+        window.projectB.masterFetch("entities/players/_index.json") as Promise<{ byLeague?: Record<string, string[]> } | null>,
+      ]);
+      if (!school || !scenario || !entityIndex?.byLeague) return null;
+
+      const namedRegistry = Array.isArray(namedWrap) ? namedWrap : (namedWrap?.list ?? []);
+      const ids = entityIndex.byLeague.LEAGUE_HIGHSCHOOL ?? [];
+      const rows = (await Promise.all(
+        ids.map((id) => window.projectB!.masterFetch!("entities/players/" + id + ".json") as Promise<EntityRow | null>)
+      )).filter((r): r is EntityRow => !!r);
+
+      return { school, scenario, namedRegistry, entities: rows };
+    } catch {
+      return null;
+    }
+  }
+
+  async function handleNewSeason() {
+    const now = $seasonStore.seasonYear;
+    let progressedByHighschoolSync = false;
+
+    if (p.careerStage === "highschool" && p.schoolId) {
+      const ctx = await loadHighschoolContext(p.schoolId);
+      if (ctx) {
+        gameStore.processSeasonEnd(now, ctx.school, ctx.namedRegistry, ctx.entities, now * 100);
+        progressedByHighschoolSync = true;
+        gameStore.addMessage({
+          id: `msg-season-hs-sync-${Date.now()}`,
+          category: "news",
+          sender: "연감",
+          subject: `${now} 시즌 졸업/승급 반영`,
+          preview: "고교 선수 학년 승급과 졸업 대상 정리가 반영되었습니다.",
+          body: [
+            "고교 시즌 종료 동기화가 완료되었습니다.",
+            "NPC 학년 승급과 졸업 처리가 반영되었습니다.",
+            "졸업 대상은 드래프트/진로 처리 풀로 이관되었습니다.",
+          ].join("\n"),
+          createdAt: `Y${now}`,
+          readAt: null,
+        });
+      }
+    }
+
+    if (!progressedByHighschoolSync) {
+      gameStore.advanceSeasonYear($seasonStore.seasonYear);
+    }
     seasonStore.startNewSeason();
-    // $seasonEnded가 false로 바뀌며 모달 자동 닫힘
+    await gameStore.save();
+    await seasonStore.save();
   }
 </script>
 
@@ -134,8 +192,6 @@
     color: #8aa4cc;
   }
 
-  .summary {}
-
   .kpi-row {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -162,7 +218,7 @@
     color: #d8e8ff;
   }
 
-  .kpi strong.gold   { color: #f5d050; }
+  .kpi strong.gold { color: #f5d050; }
   .kpi strong.silver { color: #c8d8f0; }
   .kpi strong.bronze { color: #e0a060; }
 

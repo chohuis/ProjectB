@@ -65,16 +65,56 @@
 
     if (kind === "university" && teamId) {
       gameStore.applyDraftDecision({ stage: "university", leagueId: "LEAGUE_UNIVERSITY", teamId });
+      gameStore.addMessage({
+        id: `msg-career-final-${Date.now()}`,
+        category: "system",
+        sender: "Career Office",
+        subject: "W52 final path selected",
+        preview: `University selected: ${teamName(teamId)}`,
+        body: `Final selection completed.\nPath: University (${teamName(teamId)})`,
+        createdAt: `W${$seasonStore.currentWeek}`,
+        readAt: null,
+      });
     } else if (kind === "independent" && teamId) {
       gameStore.applyDraftDecision({ stage: "independent", leagueId: "LEAGUE_INDEPENDENT", teamId });
+      gameStore.addMessage({
+        id: `msg-career-final-${Date.now()}`,
+        category: "system",
+        sender: "Career Office",
+        subject: "W52 final path selected",
+        preview: `Independent selected: ${teamName(teamId)}`,
+        body: `Final selection completed.\nPath: Independent league (${teamName(teamId)})`,
+        createdAt: `W${$seasonStore.currentWeek}`,
+        readAt: null,
+      });
     } else if (kind === "sports") {
       gameStore.enlistMilitary("sports");
       gameStore.clearFallbackAdmissions();
       gameStore.setDraftIntent(false);
+      gameStore.addMessage({
+        id: `msg-career-final-${Date.now()}`,
+        category: "system",
+        sender: "Career Office",
+        subject: "W52 final path selected",
+        preview: "Sports military selected",
+        body: "Final selection completed.\nPath: Sports military enlistment",
+        createdAt: `W${$seasonStore.currentWeek}`,
+        readAt: null,
+      });
     } else {
       gameStore.enlistMilitary("general");
       gameStore.clearFallbackAdmissions();
       gameStore.setDraftIntent(false);
+      gameStore.addMessage({
+        id: `msg-career-final-${Date.now()}`,
+        category: "system",
+        sender: "Career Office",
+        subject: "W52 final path selected",
+        preview: "General military selected",
+        body: "Final selection completed.\nPath: General military enlistment",
+        createdAt: `W${$seasonStore.currentWeek}`,
+        readAt: null,
+      });
     }
 
     seasonStore.resolvePendingAction("careerChoice");
