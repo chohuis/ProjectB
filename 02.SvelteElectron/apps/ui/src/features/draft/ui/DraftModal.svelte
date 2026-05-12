@@ -8,6 +8,13 @@
   let resolving = false;
 
   $: weekInYear = (($seasonStore.currentWeek - 1 + 52) % 52) + 1;
+  $: isHighschoolDraftFlow =
+    $gameStore.protagonist.careerStage === "highschool" &&
+    $gameStore.protagonist.grade === 3 &&
+    weekInYear === 51;
+  $: isUniversityDraftFlow =
+    $gameStore.protagonist.careerStage === "university" &&
+    weekInYear === 52;
   $: teamName = result?.teamId
     ? $masterStore.teams.find((t) => t.id === result!.teamId)?.name ?? result.teamId
     : null;
@@ -97,6 +104,17 @@
     await seasonStore.save();
     resolving = false;
   }
+
+  async function rejectToMilitary() {
+    if (resolving) return;
+    resolving = true;
+    gameStore.enlistMilitary("general");
+    seasonStore.resolvePendingAction("draft");
+    gameStore.setDraftIntent(false);
+    await gameStore.save();
+    await seasonStore.save();
+    resolving = false;
+  }
 </script>
 
 <div class="overlay">
@@ -114,14 +132,22 @@
     {:else}
       <div class="summary fail">
         <p>이번 드래프트에서 지명되지 않았습니다.</p>
+        {#if isHighschoolDraftFlow}
+          <p>다음 단계: W52에 대학/독립리그/체육부대 지원 결과를 확인합니다.</p>
+        {:else if isUniversityDraftFlow}
+          <p>대학 졸업 시점입니다. 독립리그 진입 또는 군입대를 선택하세요.</p>
+        {/if}
       </div>
     {/if}
 
     <div class="actions">
       {#if result?.drafted}
         <button disabled={resolving} on:click={finishAccept}>수락</button>
-      {:else if $gameStore.protagonist.careerStage === "highschool" && $gameStore.protagonist.grade === 3 && weekInYear === 51}
+      {:else if isHighschoolDraftFlow}
         <button disabled={resolving} on:click={processFailAndApply}>W52 지원 결과 보기</button>
+      {:else if isUniversityDraftFlow}
+        <button disabled={resolving} on:click={rejectDirect}>독립리그 진입</button>
+        <button disabled={resolving} on:click={rejectToMilitary}>군입대</button>
       {:else}
         <button disabled={resolving} on:click={rejectDirect}>독립리그 진입</button>
       {/if}

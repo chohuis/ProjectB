@@ -76,6 +76,8 @@
     action: PendingAction;
     index: number;
     tab: MainTabId;
+    tag: string;
+    priority: number;
     title: string;
     detail: string;
   };
@@ -115,6 +117,9 @@
   }
 
   function queueDetail(action: PendingAction): string {
+    const p = $gameStore.protagonist;
+    const ss = $gameStore.schoolState;
+    const weekInYear = (($seasonStore.currentWeek - 1 + 52) % 52) + 1;
     switch (action.type) {
       case "message":
         return `messageId: ${action.messageId}`;
@@ -124,14 +129,61 @@
         return `${action.contactId} / ${action.arcId}`;
       case "game":
         return `scheduleId: ${action.scheduleId}`;
+      case "careerChoice":
+        if (ss.fallbackSelectionPending) {
+          const passCount =
+            ss.fallbackUniversityPassed.length +
+            ss.fallbackIndependentPassed.length +
+            (ss.fallbackSportsMilitaryPassed ? 1 : 0);
+          return `fallback selection / passed ${passCount}`;
+        }
+        return `career choice week ${weekInYear}`;
+      case "draft":
+        return `scout ${p.scoutScore} / ovr ${p.pitching.ovr}`;
       case "salaryNegotiation":
-        return `${action.teamId} · ${action.offeredSalary.toLocaleString()} `;
+        return `${action.teamId} / offered ${action.offeredSalary.toLocaleString()}`;
       case "optionClause":
         return `${action.optionType} option`;
       case "trade":
         return `${action.fromTeamId} -> ${action.toTeamId}`;
+      case "faMarket":
+        return `FA round ${p.faNegotiationRound ?? 0} / unsigned ${p.faUnsignedWeeks ?? 0}w`;
+      case "militaryEnlist":
+        return `age ${p.age} / stage ${p.careerStage}`;
       default:
         return "";
+    }
+  }
+
+  function queueTag(action: PendingAction): string {
+    switch (action.type) {
+      case "game": return "MATCH";
+      case "draft":
+      case "careerChoice": return "CAREER";
+      case "salaryNegotiation":
+      case "optionClause":
+      case "faMarket":
+      case "trade": return "CONTRACT";
+      case "militaryEnlist": return "MILITARY";
+      case "messengerScript": return "MESSENGER";
+      case "event": return "EVENT";
+      case "message": return "MESSAGE";
+    }
+  }
+
+  function queuePriority(action: PendingAction): number {
+    switch (action.type) {
+      case "game": return 100;
+      case "careerChoice":
+      case "draft": return 90;
+      case "salaryNegotiation":
+      case "optionClause":
+      case "faMarket":
+      case "trade": return 80;
+      case "militaryEnlist": return 70;
+      case "messengerScript": return 60;
+      case "event": return 50;
+      case "message": return 40;
     }
   }
 
@@ -281,9 +333,12 @@
     action,
     index,
     tab: tabForPending(action),
+    tag: queueTag(action),
+    priority: queuePriority(action),
     title: queueLabel(action),
     detail: queueDetail(action),
-  })) as QueueItem[];
+  }))
+    .sort((a, b) => b.priority - a.priority || a.index - b.index) as QueueItem[];
 
   $: pendingByTab = pendingQueue.reduce((acc, item) => {
     acc[item.tab] = (acc[item.tab] ?? 0) + 1;
@@ -380,6 +435,7 @@
                 {#each currentTabQueue as item}
                   <article class="pending-queue-card">
                     <div class="pending-queue-text">
+                      <p class="pending-tag">{item.tag}</p>
                       <p class="pending-title">{item.title}</p>
                       {#if item.detail}
                         <p class="pending-detail">{item.detail}</p>
@@ -605,6 +661,14 @@
     color: #ffeef0;
     font-size: 13px;
     font-weight: 700;
+  }
+
+  .pending-tag {
+    margin: 0 0 2px;
+    color: #ffd0d8;
+    font-size: 10px;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
   }
 
   .pending-detail {

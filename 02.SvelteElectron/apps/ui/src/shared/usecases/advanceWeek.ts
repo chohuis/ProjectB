@@ -97,6 +97,16 @@ export function simulateProtagonistGame(homeTeamId: string, awayTeamId: string):
   return simulateNpcGame(homeTeamId, awayTeamId);
 }
 
+function calcCareerStageYear(p: ProtagonistSave, seasonWeek: number, universityWeek: number): number {
+  if (p.careerStage === "highschool") {
+    return Math.max(0, (p.grade ?? 1) - 1);
+  }
+  if (p.careerStage === "university") {
+    return Math.floor(Math.max(0, universityWeek - 1) / 52);
+  }
+  return Math.floor((seasonWeek - 1) / 52);
+}
+
 export async function advanceWeek(): Promise<WeekAdvanceResult> {
   const s = get(seasonStore);
   const g = get(gameStore);
@@ -517,7 +527,12 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     triggeredEvents: sNow.triggeredEvents,
   };
 
-  const careerStageYear = Math.floor((nextWeek - 1) / 52);
+  const gForStageYear = get(gameStore);
+  const careerStageYear = calcCareerStageYear(
+    gForStageYear.protagonist,
+    nextWeek,
+    gForStageYear.schoolState.universityWeek ?? 0,
+  );
   const evResult = runEventEngine(
     m.eventRules,
     m.eventPools,
@@ -593,8 +608,9 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     seasonStore.pushPendingAction({ type: "careerChoice" });
   }
 
-  // ── 9. 드래프트 이벤트 처리 (고3/대4 W52) ─────────────────────────────────
+  // ── 9. 드래프트 이벤트 처리 (고3 W51, 대4 W52) ─────────────────────────────
   const gDraft = get(gameStore);
+  const hasDraftPending = get(seasonStore).pendingActions.some((a) => a.type === "draft");
   const isHsDraftWeek =
     gDraft.protagonist.careerStage === "highschool" &&
     gDraft.protagonist.grade === 3 &&
@@ -604,7 +620,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     gDraft.protagonist.careerStage === "university" &&
     careerStageYear === 3 &&
     weekInYear === 52;
-  if ((isHsDraftWeek || isUnivDraftWeek) && !gDraft.schoolState.draftTriggered) {
+  if ((isHsDraftWeek || isUnivDraftWeek) && !gDraft.schoolState.draftTriggered && !hasDraftPending) {
     gameStore.markDraftTriggered(true);
     seasonStore.pushPendingAction({ type: "draft" });
   }

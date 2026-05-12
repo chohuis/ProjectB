@@ -92,7 +92,7 @@
     </div>
 
     {#if isPrimaryChoice}
-      <p class="body-text">이번 주에 진로를 먼저 정합니다. 드래프트 참가를 고르면 다음 주(W51)에 드래프트를 진행합니다.</p>
+      <p class="body-text">W50 1차 선택 단계입니다. 드래프트 참가를 고르면 W51 드래프트를 진행하고, 미지명 시 W52 지원 결과를 확인합니다.</p>
       <div class="info-row">
         <span class="info-item">OVR <strong>{ovr}</strong></span>
         <span class="info-item">평균 등급 <strong>{avgGrade}등급</strong></span>
@@ -104,7 +104,7 @@
         <button class="opt-btn" on:click={() => choosePrimary("military")} type="button"><span class="opt-label">바로 군입대</span></button>
       </div>
     {:else if isFallbackChoice}
-      <p class="body-text">드래프트 탈락 후 지원 결과입니다. 가능한 경로 중 하나를 선택하세요.</p>
+      <p class="body-text">W52 최종 선택 단계입니다. 합격한 경로 중 하나를 선택하면 즉시 다음 커리어로 전환됩니다.</p>
       <div class="options">
         {#each univPassed as teamId}
           <button class="opt-btn" on:click={() => chooseFallback("university", teamId)} type="button">
