@@ -76,9 +76,9 @@ const TRAINING_MAP: Record<string, ProgramConfig> = {
   TRN_BUNTING:     { type: "batting",  primaryStat: "bunting",      secondaryStat: "contact",      baseXP: 2.0, fatigueCost: 5,   conditionCost: 2 },
   TRN_BCLUTCH:     { type: "batting",  primaryStat: "battingClutch",secondaryStat: "discipline",   baseXP: 2.5, fatigueCost: 5,   conditionCost: 2 },
   // 구종 개발 (trainingPitchState 대상 구종의 progress 누적)
-  TRN_PITCH_DEV:   { type: "pitching", primaryStat: "command",                                     baseXP: 0,   fatigueCost: 10,  conditionCost: 2,   isPitchDev: true, progressPerWeek: 20 },
+  TRN_PITCH_DEV:   { type: "pitching", primaryStat: "command",                                     baseXP: 0,   fatigueCost: 10,  conditionCost: 2,   isPitchDev: true, progressPerWeek: 17 },
   // 공용 회복
-  TRN_RECOVERY:    { type: "shared",   primaryStat: "recovery",                                    baseXP: 0,   fatigueCost: -8,  conditionCost: -10, isRecovery: true },
+  TRN_RECOVERY:    { type: "shared",   primaryStat: "recovery",                                    baseXP: 0,   fatigueCost: -5,  conditionCost: -6, isRecovery: true },
 };
 
 const PITCHING_OVR_STATS: PitchingStatKey[] = [
@@ -104,8 +104,8 @@ function weekXP(
 ): number {
   const condFactor = condition / 100;
   // 피로 단계별 XP 페널티: 70+ → ×0.7, 85+ → ×0.5
-  const fatFactor  = fatigue >= 85 ? 0.50
-                   : fatigue >= 70 ? 0.70
+  const fatFactor  = fatigue >= 85 ? 0.35
+                   : fatigue >= 70 ? 0.65
                    : Math.max(0.80, 1 - fatigue / 200);
   const devFactor       = devRate / 62;
   const diligenceFactor = 0.6 + (diligence / 99) * 0.8; // 0.6~1.4
@@ -205,8 +205,8 @@ export function calcTrainingGrowth(
   const addB = (stat: BattingStatKey, gain: number) =>
     battingXpGains.set(stat, (battingXpGains.get(stat) ?? 0) + gain);
 
-  let fatigueDelta   = -5;
-  let conditionDelta =  3;
+  let fatigueDelta   = 0;
+  let conditionDelta = 0;
   let pitchDevGain   = 0;
 
   function applyProgram(id: string | null, mult: number) {

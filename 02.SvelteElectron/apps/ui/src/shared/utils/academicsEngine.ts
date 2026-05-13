@@ -11,8 +11,8 @@ interface StudyModeEffect {
 }
 
 export const STUDY_MODE_EFFECTS: Record<StudyMode, StudyModeEffect> = {
-  focus:  { examGain: 8, efficiencyMod: 0.75, attendanceDelta:  1, assignmentDelta:  2, percentileDelta: -2, warningIncrement: false },
-  normal: { examGain: 4, efficiencyMod: 0.90, attendanceDelta:  0, assignmentDelta:  1, percentileDelta: -1, warningIncrement: false },
+  focus:  { examGain: 8, efficiencyMod: 0.70, attendanceDelta:  1, assignmentDelta:  2, percentileDelta: -2, warningIncrement: false },
+  normal: { examGain: 4, efficiencyMod: 0.85, attendanceDelta:  0, assignmentDelta:  1, percentileDelta: -1, warningIncrement: false },
   rest:   { examGain: 1, efficiencyMod: 1.00, attendanceDelta: -3, assignmentDelta: -6, percentileDelta:  4, warningIncrement: false },
   sleep:  { examGain: 0, efficiencyMod: 1.05, attendanceDelta: -8, assignmentDelta: -9, percentileDelta:  7, warningIncrement: true  },
 };

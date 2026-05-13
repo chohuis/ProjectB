@@ -653,7 +653,11 @@ function createMasterStore() {
     if (!index?.byLeague) return;
     const ids = index.byLeague[leagueId] ?? [];
     const rows = await batchFetch<EntityRow>(ids, (id) => `entities/players/${id}.json`);
-    update((s) => ({ ...s, entities: rows }));
+    update((s) => {
+      const existingIds = new Set(s.entities.map((e) => e.id));
+      const fresh = rows.filter((r) => !existingIds.has(r.id));
+      return { ...s, entities: [...s.entities, ...fresh] };
+    });
   }
 
   async function reloadContacts() {

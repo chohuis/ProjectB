@@ -1,148 +1,322 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, tick } from "svelte";
   import { gameStore } from "../../../shared/stores/game";
   import { masterStore } from "../../../shared/stores/master";
   import { seasonStore } from "../../../shared/stores/season";
+  import type { EntityRow } from "../../../shared/stores/master";
+  import type { NpcSaveState } from "../../../shared/types/save";
 
   const dispatch = createEventDispatcher<{
     close: void;
     completed: { drafted: boolean };
   }>();
 
-  type Candidate = { id: string; name: string; ovr: number; isUser: boolean };
-  type TeamDraftProfile = { teamId: string; preference: number; needsPitcher: boolean };
+  type OriginType = "HS" | "UNIV" | "IND";
+
+  type Candidate = {
+    id: string;
+    name: string;
+    ovr: number;
+    age: number;
+    potential: number;
+    isUser: boolean;
+    position: string;
+    origin: string;
+    originType: OriginType;
+    drafted: boolean;
+  };
+
+  type PickEntry = {
+    pickNo: number;
+    round: number;
+    teamId: string;
+    teamName: string;
+    candidate: Candidate;
+  };
+
+  const ROUND_COUNT = 10;
+  const PICKS_PER_ROUND = 8;
+  const TOTAL_PICKS = ROUND_COUNT * PICKS_PER_ROUND;
 
   let started = false;
+  let loading = false;
   let pickCursor = 0;
-  let picksPerRound = 8;
-  let roundCount = 3;
   let candidates: Candidate[] = [];
   let draftTeamIds: string[] = [];
-  let teamProfiles: TeamDraftProfile[] = [];
+  let picks: PickEntry[] = [];
   let userDrafted = false;
   let finished = false;
+  let logEl: HTMLDivElement;
+  let listFilter: "all" | OriginType = "all";
 
-  $: totalPicks = picksPerRound * roundCount;
   $: heroId = $gameStore.protagonist.id;
+  $: heroName = $gameStore.protagonist.name;
 
-  function teamName(teamId: string): string {
+  $: currentRound = Math.floor(pickCursor / PICKS_PER_ROUND) + 1;
+  $: currentPickInRound = (pickCursor % PICKS_PER_ROUND) + 1;
+
+  $: currentTeamId = (() => {
+    if (finished || draftTeamIds.length === 0 || pickCursor >= TOTAL_PICKS) return "";
+    const teamOrder = pickCursor % PICKS_PER_ROUND;
+    const roundNo = currentRound;
+    const slot = roundNo % 2 === 1 ? teamOrder : PICKS_PER_ROUND - 1 - teamOrder;
+    return draftTeamIds[slot] ?? "";
+  })();
+
+  $: currentTeamName = getTeamName(currentTeamId);
+
+  $: undraftedCount = candidates.filter((c) => !c.drafted).length;
+
+  $: filteredList =
+    listFilter === "all"
+      ? candidates
+      : candidates.filter((c) => c.originType === listFilter);
+
+  function getTeamName(teamId: string): string {
     return $masterStore.teams.find((t) => t.id === teamId)?.name ?? teamId;
   }
 
-  function initBoard() {
-    draftTeamIds = $masterStore.teams.filter((t) => t.leagueId === "LEAGUE_KBL").slice(0, 8).map((t) => t.id);
-    picksPerRound = Math.max(1, draftTeamIds.length);
-    roundCount = 3;
+  function toOriginType(leagueId: string): OriginType {
+    if (leagueId === "LEAGUE_HIGHSCHOOL") return "HS";
+    if (leagueId === "LEAGUE_UNIVERSITY") return "UNIV";
+    return "IND";
+  }
+
+  function originLabel(type: OriginType): string {
+    if (type === "HS") return "고교";
+    if (type === "UNIV") return "대학";
+    return "독립";
+  }
+
+  function buildFromEntity(e: EntityRow, isUser = false): Candidate {
+    const p = (e.details as any)?.player ?? {};
+    const pitchOvr = Number(p.pitching?.ovr ?? 0);
+    const batOvr = Number(p.batting?.ovr ?? 0);
+    return {
+      id: e.id,
+      name: e.name,
+      ovr: Math.max(pitchOvr, batOvr),
+      age: e.age,
+      potential: Number(p.potentialHidden ?? 70),
+      isUser,
+      position: p.position ?? "?",
+      origin: getTeamName(e.teamId),
+      originType: toOriginType(e.leagueId),
+      drafted: false,
+    };
+  }
+
+  function buildFromNpc(npc: NpcSaveState, isUser = false): Candidate {
+    const pitchOvr = npc.pitching?.ovr ?? 0;
+    const batOvr = npc.batting?.ovr ?? 0;
+    const origin = npc.currentTeam ? getTeamName(npc.currentTeam) : npc.schoolId;
+    return {
+      id: npc.npcId,
+      name: npc.name,
+      ovr: Math.max(pitchOvr, batOvr),
+      age: npc.age,
+      potential: npc.developmentRate,
+      isUser,
+      position: npc.position,
+      origin,
+      originType: "HS",
+      drafted: false,
+    };
+  }
+
+  function npcOvr(npc: NpcSaveState): number {
+    return Math.max(npc.pitching?.ovr ?? 0, npc.batting?.ovr ?? 0);
+  }
+
+  function entityOvr(e: EntityRow): number {
+    const p = (e.details as any)?.player ?? {};
+    return Math.max(Number(p.pitching?.ovr ?? 0), Number(p.batting?.ovr ?? 0));
+  }
+
+  async function initBoard() {
+    loading = true;
+
+    await masterStore.loadEntities("LEAGUE_UNIVERSITY");
+    await masterStore.loadEntities("LEAGUE_INDEPENDENT");
+
+    draftTeamIds = $masterStore.teams
+      .filter((t) => t.leagueId === "LEAGUE_KBL" && t.tier === "1군")
+      .map((t) => t.id);
+
     pickCursor = 0;
     userDrafted = false;
     finished = false;
+    picks = [];
 
-    teamProfiles = draftTeamIds.map((teamId, idx) => ({
-      teamId,
-      // 하위권 순번 팀일수록 픽 우선순위 가중치를 높여 전력 보강 수요를 반영
-      preference: 1 + (picksPerRound - idx) * 0.04,
-      needsPitcher: idx % 2 === 0,
-    }));
+    const seen = new Set<string>();
+    const rows: Candidate[] = [];
 
-    const hs = $masterStore.entities.filter((e) => e.role === "player" && e.leagueId === "LEAGUE_HIGHSCHOOL");
-    const rows = hs.map((e) => {
-      const p = (e.details as any)?.player;
-      const pitchOvr = Number(p?.pitching?.ovr ?? 0);
-      const batOvr = Number(p?.batting?.ovr ?? 0);
-      return { id: e.id, name: e.name, ovr: Math.max(pitchOvr, batOvr), isUser: e.id === heroId };
-    });
+    // ── 고교: npcs에서 3학년 필터, 없으면 masterStore 폴백 ──
+    const hsNpcs = $gameStore.npcs.filter(
+      (n) =>
+        n.currentLeague === "LEAGUE_HIGHSCHOOL" &&
+        n.grade === 3 &&
+        n.careerStatus === "active"
+    );
 
-    const hero = rows.find((r) => r.id === heroId) ?? {
-      id: heroId,
-      name: $gameStore.protagonist.name,
-      ovr: $gameStore.protagonist.pitching.ovr,
-      isUser: true,
-    };
-    const withoutHero = rows.filter((r) => r.id !== heroId);
-    withoutHero.sort((a, b) => b.ovr - a.ovr || a.name.localeCompare(b.name, "ko"));
+    if (hsNpcs.length > 0) {
+      const sorted = [...hsNpcs].sort((a, b) => npcOvr(b) - npcOvr(a));
+      const cutoff = Math.ceil(sorted.length * 0.8);
+      for (const npc of sorted.slice(0, cutoff)) {
+        if (seen.has(npc.npcId)) continue;
+        seen.add(npc.npcId);
+        rows.push(buildFromNpc(npc, npc.npcId === heroId));
+      }
+    } else {
+      // 더미 세이브 등 npcs가 비어있을 때: 마스터 데이터에서 고교 3학년 로드
+      await masterStore.loadEntities("LEAGUE_HIGHSCHOOL");
+      const hsEntities = $masterStore.entities
+        .filter((e) => e.leagueId === "LEAGUE_HIGHSCHOOL" && e.role === "player" && e.grade === 3)
+        .sort((a, b) => entityOvr(b) - entityOvr(a));
+      const cutoff = Math.ceil(hsEntities.length * 0.8);
+      for (const e of hsEntities.slice(0, cutoff)) {
+        if (seen.has(e.id)) continue;
+        seen.add(e.id);
+        rows.push(buildFromEntity(e));
+      }
+    }
 
-    // 스카우트 점수 기반 예상 지명 순번
-    // 스카우트 점수/OVR 기반 기대 픽: 점수가 높을수록 앞 순번
+    // ── 주인공 (HS 풀에 없으면 별도 추가) ──
+    if (!seen.has(heroId)) {
+      seen.add(heroId);
+      rows.push({
+        id: heroId,
+        name: heroName,
+        ovr: $gameStore.protagonist.pitching.ovr,
+        age: ($gameStore.protagonist as any).age ?? 18,
+        potential: 75,
+        isUser: true,
+        position: $gameStore.protagonist.position ?? "SP",
+        origin: getTeamName($gameStore.protagonist.teamId),
+        originType: "HS",
+        drafted: false,
+      });
+    }
+
+    // ── 대학: OVR 상위 30명 ──
+    const allPlayers = $masterStore.entities.filter((e) => e.role === "player");
+
+    const univTop = allPlayers
+      .filter((e) => e.leagueId === "LEAGUE_UNIVERSITY")
+      .sort((a, b) => entityOvr(b) - entityOvr(a))
+      .slice(0, 30);
+
+    for (const e of univTop) {
+      if (seen.has(e.id)) continue;
+      seen.add(e.id);
+      rows.push(buildFromEntity(e));
+    }
+
+    // ── 독립: OVR 상위 15명 ──
+    const indTop = allPlayers
+      .filter((e) => e.leagueId === "LEAGUE_INDEPENDENT")
+      .sort((a, b) => entityOvr(b) - entityOvr(a))
+      .slice(0, 15);
+
+    for (const e of indTop) {
+      if (seen.has(e.id)) continue;
+      seen.add(e.id);
+      rows.push(buildFromEntity(e));
+    }
+
+    rows.sort((a, b) => b.ovr - a.ovr || a.name.localeCompare(b.name, "ko"));
+
     const scout = Math.max(1, Math.min(99, $gameStore.protagonist.scoutScore));
     const ovr = Math.max(1, Math.min(99, $gameStore.protagonist.pitching.ovr));
     const combined = scout * 0.62 + ovr * 0.38;
-    const targetPick = Math.max(1, Math.min(totalPicks, Math.round((108 - combined) / 2.2)));
-    const insertAt = Math.min(withoutHero.length, Math.max(0, targetPick - 1));
-    withoutHero.splice(insertAt, 0, hero);
+    const targetPick = Math.max(1, Math.min(TOTAL_PICKS, Math.round((108 - combined) / 2.2)));
 
-    candidates = withoutHero.slice(0, Math.max(totalPicks + 36, 84));
+    const heroIdx = rows.findIndex((r) => r.isUser);
+    if (heroIdx >= 0) {
+      const [hero] = rows.splice(heroIdx, 1);
+      rows.splice(Math.min(rows.length, Math.max(0, targetPick - 1)), 0, hero);
+    }
+
+    candidates = rows;
     gameStore.clearCareerDraftPickLog();
+    loading = false;
   }
 
-  function currentRound(): number {
-    return Math.floor(pickCursor / picksPerRound) + 1;
+  async function startDraft() {
+    await initBoard();
+    started = true;
   }
 
-  function currentPickInRound(): number {
-    return (pickCursor % picksPerRound) + 1;
-  }
+  function executePick(): PickEntry | null {
+    if (finished || pickCursor >= TOTAL_PICKS || draftTeamIds.length === 0) return null;
 
-  function ratingForTeam(candidate: Candidate, profile: TeamDraftProfile): number {
-    const base = candidate.ovr * profile.preference;
-    if (!profile.needsPitcher) return base;
-    // 현재 시나리오는 투수 커리어 중심이므로 팀 필요 포지션 가중치를 단순 적용
-    return candidate.isUser ? base + 6 : base + 2;
-  }
+    const teamOrder = pickCursor % PICKS_PER_ROUND;
+    const roundNo = Math.floor(pickCursor / PICKS_PER_ROUND) + 1;
+    const slot = roundNo % 2 === 1 ? teamOrder : PICKS_PER_ROUND - 1 - teamOrder;
+    const teamId = draftTeamIds[slot];
 
-  function pickCandidateForTeam(profile: TeamDraftProfile): Candidate {
-    const pool = candidates.slice(0, Math.min(18, candidates.length));
+    const pool = candidates.filter((c) => !c.drafted).slice(0, 35);
+    if (pool.length === 0) { finished = true; return null; }
+
     let bestIdx = 0;
     let bestScore = -Infinity;
-    for (let i = 0; i < pool.length; i += 1) {
+    for (let i = 0; i < pool.length; i++) {
       const c = pool[i];
-      // 상위 보드 내에서도 약간의 랜덤성을 부여해 고정 순서를 완화
-      const score = ratingForTeam(c, profile) + Math.random() * 3.5;
-      if (score > bestScore) {
-        bestScore = score;
-        bestIdx = i;
-      }
+      // 18세 기준 1살 초과당 -3점 (고교 유리)
+      const agePenalty = Math.max(0, c.age - 18) * 3;
+      // 포텐셜 50 기준 ±보정 (개발률이 높으면 가산)
+      const potBonus = (c.potential - 50) * 0.3;
+      const score = c.ovr + potBonus - agePenalty + Math.random() * 6;
+      if (score > bestScore) { bestScore = score; bestIdx = i; }
     }
     const selected = pool[bestIdx];
-    const realIdx = candidates.findIndex((c) => c.id === selected.id);
-    if (realIdx >= 0) candidates.splice(realIdx, 1);
-    return selected;
-  }
 
-  function doNextPick() {
-    if (finished || pickCursor >= totalPicks || draftTeamIds.length === 0 || candidates.length === 0) return;
-    const teamOrder = pickCursor % picksPerRound;
-    // 홀수 라운드는 정순, 짝수 라운드는 역순(스네이크)
-    const roundNo = currentRound();
-    const slot = roundNo % 2 === 1 ? teamOrder : picksPerRound - 1 - teamOrder;
-    const teamId = draftTeamIds[slot];
-    const profile = teamProfiles.find((p) => p.teamId === teamId) ?? {
+    const cidx = candidates.findIndex((c) => c.id === selected.id);
+    if (cidx >= 0) candidates[cidx] = { ...candidates[cidx], drafted: true };
+    candidates = candidates;
+
+    const entry: PickEntry = {
+      pickNo: pickCursor + 1,
+      round: roundNo,
       teamId,
-      preference: 1,
-      needsPitcher: true,
+      teamName: getTeamName(teamId),
+      candidate: { ...selected },
     };
-    const selected = pickCandidateForTeam(profile);
-    const pickNo = pickCursor + 1;
+    picks = [...picks, entry];
+
     gameStore.appendCareerDraftPickLog({
-      pickNo,
+      pickNo: entry.pickNo,
       round: roundNo,
       teamId,
       playerId: selected.id,
       playerName: selected.name,
       isUser: selected.isUser,
     });
+
     if (selected.isUser) userDrafted = true;
     pickCursor += 1;
-    if (pickCursor >= totalPicks || userDrafted) finished = true;
+    if (pickCursor >= TOTAL_PICKS) finished = true;
+
+    return entry;
   }
 
-  async function startSimulation() {
-    await masterStore.loadEntities("LEAGUE_HIGHSCHOOL");
-    initBoard();
-    started = true;
+  async function doNextPick() {
+    executePick();
+    await tick();
+    logEl?.scrollTo({ top: logEl.scrollHeight, behavior: "smooth" });
+  }
+
+  async function doAutoAll() {
+    while (!finished) {
+      executePick();
+      await tick();
+    }
+    await tick();
+    logEl?.scrollTo({ top: logEl.scrollHeight, behavior: "smooth" });
   }
 
   async function complete() {
-    const userPick = $gameStore.schoolState.careerDraftPickLog.find((row) => row.isUser) ?? null;
+    const userPick = $gameStore.schoolState.careerDraftPickLog.find((r) => r.isUser) ?? null;
     gameStore.setFallbackAdmissions({
       universityChoices: $gameStore.schoolState.fallbackUniversityChoices,
       independentChoices: $gameStore.schoolState.fallbackIndependentChoices,
@@ -153,12 +327,12 @@
       draftTeamId: userPick?.teamId ?? null,
       draftRound: userPick?.round ?? null,
       draftPick: userPick?.pickNo ?? null,
-      draftSigningBonus: userDrafted ? Math.max(3000, Math.round(($gameStore.protagonist.pitching.ovr - 45) * 220)) : 0,
+      draftSigningBonus: userDrafted
+        ? Math.max(3000, Math.round(($gameStore.protagonist.pitching.ovr - 45) * 220))
+        : 0,
       pendingSelection: true,
     });
-    if (!userDrafted) {
-      gameStore.setDraftIntent(false);
-    }
+    if (!userDrafted) gameStore.setDraftIntent(false);
     seasonStore.resolvePendingAction("draft");
     if (!$seasonStore.pendingActions.some((a) => a.type === "careerChoice")) {
       seasonStore.pushPendingAction({ type: "careerChoice" });
@@ -172,79 +346,373 @@
 
 <div class="overlay">
   <section class="modal">
-    <header>
-      <p class="chip">드래프트 진행</p>
-      <h3>KBL 드래프트 보드</h3>
+
+    <!-- 헤더 -->
+    <header class="modal-head">
+      <div class="head-left">
+        <p class="chip">드래프트 진행</p>
+        <h3>KBL 드래프트 보드</h3>
+      </div>
+      {#if started && !finished}
+        <div class="status-bar">
+          <span class="status-item">라운드 <strong>{currentRound}</strong> / {ROUND_COUNT}</span>
+          <span class="sep">·</span>
+          <span class="status-item">픽 <strong>{currentPickInRound}</strong> / {PICKS_PER_ROUND}</span>
+          <span class="sep">·</span>
+          <span class="status-item">전체 <strong>{pickCursor}</strong> / {TOTAL_PICKS}</span>
+        </div>
+      {:else if started && finished}
+        <div class="status-bar">
+          <span class="status-done">드래프트 완료 · 총 {picks.length}픽</span>
+        </div>
+      {/if}
     </header>
 
     {#if !started}
-      <p class="desc">드래프트 대상과 팀 순번을 확인하고 시뮬레이션을 시작하세요.</p>
-      <div class="actions">
-        <button class="ghost" on:click={() => dispatch("close")}>닫기</button>
-        <button on:click={startSimulation}>시작</button>
+      <!-- 시작 전 -->
+      <div class="pre-start">
+        <p class="pre-desc">KBL 8개 구단이 10라운드(총 80픽)에 걸쳐 신청 선수를 지명합니다.</p>
+        <ul class="pre-info">
+          <li>참가 팀: KBL 1군 8개 구단</li>
+          <li>라운드: 10라운드 (스네이크 드래프트)</li>
+          <li>총 지명 인원: 80명</li>
+          <li>참가 선수: 고교 졸업예정 · 대학 · 독립리그</li>
+        </ul>
       </div>
+      <div class="actions">
+        <button class="btn-ghost" on:click={() => dispatch("close")}>닫기</button>
+        <button class="btn-primary" on:click={startDraft} disabled={loading}>
+          {loading ? "불러오는 중..." : "드래프트 시작"}
+        </button>
+      </div>
+
     {:else}
-      <div class="status">
-        <span>라운드 {currentRound()} / {roundCount}</span>
-        <span>픽 {currentPickInRound()} / {picksPerRound}</span>
-        <span>전체 {pickCursor} / {totalPicks}</span>
-      </div>
+      <!-- 현재 지명팀 배너 -->
+      {#if !finished}
+        <div class="current-team-banner">
+          <span class="banner-label">현재 지명팀</span>
+          <span class="banner-team">{currentTeamName}</span>
+          <span class="banner-sub">라운드 {currentRound} · {currentPickInRound}번째 픽</span>
+        </div>
+      {:else}
+        <div class="current-team-banner done">
+          {#if userDrafted}
+            <span class="banner-team user-picked">지명 완료 — {picks.find(p => p.candidate.isUser)?.teamName}이(가) 지명했습니다</span>
+          {:else}
+            <span class="banner-team undrafted">지명되지 않았습니다</span>
+          {/if}
+        </div>
+      {/if}
 
+      <!-- 메인 2컬럼 -->
       <div class="board">
-        <div class="queue">
-          <h4>다음 팀 순번</h4>
-          <ul>
-            {#each Array.from({ length: Math.min(8, Math.max(0, totalPicks - pickCursor)) }, (_, i) => i) as i}
-              <li>{teamName(draftTeamIds[(pickCursor + i) % picksPerRound])}</li>
-            {/each}
-          </ul>
-        </div>
-        <div class="queue">
-          <h4>유망주 보드</h4>
-          <ul>
-            {#each candidates.slice(0, 8) as c}
-              <li class:user={c.isUser}>{c.name} ({c.ovr}) {c.isUser ? "★" : ""}</li>
-            {/each}
-          </ul>
-        </div>
-      </div>
 
-      <div class="log">
-        <h4>지명 로그</h4>
-        <div class="log-rows">
-          {#each $gameStore.schoolState.careerDraftPickLog.slice(-10).reverse() as row}
-            <div class="log-row">{row.pickNo}P · {teamName(row.teamId)} · {row.playerName} {row.isUser ? "★" : ""}</div>
-          {/each}
+        <!-- 좌: 지명 로그 테이블 -->
+        <div class="draft-log-wrap">
+          <h4>지명 현황</h4>
+          <div class="log-table-wrap" bind:this={logEl}>
+            {#if picks.length === 0}
+              <p class="empty-log">아직 지명된 선수가 없습니다.</p>
+            {:else}
+              <table class="log-table">
+                <thead>
+                  <tr>
+                    <th>픽</th>
+                    <th>R</th>
+                    <th>구단</th>
+                    <th>선수명</th>
+                    <th>OVR</th>
+                    <th>출신</th>
+                    <th>포지션</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {#each picks as p (p.pickNo)}
+                    <tr class:user-row={p.candidate.isUser}>
+                      <td class="td-pick">{p.pickNo}</td>
+                      <td class="td-round">{p.round}</td>
+                      <td class="td-team">{p.teamName}</td>
+                      <td class="td-name">
+                        {p.candidate.name}
+                        {#if p.candidate.isUser}<span class="star">★</span>{/if}
+                      </td>
+                      <td class="td-ovr">{p.candidate.ovr}</td>
+                      <td class="td-origin">
+                        <span class="origin-badge origin-{p.candidate.originType}">
+                          {originLabel(p.candidate.originType)}
+                        </span>
+                        {p.candidate.origin}
+                      </td>
+                      <td class="td-pos">{p.candidate.position}</td>
+                    </tr>
+                  {/each}
+                </tbody>
+              </table>
+            {/if}
+          </div>
         </div>
-      </div>
 
+        <!-- 우: 신청 선수 목록 -->
+        <div class="candidate-wrap">
+          <div class="candidate-head">
+            <h4>신청 선수 ({candidates.length}명 · 미지명 {undraftedCount}명)</h4>
+            <div class="filter-row">
+              {#each ([["all","전체"],["HS","고교"],["UNIV","대학"],["IND","독립"]] as const) as [key, label]}
+                <button
+                  class="filter-btn"
+                  class:active={listFilter === key}
+                  on:click={() => (listFilter = key)}
+                >{label}</button>
+              {/each}
+            </div>
+          </div>
+          <div class="candidate-list">
+            {#each filteredList as c (c.id)}
+              <div
+                class="candidate-row"
+                class:drafted={c.drafted}
+                class:is-user={c.isUser}
+              >
+                <span class="c-name">
+                  {c.name}
+                  {#if c.isUser}<span class="star">★</span>{/if}
+                </span>
+                <span class="c-ovr">{c.ovr}</span>
+                <span class="c-age">{c.age}세</span>
+                <span class="origin-badge origin-{c.originType}">{originLabel(c.originType)}</span>
+                <span class="c-origin">{c.origin}</span>
+                <span class="c-pos">{c.position}</span>
+                {#if c.drafted}
+                  <span class="drafted-badge">지명</span>
+                {/if}
+              </div>
+            {/each}
+          </div>
+        </div>
+
+      </div><!-- /board -->
+
+      <!-- 하단 버튼 -->
       <div class="actions">
-        <button class="ghost" on:click={() => dispatch("close")}>닫기</button>
-        {#if !finished}
-          <button on:click={doNextPick}>다음</button>
-        {:else}
-          <button on:click={complete}>{userDrafted ? "지명 확인" : "미지명 확인"}</button>
-        {/if}
+        <button class="btn-ghost" on:click={() => dispatch("close")}>닫기</button>
+        <div class="action-right">
+          {#if !finished}
+            <button class="btn-auto" on:click={doAutoAll}>전체 자동 진행</button>
+            <button class="btn-primary" on:click={doNextPick}>다음 픽</button>
+          {:else}
+            <button class="btn-primary" on:click={complete}>
+              {userDrafted ? "지명 확인" : "미지명 확인"}
+            </button>
+          {/if}
+        </div>
       </div>
     {/if}
+
   </section>
 </div>
 
 <style>
-  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.74); display:flex; align-items:center; justify-content:center; z-index: 260; }
-  .modal { width:min(980px,94vw); background:#0f1a30; border:1px solid #3d5f96; border-radius:14px; padding:18px; display:grid; gap:12px; }
-  .chip { margin:0; color:#88abdf; font-size:11px; }
-  h3, h4 { margin:0; color:#e8f1ff; }
-  .desc { margin:0; color:#a8c0e0; }
-  .status { display:flex; gap:12px; color:#bbd1ee; font-size:12px; }
-  .board { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-  .queue { border:1px solid #2d466f; border-radius:10px; background:#132441; padding:10px; display:grid; gap:8px; }
-  ul { margin:0; padding-left:18px; display:grid; gap:4px; color:#d2e4ff; font-size:12px; }
-  li.user { color:#ffe08a; font-weight:700; }
-  .log { border:1px solid #2d466f; border-radius:10px; background:#101d36; padding:10px; display:grid; gap:8px; }
-  .log-rows { display:grid; gap:4px; max-height:160px; overflow:auto; }
-  .log-row { font-size:12px; color:#c9ddff; }
-  .actions { display:flex; justify-content:flex-end; gap:8px; }
-  button { border:1px solid #3f629a; background:#1b2f51; color:#e6f1ff; border-radius:8px; padding:8px 12px; cursor:pointer; }
-  button.ghost { background:#13213b; }
+  .overlay {
+    position: fixed; inset: 0;
+    background: rgba(0, 0, 0, 0.78);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 260;
+  }
+
+  .modal {
+    width: min(1180px, 96vw);
+    height: 88vh;
+    max-height: 92vh;
+    background: #0d1928;
+    border: 1px solid #2d4a7a;
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    overflow: hidden;
+  }
+
+  /* ── 헤더 ── */
+  .modal-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  .head-left { display: flex; flex-direction: column; gap: 2px; }
+  .chip { margin: 0; color: #7aa8e0; font-size: 11px; }
+  h3 { margin: 0; font-size: 20px; color: #e8f2ff; }
+  h4 { margin: 0; font-size: 13px; color: #b0ccea; }
+
+  .status-bar {
+    display: flex; align-items: center; gap: 8px;
+    background: #121f38; border: 1px solid #1e3560;
+    border-radius: 8px; padding: 6px 14px;
+    font-size: 13px; color: #8ab4e0;
+    flex-shrink: 0;
+  }
+  .status-bar strong { color: #d0e8ff; }
+  .sep { color: #2a4060; }
+  .status-done { color: #60d890; font-weight: 600; }
+
+  /* ── 시작 전 ── */
+  .pre-start { display: grid; gap: 10px; }
+  .pre-desc { margin: 0; color: #a0b8d8; font-size: 14px; }
+  .pre-info {
+    margin: 0; padding-left: 20px;
+    display: grid; gap: 4px;
+    color: #7a9cc4; font-size: 13px;
+  }
+
+  /* ── 현재 지명팀 배너 ── */
+  .current-team-banner {
+    display: flex; align-items: center; gap: 12px;
+    background: #0e2044; border: 1px solid #1e3a6a;
+    border-radius: 10px; padding: 10px 16px;
+    flex-shrink: 0;
+  }
+  .current-team-banner.done { background: #0d2218; border-color: #1e4030; }
+
+  .banner-label { font-size: 11px; color: #6888b0; flex-shrink: 0; }
+  .banner-team { font-size: 17px; font-weight: 700; color: #d8f0ff; }
+  .banner-team.user-picked { color: #60d890; }
+  .banner-team.undrafted { color: #d08080; }
+  .banner-sub { font-size: 12px; color: #5070a0; margin-left: auto; }
+
+  /* ── 메인 보드 ── */
+  .board {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: 12px;
+    min-height: 0;
+    flex: 1 1 0;
+    overflow: hidden;
+  }
+
+  /* ── 지명 로그 ── */
+  .draft-log-wrap {
+    display: flex; flex-direction: column; gap: 8px;
+    min-height: 0; overflow: hidden;
+    background: #0a1628; border: 1px solid #1a3050; border-radius: 10px; padding: 10px;
+  }
+
+  .log-table-wrap {
+    overflow-y: auto; flex: 1 1 0; min-height: 0;
+  }
+
+  .empty-log { color: #3a5878; font-size: 12px; padding: 12px 4px; margin: 0; }
+
+  .log-table {
+    width: 100%; border-collapse: collapse;
+    font-size: 12px;
+  }
+
+  .log-table thead th {
+    position: sticky; top: 0;
+    background: #0d1e38; color: #5a82b8;
+    padding: 5px 8px; text-align: left;
+    border-bottom: 1px solid #1a3050;
+    font-weight: 600; white-space: nowrap;
+  }
+
+  .log-table tbody tr { border-bottom: 1px solid #111e34; }
+  .log-table tbody tr:hover { background: #101e38; }
+
+  .log-table tbody tr.user-row { background: #1a2c10; }
+  .log-table tbody tr.user-row:hover { background: #203410; }
+
+  .log-table td {
+    padding: 5px 8px; color: #b8d0f0; vertical-align: middle;
+  }
+
+  .td-pick { color: #5a8ac0; font-variant-numeric: tabular-nums; width: 36px; }
+  .td-round { color: #4a7098; width: 28px; }
+  .td-team { color: #c0d8f8; font-weight: 600; }
+  .td-name { color: #e0f0ff; }
+  .td-ovr { color: #80c0f8; font-weight: 700; width: 40px; }
+  .td-origin { display: flex; align-items: center; gap: 5px; }
+  .td-pos { color: #7090b8; width: 36px; }
+
+  .star { color: #f8d060; font-size: 12px; }
+
+  /* ── 신청 선수 목록 ── */
+  .candidate-wrap {
+    display: flex; flex-direction: column; gap: 8px;
+    min-height: 0; overflow: hidden;
+    background: #0a1628; border: 1px solid #1a3050; border-radius: 10px; padding: 10px;
+  }
+
+  .candidate-head { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+
+  .filter-row { display: flex; gap: 4px; }
+  .filter-btn {
+    font-size: 11px; padding: 2px 8px;
+    border: 1px solid #1e3a5a; background: #0e1e38;
+    color: #6888a8; border-radius: 999px; cursor: pointer;
+  }
+  .filter-btn.active { background: #1a3a6a; border-color: #3a6ab0; color: #d0e8ff; }
+
+  .candidate-list {
+    overflow-y: auto; flex: 1 1 0; min-height: 0;
+    display: flex; flex-direction: column; gap: 2px;
+  }
+
+  .candidate-row {
+    display: flex; align-items: center; gap: 6px;
+    padding: 4px 6px; border-radius: 5px;
+    font-size: 11px; transition: background 0.1s;
+  }
+  .candidate-row:hover { background: #111e34; }
+  .candidate-row.drafted { opacity: 0.38; }
+  .candidate-row.is-user { background: #1a2a10; }
+  .candidate-row.is-user:hover { background: #203210; }
+
+  .c-name { flex: 1; color: #c0d8f8; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .c-ovr { color: #70a8e0; font-weight: 700; width: 28px; text-align: right; flex-shrink: 0; }
+  .c-age { color: #486888; font-size: 10px; width: 26px; flex-shrink: 0; }
+  .c-origin { color: #5a7898; font-size: 10px; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .c-pos { color: #4a6888; font-size: 10px; width: 24px; flex-shrink: 0; }
+
+  .drafted-badge {
+    font-size: 9px; padding: 1px 4px;
+    border: 1px solid #2a5a30; background: #0e2818;
+    color: #50a860; border-radius: 3px; flex-shrink: 0;
+  }
+
+  /* ── 출신 배지 ── */
+  .origin-badge {
+    font-size: 9px; font-weight: 700; padding: 1px 5px;
+    border-radius: 3px; flex-shrink: 0; border: 1px solid;
+  }
+  .origin-HS   { background: #1a1030; border-color: #5a3090; color: #c090f8; }
+  .origin-UNIV { background: #101830; border-color: #2a5090; color: #70a8f8; }
+  .origin-IND  { background: #101a20; border-color: #2a6050; color: #60c0a0; }
+
+  /* ── 버튼 ── */
+  .actions {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-shrink: 0; gap: 8px;
+  }
+  .action-right { display: flex; gap: 8px; }
+
+  button { border-radius: 8px; padding: 8px 16px; font-size: 13px; cursor: pointer; }
+  button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  .btn-primary {
+    background: #1a3a6a; border: 1px solid #3a6ab0; color: #d8f0ff;
+  }
+  .btn-primary:hover:not(:disabled) { background: #1e4480; }
+
+  .btn-ghost {
+    background: #111e38; border: 1px solid #1e3458; color: #7090b8;
+  }
+  .btn-ghost:hover { background: #162440; }
+
+  .btn-auto {
+    background: #1a2818; border: 1px solid #2a4a28; color: #80c070;
+  }
+  .btn-auto:hover { background: #1e3020; }
 </style>

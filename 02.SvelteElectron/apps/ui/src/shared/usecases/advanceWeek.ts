@@ -422,9 +422,9 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
   let injuryJustHealed   = false;
 
   if (!alreadyInjured && newHighFatigueWeeks >= 2) {
-    const chance = Math.min(0.60, 0.25 * (newHighFatigueWeeks - 1));
+    const chance = Math.min(0.65, 0.30 + Math.max(0, newHighFatigueWeeks - 2) * 0.25);
     if (Math.random() < chance) {
-      const type = g.protagonist.fatigue >= 95 ? "moderate" : "light";
+      const type = g.protagonist.fatigue >= 92 ? "moderate" : "light";
       injuryUpdate       = { type, recoveryWeeksLeft: type === "moderate" ? 3 : 2 };
       injuryJustOccurred = true;
     }
