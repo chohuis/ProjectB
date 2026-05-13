@@ -1,53 +1,78 @@
-<script lang="ts">
+﻿<script lang="ts">
+  import { onMount } from "svelte";
   import { createEventDispatcher } from "svelte";
   import { t } from "../../shared/i18n";
-  import { gameStore } from "../../shared/stores/game";
-  import { seasonStore } from "../../shared/stores/season";
   import { masterStore } from "../../shared/stores/master";
 
   const dispatch = createEventDispatcher<{ gotoRoster: { teamId: string } }>();
 
-  type TeamTab = "my" | "all";
-  type TeamSortField = "rank" | "winPct" | "name";
-  type SortDirection = "asc" | "desc";
+  type LeagueTab = "all" | "hs" | "univ" | "ind" | "kbl";
+  const LEAGUE_MAP: Record<Exclude<LeagueTab, "all">, string> = {
+    hs: "LEAGUE_HIGHSCHOOL",
+    univ: "LEAGUE_UNIVERSITY",
+    ind: "LEAGUE_INDEPENDENT",
+    kbl: "LEAGUE_KBL"
+  };
 
-  let tab: TeamTab = "my";
-  let sortField: TeamSortField = "rank";
-  let sortDirection: SortDirection = "asc";
+  let leagueTab: LeagueTab = "all";
   let selectedTeamId = "";
 
-  function tName(teamId: string): string {
-    return $masterStore.teams.find((x) => x.id === teamId)?.name ?? teamId;
+  function leagueLabel(tab: LeagueTab): string {
+    if (tab === "all") return "전체";
+    if (tab === "hs") return "고교리그";
+    if (tab === "univ") return "대학리그";
+    if (tab === "ind") return "독립리그";
+    return "KBL";
   }
 
-  $: myTeamId = $gameStore.protagonist.teamId;
-  $: sorted = [...$seasonStore.standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
-  $: rows = sorted.map((s, i) => ({
-    id: s.teamId,
-    rank: i + 1,
-    name: tName(s.teamId),
-    wins: s.wins,
-    losses: s.losses,
-    draws: s.draws,
-    winPct: s.winPct,
-    runsFor: s.runsFor,
-    runsAgainst: s.runsAgainst,
-    streak: s.streak || "-"
-  }));
+  function teamLeagueLabel(leagueId: string): string {
+    if (leagueId === "LEAGUE_HIGHSCHOOL") return "고교";
+    if (leagueId === "LEAGUE_UNIVERSITY") return "대학";
+    if (leagueId === "LEAGUE_INDEPENDENT") return "독립";
+    if (leagueId === "LEAGUE_KBL") return "KBL";
+    return leagueId;
+  }
 
-  $: if (!selectedTeamId && rows.length > 0) selectedTeamId = rows[0].id;
-  $: my = rows.find((r) => r.id === myTeamId) ?? rows[0] ?? null;
-  $: selected = rows.find((r) => r.id === selectedTeamId) ?? rows[0] ?? null;
-
-  $: visible = [...rows].sort((a, b) => {
-    let cmp = 0;
-    if (sortField === "name") cmp = a.name.localeCompare(b.name, "ko");
-    else cmp = Number(a[sortField]) - Number(b[sortField]);
-    return sortDirection === "asc" ? cmp : -cmp;
+  $: filteredTeams = $masterStore.teams.filter((team) => {
+    if (leagueTab === "all") {
+      return team.leagueId === "LEAGUE_HIGHSCHOOL" || team.leagueId === "LEAGUE_UNIVERSITY" || team.leagueId === "LEAGUE_INDEPENDENT" || team.leagueId === "LEAGUE_KBL";
+    }
+    return team.leagueId === LEAGUE_MAP[leagueTab as Exclude<LeagueTab, "all">];
   });
 
-  function toggleSortDirection() {
-    sortDirection = sortDirection === "asc" ? "desc" : "asc";
+  $: sortedTeams = [...filteredTeams].sort((a, b) => a.name.localeCompare(b.name, "ko"));
+  $: if (!selectedTeamId || !sortedTeams.some((t) => t.id === selectedTeamId)) {
+    selectedTeamId = sortedTeams[0]?.id ?? "";
+  }
+
+  $: selectedTeam = sortedTeams.find((t) => t.id === selectedTeamId) ?? null;
+  $: selectedTeamLeagueId = selectedTeam?.leagueId ?? "";
+
+  $: teamRows = selectedTeamId
+    ? $masterStore.entities.filter((e) => e.teamId === selectedTeamId).sort((a, b) => {
+        const roleOrder: Record<string, number> = { owner: 0, manager: 1, coach: 2, player: 3 };
+        const diff = (roleOrder[a.role] ?? 9) - (roleOrder[b.role] ?? 9);
+        if (diff !== 0) return diff;
+        return a.name.localeCompare(b.name, "ko");
+      })
+    : [];
+
+  $: playerCount = teamRows.filter((e) => e.role === "player").length;
+  $: coachCount = teamRows.filter((e) => e.role === "coach").length;
+  $: managerCount = teamRows.filter((e) => e.role === "manager").length;
+
+  async function ensureLeagueEntities(leagueId: string) {
+    if (!leagueId) return;
+    await masterStore.loadEntities(leagueId);
+  }
+
+  onMount(async () => {
+    const initialLeague = sortedTeams[0]?.leagueId ?? "LEAGUE_HIGHSCHOOL";
+    await ensureLeagueEntities(initialLeague);
+  });
+
+  $: if (selectedTeamLeagueId) {
+    ensureLeagueEntities(selectedTeamLeagueId);
   }
 </script>
 
@@ -55,77 +80,66 @@
   <h2>{$t("page.team")}</h2>
   <article class="card board">
     <header class="top-row">
-      <div class="tabs">
-        <button class:active={tab === "my"} on:click={() => (tab = "my")}>내 팀</button>
-        <button class:active={tab === "all"} on:click={() => (tab = "all")}>전체 팀</button>
+      <div class="league-tabs">
+        {#each (["all", "hs", "univ", "ind", "kbl"] as LeagueTab[]) as tab}
+          <button class:active={leagueTab === tab} on:click={() => (leagueTab = tab)}>{leagueLabel(tab)}</button>
+        {/each}
       </div>
-      {#if tab === "all"}
-        <div class="tools">
-          <select bind:value={sortField}>
-            <option value="rank">순위</option>
-            <option value="winPct">승률</option>
-            <option value="name">팀명</option>
-          </select>
-          <button class="sort-dir" on:click={toggleSortDirection}>
-            {sortDirection === "asc" ? "오름차순" : "내림차순"}
-          </button>
-        </div>
-      {/if}
     </header>
 
-    {#if rows.length === 0}
-      <p class="empty">시즌 팀 데이터가 없습니다.</p>
-    {:else if tab === "my" && my}
-      <div class="my-team-layout">
-        <section class="panel">
-          <h3>{my.name}</h3>
-          <div class="metrics">
-            <div><span>순위</span><strong>{my.rank}위</strong></div>
-            <div><span>승-패-무</span><strong>{my.wins}-{my.losses}-{my.draws}</strong></div>
-            <div><span>승률</span><strong>{my.winPct.toFixed(3)}</strong></div>
-            <div><span>연속</span><strong>{my.streak}</strong></div>
-            <div><span>득점</span><strong>{my.runsFor}</strong></div>
-            <div><span>실점</span><strong>{my.runsAgainst}</strong></div>
-          </div>
-        </section>
-      </div>
-    {:else}
-      <div class="all-team-layout">
-        <section class="team-list panel">
-          <div class="team-list-head">
-            <span>팀</span><span>순위</span><span>승-패-무</span><span>승률</span>
-          </div>
-          <div class="team-rows">
-            {#each visible as team}
+    <div class="layout">
+      <section class="team-list panel">
+        <div class="head"><span>팀</span><span>리그</span></div>
+        <div class="rows">
+          {#if sortedTeams.length === 0}
+            <p class="empty">표시할 팀이 없습니다.</p>
+          {:else}
+            {#each sortedTeams as team}
               <button
-                class:selected={selected?.id === team.id}
+                class:selected={selectedTeamId === team.id}
                 on:click={() => (selectedTeamId = team.id)}
                 on:dblclick={() => dispatch("gotoRoster", { teamId: team.id })}
-                title="더블클릭: 로스터 보기"
+                title="더블클릭: 로스터 페이지로 이동"
               >
                 <strong>{team.name}</strong>
-                <span>{team.rank}</span>
-                <span>{team.wins}-{team.losses}-{team.draws}</span>
-                <span>{team.winPct.toFixed(3)}</span>
+                <span>{teamLeagueLabel(team.leagueId)}</span>
               </button>
             {/each}
+          {/if}
+        </div>
+      </section>
+
+      <aside class="panel detail">
+        {#if selectedTeam}
+          <h3>{selectedTeam.name}</h3>
+          <p class="meta">{teamLeagueLabel(selectedTeam.leagueId)} · {selectedTeam.id}</p>
+
+          <div class="metrics">
+            <div><span>선수</span><strong>{playerCount}</strong></div>
+            <div><span>코치</span><strong>{coachCount}</strong></div>
+            <div><span>감독</span><strong>{managerCount}</strong></div>
+            <div><span>총 인원</span><strong>{teamRows.length}</strong></div>
           </div>
-        </section>
-        {#if selected}
-          <aside class="team-detail panel">
-            <h3>{selected.name}</h3>
-            <div class="metrics">
-              <div><span>순위</span><strong>{selected.rank}위</strong></div>
-              <div><span>승-패-무</span><strong>{selected.wins}-{selected.losses}-{selected.draws}</strong></div>
-              <div><span>승률</span><strong>{selected.winPct.toFixed(3)}</strong></div>
-              <div><span>연속</span><strong>{selected.streak}</strong></div>
-              <div><span>득점</span><strong>{selected.runsFor}</strong></div>
-              <div><span>실점</span><strong>{selected.runsAgainst}</strong></div>
-            </div>
-          </aside>
+
+          <div class="roster-head">로스터</div>
+          <div class="roster-rows">
+            {#if teamRows.length === 0}
+              <p class="empty">로스터 데이터가 없습니다.</p>
+            {:else}
+              {#each teamRows as row}
+                {@const p = (row.details as any)?.player}
+                <div class="roster-row">
+                  <strong>{row.name}</strong>
+                  <span>{row.role === "player" ? (p?.position ?? "-") : row.role}</span>
+                </div>
+              {/each}
+            {/if}
+          </div>
+        {:else}
+          <p class="empty">팀을 선택하세요.</p>
         {/if}
-      </div>
-    {/if}
+      </aside>
+    </div>
   </article>
 </section>
 
@@ -133,26 +147,29 @@
   .page { display:grid; grid-template-rows:auto minmax(0,1fr); gap:12px; height:100%; min-height:0; overflow:hidden; }
   .card { background:#161f33; border:1px solid #2d3956; border-radius:10px; padding:12px; min-height:0; overflow:hidden; }
   .board { display:grid; grid-template-rows:auto minmax(0,1fr); gap:10px; }
-  .top-row { display:flex; justify-content:space-between; align-items:center; gap:10px; }
-  .tabs { display:flex; gap:6px; }
-  .tabs button, .tools select, .sort-dir { border:1px solid #355182; background:#1f2f4f; color:#dbe8ff; border-radius:8px; padding:5px 10px; font-size:12px; }
-  .tabs button.active { background:#3262b0; border-color:#6da1f7; }
-  .sort-dir { cursor:pointer; }
-  .my-team-layout, .all-team-layout { min-height:0; overflow:hidden; }
-  .all-team-layout { display:grid; grid-template-columns:1fr 0.9fr; gap:10px; }
+  .top-row { display:flex; align-items:center; }
+  .league-tabs { display:flex; gap:6px; flex-wrap:wrap; }
+  .league-tabs button { border:1px solid #355182; background:#1f2f4f; color:#dbe8ff; border-radius:8px; padding:5px 10px; font-size:12px; }
+  .league-tabs button.active { background:#3262b0; border-color:#6da1f7; }
+  .layout { display:grid; grid-template-columns:1fr 1fr; gap:10px; min-height:0; }
   .panel { border:1px solid #2f486f; border-radius:10px; background:#13223d; padding:10px; min-height:0; overflow:hidden; }
-  .metrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; margin-top:8px; }
+  .team-list { display:grid; grid-template-rows:auto minmax(0,1fr); gap:6px; }
+  .head, .rows button { display:grid; grid-template-columns:1fr 0.5fr; gap:6px; align-items:center; font-size:12px; }
+  .head { color:#9fb4d8; padding:0 6px; }
+  .rows { min-height:0; overflow:auto; display:grid; align-content:start; gap:4px; }
+  .rows button { border:1px solid #284269; background:#162a4a; border-radius:8px; padding:7px 6px; color:#e4edff; text-align:left; cursor:pointer; }
+  .rows button.selected { border-color:#79abf6; background:#1d3760; }
+  .rows button strong { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .detail { display:grid; grid-template-rows:auto auto auto minmax(0,1fr); gap:8px; }
+  .meta { margin:0; color:#93add6; font-size:12px; }
+  .metrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; }
   .metrics div { border:1px solid #2e486f; border-radius:8px; background:#152b4f; padding:7px; display:grid; gap:2px; }
   .metrics span { color:#9eb6de; font-size:11px; }
   .metrics strong { color:#eff5ff; font-size:14px; }
-  .team-list { display:grid; grid-template-rows:auto minmax(0,1fr); gap:6px; }
-  .team-list-head, .team-rows button { display:grid; grid-template-columns:1fr 0.45fr 0.9fr 0.7fr; gap:6px; align-items:center; font-size:12px; }
-  .team-list-head { color:#9fb4d8; padding:0 6px; }
-  .team-rows { min-height:0; overflow:auto; display:grid; align-content:start; gap:4px; }
-  .team-rows button { border:1px solid #284269; background:#162a4a; border-radius:8px; padding:7px 6px; color:#e4edff; text-align:left; cursor:pointer; }
-  .team-rows button.selected { border-color:#79abf6; background:#1d3760; }
-  .team-rows button strong { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .roster-head { color:#cfe3ff; font-size:13px; font-weight:700; }
+  .roster-rows { min-height:0; overflow:auto; display:grid; gap:4px; }
+  .roster-row { border:1px solid #2b4268; background:#142743; border-radius:8px; padding:6px 8px; display:flex; justify-content:space-between; gap:8px; font-size:12px; }
+  .roster-row span { color:#a8bfdc; }
   .empty { color:#9db2d8; font-size:13px; }
-  @media (max-width:1180px){ .all-team-layout { grid-template-columns:1fr; } .team-detail{ display:none; } }
+  @media (max-width:1180px){ .layout { grid-template-columns:1fr; } }
 </style>
-

@@ -352,6 +352,65 @@ interface EntityIndex {
   contacts?: string[];
 }
 
+interface LeagueTeamIndex {
+  leagueId: string;
+  activeTeamIds: string[];
+}
+
+const TEAM_NAME_MAP: Record<string, string> = {
+  TEAM_UNIV_KNSU: "한빛체육대학교",
+  TEAM_UNIV_KNU: "동명과학대학교",
+  TEAM_UNIV_YONSEI: "서해국제대학교",
+  TEAM_UNIV_KOREA: "남강대학교",
+  TEAM_UNIV_HANYANG: "청운공과대학교",
+  TEAM_UNIV_CHUNGBUK: "미래창성대학교",
+  TEAM_UNIV_DONGGUK: "가온문화대학교",
+  TEAM_IND_SEOUL_PIONEERS: "서울 파이오니어스",
+  TEAM_IND_BUSAN_TEMPEST: "부산 템페스트",
+  TEAM_IND_DAEGU_FALCONS: "대구 팔콘스",
+  TEAM_IND_GWANGJU_STORM: "광주 스톰",
+  TEAM_IND_DAEJEON_HUNTERS: "대전 헌터스",
+  TEAM_IND_INCHEON_ORCAS: "인천 오르카스",
+  TEAM_IND_SUWON_BLAZE: "수원 블레이즈",
+  TEAM_IND_ULSAN_PHOENIX: "울산 피닉스",
+};
+
+function teamNameFromId(teamId: string): string {
+  if (TEAM_NAME_MAP[teamId]) return TEAM_NAME_MAP[teamId];
+  const base = teamId.replace(/^TEAM_(UNIV|IND)_/, "").toLowerCase();
+  return base
+    .split("_")
+    .map((part) => (part ? part[0].toUpperCase() + part.slice(1) : part))
+    .join(" ");
+}
+
+function mergeSupplementTeams(
+  baseTeams: TeamRef[],
+  universityIndex: LeagueTeamIndex | null,
+  independentIndex: LeagueTeamIndex | null
+): TeamRef[] {
+  const merged = [...baseTeams];
+  const existing = new Set(merged.map((team) => team.id));
+
+  const append = (teamId: string, leagueId: string) => {
+    if (existing.has(teamId)) return;
+    const name = teamNameFromId(teamId);
+    merged.push({
+      id: teamId,
+      name,
+      nameEn: name,
+      leagueId,
+      clubId: teamId,
+    });
+    existing.add(teamId);
+  };
+
+  for (const teamId of universityIndex?.activeTeamIds ?? []) append(teamId, "LEAGUE_UNIVERSITY");
+  for (const teamId of independentIndex?.activeTeamIds ?? []) append(teamId, "LEAGUE_INDEPENDENT");
+
+  return merged;
+}
+
 // ── batchFetch 헬퍼 ───────────────────────────────────────────
 async function batchFetch<T>(ids: string[], pathFn: (id: string) => string): Promise<T[]> {
   if (ids.length === 0) return [];
@@ -425,6 +484,7 @@ function createMasterStore() {
       // ── 공통 데이터 (변경 없음) ────────────────────────────
       const [
         trainingData, pitchData, unlockData, refsData,
+        univTeamsIndex, indepTeamsIndex,
         msgTmplData, decisionTmplData,
         poolMedia, poolSocial, poolTeamLife, militaryPoolData,
         contactRepliesData, manifest,
@@ -435,6 +495,8 @@ function createMasterStore() {
         fetchMaster<{ leagues: LeagueRef[]; schools: SchoolRef[]; clubs: ClubRef[]; teams: TeamRef[] }>(
           "entities/refs.json"
         ),
+        fetchMaster<LeagueTeamIndex>("teams/university/index.json"),
+        fetchMaster<LeagueTeamIndex>("teams/independent/index.json"),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         fetchMaster<{ templates: Record<string, any>[] }>("messages/templates.json"),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -458,6 +520,7 @@ function createMasterStore() {
         (p): p is Record<string, unknown> => p !== null && typeof p === "object"
       );
       const eventPools = rawPools.map(parseEventPool);
+      const mergedTeams = mergeSupplementTeams(refsData?.teams ?? [], univTeamsIndex, indepTeamsIndex);
 
       // ── manifest 기반 로드 (이벤트·업적·캐릭터) ──────────
       let eventRules:  EventRule[] = [];
@@ -510,7 +573,7 @@ function createMasterStore() {
         leagues:          refsData?.leagues ?? [],
         schools:          refsData?.schools ?? [],
         clubs:            refsData?.clubs   ?? [],
-        teams:            refsData?.teams   ?? [],
+        teams:            mergedTeams,
         eventRules,
         messageTmpls,
         decisionTmpls,
