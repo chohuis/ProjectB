@@ -8,6 +8,7 @@ import { applyWeeklyStudy, calcExamResult, getUniversityEffBonus, getUniversityE
 import { checkAchievements, computeMetrics } from "../utils/achievementEngine";
 import { calcOfferedSalaryForProtagonist, calcSeasonRating } from "../utils/salaryEngine";
 import { isFaEligible } from "../utils/faEngine";
+import { calcDraftRank } from "../utils/draftEngine";
 import type { MatchResult, WeekAdvanceResult } from "../types/season";
 import type { EventContext } from "../types/event";
 import type { MessageItem } from "../types/main";
@@ -608,27 +609,89 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     seasonStore.pushPendingAction({ type: "careerChoice" });
   }
 
-  // ── 9. 드래프트 이벤트 처리 (고3 W51, 대4 W52) ─────────────────────────────
+  // ── 9. 진로 결과/드래프트 처리 (고3 W51 결과선택, 대4 W52 드래프트) ───────────
   const gDraft = get(gameStore);
-  const hasDraftPending = get(seasonStore).pendingActions.some((a) => a.type === "draft");
-  const isHsDraftWeek =
-    gDraft.protagonist.careerStage === "highschool" &&
-    gDraft.protagonist.grade === 3 &&
-    gDraft.schoolState.draftIntent &&
-    weekInYear === 51;
+  const hasCareerChoicePending = get(seasonStore).pendingActions.some((a) => a.type === "careerChoice");
   const isUnivDraftWeek =
     gDraft.protagonist.careerStage === "university" &&
     careerStageYear === 3 &&
     weekInYear === 52;
-  if ((isHsDraftWeek || isUnivDraftWeek) && !gDraft.schoolState.draftTriggered && !hasDraftPending) {
+  if (isUnivDraftWeek && !gDraft.schoolState.draftTriggered && !get(seasonStore).pendingActions.some((a) => a.type === "draft")) {
     gameStore.markDraftTriggered(true);
     seasonStore.pushPendingAction({ type: "draft" });
+  }
+
+  const needHsCareerResult =
+    gDraft.protagonist.careerStage === "highschool" &&
+    gDraft.protagonist.grade === 3 &&
+    weekInYear === 51 &&
+    gDraft.schoolState.careerApplicationsSubmitted &&
+    !gDraft.schoolState.fallbackSelectionPending &&
+    !hasCareerChoicePending;
+
+  if (needHsCareerResult) {
+    const p = gDraft.protagonist;
+    const subjects = Object.values(gDraft.schoolState.subjectScores);
+    const avgPct = subjects.length ? subjects.reduce((a, s2) => a + s2.percentile, 0) / subjects.length : 50;
+    const univChoices = gDraft.schoolState.fallbackUniversityChoices.slice(0, 3);
+    const indieChoices = gDraft.schoolState.fallbackIndependentChoices.slice(0, 3);
+    const evalUnivPass = (ovr: number, idx: number): boolean => {
+      const cutByChoice = [58, 53, 48][idx] ?? 48;
+      const score = ovr * 0.62 + avgPct * 0.38;
+      if (score < cutByChoice - 8) return false;
+      const base = 28 + (score - cutByChoice) * 3.4;
+      const chance = Math.max(8, Math.min(94, base));
+      return Math.random() * 100 < chance;
+    };
+    const evalIndiePass = (ovr: number, idx: number): boolean => {
+      const cutByChoice = [52, 48, 44][idx] ?? 44;
+      if (ovr < cutByChoice - 10) return false;
+      const base = 36 + (ovr - cutByChoice) * 3.2;
+      const chance = Math.max(12, Math.min(96, base));
+      return Math.random() * 100 < chance;
+    };
+    const evalSportsMilitaryPass = (ovr: number): boolean => {
+      if (ovr < 56) return false;
+      const base = 22 + (ovr - 56) * 2.1;
+      const chance = Math.max(6, Math.min(84, base));
+      return Math.random() * 100 < chance;
+    };
+    const univPassed = univChoices.filter((id, i) => evalUnivPass(p.pitching.ovr, i));
+    const indiePassed = indieChoices.filter((id, i) => evalIndiePass(p.pitching.ovr, i));
+    const sportsPassed = evalSportsMilitaryPass(p.pitching.ovr);
+    const draftRes = gDraft.schoolState.draftIntent
+      ? calcDraftRank(p.scoutScore, p.pitching.ovr, sNow.seasonYear)
+      : null;
+
+    gameStore.setFallbackAdmissions({
+      universityChoices: univChoices,
+      independentChoices: indieChoices,
+      universityPassed: univPassed,
+      independentPassed: indiePassed,
+      sportsMilitaryPassed: sportsPassed,
+      draftPassed: !!draftRes?.drafted,
+      draftTeamId: draftRes?.teamId ?? null,
+      draftRound: draftRes?.round ?? null,
+      draftPick: draftRes?.pick ?? null,
+      draftSigningBonus: draftRes?.signingBonus ?? 0,
+    });
+    seasonStore.pushPendingAction({ type: "careerChoice" });
+    gameStore.addMessage({
+      id: `msg-career-result-${Date.now()}`,
+      category: "system",
+      sender: "Career Office",
+      subject: "W51 application results",
+      preview: "지원 결과가 도착했습니다. 최종 진로를 선택하세요.",
+      body: "지원 결과가 도착했습니다.\n메인 화면에서 최종 진로를 선택하세요.",
+      createdAt: `W${nextWeek}`,
+      readAt: null,
+    });
   }
 
   const needFallbackChoice =
     gDraft.protagonist.careerStage === "highschool" &&
     gDraft.protagonist.grade === 3 &&
-    weekInYear === 52 &&
+    weekInYear >= 51 &&
     gDraft.schoolState.fallbackSelectionPending;
   if (needFallbackChoice && !get(seasonStore).pendingActions.some((a) => a.type === "careerChoice")) {
     seasonStore.pushPendingAction({ type: "careerChoice" });

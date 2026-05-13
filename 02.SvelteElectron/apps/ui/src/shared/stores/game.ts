@@ -142,12 +142,18 @@ const DEFAULT_SCHOOL: SchoolState = {
   careerChoiceTriggered: false,
   draftTriggered: false,
   draftIntent: false,
+  careerApplicationsSubmitted: false,
   fallbackSelectionPending: false,
   fallbackUniversityChoices: [],
   fallbackIndependentChoices: [],
   fallbackUniversityPassed: [],
   fallbackIndependentPassed: [],
   fallbackSportsMilitaryPassed: false,
+  fallbackDraftPassed: false,
+  fallbackDraftTeamId: null,
+  fallbackDraftRound: null,
+  fallbackDraftPick: null,
+  fallbackDraftSigningBonus: 0,
   universityWeek: 0,
   majorSelected: false,
   subjectScores: {
@@ -930,23 +936,41 @@ function createGameStore() {
       }));
     },
 
+    setCareerApplicationsSubmitted(flag: boolean) {
+      update((s) => ({
+        ...s,
+        schoolState: { ...s.schoolState, careerApplicationsSubmitted: flag },
+      }));
+    },
+
     setFallbackAdmissions(payload: {
       universityChoices: string[];
       independentChoices: string[];
       universityPassed: string[];
       independentPassed: string[];
       sportsMilitaryPassed: boolean;
+      draftPassed?: boolean;
+      draftTeamId?: string | null;
+      draftRound?: number | null;
+      draftPick?: number | null;
+      draftSigningBonus?: number;
+      pendingSelection?: boolean;
     }) {
       update((s) => ({
         ...s,
         schoolState: {
           ...s.schoolState,
-          fallbackSelectionPending: true,
+          fallbackSelectionPending: payload.pendingSelection ?? true,
           fallbackUniversityChoices: payload.universityChoices,
           fallbackIndependentChoices: payload.independentChoices,
           fallbackUniversityPassed: payload.universityPassed,
           fallbackIndependentPassed: payload.independentPassed,
           fallbackSportsMilitaryPassed: payload.sportsMilitaryPassed,
+          fallbackDraftPassed: payload.draftPassed === true,
+          fallbackDraftTeamId: payload.draftTeamId ?? null,
+          fallbackDraftRound: payload.draftRound ?? null,
+          fallbackDraftPick: payload.draftPick ?? null,
+          fallbackDraftSigningBonus: payload.draftSigningBonus ?? 0,
         },
       }));
     },
@@ -962,6 +986,11 @@ function createGameStore() {
           fallbackUniversityPassed: [],
           fallbackIndependentPassed: [],
           fallbackSportsMilitaryPassed: false,
+          fallbackDraftPassed: false,
+          fallbackDraftTeamId: null,
+          fallbackDraftRound: null,
+          fallbackDraftPick: null,
+          fallbackDraftSigningBonus: 0,
         },
       }));
     },
@@ -1032,12 +1061,18 @@ function createGameStore() {
           ...s.schoolState,
           attendsUniversity: payload.stage === "university",
           draftIntent: false,
+          careerApplicationsSubmitted: false,
           fallbackSelectionPending: false,
           fallbackUniversityChoices: [],
           fallbackIndependentChoices: [],
           fallbackUniversityPassed: [],
           fallbackIndependentPassed: [],
           fallbackSportsMilitaryPassed: false,
+          fallbackDraftPassed: false,
+          fallbackDraftTeamId: null,
+          fallbackDraftRound: null,
+          fallbackDraftPick: null,
+          fallbackDraftSigningBonus: 0,
           draftTriggered: payload.resetDraftTrigger ? false : s.schoolState.draftTriggered,
         };
         const logs = payload.teamName

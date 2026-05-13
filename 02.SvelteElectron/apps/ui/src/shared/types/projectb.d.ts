@@ -3,6 +3,27 @@ import type { SaveSeason } from "./season";
 
 export {};
 
+export interface SaveSlotPreview {
+  careerStage: string | null;
+  seasonYear: number | null;
+  currentWeek: number | null;
+  teamId: string | null;
+}
+
+export interface SaveSlotMeta {
+  slotId: string;
+  name: string;
+  updatedAt: string;
+  preview: SaveSlotPreview;
+}
+
+export interface SaveSlotEnvelope {
+  version: number;
+  slotMeta: SaveSlotMeta;
+  game: SaveGame | null;
+  season: SaveSeason | null;
+}
+
 declare global {
   interface Window {
     projectB?: {
@@ -44,6 +65,15 @@ declare global {
       gameSave:   (data: SaveGame) => Promise<void>;
       seasonLoad: () => Promise<SaveSeason | null>;
       seasonSave: (data: SaveSeason) => Promise<void>;
+      listSlots: () => Promise<SaveSlotMeta[]>;
+      loadSlot: (slotId: string) => Promise<SaveSlotEnvelope | null>;
+      saveSlot: (payload: { slotId: string; game: SaveGame | null; season: SaveSeason | null }) => Promise<{
+        ok: boolean;
+        slot?: SaveSlotEnvelope;
+        error?: string;
+      }>;
+      deleteSlot: (slotId: string) => Promise<{ ok: boolean; error?: string }>;
+      renameSlot: (payload: { slotId: string; name: string }) => Promise<{ ok: boolean; error?: string }>;
       // ── 주 진행 ────────────────────────────────────────────
       dayAdvance: (state: CoreGameState) => Promise<DayAdvanceResult>;
       // ── 마스터 데이터 (Electron 패키징 환경용 fallback) ──────

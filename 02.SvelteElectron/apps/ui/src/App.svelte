@@ -18,8 +18,8 @@
     masterStore.setupContentWatcher();
 
     try {
-      const saved = await window.projectB?.gameLoad?.();
-      if (saved) {
+      const slots = await window.projectB?.listSlots?.();
+      if (slots && slots.length > 0) {
         hasSave = true;
       }
     } catch {}

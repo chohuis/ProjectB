@@ -256,16 +256,110 @@ function startContentWatcher(resourceBase, rootDir) {
   return activeWatchers;
 }
 
+const SLOT_SCHEMA_VERSION = 1;
+const DEFAULT_SLOT_ID = "A";
+
+function ensureDir(dirPath) {
+  fs.mkdirSync(dirPath, { recursive: true });
+}
+
+function readJsonFileOrNull(filePath) {
+  try {
+    if (!fs.existsSync(filePath)) return null;
+    const raw = fs.readFileSync(filePath, "utf8");
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+function writeJsonAtomic(filePath, data) {
+  ensureDir(path.dirname(filePath));
+  const tempPath = `${filePath}.tmp`;
+  fs.writeFileSync(tempPath, JSON.stringify(data, null, 2), "utf8");
+  fs.renameSync(tempPath, filePath);
+}
+
+function makeSlotMeta(slotId, game, season) {
+  const protagonist = game?.protagonist ?? {};
+  return {
+    slotId,
+    name: protagonist?.name ?? `Slot ${slotId}`,
+    updatedAt: new Date().toISOString(),
+    preview: {
+      careerStage: protagonist?.careerStage ?? null,
+      seasonYear: season?.seasonYear ?? null,
+      currentWeek: season?.currentWeek ?? null,
+      teamId: protagonist?.teamId ?? null,
+    },
+  };
+}
+
 app.whenReady().then(() => {
   const resourceBase = path.resolve(__dirname, "../../resource/data/master");
   const rootDir      = path.resolve(__dirname, "../../");
   const tuningSchema = loadTuningSchema(resourceBase);
+  const userDataDir = app.getPath("userData");
+  const savesDir = path.join(userDataDir, "saves");
+  const indexPath = path.join(savesDir, "index.json");
+  const slotPath = (slotId) => path.join(savesDir, `slot_${slotId}.json`);
+  const legacyGamePath = path.join(userDataDir, "save.json");
+  const legacySeasonPath = path.join(userDataDir, "save_season.json");
+
+  function loadIndex() {
+    const parsed = readJsonFileOrNull(indexPath);
+    if (parsed && Array.isArray(parsed.slots)) return parsed;
+    return { version: 1, lastPlayedSlotId: null, slots: [] };
+  }
+
+  function saveIndex(indexData) {
+    writeJsonAtomic(indexPath, indexData);
+  }
+
+  function loadSlotEnvelope(slotId) {
+    return readJsonFileOrNull(slotPath(slotId));
+  }
+
+  function saveSlotEnvelope(slotId, game, season) {
+    const envelope = {
+      version: SLOT_SCHEMA_VERSION,
+      slotMeta: makeSlotMeta(slotId, game, season),
+      game,
+      season,
+    };
+    writeJsonAtomic(slotPath(slotId), envelope);
+
+    const indexData = loadIndex();
+    const nextSlots = indexData.slots.filter((s) => s.slotId !== slotId);
+    nextSlots.push(envelope.slotMeta);
+    saveIndex({
+      version: 1,
+      lastPlayedSlotId: slotId,
+      slots: nextSlots.sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt))),
+    });
+    return envelope;
+  }
+
+  function migrateLegacyToDefaultSlotIfNeeded() {
+    const hasLegacyGame = fs.existsSync(legacyGamePath);
+    const hasLegacySeason = fs.existsSync(legacySeasonPath);
+    const hasDefaultSlot = fs.existsSync(slotPath(DEFAULT_SLOT_ID));
+    if (hasDefaultSlot || (!hasLegacyGame && !hasLegacySeason)) return;
+
+    const legacyGame = readJsonFileOrNull(legacyGamePath);
+    const legacySeason = readJsonFileOrNull(legacySeasonPath);
+    if (!legacyGame && !legacySeason) return;
+
+    saveSlotEnvelope(DEFAULT_SLOT_ID, legacyGame, legacySeason);
+  }
 
   applyTuningFromFile(resourceBase, tuningSchema).then((res) => {
     if (!res.ok) console.warn("[tuning] invalid tuning file. fallback to defaults.", res.errors);
   }).catch((e) => {
     console.warn("[tuning] failed to load tuning file. fallback to defaults.", e);
   });
+
+  migrateLegacyToDefaultSlotIfNeeded();
 
   ipcMain.handle("match:start", async (_event, request = {}) => {
     const core = await loadCoreModule();
@@ -305,23 +399,90 @@ app.whenReady().then(() => {
     };
   });
 
-  // ── 게임 저장/불러오기 ────────────────────────────────────────────────────
-  const savePath = () => path.join(app.getPath("userData"), "save.json");
-
   ipcMain.handle("game:load", () => {
-    try {
-      const raw = fs.readFileSync(savePath(), "utf8");
-      return JSON.parse(raw);
-    } catch {
-      return null; // 파일 없음 → 첫 실행
-    }
+    const env = loadSlotEnvelope(DEFAULT_SLOT_ID);
+    return env?.game ?? null;
   });
 
   ipcMain.handle("game:save", (_event, data) => {
     try {
-      fs.writeFileSync(savePath(), JSON.stringify(data, null, 2), "utf8");
+      const env = loadSlotEnvelope(DEFAULT_SLOT_ID);
+      saveSlotEnvelope(DEFAULT_SLOT_ID, data, env?.season ?? null);
     } catch (e) {
       console.error("[game:save] 저장 실패:", e);
+    }
+  });
+
+  ipcMain.handle("season:load", () => {
+    const env = loadSlotEnvelope(DEFAULT_SLOT_ID);
+    return env?.season ?? null;
+  });
+
+  ipcMain.handle("season:save", (_event, data) => {
+    try {
+      const env = loadSlotEnvelope(DEFAULT_SLOT_ID);
+      saveSlotEnvelope(DEFAULT_SLOT_ID, env?.game ?? null, data);
+    } catch (e) {
+      console.error("[season:save] 저장 실패:", e);
+    }
+  });
+
+  ipcMain.handle("save:listSlots", () => {
+    const indexData = loadIndex();
+    return indexData.slots ?? [];
+  });
+
+  ipcMain.handle("save:loadSlot", (_event, slotId) => {
+    if (typeof slotId !== "string" || !slotId.trim()) return null;
+    return loadSlotEnvelope(slotId.trim());
+  });
+
+  ipcMain.handle("save:saveSlot", (_event, payload) => {
+    try {
+      const slotId = String(payload?.slotId ?? DEFAULT_SLOT_ID).trim();
+      if (!slotId) throw new Error("slotId is required");
+      const game = payload?.game ?? null;
+      const season = payload?.season ?? null;
+      return { ok: true, slot: saveSlotEnvelope(slotId, game, season) };
+    } catch (e) {
+      return { ok: false, error: String(e?.message ?? e) };
+    }
+  });
+
+  ipcMain.handle("save:deleteSlot", (_event, slotId) => {
+    try {
+      const id = String(slotId ?? "").trim();
+      if (!id) throw new Error("slotId is required");
+      const filePath = slotPath(id);
+      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+      const indexData = loadIndex();
+      const slots = (indexData.slots ?? []).filter((s) => s.slotId !== id);
+      const lastPlayedSlotId = indexData.lastPlayedSlotId === id ? null : indexData.lastPlayedSlotId;
+      saveIndex({ version: 1, lastPlayedSlotId, slots });
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: String(e?.message ?? e) };
+    }
+  });
+
+  ipcMain.handle("save:renameSlot", (_event, payload) => {
+    try {
+      const slotId = String(payload?.slotId ?? "").trim();
+      const name = String(payload?.name ?? "").trim();
+      if (!slotId) throw new Error("slotId is required");
+      if (!name) throw new Error("name is required");
+      const env = loadSlotEnvelope(slotId);
+      if (!env) throw new Error("slot not found");
+      env.slotMeta = { ...env.slotMeta, name, updatedAt: new Date().toISOString() };
+      writeJsonAtomic(slotPath(slotId), env);
+      const indexData = loadIndex();
+      const slots = (indexData.slots ?? []).map((s) =>
+        s.slotId === slotId ? { ...s, name, updatedAt: env.slotMeta.updatedAt } : s,
+      );
+      saveIndex({ ...indexData, slots });
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: String(e?.message ?? e) };
     }
   });
 

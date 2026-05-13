@@ -11,6 +11,13 @@ contextBridge.exposeInMainWorld("projectB", {
   // ── 게임 저장/불러오기 ──────────────────────────────────────────────────
   gameLoad: ()     => ipcRenderer.invoke("game:load"),
   gameSave: (data) => ipcRenderer.invoke("game:save", data),
+  seasonLoad: ()   => ipcRenderer.invoke("season:load"),
+  seasonSave: (data) => ipcRenderer.invoke("season:save", data),
+  listSlots: () => ipcRenderer.invoke("save:listSlots"),
+  loadSlot: (slotId) => ipcRenderer.invoke("save:loadSlot", slotId),
+  saveSlot: (payload) => ipcRenderer.invoke("save:saveSlot", payload),
+  deleteSlot: (slotId) => ipcRenderer.invoke("save:deleteSlot", slotId),
+  renameSlot: (payload) => ipcRenderer.invoke("save:renameSlot", payload),
 
   // ── 날짜 진행 ───────────────────────────────────────────────────────────
   dayAdvance: (state) => ipcRenderer.invoke("day:advance", state),
