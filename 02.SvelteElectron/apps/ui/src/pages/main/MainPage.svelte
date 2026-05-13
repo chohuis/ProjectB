@@ -2,11 +2,10 @@
   import type { MainTabId } from "../../shared/types/main";
   import { gameStore, unreadCount, showAcademicsTab } from "../../shared/stores/game";
   import { seasonStore, nextPendingAction, seasonEnded } from "../../shared/stores/season";
-  import { masterStore, teamMap } from "../../shared/stores/master";
+  import { teamMap } from "../../shared/stores/master";
   import { runSimpleGame } from "@core/usecases/matchEngine";
-  import { calcGameGrowth } from "../../shared/utils/growthEngine";
-  import { checkAchievements, computeMetrics } from "../../shared/utils/achievementEngine";
-  import type { MatchResult, PendingAction, PitcherGameLine } from "../../shared/types/season";
+  import { applyGameOutcome } from "../../shared/usecases/applyGameOutcome";
+  import type { PendingAction } from "../../shared/types/season";
   import { t } from "../../shared/i18n";
 
   function tName(id: string): string {
@@ -46,7 +45,7 @@
   import AchievementManagerModal from "../../features/achievements/ui/AchievementManagerModal.svelte";
   import SeasonEndModal from "../../features/season-end/ui/SeasonEndModal.svelte";
   import MatchPage from "../match/MatchPage.svelte";
-  import type { InteractiveMatchContext, InteractiveMatchResult } from "../../shared/types/season";
+  import type { InteractiveMatchContext, InteractiveMatchResult, UnifiedGameOutcome } from "../../shared/types/season";
 
   export let onSeasonEnd: () => void = () => {};
 
@@ -253,7 +252,7 @@
   $: pendingReady = armedPendingKey !== "" && armedPendingKey === currentPendingKey;
 
   // 경기 자동 시뮬 후 pendingAction 제거
-  function autoSimGame() {
+  async function autoSimGame() {
     if (!pendingGameEntry) return;
     const p = $gameStore.protagonist;
     const pitcherStats = {
@@ -264,60 +263,24 @@
     };
     const gameSummary = runSimpleGame(pitcherStats, 55, p.pitching.ovr);
 
-    const myTeamId = p.teamId;
-    const isHome   = pendingGameEntry.homeTeamId === myTeamId;
-    const result = buildTeamMatchResult(
-      pendingGameEntry.homeTeamId,
-      pendingGameEntry.awayTeamId,
-      gameSummary.homeScore,
-      gameSummary.awayScore,
-    );
-    seasonStore.applyMatchResult(pendingGameEntry.id, result);
-    seasonStore.resolvePendingAction("game", pendingGameEntry.id);
-
-    const myScore  = isHome ? result.homeScore : result.awayScore;
-    const oppScore = isHome ? result.awayScore : result.homeScore;
-    const oppId    = isHome ? pendingGameEntry.awayTeamId : pendingGameEntry.homeTeamId;
-    const won      = myScore > oppScore;
-    const diff     = Math.abs(myScore - oppScore);
-    const strikeouts = gameSummary.strikeouts;
-    const gotSave = won && pendingGameEntry.week > 3 && diff <= 3 ? 1 : 0;
-
-    const growth = calcGameGrowth(p, won, diff, strikeouts);
-    const matchLog = `W${pendingGameEntry.week} vs ${tName(oppId)} ${myScore}:${oppScore} ${won ? "승리" : "패배"}`;
-    gameStore.applyWeekResult(
-      growth.protagonistPatch,
-      [matchLog, ...growth.logs],
-      [],
-      $seasonStore.currentWeek,
-    );
-    if (growth.fameDelta !== 0) gameStore.updateFame(growth.fameDelta);
-    gameStore.recordBaseballAchievementMetric({ strikeouts, save: gotSave, won });
-    gameStore.addMessage({
-      id: `msg-game-w${pendingGameEntry.week}-${Date.now()}`,
-      category: "system",
-      sender: "경기 시스템",
-      subject: matchLog,
-      preview: growth.logs[1] ?? growth.logs[0] ?? matchLog,
-      body: [matchLog, ...growth.logs].join("\n"),
-      createdAt: `W${pendingGameEntry.week}`,
-      readAt: null,
-    });
-    // 경기 후 업적 처리
-    const achMetrics = computeMetrics(
-      $gameStore.achievementMetrics,
-      $gameStore.mailbox,
-      $seasonStore.standings,
-      $seasonStore.schedule,
-      myTeamId,
-    );
-    const achResult = checkAchievements($masterStore.achievements, $gameStore.achievements, achMetrics, `W${pendingGameEntry.week}`);
-    if (achResult.newlyUnlocked.length > 0) {
-      gameStore.applyAchievementCheck(achResult);
-    }
-
-    gameStore.save();
-    seasonStore.save();
+    const outcome: UnifiedGameOutcome = {
+      source: "auto",
+      scheduleId: pendingGameEntry.id,
+      week: pendingGameEntry.week,
+      homeTeamId: pendingGameEntry.homeTeamId,
+      awayTeamId: pendingGameEntry.awayTeamId,
+      protagonistTeamId: p.teamId,
+      homeScore: gameSummary.homeScore,
+      awayScore: gameSummary.awayScore,
+      strikeouts: gameSummary.strikeouts,
+      hitsAllowed: gameSummary.hits,
+      walksAllowed: gameSummary.walks,
+      outsRecorded: Math.round(gameSummary.inningsPitched * 3),
+      errors: 0,
+      pitchCount: gameSummary.pitchCount,
+      summary: "",
+    };
+    await applyGameOutcome(outcome);
   }
 
   // 업적 알림 배지 갱신
@@ -390,100 +353,32 @@
     };
   }
 
-  function completeInteractiveMatch(result: InteractiveMatchResult) {
+  async function completeInteractiveMatch(result: InteractiveMatchResult) {
     if (committedMatchScheduleIds.has(result.scheduleId)) {
       activeMatchContext = null;
       return;
     }
     committedMatchScheduleIds.add(result.scheduleId);
 
-    const myTeamId = $gameStore.protagonist.teamId;
-    const teamResult = buildTeamMatchResult(
-      result.homeTeamId,
-      result.awayTeamId,
-      result.homeScore,
-      result.awayScore,
-    );
-    const isDraw = teamResult.loserId === null;
-    const runsAllowed = result.homeTeamId === myTeamId ? result.awayScore : result.homeScore;
-    const inningsPitched = Number((Math.max(0, result.outsRecorded) / 3).toFixed(1));
-    const pitcherLine: PitcherGameLine = {
-      role: "pitcher",
-      playerId: $gameStore.protagonist.id,
-      ip: inningsPitched,
-      er: runsAllowed,
-      h: Math.max(0, result.hitsAllowed),
-      k: result.strikeouts,
-      bb: Math.max(0, result.walksAllowed),
-      decision:
-        teamResult.winnerId === myTeamId ? "W" : teamResult.loserId === myTeamId ? "L" : "ND",
-    };
-
-    const matchResult: MatchResult = { ...teamResult, playerLines: [pitcherLine] };
-
-    seasonStore.applyMatchResult(result.scheduleId, matchResult);
-    seasonStore.resolvePendingAction("game", result.scheduleId);
-
-    const won = teamResult.winnerId === myTeamId && !isDraw;
-    gameStore.recordBaseballAchievementMetric({
+    const outcome: UnifiedGameOutcome = {
+      source: "interactive",
+      scheduleId: result.scheduleId,
+      week: result.week,
+      homeTeamId: result.homeTeamId,
+      awayTeamId: result.awayTeamId,
+      protagonistTeamId: $gameStore.protagonist.teamId,
+      homeScore: result.homeScore,
+      awayScore: result.awayScore,
       strikeouts: result.strikeouts,
-      won,
-    });
-    gameStore.addMessage({
-      id: `msg-game-w${result.week}-${Date.now()}`,
-      category: "system",
-      sender: "경기 시스템",
-      subject: `W${result.week} 경기 결과`,
-      preview: `${result.awayScore}:${result.homeScore} ${won ? "승리" : isDraw ? "무승부" : "패배"} / ${result.strikeouts}K / ${result.hitsAllowed}H / ${result.walksAllowed}BB`,
-      body:
-        result.summary ||
-        `W${result.week} ${result.awayTeamId} ${result.awayScore}:${result.homeScore} ${result.homeTeamId}\n` +
-          `기록: ${result.strikeouts}K / ${result.hitsAllowed}H / ${result.walksAllowed}BB / ${result.errors}E`,
-      createdAt: `W${result.week}`,
-      readAt: null,
-    });
-
-    // 직접 플레이 후 업적 체크 (자동 시뮬 경로와 동일 규칙)
-    const achMetrics = computeMetrics(
-      $gameStore.achievementMetrics,
-      $gameStore.mailbox,
-      $seasonStore.standings,
-      $seasonStore.schedule,
-      myTeamId,
-    );
-    const achResult = checkAchievements(
-      $masterStore.achievements,
-      $gameStore.achievements,
-      achMetrics,
-      `W${result.week}`,
-    );
-    if (
-      achResult.newlyUnlocked.length > 0 ||
-      achResult.updatedRuntime.some((r, i) => r.progress !== $gameStore.achievements[i]?.progress)
-    ) {
-      gameStore.applyAchievementCheck(achResult);
-    }
-
-    gameStore.save();
-    seasonStore.save();
-    activeMatchContext = null;
-  }
-
-  function buildTeamMatchResult(
-    homeTeamId: string,
-    awayTeamId: string,
-    homeScore: number,
-    awayScore: number,
-  ): MatchResult {
-    const isDraw = homeScore === awayScore;
-    return {
-      homeScore,
-      awayScore,
-      winnerId: isDraw ? homeTeamId : homeScore > awayScore ? homeTeamId : awayTeamId,
-      loserId: isDraw ? null : homeScore > awayScore ? awayTeamId : homeTeamId,
-      playerLines: [],
-      events: [],
+      hitsAllowed: result.hitsAllowed,
+      walksAllowed: result.walksAllowed,
+      outsRecorded: result.outsRecorded,
+      errors: result.errors,
+      pitchCount: result.pitchCount,
+      summary: result.summary,
     };
+    await applyGameOutcome(outcome);
+    activeMatchContext = null;
   }
 
   // 키보드 이벤트 핸들러 - Ctrl+Q (메인 페이지에서만 동작)
@@ -935,5 +830,3 @@
     background: #2a72ea;
   }
 </style>
-
-

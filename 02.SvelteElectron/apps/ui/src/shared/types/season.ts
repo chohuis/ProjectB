@@ -142,6 +142,24 @@ export interface InteractiveMatchResult {
   summary: string;
 }
 
+export interface UnifiedGameOutcome {
+  source: "auto" | "interactive";
+  scheduleId: string;
+  week: number;
+  homeTeamId: string;
+  awayTeamId: string;
+  protagonistTeamId: string;
+  homeScore: number;
+  awayScore: number;
+  strikeouts: number;
+  hitsAllowed: number;
+  walksAllowed: number;
+  outsRecorded: number;
+  errors: number;
+  pitchCount: number;
+  summary: string;
+}
+
 // ── save_season.json 전체 구조 ─────────────────────────────────
 export interface SaveSeason {
   version: number;      // 저장 포맷 버전
