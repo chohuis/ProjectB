@@ -86,6 +86,7 @@ export type PendingAction =
   | { type: "game";            scheduleId: string }
   | { type: "message";         messageId: string }
   | { type: "event";           eventId: string; title: string; description: string; choices?: EventChoice[] }
+  | { type: "careerChoiceHub" }
   | { type: "careerChoice" }
   | { type: "messengerScript"; contactId: string; arcId: string }
   | { type: "draft" }

@@ -606,12 +606,12 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     !gLatest.schoolState.careerChoiceTriggered
   ) {
     gameStore.markCareerChoiceTriggered();
-    seasonStore.pushPendingAction({ type: "careerChoice" });
+    seasonStore.pushPendingAction({ type: "careerChoiceHub" });
   }
 
   // ── 9. 진로 결과/드래프트 처리 (고3 W51 결과선택, 대4 W52 드래프트) ───────────
   const gDraft = get(gameStore);
-  const hasCareerChoicePending = get(seasonStore).pendingActions.some((a) => a.type === "careerChoice");
+  const hasCareerChoicePending = get(seasonStore).pendingActions.some((a) => a.type === "careerChoice" || a.type === "careerChoiceHub");
   const isUnivDraftWeek =
     gDraft.protagonist.careerStage === "university" &&
     careerStageYear === 3 &&
@@ -675,7 +675,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       draftPick: draftRes?.pick ?? null,
       draftSigningBonus: draftRes?.signingBonus ?? 0,
     });
-    seasonStore.pushPendingAction({ type: "careerChoice" });
+    seasonStore.pushPendingAction({ type: "careerChoiceHub" });
     gameStore.addMessage({
       id: `msg-career-result-${Date.now()}`,
       category: "system",
@@ -693,7 +693,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     gDraft.protagonist.grade === 3 &&
     weekInYear >= 51 &&
     gDraft.schoolState.fallbackSelectionPending;
-  if (needFallbackChoice && !get(seasonStore).pendingActions.some((a) => a.type === "careerChoice")) {
+  if (needFallbackChoice && !get(seasonStore).pendingActions.some((a) => a.type === "careerChoice" || a.type === "careerChoiceHub")) {
     seasonStore.pushPendingAction({ type: "careerChoice" });
   }
 

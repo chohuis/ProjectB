@@ -29,7 +29,8 @@
   import TeamPage from "../team/TeamPage.svelte";
   import EventManagerModal from "../../features/events/ui/EventManagerModal.svelte";
   import InGameEventModal from "../../features/events/ui/InGameEventModal.svelte";
-  import CareerChoiceModal from "../../features/career/ui/CareerChoiceModal.svelte";
+  import CareerChoiceHubModal from "../../features/career/ui/CareerChoiceHubModal.svelte";
+  import CareerResultModal from "../../features/career/ui/CareerResultModal.svelte";
   import DraftModal from "../../features/draft/ui/DraftModal.svelte";
   import ContractNegotiationModal from "../../features/contract/ui/ContractNegotiationModal.svelte";
   import OptionClauseModal from "../../features/contract/ui/OptionClauseModal.svelte";
@@ -92,6 +93,7 @@
       case "message":
       case "event":
       case "game":
+      case "careerChoiceHub":
       case "careerChoice":
       case "militaryEnlist":
       case "draft":
@@ -111,6 +113,7 @@
       case "event": return "이벤트 처리";
       case "messengerScript": return "메신저 아크";
       case "game": return "경기 진행";
+      case "careerChoiceHub": return "진로 선택 허브";
       case "careerChoice": return "진로 선택";
       case "draft": return "드래프트";
       case "salaryNegotiation": return "연봉 협상";
@@ -134,6 +137,8 @@
         return `${action.contactId} / ${action.arcId}`;
       case "game":
         return `scheduleId: ${action.scheduleId}`;
+      case "careerChoiceHub":
+        return `hub week ${weekInYear}`;
       case "careerChoice":
         if (ss.fallbackSelectionPending) {
           const passCount =
@@ -164,6 +169,7 @@
     switch (action.type) {
       case "game": return "MATCH";
       case "draft":
+      case "careerChoiceHub":
       case "careerChoice": return "CAREER";
       case "salaryNegotiation":
       case "optionClause":
@@ -179,6 +185,7 @@
   function queuePriority(action: PendingAction): number {
     switch (action.type) {
       case "game": return 100;
+      case "careerChoiceHub":
       case "careerChoice":
       case "draft": return 90;
       case "salaryNegotiation":
@@ -204,6 +211,7 @@
       case "trade": return `trade:${action.fromTeamId}:${action.toTeamId}`;
       case "faMarket": return "faMarket";
       case "draft": return "draft";
+      case "careerChoiceHub": return "careerChoiceHub";
       case "careerChoice": return "careerChoice";
       case "militaryEnlist": return "militaryEnlist";
     }
@@ -228,6 +236,7 @@
   $: pendingEvent = $nextPendingAction?.type === "event" ? $nextPendingAction : null;
 
   // 진로 선택 pendingAction
+  $: pendingCareerChoiceHub = $nextPendingAction?.type === "careerChoiceHub";
   $: pendingCareerChoice = $nextPendingAction?.type === "careerChoice";
   $: pendingDraft = $nextPendingAction?.type === "draft";
   $: pendingSalaryNegotiation = $nextPendingAction?.type === "salaryNegotiation" ? $nextPendingAction : null;
@@ -473,7 +482,7 @@
           {#if canVoluntaryEnlist}
             <div class="voluntary-enlist-banner">
               <span>군복무를 지금 시작할 수 있습니다.</span>
-              <button on:click={triggerVoluntaryEnlist}>자발 입대</button>
+              <button on:click={triggerVoluntaryEnlist}>지원 입대</button>
             </div>
           {/if}
           {#if $gameStore.protagonist.careerStage === "military"}
@@ -551,8 +560,12 @@
   <SeasonEndModal onExit={onSeasonEnd} />
 {/if}
 
+{#if pendingCareerChoiceHub && currentTab === "messages" && pendingReady}
+  <CareerChoiceHubModal />
+{/if}
+
 {#if pendingCareerChoice && currentTab === "messages" && pendingReady}
-  <CareerChoiceModal />
+  <CareerResultModal />
 {/if}
 
 {#if pendingDraft && currentTab === "messages" && pendingReady}

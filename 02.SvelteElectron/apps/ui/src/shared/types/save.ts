@@ -184,6 +184,18 @@ export interface SubjectScore {
   assignment: number;   // 怨쇱젣 ?댄뻾瑜?(0~100)
 }
 
+export type CareerChoiceMode = "none" | "draft" | "university" | "independent";
+export type CareerFinalChoice = "none" | "draft" | "university" | "independent" | "sports" | "general";
+
+export interface CareerDraftPickLogEntry {
+  pickNo: number;
+  round: number;
+  teamId: string;
+  playerId: string;
+  playerName: string;
+  isUser: boolean;
+}
+
 export interface SchoolState {
   attendsUniversity: boolean;
   universityMajor: string;
@@ -210,6 +222,13 @@ export interface SchoolState {
   fallbackDraftRound: number | null;
   fallbackDraftPick: number | null;
   fallbackDraftSigningBonus: number;
+  careerChoicePopupOpened: boolean;
+  careerChoiceMode: CareerChoiceMode;
+  careerChoiceConfirmed: boolean;
+  careerChoiceUniversityApplications: string[];
+  careerChoiceIndependentApplications: string[];
+  careerDraftPickLog: CareerDraftPickLogEntry[];
+  careerFinalChoice: CareerFinalChoice;
   universityWeek: number;
   majorSelected: boolean;
 }

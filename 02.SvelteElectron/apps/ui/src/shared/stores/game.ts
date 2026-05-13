@@ -3,6 +3,9 @@ import type { MessageItem } from "../types/main";
 import type {
   AchievementMetrics,
   AchievementRuntime,
+  CareerChoiceMode,
+  CareerDraftPickLogEntry,
+  CareerFinalChoice,
   ChatContact,
   ChatMessage,
   NpcSaveState,
@@ -154,6 +157,13 @@ const DEFAULT_SCHOOL: SchoolState = {
   fallbackDraftRound: null,
   fallbackDraftPick: null,
   fallbackDraftSigningBonus: 0,
+  careerChoicePopupOpened: false,
+  careerChoiceMode: "none",
+  careerChoiceConfirmed: false,
+  careerChoiceUniversityApplications: [],
+  careerChoiceIndependentApplications: [],
+  careerDraftPickLog: [],
+  careerFinalChoice: "none",
   universityWeek: 0,
   majorSelected: false,
   subjectScores: {
@@ -943,6 +953,63 @@ function createGameStore() {
       }));
     },
 
+    setCareerChoiceUiState(payload: {
+      popupOpened?: boolean;
+      mode?: CareerChoiceMode;
+      confirmed?: boolean;
+    }) {
+      update((s) => ({
+        ...s,
+        schoolState: {
+          ...s.schoolState,
+          careerChoicePopupOpened: payload.popupOpened ?? s.schoolState.careerChoicePopupOpened,
+          careerChoiceMode: payload.mode ?? s.schoolState.careerChoiceMode,
+          careerChoiceConfirmed: payload.confirmed ?? s.schoolState.careerChoiceConfirmed,
+        },
+      }));
+    },
+
+    setCareerApplications(payload: { university: string[]; independent: string[] }) {
+      update((s) => ({
+        ...s,
+        schoolState: {
+          ...s.schoolState,
+          careerChoiceUniversityApplications: payload.university.slice(0, 3),
+          careerChoiceIndependentApplications: payload.independent.slice(0, 3),
+        },
+      }));
+    },
+
+    appendCareerDraftPickLog(entry: CareerDraftPickLogEntry) {
+      update((s) => ({
+        ...s,
+        schoolState: {
+          ...s.schoolState,
+          careerDraftPickLog: [...s.schoolState.careerDraftPickLog, entry].slice(-200),
+        },
+      }));
+    },
+
+    clearCareerDraftPickLog() {
+      update((s) => ({
+        ...s,
+        schoolState: {
+          ...s.schoolState,
+          careerDraftPickLog: [],
+        },
+      }));
+    },
+
+    setCareerFinalChoice(choice: CareerFinalChoice) {
+      update((s) => ({
+        ...s,
+        schoolState: {
+          ...s.schoolState,
+          careerFinalChoice: choice,
+        },
+      }));
+    },
+
     setFallbackAdmissions(payload: {
       universityChoices: string[];
       independentChoices: string[];
@@ -991,6 +1058,13 @@ function createGameStore() {
           fallbackDraftRound: null,
           fallbackDraftPick: null,
           fallbackDraftSigningBonus: 0,
+          careerChoicePopupOpened: false,
+          careerChoiceMode: "none",
+          careerChoiceConfirmed: false,
+          careerChoiceUniversityApplications: [],
+          careerChoiceIndependentApplications: [],
+          careerDraftPickLog: [],
+          careerFinalChoice: "none",
         },
       }));
     },
@@ -1073,6 +1147,13 @@ function createGameStore() {
           fallbackDraftRound: null,
           fallbackDraftPick: null,
           fallbackDraftSigningBonus: 0,
+          careerChoicePopupOpened: false,
+          careerChoiceMode: "none",
+          careerChoiceConfirmed: false,
+          careerChoiceUniversityApplications: [],
+          careerChoiceIndependentApplications: [],
+          careerDraftPickLog: [],
+          careerFinalChoice: "none",
           draftTriggered: payload.resetDraftTrigger ? false : s.schoolState.draftTriggered,
         };
         const logs = payload.teamName
