@@ -269,19 +269,21 @@ function toSchoolCompat(
   };
 }
 
-// ── dayLabel 계산 (주차 기반, 52주 = 3월~2월 한국 학사년도) ──
-// 각 월의 시작 주차 인덱스 (0-based): 3월=0,4월=5,5월=9,...,2월=48
+const BASE_SEASON_YEAR = 2026;
 const MONTH_STARTS = [0, 5, 9, 13, 18, 22, 26, 31, 35, 39, 44, 48];
-const MONTH_NAMES  = ["3월","4월","5월","6월","7월","8월","9월","10월","11월","12월","1월","2월"];
+const MONTH_NAMES = ["3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월", "1월", "2월"];
 
-export function computeWeekLabel(week: number, grade: number = 1): string {
-  const w = (week - 1) % 52;
+export function computeWeekLabel(week: number, seasonYear: number = BASE_SEASON_YEAR): string {
+  const w = (Math.max(1, week) - 1) % 52;
   let monthIdx = 0;
-  for (let i = MONTH_STARTS.length - 1; i >= 0; i--) {
-    if (w >= MONTH_STARTS[i]) { monthIdx = i; break; }
+  for (let i = MONTH_STARTS.length - 1; i >= 0; i -= 1) {
+    if (w >= MONTH_STARTS[i]) {
+      monthIdx = i;
+      break;
+    }
   }
   const weekInMonth = w - MONTH_STARTS[monthIdx] + 1;
-  return `${grade}학년 ${MONTH_NAMES[monthIdx]} ${weekInMonth}주차`;
+  return `${seasonYear}년 ${MONTH_NAMES[monthIdx]} ${weekInMonth}주차`;
 }
 
 // ── 초기 상태 ─────────────────────────────────────────────────
@@ -298,7 +300,7 @@ function buildInitialState(): GameStoreState {
     npcs:         [],
     pendingDraft: [],
     pendingAchievements: [],
-    dayLabel:     computeWeekLabel(1, p.grade ?? 1),
+    dayLabel:     computeWeekLabel(1, BASE_SEASON_YEAR),
     logs:         ["훈련 루틴 설정 완료", "코치 면담으로 제구 +1", "팀 분위기 안정"],
     upcoming:     ["화요일 불펜 세션", "금요일 체력장", "토요일 주말 리그 1차전"],
     player:       toPlayerCompat(p),
@@ -359,7 +361,7 @@ function fromSaveGame(saved: SaveGame): GameStoreState {
     npcs:         saved.npcs ?? [],
     pendingDraft: [],
     pendingAchievements: [],
-    dayLabel:     computeWeekLabel(1, p.grade ?? 1),
+    dayLabel:     computeWeekLabel(1, BASE_SEASON_YEAR),
     logs:         saved.recentLogs,
     upcoming:     saved.recentUpcoming,
     player:       toPlayerCompat(p),
@@ -560,13 +562,14 @@ function createGameStore() {
       newLogs: string[],
       newUpcoming: string[],
       week: number,
+      seasonYear: number = BASE_SEASON_YEAR,
     ) {
       update((s) => {
         const p = { ...s.protagonist, ...protagonistPatch };
         return {
           ...s,
           protagonist: p,
-          dayLabel:    computeWeekLabel(week, p.grade ?? 1),
+          dayLabel:    computeWeekLabel(week, seasonYear),
           logs:        [...newLogs, ...s.logs].slice(0, 30),
           upcoming:    newUpcoming,
           player:      toPlayerCompat(p),
@@ -583,7 +586,7 @@ function createGameStore() {
         return {
           ...s,
           protagonist: p,
-          dayLabel:    computeWeekLabel(week, p.grade ?? 1),
+          dayLabel:    computeWeekLabel(week, snapshot.seasonYear ?? BASE_SEASON_YEAR),
           player:      { ...s.player, morale: snapshot.morale },
           logs:        [...newLogs, ...s.logs].slice(0, 30),
         };
@@ -1131,7 +1134,7 @@ function createGameStore() {
           money: Math.max(0, s.protagonist.money + (payload.signingBonus ?? 0)),
           grade: payload.stage === "highschool" ? s.protagonist.grade : undefined,
         };
-        const schoolState = {
+        const schoolState: SchoolState = {
           ...s.schoolState,
           attendsUniversity: payload.stage === "university",
           draftIntent: false,
@@ -1515,7 +1518,7 @@ function createGameStore() {
         npcs: [],
         pendingDraft: [],
         pendingAchievements: [],
-        dayLabel: computeWeekLabel(1, protagonist.grade ?? 1),
+        dayLabel: computeWeekLabel(1, BASE_SEASON_YEAR),
         logs: [],
         upcoming: [],
         player: toPlayerCompat(protagonist),

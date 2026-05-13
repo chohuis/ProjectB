@@ -1,9 +1,8 @@
-<script lang="ts">
+﻿<script lang="ts">
   import { onMount } from "svelte";
   import { gameStore } from "../../../shared/stores/game";
   import { seasonStore } from "../../../shared/stores/season";
   import { masterStore } from "../../../shared/stores/master";
-  import DraftBoardModal from "./DraftBoardModal.svelte";
   import UniversityApplyModal from "./UniversityApplyModal.svelte";
   import IndependentApplyModal from "./IndependentApplyModal.svelte";
 
@@ -13,7 +12,6 @@
   let independentChecked = false;
   let universityChoices: string[] = [];
   let independentChoices: string[] = [];
-  let draftBoardOpen = false;
   let universityModalOpen = false;
   let independentModalOpen = false;
 
@@ -53,6 +51,13 @@
   onMount(() => {
     persistHubState();
   });
+
+  function onClickDraftApply() {
+    draftChecked = !draftChecked;
+    if (draftChecked) {
+      alert("드래프트 참가 신청이 완료되었습니다. W51주차에 참가 여부 메시지가 도착합니다.");
+    }
+  }
 
   async function chooseMilitaryNow() {
     if (resolving) return;
@@ -104,11 +109,11 @@
       <span class="chip">진로 결정</span>
       <h2>W50 진로 신청 허브</h2>
     </div>
-    <p class="body-text">각 진로 페이지를 확인하고 체크한 뒤 신청 완료를 누르세요.</p>
+    <p class="body-text">각 진로 페이지를 확인하고 체크한 뒤 신청 완료를 눌러 다음 주로 진행하세요.</p>
 
     <div class="options">
-      <button class="opt-btn" type="button" on:click={() => (draftBoardOpen = true)}>
-        <span class="opt-label">드래프트 진행 {draftChecked ? "✓" : ""}</span>
+      <button class="opt-btn" type="button" on:click={onClickDraftApply}>
+        <span class="opt-label">드래프트 참가 신청 {draftChecked ? "✓" : ""}</span>
       </button>
 
       <button class="opt-btn" type="button" on:click={() => (universityModalOpen = true)}>
@@ -133,19 +138,6 @@
   </div>
 </div>
 
-{#if draftBoardOpen}
-  <DraftBoardModal
-    on:close={async () => {
-      draftBoardOpen = false;
-      await persistHubState();
-    }}
-    on:completed={async () => {
-      draftChecked = true;
-      draftBoardOpen = false;
-      await persistHubState();
-    }}
-  />
-{/if}
 {#if universityModalOpen}
   <UniversityApplyModal
     initialSelected={universityChoices}

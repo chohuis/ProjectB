@@ -70,9 +70,20 @@
 
   async function choose(optionId: string) {
     if (!selected) return;
+    if (selected.id.startsWith("msg-hs-draft-invite-")) {
+      if (optionId === "join_draft") {
+        seasonStore.pushPendingAction({ type: "draft" });
+      } else {
+        gameStore.setDraftIntent(false);
+        if (!$seasonStore.pendingActions.some((a) => a.type === "careerChoice")) {
+          seasonStore.pushPendingAction({ type: "careerChoice" });
+        }
+      }
+    }
     gameStore.resolveDecision(selected.id, optionId);
     seasonStore.resolvePendingAction("message", selected.id);
     await gameStore.save();
+    await seasonStore.save();
   }
 
   // effectHint에서 양수/음수 판단 (+숫자 / -숫자 패턴)

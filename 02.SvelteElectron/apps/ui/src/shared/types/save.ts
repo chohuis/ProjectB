@@ -1,6 +1,6 @@
-﻿import type { MessageItem } from "./main";
+import type { MessageItem } from "./main";
 
-// ?? ?λ젰移?釉붾줉 ????????????????????????????????????????????????
+// ── 능력치 블록 ────────────────────────────────────────────────
 export interface PitchingAttributes {
   ovr: number;
   stamina: number;
@@ -10,8 +10,8 @@ export interface PitchingAttributes {
   movement: number;
   mentality: number;
   recovery: number;
-  clutch: number;       // ?꾧린 吏묒쨷?? ?꾨컲 ?묒쟾/?앹젏沅??뺣컯 ??quality 蹂댁젙
-  holdRunners: number;  // 寃ъ젣?? ?꾨（ ?쒕룄???듭젣 怨꾩닔
+  clutch: number;  // 위기 집중력: 후반 접전/득점권 압박 시 quality 보정
+  holdRunners: number;  // 견제력: 도루 시도율 억제 계수
 }
 
 export type PitchingStatKey = Exclude<keyof PitchingAttributes, "ovr">;
@@ -23,9 +23,9 @@ export interface BattingAttributes {
   eye: number;
   discipline: number;
   speed: number;
-  baseInstinct: number; // 二쇰（ ?먮떒: ?щ텇 踰좎씠??吏꾨（ ?쒕룄 鍮덈룄
-  bunting: number;      // 踰덊듃: 踰덊듃 ?援??덉쭏 蹂댁젙
-  platoon: number;      // ?뚮옒???댁꽦: 諛섎? ???ъ닔 ????λ젰 (50=?됯퇏)
+  baseInstinct: number;  // 주루 판단: 여분 베이스 진루 시도 빈도
+  bunting: number;  // 번트: 번트 타구 품질 보정
+  platoon: number;  // 플래툰 내성: 반대 손 투수 대응 능력 (50=평균)
   fielding: number;
   arm: number;
   battingClutch: number;
@@ -33,36 +33,37 @@ export interface BattingAttributes {
 
 export type BattingStatKey = Exclude<keyof BattingAttributes, "ovr">;
 
-// ?? ?ъ????숇젴??????????????????????????????????????????????????
+// ── 포지션 숙련도 ────────────────────────────────────────────────
 export type PositionKey = "C" | "1B" | "2B" | "3B" | "SS" | "LF" | "CF" | "RF" | "SP" | "RP";
 export type PositionRatings = Partial<Record<PositionKey, number>>;
 
-// ?? 媛먮룆 ?λ젰移?????????????????????????????????????????????????
+// ── 감독 능력치 ────────────────────────────────────────────────
 export interface ManagerAttributes {
-  motivation: number;       // ?좎닔 紐⑤엫 二쇨컙 蹂댁젙
-  development: number;      // ? ?꾩껜 devFactor 蹂댁젙
-  strategy: number;         // 寃쎄린 ?꾩닠 ?섏궗寃곗젙
-  handlePressure: number;   // 以묒슂 寃쎄린쨌?꾧린 ???  handlePersonnel: number;  // ?좎닔 湲곗슜쨌濡쒗뀒?댁뀡쨌遺덊렂 ?댁슜
+  motivation: number;  // 선수 모랄 주간 보정
+  development: number;  // 팀 전체 devFactor 보정
+  strategy: number;  // 경기 전술 의사결정
+  handlePressure: number;   // 압박 상황 관리
+  handlePersonnel: number;  // 선수 기용/트레이드/방출 결정
 }
 
-// ?? 肄붿튂 ?λ젰移?????????????????????????????????????????????????
+// ── 코치 능력치 ────────────────────────────────────────────────
 export type CoachSpecialty = "pitching" | "batting" | "fielding" | "running";
 
 export interface CoachAttributes {
-  teaching: number;   // XP ?띾뱷??蹂댁젙 怨꾩닔
-  analytics: number;  // ?곷? 遺꾩꽍 ?λ젰
-  experience: number; // ?덈꺼 1~5
+  teaching: number;  // XP 획득량 보정 계수
+  analytics: number;  // 상대 분석 능력
+  experience: number;  // 레벨 1~5
   specialty: CoachSpecialty;
 }
 
-// ?? 援ъ쥌 ?쒖뒪?????????????????????????????????????????????????
-export type PitchGrade = 1 | 2 | 3 | 4 | 5; // 1=?듬뱷以?2=湲곗큹 3=蹂댄넻 4=?μ닕 5=留덉뒪??
+// ── 구종 시스템 ───────────────────────────────────────────────
+export type PitchGrade = 1 | 2 | 3 | 4 | 5;  // 1=습득중 2=기초 3=보통 4=능숙 5=마스터
 export interface PitchEntry {
   id: string;
   grade: PitchGrade;
 }
 
-// ?? 二쇱씤怨?????곗씠???????????????????????????????????????????
+// ── 주인공 저장 데이터 ─────────────────────────────────────────
 export type CareerStage  = "highschool" | "university" | "pro" | "independent" | "military" | "pro_kbl" | "pro_abl";
 export type PlayerType   = "pitcher" | "batter" | "twoWay";
 export type Handedness   = "L" | "R" | "S";
@@ -71,58 +72,63 @@ export type PitchingForm = "overhand" | "threeQuarter" | "sidearm" | "underhand"
 export interface ProContract {
   teamId: string;
   leagueId: string;
-  salary: number;               // ?곌컙 ?곕큺 (留????⑥쐞)
-  durationYears: number;        // 珥?怨꾩빟 湲곌컙
-  remainingYears: number;       // ?쒖쫵 醫낅즺留덈떎 媛먯궛
+  salary: number;  // 연간 연봉 (만 원 단위)
+  durationYears: number;  // 총 계약 기간
+  remainingYears: number;  // 시즌 종료마다 감산
   signingBonus: number;
-  teamOptionYears: number;      // 0?대㈃ ?놁쓬
-  playerOptionYears: number;    // 0?대㈃ ?놁쓬
+  teamOptionYears: number;  // 0이면 없음
+  playerOptionYears: number;  // 0이면 없음
   noTrade: boolean;
   incentives?: { condition: string; bonus: number }[];
   status: "active" | "expired" | "voided";
 }
 
 export interface ProtagonistSave {
-  id: string;                        // 怨좎젙 ID (?? "PLY_HERO")
+  id: string;  // 고정 ID (예: "PLY_HERO")
   name: string;
   nameEn?: string;
   careerStage: CareerStage;
-  leagueId: string;                  // ?꾩옱 ?뚯냽 由ш렇
-  teamId: string;                    // ?꾩옱 ?뚯냽 ?
-  schoolId?: string;                 // 怨좉탳쨌????④퀎
-  grade?: 1 | 2 | 3;                // 怨좉탳 ?숇뀈
+  leagueId: string;  // 현재 소속 리그
+  teamId: string;  // 현재 소속 팀
+  schoolId?: string;  // 고교·대학 단계
+  grade?: 1 | 2 | 3;  // 고교/대학 재학 중일 때만 존재
   age: number;
   playerType: PlayerType;
-  position: string;                  // "SP" | "RP" | "CP" | "" (誘몄젙)
+  position: string;  // "SP" | "RP" | "CP" | "" (미정)
   handedness: Handedness;
-  pitchingForm?: PitchingForm;       // ?ш뎄 ??(?ъ닔 ?꾩슜)
+  pitchingForm?: PitchingForm;  // 투구 폼 (투수 전용)
   jerseyNumber: number;
 
-  // ?꾩옱 ?곹깭 (二??⑥쐞濡?蹂??
-  condition: number;                 // 0??00: 而⑤뵒??  fatigue: number;                   // 0??00: ?쇰줈??  morale: number;                    // 0??00: ?ш린
+  // 현재 상태 (주 단위로 변동)
+  condition: number;                 // 0~100: 컨디션
+  fatigue: number;                   // 0~100: 피로도
+  morale: number;                    // 0~100: 사기
 
-  // ?λ젰移?(?깆옣 諛섏쁺???꾩옱媛?
+  // 능력치 (성장 반영된 현재값)
   pitching: PitchingAttributes;
   batting: BattingAttributes;
 
-  // ?ъ????숇젴??  primaryPosition: PositionKey;
+  // 포지션 데이터
+  primaryPosition: PositionKey;
   positionRatings: PositionRatings;
 
-  // 罹먮┃???띿꽦
-  diligence: number;   // ?깆떎??1??9: growthEngine devFactor 蹂댁젙
-  popularity: number;  // ?멸린??0??00: ?ㅼ뭅?고듃 愿?щ룄쨌??諛섏쓳
+  // 캐릭터 속성
+  diligence: number;  // 성실함 1–99: growthEngine devFactor 보정
+  popularity: number;  // 인기도 0–100: 스카우트 관심도·팬 반응
 
-  // ?좎옱?Β룹꽦??  developmentRate: number;           // 45??5
-  potentialHidden: number;           // 60??9 (?④꺼吏??좎옱??
-  growthPoints: number;              // 誘몄궗???깆옣 ?ъ씤??
-  tags: string[];                    // ["湲됱꽦??, "硫섑깉愿由?, ??
+  // 성장 잠재력
+  developmentRate: number;           // 45~75
+  potentialHidden: number;  // 60–99 (숨겨진 잠재력)
+  growthPoints: number;  // 미사용 성장 포인트
+  tags: string[];  // ["급성장", "멘탈관리", …]
 
-  // XP ?꾩쟻 (二쇨컙 ?깆옣 ?붿쭊??
+  // XP 누적 (주간 성장 엔진용)
   pitchingXP: Partial<Record<PitchingStatKey, number>>;
   battingXP: Partial<Record<BattingStatKey, number>>;
 
-  // 援ъ쥌 ?쒖뒪??  pitches: PitchEntry[];                               // 蹂댁쑀 援ъ쥌 紐⑸줉 (id + ?숇젴??
-  trainingPitchState?: { id: string; progress: number }; // ?꾩옱 ?덈젴 以묒씤 援ъ쥌
+  // 구종 시스템
+  pitches: PitchEntry[];                               // 보유 구종 목록 (id + 등급)
+  trainingPitchState?: { id: string; progress: number };  // 현재 훈련 중인 구종
   money: number;
   fame: number;
   scoutScore: number;
@@ -142,46 +148,58 @@ export interface ProtagonistSave {
   };
 }
 
-// ?? ?쒖쫵 ?ㅽ꺈 (?좎닔 1紐낅텇) ?????????????????????????????????????
+// ── 시즌 스탯 (선수 1명분) ─────────────────────────────────────
 export interface PitcherSeasonStats {
   type: "pitcher";
-  g: number;      // ?깊뙋 寃쎄린 ??  gs: number;     // ?좊컻 ?깊뙋 ??  w: number;      // ??  l: number;      // ??  sv: number;     // ?몄씠釉?  hd: number;     // ???  ip: number;     // ?대떇 (?뚯닔?? 31.2 ??31?대떇 2/3)
-  er: number;     // ?먯콉??  h: number;      // ?쇱븞?
-  k: number;      // ?덉궪吏?  bb: number;     // 蹂쇰꽬
-  era: number;    // ?됯퇏?먯콉??(怨꾩궛媛? er*9/ip)
-  whip: number;   // 怨꾩궛媛? (bb+h)/ip
+  g: number;      // 등판 경기 수
+  gs: number;     // 선발 등판 수
+  w: number;      // 승
+  l: number;      // 패
+  sv: number;     // 세이브
+  hd: number;     // 홀드
+  ip: number;     // 이닝 (소수점: 31.2 → 31이닝 2/3)
+  er: number;     // 자책점
+  h: number;      // 피안타
+  k: number;      // 탈삼진
+  bb: number;     // 볼넷
+  era: number;  // 평균자책점 (계산값: er*9/ip)
+  whip: number;  // 계산값: (bb+h)/ip
 }
 
 export interface BatterSeasonStats {
   type: "batter";
-  g: number;      // 異쒖쟾 寃쎄린 ??  pa: number;     // ???  ab: number;     // ???  h: number;      // ?덊?
-  hr: number;     // ?덈윴
-  rbi: number;    // ???  sb: number;     // ?꾨（
-  bb: number;     // 蹂쇰꽬
-  k: number;      // ?쇱쭊
-  avg: number;    // ???(怨꾩궛媛? h/ab)
-  obp: number;    // 異쒕（??(怨꾩궛媛?
-  slg: number;    // ?ν???(怨꾩궛媛?
-  ops: number;    // OPS (怨꾩궛媛? obp+slg)
+  g: number;      // 출전 경기 수
+  pa: number;     // 타석
+  ab: number;     // 타수
+  h: number;      // 안타
+  hr: number;  // 홈런
+  rbi: number;    // 타점
+  sb: number;     // 도루
+  bb: number;  // 볼넷
+  k: number;  // 삼진
+  avg: number;  // 타율 (계산값: h/ab)
+  obp: number;  // 출루율 (계산값)
+  slg: number;  // 장타율 (계산값)
+  ops: number;  // OPS (계산값: obp+slg)
 }
 
 export type PlayerSeasonStats = PitcherSeasonStats | BatterSeasonStats;
 
-// ?? ?덈젴 怨꾪쉷 ??????????????????????????????????????????????????
+// ── 훈련 계획 ──────────────────────────────────────────────────
 export interface TrainingPlanState {
   primaryProgramId: string | null;
   secondaryProgramId: string | null;
   recoveryProgramId: string | null;
 }
 
-// ?? ?숆탳 ?앺솢 ?곹깭 ?????????????????????????????????????????????
+// ── 학교 생활 상태 ─────────────────────────────────────────────
 export type StudyMode = "focus" | "normal" | "rest" | "sleep";
 export type GradeRisk  = "ok" | "warn" | "danger";
 
 export interface SubjectScore {
-  percentile: number;   // ?앹감諛깅텇??(1~100, ??쓣?섎줉 醫뗭쓬)
-  attendance: number;   // 異쒖꽍瑜?(0~100)
-  assignment: number;   // 怨쇱젣 ?댄뻾瑜?(0~100)
+  percentile: number;  // 석차백분율 (1~100, 낮을수록 좋음)
+  attendance: number;  // 출석률 (0~100)
+  assignment: number;  // 과제 이행률 (0~100)
 }
 
 export type CareerChoiceMode = "none" | "draft" | "university" | "independent";
@@ -251,7 +269,7 @@ export interface AchievementMetrics {
   gamesWonTotal: number;
 }
 
-// ?? 硫붿떊? ?쒖뒪????????????????????????????????????????????????
+// 학업 관리
 export type ContactCategory = "team" | "school" | "personal" | "rival";
 
 export interface ChatMessage {
@@ -267,12 +285,13 @@ export interface ChatContact {
   category: ContactCategory;
   relation: string;
   unlocked: boolean;
-  affinity: number;           // 0??00
-  lastActionWeek: number;     // 荑⑤떎??怨꾩궛??(0 = 誘몄궗??
-  chatHistory: ChatMessage[]; // max 60媛?  flags: string[];            // ?꾨즺???꾪겕쨌?밸퀎 ???ID 紐⑸줉
+  affinity: number;  // 0–100
+  lastActionWeek: number;  // 쿨다운 계산용 (0 = 미사용)
+  chatHistory: ChatMessage[]; // max 60개
+  flags: string[];  // 완료한 아크·특별 대화 ID 목록
 }
 
-// ?? ?숆탳 留덉뒪???????????????????????????????????????????????
+// ── 메신저 시스템 ──────────────────────────────────────────────
 export type SchoolTier = "S" | "A" | "B" | "C";
 export type ProPotentialTier = "S" | "A" | "B" | "C";
 
@@ -309,21 +328,21 @@ export interface SchoolScenario {
   schoolId: string;
   narrativeAngle: string;
   protagonistRoles: {
-    seniorMentors: string[];    // 3?숇뀈 ?좊같 硫섑넗 NPC ID 紐⑸줉
-    seniorCaptain: string;      // 3?숇뀈 二쇱옣 NPC ID
-    classmateRivals: string[];  // 2?숇뀈 ?숆린 ?쇱씠踰?NPC ID 紐⑸줉
-    batteryPartner: string;     // 2?숇뀈 諛고꽣由??뚰듃??C NPC ID
-    promisingJunior: string;    // 1?숇뀈 湲곕?二?NPC ID
+    seniorMentors: string[];  // 3학년 선배 멘토 NPC ID 목록
+    seniorCaptain: string;  // 3학년 주장 NPC ID
+    classmateRivals: string[];  // 2학년 동기 라이벌 NPC ID 목록
+    batteryPartner: string;  // 2학년 배터리 파트너 C NPC ID
+    promisingJunior: string;  // 1학년 기대주 NPC ID
   };
-  mainRivalSchool: string;      // 二??쇱씠踰??숆탳 ID
-  rivalAces: string[];          // ? ?숆탳 ?먯씠??NPC ID (理쒕? 2紐?
-  initialZone0Npcs: string[];   // ?좉퇋 寃뚯엫 ?쒖옉 ??Zone 0?쇰줈 ?먮룞 諛곗젙??NPC ID 紐⑸줉
+  mainRivalSchool: string;  // 주 라이벌 학교 ID
+  rivalAces: string[];  // 타 학교 에이스 NPC ID (최대 2명)
+  initialZone0Npcs: string[];  // 신규 게임 시작 시 Zone 0으로 자동 배정될 NPC ID 목록
 }
 
-// ?? ?쒕옒?꾪듃 ???????????????????????????????????????????????
+// ── 학교 마스터 타입 ──────────────────────────────────────────
 export interface DraftPick {
   round: number;
-  pick: number;    // ?꾩껜 ???쒕쾲
+  pick: number;  // 전체 픽 순번
   teamId: string;
   npcId: string;
 }
@@ -341,17 +360,17 @@ export interface ProtagonistDraftOutcome {
   teamId?: string;
 }
 
-// ?? NPC Zone & ?고????곹깭 ????????????????????????????????????
+// ── 드래프트 타입 ────────────────────────────────────────────
 export type NpcZone = 0 | 1 | 2 | 3;
-export type MilitaryStatus = "誘명븘" | "?꾩뿭" | "援고븘" | "硫댁젣";
+export type MilitaryStatus = "미필" | "현역" | "군필" | "면제";
 export type NpcCareerStatus = "active" | "military" | "injured" | "retired";
 
 export interface NpcCareerEntry {
   year: number;
   leagueId: string;
   teamId: string;
-  statLine: string;     // "15??3??ERA 2.41" | "???.312 12?덈윴"
-  highlights: string[]; // ["?좎씤??, "?ъ뒪?"]
+  statLine: string;  // "15승 3패 ERA 2.41" | "타율 .312 12홈런"
+  highlights: string[];  // ["신인상", "올스타"]
 }
 
 export interface NpcSaveState {
@@ -361,39 +380,39 @@ export interface NpcSaveState {
   playerType: PlayerType;
   position: string;
 
-  // Zone 遺꾨쪟
+  // ── NPC Zone & 런타임 상태 ────────────────────────────────────
   zone: NpcZone;
-  zoneDowngradedAt?: number; // Zone 3 ?꾪솚???쒖쫵 ?곕룄
+  zoneDowngradedAt?: number;  // Zone 3 전환된 시즌 연도
 
-  // 湲곕낯 ?뺣낫
+  // Zone 분류
   age: number;
-  grade?: 1 | 2 | 3;        // 怨좉탳/????ы븰 以묒씪 ?뚮쭔 議댁옱
+  grade?: 1 | 2 | 3;  // 고교/대학 재학 중일 때만 존재
   schoolId: string;
   graduationYear: number;
 
-  // ?꾩옱 ?뚯냽
+  // 기본 정보
   careerStatus: NpcCareerStatus;
   currentLeague: string;
   currentTeam: string;
 
-  // 援곗쟻
+  // 현재 소속
   militaryStatus: MilitaryStatus;
   militaryEnlistYear?: number;
   militaryDischargeYear?: number;
 
-  // ?λ젰移?(Zone 0/1: ?꾩껜, Zone 2/3: 留덉?留??ㅻ깄??
+  // 군적
   pitching?: PitchingAttributes;
   batting?: BattingAttributes;
-  developmentRate: number; // 寃쎈웾 ?쒕? ?깆옣怨꾩닔
+  developmentRate: number;  // 경량 시뮬 성장계수
 
-  // 而ㅻ━??湲곕줉
+  // 능력치 (Zone 0/1: 전체, Zone 2/3: 마지막 스냅샷)
   careerHistory: NpcCareerEntry[];
-  achievements: string[]; // ["2025 ?좎씤??, "2027 MVP"]
+  achievements: string[];  // ["2025 신인상", "2027 MVP"]
 }
 
-// ?? save_game.json ?꾩껜 援ъ“ ???????????????????????????????????
+// 커리어 기록
 export interface SaveGame {
-  version: number;          // ????щ㎎ 踰꾩쟾 (留덉씠洹몃젅?댁뀡??
+  version: number;  // 저장 포맷 버전 (마이그레이션용)
   savedAt: string;          // ISO 8601 timestamp
   protagonist: ProtagonistSave;
   mailbox: MessageItem[];
@@ -402,9 +421,9 @@ export interface SaveGame {
   achievements: AchievementRuntime[];
   achievementMetrics: AchievementMetrics;
   contacts: ChatContact[];
-  recentLogs: string[];     // 理쒓렐 30媛??쒕룞 濡쒓렇
-  recentUpcoming: string[]; // ?ㅼ쓬 ?덉젙 ?대깽??紐⑸줉
-  npcs: NpcSaveState[];     // NPC ?고????곹깭 (Zone 0~3)
+  recentLogs: string[];  // 최근 30개 활동 로그
+  recentUpcoming: string[];  // 다음 예정 이벤트 목록
+  npcs: NpcSaveState[];  // NPC 런타임 상태 (Zone 0~3)
 }
 
 export const SAVE_GAME_VERSION = 2;

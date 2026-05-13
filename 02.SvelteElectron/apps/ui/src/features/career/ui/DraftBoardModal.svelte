@@ -2,6 +2,7 @@
   import { createEventDispatcher } from "svelte";
   import { gameStore } from "../../../shared/stores/game";
   import { masterStore } from "../../../shared/stores/master";
+  import { seasonStore } from "../../../shared/stores/season";
 
   const dispatch = createEventDispatcher<{
     close: void;
@@ -140,8 +141,32 @@
     started = true;
   }
 
-  function complete() {
+  async function complete() {
+    const userPick = $gameStore.schoolState.careerDraftPickLog.find((row) => row.isUser) ?? null;
+    gameStore.setFallbackAdmissions({
+      universityChoices: $gameStore.schoolState.fallbackUniversityChoices,
+      independentChoices: $gameStore.schoolState.fallbackIndependentChoices,
+      universityPassed: $gameStore.schoolState.fallbackUniversityPassed,
+      independentPassed: $gameStore.schoolState.fallbackIndependentPassed,
+      sportsMilitaryPassed: $gameStore.schoolState.fallbackSportsMilitaryPassed,
+      draftPassed: userDrafted,
+      draftTeamId: userPick?.teamId ?? null,
+      draftRound: userPick?.round ?? null,
+      draftPick: userPick?.pickNo ?? null,
+      draftSigningBonus: userDrafted ? Math.max(3000, Math.round(($gameStore.protagonist.pitching.ovr - 45) * 220)) : 0,
+      pendingSelection: true,
+    });
+    if (!userDrafted) {
+      gameStore.setDraftIntent(false);
+    }
+    seasonStore.resolvePendingAction("draft");
+    if (!$seasonStore.pendingActions.some((a) => a.type === "careerChoice")) {
+      seasonStore.pushPendingAction({ type: "careerChoice" });
+    }
+    await gameStore.save();
+    await seasonStore.save();
     dispatch("completed", { drafted: userDrafted });
+    dispatch("close");
   }
 </script>
 

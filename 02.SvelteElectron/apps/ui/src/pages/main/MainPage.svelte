@@ -31,6 +31,7 @@
   import InGameEventModal from "../../features/events/ui/InGameEventModal.svelte";
   import CareerChoiceHubModal from "../../features/career/ui/CareerChoiceHubModal.svelte";
   import CareerResultModal from "../../features/career/ui/CareerResultModal.svelte";
+  import DraftBoardModal from "../../features/career/ui/DraftBoardModal.svelte";
   import DraftModal from "../../features/draft/ui/DraftModal.svelte";
   import ContractNegotiationModal from "../../features/contract/ui/ContractNegotiationModal.svelte";
   import OptionClauseModal from "../../features/contract/ui/OptionClauseModal.svelte";
@@ -569,7 +570,11 @@
 {/if}
 
 {#if pendingDraft && currentTab === "messages" && pendingReady}
-  <DraftModal />
+  {#if $gameStore.protagonist.careerStage === "highschool"}
+    <DraftBoardModal />
+  {:else}
+    <DraftModal />
+  {/if}
 {/if}
 
 {#if pendingSalaryNegotiation && currentTab === "messages" && pendingReady}

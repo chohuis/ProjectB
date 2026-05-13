@@ -8,13 +8,12 @@ import { applyWeeklyStudy, calcExamResult, getUniversityEffBonus, getUniversityE
 import { checkAchievements, computeMetrics } from "../utils/achievementEngine";
 import { calcOfferedSalaryForProtagonist, calcSeasonRating } from "../utils/salaryEngine";
 import { isFaEligible } from "../utils/faEngine";
-import { calcDraftRank } from "../utils/draftEngine";
 import type { MatchResult, WeekAdvanceResult } from "../types/season";
 import type { EventContext } from "../types/event";
 import type { MessageItem } from "../types/main";
 import type { ProtagonistSave } from "../types/save";
 
-// ── 시설 레벨 → 훈련 효율 계수 ──────────────────────────────────────────────
+// ── 시설 효율 계산 함수 ────────────────────────────────────────
 function calcFacilityEffMod(p: ProtagonistSave, teamTier?: string): number {
   switch (p.careerStage) {
     case "highschool":  return 0.92;
@@ -29,7 +28,7 @@ function calcFacilityEffMod(p: ProtagonistSave, teamTier?: string): number {
   }
 }
 
-// ── 주간 순수입 계산 (임시 - 실제 지출 나중에 연결) ──────────────────────────
+// ── 주간 순수입 계산 (수입 - 실제 지출액 환산) ──────────────────
 function calcWeeklyNet(p: ProtagonistSave): number {
   switch (p.careerStage) {
     case "highschool":
@@ -58,7 +57,7 @@ function makeTrainingMessage(week: number, logs: string[]): MessageItem {
     id: `msg-train-w${week}-${Date.now()}`,
     category: "system",
     sender: "훈련 시스템",
-    subject: `W${week} 주간 결과`,
+    subject: `W${week} 훈련 결과`,
     preview: logs[0] ?? "",
     body: logs.join("\n"),
     createdAt: `W${week}`,
@@ -118,7 +117,12 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
   );
   if (unresolvedMsg) {
     const action = { type: "message" as const, messageId: unresolvedMsg.id };
-    seasonStore.pushPendingAction(action);
+    const hasPendingMessage = s.pendingActions.some(
+      (a) => a.type === "message" && a.messageId === unresolvedMsg.id,
+    );
+    if (!hasPendingMessage) {
+      seasonStore.pushPendingAction(action);
+    }
     return {
       processedWeek: s.currentWeek,
       logs: [],
@@ -141,7 +145,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     seasonStore.pushPendingAction(action);
     return {
       processedWeek: s.currentWeek,
-      logs: ["입영 대상: 군 복무 진행이 필요합니다."],
+          logs: ["입영 대상: 군 복무 진행이 필요합니다."],
       newMessages: [],
       matchResults: [],
       stoppedBy: action,
@@ -332,6 +336,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       [isSportsUnit ? "군 복무(체육부대): 훈련 루틴 유지" : "군 복무(일반부대): 기본 근무 수행"],
       [],
       nextWeek,
+      s.seasonYear,
     );
     gameStore.save();
     seasonStore.save();
@@ -354,6 +359,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       ["전역 후 재활 진행"],
       [],
       nextWeek,
+      s.seasonYear,
     );
   }
   if ((g.protagonist.tradeAdaptationWeeks ?? 0) > 0) {
@@ -366,10 +372,11 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       ["이적 적응 기간: 컨디션/사기 패널티 적용"],
       [],
       nextWeek,
+      s.seasonYear,
     );
   }
 
-  // ── 3. 주간 학업 효과 + 훈련 효율 계산 ────────────────────────────────────
+  // ── 3. 훈련 프로그램 실행 + 효율 연산 ──────────────────────────
   const isUniversity = g.protagonist.careerStage === "university";
 
   // 대학 주차 증가
@@ -377,12 +384,12 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     gameStore.incrementUniversityWeek();
   }
 
-  // 전공별 시험 점수 배율 적용
+  // ── 6. 시험 이벤트 처리 ──────────────────────────────────────
   const examGainMult = isUniversity ? getUniversityExamGainMult(g.schoolState.universityMajor) : 1.0;
   const studyResult = applyWeeklyStudy(g.schoolState, examGainMult);
   gameStore.applyWeeklyStudyResult(studyResult);
 
-  // 대학 전공 훈련 효율 보너스
+  // 전공 훈련 효율 보정값
   const majorEffBonus = isUniversity ? getUniversityEffBonus(g.schoolState.universityMajor) : 0;
 
   // 코치 스탯 기반 효율 보너스 (teaching 50 기준, +4%/10pt)
@@ -394,11 +401,11 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
   const coachTeaching = (pitchCoach?.details as import("../stores/master").EntityDetails)?.coach?.stats?.teaching ?? 50;
   const coachEffBonus = Math.max(-0.10, Math.min(0.20, (coachTeaching - 50) * 0.004));
 
-  // 시설 레벨 효율 계수
+  // ── 시설 효율 계산 함수 ────────────────────────────────────────
   const teamRef       = master.teams.find((t) => t.id === g.protagonist.teamId);
   const facilityEffMod = calcFacilityEffMod(g.protagonist, teamRef?.tier);
 
-  // 사기 슬럼프 페널티: 사기 35 미만 3주 연속 → 훈련 효율 -30%
+  // ── 시설 효율 계산 함수 ────────────────────────────────────────
   const prevLowMoraleWeeks = g.protagonist.consecutiveLowMoraleWeeks ?? 0;
   const isLowMorale        = g.protagonist.morale < 35;
   const newLowMoraleWeeks  = isLowMorale ? prevLowMoraleWeeks + 1 : 0;
@@ -475,7 +482,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     growth.logs.push(`[학업] 주간 효율 ${pct}% (${g.schoolState.weeklyStudyMode === "focus" ? "집중 학습" : "일반 학습"})`);
   }
 
-  // ── 4. 경기 일정 처리 ──────────────────────────────────────────────────────
+  // ── 4. 경기 일정 처리 ─────────────────────────────────────────
   const weekGames = s.schedule.filter((e) => e.week === nextWeek && !e.result);
   const logs: string[] = [...growth.logs];
   const matchResults: MatchResult[] = [];
@@ -494,7 +501,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       } else {
         const action = { type: "game" as const, scheduleId: game.id };
         seasonStore.pushPendingAction(action);
-        gameStore.applyWeekResult(growth.protagonistPatch, logs, [], nextWeek);
+        gameStore.applyWeekResult(growth.protagonistPatch, logs, [], nextWeek, s.seasonYear);
         if (growth.logs.length > 0) {
           gameStore.addMessage(makeTrainingMessage(nextWeek, growth.logs));
         }
@@ -569,7 +576,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     logs.push(`[시험] ${examRes.messageSubject}`);
   }
 
-  // ── 7. 메신저 아크 처리 (contactDefs 조회, 아크 트리거 조건 평가)
+  // ── 7. 메신저 아크 처리 (contactDefs 순회, 아크 트리거 조건 판정)
   const weekInYear = ((nextWeek - 1) % 52) + 1;
   {
     const mCur = get(masterStore);
@@ -592,7 +599,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         if (t.flagNotSet      !== undefined &&  flags.includes(t.flagNotSet))        continue;
 
         seasonStore.pushPendingAction({ type: "messengerScript", contactId: def.id, arcId: arc.id });
-        break; // 주당 1개 아크에만 반응
+        break;  // 주당 1개 아크에만 반응
       }
     }
   }
@@ -609,7 +616,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     seasonStore.pushPendingAction({ type: "careerChoiceHub" });
   }
 
-  // ── 9. 진로 결과/드래프트 처리 (고3 W51 결과선택, 대4 W52 드래프트) ───────────
+  // ── 8. 진로 결정 이벤트 (고교 W50) ────────────────────────────
   const gDraft = get(gameStore);
   const hasCareerChoicePending = get(seasonStore).pendingActions.some((a) => a.type === "careerChoice" || a.type === "careerChoiceHub");
   const isUnivDraftWeek =
@@ -659,9 +666,6 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     const univPassed = univChoices.filter((id, i) => evalUnivPass(p.pitching.ovr, i));
     const indiePassed = indieChoices.filter((id, i) => evalIndiePass(p.pitching.ovr, i));
     const sportsPassed = evalSportsMilitaryPass(p.pitching.ovr);
-    const draftRes = gDraft.schoolState.draftIntent
-      ? calcDraftRank(p.scoutScore, p.pitching.ovr, sNow.seasonYear)
-      : null;
 
     gameStore.setFallbackAdmissions({
       universityChoices: univChoices,
@@ -669,23 +673,45 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       universityPassed: univPassed,
       independentPassed: indiePassed,
       sportsMilitaryPassed: sportsPassed,
-      draftPassed: !!draftRes?.drafted,
-      draftTeamId: draftRes?.teamId ?? null,
-      draftRound: draftRes?.round ?? null,
-      draftPick: draftRes?.pick ?? null,
-      draftSigningBonus: draftRes?.signingBonus ?? 0,
+      draftPassed: false,
+      draftTeamId: null,
+      draftRound: null,
+      draftPick: null,
+      draftSigningBonus: 0,
     });
-    seasonStore.pushPendingAction({ type: "careerChoiceHub" });
-    gameStore.addMessage({
-      id: `msg-career-result-${Date.now()}`,
-      category: "system",
-      sender: "Career Office",
-      subject: "W51 application results",
-      preview: "지원 결과가 도착했습니다. 최종 진로를 선택하세요.",
-      body: "지원 결과가 도착했습니다.\n메인 화면에서 최종 진로를 선택하세요.",
-      createdAt: `W${nextWeek}`,
-      readAt: null,
-    });
+
+    if (gDraft.schoolState.draftIntent) {
+      gameStore.addMessage({
+        id: `msg-hs-draft-invite-${Date.now()}`,
+        category: "system",
+        sender: "Career Office",
+        subject: "W51 드래프트 참가 안내",
+        preview: "W51주 드래프트에 참가하시겠습니까?",
+        body: "드래프트 참가 신청이 완료되었습니다.\nW51주 드래프트에 참가하시겠습니까?",
+        createdAt: `W${nextWeek}`,
+        readAt: null,
+        decision: {
+          prompt: "W51주 드래프트에 참가하시겠습니까?",
+          options: [
+            { id: "join_draft", label: "참가", effectHint: "드래프트 진행" },
+            { id: "skip_draft", label: "불참", effectHint: "드래프트 제외 후 진로 선택" },
+          ],
+          selectedOptionId: null,
+        },
+      });
+    } else {
+      seasonStore.pushPendingAction({ type: "careerChoice" });
+      gameStore.addMessage({
+        id: `msg-career-result-${Date.now()}`,
+        category: "system",
+        sender: "Career Office",
+        subject: "W51 application results",
+        preview: "지원 결과가 도착했습니다. 최종 진로를 선택하세요.",
+        body: "지원 결과가 도착했습니다.\n메인 화면에서 최종 진로를 선택하세요.",
+        createdAt: `W${nextWeek}`,
+        readAt: null,
+      });
+    }
   }
 
   const needFallbackChoice =
@@ -738,7 +764,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
 
   const newMessages = evResult.newMessages.map((msg) => msg.id);
 
-  gameStore.applyWeekResult(growth.protagonistPatch, logs, [], nextWeek);
+  gameStore.applyWeekResult(growth.protagonistPatch, logs, [], nextWeek, s.seasonYear);
   if (growth.logs.length > 0) {
     gameStore.addMessage(makeTrainingMessage(nextWeek, growth.logs));
   }
@@ -772,3 +798,4 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     stoppedBy,
   };
 }
+
