@@ -1,0 +1,197 @@
+{
+  "version": 1,
+  "slotMeta": {
+    "slotId": "A",
+    "name": "TestPitcher",
+    "updatedAt": "2026-05-13T12:10:00.000Z",
+    "preview": {
+      "careerStage": "highschool",
+      "seasonYear": 2026,
+      "currentWeek": 49,
+      "teamId": "TEAM_HS_GWANGJU_VISION"
+    }
+  },
+  "game": {
+    "version": 2,
+    "savedAt": "2026-05-13T12:10:00.000Z",
+    "protagonist": {
+      "id": "PLY_HERO",
+      "name": "TestPitcher",
+      "careerStage": "highschool",
+      "leagueId": "LEAGUE_HIGHSCHOOL",
+      "teamId": "TEAM_HS_GWANGJU_VISION",
+      "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+      "grade": 3,
+      "age": 19,
+      "playerType": "pitcher",
+      "position": "SP",
+      "handedness": "R",
+      "pitchingForm": "overhand",
+      "jerseyNumber": 18,
+      "condition": 78,
+      "fatigue": 36,
+      "morale": 74,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 68,
+        "velocity": 70,
+        "command": 72,
+        "control": 69,
+        "movement": 67,
+        "mentality": 71,
+        "recovery": 66,
+        "clutch": 58,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 37,
+        "power": 33,
+        "eye": 34,
+        "discipline": 35,
+        "speed": 51,
+        "baseInstinct": 52,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 56,
+        "battingClutch": 31
+      },
+      "primaryPosition": "SP",
+      "positionRatings": {
+        "SP": 71,
+        "RP": 63
+      },
+      "diligence": 63,
+      "popularity": 34,
+      "developmentRate": 71,
+      "potentialHidden": 84,
+      "growthPoints": 0,
+      "tags": ["steady", "workhorse", "team_first"],
+      "pitchingXP": {
+        "velocity": 41,
+        "command": 48,
+        "control": 39,
+        "movement": 28,
+        "mentality": 22,
+        "stamina": 35
+      },
+      "battingXP": {
+        "contact": 6,
+        "discipline": 4
+      },
+      "pitches": [
+        { "id": "PITCH_FASTBALL", "grade": 4 },
+        { "id": "PITCH_SLIDER", "grade": 3 },
+        { "id": "PITCH_CHANGEUP", "grade": 2 },
+        { "id": "PITCH_CURVE", "grade": 2 }
+      ],
+      "money": 8420,
+      "fame": 96,
+      "scoutScore": 71,
+      "proServiceYears": 0,
+      "militaryUnit": null,
+      "militaryServiceWeeks": 0,
+      "militaryRecoveryWeeks": 0,
+      "tradeAdaptationWeeks": 0,
+      "faNegotiationRound": 0,
+      "faUnsignedWeeks": 0,
+      "consecutiveLowMoraleWeeks": 0,
+      "consecutiveHighFatigueWeeks": 0
+    },
+    "mailbox": [
+      {
+        "id": "msg-train-w49",
+        "category": "system",
+        "sender": "Training System",
+        "subject": "W49 Weekly Result",
+        "preview": "Command +1 / Recovery +1",
+        "body": "W49 weekly training complete. Command +1, Recovery +1.",
+        "createdAt": "W49",
+        "readAt": null
+      }
+    ],
+    "trainingPlan": {
+      "primaryProgramId": "TRN_CMD_BASE",
+      "secondaryProgramId": "TRN_CTRL_MECH",
+      "recoveryProgramId": "TRN_RECOVERY"
+    },
+    "schoolState": {
+      "attendsUniversity": false,
+      "universityMajor": "sports_science",
+      "plannedUniversityMajors": ["sports_science", "sports_management", "physical_education"],
+      "weeklyStudyMode": "normal",
+      "examAccumScore": 63,
+      "lastGrade": 5,
+      "lastGradeRisk": "ok",
+      "eligibilityBlocked": false,
+      "subjectScores": {
+        "kor": { "percentile": 32, "attendance": 94, "assignment": 91 },
+        "eng": { "percentile": 36, "attendance": 92, "assignment": 88 },
+        "math": { "percentile": 44, "attendance": 90, "assignment": 86 },
+        "soc": { "percentile": 39, "attendance": 95, "assignment": 93 },
+        "sci": { "percentile": 41, "attendance": 91, "assignment": 89 }
+      },
+      "warningCount": 0,
+      "careerChoiceTriggered": false,
+      "draftTriggered": false,
+      "draftIntent": false,
+      "careerApplicationsSubmitted": false,
+      "fallbackSelectionPending": false,
+      "fallbackUniversityChoices": [],
+      "fallbackIndependentChoices": [],
+      "fallbackUniversityPassed": [],
+      "fallbackIndependentPassed": [],
+      "fallbackSportsMilitaryPassed": false,
+      "fallbackDraftPassed": false,
+      "fallbackDraftTeamId": null,
+      "fallbackDraftRound": null,
+      "fallbackDraftPick": null,
+      "fallbackDraftSigningBonus": 0,
+      "universityWeek": 0,
+      "majorSelected": false
+    },
+    "achievements": [
+      { "id": "ACH_BASEBALL_FIRST_STRIKEOUT", "progress": 1, "unlockedAt": "W5", "claimedAt": null },
+      { "id": "ACH_BASEBALL_100_STRIKEOUTS", "progress": 96, "unlockedAt": null, "claimedAt": null },
+      { "id": "ACH_BASEBALL_FIRST_SAVE", "progress": 1, "unlockedAt": "W14", "claimedAt": null },
+      { "id": "ACH_SOCIAL_FIRST_KAKAO", "progress": 1, "unlockedAt": "W9", "claimedAt": null }
+    ],
+    "achievementMetrics": {
+      "strikeoutTotal": 96,
+      "saveTotal": 4,
+      "kakaoFirstContact": true,
+      "trainingWeeksTotal": 153,
+      "gamesWonTotal": 22
+    },
+    "contacts": [],
+    "recentLogs": ["W49 bullpen complete", "W49 command session +1", "W48 game: quality start"],
+    "recentUpcoming": ["W50 career choice event", "W51 draft week"],
+    "npcs": []
+  },
+  "season": {
+    "version": 1,
+    "savedAt": "2026-05-13T12:10:00.000Z",
+    "leagueId": "LEAGUE_HIGHSCHOOL",
+    "seasonYear": 2026,
+    "currentWeek": 49,
+    "totalWeeks": 52,
+    "pendingActions": [],
+    "schedule": [],
+    "standings": [
+      {
+        "teamId": "TEAM_HS_GWANGJU_VISION",
+        "wins": 16,
+        "losses": 9,
+        "draws": 0,
+        "winPct": 0.64,
+        "runsFor": 92,
+        "runsAgainst": 71,
+        "streak": "W2",
+        "last10": "W2L1W3L2W2"
+      }
+    ],
+    "stats": {},
+    "triggeredEvents": {}
+  }
+}

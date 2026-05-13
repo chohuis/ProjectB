@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "lastPlayedSlotId": "A",
+  "slots": [
+    {
+      "slotId": "A",
+      "name": "TestPitcher",
+      "updatedAt": "2026-05-13T12:10:00.000Z",
+      "preview": {
+        "careerStage": "highschool",
+        "seasonYear": 2026,
+        "currentWeek": 49,
+        "teamId": "TEAM_HS_GWANGJU_VISION"
+      }
+    }
+  ]
+}
