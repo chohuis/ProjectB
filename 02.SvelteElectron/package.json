@@ -28,6 +28,7 @@
     "migrate:entities": "node scripts/migrate-entities.mjs"
   },
   "dependencies": {
+    "better-sqlite3": "^12.10.0",
     "svelte": "^5.38.7"
   },
   "devDependencies": {

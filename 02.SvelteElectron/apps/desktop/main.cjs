@@ -2,6 +2,7 @@ const path = require("node:path");
 const fs = require("node:fs");
 const { pathToFileURL } = require("node:url");
 const { app, BrowserWindow, ipcMain } = require("electron");
+const Database = require("better-sqlite3");
 
 let activeMatchState = null;
 let coreModulePromise = null;
@@ -273,84 +274,178 @@ function readJsonFileOrNull(filePath) {
   }
 }
 
-function writeJsonAtomic(filePath, data) {
-  ensureDir(path.dirname(filePath));
-  const tempPath = `${filePath}.tmp`;
-  fs.writeFileSync(tempPath, JSON.stringify(data, null, 2), "utf8");
-  fs.renameSync(tempPath, filePath);
+// ── SQLite DB 초기화 ─────────────────────────────────────────
+function openDatabase(dbPath) {
+  ensureDir(path.dirname(dbPath));
+  const db = new Database(dbPath);
+  db.pragma("journal_mode = WAL");
+  db.pragma("foreign_keys = ON");
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS save_slots (
+      slot_id      TEXT PRIMARY KEY,
+      name         TEXT NOT NULL DEFAULT '',
+      updated_at   TEXT NOT NULL,
+      career_stage TEXT,
+      season_year  INTEGER,
+      current_week INTEGER,
+      team_id      TEXT,
+      game_json    TEXT NOT NULL DEFAULT '{}',
+      season_json  TEXT NOT NULL DEFAULT '{}'
+    );
+    CREATE TABLE IF NOT EXISTS npc_career_history (
+      id        INTEGER PRIMARY KEY AUTOINCREMENT,
+      slot_id   TEXT    NOT NULL REFERENCES save_slots(slot_id) ON DELETE CASCADE,
+      npc_id    TEXT    NOT NULL,
+      npc_name  TEXT    NOT NULL DEFAULT '',
+      year      INTEGER NOT NULL,
+      league_id TEXT    NOT NULL DEFAULT '',
+      team_id   TEXT    NOT NULL DEFAULT '',
+      stat_line TEXT    NOT NULL DEFAULT ''
+    );
+    CREATE INDEX IF NOT EXISTS idx_nch_slot_npc ON npc_career_history(slot_id, npc_id);
+    CREATE INDEX IF NOT EXISTS idx_nch_year     ON npc_career_history(slot_id, year);
+  `);
+  return db;
 }
 
-function makeSlotMeta(slotId, game, season) {
-  const protagonist = game?.protagonist ?? {};
-  return {
-    slotId,
-    name: protagonist?.name ?? `Slot ${slotId}`,
-    updatedAt: new Date().toISOString(),
+// ── DB 기반 슬롯 CRUD ────────────────────────────────────────
+function dbListSlots(db) {
+  return db.prepare(
+    "SELECT slot_id, name, updated_at, career_stage, season_year, current_week, team_id FROM save_slots ORDER BY updated_at DESC"
+  ).all().map((r) => ({
+    slotId:    r.slot_id,
+    name:      r.name,
+    updatedAt: r.updated_at,
     preview: {
-      careerStage: protagonist?.careerStage ?? null,
-      seasonYear: season?.seasonYear ?? null,
-      currentWeek: season?.currentWeek ?? null,
-      teamId: protagonist?.teamId ?? null,
+      careerStage: r.career_stage,
+      seasonYear:  r.season_year,
+      currentWeek: r.current_week,
+      teamId:      r.team_id,
     },
+  }));
+}
+
+function dbLoadSlot(db, slotId) {
+  const r = db.prepare("SELECT * FROM save_slots WHERE slot_id = ?").get(slotId);
+  if (!r) return null;
+  return {
+    version:  SLOT_SCHEMA_VERSION,
+    slotMeta: {
+      slotId:    r.slot_id,
+      name:      r.name,
+      updatedAt: r.updated_at,
+      preview: {
+        careerStage: r.career_stage,
+        seasonYear:  r.season_year,
+        currentWeek: r.current_week,
+        teamId:      r.team_id,
+      },
+    },
+    game:   r.game_json   ? JSON.parse(r.game_json)   : null,
+    season: r.season_json ? JSON.parse(r.season_json) : null,
   };
+}
+
+function dbSaveSlot(db, slotId, game, season) {
+  const protagonist = game?.protagonist ?? {};
+  const name      = protagonist.name ?? `Slot ${slotId}`;
+  const updatedAt = new Date().toISOString();
+  const careerStage  = protagonist.careerStage  ?? null;
+  const seasonYear   = season?.seasonYear  ?? null;
+  const currentWeek  = season?.currentWeek ?? null;
+  const teamId       = protagonist.teamId  ?? null;
+
+  const upsertSlot = db.prepare(`
+    INSERT INTO save_slots
+      (slot_id, name, updated_at, career_stage, season_year, current_week, team_id, game_json, season_json)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(slot_id) DO UPDATE SET
+      name         = excluded.name,
+      updated_at   = excluded.updated_at,
+      career_stage = excluded.career_stage,
+      season_year  = excluded.season_year,
+      current_week = excluded.current_week,
+      team_id      = excluded.team_id,
+      game_json    = excluded.game_json,
+      season_json  = excluded.season_json
+  `);
+
+  const deleteHistory = db.prepare("DELETE FROM npc_career_history WHERE slot_id = ?");
+  const insertHistory = db.prepare(`
+    INSERT INTO npc_career_history (slot_id, npc_id, npc_name, year, league_id, team_id, stat_line)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `);
+
+  db.transaction(() => {
+    upsertSlot.run(
+      slotId, name, updatedAt,
+      careerStage, seasonYear, currentWeek, teamId,
+      JSON.stringify(game ?? {}), JSON.stringify(season ?? {}),
+    );
+    if (Array.isArray(game?.npcs)) {
+      deleteHistory.run(slotId);
+      for (const npc of game.npcs) {
+        for (const entry of (npc.careerHistory ?? [])) {
+          insertHistory.run(
+            slotId, npc.npcId, npc.name ?? "",
+            entry.year, entry.leagueId ?? "",
+            entry.teamId ?? "", entry.statLine ?? "",
+          );
+        }
+      }
+    }
+  })();
+
+  return {
+    version:  SLOT_SCHEMA_VERSION,
+    slotMeta: { slotId, name, updatedAt, preview: { careerStage, seasonYear, currentWeek, teamId } },
+    game,
+    season,
+  };
+}
+
+// ── 기존 JSON 슬롯 파일 → SQLite 마이그레이션 ───────────────
+function migrateJsonSlotsToDb(db, savesDir) {
+  let files;
+  try { files = fs.readdirSync(savesDir); } catch { return; }
+  for (const f of files) {
+    const m = f.match(/^slot_(.+)\.json$/);
+    if (!m) continue;
+    const slotId = m[1];
+    if (db.prepare("SELECT 1 FROM save_slots WHERE slot_id = ?").get(slotId)) continue;
+    try {
+      const env = readJsonFileOrNull(path.join(savesDir, f));
+      if (!env) continue;
+      dbSaveSlot(db, slotId, env.game ?? null, env.season ?? null);
+      console.log(`[db-migrate] slot ${slotId} → SQLite`);
+    } catch (e) {
+      console.warn(`[db-migrate] slot ${slotId} failed:`, e);
+    }
+  }
 }
 
 app.whenReady().then(() => {
   const resourceBase = path.resolve(__dirname, "../../resource/data/master");
   const rootDir      = path.resolve(__dirname, "../../");
   const tuningSchema = loadTuningSchema(resourceBase);
-  const userDataDir = app.getPath("userData");
-  const savesDir = path.join(userDataDir, "saves");
-  const indexPath = path.join(savesDir, "index.json");
-  const slotPath = (slotId) => path.join(savesDir, `slot_${slotId}.json`);
-  const legacyGamePath = path.join(userDataDir, "save.json");
+  const userDataDir  = app.getPath("userData");
+  const savesDir     = path.join(userDataDir, "saves");
+  const dbPath       = path.join(savesDir, "projectb.db");
+
+  // ── SQLite DB 열기 + 기존 JSON 슬롯 마이그레이션 ─────────────
+  const db = openDatabase(dbPath);
+  migrateJsonSlotsToDb(db, savesDir);
+
+  // ── 레거시 save.json / save_season.json 마이그레이션 ─────────
+  const legacyGamePath   = path.join(userDataDir, "save.json");
   const legacySeasonPath = path.join(userDataDir, "save_season.json");
-
-  function loadIndex() {
-    const parsed = readJsonFileOrNull(indexPath);
-    if (parsed && Array.isArray(parsed.slots)) return parsed;
-    return { version: 1, lastPlayedSlotId: null, slots: [] };
-  }
-
-  function saveIndex(indexData) {
-    writeJsonAtomic(indexPath, indexData);
-  }
-
-  function loadSlotEnvelope(slotId) {
-    return readJsonFileOrNull(slotPath(slotId));
-  }
-
-  function saveSlotEnvelope(slotId, game, season) {
-    const envelope = {
-      version: SLOT_SCHEMA_VERSION,
-      slotMeta: makeSlotMeta(slotId, game, season),
-      game,
-      season,
-    };
-    writeJsonAtomic(slotPath(slotId), envelope);
-
-    const indexData = loadIndex();
-    const nextSlots = indexData.slots.filter((s) => s.slotId !== slotId);
-    nextSlots.push(envelope.slotMeta);
-    saveIndex({
-      version: 1,
-      lastPlayedSlotId: slotId,
-      slots: nextSlots.sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt))),
-    });
-    return envelope;
-  }
-
-  function migrateLegacyToDefaultSlotIfNeeded() {
-    const hasLegacyGame = fs.existsSync(legacyGamePath);
-    const hasLegacySeason = fs.existsSync(legacySeasonPath);
-    const hasDefaultSlot = fs.existsSync(slotPath(DEFAULT_SLOT_ID));
-    if (hasDefaultSlot || (!hasLegacyGame && !hasLegacySeason)) return;
-
-    const legacyGame = readJsonFileOrNull(legacyGamePath);
+  if (!db.prepare("SELECT 1 FROM save_slots WHERE slot_id = ?").get(DEFAULT_SLOT_ID)) {
+    const legacyGame   = readJsonFileOrNull(legacyGamePath);
     const legacySeason = readJsonFileOrNull(legacySeasonPath);
-    if (!legacyGame && !legacySeason) return;
-
-    saveSlotEnvelope(DEFAULT_SLOT_ID, legacyGame, legacySeason);
+    if (legacyGame || legacySeason) {
+      dbSaveSlot(db, DEFAULT_SLOT_ID, legacyGame, legacySeason);
+      console.log("[db-migrate] legacy save.json → SQLite");
+    }
   }
 
   applyTuningFromFile(resourceBase, tuningSchema).then((res) => {
@@ -358,8 +453,6 @@ app.whenReady().then(() => {
   }).catch((e) => {
     console.warn("[tuning] failed to load tuning file. fallback to defaults.", e);
   });
-
-  migrateLegacyToDefaultSlotIfNeeded();
 
   ipcMain.handle("match:start", async (_event, request = {}) => {
     const core = await loadCoreModule();
@@ -400,50 +493,43 @@ app.whenReady().then(() => {
   });
 
   ipcMain.handle("game:load", () => {
-    const env = loadSlotEnvelope(DEFAULT_SLOT_ID);
-    return env?.game ?? null;
+    return dbLoadSlot(db, DEFAULT_SLOT_ID)?.game ?? null;
   });
 
   ipcMain.handle("game:save", (_event, data) => {
     try {
-      const env = loadSlotEnvelope(DEFAULT_SLOT_ID);
-      saveSlotEnvelope(DEFAULT_SLOT_ID, data, env?.season ?? null);
+      const cur = dbLoadSlot(db, DEFAULT_SLOT_ID);
+      dbSaveSlot(db, DEFAULT_SLOT_ID, data, cur?.season ?? null);
     } catch (e) {
       console.error("[game:save] 저장 실패:", e);
     }
   });
 
   ipcMain.handle("season:load", () => {
-    const env = loadSlotEnvelope(DEFAULT_SLOT_ID);
-    return env?.season ?? null;
+    return dbLoadSlot(db, DEFAULT_SLOT_ID)?.season ?? null;
   });
 
   ipcMain.handle("season:save", (_event, data) => {
     try {
-      const env = loadSlotEnvelope(DEFAULT_SLOT_ID);
-      saveSlotEnvelope(DEFAULT_SLOT_ID, env?.game ?? null, data);
+      const cur = dbLoadSlot(db, DEFAULT_SLOT_ID);
+      dbSaveSlot(db, DEFAULT_SLOT_ID, cur?.game ?? null, data);
     } catch (e) {
       console.error("[season:save] 저장 실패:", e);
     }
   });
 
-  ipcMain.handle("save:listSlots", () => {
-    const indexData = loadIndex();
-    return indexData.slots ?? [];
-  });
+  ipcMain.handle("save:listSlots", () => dbListSlots(db));
 
   ipcMain.handle("save:loadSlot", (_event, slotId) => {
     if (typeof slotId !== "string" || !slotId.trim()) return null;
-    return loadSlotEnvelope(slotId.trim());
+    return dbLoadSlot(db, slotId.trim());
   });
 
   ipcMain.handle("save:saveSlot", (_event, payload) => {
     try {
       const slotId = String(payload?.slotId ?? DEFAULT_SLOT_ID).trim();
       if (!slotId) throw new Error("slotId is required");
-      const game = payload?.game ?? null;
-      const season = payload?.season ?? null;
-      return { ok: true, slot: saveSlotEnvelope(slotId, game, season) };
+      return { ok: true, slot: dbSaveSlot(db, slotId, payload?.game ?? null, payload?.season ?? null) };
     } catch (e) {
       return { ok: false, error: String(e?.message ?? e) };
     }
@@ -453,12 +539,7 @@ app.whenReady().then(() => {
     try {
       const id = String(slotId ?? "").trim();
       if (!id) throw new Error("slotId is required");
-      const filePath = slotPath(id);
-      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-      const indexData = loadIndex();
-      const slots = (indexData.slots ?? []).filter((s) => s.slotId !== id);
-      const lastPlayedSlotId = indexData.lastPlayedSlotId === id ? null : indexData.lastPlayedSlotId;
-      saveIndex({ version: 1, lastPlayedSlotId, slots });
+      db.prepare("DELETE FROM save_slots WHERE slot_id = ?").run(id);
       return { ok: true };
     } catch (e) {
       return { ok: false, error: String(e?.message ?? e) };
@@ -468,21 +549,44 @@ app.whenReady().then(() => {
   ipcMain.handle("save:renameSlot", (_event, payload) => {
     try {
       const slotId = String(payload?.slotId ?? "").trim();
-      const name = String(payload?.name ?? "").trim();
+      const name   = String(payload?.name   ?? "").trim();
       if (!slotId) throw new Error("slotId is required");
-      if (!name) throw new Error("name is required");
-      const env = loadSlotEnvelope(slotId);
-      if (!env) throw new Error("slot not found");
-      env.slotMeta = { ...env.slotMeta, name, updatedAt: new Date().toISOString() };
-      writeJsonAtomic(slotPath(slotId), env);
-      const indexData = loadIndex();
-      const slots = (indexData.slots ?? []).map((s) =>
-        s.slotId === slotId ? { ...s, name, updatedAt: env.slotMeta.updatedAt } : s,
-      );
-      saveIndex({ ...indexData, slots });
+      if (!name)   throw new Error("name is required");
+      const r = db.prepare("UPDATE save_slots SET name = ?, updated_at = ? WHERE slot_id = ?")
+        .run(name, new Date().toISOString(), slotId);
+      if (r.changes === 0) throw new Error("slot not found");
       return { ok: true };
     } catch (e) {
       return { ok: false, error: String(e?.message ?? e) };
+    }
+  });
+
+  // ── 커리어 히스토리 조회 (신규) ──────────────────────────────
+  ipcMain.handle("stats:queryCareerHistory", (_event, payload) => {
+    try {
+      const slotId  = String(payload?.slotId  ?? DEFAULT_SLOT_ID);
+      const npcId   = payload?.npcId   ?? null;
+      const year    = payload?.year    ?? null;
+      const limit   = Math.min(500, Math.max(1, Number(payload?.limit ?? 200)));
+
+      let sql = "SELECT npc_id, npc_name, year, league_id, team_id, stat_line FROM npc_career_history WHERE slot_id = ?";
+      const params = [slotId];
+      if (npcId)  { sql += " AND npc_id = ?";  params.push(npcId); }
+      if (year)   { sql += " AND year = ?";     params.push(year); }
+      sql += " ORDER BY year DESC LIMIT ?";
+      params.push(limit);
+
+      return db.prepare(sql).all(...params).map((r) => ({
+        npcId:    r.npc_id,
+        name:     r.npc_name,
+        year:     r.year,
+        leagueId: r.league_id,
+        teamId:   r.team_id,
+        statLine: r.stat_line,
+      }));
+    } catch (e) {
+      console.error("[stats:queryCareerHistory] 오류:", e);
+      return [];
     }
   });
 
