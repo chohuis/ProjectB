@@ -649,10 +649,15 @@ function createMasterStore() {
   }
 
   async function loadEntities(leagueId: string) {
-    const index = await fetchMaster<EntityIndex>("entities/players/_index.json");
-    if (!index?.byLeague) return;
-    const ids = index.byLeague[leagueId] ?? [];
-    const rows = await batchFetch<EntityRow>(ids, (id) => `entities/players/${id}.json`);
+    let rows: EntityRow[];
+    if (window.projectB?.masterLoadEntities) {
+      rows = (await window.projectB.masterLoadEntities(leagueId)) as EntityRow[];
+    } else {
+      const index = await fetchMaster<EntityIndex>("entities/players/_index.json");
+      if (!index?.byLeague) return;
+      const ids = index.byLeague[leagueId] ?? [];
+      rows = await batchFetch<EntityRow>(ids, (id) => `entities/players/${id}.json`);
+    }
     update((s) => {
       const existingIds = new Set(s.entities.map((e) => e.id));
       const fresh = rows.filter((r) => !existingIds.has(r.id));

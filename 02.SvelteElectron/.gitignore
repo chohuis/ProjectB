@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.vite/
+
+# 빌드 생성 DB (build:masterdb 결과물)
+resource/master.db
+resource/master.db-shm
+resource/master.db-wal
+
+# 사용자 저장 데이터
+userData/
+
+# 로컬 설정
+.env
+.env.local

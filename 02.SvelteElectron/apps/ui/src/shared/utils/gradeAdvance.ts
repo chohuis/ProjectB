@@ -5,7 +5,6 @@ import type {
   NamedNpcMeta,
   NpcCareerEntry,
   NpcSaveState,
-  NpcZone,
   PitchingAttributes,
   SchoolScenario,
 } from "../types/save";
@@ -80,7 +79,6 @@ function pickPosition(rand: () => number): string {
 // ── 핵심 변환: EntityRow → NpcSaveState ──────────────────────
 export function entityToNpcState(
   entity: EntityRow,
-  zone: NpcZone,
   seasonYear: number,
 ): NpcSaveState {
   const pl = entity.details.player;
@@ -92,7 +90,6 @@ export function entityToNpcState(
     playerType:   pl.playerType === "twoWay" ? "pitcher" : pl.playerType,
     position:     pl.position,
     grade,
-    zone,
     age:          entity.age,
     schoolId:     entity.schoolId ?? "",
     graduationYear: seasonYear + (3 - grade),
@@ -114,10 +111,10 @@ export function initHighSchoolNpcs(
   scenario: SchoolScenario,
   seasonYear: number,
 ): NpcSaveState[] {
-  const zone0 = new Set(scenario.initialZone0Npcs);
+  void scenario;
   return entities
     .filter(e => e.role === "player" && e.leagueId === "LEAGUE_HIGHSCHOOL")
-    .map(e => entityToNpcState(e, zone0.has(e.id) ? 0 : 1, seasonYear));
+    .map(e => entityToNpcState(e, seasonYear));
 }
 
 // ── 시즌 종료: 학년 진급 + 졸업 처리 ─────────────────────────
@@ -180,7 +177,7 @@ export function generateFreshmenNpcs(
   // 명명 NPC Grade 1 먼저 삽입
   for (const meta of namedGrade1) {
     const entity = namedEntities.find(e => e.id === meta.npcId);
-    if (entity) result.push(entityToNpcState(entity, 1, seasonYear));
+    if (entity) result.push(entityToNpcState(entity, seasonYear));
   }
 
   // 벌크 생성
@@ -203,7 +200,6 @@ export function generateFreshmenNpcs(
       playerType:    isSP ? "pitcher" : "batter",
       position:      isSP ? "SP" : pickPosition(rand),
       grade:         1,
-      zone:          1,
       age:           16,
       schoolId:      school.id,
       graduationYear: seasonYear + 2,

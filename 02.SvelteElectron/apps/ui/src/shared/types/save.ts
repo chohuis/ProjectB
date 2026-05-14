@@ -361,7 +361,6 @@ export interface ProtagonistDraftOutcome {
 }
 
 // ── 드래프트 타입 ────────────────────────────────────────────
-export type NpcZone = 0 | 1 | 2 | 3;
 export type MilitaryStatus = "미필" | "현역" | "군필" | "면제";
 export type NpcCareerStatus = "active" | "military" | "injured" | "retired";
 
@@ -380,11 +379,6 @@ export interface NpcSaveState {
   playerType: PlayerType;
   position: string;
 
-  // ── NPC Zone & 런타임 상태 ────────────────────────────────────
-  zone: NpcZone;
-  zoneDowngradedAt?: number;  // Zone 3 전환된 시즌 연도
-
-  // Zone 분류
   age: number;
   grade?: 1 | 2 | 3;  // 고교/대학 재학 중일 때만 존재
   schoolId: string;
@@ -403,9 +397,7 @@ export interface NpcSaveState {
   // 군적
   pitching?: PitchingAttributes;
   batting?: BattingAttributes;
-  developmentRate: number;  // 경량 시뮬 성장계수
-
-  // 능력치 (Zone 0/1: 전체, Zone 2/3: 마지막 스냅샷)
+  developmentRate: number;
   careerHistory: NpcCareerEntry[];
   achievements: string[];  // ["2025 신인상", "2027 MVP"]
 }

@@ -25,6 +25,7 @@ contextBridge.exposeInMainWorld("projectB", {
   // ── 마스터 데이터 (패키징 환경 fallback) ────────────────────────────────
   masterFetch: (relPath) => ipcRenderer.invoke("master:fetch", relPath),
   masterSave: (payload) => ipcRenderer.invoke("master:save", payload),
+  masterLoadEntities: (leagueId) => ipcRenderer.invoke("master:loadEntities", leagueId),
 
   // ── 매치 엔진 튜닝 (관리자 도구) ───────────────────────────────────────
   tuningLoad: () => ipcRenderer.invoke("tuning:load"),
