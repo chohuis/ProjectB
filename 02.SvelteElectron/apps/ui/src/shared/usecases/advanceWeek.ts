@@ -343,7 +343,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       nextWeek,
       s.seasonYear,
     );
-    seasonStore.simulateBackgroundLeagues(nextWeek, g.protagonist.leagueId, get(masterStore).entities);
+    await seasonStore.simulateBackgroundLeaguesAsync(nextWeek, g.protagonist.leagueId, get(masterStore).entities);
     gameStore.save();
     seasonStore.save();
     return {
@@ -791,8 +791,8 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     gameStore.applyAchievementCheck(achResult);
   }
 
-  // ── L1: 배경 리그 시뮬레이션 ──────────────────────────────────
-  seasonStore.simulateBackgroundLeagues(nextWeek, g.protagonist.leagueId, get(masterStore).entities);
+  // ── L5: 배경 리그 시뮬레이션 (Worker 비동기) ─────────────────
+  await seasonStore.simulateBackgroundLeaguesAsync(nextWeek, g.protagonist.leagueId, get(masterStore).entities);
 
   gameStore.save();
   seasonStore.save();

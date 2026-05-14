@@ -21,6 +21,54 @@ import {
   makeStandings,
 } from "../utils/leagueScheduler";
 import { simulateGame } from "../utils/gameSimulator";
+import type { SimWorkerRequest, SimWorkerResponse } from "../workers/simWorker";
+
+// ── Web Worker 브리지 (싱글톤) ────────────────────────────────
+let _simWorker: Worker | null = null;
+let _reqId = 0;
+const _pending = new Map<number, (r: { id: string; result: MatchResult }[]) => void>();
+
+function getSimWorker(): Worker | null {
+  if (typeof Worker === "undefined") return null;
+  if (!_simWorker) {
+    try {
+      _simWorker = new Worker(
+        new URL("../workers/simWorker.ts", import.meta.url),
+        { type: "module" },
+      );
+      _simWorker.onmessage = (e: MessageEvent<SimWorkerResponse>) => {
+        const { reqId, results } = e.data;
+        _pending.get(reqId)?.(results);
+        _pending.delete(reqId);
+      };
+      _simWorker.onerror = (err) => {
+        console.warn("[simWorker] error, will fallback to sync", err);
+        _simWorker = null;
+      };
+    } catch {
+      return null;
+    }
+  }
+  return _simWorker;
+}
+
+function runInWorker(
+  games: SimWorkerRequest["games"],
+  entities: EntityRow[],
+): Promise<{ id: string; result: MatchResult }[]> {
+  const worker = getSimWorker();
+  if (!worker) {
+    // 동기 폴백
+    return Promise.resolve(
+      games.map((g) => ({ id: g.id, result: simulateGame(g.homeTeamId, g.awayTeamId, entities) })),
+    );
+  }
+  return new Promise((resolve) => {
+    const reqId = _reqId++;
+    _pending.set(reqId, resolve);
+    worker.postMessage({ reqId, games, entities } satisfies SimWorkerRequest);
+  });
+}
 
 // ── seasonStore 내부 상태 ─────────────────────────────────────
 export type SeasonStoreState = SaveSeason;
@@ -206,6 +254,57 @@ function createSeasonStore() {
         }
 
         return { ...s, leagueSchedules: nextSchedules, leagueState: nextState };
+      });
+    },
+
+    // L5: 배경 리그 시뮬레이션 — Web Worker 비동기 버전
+    async simulateBackgroundLeaguesAsync(
+      week: number,
+      protagonistLeagueId: string,
+      entities: EntityRow[],
+    ): Promise<void> {
+      const s = get({ subscribe });
+
+      // 이번 주 시뮬레이션할 경기 수집
+      const batch: { leagueId: string; id: string; homeTeamId: string; awayTeamId: string }[] = [];
+      for (const [lid, schedule] of Object.entries(s.leagueSchedules)) {
+        if (lid === protagonistLeagueId) continue;
+        for (const e of schedule) {
+          if (e.week === week && !e.result) {
+            batch.push({ leagueId: lid, id: e.id, homeTeamId: e.homeTeamId, awayTeamId: e.awayTeamId });
+          }
+        }
+      }
+      if (batch.length === 0) return;
+
+      // Worker(또는 동기 폴백)로 전체 경기 병렬 처리
+      const simmed = await runInWorker(batch, entities);
+      const resultMap = new Map(simmed.map((r) => [r.id, r.result]));
+
+      // 결과를 스토어에 동기 반영
+      update((st) => {
+        const nextSchedules = { ...st.leagueSchedules };
+        const nextState = { ...st.leagueState };
+
+        for (const item of batch) {
+          const res = resultMap.get(item.id);
+          if (!res) continue;
+          const lid = item.leagueId;
+
+          // 스케줄에 결과 기록
+          nextSchedules[lid] = (nextSchedules[lid] ?? []).map((e) =>
+            e.id === item.id ? { ...e, result: res } : e,
+          );
+
+          // 순위 + 스탯 업데이트
+          const cur = nextState[lid] ?? { standings: makeStandings(ALL_TEAMS_BY_LEAGUE[lid] ?? []), stats: {} };
+          nextState[lid] = {
+            standings: updateStandings(cur.standings, res),
+            stats: accumulateStats(cur.stats, res.playerLines),
+          };
+        }
+
+        return { ...st, leagueSchedules: nextSchedules, leagueState: nextState };
       });
     },
 
