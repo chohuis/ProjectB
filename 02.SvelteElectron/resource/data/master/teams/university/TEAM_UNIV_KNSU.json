@@ -1,0 +1,40 @@
+{
+  "teamId": "TEAM_UNIV_KNSU",
+  "name": "한국체육대학교",
+  "nameEn": "Korea National Sport University",
+  "city": "서울",
+  "cityEn": "Seoul",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "colors": [
+    "#003087",
+    "#ffffff"
+  ],
+  "stadium": "한국체육대 야구장",
+  "roster": {
+    "active": [
+      "PLY_00161",
+      "PLY_00162",
+      "PLY_00163",
+      "PLY_00164",
+      "PLY_00165",
+      "PLY_00166",
+      "PLY_00167",
+      "PLY_00168",
+      "PLY_00169",
+      "PLY_00170",
+      "PLY_00171",
+      "PLY_00172",
+      "PLY_00173",
+      "PLY_00174",
+      "PLY_00175",
+      "PLY_00176",
+      "PLY_00177",
+      "PLY_00178",
+      "PLY_00179",
+      "PLY_00180"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

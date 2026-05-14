@@ -1,0 +1,40 @@
+{
+  "teamId": "TEAM_UNIV_KNU",
+  "name": "경북대학교",
+  "nameEn": "Kyungpook National University",
+  "city": "대구",
+  "cityEn": "Daegu",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "colors": [
+    "#003087",
+    "#e8b800"
+  ],
+  "stadium": "경북대 야구장",
+  "roster": {
+    "active": [
+      "PLY_00181",
+      "PLY_00182",
+      "PLY_00183",
+      "PLY_00184",
+      "PLY_00185",
+      "PLY_00186",
+      "PLY_00187",
+      "PLY_00188",
+      "PLY_00189",
+      "PLY_00190",
+      "PLY_00191",
+      "PLY_00192",
+      "PLY_00193",
+      "PLY_00194",
+      "PLY_00195",
+      "PLY_00196",
+      "PLY_00197",
+      "PLY_00198",
+      "PLY_00199",
+      "PLY_00200"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "name": "여수 쇼어",
+  "nameEn": "Yeosu Shore",
+  "city": "여수",
+  "cityEn": "Yeosu",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "selectable": false,
+  "colors": [
+    "#006064",
+    "#ffffff"
+  ],
+  "stadium": "여수 쇼어 고교 야구장",
+  "roster": {
+    "active": [
+      "PLY_01622",
+      "PLY_01623",
+      "PLY_01624",
+      "PLY_01625",
+      "PLY_01626",
+      "PLY_01627",
+      "PLY_01628",
+      "PLY_01629",
+      "PLY_01630",
+      "PLY_01631",
+      "PLY_01632",
+      "PLY_01633",
+      "PLY_01634",
+      "PLY_01635",
+      "PLY_01636",
+      "PLY_01637",
+      "PLY_01638",
+      "PLY_01639",
+      "PLY_01640",
+      "PLY_01641",
+      "PLY_01642",
+      "PLY_01643",
+      "PLY_01644",
+      "PLY_01645",
+      "PLY_01646",
+      "PLY_01647",
+      "PLY_01648",
+      "PLY_01649",
+      "PLY_01650",
+      "PLY_01651"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

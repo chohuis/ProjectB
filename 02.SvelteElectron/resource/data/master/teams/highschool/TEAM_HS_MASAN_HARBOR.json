@@ -1,0 +1,51 @@
+{
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "name": "마산 하버",
+  "nameEn": "Masan Harbor",
+  "city": "마산",
+  "cityEn": "Masan",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "selectable": false,
+  "colors": [
+    "#1a237e",
+    "#ffab00"
+  ],
+  "stadium": "마산 하버 고교 야구장",
+  "roster": {
+    "active": [
+      "PLY_01742",
+      "PLY_01743",
+      "PLY_01744",
+      "PLY_01745",
+      "PLY_01746",
+      "PLY_01747",
+      "PLY_01748",
+      "PLY_01749",
+      "PLY_01750",
+      "PLY_01751",
+      "PLY_01752",
+      "PLY_01753",
+      "PLY_01754",
+      "PLY_01755",
+      "PLY_01756",
+      "PLY_01757",
+      "PLY_01758",
+      "PLY_01759",
+      "PLY_01760",
+      "PLY_01761",
+      "PLY_01762",
+      "PLY_01763",
+      "PLY_01764",
+      "PLY_01765",
+      "PLY_01766",
+      "PLY_01767",
+      "PLY_01768",
+      "PLY_01769",
+      "PLY_01770",
+      "PLY_01771"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

@@ -8,9 +8,38 @@
     "TEAM_HS_DAEJEON_RISE",
     "TEAM_HS_INCHEON_HARBOR",
     "TEAM_HS_ULSAN_CHARGE",
-    "TEAM_HS_SUWON_EDGE"
+    "TEAM_HS_SUWON_EDGE",
+    "TEAM_HS_YEOSU_SHORE",
+    "TEAM_HS_CHUNCHEON_HIGHLAND",
+    "TEAM_HS_JEJU_WIND",
+    "TEAM_HS_GANGWON_PEAK",
+    "TEAM_HS_MASAN_HARBOR",
+    "TEAM_HS_JECHEON_RIDGE",
+    "TEAM_HS_GOYANG_ARROW",
+    "TEAM_HS_SUNCHEON_BAY"
   ],
   "archivedTeamIds": [],
   "npcTeamCount": 40,
-  "gradeSystem": "9\ub4f1\uae09\uc81c"
+  "gradeSystem": "9등급제",
+  "selectableTeamIds": [
+    "TEAM_HS_SEOUL_INNOVATION",
+    "TEAM_HS_BUSAN_WAVE",
+    "TEAM_HS_DAEGU_HEAT",
+    "TEAM_HS_GWANGJU_VISION",
+    "TEAM_HS_DAEJEON_RISE",
+    "TEAM_HS_INCHEON_HARBOR",
+    "TEAM_HS_ULSAN_CHARGE",
+    "TEAM_HS_SUWON_EDGE"
+  ],
+  "npcOnlyTeamIds": [
+    "TEAM_HS_YEOSU_SHORE",
+    "TEAM_HS_CHUNCHEON_HIGHLAND",
+    "TEAM_HS_JEJU_WIND",
+    "TEAM_HS_GANGWON_PEAK",
+    "TEAM_HS_MASAN_HARBOR",
+    "TEAM_HS_JECHEON_RIDGE",
+    "TEAM_HS_GOYANG_ARROW",
+    "TEAM_HS_SUNCHEON_BAY"
+  ],
+  "teamCount": 16
 }

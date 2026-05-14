@@ -1,0 +1,40 @@
+{
+  "teamId": "TEAM_IND_GWANGJU_STORM",
+  "name": "광주 스톰",
+  "nameEn": "Gwangju Storm",
+  "city": "광주",
+  "cityEn": "Gwangju",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "colors": [
+    "#1b5e20",
+    "#ffeb3b"
+  ],
+  "stadium": "광주 독립야구장",
+  "roster": {
+    "active": [
+      "PLY_00361",
+      "PLY_00362",
+      "PLY_00363",
+      "PLY_00364",
+      "PLY_00365",
+      "PLY_00366",
+      "PLY_00367",
+      "PLY_00368",
+      "PLY_00369",
+      "PLY_00370",
+      "PLY_00371",
+      "PLY_00372",
+      "PLY_00373",
+      "PLY_00374",
+      "PLY_00375",
+      "PLY_00376",
+      "PLY_00377",
+      "PLY_00378",
+      "PLY_00379",
+      "PLY_00380"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

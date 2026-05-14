@@ -2,6 +2,7 @@ import { get } from "svelte/store";
 import { seasonStore } from "../stores/season";
 import { gameStore } from "../stores/game";
 import { masterStore } from "../stores/master";
+import { simulateGame } from "../utils/gameSimulator";
 import { calcTrainingGrowth } from "../utils/growthEngine";
 import { runEventEngine } from "../utils/eventEngine";
 import { applyWeeklyStudy, calcExamResult, getUniversityEffBonus, getUniversityExamGainMult } from "../utils/academicsEngine";
@@ -79,6 +80,10 @@ function makeExamMessage(week: number, subject: string, body: string): MessageIt
 }
 
 function simulateNpcGame(homeTeamId: string, awayTeamId: string): MatchResult {
+  const entities = get(masterStore).entities;
+  if (entities.length > 0) {
+    return simulateGame(homeTeamId, awayTeamId, entities);
+  }
   const score = () => Math.max(0, Math.round((Math.random() + Math.random() + Math.random() - 1.5) * 4));
   let h = score();
   let a = score();
@@ -338,6 +343,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       nextWeek,
       s.seasonYear,
     );
+    seasonStore.simulateBackgroundLeagues(nextWeek, g.protagonist.leagueId, get(masterStore).entities);
     gameStore.save();
     seasonStore.save();
     return {
@@ -784,6 +790,9 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
   if (achResult.newlyUnlocked.length > 0 || achResult.updatedRuntime.some((r, i) => r.progress !== gFinal.achievements[i]?.progress)) {
     gameStore.applyAchievementCheck(achResult);
   }
+
+  // ── L1: 배경 리그 시뮬레이션 ──────────────────────────────────
+  seasonStore.simulateBackgroundLeagues(nextWeek, g.protagonist.leagueId, get(masterStore).entities);
 
   gameStore.save();
   seasonStore.save();

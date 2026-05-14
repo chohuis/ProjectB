@@ -1,0 +1,40 @@
+{
+  "teamId": "TEAM_IND_INCHEON_ORCAS",
+  "name": "인천 오르카스",
+  "nameEn": "Incheon Orcas",
+  "city": "인천",
+  "cityEn": "Incheon",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "colors": [
+    "#006064",
+    "#ffffff"
+  ],
+  "stadium": "인천 독립야구장",
+  "roster": {
+    "active": [
+      "PLY_00401",
+      "PLY_00402",
+      "PLY_00403",
+      "PLY_00404",
+      "PLY_00405",
+      "PLY_00406",
+      "PLY_00407",
+      "PLY_00408",
+      "PLY_00409",
+      "PLY_00410",
+      "PLY_00411",
+      "PLY_00412",
+      "PLY_00413",
+      "PLY_00414",
+      "PLY_00415",
+      "PLY_00416",
+      "PLY_00417",
+      "PLY_00418",
+      "PLY_00419",
+      "PLY_00420"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "teamId": "TEAM_UNIV_CHUNGBUK",
+  "name": "충북대학교",
+  "nameEn": "Chungbuk National University",
+  "city": "청주",
+  "cityEn": "Cheongju",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "colors": [
+    "#004080",
+    "#ffffff"
+  ],
+  "stadium": "충북대 야구장",
+  "roster": {
+    "active": [
+      "PLY_00261",
+      "PLY_00262",
+      "PLY_00263",
+      "PLY_00264",
+      "PLY_00265",
+      "PLY_00266",
+      "PLY_00267",
+      "PLY_00268",
+      "PLY_00269",
+      "PLY_00270",
+      "PLY_00271",
+      "PLY_00272",
+      "PLY_00273",
+      "PLY_00274",
+      "PLY_00275",
+      "PLY_00276",
+      "PLY_00277",
+      "PLY_00278",
+      "PLY_00279",
+      "PLY_00280"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

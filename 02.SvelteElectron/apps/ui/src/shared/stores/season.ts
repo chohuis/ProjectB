@@ -1,5 +1,6 @@
 import { derived, get, writable } from "svelte/store";
 import type {
+  LeagueSeasonState,
   MatchResult,
   PendingAction,
   PlayerGameLine,
@@ -8,7 +9,18 @@ import type {
   Standing,
 } from "../types/season";
 import type { BatterSeasonStats, PlayerSeasonStats, PitcherSeasonStats } from "../types/save";
+import type { EntityRow } from "../stores/master";
 import { calcAvg, calcEra, calcOps, calcWhip, makeEmptySeason, SAVE_SEASON_VERSION } from "../types/season";
+import {
+  ALL_TEAMS_BY_LEAGUE,
+  DEFAULT_LEAGUE_CONFIGS,
+  generateAllLeagueSchedules,
+  generateHsSchedule,
+  HS_GROUP_A,
+  HS_GROUP_B,
+  makeStandings,
+} from "../utils/leagueScheduler";
+import { simulateGame } from "../utils/gameSimulator";
 
 // ── seasonStore 내부 상태 ─────────────────────────────────────
 export type SeasonStoreState = SaveSeason;
@@ -27,8 +39,16 @@ function createSeasonStore() {
     // 앱 시작 시 save_season.json에서 복원
     async load() {
       try {
-        const saved = await window.projectB?.seasonLoad?.();
-        if (saved) set(saved);
+        const raw = await window.projectB?.seasonLoad?.();
+        if (raw) {
+          const saved = raw as SaveSeason;
+          // L1 필드 마이그레이션 (구버전 세이브 호환)
+          set({
+            ...saved,
+            leagueSchedules: saved.leagueSchedules ?? {},
+            leagueState:     saved.leagueState     ?? {},
+          });
+        }
       } catch (e) {
         console.warn("[seasonStore] load failed, using defaults", e);
       }
@@ -123,6 +143,100 @@ function createSeasonStore() {
     clearTriggeredEvents() {
       update((s) => ({ ...s, triggeredEvents: {} }));
     },
+
+    // ── L1: 멀티리그 초기화 ────────────────────────────────────
+    initAllLeagues(seasonYear: number, protagonistTeamId: string) {
+      // HS 스케줄 (그룹 분리)
+      const hsSchedule = generateHsSchedule(HS_GROUP_A, HS_GROUP_B, protagonistTeamId);
+
+      // 나머지 리그 스케줄
+      const otherSchedules = generateAllLeagueSchedules(
+        DEFAULT_LEAGUE_CONFIGS.map((c) => ({ ...c })),
+        protagonistTeamId,
+      );
+
+      const leagueSchedules: Record<string, ScheduleEntry[]> = {
+        LEAGUE_HIGHSCHOOL: hsSchedule,
+        ...otherSchedules,
+      };
+
+      // 리그별 초기 순위표
+      const leagueState: Record<string, LeagueSeasonState> = {};
+      for (const [lid, teams] of Object.entries(ALL_TEAMS_BY_LEAGUE)) {
+        leagueState[lid] = { standings: makeStandings(teams), stats: {} };
+      }
+
+      update((s) => ({
+        ...s,
+        seasonYear,
+        leagueSchedules,
+        leagueState,
+      }));
+    },
+
+    // L1: 해당 주차 모든 NPC 리그 경기 시뮬레이션 (protagonist 리그 제외)
+    simulateBackgroundLeagues(week: number, protagonistLeagueId: string, entities?: EntityRow[]) {
+      update((s) => {
+        const nextState = { ...s.leagueState };
+        const nextSchedules = { ...s.leagueSchedules };
+
+        for (const [lid, schedule] of Object.entries(nextSchedules)) {
+          if (lid === protagonistLeagueId) continue;
+          const weekGames = schedule.filter((e) => e.week === week && !e.result);
+          if (weekGames.length === 0) continue;
+
+          let lState = nextState[lid] ?? { standings: makeStandings(ALL_TEAMS_BY_LEAGUE[lid] ?? []), stats: {} };
+          const updatedSchedule = [...schedule];
+
+          for (const game of weekGames) {
+            const result = entities && entities.length > 0
+              ? simulateGame(game.homeTeamId, game.awayTeamId, entities)
+              : simpleNpcResult(game.homeTeamId, game.awayTeamId);
+            const idx = updatedSchedule.findIndex((e) => e.id === game.id);
+            if (idx >= 0) updatedSchedule[idx] = { ...game, result };
+            lState = { ...lState, standings: updateStandings(lState.standings, result) };
+          }
+
+          nextSchedules[lid] = updatedSchedule;
+          nextState[lid] = lState;
+        }
+
+        return { ...s, leagueSchedules: nextSchedules, leagueState: nextState };
+      });
+    },
+
+    // L1: 주인공 리그 경기 결과를 leagueState에도 동기화
+    syncProtagonistLeagueResult(leagueId: string, result: MatchResult) {
+      update((s) => {
+        const cur = s.leagueState[leagueId] ?? { standings: [], stats: {} };
+        return {
+          ...s,
+          leagueState: {
+            ...s.leagueState,
+            [leagueId]: { ...cur, standings: updateStandings(cur.standings, result) },
+          },
+        };
+      });
+    },
+
+    // L1: 특정 리그 순위표 조회 헬퍼
+    getLeagueStandings(leagueId: string): Standing[] {
+      return get({ subscribe }).leagueState[leagueId]?.standings ?? [];
+    },
+  };
+}
+
+// ── 간단한 NPC 경기 결과 생성 (Phase L3에서 교체 예정) ──────────
+function simpleNpcResult(homeTeamId: string, awayTeamId: string): MatchResult {
+  const score = () => Math.max(0, Math.round((Math.random() + Math.random() + Math.random() - 1.5) * 4));
+  let h = score();
+  let a = score();
+  if (h === a) { h > 0 ? h-- : a++; }
+  return {
+    homeScore: h, awayScore: a,
+    winnerId: h > a ? homeTeamId : awayTeamId,
+    loserId:  h > a ? awayTeamId : homeTeamId,
+    playerLines: [], events: [],
   };
 }
 

@@ -1,0 +1,40 @@
+{
+  "teamId": "TEAM_IND_BUSAN_TEMPEST",
+  "name": "부산 템페스트",
+  "nameEn": "Busan Tempest",
+  "city": "부산",
+  "cityEn": "Busan",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "colors": [
+    "#006064",
+    "#ff6f00"
+  ],
+  "stadium": "부산 독립야구장",
+  "roster": {
+    "active": [
+      "PLY_00321",
+      "PLY_00322",
+      "PLY_00323",
+      "PLY_00324",
+      "PLY_00325",
+      "PLY_00326",
+      "PLY_00327",
+      "PLY_00328",
+      "PLY_00329",
+      "PLY_00330",
+      "PLY_00331",
+      "PLY_00332",
+      "PLY_00333",
+      "PLY_00334",
+      "PLY_00335",
+      "PLY_00336",
+      "PLY_00337",
+      "PLY_00338",
+      "PLY_00339",
+      "PLY_00340"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

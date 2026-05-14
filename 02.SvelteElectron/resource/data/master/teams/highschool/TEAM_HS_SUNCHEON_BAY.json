@@ -1,0 +1,51 @@
+{
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "name": "순천 베이",
+  "nameEn": "Suncheon Bay",
+  "city": "순천",
+  "cityEn": "Suncheon",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "selectable": false,
+  "colors": [
+    "#004d40",
+    "#a5d6a7"
+  ],
+  "stadium": "순천 베이 고교 야구장",
+  "roster": {
+    "active": [
+      "PLY_01832",
+      "PLY_01833",
+      "PLY_01834",
+      "PLY_01835",
+      "PLY_01836",
+      "PLY_01837",
+      "PLY_01838",
+      "PLY_01839",
+      "PLY_01840",
+      "PLY_01841",
+      "PLY_01842",
+      "PLY_01843",
+      "PLY_01844",
+      "PLY_01845",
+      "PLY_01846",
+      "PLY_01847",
+      "PLY_01848",
+      "PLY_01849",
+      "PLY_01850",
+      "PLY_01851",
+      "PLY_01852",
+      "PLY_01853",
+      "PLY_01854",
+      "PLY_01855",
+      "PLY_01856",
+      "PLY_01857",
+      "PLY_01858",
+      "PLY_01859",
+      "PLY_01860",
+      "PLY_01861"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

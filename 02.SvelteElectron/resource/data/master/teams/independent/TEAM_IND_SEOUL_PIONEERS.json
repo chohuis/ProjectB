@@ -1,0 +1,40 @@
+{
+  "teamId": "TEAM_IND_SEOUL_PIONEERS",
+  "name": "서울 파이오니어스",
+  "nameEn": "Seoul Pioneers",
+  "city": "서울",
+  "cityEn": "Seoul",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "colors": [
+    "#0d47a1",
+    "#ffffff"
+  ],
+  "stadium": "서울 독립야구장",
+  "roster": {
+    "active": [
+      "PLY_00301",
+      "PLY_00302",
+      "PLY_00303",
+      "PLY_00304",
+      "PLY_00305",
+      "PLY_00306",
+      "PLY_00307",
+      "PLY_00308",
+      "PLY_00309",
+      "PLY_00310",
+      "PLY_00311",
+      "PLY_00312",
+      "PLY_00313",
+      "PLY_00314",
+      "PLY_00315",
+      "PLY_00316",
+      "PLY_00317",
+      "PLY_00318",
+      "PLY_00319",
+      "PLY_00320"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

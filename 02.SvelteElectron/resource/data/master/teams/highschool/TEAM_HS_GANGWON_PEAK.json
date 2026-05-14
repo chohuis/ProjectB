@@ -1,0 +1,51 @@
+{
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "name": "강원 피크",
+  "nameEn": "Gangwon Peak",
+  "city": "강원",
+  "cityEn": "Gangwon",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "selectable": false,
+  "colors": [
+    "#4e342e",
+    "#ffffff"
+  ],
+  "stadium": "강원 피크 고교 야구장",
+  "roster": {
+    "active": [
+      "PLY_01712",
+      "PLY_01713",
+      "PLY_01714",
+      "PLY_01715",
+      "PLY_01716",
+      "PLY_01717",
+      "PLY_01718",
+      "PLY_01719",
+      "PLY_01720",
+      "PLY_01721",
+      "PLY_01722",
+      "PLY_01723",
+      "PLY_01724",
+      "PLY_01725",
+      "PLY_01726",
+      "PLY_01727",
+      "PLY_01728",
+      "PLY_01729",
+      "PLY_01730",
+      "PLY_01731",
+      "PLY_01732",
+      "PLY_01733",
+      "PLY_01734",
+      "PLY_01735",
+      "PLY_01736",
+      "PLY_01737",
+      "PLY_01738",
+      "PLY_01739",
+      "PLY_01740",
+      "PLY_01741"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "name": "서울 이노베이션",
+  "nameEn": "Seoul Innovation",
+  "city": "서울",
+  "cityEn": "Seoul",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "selectable": true,
+  "colors": [
+    "#1565c0",
+    "#ffffff"
+  ],
+  "stadium": "서울 이노베이션 고교 야구장",
+  "roster": {
+    "active": [
+      "PLY_00001",
+      "PLY_00002",
+      "PLY_00003",
+      "PLY_00004",
+      "PLY_00005",
+      "PLY_00006",
+      "PLY_00007",
+      "PLY_00008",
+      "PLY_00009",
+      "PLY_00010",
+      "PLY_00011",
+      "PLY_00012",
+      "PLY_00013",
+      "PLY_00014",
+      "PLY_00015",
+      "PLY_00016",
+      "PLY_00017",
+      "PLY_00018",
+      "PLY_00019",
+      "PLY_00020",
+      "PLY_01542",
+      "PLY_01543",
+      "PLY_01544",
+      "PLY_01545",
+      "PLY_01546",
+      "PLY_01547",
+      "PLY_01548",
+      "PLY_01549",
+      "PLY_01550",
+      "PLY_01551"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "name": "수원 엣지",
+  "nameEn": "Suwon Edge",
+  "city": "수원",
+  "cityEn": "Suwon",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "selectable": true,
+  "colors": [
+    "#37474f",
+    "#cfd8dc"
+  ],
+  "stadium": "수원 엣지 고교 야구장",
+  "roster": {
+    "active": [
+      "PLY_00141",
+      "PLY_00142",
+      "PLY_00143",
+      "PLY_00144",
+      "PLY_00145",
+      "PLY_00146",
+      "PLY_00147",
+      "PLY_00148",
+      "PLY_00149",
+      "PLY_00150",
+      "PLY_00151",
+      "PLY_00152",
+      "PLY_00153",
+      "PLY_00154",
+      "PLY_00155",
+      "PLY_00156",
+      "PLY_00157",
+      "PLY_00158",
+      "PLY_00159",
+      "PLY_00160",
+      "PLY_01612",
+      "PLY_01613",
+      "PLY_01614",
+      "PLY_01615",
+      "PLY_01616",
+      "PLY_01617",
+      "PLY_01618",
+      "PLY_01619",
+      "PLY_01620",
+      "PLY_01621"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

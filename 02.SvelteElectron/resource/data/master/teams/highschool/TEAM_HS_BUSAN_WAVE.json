@@ -1,0 +1,51 @@
+{
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "name": "부산 웨이브",
+  "nameEn": "Busan Wave",
+  "city": "부산",
+  "cityEn": "Busan",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "selectable": true,
+  "colors": [
+    "#00838f",
+    "#ffffff"
+  ],
+  "stadium": "부산 웨이브 고교 야구장",
+  "roster": {
+    "active": [
+      "PLY_00021",
+      "PLY_00022",
+      "PLY_00023",
+      "PLY_00024",
+      "PLY_00025",
+      "PLY_00026",
+      "PLY_00027",
+      "PLY_00028",
+      "PLY_00029",
+      "PLY_00030",
+      "PLY_00031",
+      "PLY_00032",
+      "PLY_00033",
+      "PLY_00034",
+      "PLY_00035",
+      "PLY_00036",
+      "PLY_00037",
+      "PLY_00038",
+      "PLY_00039",
+      "PLY_00040",
+      "PLY_01552",
+      "PLY_01553",
+      "PLY_01554",
+      "PLY_01555",
+      "PLY_01556",
+      "PLY_01557",
+      "PLY_01558",
+      "PLY_01559",
+      "PLY_01560",
+      "PLY_01561"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

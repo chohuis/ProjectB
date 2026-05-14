@@ -1,0 +1,51 @@
+{
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "name": "인천 하버",
+  "nameEn": "Incheon Harbor",
+  "city": "인천",
+  "cityEn": "Incheon",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "selectable": true,
+  "colors": [
+    "#01579b",
+    "#f57f17"
+  ],
+  "stadium": "인천 하버 고교 야구장",
+  "roster": {
+    "active": [
+      "PLY_00101",
+      "PLY_00102",
+      "PLY_00103",
+      "PLY_00104",
+      "PLY_00105",
+      "PLY_00106",
+      "PLY_00107",
+      "PLY_00108",
+      "PLY_00109",
+      "PLY_00110",
+      "PLY_00111",
+      "PLY_00112",
+      "PLY_00113",
+      "PLY_00114",
+      "PLY_00115",
+      "PLY_00116",
+      "PLY_00117",
+      "PLY_00118",
+      "PLY_00119",
+      "PLY_00120",
+      "PLY_01592",
+      "PLY_01593",
+      "PLY_01594",
+      "PLY_01595",
+      "PLY_01596",
+      "PLY_01597",
+      "PLY_01598",
+      "PLY_01599",
+      "PLY_01600",
+      "PLY_01601"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

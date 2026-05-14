@@ -1,0 +1,40 @@
+{
+  "teamId": "TEAM_UNIV_DONGGUK",
+  "name": "동국대학교",
+  "nameEn": "Dongguk University",
+  "city": "서울",
+  "cityEn": "Seoul",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "colors": [
+    "#8b4513",
+    "#ffffff"
+  ],
+  "stadium": "동국대 야구장",
+  "roster": {
+    "active": [
+      "PLY_00281",
+      "PLY_00282",
+      "PLY_00283",
+      "PLY_00284",
+      "PLY_00285",
+      "PLY_00286",
+      "PLY_00287",
+      "PLY_00288",
+      "PLY_00289",
+      "PLY_00290",
+      "PLY_00291",
+      "PLY_00292",
+      "PLY_00293",
+      "PLY_00294",
+      "PLY_00295",
+      "PLY_00296",
+      "PLY_00297",
+      "PLY_00298",
+      "PLY_00299",
+      "PLY_00300"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

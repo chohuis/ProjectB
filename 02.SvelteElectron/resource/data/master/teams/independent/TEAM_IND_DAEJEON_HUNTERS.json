@@ -1,0 +1,40 @@
+{
+  "teamId": "TEAM_IND_DAEJEON_HUNTERS",
+  "name": "대전 헌터스",
+  "nameEn": "Daejeon Hunters",
+  "city": "대전",
+  "cityEn": "Daejeon",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "colors": [
+    "#4a148c",
+    "#ffcc02"
+  ],
+  "stadium": "대전 독립야구장",
+  "roster": {
+    "active": [
+      "PLY_00381",
+      "PLY_00382",
+      "PLY_00383",
+      "PLY_00384",
+      "PLY_00385",
+      "PLY_00386",
+      "PLY_00387",
+      "PLY_00388",
+      "PLY_00389",
+      "PLY_00390",
+      "PLY_00391",
+      "PLY_00392",
+      "PLY_00393",
+      "PLY_00394",
+      "PLY_00395",
+      "PLY_00396",
+      "PLY_00397",
+      "PLY_00398",
+      "PLY_00399",
+      "PLY_00400"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

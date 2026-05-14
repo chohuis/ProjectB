@@ -1,0 +1,51 @@
+{
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "name": "광주 비전",
+  "nameEn": "Gwangju Vision",
+  "city": "광주",
+  "cityEn": "Gwangju",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "selectable": true,
+  "colors": [
+    "#1b5e20",
+    "#ffd600"
+  ],
+  "stadium": "광주 비전 고교 야구장",
+  "roster": {
+    "active": [
+      "PLY_00061",
+      "PLY_00062",
+      "PLY_00063",
+      "PLY_00064",
+      "PLY_00065",
+      "PLY_00066",
+      "PLY_00067",
+      "PLY_00068",
+      "PLY_00069",
+      "PLY_00070",
+      "PLY_00071",
+      "PLY_00072",
+      "PLY_00073",
+      "PLY_00074",
+      "PLY_00075",
+      "PLY_00076",
+      "PLY_00077",
+      "PLY_00078",
+      "PLY_00079",
+      "PLY_00080",
+      "PLY_01572",
+      "PLY_01573",
+      "PLY_01574",
+      "PLY_01575",
+      "PLY_01576",
+      "PLY_01577",
+      "PLY_01578",
+      "PLY_01579",
+      "PLY_01580",
+      "PLY_01581"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

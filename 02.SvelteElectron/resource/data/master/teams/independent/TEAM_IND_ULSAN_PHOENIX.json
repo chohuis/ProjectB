@@ -1,0 +1,40 @@
+{
+  "teamId": "TEAM_IND_ULSAN_PHOENIX",
+  "name": "울산 피닉스",
+  "nameEn": "Ulsan Phoenix",
+  "city": "울산",
+  "cityEn": "Ulsan",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "colors": [
+    "#e65100",
+    "#ffd600"
+  ],
+  "stadium": "울산 독립야구장",
+  "roster": {
+    "active": [
+      "PLY_00441",
+      "PLY_00442",
+      "PLY_00443",
+      "PLY_00444",
+      "PLY_00445",
+      "PLY_00446",
+      "PLY_00447",
+      "PLY_00448",
+      "PLY_00449",
+      "PLY_00450",
+      "PLY_00451",
+      "PLY_00452",
+      "PLY_00453",
+      "PLY_00454",
+      "PLY_00455",
+      "PLY_00456",
+      "PLY_00457",
+      "PLY_00458",
+      "PLY_00459",
+      "PLY_00460"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

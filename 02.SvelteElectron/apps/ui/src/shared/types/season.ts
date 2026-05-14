@@ -53,6 +53,7 @@ export type SeasonPhase = "preseason" | "season" | "postseason" | "offseason";
 export interface ScheduleEntry {
   id: string;               // "SCH_W01_G1"
   week: number;             // 1–N (시즌 주차)
+  leagueId?: string;        // 소속 리그 (멀티리그용)
   homeTeamId: string;
   awayTeamId: string;
   isProtagonistGame: boolean;  // 주인공 팀 경기 여부
@@ -161,6 +162,12 @@ export interface UnifiedGameOutcome {
   summary: string;
 }
 
+// ── 리그별 순위·스탯 ─────────────────────────────────────────
+export interface LeagueSeasonState {
+  standings: Standing[];
+  stats: Record<string, PlayerSeasonStats>;
+}
+
 // ── save_season.json 전체 구조 ─────────────────────────────────
 export interface SaveSeason {
   version: number;      // 저장 포맷 버전
@@ -174,6 +181,9 @@ export interface SaveSeason {
   standings: Standing[];
   stats: Record<string, PlayerSeasonStats>;  // playerId → 누적 스탯
   triggeredEvents: Record<string, number>;   // eventId → 마지막 발생 주차
+  // L1: 멀티리그 지원
+  leagueSchedules: Record<string, ScheduleEntry[]>;      // leagueId → 경기 일정
+  leagueState: Record<string, LeagueSeasonState>;        // leagueId → 순위·스탯
 }
 
 export const SAVE_SEASON_VERSION = 1;
@@ -206,6 +216,8 @@ export function makeEmptySeason(
     })),
     stats: {},
     triggeredEvents: {},
+    leagueSchedules: {},
+    leagueState: {},
   };
 }
 

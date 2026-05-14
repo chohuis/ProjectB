@@ -1,0 +1,51 @@
+{
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "name": "대전 라이즈",
+  "nameEn": "Daejeon Rise",
+  "city": "대전",
+  "cityEn": "Daejeon",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "selectable": true,
+  "colors": [
+    "#4a148c",
+    "#ffffff"
+  ],
+  "stadium": "대전 라이즈 고교 야구장",
+  "roster": {
+    "active": [
+      "PLY_00081",
+      "PLY_00082",
+      "PLY_00083",
+      "PLY_00084",
+      "PLY_00085",
+      "PLY_00086",
+      "PLY_00087",
+      "PLY_00088",
+      "PLY_00089",
+      "PLY_00090",
+      "PLY_00091",
+      "PLY_00092",
+      "PLY_00093",
+      "PLY_00094",
+      "PLY_00095",
+      "PLY_00096",
+      "PLY_00097",
+      "PLY_00098",
+      "PLY_00099",
+      "PLY_00100",
+      "PLY_01582",
+      "PLY_01583",
+      "PLY_01584",
+      "PLY_01585",
+      "PLY_01586",
+      "PLY_01587",
+      "PLY_01588",
+      "PLY_01589",
+      "PLY_01590",
+      "PLY_01591"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

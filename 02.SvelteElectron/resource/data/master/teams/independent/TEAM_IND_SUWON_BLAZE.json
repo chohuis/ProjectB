@@ -1,0 +1,40 @@
+{
+  "teamId": "TEAM_IND_SUWON_BLAZE",
+  "name": "수원 블레이즈",
+  "nameEn": "Suwon Blaze",
+  "city": "수원",
+  "cityEn": "Suwon",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "colors": [
+    "#bf360c",
+    "#ffffff"
+  ],
+  "stadium": "수원 독립야구장",
+  "roster": {
+    "active": [
+      "PLY_00421",
+      "PLY_00422",
+      "PLY_00423",
+      "PLY_00424",
+      "PLY_00425",
+      "PLY_00426",
+      "PLY_00427",
+      "PLY_00428",
+      "PLY_00429",
+      "PLY_00430",
+      "PLY_00431",
+      "PLY_00432",
+      "PLY_00433",
+      "PLY_00434",
+      "PLY_00435",
+      "PLY_00436",
+      "PLY_00437",
+      "PLY_00438",
+      "PLY_00439",
+      "PLY_00440"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

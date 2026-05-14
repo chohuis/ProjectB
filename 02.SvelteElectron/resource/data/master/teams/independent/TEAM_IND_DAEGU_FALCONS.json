@@ -1,0 +1,40 @@
+{
+  "teamId": "TEAM_IND_DAEGU_FALCONS",
+  "name": "대구 팰컨스",
+  "nameEn": "Daegu Falcons",
+  "city": "대구",
+  "cityEn": "Daegu",
+  "leagueId": "LEAGUE_INDEPENDENT",
+  "colors": [
+    "#880e4f",
+    "#ffffff"
+  ],
+  "stadium": "대구 독립야구장",
+  "roster": {
+    "active": [
+      "PLY_00341",
+      "PLY_00342",
+      "PLY_00343",
+      "PLY_00344",
+      "PLY_00345",
+      "PLY_00346",
+      "PLY_00347",
+      "PLY_00348",
+      "PLY_00349",
+      "PLY_00350",
+      "PLY_00351",
+      "PLY_00352",
+      "PLY_00353",
+      "PLY_00354",
+      "PLY_00355",
+      "PLY_00356",
+      "PLY_00357",
+      "PLY_00358",
+      "PLY_00359",
+      "PLY_00360"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

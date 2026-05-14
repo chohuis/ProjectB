@@ -1,0 +1,51 @@
+{
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "name": "울산 차지",
+  "nameEn": "Ulsan Charge",
+  "city": "울산",
+  "cityEn": "Ulsan",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "selectable": true,
+  "colors": [
+    "#e65100",
+    "#ffffff"
+  ],
+  "stadium": "울산 차지 고교 야구장",
+  "roster": {
+    "active": [
+      "PLY_00121",
+      "PLY_00122",
+      "PLY_00123",
+      "PLY_00124",
+      "PLY_00125",
+      "PLY_00126",
+      "PLY_00127",
+      "PLY_00128",
+      "PLY_00129",
+      "PLY_00130",
+      "PLY_00131",
+      "PLY_00132",
+      "PLY_00133",
+      "PLY_00134",
+      "PLY_00135",
+      "PLY_00136",
+      "PLY_00137",
+      "PLY_00138",
+      "PLY_00139",
+      "PLY_00140",
+      "PLY_01602",
+      "PLY_01603",
+      "PLY_01604",
+      "PLY_01605",
+      "PLY_01606",
+      "PLY_01607",
+      "PLY_01608",
+      "PLY_01609",
+      "PLY_01610",
+      "PLY_01611"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

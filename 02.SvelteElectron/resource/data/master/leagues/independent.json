@@ -1,0 +1,38 @@
+{
+  "id": "LEAGUE_INDEPENDENT",
+  "name": "전국 독립 야구 리그",
+  "nameEn": "National Independent Baseball League",
+  "teamCount": 8,
+  "season": {
+    "regularSeason": {
+      "startWeek": 6,
+      "endWeek": 38,
+      "format": "double_roundrobin",
+      "gamesPerTeam": 56,
+      "gamesPerWeek": 3
+    },
+    "postseason": {
+      "startWeek": 39,
+      "endWeek": 44,
+      "format": "single_elimination",
+      "qualifiers": 4,
+      "rounds": [
+        { "round": "준결승", "week": 39, "games": 2 },
+        { "round": "결승", "week": 41, "games": 1 }
+      ]
+    },
+    "offseason": {
+      "startWeek": 45,
+      "endWeek": 52
+    }
+  },
+  "playerEligibility": {
+    "ageRange": [19, 30],
+    "description": "고교 졸업 후 프로 미진출 선수, 대학 중퇴 선수, 은퇴 후 재도전 선수 등"
+  },
+  "awards": [
+    { "id": "AWARD_IND_MVP",          "name": "리그 MVP",           "basis": "war" },
+    { "id": "AWARD_IND_BEST_PITCHER", "name": "최우수 투수상",  "basis": "era" },
+    { "id": "AWARD_IND_BEST_HITTER",  "name": "최우수 타자상",  "basis": "avg" }
+  ]
+}

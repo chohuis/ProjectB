@@ -1,0 +1,51 @@
+{
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "name": "대구 히트",
+  "nameEn": "Daegu Heat",
+  "city": "대구",
+  "cityEn": "Daegu",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "selectable": true,
+  "colors": [
+    "#b71c1c",
+    "#ffffff"
+  ],
+  "stadium": "대구 히트 고교 야구장",
+  "roster": {
+    "active": [
+      "PLY_00041",
+      "PLY_00042",
+      "PLY_00043",
+      "PLY_00044",
+      "PLY_00045",
+      "PLY_00046",
+      "PLY_00047",
+      "PLY_00048",
+      "PLY_00049",
+      "PLY_00050",
+      "PLY_00051",
+      "PLY_00052",
+      "PLY_00053",
+      "PLY_00054",
+      "PLY_00055",
+      "PLY_00056",
+      "PLY_00057",
+      "PLY_00058",
+      "PLY_00059",
+      "PLY_00060",
+      "PLY_01562",
+      "PLY_01563",
+      "PLY_01564",
+      "PLY_01565",
+      "PLY_01566",
+      "PLY_01567",
+      "PLY_01568",
+      "PLY_01569",
+      "PLY_01570",
+      "PLY_01571"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

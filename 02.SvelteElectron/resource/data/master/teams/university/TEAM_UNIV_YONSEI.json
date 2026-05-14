@@ -1,0 +1,40 @@
+{
+  "teamId": "TEAM_UNIV_YONSEI",
+  "name": "연세대학교",
+  "nameEn": "Yonsei University",
+  "city": "서울",
+  "cityEn": "Seoul",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "colors": [
+    "#003087",
+    "#ffffff"
+  ],
+  "stadium": "연세대 야구장",
+  "roster": {
+    "active": [
+      "PLY_00201",
+      "PLY_00202",
+      "PLY_00203",
+      "PLY_00204",
+      "PLY_00205",
+      "PLY_00206",
+      "PLY_00207",
+      "PLY_00208",
+      "PLY_00209",
+      "PLY_00210",
+      "PLY_00211",
+      "PLY_00212",
+      "PLY_00213",
+      "PLY_00214",
+      "PLY_00215",
+      "PLY_00216",
+      "PLY_00217",
+      "PLY_00218",
+      "PLY_00219",
+      "PLY_00220"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

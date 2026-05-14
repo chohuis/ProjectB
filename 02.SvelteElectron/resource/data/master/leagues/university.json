@@ -1,0 +1,42 @@
+{
+  "id": "LEAGUE_UNIVERSITY",
+  "name": "전국 대학 야구 리그",
+  "nameEn": "National University Baseball League",
+  "teamCount": 7,
+  "season": {
+    "regularSeason": {
+      "startWeek": 8,
+      "endWeek": 40,
+      "format": "single_roundrobin",
+      "gamesPerTeam": 30,
+      "gamesPerWeek": 2
+    },
+    "postseason": {
+      "startWeek": 41,
+      "endWeek": 46,
+      "format": "single_elimination",
+      "qualifiers": 4,
+      "rounds": [
+        { "round": "4강", "week": 41, "games": 2 },
+        { "round": "3·4위전", "week": 43, "games": 1 },
+        { "round": "결승", "week": 44, "games": 1 }
+      ]
+    },
+    "offseason": {
+      "startWeek": 47,
+      "endWeek": 52
+    }
+  },
+  "academicConstraints": {
+    "creditSystem": "학점(4.5 만점)",
+    "defaultMajor": "체육교육",
+    "academicWarningThreshold": 1.7,
+    "academicSuspensionThreshold": 1.0
+  },
+  "awards": [
+    { "id": "AWARD_UNIV_MVP",          "name": "리그 MVP",           "basis": "war" },
+    { "id": "AWARD_UNIV_BEST_PITCHER", "name": "최우수 투수상",  "basis": "era" },
+    { "id": "AWARD_UNIV_BEST_HITTER",  "name": "최우수 타자상",  "basis": "avg" },
+    { "id": "AWARD_UNIV_ROOKIE",       "name": "신인상",                 "basis": "rookie_war" }
+  ]
+}

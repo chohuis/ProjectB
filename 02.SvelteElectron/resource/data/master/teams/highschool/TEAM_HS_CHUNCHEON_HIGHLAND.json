@@ -1,0 +1,51 @@
+{
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "name": "춘천 하이랜드",
+  "nameEn": "Chuncheon Highland",
+  "city": "춘천",
+  "cityEn": "Chuncheon",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "selectable": false,
+  "colors": [
+    "#33691e",
+    "#ffffff"
+  ],
+  "stadium": "춘천 하이랜드 고교 야구장",
+  "roster": {
+    "active": [
+      "PLY_01652",
+      "PLY_01653",
+      "PLY_01654",
+      "PLY_01655",
+      "PLY_01656",
+      "PLY_01657",
+      "PLY_01658",
+      "PLY_01659",
+      "PLY_01660",
+      "PLY_01661",
+      "PLY_01662",
+      "PLY_01663",
+      "PLY_01664",
+      "PLY_01665",
+      "PLY_01666",
+      "PLY_01667",
+      "PLY_01668",
+      "PLY_01669",
+      "PLY_01670",
+      "PLY_01671",
+      "PLY_01672",
+      "PLY_01673",
+      "PLY_01674",
+      "PLY_01675",
+      "PLY_01676",
+      "PLY_01677",
+      "PLY_01678",
+      "PLY_01679",
+      "PLY_01680",
+      "PLY_01681"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

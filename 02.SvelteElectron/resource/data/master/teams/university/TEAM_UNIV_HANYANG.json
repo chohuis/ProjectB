@@ -1,0 +1,40 @@
+{
+  "teamId": "TEAM_UNIV_HANYANG",
+  "name": "한양대학교",
+  "nameEn": "Hanyang University",
+  "city": "서울",
+  "cityEn": "Seoul",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "colors": [
+    "#c00000",
+    "#000000"
+  ],
+  "stadium": "한양대 야구장",
+  "roster": {
+    "active": [
+      "PLY_00241",
+      "PLY_00242",
+      "PLY_00243",
+      "PLY_00244",
+      "PLY_00245",
+      "PLY_00246",
+      "PLY_00247",
+      "PLY_00248",
+      "PLY_00249",
+      "PLY_00250",
+      "PLY_00251",
+      "PLY_00252",
+      "PLY_00253",
+      "PLY_00254",
+      "PLY_00255",
+      "PLY_00256",
+      "PLY_00257",
+      "PLY_00258",
+      "PLY_00259",
+      "PLY_00260"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

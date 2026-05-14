@@ -1,0 +1,87 @@
+{
+  "id": "LEAGUE_HIGHSCHOOL",
+  "name": "전국 고교 야구 리그",
+  "nameEn": "National High School Baseball League",
+  "teamCount": 16,
+  "selectableTeamCount": 8,
+  "npcOnlyTeamCount": 8,
+  "season": {
+    "regularSeason": {
+      "startWeek": 10,
+      "endWeek": 42,
+      "format": "group_roundrobin",
+      "groups": [
+        {
+          "id": "GROUP_A",
+          "name": "A조",
+          "teamCount": 8,
+          "description": "선택 가능 팀 4개 + NPC 전용 4개"
+        },
+        {
+          "id": "GROUP_B",
+          "name": "B조",
+          "teamCount": 8,
+          "description": "선택 가능 팀 4개 + NPC 전용 4개"
+        }
+      ],
+      "gamesPerTeam": 14,
+      "gamesPerWeek": 2
+    },
+    "tournament": {
+      "startWeek": 43,
+      "endWeek": 46,
+      "format": "single_elimination",
+      "rounds": [
+        { "round": "8강", "week": 43, "games": 4 },
+        { "round": "4강", "week": 44, "games": 2 },
+        { "round": "3·4위전", "week": 45, "games": 1 },
+        { "round": "결승", "week": 46, "games": 1 }
+      ],
+      "qualifiers": 4,
+      "qualifierRule": "각 그룹 상위 4팀",
+      "pitchingRestriction": {
+        "starterRestDays": 3,
+        "description": "토너먼트 중 선발 투수는 3일 이내 재등판 불가"
+      }
+    },
+    "offseason": {
+      "startWeek": 47,
+      "endWeek": 52
+    }
+  },
+  "groupAssignment": {
+    "GROUP_A": [
+      "TEAM_HS_SEOUL_INNOVATION",
+      "TEAM_HS_DAEGU_HEAT",
+      "TEAM_HS_INCHEON_HARBOR",
+      "TEAM_HS_SUWON_EDGE",
+      "TEAM_HS_YEOSU_SHORE",
+      "TEAM_HS_JEJU_WIND",
+      "TEAM_HS_MASAN_HARBOR",
+      "TEAM_HS_GOYANG_ARROW"
+    ],
+    "GROUP_B": [
+      "TEAM_HS_BUSAN_WAVE",
+      "TEAM_HS_GWANGJU_VISION",
+      "TEAM_HS_DAEJEON_RISE",
+      "TEAM_HS_ULSAN_CHARGE",
+      "TEAM_HS_CHUNCHEON_HIGHLAND",
+      "TEAM_HS_GANGWON_PEAK",
+      "TEAM_HS_JECHEON_RIDGE",
+      "TEAM_HS_SUNCHEON_BAY"
+    ]
+  },
+  "awards": [
+    { "id": "AWARD_HS_MVP",          "name": "대회 MVP",           "basis": "tournament_mvp" },
+    { "id": "AWARD_HS_BEST_PITCHER", "name": "최우수 투수상",  "basis": "era_tournament" },
+    { "id": "AWARD_HS_BEST_HITTER",  "name": "최우수 타자상",  "basis": "avg_tournament" },
+    { "id": "AWARD_HS_CHAMPION",     "name": "우승",                   "basis": "tournament_winner" }
+  ],
+  "draftImpact": {
+    "description": "고교 리그 및 토너먼트 성적이 드래프트 순위에 영향",
+    "mvpBonus": 5,
+    "championBonus": 3,
+    "regularSeasonStatWeight": 0.4,
+    "tournamentStatWeight": 0.6
+  }
+}

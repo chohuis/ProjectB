@@ -1,0 +1,51 @@
+{
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "name": "제천 릿지",
+  "nameEn": "Jecheon Ridge",
+  "city": "제천",
+  "cityEn": "Jecheon",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "selectable": false,
+  "colors": [
+    "#263238",
+    "#eceff1"
+  ],
+  "stadium": "제천 릿지 고교 야구장",
+  "roster": {
+    "active": [
+      "PLY_01772",
+      "PLY_01773",
+      "PLY_01774",
+      "PLY_01775",
+      "PLY_01776",
+      "PLY_01777",
+      "PLY_01778",
+      "PLY_01779",
+      "PLY_01780",
+      "PLY_01781",
+      "PLY_01782",
+      "PLY_01783",
+      "PLY_01784",
+      "PLY_01785",
+      "PLY_01786",
+      "PLY_01787",
+      "PLY_01788",
+      "PLY_01789",
+      "PLY_01790",
+      "PLY_01791",
+      "PLY_01792",
+      "PLY_01793",
+      "PLY_01794",
+      "PLY_01795",
+      "PLY_01796",
+      "PLY_01797",
+      "PLY_01798",
+      "PLY_01799",
+      "PLY_01800",
+      "PLY_01801"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

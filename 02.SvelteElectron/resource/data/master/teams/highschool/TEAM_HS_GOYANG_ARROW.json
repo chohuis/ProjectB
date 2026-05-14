@@ -1,0 +1,51 @@
+{
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "name": "고양 애로우",
+  "nameEn": "Goyang Arrow",
+  "city": "고양",
+  "cityEn": "Goyang",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "selectable": false,
+  "colors": [
+    "#880e4f",
+    "#ffffff"
+  ],
+  "stadium": "고양 애로우 고교 야구장",
+  "roster": {
+    "active": [
+      "PLY_01802",
+      "PLY_01803",
+      "PLY_01804",
+      "PLY_01805",
+      "PLY_01806",
+      "PLY_01807",
+      "PLY_01808",
+      "PLY_01809",
+      "PLY_01810",
+      "PLY_01811",
+      "PLY_01812",
+      "PLY_01813",
+      "PLY_01814",
+      "PLY_01815",
+      "PLY_01816",
+      "PLY_01817",
+      "PLY_01818",
+      "PLY_01819",
+      "PLY_01820",
+      "PLY_01821",
+      "PLY_01822",
+      "PLY_01823",
+      "PLY_01824",
+      "PLY_01825",
+      "PLY_01826",
+      "PLY_01827",
+      "PLY_01828",
+      "PLY_01829",
+      "PLY_01830",
+      "PLY_01831"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

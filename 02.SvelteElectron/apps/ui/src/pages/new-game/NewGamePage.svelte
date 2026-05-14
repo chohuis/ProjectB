@@ -164,6 +164,7 @@
     seasonStore.initSeason("LEAGUE_HIGHSCHOOL", 2026, 52, teamIds);
     const schedule = generateSchedule(teamIds, selectedTeamId, 52);
     seasonStore.setSchedule(schedule);
+    seasonStore.initAllLeagues(2026, selectedTeamId);
 
     onComplete();
   }

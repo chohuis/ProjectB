@@ -1,0 +1,51 @@
+{
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "name": "제주 윈드",
+  "nameEn": "Jeju Wind",
+  "city": "제주",
+  "cityEn": "Jeju",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "selectable": false,
+  "colors": [
+    "#0277bd",
+    "#76ff03"
+  ],
+  "stadium": "제주 윈드 고교 야구장",
+  "roster": {
+    "active": [
+      "PLY_01682",
+      "PLY_01683",
+      "PLY_01684",
+      "PLY_01685",
+      "PLY_01686",
+      "PLY_01687",
+      "PLY_01688",
+      "PLY_01689",
+      "PLY_01690",
+      "PLY_01691",
+      "PLY_01692",
+      "PLY_01693",
+      "PLY_01694",
+      "PLY_01695",
+      "PLY_01696",
+      "PLY_01697",
+      "PLY_01698",
+      "PLY_01699",
+      "PLY_01700",
+      "PLY_01701",
+      "PLY_01702",
+      "PLY_01703",
+      "PLY_01704",
+      "PLY_01705",
+      "PLY_01706",
+      "PLY_01707",
+      "PLY_01708",
+      "PLY_01709",
+      "PLY_01710",
+      "PLY_01711"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}
