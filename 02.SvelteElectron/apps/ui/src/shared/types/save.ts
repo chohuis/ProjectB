@@ -398,6 +398,7 @@ export interface NpcSaveState {
   pitching?: PitchingAttributes;
   batting?: BattingAttributes;
   developmentRate: number;
+  proServiceYears?: number;  // 프로 입단 후 연수 (KBL/ABL FA 자격 기준: 9년)
   careerHistory: NpcCareerEntry[];
   achievements: string[];  // ["2025 신인상", "2027 MVP"]
 }

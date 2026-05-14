@@ -9,6 +9,7 @@
 
   $: p = $gameStore.protagonist;
   $: myTeamId = p.teamId;
+  $: summary = $gameStore.seasonEndSummary;
   $: myStanding = $seasonStore.standings.find((s) => s.teamId === myTeamId);
   $: myRank = $currentStandings.findIndex((s) => s.teamId === myTeamId) + 1;
   $: totalTeams = $seasonStore.standings.length;
@@ -182,6 +183,44 @@
               <span class="award-label">홈런왕</span>
               <strong class="award-name">{seasonAwards.hrKing.name}</strong>
               <span class="award-val">{seasonAwards.hrKing.hr}홈런</span>
+            </div>
+          {/if}
+        </div>
+      </section>
+    {/if}
+
+    {#if summary && (summary.univGraduatedCount + summary.militaryEnlistedCount + summary.militaryDischargedCount + summary.faCount + summary.retiredCount) > 0}
+      <section class="npc-summary-section">
+        <h4>선수 동향</h4>
+        <div class="npc-summary-grid">
+          {#if summary.univGraduatedCount > 0}
+            <div class="ns-item">
+              <span class="ns-val">{summary.univGraduatedCount}</span>
+              <span class="ns-label">대학 졸업</span>
+            </div>
+          {/if}
+          {#if summary.militaryEnlistedCount > 0}
+            <div class="ns-item">
+              <span class="ns-val">{summary.militaryEnlistedCount}</span>
+              <span class="ns-label">입대</span>
+            </div>
+          {/if}
+          {#if summary.militaryDischargedCount > 0}
+            <div class="ns-item">
+              <span class="ns-val">{summary.militaryDischargedCount}</span>
+              <span class="ns-label">전역</span>
+            </div>
+          {/if}
+          {#if summary.faCount > 0}
+            <div class="ns-item">
+              <span class="ns-val">{summary.faCount}</span>
+              <span class="ns-label">FA 선언</span>
+            </div>
+          {/if}
+          {#if summary.retiredCount > 0}
+            <div class="ns-item">
+              <span class="ns-val">{summary.retiredCount}</span>
+              <span class="ns-label">은퇴</span>
             </div>
           {/if}
         </div>
@@ -364,6 +403,33 @@
     font-size: 15px;
     color: #80d8ff;
     font-weight: 700;
+  }
+
+  .npc-summary-grid {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .ns-item {
+    background: #131f38;
+    border: 1px solid #2a3f62;
+    border-radius: 8px;
+    padding: 8px 14px;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+
+  .ns-val {
+    font-size: 18px;
+    font-weight: 700;
+    color: #80c8ff;
+  }
+
+  .ns-label {
+    font-size: 11px;
+    color: #7a9ac8;
   }
 
   .actions {

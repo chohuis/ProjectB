@@ -41,6 +41,15 @@ import type { ContactDef, ContactEffect } from "../types/messenger";
 import type { CoreGameState } from "../types/projectb.d";
 import type { ProContract } from "../types/save";
 
+// ── 시즌 종료 요약 ────────────────────────────────────────────
+export interface SeasonEndSummary {
+  retiredCount: number;
+  militaryEnlistedCount: number;
+  militaryDischargedCount: number;
+  faCount: number;
+  univGraduatedCount: number;
+}
+
 // ── gameStore 내부 상태 ────────────────────────────────────────
 export interface GameStoreState {
   protagonist: ProtagonistSave;
@@ -51,8 +60,9 @@ export interface GameStoreState {
   achievementMetrics: AchievementMetrics;
   contacts: ChatContact[];
   npcs: NpcSaveState[];
-  pendingDraft: NpcSaveState[];    // 드래프트 대기 졸업생 (비저장, 시즌 종료 시 채워짐)
-  pendingAchievements: string[];   // 미확인 신규 달성 (비저장)
+  pendingDraft: NpcSaveState[];       // 드래프트 대기 졸업생 (비저장, 시즌 종료 시 채워짐)
+  pendingAchievements: string[];      // 미확인 신규 달성 (비저장)
+  seasonEndSummary: SeasonEndSummary | null;  // 직전 시즌 종료 처리 요약 (비저장)
   dayLabel: string;
   logs: string[];
   upcoming: string[];
@@ -302,6 +312,7 @@ function buildInitialState(): GameStoreState {
     npcs:         [],
     pendingDraft: [],
     pendingAchievements: [],
+    seasonEndSummary: null,
     dayLabel:     computeWeekLabel(1, BASE_SEASON_YEAR),
     logs:         ["훈련 루틴 설정 완료", "코치 면담으로 제구 +1", "팀 분위기 안정"],
     upcoming:     ["화요일 불펜 세션", "금요일 체력장", "토요일 주말 리그 1차전"],
@@ -363,6 +374,7 @@ function fromSaveGame(saved: SaveGame): GameStoreState {
     npcs:         saved.npcs ?? [],
     pendingDraft: [],
     pendingAchievements: [],
+    seasonEndSummary: null,
     dayLabel:     computeWeekLabel(1, BASE_SEASON_YEAR),
     logs:         saved.recentLogs,
     upcoming:     saved.recentUpcoming,
@@ -430,6 +442,17 @@ function updateAchievementProgress(
   });
 }
 
+const KBL_FARM_MAP: Record<string, string> = {
+  "PKT_Busan_GiantWhales":     "TEAM_KBL_GIANTWHALES_2",
+  "PKT_Changwon_SteelDinos":   "TEAM_KBL_STEELDINOS_2",
+  "PKT_Daegu_RoyalLions":      "TEAM_KBL_ROYALLIONS_2",
+  "PKT_Daejeon_SoaringEagles": "TEAM_KBL_SOARINGEAGLES_2",
+  "PKT_Gwangju_EmberTigers":   "TEAM_KBL_EMBERTIGERS_2",
+  "PKT_Incheon_SkyGulls":      "TEAM_KBL_SKYGULLS_2",
+  "PKT_Seoul_BearGuardians":   "TEAM_KBL_BEARGUARDIANS_2",
+  "PKT_Seoul_TwinWolves":      "TEAM_KBL_TWINWOLVES_2",
+};
+
 type RosterRule = { min: number; max: number };
 const ROSTER_RULES: Record<string, RosterRule> = {
   LEAGUE_HIGHSCHOOL: { min: 18, max: 30 },
@@ -482,7 +505,7 @@ function npcCoreOvr(npc: NpcSaveState): number {
   return npc.batting?.ovr ?? 0;
 }
 
-function normalizeOffseasonNpcs(npcs: NpcSaveState[], seasonYear: number): { next: NpcSaveState[]; logs: string[] } {
+function normalizeOffseasonNpcs(npcs: NpcSaveState[], seasonYear: number, summary?: SeasonEndSummary): { next: NpcSaveState[]; logs: string[] } {
   const logs: string[] = [];
   const next = npcs.map((n) => ({ ...n }));
 
@@ -518,6 +541,7 @@ function normalizeOffseasonNpcs(npcs: NpcSaveState[], seasonYear: number): { nex
           },
         ],
       };
+      if (summary) summary.retiredCount++;
       logs.push(`${npc.name} retired`);
     }
   }
@@ -548,12 +572,22 @@ function normalizeOffseasonNpcs(npcs: NpcSaveState[], seasonYear: number): { nex
       for (let i = 0; i < next.length; i += 1) {
         const npc = next[i];
         if (!drop.has(npc.npcId)) continue;
-        if (leagueId === "LEAGUE_KBL" || leagueId === "LEAGUE_ABL") {
+        if (leagueId === "LEAGUE_KBL") {
+          const farmId = KBL_FARM_MAP[npc.currentTeam];
+          if (farmId) {
+            next[i] = { ...npc, currentTeam: farmId };
+            logs.push(`${npc.name} → 2군 강등`);
+          } else {
+            next[i] = { ...npc, currentLeague: "LEAGUE_INDEPENDENT", currentTeam: "" };
+            logs.push(`${npc.name} → 독립리그`);
+          }
+        } else if (leagueId === "LEAGUE_ABL") {
           next[i] = { ...npc, currentLeague: "LEAGUE_INDEPENDENT", currentTeam: "" };
-          logs.push(`${npc.name} moved to independent (roster cap)`);
+          logs.push(`${npc.name} → 독립리그 (ABL 로스터 초과)`);
         } else {
           next[i] = { ...npc, careerStatus: "retired", currentLeague: "LEAGUE_RETIRED", currentTeam: "" };
-          logs.push(`${npc.name} retired (roster cap)`);
+          if (summary) summary.retiredCount++;
+          logs.push(`${npc.name} 은퇴 (로스터 초과)`);
         }
       }
     } else if (group.length < rule.min) {
@@ -1528,75 +1562,141 @@ function createGameStore() {
       });
     },
 
-    // L6: 전체 리그 NPC 오프시즌 처리 (에이징·감퇴·UNIV 졸업·은퇴·로스터 정리)
+    // L6: 전체 리그 NPC 오프시즌 처리 (에이징·감퇴·UNIV졸업·군입대·전역·FA·은퇴·로스터 정리)
     processAllLeaguesSeasonEnd(seasonYear: number) {
       update((s) => {
-        const aged: NpcSaveState[] = [];
+        const summary: SeasonEndSummary = {
+          retiredCount: 0,
+          militaryEnlistedCount: 0,
+          militaryDischargedCount: 0,
+          faCount: 0,
+          univGraduatedCount: 0,
+        };
         const newPendingDraft: NpcSaveState[] = [];
 
-        for (const npc of s.npcs) {
-          // HS NPC는 processSeasonEnd에서 별도 처리
-          if (npc.currentLeague === "LEAGUE_HIGHSCHOOL") {
-            aged.push(npc);
-            continue;
-          }
-          if (npc.careerStatus !== "active") {
-            aged.push(npc);
-            continue;
+        const processed = s.npcs.map((npc): NpcSaveState => {
+          // HS는 processSeasonEnd에서 별도 처리
+          if (npc.currentLeague === "LEAGUE_HIGHSCHOOL") return npc;
+
+          let n: NpcSaveState = { ...npc };
+
+          // 1. 군 전역 처리 (복무 완료)
+          if (
+            n.careerStatus === "military" &&
+            n.militaryDischargeYear != null &&
+            n.militaryDischargeYear <= seasonYear
+          ) {
+            n = {
+              ...n,
+              careerStatus: "active",
+              militaryStatus: "군필",
+              currentLeague: "LEAGUE_INDEPENDENT",
+              currentTeam: "",
+            };
+            summary.militaryDischargedCount++;
           }
 
-          let n: NpcSaveState = { ...npc, age: npc.age + 1 };
+          if (n.careerStatus === "retired" || n.currentLeague === "LEAGUE_RETIRED") return n;
 
-          // UNIV 졸업 처리
+          // 2. 나이 +1
+          n = { ...n, age: n.age + 1 };
+
+          if (n.currentLeague === "LEAGUE_DRAFT_POOL" || n.currentLeague === "LEAGUE_FREE_AGENT") return n;
+          if (n.careerStatus !== "active") return n;
+
+          // 3. 대학 학년 진급 + 졸업
           if (n.currentLeague === "LEAGUE_UNIVERSITY") {
             if (n.grade === 3) {
-              n = {
+              const graduated: NpcSaveState = {
                 ...n,
                 grade: undefined,
-                currentLeague: "LEAGUE_DRAFT_POOL" as NpcSaveState["currentLeague"],
+                currentLeague: "LEAGUE_DRAFT_POOL",
                 careerHistory: [
                   ...n.careerHistory,
-                  {
-                    year: seasonYear,
-                    leagueId: "LEAGUE_UNIVERSITY",
-                    teamId: n.currentTeam,
-                    statLine: "-",
-                    highlights: [],
-                  },
+                  { year: seasonYear, leagueId: "LEAGUE_UNIVERSITY", teamId: n.currentTeam, statLine: "-", highlights: [] },
                 ],
               };
-              newPendingDraft.push(n);
+              newPendingDraft.push(graduated);
+              summary.univGraduatedCount++;
+              return graduated;
             } else if (n.grade != null && n.grade < 3) {
               n = { ...n, grade: (n.grade + 1) as 1 | 2 | 3 };
             }
+            return n;
           }
 
-          // 능력치 노화 감퇴
+          // 4. 능력치 에이징 (독립/프로)
           n = applyAgingDecay(n);
 
-          aged.push(n);
-        }
+          // 5. 프로 연차 증가 (KBL/ABL)
+          if (n.currentLeague === "LEAGUE_KBL" || n.currentLeague === "LEAGUE_ABL") {
+            n = { ...n, proServiceYears: (n.proServiceYears ?? 0) + 1 };
 
-        const { next, logs } = normalizeOffseasonNpcs(aged, seasonYear);
+            // 6. FA 판정 (9년 이상, 60% 확률)
+            if ((n.proServiceYears ?? 0) >= 9 && Math.random() < 0.6) {
+              n = { ...n, currentLeague: "LEAGUE_FREE_AGENT", currentTeam: "" };
+              summary.faCount++;
+              return n;
+            }
+          }
 
-        const lifecycleMsg: MessageItem | null =
-          logs.length > 0
-            ? {
-                id: `msg-offseason-${Date.now()}`,
-                category: "news",
-                sender: "연감",
-                subject: "오프시즌 선수 동향",
-                preview: logs[0],
-                body: logs.join("\n"),
-                createdAt: `Y${seasonYear}`,
-                readAt: null,
-              }
-            : null;
+          // 7. 군입대 판정 (미필 + 나이 조건)
+          if (n.militaryStatus === "미필") {
+            const isKbl = n.currentLeague === "LEAGUE_KBL" || n.currentLeague === "LEAGUE_ABL";
+            const enlistThreshold = isKbl ? 27 : 24;
+            const enlistChance = isKbl ? 0.25 : 0.35;
+            if (n.age >= enlistThreshold && Math.random() < enlistChance) {
+              n = {
+                ...n,
+                careerStatus: "military",
+                militaryStatus: "현역",
+                militaryEnlistYear: seasonYear,
+                militaryDischargeYear: seasonYear + 2,
+                currentLeague: "LEAGUE_MILITARY",
+                currentTeam: "",
+              };
+              summary.militaryEnlistedCount++;
+              return n;
+            }
+          }
+
+          return n;
+        });
+
+        // 8. 은퇴 판정 + 로스터 캡 정규화
+        const { next, logs } = normalizeOffseasonNpcs(processed, seasonYear, summary);
+
+        // 9. FA 선수 KBL 1군 재배치
+        const kblTeams = [...new Set(
+          next.filter((n) => n.currentLeague === "LEAGUE_KBL" && !Object.values(KBL_FARM_MAP).includes(n.currentTeam))
+              .map((n) => n.currentTeam)
+        )];
+        const redistributed = next.map((n): NpcSaveState => {
+          if (n.currentLeague !== "LEAGUE_FREE_AGENT") return n;
+          if (kblTeams.length > 0) {
+            return { ...n, currentLeague: "LEAGUE_KBL", currentTeam: kblTeams[Math.floor(Math.random() * kblTeams.length)] };
+          }
+          return { ...n, currentLeague: "LEAGUE_INDEPENDENT", currentTeam: "" };
+        });
+
+        const lifecycleMsg: MessageItem | null = logs.length > 0
+          ? {
+              id: `msg-offseason-${Date.now()}`,
+              category: "news",
+              sender: "연감",
+              subject: "오프시즌 선수 동향",
+              preview: logs[0],
+              body: logs.join("\n"),
+              createdAt: `Y${seasonYear}`,
+              readAt: null,
+            }
+          : null;
 
         return {
           ...s,
-          npcs: next,
+          npcs: redistributed,
           pendingDraft: [...s.pendingDraft, ...newPendingDraft],
+          seasonEndSummary: summary,
           logs: [...logs, ...s.logs].slice(0, 30),
           mailbox: lifecycleMsg ? trimMailbox([lifecycleMsg, ...s.mailbox]) : s.mailbox,
         };
@@ -1627,6 +1727,7 @@ function createGameStore() {
         npcs: [],
         pendingDraft: [],
         pendingAchievements: [],
+        seasonEndSummary: null,
         dayLabel: computeWeekLabel(1, BASE_SEASON_YEAR),
         logs: [],
         upcoming: [],

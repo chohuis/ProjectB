@@ -478,6 +478,7 @@ function openDatabase(dbPath) {
       military_status        TEXT NOT NULL DEFAULT '미필',
       military_enlist_year   INTEGER,
       military_discharge_year INTEGER,
+      pro_service_years      INTEGER NOT NULL DEFAULT 0,
       development_rate       INTEGER NOT NULL DEFAULT 60,
       pitch_ovr INTEGER, pitch_stamina INTEGER, pitch_velocity INTEGER,
       pitch_command INTEGER, pitch_control INTEGER, pitch_movement INTEGER,
@@ -854,12 +855,12 @@ function dbSaveSlot(db, slotId, game, season) {
     const npcStmt = db.prepare(`INSERT INTO npc_runtime (
       slot_id,npc_id,name,name_en,player_type,position,age,grade,school_id,graduation_year,
       career_status,current_league,current_team,military_status,military_enlist_year,military_discharge_year,
-      development_rate,
+      pro_service_years,development_rate,
       pitch_ovr,pitch_stamina,pitch_velocity,pitch_command,pitch_control,pitch_movement,
       pitch_mentality,pitch_recovery,pitch_clutch,pitch_hold_runners,
       bat_ovr,bat_contact,bat_power,bat_eye,bat_discipline,bat_speed,
       bat_base_instinct,bat_bunting,bat_platoon,bat_fielding,bat_arm,bat_batting_clutch
-    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`);
+    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`);
     const npcHistStmt = db.prepare(`INSERT INTO npc_career_history (slot_id,npc_id,year,league_id,team_id,stat_line,highlights_json,sort_order) VALUES (?,?,?,?,?,?,?,?)`);
     const npcAchStmt  = db.prepare(`INSERT INTO npc_achievements (slot_id,npc_id,achievement_text,sort_order) VALUES (?,?,?,?)`);
     for (const npc of (game?.npcs ?? [])) {
@@ -872,6 +873,7 @@ function dbSaveSlot(db, slotId, game, season) {
         npc.careerStatus, npc.currentLeague, npc.currentTeam,
         npc.militaryStatus ?? "미필",
         npc.militaryEnlistYear ?? null, npc.militaryDischargeYear ?? null,
+        npc.proServiceYears ?? 0,
         npc.developmentRate ?? 60,
         pi.ovr ?? null, pi.stamina ?? null, pi.velocity ?? null, pi.command ?? null,
         pi.control ?? null, pi.movement ?? null, pi.mentality ?? null,
@@ -1023,6 +1025,7 @@ function dbLoadSlot(db, slotId) {
       militaryStatus: n.military_status,
       militaryEnlistYear: n.military_enlist_year ?? undefined,
       militaryDischargeYear: n.military_discharge_year ?? undefined,
+      proServiceYears: n.pro_service_years ?? 0,
       developmentRate: n.development_rate,
       pitching: n.pitch_ovr != null ? {
         ovr: n.pitch_ovr, stamina: n.pitch_stamina, velocity: n.pitch_velocity,
