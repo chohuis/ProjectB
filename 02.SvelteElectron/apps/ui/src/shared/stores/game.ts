@@ -439,6 +439,44 @@ const ROSTER_RULES: Record<string, RosterRule> = {
   LEAGUE_ABL: { min: 50, max: 90 },
 };
 
+function clampStat(v: number): number {
+  return Math.max(1, Math.min(99, Math.round(v)));
+}
+
+function applyAgingDecay(npc: NpcSaveState): NpcSaveState {
+  const age = npc.age;
+  if (age < 30) return npc;
+  const factor = age >= 33 ? 2 : 1;
+
+  if (npc.playerType === "pitcher" && npc.pitching) {
+    const p = npc.pitching;
+    return {
+      ...npc,
+      pitching: {
+        ...p,
+        velocity: clampStat(p.velocity - 0.4 * factor),
+        stamina:  clampStat(p.stamina  - 0.3 * factor),
+        recovery: clampStat(p.recovery - 0.2 * factor),
+        ovr:      clampStat(p.ovr      - 0.3 * factor),
+      },
+    };
+  }
+  if (npc.playerType === "batter" && npc.batting) {
+    const b = npc.batting;
+    return {
+      ...npc,
+      batting: {
+        ...b,
+        speed:    clampStat(b.speed    - 0.4 * factor),
+        power:    clampStat(b.power    - 0.2 * factor),
+        fielding: clampStat(b.fielding - 0.2 * factor),
+        ovr:      clampStat(b.ovr      - 0.3 * factor),
+      },
+    };
+  }
+  return npc;
+}
+
 function npcCoreOvr(npc: NpcSaveState): number {
   if (npc.playerType === "pitcher") return npc.pitching?.ovr ?? 0;
   return npc.batting?.ovr ?? 0;
@@ -1457,7 +1495,7 @@ function createGameStore() {
     },
 
     // 시즌 종료 후 주인공 상태 갱신 (나이+1, 학년+1, 프로연차+1, 오프시즌 회복)
-    advanceSeasonYear(seasonYear?: number) {
+    advanceSeasonYear(_seasonYear?: number) {
       update((s) => {
         const p = s.protagonist;
         const isPro = ["pro", "pro_kbl", "pro_abl"].includes(p.careerStage);
@@ -1479,29 +1517,87 @@ function createGameStore() {
         const schoolState = draftTriggeredReset
           ? { ...s.schoolState, draftTriggered: false }
           : s.schoolState;
-        const lifecycle = normalizeOffseasonNpcs(s.npcs, seasonYear ?? new Date().getFullYear());
+
+        return {
+          ...s,
+          protagonist,
+          player: toPlayerCompat(protagonist),
+          school: toSchoolCompat(protagonist.careerStage, schoolState),
+          schoolState,
+        };
+      });
+    },
+
+    // L6: 전체 리그 NPC 오프시즌 처리 (에이징·감퇴·UNIV 졸업·은퇴·로스터 정리)
+    processAllLeaguesSeasonEnd(seasonYear: number) {
+      update((s) => {
+        const aged: NpcSaveState[] = [];
+        const newPendingDraft: NpcSaveState[] = [];
+
+        for (const npc of s.npcs) {
+          // HS NPC는 processSeasonEnd에서 별도 처리
+          if (npc.currentLeague === "LEAGUE_HIGHSCHOOL") {
+            aged.push(npc);
+            continue;
+          }
+          if (npc.careerStatus !== "active") {
+            aged.push(npc);
+            continue;
+          }
+
+          let n: NpcSaveState = { ...npc, age: npc.age + 1 };
+
+          // UNIV 졸업 처리
+          if (n.currentLeague === "LEAGUE_UNIVERSITY") {
+            if (n.grade === 3) {
+              n = {
+                ...n,
+                grade: undefined,
+                currentLeague: "LEAGUE_DRAFT_POOL" as NpcSaveState["currentLeague"],
+                careerHistory: [
+                  ...n.careerHistory,
+                  {
+                    year: seasonYear,
+                    leagueId: "LEAGUE_UNIVERSITY",
+                    teamId: n.currentTeam,
+                    statLine: "-",
+                    highlights: [],
+                  },
+                ],
+              };
+              newPendingDraft.push(n);
+            } else if (n.grade != null && n.grade < 3) {
+              n = { ...n, grade: (n.grade + 1) as 1 | 2 | 3 };
+            }
+          }
+
+          // 능력치 노화 감퇴
+          n = applyAgingDecay(n);
+
+          aged.push(n);
+        }
+
+        const { next, logs } = normalizeOffseasonNpcs(aged, seasonYear);
+
         const lifecycleMsg: MessageItem | null =
-          lifecycle.logs.length > 0
+          logs.length > 0
             ? {
                 id: `msg-offseason-${Date.now()}`,
                 category: "news",
-                sender: "Yearbook",
-                subject: "Offseason lifecycle report",
-                preview: lifecycle.logs[0],
-                body: lifecycle.logs.join("\n"),
-                createdAt: `Y${seasonYear ?? new Date().getFullYear()}`,
+                sender: "연감",
+                subject: "오프시즌 선수 동향",
+                preview: logs[0],
+                body: logs.join("\n"),
+                createdAt: `Y${seasonYear}`,
                 readAt: null,
               }
             : null;
 
         return {
           ...s,
-          protagonist,
-          npcs: lifecycle.next,
-          player: toPlayerCompat(protagonist),
-          school: toSchoolCompat(protagonist.careerStage, schoolState),
-          schoolState,
-          logs: [...lifecycle.logs, ...s.logs].slice(0, 30),
+          npcs: next,
+          pendingDraft: [...s.pendingDraft, ...newPendingDraft],
+          logs: [...logs, ...s.logs].slice(0, 30),
           mailbox: lifecycleMsg ? trimMailbox([lifecycleMsg, ...s.mailbox]) : s.mailbox,
         };
       });
