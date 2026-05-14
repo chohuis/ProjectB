@@ -1,0 +1,120 @@
+{
+  "id": "PLY_01717",
+  "name": "고성민",
+  "nameEn": "Go Seongmin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "grade": 1,
+  "schoolId": "SCHOOL_TEAM_HS_GANGWON_PEAK",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 6,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 48,
+        "velocity": 60,
+        "command": 53,
+        "control": 42,
+        "movement": 42,
+        "mentality": 48,
+        "recovery": 52,
+        "clutch": 50,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 41,
+        "power": 42,
+        "eye": 48,
+        "discipline": 56,
+        "speed": 34,
+        "fielding": 45,
+        "arm": 39,
+        "battingClutch": 50,
+        "baseInstinct": 50,
+        "bunting": 45,
+        "platoon": 50
+      },
+      "developmentRate": 60,
+      "potentialHidden": 73,
+      "primaryPosition": "RP",
+      "positionRatings": {
+        "RP": 48
+      },
+      "pitches": [
+        {
+          "id": "PITCH_FASTBALL",
+          "grade": 3
+        },
+        {
+          "id": "PITCH_SCREWBALL",
+          "grade": 3
+        },
+        {
+          "id": "PITCH_SPLITTER",
+          "grade": 3
+        },
+        {
+          "id": "PITCH_KNUCKLEBALL",
+          "grade": 2
+        }
+      ]
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  },
+  "diligence": 58,
+  "popularity": 14
+}

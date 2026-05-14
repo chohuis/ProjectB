@@ -1,0 +1,116 @@
+{
+  "id": "PLY_01774",
+  "name": "서원준",
+  "nameEn": "Seo Wonjun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "schoolId": "SCHOOL_TEAM_HS_JECHEON_RIDGE",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 3,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 44,
+        "velocity": 42,
+        "command": 59,
+        "control": 46,
+        "movement": 50,
+        "mentality": 50,
+        "recovery": 57,
+        "clutch": 50,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 51,
+        "power": 42,
+        "eye": 38,
+        "discipline": 35,
+        "speed": 36,
+        "fielding": 49,
+        "arm": 37,
+        "battingClutch": 50,
+        "baseInstinct": 50,
+        "bunting": 45,
+        "platoon": 50
+      },
+      "developmentRate": 82,
+      "potentialHidden": 86,
+      "primaryPosition": "SP",
+      "positionRatings": {
+        "SP": 54
+      },
+      "pitches": [
+        {
+          "id": "PITCH_FASTBALL",
+          "grade": 5
+        },
+        {
+          "id": "PITCH_SPLITTER",
+          "grade": 2
+        },
+        {
+          "id": "PITCH_CHANGEUP",
+          "grade": 4
+        }
+      ]
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  },
+  "diligence": 58,
+  "popularity": 11
+}

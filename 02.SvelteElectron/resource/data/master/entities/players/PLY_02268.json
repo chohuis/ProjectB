@@ -1,0 +1,124 @@
+{
+  "id": "PLY_02268",
+  "name": "Mason Williams",
+  "nameEn": "Mason Williams",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_LAKESPIRITS",
+  "teamId": "TEAM_ABL_LAKESPIRITS_1",
+  "grade": null,
+  "schoolId": "SCHOOL_NONE",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 88,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 88,
+        "velocity": 74,
+        "command": 79,
+        "control": 84,
+        "movement": 74,
+        "mentality": 75,
+        "recovery": 86,
+        "clutch": 50,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 45,
+        "power": 55,
+        "eye": 57,
+        "discipline": 42,
+        "speed": 62,
+        "fielding": 65,
+        "arm": 50,
+        "battingClutch": 50,
+        "baseInstinct": 50,
+        "bunting": 45,
+        "platoon": 50
+      },
+      "developmentRate": 50,
+      "potentialHidden": 89,
+      "primaryPosition": "SP",
+      "positionRatings": {
+        "SP": 78
+      },
+      "pitches": [
+        {
+          "id": "PITCH_FASTBALL",
+          "grade": 4
+        },
+        {
+          "id": "PITCH_CUTTER",
+          "grade": 2
+        },
+        {
+          "id": "PITCH_SCREWBALL",
+          "grade": 4
+        },
+        {
+          "id": "PITCH_SLIDER",
+          "grade": 2
+        },
+        {
+          "id": "PITCH_SPLITTER",
+          "grade": 3
+        }
+      ]
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  },
+  "diligence": 61,
+  "popularity": 27
+}

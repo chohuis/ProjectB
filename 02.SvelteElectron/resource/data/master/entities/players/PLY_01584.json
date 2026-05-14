@@ -1,0 +1,120 @@
+{
+  "id": "PLY_01584",
+  "name": "송재원",
+  "nameEn": "Song Jaewon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "grade": 1,
+  "schoolId": "SCHOOL_TEAM_HS_DAEJEON_RISE",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 23,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 53,
+        "velocity": 39,
+        "command": 49,
+        "control": 43,
+        "movement": 53,
+        "mentality": 55,
+        "recovery": 51,
+        "clutch": 50,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 51,
+        "power": 34,
+        "eye": 44,
+        "discipline": 38,
+        "speed": 51,
+        "fielding": 36,
+        "arm": 51,
+        "battingClutch": 50,
+        "baseInstinct": 50,
+        "bunting": 45,
+        "platoon": 50
+      },
+      "developmentRate": 87,
+      "potentialHidden": 68,
+      "primaryPosition": "CP",
+      "positionRatings": {
+        "CP": 45
+      },
+      "pitches": [
+        {
+          "id": "PITCH_FASTBALL",
+          "grade": 2
+        },
+        {
+          "id": "PITCH_SINKER",
+          "grade": 2
+        },
+        {
+          "id": "PITCH_SLIDER",
+          "grade": 3
+        },
+        {
+          "id": "PITCH_CURVE",
+          "grade": 2
+        }
+      ]
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  },
+  "diligence": 71,
+  "popularity": 24
+}
