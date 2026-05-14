@@ -1,9 +1,9 @@
 <script lang="ts">
   import { gameStore } from "../../../shared/stores/game";
   import { seasonStore, currentStandings } from "../../../shared/stores/season";
-  import { teamMap } from "../../../shared/stores/master";
+  import { masterStore, teamMap } from "../../../shared/stores/master";
   import type { EntityRow } from "../../../shared/stores/master";
-  import type { HighSchoolMaster, NamedNpcMeta, SchoolScenario } from "../../../shared/types/save";
+  import type { HighSchoolMaster, NamedNpcMeta, PitcherSeasonStats, BatterSeasonStats, SchoolScenario } from "../../../shared/types/save";
 
   export let onExit: () => void;
 
@@ -12,6 +12,36 @@
   $: myStanding = $seasonStore.standings.find((s) => s.teamId === myTeamId);
   $: myRank = $currentStandings.findIndex((s) => s.teamId === myTeamId) + 1;
   $: totalTeams = $seasonStore.standings.length;
+
+  // ── 시즌 시상 계산 ──────────────────────────────────────────────
+  function entityName(id: string): string {
+    return $masterStore.entities.find((e) => e.id === id)?.name ?? id;
+  }
+
+  $: seasonAwards = (() => {
+    const stats = $seasonStore.stats;
+    let eraKing:  { name: string; era: number } | null = null;
+    let winKing:  { name: string; w: number }   | null = null;
+    let avgKing:  { name: string; avg: number } | null = null;
+    let hrKing:   { name: string; hr: number }  | null = null;
+
+    for (const [id, s] of Object.entries(stats)) {
+      if (s.type === "pitcher") {
+        const ps = s as PitcherSeasonStats;
+        if (ps.ip >= 20) {
+          if (!eraKing || ps.era < eraKing.era) eraKing = { name: entityName(id), era: ps.era };
+          if (!winKing || ps.w > winKing.w)     winKing = { name: entityName(id), w: ps.w };
+        }
+      } else {
+        const bs = s as BatterSeasonStats;
+        if (bs.ab >= 50) {
+          if (!avgKing || bs.avg > avgKing.avg) avgKing = { name: entityName(id), avg: bs.avg };
+          if (!hrKing  || bs.hr  > hrKing.hr)  hrKing  = { name: entityName(id), hr: bs.hr };
+        }
+      }
+    }
+    return { eraKing, winKing, avgKing, hrKing };
+  })();
 
   function tName(id: string): string {
     return $teamMap.get(id)?.name ?? id;
@@ -71,6 +101,13 @@
       }
     }
 
+    // L4: NPC 시즌 스탯 → careerHistory 기록
+    const leagueStats: Record<string, Record<string, import("../../../shared/types/save").PlayerSeasonStats>> = {};
+    for (const [lid, ls] of Object.entries($seasonStore.leagueState)) {
+      leagueStats[lid] = ls.stats;
+    }
+    gameStore.applySeasonHistory($seasonStore.stats, leagueStats, now);
+
     if (!progressedByHighschoolSync) {
       gameStore.advanceSeasonYear($seasonStore.seasonYear);
     }
@@ -110,6 +147,43 @@
         </div>
       </div>
     </section>
+
+    <!-- 시상 -->
+    {#if seasonAwards.eraKing || seasonAwards.winKing || seasonAwards.avgKing || seasonAwards.hrKing}
+      <section class="awards-section">
+        <h4>시즌 시상</h4>
+        <div class="awards-grid">
+          {#if seasonAwards.eraKing}
+            <div class="award">
+              <span class="award-label">ERA왕</span>
+              <strong class="award-name">{seasonAwards.eraKing.name}</strong>
+              <span class="award-val">{seasonAwards.eraKing.era.toFixed(2)}</span>
+            </div>
+          {/if}
+          {#if seasonAwards.winKing}
+            <div class="award">
+              <span class="award-label">다승왕</span>
+              <strong class="award-name">{seasonAwards.winKing.name}</strong>
+              <span class="award-val">{seasonAwards.winKing.w}승</span>
+            </div>
+          {/if}
+          {#if seasonAwards.avgKing}
+            <div class="award">
+              <span class="award-label">타격왕</span>
+              <strong class="award-name">{seasonAwards.avgKing.name}</strong>
+              <span class="award-val">{seasonAwards.avgKing.avg.toFixed(3).replace(/^0\./, ".")}</span>
+            </div>
+          {/if}
+          {#if seasonAwards.hrKing}
+            <div class="award">
+              <span class="award-label">홈런왕</span>
+              <strong class="award-name">{seasonAwards.hrKing.name}</strong>
+              <span class="award-val">{seasonAwards.hrKing.hr}홈런</span>
+            </div>
+          {/if}
+        </div>
+      </section>
+    {/if}
 
     <section class="standings-section">
       <h4>최종 순위표</h4>
@@ -248,6 +322,45 @@
     color: #f0e060;
     font-weight: 700;
     background: #1e2e14;
+  }
+
+  .awards-section { display: grid; gap: 8px; }
+
+  .awards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .award {
+    background: #1a2c4a;
+    border: 1px solid #3a5880;
+    border-radius: 10px;
+    padding: 10px;
+    display: grid;
+    gap: 4px;
+    text-align: center;
+  }
+
+  .award-label {
+    font-size: 10px;
+    color: #f0c060;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+  }
+
+  .award-name {
+    font-size: 13px;
+    color: #e8f0ff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .award-val {
+    font-size: 15px;
+    color: #80d8ff;
+    font-weight: 700;
   }
 
   .actions {

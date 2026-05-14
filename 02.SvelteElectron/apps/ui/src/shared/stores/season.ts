@@ -194,7 +194,11 @@ function createSeasonStore() {
               : simpleNpcResult(game.homeTeamId, game.awayTeamId);
             const idx = updatedSchedule.findIndex((e) => e.id === game.id);
             if (idx >= 0) updatedSchedule[idx] = { ...game, result };
-            lState = { ...lState, standings: updateStandings(lState.standings, result) };
+            lState = {
+              ...lState,
+              standings: updateStandings(lState.standings, result),
+              stats:     accumulateStats(lState.stats, result.playerLines),
+            };
           }
 
           nextSchedules[lid] = updatedSchedule;
@@ -213,7 +217,10 @@ function createSeasonStore() {
           ...s,
           leagueState: {
             ...s.leagueState,
-            [leagueId]: { ...cur, standings: updateStandings(cur.standings, result) },
+            [leagueId]: {
+              standings: updateStandings(cur.standings, result),
+              stats:     accumulateStats(cur.stats, result.playerLines),
+            },
           },
         };
       });

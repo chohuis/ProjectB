@@ -8,9 +8,11 @@ import type {
   CareerFinalChoice,
   ChatContact,
   ChatMessage,
+  NpcCareerEntry,
   NpcSaveState,
   PitchEntry,
   PitchingStatKey,
+  PlayerSeasonStats,
   ProtagonistSave,
   SaveGame,
   SchoolState,
@@ -522,6 +524,17 @@ function normalizeOffseasonNpcs(npcs: NpcSaveState[], seasonYear: number): { nex
   }
 
   return { next, logs };
+}
+
+// ── NPC 스탯라인 생성 헬퍼 ──────────────────────────────────────
+function buildNpcStatLine(stat: PlayerSeasonStats): string {
+  if (stat.type === "pitcher") {
+    const ip  = stat.ip.toFixed(1);
+    const era = stat.era.toFixed(2);
+    return `${stat.w}승 ${stat.l}패 ERA ${era} ${ip}이닝 ${stat.k}K`;
+  }
+  const avg = stat.avg.toFixed(3).replace(/^0\./, ".");
+  return `타율 ${avg} ${stat.hr}홈런 ${stat.rbi}타점 ${stat.ab}타수`;
 }
 
 // ── 스토어 생성 ───────────────────────────────────────────────
@@ -1575,6 +1588,37 @@ function createGameStore() {
           protagonist: updatedProto,
           pendingDraft: graduated,
         };
+      });
+    },
+
+    // L4: 시즌 종료 시 NPC careerHistory 기록
+    applySeasonHistory(
+      seasonStats: Record<string, PlayerSeasonStats>,
+      leagueStats: Record<string, Record<string, PlayerSeasonStats>>,
+      seasonYear: number,
+    ) {
+      update((s) => {
+        const merged: Record<string, PlayerSeasonStats> = { ...seasonStats };
+        for (const stats of Object.values(leagueStats)) {
+          for (const [id, st] of Object.entries(stats)) {
+            if (!merged[id]) merged[id] = st;
+          }
+        }
+        const npcs = s.npcs.map((npc) => {
+          if (npc.careerStatus !== "active") return npc;
+          const stat = merged[npc.npcId];
+          if (!stat) return npc;
+          const statLine = buildNpcStatLine(stat);
+          const entry: NpcCareerEntry = {
+            year:      seasonYear,
+            leagueId:  npc.currentLeague,
+            teamId:    npc.currentTeam,
+            statLine,
+            highlights: [],
+          };
+          return { ...npc, careerHistory: [...npc.careerHistory, entry] };
+        });
+        return { ...s, npcs };
       });
     },
 

@@ -54,6 +54,7 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
   const matchResult: MatchResult = { ...teamResult, playerLines: [pitcherLine] };
 
   seasonStore.applyMatchResult(outcome.scheduleId, matchResult);
+  seasonStore.syncProtagonistLeagueResult(protagonist.leagueId, matchResult);
   seasonStore.resolvePendingAction("game", outcome.scheduleId);
 
   const myScore = outcome.homeTeamId === myTeamId ? outcome.homeScore : outcome.awayScore;
