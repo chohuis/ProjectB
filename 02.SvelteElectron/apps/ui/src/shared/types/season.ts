@@ -184,6 +184,9 @@ export interface SaveSeason {
   // L1: 멀티리그 지원
   leagueSchedules: Record<string, ScheduleEntry[]>;      // leagueId → 경기 일정
   leagueState: Record<string, LeagueSeasonState>;        // leagueId → 순위·스탯
+  // 고교 A/B조 배정 (매 시즌 랜덤, protagonist 조는 schedule/standings에 반영)
+  hsGroupA: string[];
+  hsGroupB: string[];
 }
 
 export const SAVE_SEASON_VERSION = 1;
@@ -218,6 +221,8 @@ export function makeEmptySeason(
     triggeredEvents: {},
     leagueSchedules: {},
     leagueState: {},
+    hsGroupA: [],
+    hsGroupB: [],
   };
 }
 

@@ -2,6 +2,7 @@
   import { gameStore } from "../../../shared/stores/game";
   import { seasonStore, currentStandings } from "../../../shared/stores/season";
   import { masterStore, teamMap } from "../../../shared/stores/master";
+  import { HS_ALL_TEAMS } from "../../../shared/utils/leagueScheduler";
   import type { EntityRow } from "../../../shared/stores/master";
   import type { HighSchoolMaster, NamedNpcMeta, PitcherSeasonStats, BatterSeasonStats, SchoolScenario } from "../../../shared/types/save";
 
@@ -116,6 +117,16 @@
       gameStore.advanceSeasonYear($seasonStore.seasonYear);
     }
     seasonStore.startNewSeason();
+
+    // 고교 2·3학년 시즌: 매년 그룹 재편 + 스케줄 재생성
+    if (p.careerStage === "highschool" && p.grade != null && p.grade < 3) {
+      const allHsIds = $masterStore.teams
+        .filter((t) => t.leagueId === "LEAGUE_HIGHSCHOOL")
+        .map((t) => t.id);
+      const newSchedule = seasonStore.reinitHighschoolSeason(p.teamId, allHsIds);
+      seasonStore.setSchedule(newSchedule);
+    }
+
     await gameStore.save();
     await seasonStore.save();
   }

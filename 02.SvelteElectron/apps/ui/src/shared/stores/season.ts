@@ -15,10 +15,9 @@ import {
   ALL_TEAMS_BY_LEAGUE,
   DEFAULT_LEAGUE_CONFIGS,
   generateAllLeagueSchedules,
-  generateHsSchedule,
-  HS_GROUP_A,
-  HS_GROUP_B,
+  generateLeagueSchedule,
   makeStandings,
+  shuffleHsGroups,
 } from "../utils/leagueScheduler";
 import { simulateGame } from "../utils/gameSimulator";
 import type { SimWorkerRequest, SimWorkerResponse } from "../workers/simWorker";
@@ -95,6 +94,8 @@ function createSeasonStore() {
             ...saved,
             leagueSchedules: saved.leagueSchedules ?? {},
             leagueState:     saved.leagueState     ?? {},
+            hsGroupA:        saved.hsGroupA        ?? [],
+            hsGroupB:        saved.hsGroupB        ?? [],
           });
         }
       } catch (e) {
@@ -193,9 +194,14 @@ function createSeasonStore() {
     },
 
     // ── L1: 멀티리그 초기화 ────────────────────────────────────
-    initAllLeagues(seasonYear: number, protagonistTeamId: string) {
-      // HS 스케줄 (그룹 분리)
-      const hsSchedule = generateHsSchedule(HS_GROUP_A, HS_GROUP_B, protagonistTeamId);
+    // hsGroupA/hsGroupB: NewGamePage에서 미리 셔플한 조 배정 (매 시즌 전달)
+    initAllLeagues(seasonYear: number, protagonistTeamId: string, hsGroupA: string[], hsGroupB: string[]) {
+      // protagonist가 속한 조와 NPC 조 구분
+      const protagonistGroup = hsGroupA.includes(protagonistTeamId) ? hsGroupA : hsGroupB;
+      const npcGroup         = hsGroupA.includes(protagonistTeamId) ? hsGroupB : hsGroupA;
+
+      // NPC 조 스케줄만 background sim 대상으로 등록 (protagonist 조는 seasonStore.schedule에서 관리)
+      const npcHsSchedule = generateLeagueSchedule("LEAGUE_HIGHSCHOOL_NPC", npcGroup, 10, 42, 2, protagonistTeamId);
 
       // 나머지 리그 스케줄
       const otherSchedules = generateAllLeagueSchedules(
@@ -204,13 +210,16 @@ function createSeasonStore() {
       );
 
       const leagueSchedules: Record<string, ScheduleEntry[]> = {
-        LEAGUE_HIGHSCHOOL: hsSchedule,
+        LEAGUE_HIGHSCHOOL_NPC: npcHsSchedule,
         ...otherSchedules,
       };
 
-      // 리그별 초기 순위표
-      const leagueState: Record<string, LeagueSeasonState> = {};
+      // 리그별 초기 순위표 (HIGHSCHOOL 제외 — protagonist 조는 seasonStore.standings, NPC 조는 별도)
+      const leagueState: Record<string, LeagueSeasonState> = {
+        LEAGUE_HIGHSCHOOL_NPC: { standings: makeStandings(npcGroup), stats: {} },
+      };
       for (const [lid, teams] of Object.entries(ALL_TEAMS_BY_LEAGUE)) {
+        if (lid === "LEAGUE_HIGHSCHOOL") continue;
         leagueState[lid] = { standings: makeStandings(teams), stats: {} };
       }
 
@@ -219,7 +228,48 @@ function createSeasonStore() {
         seasonYear,
         leagueSchedules,
         leagueState,
+        hsGroupA,
+        hsGroupB,
+        // protagonist 조 순위표를 standings에도 반영
+        standings: makeStandings(protagonistGroup),
       }));
+    },
+
+    // HS 연간 그룹 재편 (고교 2·3학년 시즌 시작 시 호출)
+    // protagonist 조 schedule[]을 반환 → 호출자가 setSchedule()에 넘겨야 함
+    reinitHighschoolSeason(protagonistTeamId: string, allHsTeams: string[]): ScheduleEntry[] {
+      const { groupA, groupB } = shuffleHsGroups(allHsTeams);
+      const protagonistGroup = groupA.includes(protagonistTeamId) ? groupA : groupB;
+      const npcGroup         = groupA.includes(protagonistTeamId) ? groupB : groupA;
+
+      const npcHsSchedule = generateLeagueSchedule("LEAGUE_HIGHSCHOOL_NPC", npcGroup, 10, 42, 2, protagonistTeamId);
+      const protagonistSchedule = generateLeagueSchedule("LEAGUE_HIGHSCHOOL", protagonistGroup, 10, 42, 2, protagonistTeamId);
+
+      update((s) => {
+        const leagueState: Record<string, LeagueSeasonState> = {
+          LEAGUE_HIGHSCHOOL_NPC: { standings: makeStandings(npcGroup), stats: {} },
+        };
+        for (const [lid, teams] of Object.entries(ALL_TEAMS_BY_LEAGUE)) {
+          if (lid === "LEAGUE_HIGHSCHOOL") continue;
+          leagueState[lid] = { standings: makeStandings(teams), stats: {} };
+        }
+        return {
+          ...s,
+          standings: makeStandings(protagonistGroup),
+          leagueSchedules: {
+            LEAGUE_HIGHSCHOOL_NPC: npcHsSchedule,
+            ...DEFAULT_LEAGUE_CONFIGS.reduce<Record<string, ScheduleEntry[]>>((acc, cfg) => {
+              acc[cfg.leagueId] = generateLeagueSchedule(cfg.leagueId, cfg.teams, cfg.startWeek, cfg.endWeek, cfg.cycles, protagonistTeamId);
+              return acc;
+            }, {}),
+          },
+          leagueState,
+          hsGroupA: groupA,
+          hsGroupB: groupB,
+        };
+      });
+
+      return protagonistSchedule;
     },
 
     // L1: 해당 주차 모든 NPC 리그 경기 시뮬레이션 (protagonist 리그 제외)

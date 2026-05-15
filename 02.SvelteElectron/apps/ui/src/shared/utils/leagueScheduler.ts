@@ -143,28 +143,44 @@ export function generateAllLeagueSchedules(
   return result;
 }
 
-// ── 정적 리그 설정 ────────────────────────────────────────────
-export const HS_GROUP_A = [
+// ── 고교 팀 목록 ──────────────────────────────────────────────
+export const HS_SELECTABLE_TEAMS = [
   "TEAM_HS_SEOUL_INNOVATION",
-  "TEAM_HS_DAEGU_HEAT",
-  "TEAM_HS_INCHEON_HARBOR",
-  "TEAM_HS_SUWON_EDGE",
-  "TEAM_HS_YEOSU_SHORE",
-  "TEAM_HS_JEJU_WIND",
-  "TEAM_HS_MASAN_HARBOR",
-  "TEAM_HS_GOYANG_ARROW",
-];
-
-export const HS_GROUP_B = [
   "TEAM_HS_BUSAN_WAVE",
+  "TEAM_HS_DAEGU_HEAT",
   "TEAM_HS_GWANGJU_VISION",
   "TEAM_HS_DAEJEON_RISE",
+  "TEAM_HS_INCHEON_HARBOR",
   "TEAM_HS_ULSAN_CHARGE",
+  "TEAM_HS_SUWON_EDGE",
+];
+
+export const HS_ALL_TEAMS = [
+  ...HS_SELECTABLE_TEAMS,
+  "TEAM_HS_YEOSU_SHORE",
   "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "TEAM_HS_JEJU_WIND",
   "TEAM_HS_GANGWON_PEAK",
+  "TEAM_HS_MASAN_HARBOR",
   "TEAM_HS_JECHEON_RIDGE",
+  "TEAM_HS_GOYANG_ARROW",
   "TEAM_HS_SUNCHEON_BAY",
 ];
+
+// 매 시즌 16개 팀을 랜덤으로 A/B 두 조로 분배
+export function shuffleHsGroups(allTeams: string[] = HS_ALL_TEAMS): { groupA: string[]; groupB: string[] } {
+  const arr = [...allTeams];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  const half = Math.floor(arr.length / 2);
+  return { groupA: arr.slice(0, half), groupB: arr.slice(half) };
+}
+
+// 하위 호환용 정적 그룹 (직접 사용하지 말 것 — shuffleHsGroups 사용)
+export const HS_GROUP_A = HS_ALL_TEAMS.slice(0, 8);
+export const HS_GROUP_B = HS_ALL_TEAMS.slice(8);
 
 export const UNIV_TEAMS = [
   "TEAM_UNIV_KNSU", "TEAM_UNIV_KNU", "TEAM_UNIV_YONSEI",
@@ -197,7 +213,7 @@ export const ABL_TEAMS = [
 ];
 
 export const ALL_TEAMS_BY_LEAGUE: Record<string, string[]> = {
-  LEAGUE_HIGHSCHOOL: [...HS_GROUP_A, ...HS_GROUP_B],
+  LEAGUE_HIGHSCHOOL: HS_ALL_TEAMS,
   LEAGUE_UNIVERSITY: UNIV_TEAMS,
   LEAGUE_INDEPENDENT: IND_TEAMS,
   LEAGUE_KBL: KBL_TEAMS,

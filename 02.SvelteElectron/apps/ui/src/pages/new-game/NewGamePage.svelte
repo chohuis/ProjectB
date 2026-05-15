@@ -3,6 +3,7 @@
   import { gameStore } from "../../shared/stores/game";
   import { seasonStore } from "../../shared/stores/season";
   import { generateSchedule } from "../../shared/utils/scheduleGen";
+  import { HS_SELECTABLE_TEAMS, shuffleHsGroups } from "../../shared/utils/leagueScheduler";
   import type { Handedness, PitchEntry, PitchingForm, ProtagonistSave } from "../../shared/types/save";
 
   export let onComplete: () => void;
@@ -31,7 +32,10 @@
   let selectedTeamId = "";
   let entitiesLoaded = false;
 
-  $: hsTeams = $masterStore.teams.filter((t) => t.leagueId === "LEAGUE_HIGHSCHOOL");
+  // 전체 고교팀 (16개) — 리그 구성용
+  $: hsAllTeams = $masterStore.teams.filter((t) => t.leagueId === "LEAGUE_HIGHSCHOOL");
+  // 선택 가능한 팀 (8개) — 캐릭터 생성 UI 표시용
+  $: hsTeams = hsAllTeams.filter((t) => HS_SELECTABLE_TEAMS.includes(t.id));
   $: selectedTeam = hsTeams.find((t) => t.id === selectedTeamId) ?? null;
 
   // Step 2 진입 시 엔티티 로드
@@ -110,7 +114,6 @@
   // ── 게임 시작 ──────────────────────────────────────────────────
   async function startGame() {
     const preset = PRESETS[selectedPreset];
-    const teamIds = hsTeams.map((t) => t.id);
     const potentialHidden = Math.floor(Math.random() * 31) + 60;
     const developmentRate = Math.floor(Math.random() * 16) + 55;
 
@@ -160,11 +163,18 @@
       faUnsignedWeeks: 0,
     };
 
+    // 16개 팀을 A/B조로 랜덤 분배
+    const allHsIds = hsAllTeams.map((t) => t.id);
+    const { groupA, groupB } = shuffleHsGroups(allHsIds);
+    // protagonist 조 결정
+    const protagonistGroup = groupA.includes(selectedTeamId) ? groupA : groupB;
+
     gameStore.initNew(protagonist);
-    seasonStore.initSeason("LEAGUE_HIGHSCHOOL", 2026, 52, teamIds);
-    const schedule = generateSchedule(teamIds, selectedTeamId, 52);
+    // protagonist 조(8팀) 기준으로 시즌·스케줄 초기화
+    seasonStore.initSeason("LEAGUE_HIGHSCHOOL", 2026, 52, protagonistGroup);
+    const schedule = generateSchedule(protagonistGroup, selectedTeamId, 52);
     seasonStore.setSchedule(schedule);
-    seasonStore.initAllLeagues(2026, selectedTeamId);
+    seasonStore.initAllLeagues(2026, selectedTeamId, groupA, groupB);
 
     onComplete();
   }

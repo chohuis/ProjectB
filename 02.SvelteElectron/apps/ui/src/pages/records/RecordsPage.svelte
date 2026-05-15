@@ -27,12 +27,22 @@
 
   function leagueName(lid: string): string {
     const map: Record<string, string> = {
-      LEAGUE_HIGHSCHOOL:  "고교",
-      LEAGUE_UNIVERSITY:  "대학",
-      LEAGUE_INDEPENDENT: "독립",
-      LEAGUE_KBL:         "KBL",
-      LEAGUE_ABL:         "ABL",
+      LEAGUE_HIGHSCHOOL:     "고교",
+      LEAGUE_UNIVERSITY:     "대학",
+      LEAGUE_INDEPENDENT:    "독립",
+      LEAGUE_KBL:            "KBL",
+      LEAGUE_ABL:            "ABL",
     };
+    if (lid === "LEAGUE_HIGHSCHOOL") {
+      const hsGroupA = $seasonStore.hsGroupA ?? [];
+      const isGroupA = hsGroupA.includes($gameStore.protagonist.teamId);
+      return isGroupA ? "고등학교 A리그" : "고등학교 B리그";
+    }
+    if (lid === "LEAGUE_HIGHSCHOOL_NPC") {
+      const hsGroupA = $seasonStore.hsGroupA ?? [];
+      const isGroupA = hsGroupA.includes($gameStore.protagonist.teamId);
+      return isGroupA ? "고등학교 B리그" : "고등학교 A리그";
+    }
     return map[lid] ?? lid;
   }
 
