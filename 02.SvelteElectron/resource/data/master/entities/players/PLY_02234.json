@@ -1,0 +1,120 @@
+{
+  "id": "PLY_02234",
+  "name": "Victor Anderson",
+  "nameEn": "Victor Anderson",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_MOTORWOLVES",
+  "teamId": "TEAM_ABL_MOTORWOLVES_2",
+  "grade": null,
+  "schoolId": "SCHOOL_NONE",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 7,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 75,
+        "velocity": 85,
+        "command": 65,
+        "control": 71,
+        "movement": 81,
+        "mentality": 84,
+        "recovery": 76,
+        "clutch": 50,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 34,
+        "power": 30,
+        "eye": 30,
+        "discipline": 38,
+        "speed": 30,
+        "fielding": 42,
+        "arm": 46,
+        "battingClutch": 50,
+        "baseInstinct": 50,
+        "bunting": 45,
+        "platoon": 50
+      },
+      "developmentRate": 48,
+      "potentialHidden": 80,
+      "primaryPosition": "SP",
+      "positionRatings": {
+        "SP": 76
+      },
+      "pitches": [
+        {
+          "id": "PITCH_FASTBALL",
+          "grade": 3
+        },
+        {
+          "id": "PITCH_SCREWBALL",
+          "grade": 4
+        },
+        {
+          "id": "PITCH_CURVE",
+          "grade": 2
+        },
+        {
+          "id": "PITCH_SLIDER",
+          "grade": 2
+        }
+      ]
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  },
+  "diligence": 40,
+  "popularity": 38
+}

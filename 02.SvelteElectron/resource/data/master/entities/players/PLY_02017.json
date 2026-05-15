@@ -1,0 +1,108 @@
+{
+  "id": "PLY_02017",
+  "name": "손성민",
+  "nameEn": "Son Seongmin",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_KBL",
+  "clubId": "CLUB_KBL_GIANTWHALES",
+  "teamId": "TEAM_KBL_GIANTWHALES_2",
+  "grade": null,
+  "schoolId": "SCHOOL_NONE",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 26,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 56,
+        "velocity": 50,
+        "command": 52,
+        "control": 58,
+        "movement": 59,
+        "mentality": 67,
+        "recovery": 57,
+        "clutch": 50,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 65,
+        "power": 62,
+        "eye": 66,
+        "discipline": 49,
+        "speed": 68,
+        "fielding": 56,
+        "arm": 71,
+        "battingClutch": 50,
+        "baseInstinct": 50,
+        "bunting": 45,
+        "platoon": 50
+      },
+      "developmentRate": 54,
+      "potentialHidden": 75,
+      "primaryPosition": "SS",
+      "positionRatings": {
+        "SS": 61
+      },
+      "pitches": [
+        {
+          "id": "PITCH_FASTBALL",
+          "grade": 1
+        }
+      ]
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  },
+  "diligence": 60,
+  "popularity": 60
+}

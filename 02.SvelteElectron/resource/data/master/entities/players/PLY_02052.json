@@ -1,0 +1,112 @@
+{
+  "id": "PLY_02052",
+  "name": "Miguel Scott",
+  "nameEn": "Miguel Scott",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_HARBORHAWKS",
+  "teamId": "TEAM_ABL_HARBORHAWKS_2",
+  "grade": null,
+  "schoolId": "SCHOOL_NONE",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 18,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 47,
+        "velocity": 55,
+        "command": 60,
+        "control": 67,
+        "movement": 62,
+        "mentality": 70,
+        "recovery": 58,
+        "clutch": 50,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 46,
+        "power": 53,
+        "eye": 42,
+        "discipline": 60,
+        "speed": 58,
+        "fielding": 47,
+        "arm": 42,
+        "battingClutch": 50,
+        "baseInstinct": 50,
+        "bunting": 45,
+        "platoon": 50
+      },
+      "developmentRate": 32,
+      "potentialHidden": 56,
+      "primaryPosition": "RP",
+      "positionRatings": {
+        "RP": 59
+      },
+      "pitches": [
+        {
+          "id": "PITCH_FASTBALL",
+          "grade": 4
+        },
+        {
+          "id": "PITCH_CURVE",
+          "grade": 3
+        }
+      ]
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  },
+  "diligence": 41,
+  "popularity": 19
+}

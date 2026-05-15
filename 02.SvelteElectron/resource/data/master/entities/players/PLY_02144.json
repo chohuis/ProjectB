@@ -1,0 +1,108 @@
+{
+  "id": "PLY_02144",
+  "name": "Ethan Ramirez",
+  "nameEn": "Ethan Ramirez",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "CLUB_ABL_LONESTARS",
+  "teamId": "TEAM_ABL_LONESTARS_1",
+  "grade": null,
+  "schoolId": "SCHOOL_NONE",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 81,
+      "pitching": {
+        "ovr": 85,
+        "stamina": 97,
+        "velocity": 80,
+        "command": 90,
+        "control": 95,
+        "movement": 81,
+        "mentality": 75,
+        "recovery": 74,
+        "clutch": 50,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 85,
+        "contact": 74,
+        "power": 74,
+        "eye": 85,
+        "discipline": 74,
+        "speed": 84,
+        "fielding": 79,
+        "arm": 93,
+        "battingClutch": 50,
+        "baseInstinct": 50,
+        "bunting": 45,
+        "platoon": 50
+      },
+      "developmentRate": 30,
+      "potentialHidden": 87,
+      "primaryPosition": "C",
+      "positionRatings": {
+        "C": 85
+      },
+      "pitches": [
+        {
+          "id": "PITCH_FASTBALL",
+          "grade": 1
+        }
+      ]
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  },
+  "diligence": 46,
+  "popularity": 58
+}

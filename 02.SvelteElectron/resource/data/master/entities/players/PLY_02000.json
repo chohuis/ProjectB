@@ -1,0 +1,112 @@
+{
+  "id": "PLY_02000",
+  "name": "노지호",
+  "nameEn": "No Jiho",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_KBL",
+  "clubId": "CLUB_KBL_STEELDINOS",
+  "teamId": "TEAM_KBL_STEELDINOS_2",
+  "grade": null,
+  "schoolId": "SCHOOL_NONE",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 92,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 64,
+        "velocity": 63,
+        "command": 72,
+        "control": 84,
+        "movement": 77,
+        "mentality": 77,
+        "recovery": 68,
+        "clutch": 50,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 30,
+        "contact": 30,
+        "power": 30,
+        "eye": 30,
+        "discipline": 37,
+        "speed": 32,
+        "fielding": 30,
+        "arm": 30,
+        "battingClutch": 50,
+        "baseInstinct": 50,
+        "bunting": 45,
+        "platoon": 50
+      },
+      "developmentRate": 63,
+      "potentialHidden": 72,
+      "primaryPosition": "RP",
+      "positionRatings": {
+        "RP": 72
+      },
+      "pitches": [
+        {
+          "id": "PITCH_FASTBALL",
+          "grade": 5
+        },
+        {
+          "id": "PITCH_SPLITTER",
+          "grade": 4
+        }
+      ]
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  },
+  "diligence": 79,
+  "popularity": 10
+}
