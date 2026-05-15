@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02746",
+  "name": "石川哲",
+  "nameEn": "Ishikawa Satoshi",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
+  "teamId": "TEAM_JBL_PL_SPIRITBUFFALOS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "DH",
+      "jerseyNumber": 50,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 43,
+        "velocity": 42,
+        "command": 44,
+        "control": 45,
+        "movement": 44,
+        "mentality": 46,
+        "recovery": 43
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 69,
+        "power": 64,
+        "eye": 63,
+        "discipline": 62,
+        "speed": 55,
+        "fielding": 57,
+        "arm": 55,
+        "battingClutch": 66
+      },
+      "developmentRate": 39,
+      "potentialHidden": 62
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

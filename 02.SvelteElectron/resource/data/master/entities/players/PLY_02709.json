@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02709",
+  "name": "吉田雄太",
+  "nameEn": "Yoshida Yuta",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
+  "teamId": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 8,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 71,
+        "velocity": 78,
+        "command": 73,
+        "control": 73,
+        "movement": 71,
+        "mentality": 73,
+        "recovery": 72
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 46,
+        "power": 49,
+        "eye": 51,
+        "discipline": 45,
+        "speed": 48,
+        "fielding": 49,
+        "arm": 52,
+        "battingClutch": 51
+      },
+      "developmentRate": 42,
+      "potentialHidden": 74
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

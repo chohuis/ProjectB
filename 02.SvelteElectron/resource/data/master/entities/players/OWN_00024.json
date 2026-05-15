@@ -1,0 +1,84 @@
+{
+  "id": "OWN_00024",
+  "name": "西村清",
+  "nameEn": "Nishimura Kiyoshi",
+  "role": "owner",
+  "age": 69,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_POLARBEARS",
+  "teamId": "TEAM_JBL_PL_POLARBEARS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 0,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 50,
+        "velocity": 50,
+        "command": 50,
+        "control": 50,
+        "movement": 50,
+        "mentality": 50,
+        "recovery": 50
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 50,
+        "power": 50,
+        "eye": 50,
+        "discipline": 50,
+        "speed": 50,
+        "fielding": 50,
+        "arm": 50,
+        "battingClutch": 50
+      },
+      "developmentRate": 50,
+      "potentialHidden": 70
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "공격 투자",
+      "tenureYears": 11,
+      "stats": {
+        "budgetSupport": 68,
+        "patience": 52,
+        "prInfluence": 54,
+        "facilityInvestment": 82,
+        "staffTrust": 65
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

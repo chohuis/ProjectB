@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02758",
+  "name": "井上龍",
+  "nameEn": "Inoue Ryu",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+  "teamId": "TEAM_JBL_PL_MARINESOLDIERS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 12,
+      "pitching": {
+        "ovr": 95,
+        "stamina": 79,
+        "velocity": 98,
+        "command": 89,
+        "control": 94,
+        "movement": 86,
+        "mentality": 89,
+        "recovery": 93
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 59,
+        "power": 62,
+        "eye": 59,
+        "discipline": 60,
+        "speed": 63,
+        "fielding": 64,
+        "arm": 59,
+        "battingClutch": 60
+      },
+      "developmentRate": 45,
+      "potentialHidden": 74
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

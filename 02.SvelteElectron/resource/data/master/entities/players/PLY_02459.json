@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02459",
+  "name": "前田大輝",
+  "nameEn": "Maeda Daiki",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONDRAKES",
+  "teamId": "TEAM_JBL_CL_IRONDRAKES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 33,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 73,
+        "velocity": 71,
+        "command": 68,
+        "control": 66,
+        "movement": 64,
+        "mentality": 68,
+        "recovery": 66
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 47,
+        "power": 44,
+        "eye": 43,
+        "discipline": 46,
+        "speed": 43,
+        "fielding": 42,
+        "arm": 48,
+        "battingClutch": 46
+      },
+      "developmentRate": 57,
+      "potentialHidden": 87
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

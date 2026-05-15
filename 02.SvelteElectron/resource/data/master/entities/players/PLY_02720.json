@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02720",
+  "name": "橋本清",
+  "nameEn": "Hashimoto Kiyoshi",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
+  "teamId": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 19,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 64,
+        "velocity": 64,
+        "command": 65,
+        "control": 65,
+        "movement": 64,
+        "mentality": 63,
+        "recovery": 60
+      },
+      "batting": {
+        "ovr": 90,
+        "contact": 84,
+        "power": 88,
+        "eye": 91,
+        "discipline": 91,
+        "speed": 92,
+        "fielding": 92,
+        "arm": 84,
+        "battingClutch": 92
+      },
+      "developmentRate": 34,
+      "potentialHidden": 88
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

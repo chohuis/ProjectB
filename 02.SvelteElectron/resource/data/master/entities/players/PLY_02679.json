@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02679",
+  "name": "佐々木勇",
+  "nameEn": "Sasaki Isamu",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_POLARBEARS",
+  "teamId": "TEAM_JBL_PL_POLARBEARS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "DH",
+      "jerseyNumber": 23,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 52,
+        "velocity": 50,
+        "command": 55,
+        "control": 49,
+        "movement": 51,
+        "mentality": 51,
+        "recovery": 47
+      },
+      "batting": {
+        "ovr": 81,
+        "contact": 81,
+        "power": 90,
+        "eye": 86,
+        "discipline": 82,
+        "speed": 80,
+        "fielding": 79,
+        "arm": 74,
+        "battingClutch": 87
+      },
+      "developmentRate": 39,
+      "potentialHidden": 70
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02551",
+  "name": "鈴木蓮",
+  "nameEn": "Suzuki Ren",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 35,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 55,
+        "velocity": 67,
+        "command": 61,
+        "control": 60,
+        "movement": 54,
+        "mentality": 58,
+        "recovery": 59
+      },
+      "batting": {
+        "ovr": 33,
+        "contact": 30,
+        "power": 26,
+        "eye": 32,
+        "discipline": 27,
+        "speed": 28,
+        "fielding": 25,
+        "arm": 30,
+        "battingClutch": 26
+      },
+      "developmentRate": 45,
+      "potentialHidden": 58
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

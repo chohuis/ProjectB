@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02711",
+  "name": "橋本颯太",
+  "nameEn": "Hashimoto Sota",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
+  "teamId": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 10,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 67,
+        "velocity": 79,
+        "command": 68,
+        "control": 71,
+        "movement": 66,
+        "mentality": 67,
+        "recovery": 69
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 49,
+        "power": 49,
+        "eye": 46,
+        "discipline": 48,
+        "speed": 46,
+        "fielding": 46,
+        "arm": 46,
+        "battingClutch": 49
+      },
+      "developmentRate": 48,
+      "potentialHidden": 78
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

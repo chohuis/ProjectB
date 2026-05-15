@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02589",
+  "name": "岡田光",
+  "nameEn": "Okada Hikaru",
+  "role": "player",
+  "age": 36,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "DH",
+      "jerseyNumber": 23,
+      "pitching": {
+        "ovr": 38,
+        "stamina": 43,
+        "velocity": 46,
+        "command": 44,
+        "control": 39,
+        "movement": 36,
+        "mentality": 37,
+        "recovery": 38
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 76,
+        "power": 78,
+        "eye": 72,
+        "discipline": 69,
+        "speed": 66,
+        "fielding": 67,
+        "arm": 71,
+        "battingClutch": 70
+      },
+      "developmentRate": 45,
+      "potentialHidden": 87
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

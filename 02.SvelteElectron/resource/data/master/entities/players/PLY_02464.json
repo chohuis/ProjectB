@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02464",
+  "name": "鈴木純",
+  "nameEn": "Suzuki Jun",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONDRAKES",
+  "teamId": "TEAM_JBL_CL_IRONDRAKES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "RP",
+      "jerseyNumber": 38,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 56,
+        "velocity": 71,
+        "command": 70,
+        "control": 70,
+        "movement": 67,
+        "mentality": 67,
+        "recovery": 64
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 47,
+        "power": 46,
+        "eye": 39,
+        "discipline": 42,
+        "speed": 46,
+        "fielding": 44,
+        "arm": 40,
+        "battingClutch": 48
+      },
+      "developmentRate": 52,
+      "potentialHidden": 63
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

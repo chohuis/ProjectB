@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02559",
+  "name": "伊藤仁",
+  "nameEn": "Ito Jin",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 43,
+      "pitching": {
+        "ovr": 39,
+        "stamina": 36,
+        "velocity": 34,
+        "command": 39,
+        "control": 34,
+        "movement": 37,
+        "mentality": 37,
+        "recovery": 37
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 66,
+        "power": 71,
+        "eye": 67,
+        "discipline": 63,
+        "speed": 64,
+        "fielding": 68,
+        "arm": 62,
+        "battingClutch": 65
+      },
+      "developmentRate": 53,
+      "potentialHidden": 76
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

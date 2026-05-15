@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02605",
+  "name": "西村勇",
+  "nameEn": "Nishimura Isamu",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 44,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 42,
+        "velocity": 50,
+        "command": 50,
+        "control": 46,
+        "movement": 47,
+        "mentality": 44,
+        "recovery": 47
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 68,
+        "power": 67,
+        "eye": 68,
+        "discipline": 70,
+        "speed": 69,
+        "fielding": 66,
+        "arm": 70,
+        "battingClutch": 65
+      },
+      "developmentRate": 49,
+      "potentialHidden": 87
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02681",
+  "name": "遠藤勇",
+  "nameEn": "Endo Isamu",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_POLARBEARS",
+  "teamId": "TEAM_JBL_PL_POLARBEARS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 25,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 44,
+        "velocity": 51,
+        "command": 50,
+        "control": 50,
+        "movement": 45,
+        "mentality": 45,
+        "recovery": 44
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 73,
+        "power": 73,
+        "eye": 67,
+        "discipline": 67,
+        "speed": 70,
+        "fielding": 66,
+        "arm": 72,
+        "battingClutch": 72
+      },
+      "developmentRate": 36,
+      "potentialHidden": 84
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

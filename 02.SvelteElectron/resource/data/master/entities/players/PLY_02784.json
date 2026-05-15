@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02784",
+  "name": "渡辺雄太",
+  "nameEn": "Watanabe Yuta",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+  "teamId": "TEAM_JBL_PL_MARINESOLDIERS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 43,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 48,
+        "velocity": 50,
+        "command": 43,
+        "control": 42,
+        "movement": 45,
+        "mentality": 48,
+        "recovery": 49
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 70,
+        "power": 75,
+        "eye": 69,
+        "discipline": 73,
+        "speed": 70,
+        "fielding": 70,
+        "arm": 72,
+        "battingClutch": 76
+      },
+      "developmentRate": 43,
+      "potentialHidden": 63
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

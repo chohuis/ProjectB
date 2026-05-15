@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02640",
+  "name": "藤井光",
+  "nameEn": "Fujii Hikaru",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 34,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 76,
+        "velocity": 82,
+        "command": 74,
+        "control": 80,
+        "movement": 74,
+        "mentality": 72,
+        "recovery": 76
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 59,
+        "power": 58,
+        "eye": 54,
+        "discipline": 54,
+        "speed": 56,
+        "fielding": 53,
+        "arm": 53,
+        "battingClutch": 59
+      },
+      "developmentRate": 43,
+      "potentialHidden": 75
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

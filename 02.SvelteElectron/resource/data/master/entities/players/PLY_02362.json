@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02362",
+  "name": "遠藤充",
+  "nameEn": "Endo Mitsuru",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_NEONCRANES",
+  "teamId": "TEAM_JBL_CL_NEONCRANES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 21,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 48,
+        "velocity": 46,
+        "command": 44,
+        "control": 47,
+        "movement": 50,
+        "mentality": 45,
+        "recovery": 50
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 76,
+        "power": 69,
+        "eye": 69,
+        "discipline": 76,
+        "speed": 79,
+        "fielding": 79,
+        "arm": 70,
+        "battingClutch": 76
+      },
+      "developmentRate": 46,
+      "potentialHidden": 77
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

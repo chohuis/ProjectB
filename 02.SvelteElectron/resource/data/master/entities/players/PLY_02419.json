@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02419",
+  "name": "佐々木亮",
+  "nameEn": "Sasaki Ryo",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
+  "teamId": "TEAM_JBL_CL_TEMPOSTINGS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 38,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 54,
+        "velocity": 70,
+        "command": 62,
+        "control": 59,
+        "movement": 66,
+        "mentality": 59,
+        "recovery": 59
+      },
+      "batting": {
+        "ovr": 35,
+        "contact": 43,
+        "power": 42,
+        "eye": 34,
+        "discipline": 38,
+        "speed": 41,
+        "fielding": 34,
+        "arm": 35,
+        "battingClutch": 39
+      },
+      "developmentRate": 49,
+      "potentialHidden": 71
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

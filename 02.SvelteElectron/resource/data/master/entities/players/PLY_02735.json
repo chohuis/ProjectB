@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02735",
+  "name": "前田拓",
+  "nameEn": "Maeda Hiraku",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
+  "teamId": "TEAM_JBL_PL_SPIRITBUFFALOS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 39,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 67,
+        "velocity": 77,
+        "command": 74,
+        "control": 77,
+        "movement": 75,
+        "mentality": 75,
+        "recovery": 71
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 55,
+        "power": 51,
+        "eye": 52,
+        "discipline": 48,
+        "speed": 46,
+        "fielding": 47,
+        "arm": 48,
+        "battingClutch": 51
+      },
+      "developmentRate": 56,
+      "potentialHidden": 84
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

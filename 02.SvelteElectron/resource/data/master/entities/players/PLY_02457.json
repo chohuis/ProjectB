@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02457",
+  "name": "佐藤翔",
+  "nameEn": "Sato Sho",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONDRAKES",
+  "teamId": "TEAM_JBL_CL_IRONDRAKES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 31,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 69,
+        "velocity": 67,
+        "command": 63,
+        "control": 64,
+        "movement": 63,
+        "mentality": 67,
+        "recovery": 66
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 41,
+        "power": 41,
+        "eye": 36,
+        "discipline": 39,
+        "speed": 41,
+        "fielding": 35,
+        "arm": 39,
+        "battingClutch": 40
+      },
+      "developmentRate": 53,
+      "potentialHidden": 69
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

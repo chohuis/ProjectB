@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02468",
+  "name": "高橋晃",
+  "nameEn": "Takahashi Akira",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONDRAKES",
+  "teamId": "TEAM_JBL_CL_IRONDRAKES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 42,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 54,
+        "velocity": 58,
+        "command": 56,
+        "control": 49,
+        "movement": 54,
+        "mentality": 53,
+        "recovery": 53
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 76,
+        "power": 69,
+        "eye": 72,
+        "discipline": 72,
+        "speed": 70,
+        "fielding": 78,
+        "arm": 74,
+        "battingClutch": 75
+      },
+      "developmentRate": 47,
+      "potentialHidden": 65
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

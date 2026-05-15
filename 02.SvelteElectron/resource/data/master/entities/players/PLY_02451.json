@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02451",
+  "name": "岡田悠人",
+  "nameEn": "Okada Yuto",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONDRAKES",
+  "teamId": "TEAM_JBL_CL_IRONDRAKES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 20,
+      "pitching": {
+        "ovr": 39,
+        "stamina": 38,
+        "velocity": 42,
+        "command": 44,
+        "control": 40,
+        "movement": 42,
+        "mentality": 43,
+        "recovery": 38
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 76,
+        "power": 76,
+        "eye": 72,
+        "discipline": 69,
+        "speed": 75,
+        "fielding": 72,
+        "arm": 68,
+        "battingClutch": 74
+      },
+      "developmentRate": 47,
+      "potentialHidden": 70
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02779",
+  "name": "藤井拓",
+  "nameEn": "Fujii Hiraku",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+  "teamId": "TEAM_JBL_PL_MARINESOLDIERS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "RP",
+      "jerseyNumber": 38,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 55,
+        "velocity": 69,
+        "command": 58,
+        "control": 60,
+        "movement": 64,
+        "mentality": 57,
+        "recovery": 57
+      },
+      "batting": {
+        "ovr": 32,
+        "contact": 34,
+        "power": 34,
+        "eye": 37,
+        "discipline": 37,
+        "speed": 31,
+        "fielding": 30,
+        "arm": 34,
+        "battingClutch": 33
+      },
+      "developmentRate": 43,
+      "potentialHidden": 68
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

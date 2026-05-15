@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02378",
+  "name": "佐々木峻",
+  "nameEn": "Sasaki Shun",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_NEONCRANES",
+  "teamId": "TEAM_JBL_CL_NEONCRANES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 42,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 35,
+        "velocity": 47,
+        "command": 40,
+        "control": 41,
+        "movement": 41,
+        "mentality": 44,
+        "recovery": 38
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 70,
+        "power": 70,
+        "eye": 64,
+        "discipline": 63,
+        "speed": 61,
+        "fielding": 66,
+        "arm": 67,
+        "battingClutch": 68
+      },
+      "developmentRate": 50,
+      "potentialHidden": 63
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

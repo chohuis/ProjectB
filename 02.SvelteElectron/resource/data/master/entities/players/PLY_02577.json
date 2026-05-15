@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02577",
+  "name": "林翔",
+  "nameEn": "Hayashi Sho",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "RP",
+      "jerseyNumber": 11,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 61,
+        "velocity": 73,
+        "command": 70,
+        "control": 73,
+        "movement": 66,
+        "mentality": 68,
+        "recovery": 72
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 38,
+        "power": 39,
+        "eye": 39,
+        "discipline": 37,
+        "speed": 37,
+        "fielding": 34,
+        "arm": 38,
+        "battingClutch": 40
+      },
+      "developmentRate": 43,
+      "potentialHidden": 65
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

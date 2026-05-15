@@ -5,7 +5,8 @@
     { "id": "LEAGUE_UNIVERSITY",  "name": "대학 리그",  "nameEn": "University League" },
     { "id": "LEAGUE_INDEPENDENT", "name": "독립 리그",  "nameEn": "Independent League" },
     { "id": "LEAGUE_KBL",         "name": "KBL 리그",   "nameEn": "KBL League" },
-    { "id": "LEAGUE_ABL",         "name": "ABL",        "nameEn": "ABL" }
+    { "id": "LEAGUE_ABL",         "name": "ABL",        "nameEn": "ABL" },
+    { "id": "LEAGUE_JBL",         "name": "JBL",        "nameEn": "JBL" }
   ],
   "schools": [
     { "id": "SCHOOL_NONE",                "name": "해당 없음",         "nameEn": "N/A" },
@@ -43,7 +44,20 @@
     { "id": "CLUB_ABL_COASTALRAYS",     "name": "샌디에이고 코스털레이스","nameEn": "San Diego CoastalRays",  "leagueId": "LEAGUE_ABL" },
     { "id": "CLUB_ABL_BAYSEALS",        "name": "샌프란시스코 베이씰스","nameEn": "San Francisco BaySeals",  "leagueId": "LEAGUE_ABL" },
     { "id": "CLUB_ABL_RIVERCARDINALS",  "name": "세인트루이스 리버카디널스","nameEn": "St. Louis RiverCardinals","leagueId": "LEAGUE_ABL" },
-    { "id": "CLUB_ABL_PEACHTREEFALCONS","name": "애틀랜타 피치트리팰컨스","nameEn": "Atlanta PeachtreeFalcons","leagueId": "LEAGUE_ABL" }
+    { "id": "CLUB_ABL_PEACHTREEFALCONS","name": "애틀랜타 피치트리팰컨스","nameEn": "Atlanta PeachtreeFalcons","leagueId": "LEAGUE_ABL" },
+
+    { "id": "CLUB_JBL_CL_NEONCRANES",    "name": "도쿄 네온 크레인즈",   "nameEn": "Tokyo Neon Cranes",         "leagueId": "LEAGUE_JBL" },
+    { "id": "CLUB_JBL_CL_TEMPOSTINGS",   "name": "오사카 템포 스팅스",   "nameEn": "Osaka Tempo Stings",        "leagueId": "LEAGUE_JBL" },
+    { "id": "CLUB_JBL_CL_IRONDRAKES",    "name": "나고야 아이언 드레이크스","nameEn": "Nagoya Iron Drakes",      "leagueId": "LEAGUE_JBL" },
+    { "id": "CLUB_JBL_CL_TIDERAVES",     "name": "요코하마 타이드 레이브스","nameEn": "Yokohama Tide Raves",     "leagueId": "LEAGUE_JBL" },
+    { "id": "CLUB_JBL_CL_SILVERWOLVES",  "name": "고베 실버 울브스",     "nameEn": "Kobe Silver Wolves",        "leagueId": "LEAGUE_JBL" },
+    { "id": "CLUB_JBL_CL_IRONSTORMS",    "name": "히로시마 아이언 스톰즈","nameEn": "Hiroshima Iron Storms",    "leagueId": "LEAGUE_JBL" },
+    { "id": "CLUB_JBL_PL_THUNDERFALCONS","name": "후쿠오카 썬더 팰컨즈", "nameEn": "Fukuoka Thunder Falcons",   "leagueId": "LEAGUE_JBL" },
+    { "id": "CLUB_JBL_PL_POLARBEARS",    "name": "삿포로 폴라 베어스",   "nameEn": "Sapporo Polar Bears",       "leagueId": "LEAGUE_JBL" },
+    { "id": "CLUB_JBL_PL_SPIRITBUFFALOS","name": "센다이 스피릿 버팔로스","nameEn": "Sendai Spirit Buffalos",   "leagueId": "LEAGUE_JBL" },
+    { "id": "CLUB_JBL_PL_MARINESOLDIERS","name": "나가사키 마린 솔저스", "nameEn": "Nagasaki Marine Soldiers",  "leagueId": "LEAGUE_JBL" },
+    { "id": "CLUB_JBL_PL_SEAGULLS",      "name": "니가타 씨걸스",        "nameEn": "Niigata Seagulls",          "leagueId": "LEAGUE_JBL" },
+    { "id": "CLUB_JBL_PL_SUNS",          "name": "오키나와 선즈",        "nameEn": "Okinawa Suns",              "leagueId": "LEAGUE_JBL" }
   ],
   "teams": [
     {
@@ -301,6 +315,31 @@
     { "id": "TEAM_ABL_RIVERCARDINALS_1",  "name": "세인트루이스 리버카디널스","nameEn": "St. Louis RiverCardinals",        "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_RIVERCARDINALS",  "tier": "메이저" },
     { "id": "TEAM_ABL_RIVERCARDINALS_2",  "name": "세인트루이스 리버카디널스 팜","nameEn": "St. Louis RiverCardinals (Farm)","leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_RIVERCARDINALS","tier": "마이너" },
     { "id": "TEAM_ABL_PEACHTREEFALCONS_1","name": "애틀랜타 피치트리팰컨스", "nameEn": "Atlanta PeachtreeFalcons",        "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_PEACHTREEFALCONS","tier": "메이저" },
-    { "id": "TEAM_ABL_PEACHTREEFALCONS_2","name": "애틀랜타 피치트리팰컨스 팜","nameEn": "Atlanta PeachtreeFalcons (Farm)","leagueId": "LEAGUE_ABL","clubId": "CLUB_ABL_PEACHTREEFALCONS","tier": "마이너" }
+    { "id": "TEAM_ABL_PEACHTREEFALCONS_2","name": "애틀랜타 피치트리팰컨스 팜","nameEn": "Atlanta PeachtreeFalcons (Farm)","leagueId": "LEAGUE_ABL","clubId": "CLUB_ABL_PEACHTREEFALCONS","tier": "마이너" },
+
+    { "id": "TEAM_JBL_CL_NEONCRANES_1",    "name": "도쿄 네온 크레인즈 1군",    "nameEn": "Tokyo Neon Cranes (1st)",         "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_CL_NEONCRANES",    "tier": "1군" },
+    { "id": "TEAM_JBL_CL_NEONCRANES_2",    "name": "도쿄 네온 크레인즈 2군",    "nameEn": "Tokyo Neon Cranes (2nd)",         "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_CL_NEONCRANES",    "tier": "2군" },
+    { "id": "TEAM_JBL_CL_TEMPOSTINGS_1",   "name": "오사카 템포 스팅스 1군",    "nameEn": "Osaka Tempo Stings (1st)",        "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_CL_TEMPOSTINGS",   "tier": "1군" },
+    { "id": "TEAM_JBL_CL_TEMPOSTINGS_2",   "name": "오사카 템포 스팅스 2군",    "nameEn": "Osaka Tempo Stings (2nd)",        "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_CL_TEMPOSTINGS",   "tier": "2군" },
+    { "id": "TEAM_JBL_CL_IRONDRAKES_1",    "name": "나고야 아이언 드레이크스 1군","nameEn": "Nagoya Iron Drakes (1st)",       "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_CL_IRONDRAKES",    "tier": "1군" },
+    { "id": "TEAM_JBL_CL_IRONDRAKES_2",    "name": "나고야 아이언 드레이크스 2군","nameEn": "Nagoya Iron Drakes (2nd)",       "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_CL_IRONDRAKES",    "tier": "2군" },
+    { "id": "TEAM_JBL_CL_TIDERAVES_1",     "name": "요코하마 타이드 레이브스 1군","nameEn": "Yokohama Tide Raves (1st)",     "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_CL_TIDERAVES",     "tier": "1군" },
+    { "id": "TEAM_JBL_CL_TIDERAVES_2",     "name": "요코하마 타이드 레이브스 2군","nameEn": "Yokohama Tide Raves (2nd)",     "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_CL_TIDERAVES",     "tier": "2군" },
+    { "id": "TEAM_JBL_CL_SILVERWOLVES_1",  "name": "고베 실버 울브스 1군",      "nameEn": "Kobe Silver Wolves (1st)",        "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_CL_SILVERWOLVES",  "tier": "1군" },
+    { "id": "TEAM_JBL_CL_SILVERWOLVES_2",  "name": "고베 실버 울브스 2군",      "nameEn": "Kobe Silver Wolves (2nd)",        "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_CL_SILVERWOLVES",  "tier": "2군" },
+    { "id": "TEAM_JBL_CL_IRONSTORMS_1",    "name": "히로시마 아이언 스톰즈 1군","nameEn": "Hiroshima Iron Storms (1st)",     "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_CL_IRONSTORMS",    "tier": "1군" },
+    { "id": "TEAM_JBL_CL_IRONSTORMS_2",    "name": "히로시마 아이언 스톰즈 2군","nameEn": "Hiroshima Iron Storms (2nd)",     "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_CL_IRONSTORMS",    "tier": "2군" },
+    { "id": "TEAM_JBL_PL_THUNDERFALCONS_1","name": "후쿠오카 썬더 팰컨즈 1군",  "nameEn": "Fukuoka Thunder Falcons (1st)",   "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_PL_THUNDERFALCONS","tier": "1군" },
+    { "id": "TEAM_JBL_PL_THUNDERFALCONS_2","name": "후쿠오카 썬더 팰컨즈 2군",  "nameEn": "Fukuoka Thunder Falcons (2nd)",   "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_PL_THUNDERFALCONS","tier": "2군" },
+    { "id": "TEAM_JBL_PL_POLARBEARS_1",    "name": "삿포로 폴라 베어스 1군",    "nameEn": "Sapporo Polar Bears (1st)",       "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_PL_POLARBEARS",    "tier": "1군" },
+    { "id": "TEAM_JBL_PL_POLARBEARS_2",    "name": "삿포로 폴라 베어스 2군",    "nameEn": "Sapporo Polar Bears (2nd)",       "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_PL_POLARBEARS",    "tier": "2군" },
+    { "id": "TEAM_JBL_PL_SPIRITBUFFALOS_1","name": "센다이 스피릿 버팔로스 1군","nameEn": "Sendai Spirit Buffalos (1st)",    "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS","tier": "1군" },
+    { "id": "TEAM_JBL_PL_SPIRITBUFFALOS_2","name": "센다이 스피릿 버팔로스 2군","nameEn": "Sendai Spirit Buffalos (2nd)",    "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS","tier": "2군" },
+    { "id": "TEAM_JBL_PL_MARINESOLDIERS_1","name": "나가사키 마린 솔저스 1군",  "nameEn": "Nagasaki Marine Soldiers (1st)", "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_PL_MARINESOLDIERS","tier": "1군" },
+    { "id": "TEAM_JBL_PL_MARINESOLDIERS_2","name": "나가사키 마린 솔저스 2군",  "nameEn": "Nagasaki Marine Soldiers (2nd)", "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_PL_MARINESOLDIERS","tier": "2군" },
+    { "id": "TEAM_JBL_PL_SEAGULLS_1",      "name": "니가타 씨걸스 1군",         "nameEn": "Niigata Seagulls (1st)",          "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_PL_SEAGULLS",      "tier": "1군" },
+    { "id": "TEAM_JBL_PL_SEAGULLS_2",      "name": "니가타 씨걸스 2군",         "nameEn": "Niigata Seagulls (2nd)",          "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_PL_SEAGULLS",      "tier": "2군" },
+    { "id": "TEAM_JBL_PL_SUNS_1",          "name": "오키나와 선즈 1군",          "nameEn": "Okinawa Suns (1st)",              "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_PL_SUNS",          "tier": "1군" },
+    { "id": "TEAM_JBL_PL_SUNS_2",          "name": "오키나와 선즈 2군",          "nameEn": "Okinawa Suns (2nd)",              "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_PL_SUNS",          "tier": "2군" }
   ]
 }

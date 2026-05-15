@@ -19,6 +19,7 @@ const ENTITIES_DIR = resolve(MASTER, "entities");
 const krPool = JSON.parse(readFileSync(resolve(MASTER, "players/name_pool_kr.json"), "utf8"));
 const enPool = JSON.parse(readFileSync(resolve(MASTER, "players/name_pool_en.json"), "utf8"));
 const ablEnPool = JSON.parse(readFileSync(resolve(MASTER, "players/name_pool_abl_en.json"), "utf8"));
+const jpPool = JSON.parse(readFileSync(resolve(MASTER, "players/name_pool_jp.json"), "utf8"));
 
 const KR_LAST = krPool.lastNames;
 const KR_GIVEN = krPool.givenNames;
@@ -26,6 +27,8 @@ const EN_LAST = enPool.lastNames;
 const EN_GIVEN = enPool.givenNames;
 const ABL_EN_FIRST = ablEnPool.firstNames;
 const ABL_EN_LAST = ablEnPool.lastNames;
+const JP_LAST = jpPool.lastNames;
+const JP_GIVEN = jpPool.givenNames;
 
 const KBL_CLUBS = [
   { no: 1, clubId: "CLUB_KBL_KIA", team1: "TEAM_KBL_KIA_1", team2: "TEAM_KBL_KIA_2" },
@@ -67,6 +70,26 @@ const UNIV_TEAMS = [
   { no: 7, teamId: "TEAM_UNIV_DONGGUK", schoolId: "SCHOOL_UNIV_DONGGUK" }
 ];
 
+const JBL_CL_CLUBS = [
+  { no: 1,  clubId: "CLUB_JBL_CL_NEONCRANES",    team1: "TEAM_JBL_CL_NEONCRANES_1",    team2: "TEAM_JBL_CL_NEONCRANES_2" },
+  { no: 2,  clubId: "CLUB_JBL_CL_TEMPOSTINGS",   team1: "TEAM_JBL_CL_TEMPOSTINGS_1",   team2: "TEAM_JBL_CL_TEMPOSTINGS_2" },
+  { no: 3,  clubId: "CLUB_JBL_CL_IRONDRAKES",    team1: "TEAM_JBL_CL_IRONDRAKES_1",    team2: "TEAM_JBL_CL_IRONDRAKES_2" },
+  { no: 4,  clubId: "CLUB_JBL_CL_TIDERAVES",     team1: "TEAM_JBL_CL_TIDERAVES_1",     team2: "TEAM_JBL_CL_TIDERAVES_2" },
+  { no: 5,  clubId: "CLUB_JBL_CL_SILVERWOLVES",  team1: "TEAM_JBL_CL_SILVERWOLVES_1",  team2: "TEAM_JBL_CL_SILVERWOLVES_2" },
+  { no: 6,  clubId: "CLUB_JBL_CL_IRONSTORMS",    team1: "TEAM_JBL_CL_IRONSTORMS_1",    team2: "TEAM_JBL_CL_IRONSTORMS_2" },
+];
+
+const JBL_PL_CLUBS = [
+  { no: 7,  clubId: "CLUB_JBL_PL_THUNDERFALCONS", team1: "TEAM_JBL_PL_THUNDERFALCONS_1", team2: "TEAM_JBL_PL_THUNDERFALCONS_2" },
+  { no: 8,  clubId: "CLUB_JBL_PL_POLARBEARS",     team1: "TEAM_JBL_PL_POLARBEARS_1",     team2: "TEAM_JBL_PL_POLARBEARS_2" },
+  { no: 9,  clubId: "CLUB_JBL_PL_SPIRITBUFFALOS", team1: "TEAM_JBL_PL_SPIRITBUFFALOS_1", team2: "TEAM_JBL_PL_SPIRITBUFFALOS_2" },
+  { no: 10, clubId: "CLUB_JBL_PL_MARINESOLDIERS", team1: "TEAM_JBL_PL_MARINESOLDIERS_1", team2: "TEAM_JBL_PL_MARINESOLDIERS_2" },
+  { no: 11, clubId: "CLUB_JBL_PL_SEAGULLS",       team1: "TEAM_JBL_PL_SEAGULLS_1",       team2: "TEAM_JBL_PL_SEAGULLS_2" },
+  { no: 12, clubId: "CLUB_JBL_PL_SUNS",           team1: "TEAM_JBL_PL_SUNS_1",           team2: "TEAM_JBL_PL_SUNS_2" },
+];
+
+const JBL_CLUBS = [...JBL_CL_CLUBS, ...JBL_PL_CLUBS];
+
 const IND_TEAMS = [
   { no: 1, teamId: "TEAM_IND_SEOUL_PIONEERS" },
   { no: 2, teamId: "TEAM_IND_BUSAN_TEMPEST" },
@@ -87,7 +110,9 @@ const LEAGUE_CONF = {
   LEAGUE_KBL_1: { age: [21, 38], ovr: [68, 90], pot: [56, 90], dev: [35, 55], grade: null },
   LEAGUE_KBL_2: { age: [19, 32], ovr: [58, 78], pot: [56, 90], dev: [42, 60], grade: null },
   LEAGUE_ABL_MLB: { age: [22, 42], ovr: [72, 94], pot: [58, 92], dev: [30, 52], grade: null },
-  LEAGUE_ABL_AAA: { age: [21, 35], ovr: [65, 85], pot: [58, 92], dev: [30, 52], grade: null }
+  LEAGUE_ABL_AAA: { age: [21, 35], ovr: [65, 85], pot: [58, 92], dev: [30, 52], grade: null },
+  LEAGUE_JBL_1:   { age: [21, 38], ovr: [69, 91], pot: [57, 92], dev: [32, 53], grade: null },
+  LEAGUE_JBL_2:   { age: [19, 32], ovr: [59, 79], pot: [57, 91], dev: [39, 57], grade: null },
 };
 
 function makeRng(seed) {
@@ -124,6 +149,23 @@ function createNameMaker(rng, used) {
       name = `${pick(rng, KR_LAST)}${pick(rng, KR_GIVEN)}`;
       nameEn = `${pick(rng, EN_LAST)} ${pick(rng, EN_GIVEN)}`;
       tryCount += 1;
+    } while (used.has(name) && tryCount < 200);
+    used.add(name);
+    return { name, nameEn };
+  };
+}
+
+function createJblNameMaker(rng, used) {
+  return () => {
+    let name = "";
+    let nameEn = "";
+    let tryCount = 0;
+    do {
+      const last  = pick(rng, JP_LAST);
+      const given = pick(rng, JP_GIVEN);
+      name   = `${last.kanji}${given.kanji}`;
+      nameEn = `${last.roman} ${given.roman}`;
+      tryCount++;
     } while (used.has(name) && tryCount < 200);
     used.add(name);
     return { name, nameEn };
@@ -455,6 +497,34 @@ function generateInd() {
   return { version: 1, sourceLeague: "LEAGUE_INDEPENDENT", entities: all };
 }
 
+function generateJbl() {
+  const all = [];
+  const usedName = new Set();
+  JBL_CLUBS.forEach((club, idx) => {
+    const rng = makeRng(5000 + idx);
+    const makeName = createJblNameMaker(rng, usedName);
+    POS_25.forEach((pos, i) => {
+      const id = `PLY_JBL_${pad2(club.no)}_${pad3(i + 1)}`;
+      all.push(makePlayerEntity({ rng, makeName, id, leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", grade: null, conf: LEAGUE_CONF.LEAGUE_JBL_1, position: pos, jerseyNumber: i + 1 }));
+    });
+    for (let i = 0; i < 3; i += 1) {
+      all.push(makeStaffEntity({ rng, makeName, id: `COA_JBL_${pad2(club.no)}_${pad3(i + 1)}`, role: "coach", leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [34, 58] }));
+    }
+    all.push(makeStaffEntity({ rng, makeName, id: `MNG_JBL_${pad2(club.no)}_001`, role: "manager", leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [42, 66] }));
+    all.push(makeStaffEntity({ rng, makeName, id: `OWN_JBL_${pad2(club.no)}_001`, role: "owner",   leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [48, 74] }));
+
+    POS_20.forEach((pos, i) => {
+      const id = `PLY_JBL_${pad2(club.no)}_${pad3(100 + i + 1)}`;
+      all.push(makePlayerEntity({ rng, makeName, id, leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", grade: null, conf: LEAGUE_CONF.LEAGUE_JBL_2, position: pos, jerseyNumber: i + 31 }));
+    });
+    for (let i = 0; i < 2; i += 1) {
+      all.push(makeStaffEntity({ rng, makeName, id: `COA_JBL_${pad2(club.no)}_${pad3(100 + i + 1)}`, role: "coach", leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [34, 58] }));
+    }
+    all.push(makeStaffEntity({ rng, makeName, id: `MNG_JBL_${pad2(club.no)}_101`, role: "manager", leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [42, 66] }));
+  });
+  return { version: 1, sourceLeague: "LEAGUE_JBL", entities: all };
+}
+
 function assertUniqueIds(files) {
   const seen = new Set();
   for (const file of files) {
@@ -470,18 +540,21 @@ function run() {
   const abl = generateAbl();
   const univ = generateUniv();
   const ind = generateInd();
-  assertUniqueIds([kbl, abl, univ, ind]);
+  const jbl = generateJbl();
+  assertUniqueIds([kbl, abl, univ, ind, jbl]);
 
-  writeFileSync(resolve(ENTITIES_DIR, "people_kbl.json"), JSON.stringify(kbl, null, 2), "utf8");
-  writeFileSync(resolve(ENTITIES_DIR, "people_abl.json"), JSON.stringify(abl, null, 2), "utf8");
+  writeFileSync(resolve(ENTITIES_DIR, "people_kbl.json"),  JSON.stringify(kbl,  null, 2), "utf8");
+  writeFileSync(resolve(ENTITIES_DIR, "people_abl.json"),  JSON.stringify(abl,  null, 2), "utf8");
   writeFileSync(resolve(ENTITIES_DIR, "people_univ.json"), JSON.stringify(univ, null, 2), "utf8");
-  writeFileSync(resolve(ENTITIES_DIR, "people_ind.json"), JSON.stringify(ind, null, 2), "utf8");
+  writeFileSync(resolve(ENTITIES_DIR, "people_ind.json"),  JSON.stringify(ind,  null, 2), "utf8");
+  writeFileSync(resolve(ENTITIES_DIR, "people_jbl.json"),  JSON.stringify(jbl,  null, 2), "utf8");
 
-  console.log(`KBL: ${kbl.entities.length}명 (목표 424)`);
-  console.log(`ABL: ${abl.entities.length}명 (목표 832)`);
+  console.log(`KBL:  ${kbl.entities.length}명 (목표 424)`);
+  console.log(`ABL:  ${abl.entities.length}명 (목표 832)`);
   console.log(`UNIV: ${univ.entities.length}명 (목표 161)`);
-  console.log(`IND: ${ind.entities.length}명 (목표 184)`);
-  console.log("완료: people_kbl.json / people_abl.json / people_univ.json / people_ind.json");
+  console.log(`IND:  ${ind.entities.length}명 (목표 184)`);
+  console.log(`JBL:  ${jbl.entities.length}명 (목표 636)`);
+  console.log("완료: people_kbl.json / people_abl.json / people_univ.json / people_ind.json / people_jbl.json");
 }
 
 run();

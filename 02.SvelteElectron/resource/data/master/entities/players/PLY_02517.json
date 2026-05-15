@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02517",
+  "name": "伊藤晃",
+  "nameEn": "Ito Akira",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TIDERAVES",
+  "teamId": "TEAM_JBL_CL_TIDERAVES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 46,
+      "pitching": {
+        "ovr": 33,
+        "stamina": 34,
+        "velocity": 34,
+        "command": 32,
+        "control": 31,
+        "movement": 30,
+        "mentality": 37,
+        "recovery": 31
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 67,
+        "power": 66,
+        "eye": 66,
+        "discipline": 66,
+        "speed": 68,
+        "fielding": 70,
+        "arm": 72,
+        "battingClutch": 68
+      },
+      "developmentRate": 47,
+      "potentialHidden": 91
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

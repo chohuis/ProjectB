@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02725",
+  "name": "田中雄太",
+  "nameEn": "Tanaka Yuta",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
+  "teamId": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "DH",
+      "jerseyNumber": 24,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 43,
+        "velocity": 47,
+        "command": 46,
+        "control": 47,
+        "movement": 47,
+        "mentality": 49,
+        "recovery": 45
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 75,
+        "power": 76,
+        "eye": 74,
+        "discipline": 69,
+        "speed": 68,
+        "fielding": 66,
+        "arm": 71,
+        "battingClutch": 74
+      },
+      "developmentRate": 48,
+      "potentialHidden": 67
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

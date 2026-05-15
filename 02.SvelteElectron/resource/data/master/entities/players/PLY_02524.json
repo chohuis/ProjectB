@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02524",
+  "name": "山崎清",
+  "nameEn": "Yamazaki Kiyoshi",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 3,
+      "pitching": {
+        "ovr": 79,
+        "stamina": 74,
+        "velocity": 76,
+        "command": 78,
+        "control": 77,
+        "movement": 75,
+        "mentality": 74,
+        "recovery": 77
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 47,
+        "power": 41,
+        "eye": 45,
+        "discipline": 42,
+        "speed": 45,
+        "fielding": 45,
+        "arm": 39,
+        "battingClutch": 42
+      },
+      "developmentRate": 40,
+      "potentialHidden": 77
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

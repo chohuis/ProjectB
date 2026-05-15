@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02751",
+  "name": "山口剛",
+  "nameEn": "Yamaguchi Tsuyoshi",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+  "teamId": "TEAM_JBL_PL_MARINESOLDIERS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 5,
+      "pitching": {
+        "ovr": 88,
+        "stamina": 93,
+        "velocity": 92,
+        "command": 94,
+        "control": 85,
+        "movement": 84,
+        "mentality": 93,
+        "recovery": 88
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 61,
+        "power": 61,
+        "eye": 63,
+        "discipline": 60,
+        "speed": 63,
+        "fielding": 60,
+        "arm": 60,
+        "battingClutch": 56
+      },
+      "developmentRate": 34,
+      "potentialHidden": 63
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

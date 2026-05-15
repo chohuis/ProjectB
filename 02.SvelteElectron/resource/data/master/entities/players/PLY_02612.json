@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02612",
+  "name": "中村駿",
+  "nameEn": "Nakamura Shun",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 1,
+      "pitching": {
+        "ovr": 80,
+        "stamina": 78,
+        "velocity": 85,
+        "command": 76,
+        "control": 75,
+        "movement": 74,
+        "mentality": 82,
+        "recovery": 80
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 41,
+        "power": 48,
+        "eye": 43,
+        "discipline": 43,
+        "speed": 40,
+        "fielding": 46,
+        "arm": 40,
+        "battingClutch": 41
+      },
+      "developmentRate": 44,
+      "potentialHidden": 65
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

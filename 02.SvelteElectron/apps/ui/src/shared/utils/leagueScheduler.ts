@@ -218,12 +218,22 @@ export const ABL_TEAMS = [
   "TEAM_ABL_DESERTSERPENTS_1", "TEAM_ABL_RIVERCARDINALS_1",
 ];
 
+export const JBL_TEAMS = [
+  "TEAM_JBL_CL_NEONCRANES_1",    "TEAM_JBL_CL_TEMPOSTINGS_1",
+  "TEAM_JBL_CL_IRONDRAKES_1",    "TEAM_JBL_CL_TIDERAVES_1",
+  "TEAM_JBL_CL_SILVERWOLVES_1",  "TEAM_JBL_CL_IRONSTORMS_1",
+  "TEAM_JBL_PL_THUNDERFALCONS_1","TEAM_JBL_PL_POLARBEARS_1",
+  "TEAM_JBL_PL_SPIRITBUFFALOS_1","TEAM_JBL_PL_MARINESOLDIERS_1",
+  "TEAM_JBL_PL_SEAGULLS_1",      "TEAM_JBL_PL_SUNS_1",
+];
+
 export const ALL_TEAMS_BY_LEAGUE: Record<string, string[]> = {
   LEAGUE_HIGHSCHOOL: HS_ALL_TEAMS,
   LEAGUE_UNIVERSITY: UNIV_TEAMS,
   LEAGUE_INDEPENDENT: IND_TEAMS,
   LEAGUE_KBL: KBL_TEAMS,
   LEAGUE_ABL: ABL_TEAMS,
+  LEAGUE_JBL: JBL_TEAMS,
 };
 
 // 리그별 기본 스케줄 설정값
@@ -232,4 +242,5 @@ export const DEFAULT_LEAGUE_CONFIGS: Omit<LeagueConfig, "groupA" | "groupB">[] =
   { leagueId: "LEAGUE_INDEPENDENT", teams: IND_TEAMS,   startWeek: 6,  endWeek: 38, cycles: 8 },
   { leagueId: "LEAGUE_KBL",         teams: KBL_TEAMS,   startWeek: 1,  endWeek: 50, cycles: 16 },
   { leagueId: "LEAGUE_ABL",         teams: ABL_TEAMS,   startWeek: 1,  endWeek: 50, cycles: 9 },
+  { leagueId: "LEAGUE_JBL",         teams: JBL_TEAMS,   startWeek: 1,  endWeek: 50, cycles: 10 },
 ];

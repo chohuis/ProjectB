@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02558",
+  "name": "小林峻",
+  "nameEn": "Kobayashi Shun",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 42,
+      "pitching": {
+        "ovr": 33,
+        "stamina": 29,
+        "velocity": 34,
+        "command": 33,
+        "control": 32,
+        "movement": 31,
+        "mentality": 32,
+        "recovery": 28
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 67,
+        "power": 60,
+        "eye": 67,
+        "discipline": 65,
+        "speed": 56,
+        "fielding": 61,
+        "arm": 67,
+        "battingClutch": 67
+      },
+      "developmentRate": 46,
+      "potentialHidden": 81
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

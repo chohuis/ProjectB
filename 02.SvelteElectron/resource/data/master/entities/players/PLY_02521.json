@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02521",
+  "name": "佐々木隼人",
+  "nameEn": "Sasaki Hayato",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TIDERAVES",
+  "teamId": "TEAM_JBL_CL_TIDERAVES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "DH",
+      "jerseyNumber": 50,
+      "pitching": {
+        "ovr": 37,
+        "stamina": 33,
+        "velocity": 37,
+        "command": 39,
+        "control": 34,
+        "movement": 35,
+        "mentality": 37,
+        "recovery": 33
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 63,
+        "power": 66,
+        "eye": 62,
+        "discipline": 59,
+        "speed": 54,
+        "fielding": 49,
+        "arm": 56,
+        "battingClutch": 58
+      },
+      "developmentRate": 39,
+      "potentialHidden": 65
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

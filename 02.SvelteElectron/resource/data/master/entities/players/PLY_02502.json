@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02502",
+  "name": "阿部雄太",
+  "nameEn": "Abe Yuta",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TIDERAVES",
+  "teamId": "TEAM_JBL_CL_TIDERAVES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 31,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 57,
+        "velocity": 60,
+        "command": 60,
+        "control": 61,
+        "movement": 56,
+        "mentality": 56,
+        "recovery": 59
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 39,
+        "power": 43,
+        "eye": 35,
+        "discipline": 34,
+        "speed": 42,
+        "fielding": 35,
+        "arm": 36,
+        "battingClutch": 38
+      },
+      "developmentRate": 40,
+      "potentialHidden": 59
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

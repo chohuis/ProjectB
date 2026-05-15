@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02489",
+  "name": "藤田駿",
+  "nameEn": "Fujita Shun",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TIDERAVES",
+  "teamId": "TEAM_JBL_CL_TIDERAVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 13,
+      "pitching": {
+        "ovr": 95,
+        "stamina": 81,
+        "velocity": 92,
+        "command": 94,
+        "control": 90,
+        "movement": 92,
+        "mentality": 88,
+        "recovery": 89
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 62,
+        "power": 64,
+        "eye": 59,
+        "discipline": 67,
+        "speed": 62,
+        "fielding": 65,
+        "arm": 60,
+        "battingClutch": 66
+      },
+      "developmentRate": 35,
+      "potentialHidden": 87
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

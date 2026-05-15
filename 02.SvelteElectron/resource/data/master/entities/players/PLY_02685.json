@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02685",
+  "name": "石田司",
+  "nameEn": "Ishida Tsukasa",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_POLARBEARS",
+  "teamId": "TEAM_JBL_PL_POLARBEARS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 34,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 57,
+        "velocity": 62,
+        "command": 63,
+        "control": 54,
+        "movement": 60,
+        "mentality": 54,
+        "recovery": 54
+      },
+      "batting": {
+        "ovr": 30,
+        "contact": 23,
+        "power": 25,
+        "eye": 22,
+        "discipline": 25,
+        "speed": 29,
+        "fielding": 22,
+        "arm": 28,
+        "battingClutch": 24
+      },
+      "developmentRate": 48,
+      "potentialHidden": 61
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

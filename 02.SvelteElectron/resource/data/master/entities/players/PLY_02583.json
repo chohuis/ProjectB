@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02583",
+  "name": "石田清",
+  "nameEn": "Ishida Kiyoshi",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 17,
+      "pitching": {
+        "ovr": 36,
+        "stamina": 37,
+        "velocity": 41,
+        "command": 40,
+        "control": 41,
+        "movement": 34,
+        "mentality": 39,
+        "recovery": 37
+      },
+      "batting": {
+        "ovr": 74,
+        "contact": 73,
+        "power": 65,
+        "eye": 66,
+        "discipline": 71,
+        "speed": 68,
+        "fielding": 67,
+        "arm": 71,
+        "battingClutch": 73
+      },
+      "developmentRate": 32,
+      "potentialHidden": 91
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

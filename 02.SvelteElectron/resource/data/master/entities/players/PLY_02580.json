@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02580",
+  "name": "林亮",
+  "nameEn": "Hayashi Ryo",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 14,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 46,
+        "velocity": 55,
+        "command": 55,
+        "control": 53,
+        "movement": 52,
+        "mentality": 46,
+        "recovery": 52
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 75,
+        "power": 71,
+        "eye": 76,
+        "discipline": 77,
+        "speed": 70,
+        "fielding": 73,
+        "arm": 75,
+        "battingClutch": 74
+      },
+      "developmentRate": 35,
+      "potentialHidden": 78
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

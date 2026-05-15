@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02513",
+  "name": "井上翔",
+  "nameEn": "Inoue Sho",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TIDERAVES",
+  "teamId": "TEAM_JBL_CL_TIDERAVES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 42,
+      "pitching": {
+        "ovr": 33,
+        "stamina": 28,
+        "velocity": 28,
+        "command": 27,
+        "control": 25,
+        "movement": 30,
+        "mentality": 32,
+        "recovery": 30
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 64,
+        "power": 63,
+        "eye": 65,
+        "discipline": 60,
+        "speed": 58,
+        "fielding": 61,
+        "arm": 70,
+        "battingClutch": 67
+      },
+      "developmentRate": 55,
+      "potentialHidden": 84
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

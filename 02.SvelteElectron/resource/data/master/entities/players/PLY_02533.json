@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02533",
+  "name": "山崎海斗",
+  "nameEn": "Yamazaki Kaito",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "CP",
+      "jerseyNumber": 12,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 53,
+        "velocity": 75,
+        "command": 68,
+        "control": 74,
+        "movement": 64,
+        "mentality": 72,
+        "recovery": 71
+      },
+      "batting": {
+        "ovr": 35,
+        "contact": 37,
+        "power": 35,
+        "eye": 38,
+        "discipline": 35,
+        "speed": 33,
+        "fielding": 35,
+        "arm": 35,
+        "battingClutch": 39
+      },
+      "developmentRate": 34,
+      "potentialHidden": 91
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

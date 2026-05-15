@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02638",
+  "name": "渡辺翼",
+  "nameEn": "Watanabe Tsubasa",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 32,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 60,
+        "velocity": 62,
+        "command": 61,
+        "control": 62,
+        "movement": 59,
+        "mentality": 60,
+        "recovery": 62
+      },
+      "batting": {
+        "ovr": 27,
+        "contact": 24,
+        "power": 31,
+        "eye": 24,
+        "discipline": 26,
+        "speed": 29,
+        "fielding": 27,
+        "arm": 27,
+        "battingClutch": 30
+      },
+      "developmentRate": 53,
+      "potentialHidden": 69
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

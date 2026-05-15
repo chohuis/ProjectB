@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02516",
+  "name": "清水徹",
+  "nameEn": "Shimizu Toru",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TIDERAVES",
+  "teamId": "TEAM_JBL_CL_TIDERAVES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 45,
+      "pitching": {
+        "ovr": 27,
+        "stamina": 26,
+        "velocity": 35,
+        "command": 32,
+        "control": 31,
+        "movement": 24,
+        "mentality": 26,
+        "recovery": 30
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 58,
+        "power": 63,
+        "eye": 61,
+        "discipline": 57,
+        "speed": 60,
+        "fielding": 57,
+        "arm": 62,
+        "battingClutch": 60
+      },
+      "developmentRate": 47,
+      "potentialHidden": 59
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02642",
+  "name": "山本純",
+  "nameEn": "Yamamoto Jun",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 36,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 52,
+        "velocity": 66,
+        "command": 67,
+        "control": 58,
+        "movement": 58,
+        "mentality": 62,
+        "recovery": 63
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 36,
+        "power": 36,
+        "eye": 36,
+        "discipline": 39,
+        "speed": 37,
+        "fielding": 41,
+        "arm": 43,
+        "battingClutch": 41
+      },
+      "developmentRate": 48,
+      "potentialHidden": 71
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

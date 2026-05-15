@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02539",
+  "name": "石田浩",
+  "nameEn": "Ishida Hiroshi",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 18,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 61,
+        "velocity": 64,
+        "command": 66,
+        "control": 63,
+        "movement": 62,
+        "mentality": 59,
+        "recovery": 57
+      },
+      "batting": {
+        "ovr": 88,
+        "contact": 80,
+        "power": 82,
+        "eye": 79,
+        "discipline": 85,
+        "speed": 81,
+        "fielding": 80,
+        "arm": 82,
+        "battingClutch": 80
+      },
+      "developmentRate": 53,
+      "potentialHidden": 63
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

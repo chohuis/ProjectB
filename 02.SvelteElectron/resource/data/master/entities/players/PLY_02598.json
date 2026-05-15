@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02598",
+  "name": "渡辺司",
+  "nameEn": "Watanabe Tsukasa",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 37,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 60,
+        "velocity": 77,
+        "command": 73,
+        "control": 68,
+        "movement": 68,
+        "mentality": 73,
+        "recovery": 67
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 43,
+        "power": 41,
+        "eye": 35,
+        "discipline": 43,
+        "speed": 38,
+        "fielding": 40,
+        "arm": 41,
+        "battingClutch": 36
+      },
+      "developmentRate": 49,
+      "potentialHidden": 65
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

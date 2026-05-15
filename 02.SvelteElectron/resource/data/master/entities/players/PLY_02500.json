@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02500",
+  "name": "岡本陽介",
+  "nameEn": "Okamoto Yosuke",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TIDERAVES",
+  "teamId": "TEAM_JBL_CL_TIDERAVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "DH",
+      "jerseyNumber": 24,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 39,
+        "velocity": 43,
+        "command": 42,
+        "control": 41,
+        "movement": 47,
+        "mentality": 44,
+        "recovery": 44
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 69,
+        "power": 72,
+        "eye": 66,
+        "discipline": 74,
+        "speed": 69,
+        "fielding": 60,
+        "arm": 69,
+        "battingClutch": 70
+      },
+      "developmentRate": 37,
+      "potentialHidden": 69
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

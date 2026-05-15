@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02348",
+  "name": "後藤亮",
+  "nameEn": "Goto Ryo",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_NEONCRANES",
+  "teamId": "TEAM_JBL_CL_NEONCRANES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 7,
+      "pitching": {
+        "ovr": 84,
+        "stamina": 81,
+        "velocity": 90,
+        "command": 86,
+        "control": 84,
+        "movement": 85,
+        "mentality": 85,
+        "recovery": 80
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 60,
+        "power": 55,
+        "eye": 57,
+        "discipline": 55,
+        "speed": 53,
+        "fielding": 58,
+        "arm": 59,
+        "battingClutch": 61
+      },
+      "developmentRate": 34,
+      "potentialHidden": 71
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

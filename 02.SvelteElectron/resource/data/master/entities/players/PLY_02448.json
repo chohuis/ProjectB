@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02448",
+  "name": "山田剛",
+  "nameEn": "Yamada Tsuyoshi",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONDRAKES",
+  "teamId": "TEAM_JBL_CL_IRONDRAKES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 17,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 54,
+        "velocity": 55,
+        "command": 55,
+        "control": 55,
+        "movement": 53,
+        "mentality": 52,
+        "recovery": 54
+      },
+      "batting": {
+        "ovr": 79,
+        "contact": 74,
+        "power": 73,
+        "eye": 72,
+        "discipline": 77,
+        "speed": 81,
+        "fielding": 76,
+        "arm": 77,
+        "battingClutch": 75
+      },
+      "developmentRate": 44,
+      "potentialHidden": 74
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

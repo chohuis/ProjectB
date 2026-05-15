@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02740",
+  "name": "池田峻",
+  "nameEn": "Ikeda Shun",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
+  "teamId": "TEAM_JBL_PL_SPIRITBUFFALOS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 44,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 47,
+        "velocity": 44,
+        "command": 41,
+        "control": 46,
+        "movement": 46,
+        "mentality": 40,
+        "recovery": 46
+      },
+      "batting": {
+        "ovr": 79,
+        "contact": 74,
+        "power": 74,
+        "eye": 73,
+        "discipline": 70,
+        "speed": 81,
+        "fielding": 77,
+        "arm": 78,
+        "battingClutch": 77
+      },
+      "developmentRate": 40,
+      "potentialHidden": 85
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

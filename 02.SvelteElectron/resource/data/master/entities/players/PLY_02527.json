@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02527",
+  "name": "清水雄太",
+  "nameEn": "Shimizu Yuta",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 6,
+      "pitching": {
+        "ovr": 88,
+        "stamina": 76,
+        "velocity": 89,
+        "command": 84,
+        "control": 83,
+        "movement": 84,
+        "mentality": 87,
+        "recovery": 85
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 59,
+        "power": 63,
+        "eye": 57,
+        "discipline": 57,
+        "speed": 61,
+        "fielding": 55,
+        "arm": 55,
+        "battingClutch": 56
+      },
+      "developmentRate": 50,
+      "potentialHidden": 86
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

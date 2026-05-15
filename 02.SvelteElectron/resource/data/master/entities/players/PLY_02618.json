@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02618",
+  "name": "福田駿",
+  "nameEn": "Fukuda Shun",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 7,
+      "pitching": {
+        "ovr": 90,
+        "stamina": 81,
+        "velocity": 95,
+        "command": 92,
+        "control": 86,
+        "movement": 89,
+        "mentality": 93,
+        "recovery": 85
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 57,
+        "power": 61,
+        "eye": 63,
+        "discipline": 59,
+        "speed": 56,
+        "fielding": 56,
+        "arm": 64,
+        "battingClutch": 63
+      },
+      "developmentRate": 49,
+      "potentialHidden": 76
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

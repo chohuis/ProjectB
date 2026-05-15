@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02639",
+  "name": "石田啓",
+  "nameEn": "Ishida Hiroshi",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 33,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 81,
+        "velocity": 79,
+        "command": 75,
+        "control": 73,
+        "movement": 77,
+        "mentality": 78,
+        "recovery": 75
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 50,
+        "power": 51,
+        "eye": 50,
+        "discipline": 51,
+        "speed": 50,
+        "fielding": 42,
+        "arm": 44,
+        "battingClutch": 49
+      },
+      "developmentRate": 45,
+      "potentialHidden": 73
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02671",
+  "name": "遠藤学",
+  "nameEn": "Endo Manabu",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_POLARBEARS",
+  "teamId": "TEAM_JBL_PL_POLARBEARS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 15,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 55,
+        "velocity": 56,
+        "command": 51,
+        "control": 54,
+        "movement": 47,
+        "mentality": 55,
+        "recovery": 51
+      },
+      "batting": {
+        "ovr": 80,
+        "contact": 78,
+        "power": 74,
+        "eye": 73,
+        "discipline": 76,
+        "speed": 73,
+        "fielding": 80,
+        "arm": 83,
+        "battingClutch": 75
+      },
+      "developmentRate": 36,
+      "potentialHidden": 81
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

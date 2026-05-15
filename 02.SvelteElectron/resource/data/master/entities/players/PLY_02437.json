@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02437",
+  "name": "坂本進",
+  "nameEn": "Sakamoto Susumu",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONDRAKES",
+  "teamId": "TEAM_JBL_CL_IRONDRAKES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 6,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 69,
+        "velocity": 84,
+        "command": 81,
+        "control": 74,
+        "movement": 72,
+        "mentality": 81,
+        "recovery": 74
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 41,
+        "power": 47,
+        "eye": 44,
+        "discipline": 43,
+        "speed": 44,
+        "fielding": 46,
+        "arm": 43,
+        "battingClutch": 48
+      },
+      "developmentRate": 43,
+      "potentialHidden": 79
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

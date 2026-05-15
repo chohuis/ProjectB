@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02461",
+  "name": "中村拓",
+  "nameEn": "Nakamura Hiraku",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONDRAKES",
+  "teamId": "TEAM_JBL_CL_IRONDRAKES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 35,
+      "pitching": {
+        "ovr": 81,
+        "stamina": 68,
+        "velocity": 86,
+        "command": 82,
+        "control": 82,
+        "movement": 74,
+        "mentality": 75,
+        "recovery": 77
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 46,
+        "power": 50,
+        "eye": 45,
+        "discipline": 46,
+        "speed": 42,
+        "fielding": 48,
+        "arm": 43,
+        "battingClutch": 49
+      },
+      "developmentRate": 56,
+      "potentialHidden": 89
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

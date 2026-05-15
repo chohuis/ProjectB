@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02715",
+  "name": "斎藤清",
+  "nameEn": "Saito Kiyoshi",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
+  "teamId": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 14,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 64,
+        "velocity": 67,
+        "command": 67,
+        "control": 70,
+        "movement": 67,
+        "mentality": 69,
+        "recovery": 62
+      },
+      "batting": {
+        "ovr": 91,
+        "contact": 92,
+        "power": 90,
+        "eye": 92,
+        "discipline": 89,
+        "speed": 84,
+        "fielding": 93,
+        "arm": 94,
+        "battingClutch": 88
+      },
+      "developmentRate": 48,
+      "potentialHidden": 91
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

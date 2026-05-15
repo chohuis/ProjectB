@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02345",
+  "name": "山口悠人",
+  "nameEn": "Yamaguchi Yuto",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_NEONCRANES",
+  "teamId": "TEAM_JBL_CL_NEONCRANES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 4,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 78,
+        "velocity": 78,
+        "command": 73,
+        "control": 78,
+        "movement": 76,
+        "mentality": 76,
+        "recovery": 78
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 46,
+        "power": 44,
+        "eye": 44,
+        "discipline": 51,
+        "speed": 51,
+        "fielding": 50,
+        "arm": 46,
+        "battingClutch": 51
+      },
+      "developmentRate": 35,
+      "potentialHidden": 77
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

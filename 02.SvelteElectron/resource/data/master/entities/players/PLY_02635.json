@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02635",
+  "name": "鈴木晃",
+  "nameEn": "Suzuki Akira",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "DH",
+      "jerseyNumber": 24,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 64,
+        "velocity": 69,
+        "command": 64,
+        "control": 59,
+        "movement": 61,
+        "mentality": 63,
+        "recovery": 65
+      },
+      "batting": {
+        "ovr": 84,
+        "contact": 93,
+        "power": 89,
+        "eye": 83,
+        "discipline": 85,
+        "speed": 85,
+        "fielding": 80,
+        "arm": 78,
+        "battingClutch": 86
+      },
+      "developmentRate": 48,
+      "potentialHidden": 73
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02706",
+  "name": "斎藤悠人",
+  "nameEn": "Saito Yuto",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
+  "teamId": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 5,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 84,
+        "velocity": 80,
+        "command": 75,
+        "control": 81,
+        "movement": 81,
+        "mentality": 75,
+        "recovery": 73
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 50,
+        "power": 50,
+        "eye": 44,
+        "discipline": 44,
+        "speed": 42,
+        "fielding": 43,
+        "arm": 43,
+        "battingClutch": 49
+      },
+      "developmentRate": 32,
+      "potentialHidden": 79
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

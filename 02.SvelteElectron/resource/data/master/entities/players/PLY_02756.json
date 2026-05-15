@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02756",
+  "name": "山本浩",
+  "nameEn": "Yamamoto Hiroshi",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+  "teamId": "TEAM_JBL_PL_MARINESOLDIERS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 10,
+      "pitching": {
+        "ovr": 82,
+        "stamina": 74,
+        "velocity": 80,
+        "command": 78,
+        "control": 74,
+        "movement": 74,
+        "mentality": 73,
+        "recovery": 72
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 41,
+        "power": 42,
+        "eye": 48,
+        "discipline": 40,
+        "speed": 48,
+        "fielding": 47,
+        "arm": 47,
+        "battingClutch": 47
+      },
+      "developmentRate": 50,
+      "potentialHidden": 66
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

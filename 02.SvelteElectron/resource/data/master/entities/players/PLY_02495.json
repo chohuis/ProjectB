@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02495",
+  "name": "斎藤健太",
+  "nameEn": "Saito Kenta",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TIDERAVES",
+  "teamId": "TEAM_JBL_CL_TIDERAVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 19,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 60,
+        "velocity": 62,
+        "command": 62,
+        "control": 56,
+        "movement": 59,
+        "mentality": 62,
+        "recovery": 62
+      },
+      "batting": {
+        "ovr": 84,
+        "contact": 82,
+        "power": 77,
+        "eye": 82,
+        "discipline": 82,
+        "speed": 87,
+        "fielding": 80,
+        "arm": 77,
+        "battingClutch": 78
+      },
+      "developmentRate": 36,
+      "potentialHidden": 71
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}
