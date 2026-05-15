@@ -32,6 +32,7 @@
       LEAGUE_INDEPENDENT:    "독립",
       LEAGUE_KBL:            "KBL",
       LEAGUE_ABL:            "ABL",
+      LEAGUE_JBL:            "JBL",
     };
     if (lid === "LEAGUE_HIGHSCHOOL") {
       const hsGroupA = $seasonStore.hsGroupA ?? [];

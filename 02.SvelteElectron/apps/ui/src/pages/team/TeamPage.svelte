@@ -6,37 +6,38 @@
 
   const dispatch = createEventDispatcher<{ gotoRoster: { teamId: string } }>();
 
-  type LeagueTab = "all" | "hs" | "univ" | "ind" | "kbl";
+  type LeagueTab = "all" | "hs" | "univ" | "ind" | "kbl" | "abl" | "jbl";
   const LEAGUE_MAP: Record<Exclude<LeagueTab, "all">, string> = {
-    hs: "LEAGUE_HIGHSCHOOL",
+    hs:   "LEAGUE_HIGHSCHOOL",
     univ: "LEAGUE_UNIVERSITY",
-    ind: "LEAGUE_INDEPENDENT",
-    kbl: "LEAGUE_KBL"
+    ind:  "LEAGUE_INDEPENDENT",
+    kbl:  "LEAGUE_KBL",
+    abl:  "LEAGUE_ABL",
+    jbl:  "LEAGUE_JBL",
   };
 
   let leagueTab: LeagueTab = "all";
   let selectedTeamId = "";
 
   function leagueLabel(tab: LeagueTab): string {
-    if (tab === "all") return "전체";
-    if (tab === "hs") return "고교리그";
-    if (tab === "univ") return "대학리그";
-    if (tab === "ind") return "독립리그";
-    return "KBL";
+    const labels: Record<LeagueTab, string> = {
+      all: "전체", hs: "고교리그", univ: "대학리그",
+      ind: "독립리그", kbl: "KBL", abl: "ABL", jbl: "JBL",
+    };
+    return labels[tab] ?? tab;
   }
 
   function teamLeagueLabel(leagueId: string): string {
-    if (leagueId === "LEAGUE_HIGHSCHOOL") return "고교";
-    if (leagueId === "LEAGUE_UNIVERSITY") return "대학";
-    if (leagueId === "LEAGUE_INDEPENDENT") return "독립";
-    if (leagueId === "LEAGUE_KBL") return "KBL";
-    return leagueId;
+    const map: Record<string, string> = {
+      LEAGUE_HIGHSCHOOL: "고교", LEAGUE_UNIVERSITY: "대학",
+      LEAGUE_INDEPENDENT: "독립", LEAGUE_KBL: "KBL",
+      LEAGUE_ABL: "ABL", LEAGUE_JBL: "JBL",
+    };
+    return map[leagueId] ?? leagueId;
   }
 
   $: filteredTeams = $masterStore.teams.filter((team) => {
-    if (leagueTab === "all") {
-      return team.leagueId === "LEAGUE_HIGHSCHOOL" || team.leagueId === "LEAGUE_UNIVERSITY" || team.leagueId === "LEAGUE_INDEPENDENT" || team.leagueId === "LEAGUE_KBL";
-    }
+    if (leagueTab === "all") return true;
     return team.leagueId === LEAGUE_MAP[leagueTab as Exclude<LeagueTab, "all">];
   });
 
@@ -81,7 +82,7 @@
   <article class="card board">
     <header class="top-row">
       <div class="league-tabs">
-        {#each (["all", "hs", "univ", "ind", "kbl"] as LeagueTab[]) as tab}
+        {#each (["all", "hs", "univ", "ind", "kbl", "abl", "jbl"] as LeagueTab[]) as tab}
           <button class:active={leagueTab === tab} on:click={() => (leagueTab = tab)}>{leagueLabel(tab)}</button>
         {/each}
       </div>
