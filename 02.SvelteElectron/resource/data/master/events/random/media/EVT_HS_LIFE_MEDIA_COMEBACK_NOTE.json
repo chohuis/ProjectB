@@ -1,0 +1,30 @@
+{
+  "id": "EVT_HS_LIFE_MEDIA_COMEBACK_NOTE",
+  "type": "random",
+  "category": "media",
+  "priority": 285,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_gte",
+      "value": 20
+    },
+    {
+      "type": "morale_gte",
+      "value": 42
+    },
+    {
+      "type": "condition_gte",
+      "value": 48
+    }
+  ],
+  "messageTemplateId": "MSG_HS_MEDIA_COMEBACK_NOTE",
+  "decisionTemplateId": null,
+  "cooldownWeeks": 3,
+  "weight": 12,
+  "poolId": "POOL_MEDIA_DAILY"
+}

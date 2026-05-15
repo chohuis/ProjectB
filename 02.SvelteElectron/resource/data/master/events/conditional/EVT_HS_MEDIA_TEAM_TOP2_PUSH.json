@@ -1,0 +1,24 @@
+{
+  "id": "EVT_HS_MEDIA_TEAM_TOP2_PUSH",
+  "type": "conditional",
+  "category": "media",
+  "priority": 750,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "team_rank_lte",
+      "value": 2
+    },
+    {
+      "type": "week_gte",
+      "value": 24
+    }
+  ],
+  "messageTemplateId": "MSG_HS_LIFE_MEDIA_RIVAL_HEADLINE",
+  "decisionTemplateId": null,
+  "cooldownWeeks": 6
+}

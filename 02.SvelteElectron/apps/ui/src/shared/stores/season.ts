@@ -4,6 +4,7 @@ import type {
   MatchResult,
   PendingAction,
   PlayerGameLine,
+  PostseasonSeries,
   SaveSeason,
   ScheduleEntry,
   Standing,
@@ -92,10 +93,18 @@ function createSeasonStore() {
           // L1 필드 마이그레이션 (구버전 세이브 호환)
           set({
             ...saved,
+            currentDate:     saved.currentDate     ?? `${saved.seasonYear ?? 2026}-03-01`,
             leagueSchedules: saved.leagueSchedules ?? {},
             leagueState:     saved.leagueState     ?? {},
-            hsGroupA:        saved.hsGroupA        ?? [],
-            hsGroupB:        saved.hsGroupB        ?? [],
+            hsGroupA:           saved.hsGroupA           ?? [],
+            hsGroupB:           saved.hsGroupB           ?? [],
+            postseasonBrackets: saved.postseasonBrackets  ?? {},
+            ablEastTeams:       saved.ablEastTeams        ?? [],
+            ablWestTeams:       saved.ablWestTeams        ?? [],
+            // gameDate 없는 구버전 스케줄 엔트리 보정
+            schedule: (saved.schedule ?? []).map((e) =>
+              e.gameDate ? e : { ...e, gameDate: `${saved.seasonYear ?? 2026}-03-01` }
+            ),
           });
         }
       } catch (e) {
@@ -135,6 +144,11 @@ function createSeasonStore() {
     // 현재 주차 증가
     advanceWeek() {
       update((s) => ({ ...s, currentWeek: s.currentWeek + 1 }));
+    },
+
+    // 현재 날짜 갱신 ("2026-04-15" 형식)
+    setCurrentDate(date: string) {
+      update((s) => ({ ...s, currentDate: date }));
     },
 
     // 경기 결과 반영: 순위 업데이트 + 스탯 누적
@@ -373,6 +387,33 @@ function createSeasonStore() {
           },
         };
       });
+    },
+
+    // 포스트시즌 경기 동적 주입
+    injectPostseasonEntries(entries: ScheduleEntry[]) {
+      if (entries.length === 0) return;
+      update((s) => ({ ...s, schedule: [...s.schedule, ...entries] }));
+    },
+
+    // 포스트시즌 브라켓 초기화 (또는 전체 교체)
+    initPostseasonBracket(leagueId: string, series: PostseasonSeries[]) {
+      update((s) => ({
+        ...s,
+        postseasonBrackets: { ...s.postseasonBrackets, [leagueId]: series },
+      }));
+    },
+
+    // 포스트시즌 브라켓 부분 업데이트 (시리즈 결과 반영)
+    updatePostseasonBracket(leagueId: string, updatedSeries: PostseasonSeries[]) {
+      update((s) => ({
+        ...s,
+        postseasonBrackets: { ...s.postseasonBrackets, [leagueId]: updatedSeries },
+      }));
+    },
+
+    // ABL 컨퍼런스 배정 저장
+    setAblConferences(east: string[], west: string[]) {
+      update((s) => ({ ...s, ablEastTeams: east, ablWestTeams: west }));
     },
 
     // L1: 특정 리그 순위표 조회 헬퍼

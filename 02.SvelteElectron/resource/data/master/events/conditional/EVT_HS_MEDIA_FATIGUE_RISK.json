@@ -1,0 +1,20 @@
+{
+  "id": "EVT_HS_MEDIA_FATIGUE_RISK",
+  "type": "conditional",
+  "category": "media",
+  "priority": 735,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "fatigue_gte",
+      "value": 85
+    }
+  ],
+  "messageTemplateId": "MSG_HS_MEDIA_SCOUT_CAMERA_04",
+  "decisionTemplateId": "DEC_COND_FATIGUE_WARNING",
+  "cooldownWeeks": 6
+}

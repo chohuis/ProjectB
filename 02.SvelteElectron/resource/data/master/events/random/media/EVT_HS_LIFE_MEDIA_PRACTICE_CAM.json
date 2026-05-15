@@ -1,0 +1,26 @@
+{
+  "id": "EVT_HS_LIFE_MEDIA_PRACTICE_CAM",
+  "type": "random",
+  "category": "media",
+  "priority": 284,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_gte",
+      "value": 12
+    },
+    {
+      "type": "condition_gte",
+      "value": 60
+    }
+  ],
+  "messageTemplateId": "MSG_HS_MEDIA_PRACTICE_CAM",
+  "decisionTemplateId": null,
+  "cooldownWeeks": 2,
+  "weight": 15,
+  "poolId": "POOL_MEDIA_DAILY"
+}

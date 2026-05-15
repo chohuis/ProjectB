@@ -1,4 +1,5 @@
 import type { ScheduleEntry, Standing } from "../types/season";
+import { toGameDate } from "./scheduleGen";
 
 // ── 라운드 로빈 생성 (Berger Table) ─────────────────────────────
 // 반환: rounds[r] = [{home, away}, ...]
@@ -45,6 +46,7 @@ function assignRoundsToWeeks(
   leagueId: string,
   idPrefix: string,
   protagonistTeamId: string,
+  seasonYear = 2026,
 ): ScheduleEntry[] {
   const entries: ScheduleEntry[] = [];
   const available = endWeek - startWeek + 1;
@@ -52,11 +54,13 @@ function assignRoundsToWeeks(
 
   rounds.forEach((round, ri) => {
     const week = Math.min(endWeek, startWeek + Math.round(ri * step));
+    const gameDate = toGameDate(seasonYear, week, 5);  // 토요일 기준
     round.forEach((m, gi) => {
       const id = `${idPrefix}_R${String(ri + 1).padStart(2, "0")}_G${gi + 1}`;
       entries.push({
         id,
         week,
+        gameDate,
         homeTeamId: m.home,
         awayTeamId: m.away,
         leagueId,
@@ -81,12 +85,13 @@ export function generateHsSchedule(
   groupA: string[],
   groupB: string[],
   protagonistTeamId: string,
+  seasonYear = 2026,
 ): ScheduleEntry[] {
   const roundsA = buildDoubleRoundRobin(groupA);
   const roundsB = buildDoubleRoundRobin(groupB);
   return [
-    ...assignRoundsToWeeks(roundsA, 10, 42, "LEAGUE_HIGHSCHOOL", "HS_A", protagonistTeamId),
-    ...assignRoundsToWeeks(roundsB, 10, 42, "LEAGUE_HIGHSCHOOL", "HS_B", protagonistTeamId),
+    ...assignRoundsToWeeks(roundsA, 10, 42, "LEAGUE_HIGHSCHOOL", "HS_A", protagonistTeamId, seasonYear),
+    ...assignRoundsToWeeks(roundsB, 10, 42, "LEAGUE_HIGHSCHOOL", "HS_B", protagonistTeamId, seasonYear),
   ];
 }
 
@@ -98,6 +103,7 @@ export function generateLeagueSchedule(
   endWeek: number,
   cycles: number,
   protagonistTeamId: string,
+  seasonYear = 2026,
 ): ScheduleEntry[] {
   let allRounds: Array<Array<{ home: string; away: string }>> = [];
   const base = buildRoundRobin(teams);
@@ -109,7 +115,7 @@ export function generateLeagueSchedule(
     }
   }
   const prefix = leagueId.replace("LEAGUE_", "");
-  return assignRoundsToWeeks(allRounds, startWeek, endWeek, leagueId, prefix, protagonistTeamId);
+  return assignRoundsToWeeks(allRounds, startWeek, endWeek, leagueId, prefix, protagonistTeamId, seasonYear);
 }
 
 // ── 리그별 스케줄 일괄 생성 ──────────────────────────────────
@@ -119,7 +125,6 @@ export interface LeagueConfig {
   startWeek: number;
   endWeek: number;
   cycles: number;
-  // HS group play override
   groupA?: string[];
   groupB?: string[];
 }
@@ -127,16 +132,17 @@ export interface LeagueConfig {
 export function generateAllLeagueSchedules(
   configs: LeagueConfig[],
   protagonistTeamId: string,
+  seasonYear = 2026,
 ): Record<string, ScheduleEntry[]> {
   const result: Record<string, ScheduleEntry[]> = {};
   for (const cfg of configs) {
     if (cfg.groupA && cfg.groupB) {
-      result[cfg.leagueId] = generateHsSchedule(cfg.groupA, cfg.groupB, protagonistTeamId);
+      result[cfg.leagueId] = generateHsSchedule(cfg.groupA, cfg.groupB, protagonistTeamId, seasonYear);
     } else {
       result[cfg.leagueId] = generateLeagueSchedule(
         cfg.leagueId, cfg.teams,
         cfg.startWeek, cfg.endWeek, cfg.cycles,
-        protagonistTeamId,
+        protagonistTeamId, seasonYear,
       );
     }
   }

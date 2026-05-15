@@ -16,7 +16,7 @@
     $nextPendingAction?.type === "game"    ? "경기 대기 중" :
     $nextPendingAction?.type === "message" ? "메시지 확인 필요" :
     $nextPendingAction?.type === "event"   ? "이벤트 처리 필요" :
-    advancing ? "진행 중..." : "주 진행";
+    advancing ? "진행 중..." : "다음 이벤트로";
 
   async function handleAdvance() {
     if (btnDisabled) return;

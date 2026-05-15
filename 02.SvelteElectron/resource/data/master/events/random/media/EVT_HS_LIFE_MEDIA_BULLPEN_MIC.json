@@ -1,0 +1,26 @@
+{
+  "id": "EVT_HS_LIFE_MEDIA_BULLPEN_MIC",
+  "type": "random",
+  "category": "media",
+  "priority": 286,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_gte",
+      "value": 8
+    },
+    {
+      "type": "fatigue_lte",
+      "value": 70
+    }
+  ],
+  "messageTemplateId": "MSG_HS_MEDIA_BULLPEN_MIC",
+  "decisionTemplateId": "DEC_RAND_LOCAL_INTERVIEW",
+  "cooldownWeeks": 2,
+  "weight": 16,
+  "poolId": "POOL_MEDIA_DAILY"
+}

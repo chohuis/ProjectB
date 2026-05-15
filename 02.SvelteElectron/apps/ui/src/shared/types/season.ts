@@ -53,6 +53,7 @@ export type SeasonPhase = "preseason" | "season" | "postseason" | "offseason";
 export interface ScheduleEntry {
   id: string;               // "SCH_W01_G1"
   week: number;             // 1–N (시즌 주차)
+  gameDate: string;         // "2026-04-15" — 실제 경기 날짜
   leagueId?: string;        // 소속 리그 (멀티리그용)
   homeTeamId: string;
   awayTeamId: string;
@@ -162,6 +163,23 @@ export interface UnifiedGameOutcome {
   summary: string;
 }
 
+// ── 포스트시즌 시리즈 ──────────────────────────────────────────
+export interface PostseasonSeries {
+  id: string;           // "KBL_WC" | "KBL_PREP" | "ABL_EDS" 등
+  leagueId: string;
+  round: string;        // 표시용: "와일드카드" | "준플레이오프" 등
+  homeTeamId: string;   // "" = 아직 미결정 (이전 시리즈 대기)
+  awayTeamId: string;
+  bestOf: 1 | 3 | 5 | 7;
+  homeWins: number;
+  awayWins: number;
+  winner: string | null;
+  homeFrom: string | null;             // 홈팀 공급 시리즈 ID
+  awayFrom: string | null;             // 원정팀 공급 시리즈 ID
+  nextSeriesId: string | null;         // 승자가 진출하는 다음 시리즈 ID
+  nextSeriesSlot: "home" | "away" | null;
+}
+
 // ── 리그별 순위·스탯 ─────────────────────────────────────────
 export interface LeagueSeasonState {
   standings: Standing[];
@@ -175,6 +193,7 @@ export interface SaveSeason {
   leagueId: string;     // 현재 진행 리그 (예: "LEAGUE_HIGHSCHOOL")
   seasonYear: number;   // 시즌 연도
   currentWeek: number;  // 현재 주차 (1부터)
+  currentDate: string;  // "2026-04-15" — 현재 게임내 날짜
   totalWeeks: number;   // 전체 주차 수
   pendingActions: PendingAction[];        // 미처리 정지 조건 (순서 중요)
   schedule: ScheduleEntry[];
@@ -187,6 +206,11 @@ export interface SaveSeason {
   // 고교 A/B조 배정 (매 시즌 랜덤, protagonist 조는 schedule/standings에 반영)
   hsGroupA: string[];
   hsGroupB: string[];
+  // 포스트시즌 브라켓 (leagueId → 시리즈 목록)
+  postseasonBrackets: Record<string, PostseasonSeries[]>;
+  // ABL 컨퍼런스 배정 (시즌 시작 시 랜덤)
+  ablEastTeams: string[];
+  ablWestTeams: string[];
 }
 
 export const SAVE_SEASON_VERSION = 1;
@@ -203,6 +227,7 @@ export function makeEmptySeason(
     leagueId,
     seasonYear,
     currentWeek: 0,
+    currentDate: `${seasonYear}-03-01`,
     totalWeeks,
     pendingActions: [],
     schedule: [],
@@ -223,6 +248,9 @@ export function makeEmptySeason(
     leagueState: {},
     hsGroupA: [],
     hsGroupB: [],
+    postseasonBrackets: {},
+    ablEastTeams: [],
+    ablWestTeams: [],
   };
 }
 

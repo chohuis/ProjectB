@@ -7,6 +7,7 @@
   import { applyGameOutcome } from "../../shared/usecases/applyGameOutcome";
   import type { PendingAction } from "../../shared/types/season";
   import { t } from "../../shared/i18n";
+  import { toDateKo } from "../../shared/utils/scheduleGen";
 
   function tName(id: string): string {
     return $teamMap.get(id)?.name ?? id;
@@ -431,7 +432,7 @@
 {:else}
   <div class="layout">
     <TopHeader
-      dayLabel={$gameStore.dayLabel}
+      dayLabel={$seasonStore.currentDate ? toDateKo($seasonStore.currentDate) : $gameStore.dayLabel}
       teamName={tName($gameStore.protagonist.teamId)}
       playerName={$gameStore.player.name}
       onOpenPending={openPendingFromNext}

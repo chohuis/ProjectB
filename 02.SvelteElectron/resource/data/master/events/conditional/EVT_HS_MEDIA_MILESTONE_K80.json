@@ -1,0 +1,20 @@
+{
+  "id": "EVT_HS_MEDIA_MILESTONE_K80",
+  "type": "conditional",
+  "category": "media",
+  "priority": 770,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "season_k_gte",
+      "value": 80
+    }
+  ],
+  "messageTemplateId": "MSG_HS_MEDIA_STRIKEOUT_CLIP",
+  "decisionTemplateId": null,
+  "cooldownWeeks": 8
+}

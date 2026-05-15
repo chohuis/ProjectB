@@ -1,0 +1,20 @@
+{
+  "id": "EVT_HS_MEDIA_OVR60_ALERT",
+  "type": "conditional",
+  "category": "media",
+  "priority": 740,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "pitching_ovr_gte",
+      "value": 60
+    }
+  ],
+  "messageTemplateId": "MSG_HS_MEDIA_PITCH_BREAKDOWN",
+  "decisionTemplateId": null,
+  "cooldownWeeks": 6
+}

@@ -41,17 +41,40 @@
 
   const weekLabel = ["월", "화", "수", "목", "금", "토", "일"];
 
-  const today = new Date(2026, 3, 21);
+  $: todayDate = $seasonStore.currentDate
+    ? new Date($seasonStore.currentDate + "T00:00:00")
+    : new Date(2026, 3, 21);
   let view: CalendarView = "month";
   let filter: "all" | ScheduleType = "all";
-  let cursor = new Date(today);
-  let selectedDateKey = toDateKey(today);
+  let cursor = $seasonStore.currentDate
+    ? new Date($seasonStore.currentDate + "T00:00:00")
+    : new Date(2026, 3, 21);
+  let selectedDateKey = $seasonStore.currentDate ?? "2026-03-01";
+
+  function psLabel(id: string): string {
+    // HS 레거시 패턴
+    if (id.startsWith("PS_FINAL_")) return "[결승]";
+    if (id.startsWith("PS_SEMI"))   return "[준결승]";
+    // 통합 포스트시즌 엔진 패턴
+    if (id.includes("_KS_"))    return "[한국시리즈]";
+    if (id.includes("_PO_"))    return "[플레이오프]";
+    if (id.includes("_PREP_"))  return "[준플레이오프]";
+    if (id.includes("_WC_"))    return "[와일드카드]";
+    if (id.includes("_CS_"))    return "[챔피언십]";
+    if (id.includes("_EDS_") || id.includes("_WDS_")) return "[디비전시리즈]";
+    if (id.includes("_EWC_") || id.includes("_WWC_")) return "[와일드카드]";
+    if (id.includes("_SEMI"))   return "[준결승]";
+    if (id.includes("_FINAL"))  return "[결승]";
+    return "";
+  }
 
   $: schedules = seasonEntries.map((entry): ScheduleItem => {
-    const seasonYear = $seasonStore.seasonYear || 2026;
-    const baseDate = new Date(seasonYear, 2, 1); // 3월 1주차 기준
-    baseDate.setDate(baseDate.getDate() + (entry.week - 1) * 7);
-    const date = toDateKey(baseDate);
+    const date = entry.gameDate ?? (() => {
+      const seasonYear = $seasonStore.seasonYear || 2026;
+      const baseDate = new Date(seasonYear, 2, 1);
+      baseDate.setDate(baseDate.getDate() + (entry.week - 1) * 7 + 5);
+      return toDateKey(baseDate);
+    })();
     const isHome = entry.homeTeamId === protagonistTeamId;
     const opponent = teamLabel(isHome ? entry.awayTeamId : entry.homeTeamId);
     const status: ScheduleItem["status"] = entry.result
@@ -59,11 +82,12 @@
       : entry.week >= $seasonStore.currentWeek
         ? "important"
         : "planned";
+    const prefix = psLabel(entry.id);
     return {
       id: entry.id,
       date,
       type: "game",
-      title: `W${entry.week} vs ${opponent}`,
+      title: `${prefix ? prefix + " " : ""}W${entry.week} vs ${opponent}`,
       time: "13:00",
       location: isHome ? "홈" : "원정",
       status,
@@ -168,8 +192,8 @@
   }
 
   function goToday() {
-    cursor = new Date(today);
-    selectedDateKey = toDateKey(today);
+    cursor = new Date(todayDate);
+    selectedDateKey = toDateKey(todayDate);
   }
 
   function selectDate(dateKey: string) {
@@ -204,11 +228,6 @@
     return `${won ? "승" : "패"} ${r.homeScore}:${r.awayScore}`;
   }
 
-  // 52주 전체 타임라인
-  const SEASON_START = 5;
-  const SEASON_END   = 36;
-  const POST_END     = 44;
-
   const PHASE_LABEL: Record<string, string> = {
     preseason: "프리시즌",
     season: "정규시즌",
@@ -222,15 +241,22 @@
     offseason: "비시즌 훈련",
   };
 
-  function weekPhase(week: number): string {
-    if (week < SEASON_START) return "preseason";
-    if (week <= SEASON_END)  return "season";
-    if (week <= POST_END)    return "postseason";
-    return "offseason";
-  }
-
   $: totalWeeks = $seasonStore.totalWeeks > 0 ? $seasonStore.totalWeeks : 52;
   $: allWeeks   = Array.from({ length: totalWeeks }, (_, i) => i + 1);
+
+  // 스케줄 엔트리 기반으로 주차별 phase 결정 (리그마다 다름)
+  $: phaseByWeek = (() => {
+    const m = new Map<number, string>();
+    for (const e of seasonEntries) {
+      if (!m.has(e.week)) m.set(e.week, e.phase);
+    }
+    return m;
+  })();
+
+  function weekPhase(week: number): string {
+    return phaseByWeek.get(week) ?? "offseason";
+  }
+
   $: gameByWeek = new Map(
     seasonEntries
       .filter((e) => e.isProtagonistGame)
@@ -282,7 +308,8 @@
                   {@const game = gameByWeek.get(week) ?? null}
                   {@const isCurrent = week === $seasonStore.currentWeek}
                   {@const isPast = week < $seasonStore.currentWeek}
-                  <div class="week-row" class:current={isCurrent} class:past={isPast}>
+                  {@const isPostgame = game ? psLabel(game.id) !== "" : false}
+                  <div class="week-row" class:current={isCurrent} class:past={isPast} class:postseason-game={isPostgame}>
                     <span class="week-num">W{week}</span>
                     <span class="phase-tag" class:pre={phase === "preseason"} class:reg={phase === "season"} class:post={phase === "postseason"} class:off={phase === "offseason"}>
                       {PHASE_LABEL[phase]}
@@ -291,8 +318,9 @@
                       {@const isHome = game.homeTeamId === protagonistTeamId}
                       {@const opp = teamLabel(isHome ? game.awayTeamId : game.homeTeamId)}
                       {@const done = !!game.result}
+                      {@const psl = psLabel(game.id)}
                       <span class="game-loc">{isHome ? "홈" : "원정"}</span>
-                      <span class="opponent">vs {opp}</span>
+                      <span class="opponent">{psl ? psl + " " : ""}vs {opp}</span>
                       <span class="status" class:win={done && game.result?.winnerId === protagonistTeamId} class:lose={done && game.result?.winnerId !== protagonistTeamId}>
                         {gameStatusLabel(game)}
                       </span>
@@ -793,6 +821,16 @@
 
   .week-row.past {
     opacity: 0.55;
+  }
+
+  .week-row.postseason-game {
+    border-color: #c9960f;
+    background: #2a1e08;
+  }
+
+  .week-row.postseason-game.current {
+    border-color: #f5d050;
+    background: #3a2a0a;
   }
 
   .week-num {

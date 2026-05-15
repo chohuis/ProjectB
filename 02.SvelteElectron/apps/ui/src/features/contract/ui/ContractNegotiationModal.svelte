@@ -4,7 +4,8 @@
   import { seasonStore } from "../../../shared/stores/season";
   import type { PendingAction } from "../../../shared/types/season";
   import type { PitcherSeasonStats, ProContract } from "../../../shared/types/save";
-  import { generateProSchedule } from "../../../shared/utils/scheduleGen";
+  import { generateKblSchedule, generateAblSchedule } from "../../../shared/utils/scheduleGen";
+  import { shuffleAblConferences } from "../../../shared/utils/postseasonEngine";
   import { calcMarketSalary, calcSeasonRating } from "../../../shared/utils/salaryEngine";
   import { isFaEligible } from "../../../shared/utils/faEngine";
 
@@ -48,8 +49,18 @@
       .filter((t) => t.leagueId === action.leagueId)
       .map((t) => t.id);
     const seasonYear = ($seasonStore.seasonYear || 2026) + 1;
-    seasonStore.initSeason(action.leagueId, seasonYear, 48, proTeamIds);
-    seasonStore.setSchedule(generateProSchedule(proTeamIds, contract.teamId));
+    const isAbl = action.leagueId === "LEAGUE_ABL";
+    const totalWeeks = isAbl ? 28 : 30;
+    seasonStore.initSeason(action.leagueId, seasonYear, totalWeeks, proTeamIds);
+    seasonStore.setSchedule(
+      isAbl
+        ? generateAblSchedule(proTeamIds, contract.teamId)
+        : generateKblSchedule(proTeamIds, contract.teamId),
+    );
+    if (isAbl) {
+      const { east, west } = shuffleAblConferences(proTeamIds);
+      seasonStore.setAblConferences(east, west);
+    }
     seasonStore.resolvePendingAction("salaryNegotiation");
     await gameStore.save();
     await seasonStore.save();

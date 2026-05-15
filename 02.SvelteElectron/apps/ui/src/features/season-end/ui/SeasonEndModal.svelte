@@ -20,6 +20,33 @@
     return $masterStore.entities.find((e) => e.id === id)?.name ?? id;
   }
 
+  // ── 포스트시즌 결과 파생 ──────────────────────────────────────
+  $: postseasonResult = (() => {
+    const psEntries = $seasonStore.schedule.filter((e) => e.phase === "postseason");
+    if (psEntries.length === 0) return null;
+
+    const finalEntry = psEntries.find((e) => e.id.startsWith("PS_FINAL_"));
+    if (!finalEntry?.result) return null;
+
+    const champion = finalEntry.result.winnerId;
+    const runnerUp = finalEntry.result.loserId ?? "";
+
+    let myResult: "champion" | "runnerUp" | "semiFinal" | "notQualified" = "notQualified";
+    if (champion === myTeamId) {
+      myResult = "champion";
+    } else if (runnerUp === myTeamId) {
+      myResult = "runnerUp";
+    } else {
+      const inSemis = psEntries.some(
+        (e) => e.id.startsWith("PS_SEMI") &&
+               (e.homeTeamId === myTeamId || e.awayTeamId === myTeamId),
+      );
+      if (inSemis) myResult = "semiFinal";
+    }
+
+    return { champion, runnerUp, myResult };
+  })();
+
   $: seasonAwards = (() => {
     const stats = $seasonStore.stats;
     let eraKing:  { name: string; era: number } | null = null;
@@ -162,6 +189,42 @@
         </div>
       </div>
     </section>
+
+    <!-- 포스트시즌 결과 -->
+    {#if postseasonResult}
+      <section class="postseason-section">
+        <h4>포스트시즌 결과</h4>
+        <div class="ps-grid">
+          <div class="ps-card ps-champion-card">
+            <span class="ps-badge">우승</span>
+            <strong class="ps-team-name">{tName(postseasonResult.champion)}</strong>
+          </div>
+          {#if postseasonResult.runnerUp}
+            <div class="ps-card ps-runner-card">
+              <span class="ps-badge">준우승</span>
+              <strong class="ps-team-name">{tName(postseasonResult.runnerUp)}</strong>
+            </div>
+          {/if}
+          <div
+            class="ps-card ps-my-card"
+            class:ps-my-champion={postseasonResult.myResult === "champion"}
+            class:ps-my-runner={postseasonResult.myResult === "runnerUp"}
+            class:ps-my-semi={postseasonResult.myResult === "semiFinal"}
+          >
+            <span class="ps-badge">우리 팀</span>
+            <strong class="ps-team-name">
+              {postseasonResult.myResult === "champion"
+                ? "우승"
+                : postseasonResult.myResult === "runnerUp"
+                  ? "준우승"
+                  : postseasonResult.myResult === "semiFinal"
+                    ? "4강 탈락"
+                    : "미진출"}
+            </strong>
+          </div>
+        </div>
+      </section>
+    {/if}
 
     <!-- 시상 -->
     {#if seasonAwards.eraKing || seasonAwards.winKing || seasonAwards.avgKing || seasonAwards.hrKing}
@@ -476,4 +539,65 @@
   .btn-next:hover { background: #235c34; }
 
   p { margin: 0; }
+
+  /* ── 포스트시즌 결과 ─────────────────────────────────── */
+  .postseason-section { display: grid; gap: 8px; }
+
+  .ps-grid {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .ps-card {
+    flex: 1 1 120px;
+    background: #131f38;
+    border: 1px solid #2a3f62;
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: grid;
+    gap: 5px;
+    text-align: center;
+  }
+
+  .ps-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #7a9ac8;
+    text-transform: uppercase;
+  }
+
+  .ps-team-name {
+    font-size: 14px;
+    color: #d8e8ff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .ps-champion-card {
+    border-color: #b89020;
+    background: #1e1a08;
+  }
+  .ps-champion-card .ps-badge { color: #f5d050; }
+  .ps-champion-card .ps-team-name { color: #f5d050; }
+
+  .ps-runner-card {
+    border-color: #6080a0;
+    background: #10182a;
+  }
+  .ps-runner-card .ps-badge { color: #a0b8d8; }
+  .ps-runner-card .ps-team-name { color: #c8d8f0; }
+
+  .ps-my-champion { border-color: #f5d050; background: #1e1a08; }
+  .ps-my-champion .ps-team-name { color: #f5d050; font-size: 16px; }
+
+  .ps-my-runner { border-color: #8090b0; background: #10182a; }
+  .ps-my-runner .ps-team-name { color: #c8d8f0; font-size: 16px; }
+
+  .ps-my-semi { border-color: #405878; }
+  .ps-my-semi .ps-team-name { color: #8aa4cc; }
+
+  .ps-my-card .ps-badge { color: #e0a060; }
 </style>

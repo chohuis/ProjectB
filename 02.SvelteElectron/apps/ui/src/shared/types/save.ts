@@ -37,13 +37,21 @@ export type BattingStatKey = Exclude<keyof BattingAttributes, "ovr">;
 export type PositionKey = "C" | "1B" | "2B" | "3B" | "SS" | "LF" | "CF" | "RF" | "SP" | "RP";
 export type PositionRatings = Partial<Record<PositionKey, number>>;
 
+// ── 투수 역할 ──────────────────────────────────────────────────
+export type PitcherRole =
+  | "1선발" | "2선발" | "3선발" | "4선발" | "5선발"
+  | "롱릴리프" | "중간계투" | "셋업맨" | "마무리" | "패전처리"
+  | "스윙맨" | "오프너";
+
 // ── 감독 능력치 ────────────────────────────────────────────────
 export interface ManagerAttributes {
-  motivation: number;  // 선수 모랄 주간 보정
-  development: number;  // 팀 전체 devFactor 보정
-  strategy: number;  // 경기 전술 의사결정
-  handlePressure: number;   // 압박 상황 관리
-  handlePersonnel: number;  // 선수 기용/트레이드/방출 결정
+  motivation: number;      // 선수 모랄 주간 보정
+  development: number;     // 팀 전체 devFactor 보정
+  strategy: number;        // 경기 전술 의사결정
+  handlePressure: number;  // 압박 상황 관리
+  handlePersonnel: number; // 선수 기용/트레이드/방출 결정
+  rotationMgmt?: number;   // 선발 로테이션 운용 능력 (50 기본)
+  bullpenMgmt?: number;    // 불펜 운용 능력 (50 기본)
 }
 
 // ── 코치 능력치 ────────────────────────────────────────────────
@@ -146,6 +154,7 @@ export interface ProtagonistSave {
     type: "light" | "moderate" | "severe";
     recoveryWeeksLeft: number;
   };
+  currentRole?: PitcherRole;  // 현재 시즌 역할 (시즌 시작 시 배정)
 }
 
 // ── 시즌 스탯 (선수 1명분) ─────────────────────────────────────

@@ -1,0 +1,19 @@
+{
+  "id": "EVT_HS_Y3_TOP10_REPORT",
+  "type": "mandatory",
+  "category": "media",
+  "priority": 970,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "week_eq",
+      "value": 138
+    }
+  ],
+  "messageTemplateId": "MSG_HS_TOP10_Y3",
+  "decisionTemplateId": null
+}
