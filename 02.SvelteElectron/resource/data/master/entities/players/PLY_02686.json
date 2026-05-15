@@ -1,9 +1,9 @@
 {
   "id": "PLY_02686",
-  "name": "石川颯太",
-  "nameEn": "Ishikawa Sota",
+  "name": "나카무라 준",
+  "nameEn": "Nakamura Jun",
   "role": "player",
-  "age": 31,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "RP",
       "jerseyNumber": 35,
       "pitching": {
-        "ovr": 71,
-        "stamina": 58,
-        "velocity": 68,
-        "command": 69,
-        "control": 69,
-        "movement": 62,
-        "mentality": 69,
-        "recovery": 61
+        "ovr": 76,
+        "stamina": 65,
+        "velocity": 82,
+        "command": 79,
+        "control": 72,
+        "movement": 77,
+        "mentality": 76,
+        "recovery": 75
       },
       "batting": {
-        "ovr": 40,
-        "contact": 47,
-        "power": 47,
-        "eye": 45,
-        "discipline": 46,
-        "speed": 40,
-        "fielding": 42,
-        "arm": 42,
-        "battingClutch": 46
+        "ovr": 50,
+        "contact": 52,
+        "power": 50,
+        "eye": 53,
+        "discipline": 49,
+        "speed": 56,
+        "fielding": 48,
+        "arm": 56,
+        "battingClutch": 53
       },
-      "developmentRate": 40,
-      "potentialHidden": 76
+      "developmentRate": 47,
+      "potentialHidden": 83
     },
     "coach": {
       "specialty": "-",

@@ -1,9 +1,9 @@
 {
   "id": "PLY_02644",
-  "name": "三浦悠人",
-  "nameEn": "Miura Yuto",
+  "name": "오카모토 렌",
+  "nameEn": "Okamoto Ren",
   "role": "player",
-  "age": 19,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "RP",
       "jerseyNumber": 38,
       "pitching": {
-        "ovr": 62,
-        "stamina": 57,
-        "velocity": 67,
-        "command": 64,
-        "control": 57,
+        "ovr": 67,
+        "stamina": 54,
+        "velocity": 68,
+        "command": 62,
+        "control": 65,
         "movement": 60,
-        "mentality": 65,
-        "recovery": 62
+        "mentality": 64,
+        "recovery": 60
       },
       "batting": {
-        "ovr": 35,
-        "contact": 38,
-        "power": 37,
-        "eye": 40,
-        "discipline": 32,
-        "speed": 35,
-        "fielding": 39,
-        "arm": 34,
-        "battingClutch": 38
+        "ovr": 36,
+        "contact": 34,
+        "power": 33,
+        "eye": 27,
+        "discipline": 29,
+        "speed": 31,
+        "fielding": 34,
+        "arm": 27,
+        "battingClutch": 31
       },
-      "developmentRate": 39,
-      "potentialHidden": 67
+      "developmentRate": 56,
+      "potentialHidden": 87
     },
     "coach": {
       "specialty": "-",

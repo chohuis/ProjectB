@@ -1,9 +1,9 @@
 {
   "id": "COA_00215",
-  "name": "坂本峻",
-  "nameEn": "Sakamoto Shun",
+  "name": "타카하시 사토시",
+  "nameEn": "Takahashi Satoshi",
   "role": "coach",
-  "age": 57,
+  "age": 54,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "수비",
-      "experienceYears": 3,
+      "specialty": "타격",
+      "experienceYears": 12,
       "stats": {
-        "teaching": 55,
-        "analysis": 53,
-        "communication": 58,
-        "discipline": 61,
-        "leadership": 69
+        "teaching": 61,
+        "analysis": 74,
+        "communication": 71,
+        "discipline": 76,
+        "leadership": 79
       },
-      "trainingBuffs": "체력 훈련 +2%"
+      "trainingBuffs": "제구 훈련 +2%"
     },
     "manager": {
       "style": "균형",

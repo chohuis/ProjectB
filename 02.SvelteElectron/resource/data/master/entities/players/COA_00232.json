@@ -1,9 +1,9 @@
 {
   "id": "COA_00232",
-  "name": "高橋雄太",
-  "nameEn": "Takahashi Yuta",
+  "name": "미우라 카이토",
+  "nameEn": "Miura Kaito",
   "role": "coach",
-  "age": 58,
+  "age": 34,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "투수",
-      "experienceYears": 10,
+      "specialty": "멘탈",
+      "experienceYears": 13,
       "stats": {
-        "teaching": 67,
-        "analysis": 62,
-        "communication": 70,
-        "discipline": 58,
-        "leadership": 84
+        "teaching": 77,
+        "analysis": 68,
+        "communication": 57,
+        "discipline": 63,
+        "leadership": 79
       },
-      "trainingBuffs": "체력 훈련 +2%"
+      "trainingBuffs": ""
     },
     "manager": {
       "style": "균형",

@@ -1,9 +1,9 @@
 {
   "id": "PLY_02660",
-  "name": "佐々木凌",
-  "nameEn": "Sasaki Ryo",
+  "name": "야마구치 마나부",
+  "nameEn": "Yamaguchi Manabu",
   "role": "player",
-  "age": 31,
+  "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "SP",
       "jerseyNumber": 4,
       "pitching": {
-        "ovr": 77,
-        "stamina": 74,
-        "velocity": 77,
-        "command": 77,
-        "control": 76,
-        "movement": 72,
-        "mentality": 79,
-        "recovery": 70
+        "ovr": 82,
+        "stamina": 86,
+        "velocity": 86,
+        "command": 81,
+        "control": 86,
+        "movement": 77,
+        "mentality": 86,
+        "recovery": 77
       },
       "batting": {
-        "ovr": 51,
-        "contact": 43,
-        "power": 43,
-        "eye": 45,
-        "discipline": 46,
-        "speed": 46,
-        "fielding": 48,
-        "arm": 50,
-        "battingClutch": 49
+        "ovr": 50,
+        "contact": 53,
+        "power": 54,
+        "eye": 53,
+        "discipline": 56,
+        "speed": 57,
+        "fielding": 54,
+        "arm": 51,
+        "battingClutch": 54
       },
-      "developmentRate": 38,
-      "potentialHidden": 74
+      "developmentRate": 45,
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",

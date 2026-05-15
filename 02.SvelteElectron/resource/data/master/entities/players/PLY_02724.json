@@ -1,9 +1,9 @@
 {
   "id": "PLY_02724",
-  "name": "松本誠",
-  "nameEn": "Matsumoto Makoto",
+  "name": "카토 유타카",
+  "nameEn": "Kato Yutaka",
   "role": "player",
-  "age": 38,
+  "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -20,27 +20,27 @@
       "jerseyNumber": 23,
       "pitching": {
         "ovr": 69,
-        "stamina": 63,
-        "velocity": 66,
-        "command": 62,
-        "control": 63,
-        "movement": 67,
-        "mentality": 63,
-        "recovery": 66
+        "stamina": 70,
+        "velocity": 69,
+        "command": 69,
+        "control": 69,
+        "movement": 68,
+        "mentality": 70,
+        "recovery": 71
       },
       "batting": {
         "ovr": 94,
-        "contact": 93,
+        "contact": 97,
         "power": 96,
-        "eye": 90,
-        "discipline": 85,
-        "speed": 85,
-        "fielding": 80,
-        "arm": 87,
-        "battingClutch": 87
+        "eye": 86,
+        "discipline": 89,
+        "speed": 83,
+        "fielding": 84,
+        "arm": 82,
+        "battingClutch": 91
       },
-      "developmentRate": 37,
-      "potentialHidden": 77
+      "developmentRate": 41,
+      "potentialHidden": 84
     },
     "coach": {
       "specialty": "-",

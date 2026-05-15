@@ -1,9 +1,9 @@
 {
   "id": "COA_00213",
-  "name": "村上剛",
-  "nameEn": "Murakami Tsuyoshi",
+  "name": "마에다 아키라",
+  "nameEn": "Maeda Akira",
   "role": "coach",
-  "age": 49,
+  "age": 50,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "수비",
-      "experienceYears": 5,
+      "specialty": "멘탈",
+      "experienceYears": 14,
       "stats": {
-        "teaching": 55,
-        "analysis": 75,
-        "communication": 74,
-        "discipline": 75,
-        "leadership": 79
+        "teaching": 57,
+        "analysis": 64,
+        "communication": 80,
+        "discipline": 55,
+        "leadership": 75
       },
-      "trainingBuffs": "체력 훈련 +2%"
+      "trainingBuffs": "컨택 훈련 +2%"
     },
     "manager": {
       "style": "균형",

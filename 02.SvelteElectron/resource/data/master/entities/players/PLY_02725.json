@@ -1,9 +1,9 @@
 {
   "id": "PLY_02725",
-  "name": "田中雄太",
-  "nameEn": "Tanaka Yuta",
+  "name": "콘도 아키라",
+  "nameEn": "Kondo Akira",
   "role": "player",
-  "age": 23,
+  "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
+      "handedness": "R",
       "position": "DH",
       "jerseyNumber": 24,
       "pitching": {
-        "ovr": 44,
-        "stamina": 43,
-        "velocity": 47,
-        "command": 46,
-        "control": 47,
-        "movement": 47,
-        "mentality": 49,
-        "recovery": 45
+        "ovr": 37,
+        "stamina": 41,
+        "velocity": 43,
+        "command": 39,
+        "control": 40,
+        "movement": 40,
+        "mentality": 41,
+        "recovery": 39
       },
       "batting": {
-        "ovr": 70,
-        "contact": 75,
+        "ovr": 73,
+        "contact": 74,
         "power": 76,
-        "eye": 74,
-        "discipline": 69,
-        "speed": 68,
-        "fielding": 66,
-        "arm": 71,
-        "battingClutch": 74
+        "eye": 70,
+        "discipline": 67,
+        "speed": 65,
+        "fielding": 64,
+        "arm": 66,
+        "battingClutch": 68
       },
-      "developmentRate": 48,
-      "potentialHidden": 67
+      "developmentRate": 51,
+      "potentialHidden": 87
     },
     "coach": {
       "specialty": "-",

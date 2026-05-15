@@ -1,9 +1,9 @@
 {
   "id": "PLY_02643",
-  "name": "石田大和",
-  "nameEn": "Ishida Yamato",
+  "name": "카토 렌",
+  "nameEn": "Kato Ren",
   "role": "player",
-  "age": 26,
+  "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -20,27 +20,27 @@
       "jerseyNumber": 37,
       "pitching": {
         "ovr": 70,
-        "stamina": 62,
-        "velocity": 74,
-        "command": 72,
-        "control": 64,
-        "movement": 71,
-        "mentality": 64,
-        "recovery": 67
+        "stamina": 58,
+        "velocity": 71,
+        "command": 68,
+        "control": 66,
+        "movement": 62,
+        "mentality": 69,
+        "recovery": 64
       },
       "batting": {
-        "ovr": 45,
-        "contact": 43,
-        "power": 39,
-        "eye": 39,
-        "discipline": 37,
-        "speed": 40,
-        "fielding": 38,
-        "arm": 40,
-        "battingClutch": 44
+        "ovr": 49,
+        "contact": 42,
+        "power": 42,
+        "eye": 43,
+        "discipline": 48,
+        "speed": 44,
+        "fielding": 46,
+        "arm": 45,
+        "battingClutch": 47
       },
-      "developmentRate": 44,
-      "potentialHidden": 71
+      "developmentRate": 40,
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",

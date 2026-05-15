@@ -1,9 +1,9 @@
 {
   "id": "COA_00199",
-  "name": "後藤健太",
-  "nameEn": "Goto Kenta",
+  "name": "와타나베 카이토",
+  "nameEn": "Watanabe Kaito",
   "role": "coach",
-  "age": 48,
+  "age": 47,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -43,14 +43,14 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "멘탈",
-      "experienceYears": 7,
+      "specialty": "투수",
+      "experienceYears": 15,
       "stats": {
-        "teaching": 56,
-        "analysis": 60,
-        "communication": 52,
-        "discipline": 78,
-        "leadership": 67
+        "teaching": 79,
+        "analysis": 55,
+        "communication": 75,
+        "discipline": 73,
+        "leadership": 58
       },
       "trainingBuffs": "컨택 훈련 +2%"
     },

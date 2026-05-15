@@ -1,9 +1,9 @@
 {
   "id": "PLY_02770",
-  "name": "鈴木剛",
-  "nameEn": "Suzuki Tsuyoshi",
+  "name": "오카다 마코토",
+  "nameEn": "Okada Makoto",
   "role": "player",
-  "age": 29,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "DH",
       "jerseyNumber": 24,
       "pitching": {
-        "ovr": 55,
-        "stamina": 56,
-        "velocity": 61,
-        "command": 58,
-        "control": 53,
-        "movement": 58,
-        "mentality": 54,
-        "recovery": 55
+        "ovr": 63,
+        "stamina": 63,
+        "velocity": 68,
+        "command": 60,
+        "control": 64,
+        "movement": 59,
+        "mentality": 62,
+        "recovery": 61
       },
       "batting": {
-        "ovr": 79,
-        "contact": 83,
-        "power": 86,
-        "eye": 75,
-        "discipline": 80,
-        "speed": 71,
-        "fielding": 71,
-        "arm": 74,
-        "battingClutch": 75
+        "ovr": 85,
+        "contact": 91,
+        "power": 90,
+        "eye": 88,
+        "discipline": 90,
+        "speed": 86,
+        "fielding": 81,
+        "arm": 88,
+        "battingClutch": 85
       },
-      "developmentRate": 43,
-      "potentialHidden": 64
+      "developmentRate": 52,
+      "potentialHidden": 87
     },
     "coach": {
       "specialty": "-",

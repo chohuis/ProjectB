@@ -1,7 +1,7 @@
 {
   "id": "PLY_02559",
-  "name": "伊藤仁",
-  "nameEn": "Ito Jin",
+  "name": "고토 쓰카사",
+  "nameEn": "Goto Tsukasa",
   "role": "player",
   "age": 22,
   "status": "active",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "R",
+      "handedness": "L",
       "position": "1B",
       "jerseyNumber": 43,
       "pitching": {
-        "ovr": 39,
-        "stamina": 36,
-        "velocity": 34,
-        "command": 39,
-        "control": 34,
-        "movement": 37,
-        "mentality": 37,
-        "recovery": 37
+        "ovr": 47,
+        "stamina": 41,
+        "velocity": 49,
+        "command": 46,
+        "control": 46,
+        "movement": 41,
+        "mentality": 43,
+        "recovery": 43
       },
       "batting": {
-        "ovr": 65,
-        "contact": 66,
-        "power": 71,
-        "eye": 67,
-        "discipline": 63,
-        "speed": 64,
-        "fielding": 68,
-        "arm": 62,
-        "battingClutch": 65
+        "ovr": 77,
+        "contact": 73,
+        "power": 82,
+        "eye": 78,
+        "discipline": 73,
+        "speed": 69,
+        "fielding": 76,
+        "arm": 72,
+        "battingClutch": 73
       },
       "developmentRate": 53,
-      "potentialHidden": 76
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",

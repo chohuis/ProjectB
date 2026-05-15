@@ -1,9 +1,9 @@
 {
   "id": "PLY_02769",
-  "name": "太田暁",
-  "nameEn": "Ota Akira",
+  "name": "야마구치 미쓰루",
+  "nameEn": "Yamaguchi Mitsuru",
   "role": "player",
-  "age": 26,
+  "age": 36,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -20,27 +20,27 @@
       "jerseyNumber": 23,
       "pitching": {
         "ovr": 55,
-        "stamina": 53,
-        "velocity": 54,
-        "command": 55,
-        "control": 58,
-        "movement": 52,
-        "mentality": 52,
-        "recovery": 51
+        "stamina": 48,
+        "velocity": 60,
+        "command": 56,
+        "control": 53,
+        "movement": 51,
+        "mentality": 57,
+        "recovery": 53
       },
       "batting": {
-        "ovr": 77,
-        "contact": 74,
-        "power": 84,
-        "eye": 77,
-        "discipline": 75,
-        "speed": 69,
-        "fielding": 72,
-        "arm": 72,
+        "ovr": 75,
+        "contact": 82,
+        "power": 81,
+        "eye": 73,
+        "discipline": 71,
+        "speed": 70,
+        "fielding": 67,
+        "arm": 68,
         "battingClutch": 75
       },
-      "developmentRate": 52,
-      "potentialHidden": 79
+      "developmentRate": 40,
+      "potentialHidden": 82
     },
     "coach": {
       "specialty": "-",

@@ -1,9 +1,9 @@
 {
   "id": "PLY_02881",
-  "name": "遠藤龍",
-  "nameEn": "Endo Ryu",
+  "name": "이케다 마코토",
+  "nameEn": "Ikeda Makoto",
   "role": "player",
-  "age": 19,
+  "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
+      "handedness": "R",
       "position": "DH",
       "jerseyNumber": 50,
       "pitching": {
-        "ovr": 47,
-        "stamina": 50,
-        "velocity": 49,
-        "command": 51,
-        "control": 49,
-        "movement": 48,
-        "mentality": 47,
-        "recovery": 49
+        "ovr": 43,
+        "stamina": 33,
+        "velocity": 43,
+        "command": 42,
+        "control": 34,
+        "movement": 37,
+        "mentality": 41,
+        "recovery": 36
       },
       "batting": {
-        "ovr": 73,
-        "contact": 80,
-        "power": 84,
-        "eye": 80,
-        "discipline": 74,
-        "speed": 67,
-        "fielding": 65,
-        "arm": 70,
-        "battingClutch": 79
+        "ovr": 76,
+        "contact": 76,
+        "power": 75,
+        "eye": 70,
+        "discipline": 68,
+        "speed": 64,
+        "fielding": 64,
+        "arm": 64,
+        "battingClutch": 74
       },
-      "developmentRate": 50,
-      "potentialHidden": 64
+      "developmentRate": 51,
+      "potentialHidden": 58
     },
     "coach": {
       "specialty": "-",

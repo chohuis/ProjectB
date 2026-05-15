@@ -1,9 +1,9 @@
 {
   "id": "PLY_02764",
-  "name": "近藤剛",
-  "nameEn": "Kondo Tsuyoshi",
+  "name": "사카모토 진",
+  "nameEn": "Sakamoto Jin",
   "role": "player",
-  "age": 26,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
+      "handedness": "R",
       "position": "3B",
       "jerseyNumber": 18,
       "pitching": {
-        "ovr": 71,
-        "stamina": 61,
-        "velocity": 73,
-        "command": 64,
-        "control": 67,
-        "movement": 66,
-        "mentality": 65,
-        "recovery": 68
+        "ovr": 45,
+        "stamina": 48,
+        "velocity": 47,
+        "command": 46,
+        "control": 44,
+        "movement": 42,
+        "mentality": 44,
+        "recovery": 43
       },
       "batting": {
-        "ovr": 89,
-        "contact": 83,
-        "power": 86,
-        "eye": 85,
-        "discipline": 84,
-        "speed": 87,
-        "fielding": 83,
-        "arm": 88,
-        "battingClutch": 85
+        "ovr": 73,
+        "contact": 68,
+        "power": 71,
+        "eye": 72,
+        "discipline": 71,
+        "speed": 71,
+        "fielding": 67,
+        "arm": 70,
+        "battingClutch": 74
       },
       "developmentRate": 36,
-      "potentialHidden": 65
+      "potentialHidden": 86
     },
     "coach": {
       "specialty": "-",

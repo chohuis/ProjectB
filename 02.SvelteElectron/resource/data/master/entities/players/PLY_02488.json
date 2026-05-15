@@ -1,9 +1,9 @@
 {
   "id": "PLY_02488",
-  "name": "藤田蓮",
-  "nameEn": "Fujita Ren",
+  "name": "고토 아키라",
+  "nameEn": "Goto Akira",
   "role": "player",
-  "age": 38,
+  "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "CP",
       "jerseyNumber": 12,
       "pitching": {
-        "ovr": 94,
-        "stamina": 79,
-        "velocity": 97,
-        "command": 87,
-        "control": 94,
-        "movement": 89,
-        "mentality": 93,
-        "recovery": 93
+        "ovr": 81,
+        "stamina": 67,
+        "velocity": 87,
+        "command": 83,
+        "control": 81,
+        "movement": 79,
+        "mentality": 78,
+        "recovery": 76
       },
       "batting": {
-        "ovr": 59,
-        "contact": 60,
-        "power": 58,
-        "eye": 56,
-        "discipline": 56,
-        "speed": 57,
-        "fielding": 52,
+        "ovr": 49,
+        "contact": 50,
+        "power": 46,
+        "eye": 45,
+        "discipline": 52,
+        "speed": 46,
+        "fielding": 46,
         "arm": 53,
-        "battingClutch": 61
+        "battingClutch": 51
       },
-      "developmentRate": 35,
-      "potentialHidden": 66
+      "developmentRate": 39,
+      "potentialHidden": 92
     },
     "coach": {
       "specialty": "-",

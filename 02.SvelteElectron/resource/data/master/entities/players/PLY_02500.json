@@ -1,9 +1,9 @@
 {
   "id": "PLY_02500",
-  "name": "岡本陽介",
-  "nameEn": "Okamoto Yosuke",
+  "name": "고바야시 유토",
+  "nameEn": "Kobayashi Yuto",
   "role": "player",
-  "age": 22,
+  "age": 38,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "DH",
       "jerseyNumber": 24,
       "pitching": {
-        "ovr": 48,
-        "stamina": 39,
-        "velocity": 43,
-        "command": 42,
-        "control": 41,
-        "movement": 47,
-        "mentality": 44,
-        "recovery": 44
+        "ovr": 65,
+        "stamina": 58,
+        "velocity": 63,
+        "command": 60,
+        "control": 67,
+        "movement": 66,
+        "mentality": 60,
+        "recovery": 65
       },
       "batting": {
-        "ovr": 72,
-        "contact": 69,
-        "power": 72,
-        "eye": 66,
-        "discipline": 74,
-        "speed": 69,
-        "fielding": 60,
-        "arm": 69,
-        "battingClutch": 70
+        "ovr": 90,
+        "contact": 91,
+        "power": 94,
+        "eye": 86,
+        "discipline": 86,
+        "speed": 82,
+        "fielding": 82,
+        "arm": 89,
+        "battingClutch": 87
       },
-      "developmentRate": 37,
-      "potentialHidden": 69
+      "developmentRate": 39,
+      "potentialHidden": 91
     },
     "coach": {
       "specialty": "-",

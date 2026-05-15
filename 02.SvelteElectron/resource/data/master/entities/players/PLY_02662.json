@@ -1,9 +1,9 @@
 {
   "id": "PLY_02662",
-  "name": "山本駿",
-  "nameEn": "Yamamoto Shun",
+  "name": "타카하시 렌",
+  "nameEn": "Takahashi Ren",
   "role": "player",
-  "age": 36,
+  "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "RP",
       "jerseyNumber": 6,
       "pitching": {
-        "ovr": 69,
-        "stamina": 64,
-        "velocity": 79,
-        "command": 72,
-        "control": 70,
-        "movement": 72,
-        "mentality": 74,
-        "recovery": 73
+        "ovr": 88,
+        "stamina": 77,
+        "velocity": 88,
+        "command": 87,
+        "control": 87,
+        "movement": 86,
+        "mentality": 87,
+        "recovery": 78
       },
       "batting": {
-        "ovr": 54,
-        "contact": 46,
-        "power": 50,
-        "eye": 49,
-        "discipline": 48,
-        "speed": 49,
-        "fielding": 45,
-        "arm": 45,
-        "battingClutch": 51
+        "ovr": 60,
+        "contact": 60,
+        "power": 59,
+        "eye": 59,
+        "discipline": 56,
+        "speed": 55,
+        "fielding": 59,
+        "arm": 59,
+        "battingClutch": 56
       },
-      "developmentRate": 44,
-      "potentialHidden": 58
+      "developmentRate": 50,
+      "potentialHidden": 61
     },
     "coach": {
       "specialty": "-",

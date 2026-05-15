@@ -1,9 +1,9 @@
 {
   "id": "OWN_00026",
-  "name": "加藤龍",
-  "nameEn": "Kato Ryu",
+  "name": "오카다 소타",
+  "nameEn": "Okada Sota",
   "role": "owner",
-  "age": 49,
+  "age": 59,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -68,14 +68,14 @@
       "riskTolerance": 50
     },
     "owner": {
-      "ownershipStyle": "안정 운영",
-      "tenureYears": 6,
+      "ownershipStyle": "성적 우선",
+      "tenureYears": 8,
       "stats": {
-        "budgetSupport": 83,
-        "patience": 80,
-        "prInfluence": 72,
-        "facilityInvestment": 76,
-        "staffTrust": 72
+        "budgetSupport": 64,
+        "patience": 65,
+        "prInfluence": 60,
+        "facilityInvestment": 60,
+        "staffTrust": 79
       },
       "budgetPolicy": "",
       "hiringPolicy": ""

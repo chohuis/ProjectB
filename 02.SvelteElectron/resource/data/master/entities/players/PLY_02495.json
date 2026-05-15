@@ -1,9 +1,9 @@
 {
   "id": "PLY_02495",
-  "name": "斎藤健太",
-  "nameEn": "Saito Kenta",
+  "name": "타나카 기요시",
+  "nameEn": "Tanaka Kiyoshi",
   "role": "player",
-  "age": 23,
+  "age": 31,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SS",
       "jerseyNumber": 19,
       "pitching": {
-        "ovr": 63,
-        "stamina": 60,
+        "ovr": 54,
+        "stamina": 56,
         "velocity": 62,
-        "command": 62,
-        "control": 56,
-        "movement": 59,
-        "mentality": 62,
-        "recovery": 62
+        "command": 61,
+        "control": 60,
+        "movement": 57,
+        "mentality": 56,
+        "recovery": 58
       },
       "batting": {
-        "ovr": 84,
-        "contact": 82,
-        "power": 77,
-        "eye": 82,
-        "discipline": 82,
-        "speed": 87,
-        "fielding": 80,
-        "arm": 77,
-        "battingClutch": 78
+        "ovr": 85,
+        "contact": 87,
+        "power": 78,
+        "eye": 79,
+        "discipline": 79,
+        "speed": 82,
+        "fielding": 83,
+        "arm": 79,
+        "battingClutch": 87
       },
-      "developmentRate": 36,
-      "potentialHidden": 71
+      "developmentRate": 48,
+      "potentialHidden": 73
     },
     "coach": {
       "specialty": "-",

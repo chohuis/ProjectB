@@ -1,9 +1,9 @@
 {
   "id": "MNG_00089",
-  "name": "石田大輝",
-  "nameEn": "Ishida Daiki",
+  "name": "스즈키 히로시",
+  "nameEn": "Suzuki Hiroshi",
   "role": "manager",
-  "age": 61,
+  "age": 49,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -56,16 +56,16 @@
     },
     "manager": {
       "style": "공격적",
-      "experienceYears": 15,
+      "experienceYears": 20,
       "stats": {
-        "tactics": 76,
-        "decision": 86,
-        "rotationMgmt": 66,
-        "bullpenMgmt": 55,
-        "moraleMgmt": 80
+        "tactics": 61,
+        "decision": 59,
+        "rotationMgmt": 59,
+        "bullpenMgmt": 69,
+        "moraleMgmt": 79
       },
       "gamePlanBias": "",
-      "riskTolerance": 67
+      "riskTolerance": 48
     },
     "owner": {
       "ownershipStyle": "안정 운영",

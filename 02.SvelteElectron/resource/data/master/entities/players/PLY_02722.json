@@ -1,9 +1,9 @@
 {
   "id": "PLY_02722",
-  "name": "坂本茂",
-  "nameEn": "Sakamoto Shigeru",
+  "name": "시미즈 소타",
+  "nameEn": "Shimizu Sota",
   "role": "player",
-  "age": 32,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
+      "handedness": "R",
       "position": "CF",
       "jerseyNumber": 21,
       "pitching": {
-        "ovr": 55,
-        "stamina": 55,
-        "velocity": 56,
-        "command": 61,
-        "control": 57,
-        "movement": 55,
-        "mentality": 58,
-        "recovery": 57
+        "ovr": 67,
+        "stamina": 67,
+        "velocity": 72,
+        "command": 63,
+        "control": 61,
+        "movement": 65,
+        "mentality": 62,
+        "recovery": 62
       },
       "batting": {
-        "ovr": 84,
-        "contact": 87,
-        "power": 81,
-        "eye": 89,
-        "discipline": 82,
+        "ovr": 90,
+        "contact": 89,
+        "power": 84,
+        "eye": 85,
+        "discipline": 88,
         "speed": 89,
-        "fielding": 89,
-        "arm": 89,
-        "battingClutch": 91
+        "fielding": 84,
+        "arm": 82,
+        "battingClutch": 83
       },
-      "developmentRate": 36,
-      "potentialHidden": 58
+      "developmentRate": 45,
+      "potentialHidden": 92
     },
     "coach": {
       "specialty": "-",

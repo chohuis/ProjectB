@@ -1,9 +1,9 @@
 {
   "id": "PLY_02781",
-  "name": "佐々木司",
-  "nameEn": "Sasaki Tsukasa",
+  "name": "요시다 소타",
+  "nameEn": "Yoshida Sota",
   "role": "player",
-  "age": 20,
+  "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "CP",
       "jerseyNumber": 40,
       "pitching": {
-        "ovr": 67,
-        "stamina": 53,
-        "velocity": 66,
-        "command": 60,
-        "control": 68,
-        "movement": 62,
-        "mentality": 62,
-        "recovery": 63
+        "ovr": 61,
+        "stamina": 57,
+        "velocity": 69,
+        "command": 63,
+        "control": 70,
+        "movement": 66,
+        "mentality": 60,
+        "recovery": 64
       },
       "batting": {
-        "ovr": 26,
-        "contact": 25,
-        "power": 30,
-        "eye": 26,
-        "discipline": 31,
-        "speed": 27,
-        "fielding": 27,
-        "arm": 25,
-        "battingClutch": 27
+        "ovr": 48,
+        "contact": 44,
+        "power": 46,
+        "eye": 47,
+        "discipline": 43,
+        "speed": 43,
+        "fielding": 44,
+        "arm": 42,
+        "battingClutch": 40
       },
-      "developmentRate": 40,
-      "potentialHidden": 67
+      "developmentRate": 39,
+      "potentialHidden": 86
     },
     "coach": {
       "specialty": "-",

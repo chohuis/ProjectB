@@ -1,9 +1,9 @@
 {
   "id": "PLY_02636",
-  "name": "橋本光",
-  "nameEn": "Hashimoto Hikaru",
+  "name": "오타 츠바사",
+  "nameEn": "Ota Tsubasa",
   "role": "player",
-  "age": 29,
+  "age": 37,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
-      "position": "2B",
+      "handedness": "R",
+      "position": "RF",
       "jerseyNumber": 25,
       "pitching": {
-        "ovr": 55,
-        "stamina": 45,
-        "velocity": 49,
-        "command": 53,
-        "control": 48,
-        "movement": 53,
-        "mentality": 52,
-        "recovery": 48
+        "ovr": 42,
+        "stamina": 37,
+        "velocity": 46,
+        "command": 41,
+        "control": 38,
+        "movement": 35,
+        "mentality": 42,
+        "recovery": 34
       },
       "batting": {
-        "ovr": 84,
-        "contact": 82,
-        "power": 79,
-        "eye": 76,
-        "discipline": 82,
-        "speed": 75,
-        "fielding": 78,
-        "arm": 80,
-        "battingClutch": 77
+        "ovr": 69,
+        "contact": 72,
+        "power": 67,
+        "eye": 66,
+        "discipline": 68,
+        "speed": 69,
+        "fielding": 72,
+        "arm": 68,
+        "battingClutch": 74
       },
-      "developmentRate": 35,
-      "potentialHidden": 71
+      "developmentRate": 39,
+      "potentialHidden": 85
     },
     "coach": {
       "specialty": "-",

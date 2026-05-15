@@ -1,9 +1,9 @@
 {
   "id": "PLY_02731",
-  "name": "渡辺哲",
-  "nameEn": "Watanabe Satoshi",
+  "name": "오카모토 쇼",
+  "nameEn": "Okamoto Sho",
   "role": "player",
-  "age": 20,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "RP",
       "jerseyNumber": 35,
       "pitching": {
-        "ovr": 68,
-        "stamina": 57,
-        "velocity": 74,
-        "command": 67,
-        "control": 66,
-        "movement": 69,
-        "mentality": 70,
-        "recovery": 71
+        "ovr": 62,
+        "stamina": 53,
+        "velocity": 70,
+        "command": 65,
+        "control": 57,
+        "movement": 57,
+        "mentality": 64,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 40,
-        "contact": 35,
-        "power": 33,
-        "eye": 33,
-        "discipline": 32,
-        "speed": 36,
-        "fielding": 38,
-        "arm": 36,
-        "battingClutch": 39
+        "ovr": 39,
+        "contact": 39,
+        "power": 41,
+        "eye": 39,
+        "discipline": 36,
+        "speed": 41,
+        "fielding": 34,
+        "arm": 41,
+        "battingClutch": 37
       },
-      "developmentRate": 53,
-      "potentialHidden": 91
+      "developmentRate": 40,
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",

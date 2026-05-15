@@ -1,9 +1,9 @@
 {
   "id": "COA_00220",
-  "name": "岡田翔",
-  "nameEn": "Okada Sho",
+  "name": "이시다 이사무",
+  "nameEn": "Ishida Isamu",
   "role": "coach",
-  "age": 51,
+  "age": 56,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -44,13 +44,13 @@
     },
     "coach": {
       "specialty": "수비",
-      "experienceYears": 3,
+      "experienceYears": 17,
       "stats": {
-        "teaching": 56,
-        "analysis": 78,
-        "communication": 84,
-        "discipline": 80,
-        "leadership": 76
+        "teaching": 76,
+        "analysis": 66,
+        "communication": 62,
+        "discipline": 59,
+        "leadership": 52
       },
       "trainingBuffs": "제구 훈련 +2%"
     },

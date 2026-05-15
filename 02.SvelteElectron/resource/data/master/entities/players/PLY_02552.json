@@ -1,9 +1,9 @@
 {
   "id": "PLY_02552",
-  "name": "橋本徹",
-  "nameEn": "Hashimoto Toru",
+  "name": "나카무라 기요시",
+  "nameEn": "Nakamura Kiyoshi",
   "role": "player",
-  "age": 28,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "RP",
       "jerseyNumber": 36,
       "pitching": {
-        "ovr": 56,
-        "stamina": 53,
-        "velocity": 67,
-        "command": 55,
-        "control": 60,
-        "movement": 54,
-        "mentality": 55,
-        "recovery": 58
+        "ovr": 74,
+        "stamina": 66,
+        "velocity": 82,
+        "command": 73,
+        "control": 73,
+        "movement": 78,
+        "mentality": 77,
+        "recovery": 77
       },
       "batting": {
-        "ovr": 24,
-        "contact": 25,
-        "power": 31,
-        "eye": 28,
-        "discipline": 29,
-        "speed": 28,
-        "fielding": 29,
-        "arm": 26,
-        "battingClutch": 26
+        "ovr": 57,
+        "contact": 59,
+        "power": 55,
+        "eye": 53,
+        "discipline": 53,
+        "speed": 55,
+        "fielding": 55,
+        "arm": 56,
+        "battingClutch": 60
       },
-      "developmentRate": 44,
-      "potentialHidden": 75
+      "developmentRate": 47,
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",

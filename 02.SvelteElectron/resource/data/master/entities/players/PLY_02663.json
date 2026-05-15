@@ -1,9 +1,9 @@
 {
   "id": "PLY_02663",
-  "name": "渡辺悠人",
-  "nameEn": "Watanabe Yuto",
+  "name": "마에다 사토시",
+  "nameEn": "Maeda Satoshi",
   "role": "player",
-  "age": 32,
+  "age": 34,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "RP",
       "jerseyNumber": 7,
       "pitching": {
-        "ovr": 82,
+        "ovr": 87,
         "stamina": 75,
         "velocity": 89,
-        "command": 81,
-        "control": 82,
-        "movement": 85,
-        "mentality": 81,
-        "recovery": 78
+        "command": 89,
+        "control": 83,
+        "movement": 80,
+        "mentality": 88,
+        "recovery": 84
       },
       "batting": {
-        "ovr": 55,
-        "contact": 52,
-        "power": 51,
-        "eye": 54,
-        "discipline": 49,
-        "speed": 50,
-        "fielding": 46,
-        "arm": 47,
-        "battingClutch": 48
+        "ovr": 59,
+        "contact": 63,
+        "power": 58,
+        "eye": 58,
+        "discipline": 55,
+        "speed": 55,
+        "fielding": 54,
+        "arm": 54,
+        "battingClutch": 59
       },
-      "developmentRate": 34,
-      "potentialHidden": 75
+      "developmentRate": 46,
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",

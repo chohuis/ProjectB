@@ -1,7 +1,7 @@
 {
   "id": "PLY_02545",
-  "name": "西村健太",
-  "nameEn": "Nishimura Kenta",
+  "name": "엔도 쇼",
+  "nameEn": "Endo Sho",
   "role": "player",
   "age": 28,
   "status": "active",
@@ -19,28 +19,28 @@
       "position": "DH",
       "jerseyNumber": 24,
       "pitching": {
-        "ovr": 38,
-        "stamina": 40,
-        "velocity": 40,
-        "command": 44,
-        "control": 37,
-        "movement": 42,
-        "mentality": 44,
-        "recovery": 37
+        "ovr": 57,
+        "stamina": 61,
+        "velocity": 66,
+        "command": 58,
+        "control": 55,
+        "movement": 55,
+        "mentality": 63,
+        "recovery": 56
       },
       "batting": {
-        "ovr": 66,
-        "contact": 69,
-        "power": 78,
-        "eye": 67,
-        "discipline": 73,
-        "speed": 62,
-        "fielding": 62,
-        "arm": 69,
-        "battingClutch": 69
+        "ovr": 86,
+        "contact": 82,
+        "power": 86,
+        "eye": 85,
+        "discipline": 80,
+        "speed": 73,
+        "fielding": 76,
+        "arm": 76,
+        "battingClutch": 82
       },
-      "developmentRate": 35,
-      "potentialHidden": 84
+      "developmentRate": 40,
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",

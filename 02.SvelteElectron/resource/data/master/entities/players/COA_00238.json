@@ -1,9 +1,9 @@
 {
   "id": "COA_00238",
-  "name": "佐藤充",
-  "nameEn": "Sato Mitsuru",
+  "name": "와타나베 츠바사",
+  "nameEn": "Watanabe Tsubasa",
   "role": "coach",
-  "age": 49,
+  "age": 38,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -44,15 +44,15 @@
     },
     "coach": {
       "specialty": "멘탈",
-      "experienceYears": 18,
+      "experienceYears": 11,
       "stats": {
-        "teaching": 80,
-        "analysis": 82,
-        "communication": 84,
-        "discipline": 69,
-        "leadership": 52
+        "teaching": 62,
+        "analysis": 78,
+        "communication": 65,
+        "discipline": 60,
+        "leadership": 70
       },
-      "trainingBuffs": ""
+      "trainingBuffs": "구속 훈련 +2%"
     },
     "manager": {
       "style": "균형",

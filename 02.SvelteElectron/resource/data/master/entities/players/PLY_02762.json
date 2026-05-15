@@ -1,9 +1,9 @@
 {
   "id": "PLY_02762",
-  "name": "佐藤暁",
-  "nameEn": "Sato Akira",
+  "name": "후지이 이사무",
+  "nameEn": "Fujii Isamu",
   "role": "player",
-  "age": 21,
+  "age": 37,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
+      "handedness": "R",
       "position": "1B",
       "jerseyNumber": 16,
       "pitching": {
-        "ovr": 41,
-        "stamina": 36,
-        "velocity": 42,
-        "command": 41,
-        "control": 34,
-        "movement": 33,
-        "mentality": 41,
-        "recovery": 39
+        "ovr": 42,
+        "stamina": 46,
+        "velocity": 51,
+        "command": 45,
+        "control": 41,
+        "movement": 44,
+        "mentality": 48,
+        "recovery": 40
       },
       "batting": {
-        "ovr": 76,
-        "contact": 69,
-        "power": 75,
+        "ovr": 75,
+        "contact": 72,
+        "power": 78,
         "eye": 71,
-        "discipline": 67,
-        "speed": 69,
-        "fielding": 73,
-        "arm": 68,
-        "battingClutch": 68
+        "discipline": 75,
+        "speed": 71,
+        "fielding": 74,
+        "arm": 66,
+        "battingClutch": 74
       },
-      "developmentRate": 42,
-      "potentialHidden": 85
+      "developmentRate": 43,
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",

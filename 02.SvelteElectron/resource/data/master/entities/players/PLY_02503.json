@@ -1,9 +1,9 @@
 {
   "id": "PLY_02503",
-  "name": "伊藤茂",
-  "nameEn": "Ito Shigeru",
+  "name": "시미즈 유타카",
+  "nameEn": "Shimizu Yutaka",
   "role": "player",
-  "age": 27,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "SP",
       "jerseyNumber": 32,
       "pitching": {
-        "ovr": 72,
-        "stamina": 74,
-        "velocity": 70,
-        "command": 69,
-        "control": 69,
-        "movement": 67,
-        "mentality": 63,
-        "recovery": 69
+        "ovr": 77,
+        "stamina": 75,
+        "velocity": 73,
+        "command": 77,
+        "control": 74,
+        "movement": 74,
+        "mentality": 71,
+        "recovery": 72
       },
       "batting": {
-        "ovr": 39,
-        "contact": 37,
-        "power": 43,
-        "eye": 40,
-        "discipline": 41,
-        "speed": 37,
-        "fielding": 38,
-        "arm": 35,
-        "battingClutch": 37
+        "ovr": 42,
+        "contact": 43,
+        "power": 50,
+        "eye": 41,
+        "discipline": 46,
+        "speed": 49,
+        "fielding": 42,
+        "arm": 46,
+        "battingClutch": 44
       },
-      "developmentRate": 56,
-      "potentialHidden": 60
+      "developmentRate": 45,
+      "potentialHidden": 90
     },
     "coach": {
       "specialty": "-",

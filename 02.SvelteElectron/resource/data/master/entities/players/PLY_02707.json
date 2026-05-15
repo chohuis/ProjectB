@@ -1,7 +1,7 @@
 {
   "id": "PLY_02707",
-  "name": "前田誠",
-  "nameEn": "Maeda Makoto",
+  "name": "사이토 료",
+  "nameEn": "Saito Ryo",
   "role": "player",
   "age": 30,
   "status": "active",
@@ -19,28 +19,28 @@
       "position": "RP",
       "jerseyNumber": 6,
       "pitching": {
-        "ovr": 90,
-        "stamina": 85,
-        "velocity": 96,
-        "command": 91,
-        "control": 90,
-        "movement": 89,
-        "mentality": 92,
-        "recovery": 86
+        "ovr": 83,
+        "stamina": 72,
+        "velocity": 81,
+        "command": 84,
+        "control": 78,
+        "movement": 81,
+        "mentality": 77,
+        "recovery": 77
       },
       "batting": {
-        "ovr": 66,
-        "contact": 63,
-        "power": 60,
-        "eye": 66,
-        "discipline": 61,
-        "speed": 65,
-        "fielding": 59,
-        "arm": 61,
-        "battingClutch": 61
+        "ovr": 47,
+        "contact": 49,
+        "power": 53,
+        "eye": 48,
+        "discipline": 46,
+        "speed": 46,
+        "fielding": 47,
+        "arm": 45,
+        "battingClutch": 47
       },
-      "developmentRate": 43,
-      "potentialHidden": 89
+      "developmentRate": 32,
+      "potentialHidden": 64
     },
     "coach": {
       "specialty": "-",

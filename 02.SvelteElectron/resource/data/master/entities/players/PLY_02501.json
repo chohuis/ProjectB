@@ -1,9 +1,9 @@
 {
   "id": "PLY_02501",
-  "name": "田中大和",
-  "nameEn": "Tanaka Yamato",
+  "name": "마에다 준",
+  "nameEn": "Maeda Jun",
   "role": "player",
-  "age": 28,
+  "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
-      "position": "SS",
+      "handedness": "R",
+      "position": "2B",
       "jerseyNumber": 25,
       "pitching": {
-        "ovr": 51,
-        "stamina": 49,
-        "velocity": 47,
-        "command": 47,
-        "control": 47,
-        "movement": 44,
-        "mentality": 49,
-        "recovery": 41
+        "ovr": 69,
+        "stamina": 61,
+        "velocity": 67,
+        "command": 65,
+        "control": 65,
+        "movement": 61,
+        "mentality": 67,
+        "recovery": 67
       },
       "batting": {
-        "ovr": 77,
-        "contact": 76,
-        "power": 82,
-        "eye": 75,
-        "discipline": 77,
-        "speed": 77,
-        "fielding": 78,
-        "arm": 75,
-        "battingClutch": 81
+        "ovr": 84,
+        "contact": 87,
+        "power": 87,
+        "eye": 84,
+        "discipline": 82,
+        "speed": 88,
+        "fielding": 88,
+        "arm": 83,
+        "battingClutch": 91
       },
-      "developmentRate": 49,
-      "potentialHidden": 64
+      "developmentRate": 38,
+      "potentialHidden": 61
     },
     "coach": {
       "specialty": "-",

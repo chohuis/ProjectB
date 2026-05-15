@@ -1,9 +1,9 @@
 {
   "id": "PLY_02685",
-  "name": "石田司",
-  "nameEn": "Ishida Tsukasa",
+  "name": "오타 준",
+  "nameEn": "Ota Jun",
   "role": "player",
-  "age": 22,
+  "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "SP",
       "jerseyNumber": 34,
       "pitching": {
-        "ovr": 59,
-        "stamina": 57,
-        "velocity": 62,
-        "command": 63,
-        "control": 54,
-        "movement": 60,
-        "mentality": 54,
-        "recovery": 54
+        "ovr": 58,
+        "stamina": 66,
+        "velocity": 59,
+        "command": 58,
+        "control": 64,
+        "movement": 63,
+        "mentality": 63,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 30,
-        "contact": 23,
-        "power": 25,
-        "eye": 22,
-        "discipline": 25,
-        "speed": 29,
-        "fielding": 22,
+        "ovr": 29,
+        "contact": 32,
+        "power": 31,
+        "eye": 33,
+        "discipline": 26,
+        "speed": 30,
+        "fielding": 33,
         "arm": 28,
-        "battingClutch": 24
+        "battingClutch": 29
       },
-      "developmentRate": 48,
-      "potentialHidden": 61
+      "developmentRate": 43,
+      "potentialHidden": 91
     },
     "coach": {
       "specialty": "-",

@@ -1,9 +1,9 @@
 {
   "id": "COA_00207",
-  "name": "山本雄太",
-  "nameEn": "Yamamoto Yuta",
+  "name": "오카모토 유토",
+  "nameEn": "Okamoto Yuto",
   "role": "coach",
-  "age": 58,
+  "age": 40,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "타격",
-      "experienceYears": 15,
+      "specialty": "수비",
+      "experienceYears": 3,
       "stats": {
-        "teaching": 83,
-        "analysis": 64,
-        "communication": 53,
-        "discipline": 68,
-        "leadership": 67
+        "teaching": 57,
+        "analysis": 57,
+        "communication": 78,
+        "discipline": 83,
+        "leadership": 84
       },
-      "trainingBuffs": "구속 훈련 +2%"
+      "trainingBuffs": "제구 훈련 +2%"
     },
     "manager": {
       "style": "균형",

@@ -1,9 +1,9 @@
 {
   "id": "PLY_02695",
-  "name": "福田大輝",
-  "nameEn": "Fukuda Daiki",
+  "name": "아베 아키라",
+  "nameEn": "Abe Akira",
   "role": "player",
-  "age": 25,
+  "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "2B",
       "jerseyNumber": 44,
       "pitching": {
-        "ovr": 43,
-        "stamina": 45,
-        "velocity": 52,
-        "command": 42,
-        "control": 48,
-        "movement": 41,
-        "mentality": 44,
-        "recovery": 46
+        "ovr": 30,
+        "stamina": 30,
+        "velocity": 30,
+        "command": 33,
+        "control": 28,
+        "movement": 34,
+        "mentality": 30,
+        "recovery": 28
       },
       "batting": {
-        "ovr": 64,
+        "ovr": 62,
         "contact": 63,
-        "power": 60,
+        "power": 57,
         "eye": 64,
-        "discipline": 69,
-        "speed": 67,
-        "fielding": 68,
-        "arm": 64,
-        "battingClutch": 70
+        "discipline": 59,
+        "speed": 61,
+        "fielding": 63,
+        "arm": 60,
+        "battingClutch": 65
       },
-      "developmentRate": 41,
-      "potentialHidden": 79
+      "developmentRate": 57,
+      "potentialHidden": 89
     },
     "coach": {
       "specialty": "-",

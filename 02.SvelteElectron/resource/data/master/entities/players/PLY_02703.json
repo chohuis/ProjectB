@@ -1,9 +1,9 @@
 {
   "id": "PLY_02703",
-  "name": "藤井隼人",
-  "nameEn": "Fujii Hayato",
+  "name": "마에다 렌",
+  "nameEn": "Maeda Ren",
   "role": "player",
-  "age": 35,
+  "age": 36,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "SP",
       "jerseyNumber": 2,
       "pitching": {
-        "ovr": 67,
-        "stamina": 76,
-        "velocity": 74,
-        "command": 68,
-        "control": 66,
-        "movement": 71,
-        "mentality": 68,
-        "recovery": 71
+        "ovr": 85,
+        "stamina": 93,
+        "velocity": 89,
+        "command": 91,
+        "control": 87,
+        "movement": 85,
+        "mentality": 89,
+        "recovery": 86
       },
       "batting": {
-        "ovr": 48,
-        "contact": 47,
-        "power": 50,
-        "eye": 47,
-        "discipline": 52,
-        "speed": 45,
-        "fielding": 48,
-        "arm": 50,
-        "battingClutch": 46
+        "ovr": 64,
+        "contact": 57,
+        "power": 61,
+        "eye": 61,
+        "discipline": 56,
+        "speed": 55,
+        "fielding": 54,
+        "arm": 62,
+        "battingClutch": 58
       },
-      "developmentRate": 34,
-      "potentialHidden": 57
+      "developmentRate": 35,
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",

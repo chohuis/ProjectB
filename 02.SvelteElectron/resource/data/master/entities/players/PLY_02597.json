@@ -1,9 +1,9 @@
 {
   "id": "PLY_02597",
-  "name": "中村徹",
-  "nameEn": "Nakamura Toru",
+  "name": "야마구치 마코토",
+  "nameEn": "Yamaguchi Makoto",
   "role": "player",
-  "age": 23,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "RP",
       "jerseyNumber": 36,
       "pitching": {
-        "ovr": 56,
-        "stamina": 53,
-        "velocity": 64,
-        "command": 56,
-        "control": 56,
-        "movement": 62,
-        "mentality": 55,
-        "recovery": 60
+        "ovr": 63,
+        "stamina": 54,
+        "velocity": 62,
+        "command": 63,
+        "control": 61,
+        "movement": 56,
+        "mentality": 58,
+        "recovery": 64
       },
       "batting": {
-        "ovr": 29,
-        "contact": 35,
-        "power": 33,
-        "eye": 28,
-        "discipline": 29,
-        "speed": 29,
+        "ovr": 30,
+        "contact": 36,
+        "power": 32,
+        "eye": 37,
+        "discipline": 35,
+        "speed": 31,
         "fielding": 31,
-        "arm": 33,
-        "battingClutch": 29
+        "arm": 32,
+        "battingClutch": 36
       },
-      "developmentRate": 47,
-      "potentialHidden": 70
+      "developmentRate": 53,
+      "potentialHidden": 66
     },
     "coach": {
       "specialty": "-",

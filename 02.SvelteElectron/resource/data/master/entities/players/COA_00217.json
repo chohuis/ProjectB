@@ -1,9 +1,9 @@
 {
   "id": "COA_00217",
-  "name": "井上悠人",
-  "nameEn": "Inoue Yuto",
+  "name": "야마다 유토",
+  "nameEn": "Yamada Yuto",
   "role": "coach",
-  "age": 37,
+  "age": 38,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "타격",
-      "experienceYears": 15,
+      "specialty": "투수",
+      "experienceYears": 10,
       "stats": {
-        "teaching": 78,
-        "analysis": 66,
-        "communication": 55,
-        "discipline": 72,
+        "teaching": 53,
+        "analysis": 74,
+        "communication": 67,
+        "discipline": 80,
         "leadership": 61
       },
-      "trainingBuffs": "제구 훈련 +2%"
+      "trainingBuffs": "컨택 훈련 +2%"
     },
     "manager": {
       "style": "균형",

@@ -1,9 +1,9 @@
 {
   "id": "PLY_02441",
-  "name": "前田陽介",
-  "nameEn": "Maeda Yosuke",
+  "name": "사사키 마코토",
+  "nameEn": "Sasaki Makoto",
   "role": "player",
-  "age": 24,
+  "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "RP",
       "jerseyNumber": 10,
       "pitching": {
-        "ovr": 76,
-        "stamina": 71,
-        "velocity": 79,
-        "command": 79,
-        "control": 74,
-        "movement": 69,
+        "ovr": 78,
+        "stamina": 74,
+        "velocity": 82,
+        "command": 74,
+        "control": 77,
+        "movement": 72,
         "mentality": 74,
-        "recovery": 69
+        "recovery": 75
       },
       "batting": {
         "ovr": 48,
-        "contact": 50,
-        "power": 50,
-        "eye": 53,
-        "discipline": 49,
-        "speed": 54,
-        "fielding": 48,
-        "arm": 47,
-        "battingClutch": 53
+        "contact": 52,
+        "power": 48,
+        "eye": 52,
+        "discipline": 47,
+        "speed": 45,
+        "fielding": 49,
+        "arm": 46,
+        "battingClutch": 48
       },
-      "developmentRate": 37,
-      "potentialHidden": 71
+      "developmentRate": 36,
+      "potentialHidden": 92
     },
     "coach": {
       "specialty": "-",

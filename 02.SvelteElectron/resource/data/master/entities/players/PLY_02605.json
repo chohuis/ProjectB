@@ -1,9 +1,9 @@
 {
   "id": "PLY_02605",
-  "name": "西村勇",
-  "nameEn": "Nishimura Isamu",
+  "name": "나카무라 야마토",
+  "nameEn": "Nakamura Yamato",
   "role": "player",
-  "age": 32,
+  "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "2B",
       "jerseyNumber": 44,
       "pitching": {
-        "ovr": 47,
-        "stamina": 42,
-        "velocity": 50,
-        "command": 50,
-        "control": 46,
-        "movement": 47,
-        "mentality": 44,
-        "recovery": 47
+        "ovr": 48,
+        "stamina": 41,
+        "velocity": 42,
+        "command": 48,
+        "control": 42,
+        "movement": 38,
+        "mentality": 43,
+        "recovery": 44
       },
       "batting": {
-        "ovr": 67,
-        "contact": 68,
-        "power": 67,
-        "eye": 68,
-        "discipline": 70,
-        "speed": 69,
-        "fielding": 66,
-        "arm": 70,
-        "battingClutch": 65
+        "ovr": 63,
+        "contact": 65,
+        "power": 58,
+        "eye": 64,
+        "discipline": 62,
+        "speed": 66,
+        "fielding": 67,
+        "arm": 64,
+        "battingClutch": 67
       },
-      "developmentRate": 49,
-      "potentialHidden": 87
+      "developmentRate": 46,
+      "potentialHidden": 63
     },
     "coach": {
       "specialty": "-",

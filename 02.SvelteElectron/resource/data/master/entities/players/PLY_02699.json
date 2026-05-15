@@ -1,9 +1,9 @@
 {
   "id": "PLY_02699",
-  "name": "伊藤颯太",
-  "nameEn": "Ito Sota",
+  "name": "사카모토 아키라",
+  "nameEn": "Sakamoto Akira",
   "role": "player",
-  "age": 21,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "CF",
       "jerseyNumber": 48,
       "pitching": {
-        "ovr": 55,
-        "stamina": 57,
-        "velocity": 59,
-        "command": 55,
-        "control": 58,
-        "movement": 54,
-        "mentality": 56,
-        "recovery": 58
+        "ovr": 43,
+        "stamina": 39,
+        "velocity": 39,
+        "command": 37,
+        "control": 36,
+        "movement": 40,
+        "mentality": 41,
+        "recovery": 37
       },
       "batting": {
-        "ovr": 77,
-        "contact": 77,
-        "power": 73,
-        "eye": 76,
-        "discipline": 74,
-        "speed": 78,
-        "fielding": 82,
-        "arm": 76,
-        "battingClutch": 80
+        "ovr": 75,
+        "contact": 71,
+        "power": 72,
+        "eye": 70,
+        "discipline": 73,
+        "speed": 71,
+        "fielding": 74,
+        "arm": 71,
+        "battingClutch": 75
       },
-      "developmentRate": 50,
-      "potentialHidden": 63
+      "developmentRate": 41,
+      "potentialHidden": 91
     },
     "coach": {
       "specialty": "-",

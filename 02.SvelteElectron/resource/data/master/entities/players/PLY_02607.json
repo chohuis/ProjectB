@@ -1,9 +1,9 @@
 {
   "id": "PLY_02607",
-  "name": "村上浩",
-  "nameEn": "Murakami Hiroshi",
+  "name": "이노우에 마나부",
+  "nameEn": "Inoue Manabu",
   "role": "player",
-  "age": 27,
+  "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SS",
       "jerseyNumber": 46,
       "pitching": {
-        "ovr": 42,
-        "stamina": 39,
-        "velocity": 45,
-        "command": 38,
-        "control": 38,
-        "movement": 36,
-        "mentality": 41,
-        "recovery": 39
+        "ovr": 37,
+        "stamina": 31,
+        "velocity": 35,
+        "command": 29,
+        "control": 32,
+        "movement": 30,
+        "mentality": 33,
+        "recovery": 27
       },
       "batting": {
-        "ovr": 68,
-        "contact": 67,
-        "power": 67,
-        "eye": 67,
-        "discipline": 65,
-        "speed": 73,
-        "fielding": 75,
-        "arm": 68,
-        "battingClutch": 69
+        "ovr": 60,
+        "contact": 59,
+        "power": 60,
+        "eye": 61,
+        "discipline": 60,
+        "speed": 62,
+        "fielding": 64,
+        "arm": 60,
+        "battingClutch": 59
       },
-      "developmentRate": 40,
-      "potentialHidden": 79
+      "developmentRate": 50,
+      "potentialHidden": 88
     },
     "coach": {
       "specialty": "-",

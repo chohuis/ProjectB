@@ -1,9 +1,9 @@
 {
   "id": "COA_00216",
-  "name": "高橋哲",
-  "nameEn": "Takahashi Satoshi",
+  "name": "하야시 츠바사",
+  "nameEn": "Hayashi Tsubasa",
   "role": "coach",
-  "age": 54,
+  "age": 55,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "타격",
-      "experienceYears": 12,
+      "specialty": "투수",
+      "experienceYears": 6,
       "stats": {
-        "teaching": 61,
-        "analysis": 74,
-        "communication": 71,
-        "discipline": 76,
-        "leadership": 79
+        "teaching": 84,
+        "analysis": 73,
+        "communication": 62,
+        "discipline": 66,
+        "leadership": 60
       },
-      "trainingBuffs": "제구 훈련 +2%"
+      "trainingBuffs": "구속 훈련 +2%"
     },
     "manager": {
       "style": "균형",

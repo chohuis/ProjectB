@@ -1,9 +1,9 @@
 {
   "id": "PLY_02774",
-  "name": "山田進",
-  "nameEn": "Yamada Susumu",
+  "name": "타카하시 미쓰루",
+  "nameEn": "Takahashi Mitsuru",
   "role": "player",
-  "age": 20,
+  "age": 31,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
       "jerseyNumber": 33,
       "pitching": {
-        "ovr": 68,
-        "stamina": 75,
-        "velocity": 70,
-        "command": 70,
-        "control": 69,
-        "movement": 67,
-        "mentality": 73,
-        "recovery": 66
+        "ovr": 58,
+        "stamina": 60,
+        "velocity": 60,
+        "command": 62,
+        "control": 60,
+        "movement": 61,
+        "mentality": 59,
+        "recovery": 60
       },
       "batting": {
-        "ovr": 40,
-        "contact": 37,
-        "power": 37,
-        "eye": 37,
+        "ovr": 26,
+        "contact": 29,
+        "power": 29,
+        "eye": 26,
         "discipline": 33,
-        "speed": 40,
-        "fielding": 33,
-        "arm": 39,
-        "battingClutch": 36
+        "speed": 28,
+        "fielding": 26,
+        "arm": 29,
+        "battingClutch": 33
       },
-      "developmentRate": 41,
-      "potentialHidden": 62
+      "developmentRate": 45,
+      "potentialHidden": 65
     },
     "coach": {
       "specialty": "-",

@@ -1,9 +1,9 @@
 {
   "id": "PLY_02606",
-  "name": "前田剛",
-  "nameEn": "Maeda Tsuyoshi",
+  "name": "야마모토 토루",
+  "nameEn": "Yamamoto Toru",
   "role": "player",
-  "age": 28,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "3B",
       "jerseyNumber": 45,
       "pitching": {
-        "ovr": 51,
-        "stamina": 56,
-        "velocity": 56,
-        "command": 55,
-        "control": 53,
-        "movement": 53,
-        "mentality": 58,
-        "recovery": 49
+        "ovr": 41,
+        "stamina": 42,
+        "velocity": 45,
+        "command": 45,
+        "control": 38,
+        "movement": 43,
+        "mentality": 38,
+        "recovery": 44
       },
       "batting": {
-        "ovr": 75,
-        "contact": 79,
-        "power": 73,
-        "eye": 73,
-        "discipline": 72,
-        "speed": 71,
-        "fielding": 74,
-        "arm": 73,
-        "battingClutch": 74
+        "ovr": 76,
+        "contact": 77,
+        "power": 78,
+        "eye": 76,
+        "discipline": 80,
+        "speed": 70,
+        "fielding": 75,
+        "arm": 83,
+        "battingClutch": 73
       },
-      "developmentRate": 50,
-      "potentialHidden": 64
+      "developmentRate": 46,
+      "potentialHidden": 67
     },
     "coach": {
       "specialty": "-",

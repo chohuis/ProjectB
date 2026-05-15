@@ -1,9 +1,9 @@
 {
   "id": "PLY_02380",
-  "name": "前田駿",
-  "nameEn": "Maeda Shun",
+  "name": "시미즈 켄타",
+  "nameEn": "Shimizu Kenta",
   "role": "player",
-  "age": 28,
+  "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "2B",
       "jerseyNumber": 44,
       "pitching": {
-        "ovr": 52,
-        "stamina": 50,
-        "velocity": 52,
-        "command": 46,
+        "ovr": 48,
+        "stamina": 42,
+        "velocity": 49,
+        "command": 44,
         "control": 48,
-        "movement": 44,
-        "mentality": 50,
-        "recovery": 47
+        "movement": 45,
+        "mentality": 48,
+        "recovery": 40
       },
       "batting": {
-        "ovr": 72,
-        "contact": 65,
-        "power": 69,
-        "eye": 66,
-        "discipline": 64,
-        "speed": 73,
-        "fielding": 68,
-        "arm": 70,
-        "battingClutch": 66
+        "ovr": 82,
+        "contact": 77,
+        "power": 72,
+        "eye": 80,
+        "discipline": 76,
+        "speed": 83,
+        "fielding": 77,
+        "arm": 76,
+        "battingClutch": 81
       },
-      "developmentRate": 44,
-      "potentialHidden": 82
+      "developmentRate": 52,
+      "potentialHidden": 91
     },
     "coach": {
       "specialty": "-",

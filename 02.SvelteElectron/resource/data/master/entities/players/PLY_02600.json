@@ -1,9 +1,9 @@
 {
   "id": "PLY_02600",
-  "name": "佐藤陽介",
-  "nameEn": "Sato Yosuke",
+  "name": "마에다 마코토",
+  "nameEn": "Maeda Makoto",
   "role": "player",
-  "age": 30,
+  "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "CP",
       "jerseyNumber": 39,
       "pitching": {
-        "ovr": 69,
-        "stamina": 58,
-        "velocity": 81,
-        "command": 68,
-        "control": 70,
-        "movement": 71,
-        "mentality": 72,
-        "recovery": 67
+        "ovr": 68,
+        "stamina": 56,
+        "velocity": 70,
+        "command": 66,
+        "control": 65,
+        "movement": 63,
+        "mentality": 70,
+        "recovery": 61
       },
       "batting": {
-        "ovr": 46,
-        "contact": 52,
-        "power": 45,
-        "eye": 45,
-        "discipline": 46,
-        "speed": 49,
-        "fielding": 48,
-        "arm": 52,
-        "battingClutch": 52
+        "ovr": 34,
+        "contact": 38,
+        "power": 38,
+        "eye": 33,
+        "discipline": 33,
+        "speed": 39,
+        "fielding": 31,
+        "arm": 33,
+        "battingClutch": 35
       },
-      "developmentRate": 40,
-      "potentialHidden": 79
+      "developmentRate": 51,
+      "potentialHidden": 78
     },
     "coach": {
       "specialty": "-",

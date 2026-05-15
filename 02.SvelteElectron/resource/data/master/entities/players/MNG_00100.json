@@ -1,9 +1,9 @@
 {
   "id": "MNG_00100",
-  "name": "西村大和",
-  "nameEn": "Nishimura Yamato",
+  "name": "야마자키 쇼",
+  "nameEn": "Yamazaki Sho",
   "role": "manager",
-  "age": 66,
+  "age": 43,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -55,17 +55,17 @@
       "trainingBuffs": ""
     },
     "manager": {
-      "style": "데이터 중심",
-      "experienceYears": 20,
+      "style": "유망주 중심",
+      "experienceYears": 14,
       "stats": {
-        "tactics": 64,
-        "decision": 64,
-        "rotationMgmt": 57,
-        "bullpenMgmt": 71,
-        "moraleMgmt": 59
+        "tactics": 68,
+        "decision": 70,
+        "rotationMgmt": 64,
+        "bullpenMgmt": 66,
+        "moraleMgmt": 83
       },
       "gamePlanBias": "",
-      "riskTolerance": 57
+      "riskTolerance": 45
     },
     "owner": {
       "ownershipStyle": "안정 운영",

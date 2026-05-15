@@ -1,7 +1,7 @@
 {
   "id": "PLY_02775",
-  "name": "村上凌",
-  "nameEn": "Murakami Ryo",
+  "name": "시미즈 슌",
+  "nameEn": "Shimizu Shun",
   "role": "player",
   "age": 32,
   "status": "active",
@@ -19,28 +19,28 @@
       "position": "SP",
       "jerseyNumber": 34,
       "pitching": {
-        "ovr": 71,
-        "stamina": 71,
-        "velocity": 78,
-        "command": 71,
-        "control": 69,
-        "movement": 70,
-        "mentality": 74,
-        "recovery": 68
+        "ovr": 63,
+        "stamina": 66,
+        "velocity": 69,
+        "command": 64,
+        "control": 59,
+        "movement": 65,
+        "mentality": 64,
+        "recovery": 58
       },
       "batting": {
-        "ovr": 49,
-        "contact": 54,
-        "power": 48,
-        "eye": 51,
-        "discipline": 50,
-        "speed": 48,
-        "fielding": 46,
-        "arm": 49,
-        "battingClutch": 53
+        "ovr": 40,
+        "contact": 41,
+        "power": 41,
+        "eye": 36,
+        "discipline": 36,
+        "speed": 41,
+        "fielding": 38,
+        "arm": 34,
+        "battingClutch": 35
       },
-      "developmentRate": 49,
-      "potentialHidden": 80
+      "developmentRate": 55,
+      "potentialHidden": 81
     },
     "coach": {
       "specialty": "-",

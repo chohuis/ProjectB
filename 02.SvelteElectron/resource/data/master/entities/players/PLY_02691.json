@@ -1,9 +1,9 @@
 {
   "id": "PLY_02691",
-  "name": "福田晃",
-  "nameEn": "Fukuda Akira",
+  "name": "엔도 마나부",
+  "nameEn": "Endo Manabu",
   "role": "player",
-  "age": 29,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "CP",
       "jerseyNumber": 40,
       "pitching": {
-        "ovr": 61,
-        "stamina": 48,
-        "velocity": 64,
-        "command": 62,
-        "control": 63,
-        "movement": 62,
-        "mentality": 58,
-        "recovery": 61
+        "ovr": 71,
+        "stamina": 62,
+        "velocity": 79,
+        "command": 72,
+        "control": 79,
+        "movement": 69,
+        "mentality": 74,
+        "recovery": 74
       },
       "batting": {
-        "ovr": 26,
-        "contact": 26,
-        "power": 31,
-        "eye": 27,
-        "discipline": 32,
-        "speed": 25,
-        "fielding": 27,
-        "arm": 30,
-        "battingClutch": 33
+        "ovr": 49,
+        "contact": 45,
+        "power": 49,
+        "eye": 44,
+        "discipline": 49,
+        "speed": 51,
+        "fielding": 50,
+        "arm": 51,
+        "battingClutch": 52
       },
-      "developmentRate": 39,
-      "potentialHidden": 80
+      "developmentRate": 51,
+      "potentialHidden": 66
     },
     "coach": {
       "specialty": "-",

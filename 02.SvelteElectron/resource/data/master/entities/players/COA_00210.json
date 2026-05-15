@@ -1,9 +1,9 @@
 {
   "id": "COA_00210",
-  "name": "加藤凌",
-  "nameEn": "Kato Ryo",
+  "name": "야마자키 사토시",
+  "nameEn": "Yamazaki Satoshi",
   "role": "coach",
-  "age": 36,
+  "age": 37,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -44,15 +44,15 @@
     },
     "coach": {
       "specialty": "투수",
-      "experienceYears": 4,
+      "experienceYears": 6,
       "stats": {
-        "teaching": 59,
-        "analysis": 69,
-        "communication": 79,
-        "discipline": 57,
-        "leadership": 73
+        "teaching": 54,
+        "analysis": 74,
+        "communication": 59,
+        "discipline": 69,
+        "leadership": 79
       },
-      "trainingBuffs": ""
+      "trainingBuffs": "구속 훈련 +2%"
     },
     "manager": {
       "style": "균형",

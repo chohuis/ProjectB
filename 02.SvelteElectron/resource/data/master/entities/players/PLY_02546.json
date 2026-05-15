@@ -1,9 +1,9 @@
 {
   "id": "PLY_02546",
-  "name": "斎藤雄太",
-  "nameEn": "Saito Yuta",
+  "name": "후지이 다이키",
+  "nameEn": "Fujii Daiki",
   "role": "player",
-  "age": 38,
+  "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -16,31 +16,31 @@
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "2B",
+      "position": "LF",
       "jerseyNumber": 25,
       "pitching": {
-        "ovr": 45,
-        "stamina": 39,
-        "velocity": 45,
-        "command": 46,
-        "control": 43,
-        "movement": 44,
-        "mentality": 41,
-        "recovery": 42
+        "ovr": 59,
+        "stamina": 59,
+        "velocity": 59,
+        "command": 59,
+        "control": 60,
+        "movement": 62,
+        "mentality": 57,
+        "recovery": 57
       },
       "batting": {
-        "ovr": 72,
-        "contact": 76,
-        "power": 69,
-        "eye": 69,
-        "discipline": 73,
-        "speed": 69,
-        "fielding": 71,
-        "arm": 68,
-        "battingClutch": 75
+        "ovr": 83,
+        "contact": 80,
+        "power": 81,
+        "eye": 77,
+        "discipline": 83,
+        "speed": 83,
+        "fielding": 75,
+        "arm": 83,
+        "battingClutch": 80
       },
-      "developmentRate": 52,
-      "potentialHidden": 60
+      "developmentRate": 48,
+      "potentialHidden": 73
     },
     "coach": {
       "specialty": "-",

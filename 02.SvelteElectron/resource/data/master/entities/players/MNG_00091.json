@@ -1,9 +1,9 @@
 {
   "id": "MNG_00091",
-  "name": "林海斗",
-  "nameEn": "Hayashi Kaito",
+  "name": "고토 미쓰루",
+  "nameEn": "Goto Mitsuru",
   "role": "manager",
-  "age": 51,
+  "age": 63,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -55,17 +55,17 @@
       "trainingBuffs": ""
     },
     "manager": {
-      "style": "균형",
-      "experienceYears": 21,
+      "style": "데이터 중심",
+      "experienceYears": 13,
       "stats": {
-        "tactics": 80,
-        "decision": 75,
-        "rotationMgmt": 82,
-        "bullpenMgmt": 68,
+        "tactics": 61,
+        "decision": 81,
+        "rotationMgmt": 75,
+        "bullpenMgmt": 80,
         "moraleMgmt": 75
       },
       "gamePlanBias": "",
-      "riskTolerance": 60
+      "riskTolerance": 45
     },
     "owner": {
       "ownershipStyle": "안정 운영",

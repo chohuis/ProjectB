@@ -1,9 +1,9 @@
 {
   "id": "PLY_02566",
-  "name": "佐々木啓",
-  "nameEn": "Sasaki Hiroshi",
+  "name": "후지이 야마토",
+  "nameEn": "Fujii Yamato",
   "role": "player",
-  "age": 27,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "DH",
       "jerseyNumber": 50,
       "pitching": {
-        "ovr": 34,
-        "stamina": 28,
-        "velocity": 34,
-        "command": 29,
-        "control": 26,
-        "movement": 26,
-        "mentality": 33,
-        "recovery": 26
+        "ovr": 40,
+        "stamina": 42,
+        "velocity": 40,
+        "command": 41,
+        "control": 40,
+        "movement": 40,
+        "mentality": 44,
+        "recovery": 42
       },
       "batting": {
-        "ovr": 67,
-        "contact": 70,
-        "power": 66,
-        "eye": 61,
-        "discipline": 65,
-        "speed": 54,
-        "fielding": 55,
-        "arm": 58,
-        "battingClutch": 64
+        "ovr": 76,
+        "contact": 74,
+        "power": 78,
+        "eye": 72,
+        "discipline": 76,
+        "speed": 67,
+        "fielding": 64,
+        "arm": 74,
+        "battingClutch": 74
       },
-      "developmentRate": 55,
-      "potentialHidden": 80
+      "developmentRate": 40,
+      "potentialHidden": 74
     },
     "coach": {
       "specialty": "-",

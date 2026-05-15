@@ -1,7 +1,7 @@
 {
   "id": "PLY_02776",
-  "name": "石川翔",
-  "nameEn": "Ishikawa Sho",
+  "name": "이시다 히라쿠",
+  "nameEn": "Ishida Hiraku",
   "role": "player",
   "age": 30,
   "status": "active",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "RP",
       "jerseyNumber": 35,
       "pitching": {
-        "ovr": 80,
-        "stamina": 73,
-        "velocity": 85,
-        "command": 77,
-        "control": 76,
-        "movement": 80,
-        "mentality": 79,
-        "recovery": 73
+        "ovr": 71,
+        "stamina": 62,
+        "velocity": 76,
+        "command": 70,
+        "control": 65,
+        "movement": 65,
+        "mentality": 72,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 45,
-        "contact": 51,
-        "power": 50,
-        "eye": 51,
-        "discipline": 50,
-        "speed": 49,
+        "ovr": 51,
+        "contact": 44,
+        "power": 45,
+        "eye": 48,
+        "discipline": 48,
+        "speed": 47,
         "fielding": 46,
         "arm": 44,
         "battingClutch": 50
       },
-      "developmentRate": 53,
-      "potentialHidden": 77
+      "developmentRate": 41,
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",

@@ -1,9 +1,9 @@
 {
   "id": "PLY_02689",
-  "name": "坂本翼",
-  "nameEn": "Sakamoto Tsubasa",
+  "name": "사사키 쓰카사",
+  "nameEn": "Sasaki Tsukasa",
   "role": "player",
-  "age": 25,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "RP",
       "jerseyNumber": 38,
       "pitching": {
-        "ovr": 64,
-        "stamina": 57,
-        "velocity": 69,
-        "command": 70,
-        "control": 64,
-        "movement": 67,
-        "mentality": 68,
-        "recovery": 62
+        "ovr": 66,
+        "stamina": 63,
+        "velocity": 71,
+        "command": 68,
+        "control": 62,
+        "movement": 68,
+        "mentality": 70,
+        "recovery": 64
       },
       "batting": {
-        "ovr": 50,
-        "contact": 43,
-        "power": 44,
-        "eye": 46,
-        "discipline": 48,
-        "speed": 43,
-        "fielding": 41,
-        "arm": 50,
-        "battingClutch": 50
+        "ovr": 43,
+        "contact": 37,
+        "power": 45,
+        "eye": 43,
+        "discipline": 41,
+        "speed": 37,
+        "fielding": 35,
+        "arm": 39,
+        "battingClutch": 40
       },
-      "developmentRate": 53,
-      "potentialHidden": 84
+      "developmentRate": 56,
+      "potentialHidden": 87
     },
     "coach": {
       "specialty": "-",

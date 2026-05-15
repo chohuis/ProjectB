@@ -1,9 +1,9 @@
 {
   "id": "MNG_00093",
-  "name": "林光",
-  "nameEn": "Hayashi Hikaru",
+  "name": "야마다 준",
+  "nameEn": "Yamada Jun",
   "role": "manager",
-  "age": 49,
+  "age": 42,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -55,17 +55,17 @@
       "trainingBuffs": ""
     },
     "manager": {
-      "style": "수비적",
-      "experienceYears": 17,
+      "style": "유망주 중심",
+      "experienceYears": 14,
       "stats": {
-        "tactics": 69,
-        "decision": 83,
-        "rotationMgmt": 73,
-        "bullpenMgmt": 77,
-        "moraleMgmt": 75
+        "tactics": 57,
+        "decision": 82,
+        "rotationMgmt": 81,
+        "bullpenMgmt": 79,
+        "moraleMgmt": 74
       },
       "gamePlanBias": "",
-      "riskTolerance": 66
+      "riskTolerance": 67
     },
     "owner": {
       "ownershipStyle": "안정 운영",

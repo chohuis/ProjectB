@@ -1,9 +1,9 @@
 {
   "id": "PLY_02748",
-  "name": "西村翼",
-  "nameEn": "Nishimura Tsubasa",
+  "name": "야마다 츠바사",
+  "nameEn": "Yamada Tsubasa",
   "role": "player",
-  "age": 21,
+  "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
       "jerseyNumber": 2,
       "pitching": {
-        "ovr": 75,
-        "stamina": 79,
-        "velocity": 75,
-        "command": 76,
-        "control": 70,
-        "movement": 73,
-        "mentality": 71,
-        "recovery": 72
+        "ovr": 90,
+        "stamina": 87,
+        "velocity": 92,
+        "command": 92,
+        "control": 87,
+        "movement": 89,
+        "mentality": 85,
+        "recovery": 88
       },
       "batting": {
-        "ovr": 43,
-        "contact": 43,
-        "power": 45,
-        "eye": 46,
-        "discipline": 41,
-        "speed": 46,
-        "fielding": 44,
-        "arm": 47,
-        "battingClutch": 43
+        "ovr": 67,
+        "contact": 69,
+        "power": 67,
+        "eye": 66,
+        "discipline": 68,
+        "speed": 70,
+        "fielding": 64,
+        "arm": 70,
+        "battingClutch": 70
       },
-      "developmentRate": 35,
-      "potentialHidden": 73
+      "developmentRate": 50,
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",

@@ -1,9 +1,9 @@
 {
   "id": "COA_00222",
-  "name": "石川豊",
-  "nameEn": "Ishikawa Yutaka",
+  "name": "후지타 요스케",
+  "nameEn": "Fujita Yosuke",
   "role": "coach",
-  "age": 36,
+  "age": 39,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "멘탈",
-      "experienceYears": 17,
+      "specialty": "투수",
+      "experienceYears": 14,
       "stats": {
-        "teaching": 77,
-        "analysis": 56,
+        "teaching": 72,
+        "analysis": 55,
         "communication": 67,
-        "discipline": 76,
-        "leadership": 67
+        "discipline": 54,
+        "leadership": 78
       },
-      "trainingBuffs": ""
+      "trainingBuffs": "체력 훈련 +2%"
     },
     "manager": {
       "style": "균형",

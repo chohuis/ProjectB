@@ -1,9 +1,9 @@
 {
   "id": "PLY_02732",
-  "name": "山本悠人",
-  "nameEn": "Yamamoto Yuto",
+  "name": "시미즈 준",
+  "nameEn": "Shimizu Jun",
   "role": "player",
-  "age": 26,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "RP",
       "jerseyNumber": 36,
       "pitching": {
-        "ovr": 63,
-        "stamina": 54,
-        "velocity": 59,
-        "command": 56,
+        "ovr": 56,
+        "stamina": 48,
+        "velocity": 65,
+        "command": 59,
         "control": 61,
-        "movement": 60,
-        "mentality": 57,
-        "recovery": 56
+        "movement": 54,
+        "mentality": 58,
+        "recovery": 60
       },
       "batting": {
-        "ovr": 32,
+        "ovr": 33,
         "contact": 31,
-        "power": 28,
+        "power": 36,
         "eye": 32,
-        "discipline": 26,
+        "discipline": 33,
         "speed": 32,
-        "fielding": 26,
-        "arm": 26,
-        "battingClutch": 30
+        "fielding": 33,
+        "arm": 29,
+        "battingClutch": 37
       },
-      "developmentRate": 44,
-      "potentialHidden": 74
+      "developmentRate": 53,
+      "potentialHidden": 85
     },
     "coach": {
       "specialty": "-",

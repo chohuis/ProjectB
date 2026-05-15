@@ -1,9 +1,9 @@
 {
   "id": "PLY_02760",
-  "name": "藤田修",
-  "nameEn": "Fujita Osamu",
+  "name": "니시무라 켄타",
+  "nameEn": "Nishimura Kenta",
   "role": "player",
-  "age": 33,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "R",
+      "handedness": "L",
       "position": "C",
       "jerseyNumber": 14,
       "pitching": {
-        "ovr": 40,
-        "stamina": 44,
-        "velocity": 46,
-        "command": 45,
-        "control": 39,
-        "movement": 44,
-        "mentality": 39,
-        "recovery": 43
+        "ovr": 60,
+        "stamina": 60,
+        "velocity": 62,
+        "command": 62,
+        "control": 56,
+        "movement": 60,
+        "mentality": 64,
+        "recovery": 60
       },
       "batting": {
-        "ovr": 74,
-        "contact": 72,
-        "power": 75,
-        "eye": 76,
-        "discipline": 74,
-        "speed": 73,
-        "fielding": 73,
-        "arm": 80,
-        "battingClutch": 80
+        "ovr": 87,
+        "contact": 86,
+        "power": 81,
+        "eye": 85,
+        "discipline": 83,
+        "speed": 79,
+        "fielding": 88,
+        "arm": 85,
+        "battingClutch": 88
       },
-      "developmentRate": 45,
-      "potentialHidden": 86
+      "developmentRate": 34,
+      "potentialHidden": 88
     },
     "coach": {
       "specialty": "-",

@@ -1,9 +1,9 @@
 {
   "id": "PLY_02679",
-  "name": "佐々木勇",
-  "nameEn": "Sasaki Isamu",
+  "name": "후쿠다 쓰카사",
+  "nameEn": "Fukuda Tsukasa",
   "role": "player",
-  "age": 35,
+  "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "DH",
       "jerseyNumber": 23,
       "pitching": {
-        "ovr": 52,
+        "ovr": 60,
         "stamina": 52,
-        "velocity": 50,
-        "command": 55,
-        "control": 49,
-        "movement": 51,
+        "velocity": 57,
+        "command": 59,
+        "control": 56,
+        "movement": 54,
         "mentality": 51,
-        "recovery": 47
+        "recovery": 51
       },
       "batting": {
-        "ovr": 81,
-        "contact": 81,
-        "power": 90,
+        "ovr": 86,
+        "contact": 88,
+        "power": 92,
         "eye": 86,
-        "discipline": 82,
-        "speed": 80,
-        "fielding": 79,
-        "arm": 74,
-        "battingClutch": 87
+        "discipline": 90,
+        "speed": 82,
+        "fielding": 82,
+        "arm": 82,
+        "battingClutch": 86
       },
-      "developmentRate": 39,
-      "potentialHidden": 70
+      "developmentRate": 42,
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",

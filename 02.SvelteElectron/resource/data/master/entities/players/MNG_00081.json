@@ -1,9 +1,9 @@
 {
   "id": "MNG_00081",
-  "name": "高橋大輝",
-  "nameEn": "Takahashi Daiki",
+  "name": "이시카와 아키라",
+  "nameEn": "Ishikawa Akira",
   "role": "manager",
-  "age": 64,
+  "age": 45,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -55,17 +55,17 @@
       "trainingBuffs": ""
     },
     "manager": {
-      "style": "데이터 중심",
-      "experienceYears": 10,
+      "style": "균형",
+      "experienceYears": 24,
       "stats": {
-        "tactics": 85,
-        "decision": 55,
-        "rotationMgmt": 66,
-        "bullpenMgmt": 58,
-        "moraleMgmt": 65
+        "tactics": 66,
+        "decision": 58,
+        "rotationMgmt": 65,
+        "bullpenMgmt": 83,
+        "moraleMgmt": 59
       },
       "gamePlanBias": "",
-      "riskTolerance": 37
+      "riskTolerance": 35
     },
     "owner": {
       "ownershipStyle": "안정 운영",

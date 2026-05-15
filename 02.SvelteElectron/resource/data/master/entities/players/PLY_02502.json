@@ -1,9 +1,9 @@
 {
   "id": "PLY_02502",
-  "name": "阿部雄太",
-  "nameEn": "Abe Yuta",
+  "name": "하야시 마나부",
+  "nameEn": "Hayashi Manabu",
   "role": "player",
-  "age": 20,
+  "age": 31,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "SP",
       "jerseyNumber": 31,
       "pitching": {
-        "ovr": 60,
-        "stamina": 57,
-        "velocity": 60,
-        "command": 60,
-        "control": 61,
-        "movement": 56,
-        "mentality": 56,
-        "recovery": 59
+        "ovr": 78,
+        "stamina": 76,
+        "velocity": 78,
+        "command": 80,
+        "control": 72,
+        "movement": 70,
+        "mentality": 79,
+        "recovery": 72
       },
       "batting": {
-        "ovr": 37,
-        "contact": 39,
-        "power": 43,
-        "eye": 35,
-        "discipline": 34,
-        "speed": 42,
-        "fielding": 35,
-        "arm": 36,
-        "battingClutch": 38
+        "ovr": 49,
+        "contact": 50,
+        "power": 47,
+        "eye": 46,
+        "discipline": 46,
+        "speed": 46,
+        "fielding": 52,
+        "arm": 49,
+        "battingClutch": 51
       },
-      "developmentRate": 40,
-      "potentialHidden": 59
+      "developmentRate": 41,
+      "potentialHidden": 90
     },
     "coach": {
       "specialty": "-",

@@ -1,9 +1,9 @@
 {
   "id": "PLY_02777",
-  "name": "前田光",
-  "nameEn": "Maeda Hikaru",
+  "name": "와타나베 스스무",
+  "nameEn": "Watanabe Susumu",
   "role": "player",
-  "age": 22,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "RP",
       "jerseyNumber": 36,
       "pitching": {
-        "ovr": 68,
-        "stamina": 53,
-        "velocity": 66,
-        "command": 66,
-        "control": 65,
+        "ovr": 64,
+        "stamina": 57,
+        "velocity": 69,
+        "command": 68,
+        "control": 69,
         "movement": 63,
-        "mentality": 64,
-        "recovery": 60
+        "mentality": 68,
+        "recovery": 69
       },
       "batting": {
-        "ovr": 33,
-        "contact": 28,
-        "power": 29,
-        "eye": 33,
-        "discipline": 27,
-        "speed": 34,
-        "fielding": 28,
-        "arm": 26,
-        "battingClutch": 33
+        "ovr": 47,
+        "contact": 47,
+        "power": 51,
+        "eye": 44,
+        "discipline": 48,
+        "speed": 46,
+        "fielding": 49,
+        "arm": 46,
+        "battingClutch": 44
       },
-      "developmentRate": 43,
-      "potentialHidden": 67
+      "developmentRate": 49,
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",

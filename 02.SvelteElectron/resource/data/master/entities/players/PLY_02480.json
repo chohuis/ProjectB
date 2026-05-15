@@ -1,9 +1,9 @@
 {
   "id": "PLY_02480",
-  "name": "福田豊",
-  "nameEn": "Fukuda Yutaka",
+  "name": "사사키 유타카",
+  "nameEn": "Sasaki Yutaka",
   "role": "player",
-  "age": 31,
+  "age": 38,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "SP",
       "jerseyNumber": 4,
       "pitching": {
-        "ovr": 79,
-        "stamina": 74,
-        "velocity": 74,
-        "command": 76,
-        "control": 79,
-        "movement": 71,
-        "mentality": 75,
-        "recovery": 73
+        "ovr": 81,
+        "stamina": 87,
+        "velocity": 91,
+        "command": 82,
+        "control": 84,
+        "movement": 82,
+        "mentality": 86,
+        "recovery": 81
       },
       "batting": {
         "ovr": 50,
-        "contact": 46,
-        "power": 45,
-        "eye": 45,
-        "discipline": 48,
-        "speed": 44,
-        "fielding": 44,
-        "arm": 51,
-        "battingClutch": 44
+        "contact": 51,
+        "power": 54,
+        "eye": 49,
+        "discipline": 50,
+        "speed": 56,
+        "fielding": 47,
+        "arm": 54,
+        "battingClutch": 56
       },
-      "developmentRate": 47,
-      "potentialHidden": 86
+      "developmentRate": 45,
+      "potentialHidden": 71
     },
     "coach": {
       "specialty": "-",

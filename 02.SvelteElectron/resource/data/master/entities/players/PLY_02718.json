@@ -1,9 +1,9 @@
 {
   "id": "PLY_02718",
-  "name": "石川亮",
-  "nameEn": "Ishikawa Ryo",
+  "name": "고토 켄타",
+  "nameEn": "Goto Kenta",
   "role": "player",
-  "age": 27,
+  "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "2B",
       "jerseyNumber": 17,
       "pitching": {
-        "ovr": 72,
-        "stamina": 70,
-        "velocity": 68,
-        "command": 68,
-        "control": 63,
-        "movement": 63,
-        "mentality": 66,
-        "recovery": 69
+        "ovr": 52,
+        "stamina": 56,
+        "velocity": 58,
+        "command": 53,
+        "control": 53,
+        "movement": 53,
+        "mentality": 52,
+        "recovery": 53
       },
       "batting": {
-        "ovr": 88,
-        "contact": 92,
-        "power": 83,
-        "eye": 91,
-        "discipline": 89,
-        "speed": 89,
-        "fielding": 87,
-        "arm": 91,
-        "battingClutch": 90
+        "ovr": 82,
+        "contact": 84,
+        "power": 85,
+        "eye": 85,
+        "discipline": 86,
+        "speed": 86,
+        "fielding": 86,
+        "arm": 80,
+        "battingClutch": 83
       },
-      "developmentRate": 34,
-      "potentialHidden": 67
+      "developmentRate": 46,
+      "potentialHidden": 61
     },
     "coach": {
       "specialty": "-",

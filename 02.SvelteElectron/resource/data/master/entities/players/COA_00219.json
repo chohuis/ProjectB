@@ -1,9 +1,9 @@
 {
   "id": "COA_00219",
-  "name": "山田博",
-  "nameEn": "Yamada Hiroshi",
+  "name": "와타나베 사토시",
+  "nameEn": "Watanabe Satoshi",
   "role": "coach",
-  "age": 54,
+  "age": 46,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "수비",
-      "experienceYears": 17,
+      "specialty": "멘탈",
+      "experienceYears": 16,
       "stats": {
-        "teaching": 67,
-        "analysis": 55,
-        "communication": 59,
+        "teaching": 74,
+        "analysis": 60,
+        "communication": 60,
         "discipline": 82,
-        "leadership": 74
+        "leadership": 82
       },
-      "trainingBuffs": "제구 훈련 +2%"
+      "trainingBuffs": ""
     },
     "manager": {
       "style": "균형",

@@ -1,9 +1,9 @@
 {
   "id": "PLY_02520",
-  "name": "阿部翼",
-  "nameEn": "Abe Tsubasa",
+  "name": "사카모토 렌",
+  "nameEn": "Sakamoto Ren",
   "role": "player",
-  "age": 28,
+  "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "R",
+      "handedness": "L",
       "position": "RF",
       "jerseyNumber": 49,
       "pitching": {
-        "ovr": 45,
-        "stamina": 49,
-        "velocity": 49,
-        "command": 45,
-        "control": 50,
-        "movement": 42,
-        "mentality": 48,
-        "recovery": 45
+        "ovr": 49,
+        "stamina": 46,
+        "velocity": 47,
+        "command": 44,
+        "control": 44,
+        "movement": 41,
+        "mentality": 44,
+        "recovery": 42
       },
       "batting": {
         "ovr": 74,
-        "contact": 82,
-        "power": 82,
-        "eye": 76,
-        "discipline": 75,
-        "speed": 76,
-        "fielding": 71,
-        "arm": 76,
-        "battingClutch": 76
+        "contact": 71,
+        "power": 76,
+        "eye": 69,
+        "discipline": 70,
+        "speed": 67,
+        "fielding": 65,
+        "arm": 73,
+        "battingClutch": 72
       },
-      "developmentRate": 53,
-      "potentialHidden": 68
+      "developmentRate": 44,
+      "potentialHidden": 65
     },
     "coach": {
       "specialty": "-",

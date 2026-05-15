@@ -1,9 +1,9 @@
 {
   "id": "OWN_00020",
-  "name": "前田純",
-  "nameEn": "Maeda Jun",
+  "name": "미우라 이사무",
+  "nameEn": "Miura Isamu",
   "role": "owner",
-  "age": 59,
+  "age": 73,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -68,14 +68,14 @@
       "riskTolerance": 50
     },
     "owner": {
-      "ownershipStyle": "공격 투자",
-      "tenureYears": 4,
+      "ownershipStyle": "유망주 중심",
+      "tenureYears": 16,
       "stats": {
-        "budgetSupport": 67,
-        "patience": 79,
-        "prInfluence": 80,
-        "facilityInvestment": 85,
-        "staffTrust": 75
+        "budgetSupport": 72,
+        "patience": 67,
+        "prInfluence": 59,
+        "facilityInvestment": 50,
+        "staffTrust": 51
       },
       "budgetPolicy": "",
       "hiringPolicy": ""

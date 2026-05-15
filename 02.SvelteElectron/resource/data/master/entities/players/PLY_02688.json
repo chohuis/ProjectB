@@ -1,9 +1,9 @@
 {
   "id": "PLY_02688",
-  "name": "三浦大和",
-  "nameEn": "Miura Yamato",
+  "name": "카토 아키라",
+  "nameEn": "Kato Akira",
   "role": "player",
-  "age": 25,
+  "age": 31,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "RP",
       "jerseyNumber": 37,
       "pitching": {
-        "ovr": 80,
-        "stamina": 69,
-        "velocity": 85,
-        "command": 77,
-        "control": 75,
-        "movement": 76,
-        "mentality": 73,
-        "recovery": 79
+        "ovr": 62,
+        "stamina": 60,
+        "velocity": 65,
+        "command": 62,
+        "control": 64,
+        "movement": 65,
+        "mentality": 61,
+        "recovery": 59
       },
       "batting": {
-        "ovr": 50,
-        "contact": 53,
-        "power": 54,
-        "eye": 49,
-        "discipline": 47,
-        "speed": 50,
-        "fielding": 52,
-        "arm": 50,
-        "battingClutch": 52
+        "ovr": 38,
+        "contact": 37,
+        "power": 36,
+        "eye": 36,
+        "discipline": 32,
+        "speed": 30,
+        "fielding": 31,
+        "arm": 33,
+        "battingClutch": 31
       },
-      "developmentRate": 47,
-      "potentialHidden": 64
+      "developmentRate": 43,
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",

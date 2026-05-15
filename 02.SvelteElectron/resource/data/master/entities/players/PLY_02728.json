@@ -1,9 +1,9 @@
 {
   "id": "PLY_02728",
-  "name": "阿部海斗",
-  "nameEn": "Abe Kaito",
+  "name": "후지이 류",
+  "nameEn": "Fujii Ryu",
   "role": "player",
-  "age": 22,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
       "jerseyNumber": 32,
       "pitching": {
-        "ovr": 66,
-        "stamina": 64,
-        "velocity": 69,
-        "command": 64,
-        "control": 65,
-        "movement": 61,
-        "mentality": 66,
-        "recovery": 59
+        "ovr": 71,
+        "stamina": 71,
+        "velocity": 76,
+        "command": 75,
+        "control": 73,
+        "movement": 67,
+        "mentality": 72,
+        "recovery": 68
       },
       "batting": {
-        "ovr": 31,
-        "contact": 31,
-        "power": 37,
-        "eye": 38,
-        "discipline": 35,
-        "speed": 33,
-        "fielding": 32,
-        "arm": 32,
-        "battingClutch": 36
+        "ovr": 45,
+        "contact": 46,
+        "power": 46,
+        "eye": 42,
+        "discipline": 45,
+        "speed": 46,
+        "fielding": 45,
+        "arm": 43,
+        "battingClutch": 43
       },
-      "developmentRate": 42,
-      "potentialHidden": 87
+      "developmentRate": 49,
+      "potentialHidden": 89
     },
     "coach": {
       "specialty": "-",

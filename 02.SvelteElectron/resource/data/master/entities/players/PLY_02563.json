@@ -1,9 +1,9 @@
 {
   "id": "PLY_02563",
-  "name": "井上雄太",
-  "nameEn": "Inoue Yuta",
+  "name": "이케다 준",
+  "nameEn": "Ikeda Jun",
   "role": "player",
-  "age": 29,
+  "age": 31,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -20,27 +20,27 @@
       "jerseyNumber": 47,
       "pitching": {
         "ovr": 52,
-        "stamina": 52,
-        "velocity": 58,
-        "command": 55,
-        "control": 58,
-        "movement": 53,
-        "mentality": 53,
-        "recovery": 55
+        "stamina": 47,
+        "velocity": 57,
+        "command": 49,
+        "control": 54,
+        "movement": 47,
+        "mentality": 51,
+        "recovery": 52
       },
       "batting": {
-        "ovr": 74,
-        "contact": 81,
-        "power": 76,
-        "eye": 79,
-        "discipline": 73,
-        "speed": 76,
-        "fielding": 75,
-        "arm": 71,
-        "battingClutch": 72
+        "ovr": 72,
+        "contact": 73,
+        "power": 75,
+        "eye": 71,
+        "discipline": 77,
+        "speed": 74,
+        "fielding": 71,
+        "arm": 77,
+        "battingClutch": 80
       },
-      "developmentRate": 42,
-      "potentialHidden": 59
+      "developmentRate": 39,
+      "potentialHidden": 74
     },
     "coach": {
       "specialty": "-",

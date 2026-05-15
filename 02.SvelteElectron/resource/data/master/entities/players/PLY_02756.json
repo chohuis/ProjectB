@@ -1,9 +1,9 @@
 {
   "id": "PLY_02756",
-  "name": "山本浩",
-  "nameEn": "Yamamoto Hiroshi",
+  "name": "하야시 쇼",
+  "nameEn": "Hayashi Sho",
   "role": "player",
-  "age": 24,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "RP",
       "jerseyNumber": 10,
       "pitching": {
-        "ovr": 82,
-        "stamina": 74,
-        "velocity": 80,
-        "command": 78,
-        "control": 74,
-        "movement": 74,
-        "mentality": 73,
-        "recovery": 72
+        "ovr": 79,
+        "stamina": 63,
+        "velocity": 76,
+        "command": 79,
+        "control": 70,
+        "movement": 77,
+        "mentality": 78,
+        "recovery": 76
       },
       "batting": {
-        "ovr": 49,
-        "contact": 41,
-        "power": 42,
-        "eye": 48,
-        "discipline": 40,
-        "speed": 48,
-        "fielding": 47,
-        "arm": 47,
-        "battingClutch": 47
+        "ovr": 57,
+        "contact": 58,
+        "power": 53,
+        "eye": 51,
+        "discipline": 54,
+        "speed": 58,
+        "fielding": 49,
+        "arm": 53,
+        "battingClutch": 57
       },
-      "developmentRate": 50,
-      "potentialHidden": 66
+      "developmentRate": 46,
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",

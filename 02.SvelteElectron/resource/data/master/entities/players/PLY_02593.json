@@ -1,9 +1,9 @@
 {
   "id": "PLY_02593",
-  "name": "阿部晃",
-  "nameEn": "Abe Akira",
+  "name": "야마자키 히로시",
+  "nameEn": "Yamazaki Hiroshi",
   "role": "player",
-  "age": 19,
+  "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
       "jerseyNumber": 32,
       "pitching": {
-        "ovr": 75,
-        "stamina": 73,
-        "velocity": 78,
-        "command": 76,
-        "control": 75,
-        "movement": 69,
-        "mentality": 77,
-        "recovery": 71
+        "ovr": 65,
+        "stamina": 66,
+        "velocity": 61,
+        "command": 59,
+        "control": 61,
+        "movement": 56,
+        "mentality": 62,
+        "recovery": 61
       },
       "batting": {
-        "ovr": 52,
-        "contact": 50,
-        "power": 54,
-        "eye": 54,
-        "discipline": 50,
-        "speed": 54,
-        "fielding": 52,
-        "arm": 55,
-        "battingClutch": 52
+        "ovr": 41,
+        "contact": 36,
+        "power": 43,
+        "eye": 37,
+        "discipline": 39,
+        "speed": 37,
+        "fielding": 40,
+        "arm": 42,
+        "battingClutch": 39
       },
-      "developmentRate": 52,
-      "potentialHidden": 88
+      "developmentRate": 54,
+      "potentialHidden": 84
     },
     "coach": {
       "specialty": "-",

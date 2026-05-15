@@ -1,9 +1,9 @@
 {
   "id": "PLY_02680",
-  "name": "藤田啓",
-  "nameEn": "Fujita Hiroshi",
+  "name": "와타나베 야마토",
+  "nameEn": "Watanabe Yamato",
   "role": "player",
-  "age": 28,
+  "age": 31,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -20,27 +20,27 @@
       "jerseyNumber": 24,
       "pitching": {
         "ovr": 44,
-        "stamina": 44,
-        "velocity": 47,
-        "command": 49,
-        "control": 45,
-        "movement": 46,
-        "mentality": 44,
-        "recovery": 42
+        "stamina": 46,
+        "velocity": 43,
+        "command": 44,
+        "control": 47,
+        "movement": 47,
+        "mentality": 41,
+        "recovery": 41
       },
       "batting": {
-        "ovr": 69,
-        "contact": 71,
-        "power": 71,
-        "eye": 65,
-        "discipline": 65,
-        "speed": 61,
-        "fielding": 62,
-        "arm": 63,
-        "battingClutch": 68
+        "ovr": 73,
+        "contact": 73,
+        "power": 75,
+        "eye": 71,
+        "discipline": 74,
+        "speed": 70,
+        "fielding": 69,
+        "arm": 68,
+        "battingClutch": 72
       },
-      "developmentRate": 50,
-      "potentialHidden": 58
+      "developmentRate": 39,
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",

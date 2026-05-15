@@ -1,9 +1,9 @@
 {
   "id": "PLY_02577",
-  "name": "林翔",
-  "nameEn": "Hayashi Sho",
+  "name": "무라카미 츠바사",
+  "nameEn": "Murakami Tsubasa",
   "role": "player",
-  "age": 35,
+  "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "RP",
       "jerseyNumber": 11,
       "pitching": {
-        "ovr": 71,
-        "stamina": 61,
-        "velocity": 73,
-        "command": 70,
-        "control": 73,
-        "movement": 66,
-        "mentality": 68,
-        "recovery": 72
+        "ovr": 82,
+        "stamina": 68,
+        "velocity": 83,
+        "command": 77,
+        "control": 76,
+        "movement": 76,
+        "mentality": 81,
+        "recovery": 74
       },
       "batting": {
-        "ovr": 39,
-        "contact": 38,
-        "power": 39,
-        "eye": 39,
-        "discipline": 37,
-        "speed": 37,
-        "fielding": 34,
-        "arm": 38,
-        "battingClutch": 40
+        "ovr": 55,
+        "contact": 60,
+        "power": 57,
+        "eye": 55,
+        "discipline": 56,
+        "speed": 57,
+        "fielding": 54,
+        "arm": 55,
+        "battingClutch": 54
       },
-      "developmentRate": 43,
-      "potentialHidden": 65
+      "developmentRate": 44,
+      "potentialHidden": 78
     },
     "coach": {
       "specialty": "-",

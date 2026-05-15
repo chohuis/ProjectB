@@ -1,9 +1,9 @@
 {
   "id": "PLY_02560",
-  "name": "山田悠人",
-  "nameEn": "Yamada Yuto",
+  "name": "타카하시 슌",
+  "nameEn": "Takahashi Shun",
   "role": "player",
-  "age": 25,
+  "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "2B",
       "jerseyNumber": 44,
       "pitching": {
-        "ovr": 38,
-        "stamina": 38,
-        "velocity": 40,
+        "ovr": 39,
+        "stamina": 36,
+        "velocity": 36,
         "command": 40,
-        "control": 38,
-        "movement": 33,
-        "mentality": 40,
-        "recovery": 33
+        "control": 33,
+        "movement": 39,
+        "mentality": 35,
+        "recovery": 39
       },
       "batting": {
         "ovr": 63,
-        "contact": 58,
-        "power": 60,
-        "eye": 56,
-        "discipline": 55,
-        "speed": 61,
-        "fielding": 64,
-        "arm": 63,
-        "battingClutch": 60
+        "contact": 62,
+        "power": 62,
+        "eye": 68,
+        "discipline": 69,
+        "speed": 68,
+        "fielding": 67,
+        "arm": 65,
+        "battingClutch": 65
       },
-      "developmentRate": 47,
-      "potentialHidden": 75
+      "developmentRate": 40,
+      "potentialHidden": 63
     },
     "coach": {
       "specialty": "-",

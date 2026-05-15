@@ -1,9 +1,9 @@
 {
   "id": "MNG_00099",
-  "name": "藤田茂",
-  "nameEn": "Fujita Shigeru",
+  "name": "고바야시 카이토",
+  "nameEn": "Kobayashi Kaito",
   "role": "manager",
-  "age": 50,
+  "age": 64,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -55,17 +55,17 @@
       "trainingBuffs": ""
     },
     "manager": {
-      "style": "데이터 중심",
-      "experienceYears": 14,
+      "style": "유망주 중심",
+      "experienceYears": 24,
       "stats": {
-        "tactics": 66,
-        "decision": 81,
-        "rotationMgmt": 56,
-        "bullpenMgmt": 76,
-        "moraleMgmt": 85
+        "tactics": 71,
+        "decision": 71,
+        "rotationMgmt": 61,
+        "bullpenMgmt": 60,
+        "moraleMgmt": 65
       },
       "gamePlanBias": "",
-      "riskTolerance": 41
+      "riskTolerance": 55
     },
     "owner": {
       "ownershipStyle": "안정 운영",

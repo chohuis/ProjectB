@@ -1,9 +1,9 @@
 {
   "id": "COA_00225",
-  "name": "斎藤浩",
-  "nameEn": "Saito Hiroshi",
+  "name": "이토 카이토",
+  "nameEn": "Ito Kaito",
   "role": "coach",
-  "age": 47,
+  "age": 37,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -43,14 +43,14 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "수비",
-      "experienceYears": 4,
+      "specialty": "멘탈",
+      "experienceYears": 16,
       "stats": {
-        "teaching": 66,
-        "analysis": 68,
-        "communication": 60,
-        "discipline": 67,
-        "leadership": 62
+        "teaching": 60,
+        "analysis": 73,
+        "communication": 71,
+        "discipline": 62,
+        "leadership": 53
       },
       "trainingBuffs": ""
     },

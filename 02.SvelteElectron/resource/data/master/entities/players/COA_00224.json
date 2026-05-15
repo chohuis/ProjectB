@@ -1,9 +1,9 @@
 {
   "id": "COA_00224",
-  "name": "福田清",
-  "nameEn": "Fukuda Kiyoshi",
+  "name": "시미즈 마코토",
+  "nameEn": "Shimizu Makoto",
   "role": "coach",
-  "age": 39,
+  "age": 36,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "투수",
-      "experienceYears": 3,
+      "specialty": "수비",
+      "experienceYears": 8,
       "stats": {
-        "teaching": 68,
-        "analysis": 67,
-        "communication": 70,
-        "discipline": 75,
-        "leadership": 72
+        "teaching": 72,
+        "analysis": 79,
+        "communication": 65,
+        "discipline": 57,
+        "leadership": 59
       },
-      "trainingBuffs": "체력 훈련 +2%"
+      "trainingBuffs": "구속 훈련 +2%"
     },
     "manager": {
       "style": "균형",

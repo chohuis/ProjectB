@@ -1,9 +1,9 @@
 {
   "id": "PLY_02749",
-  "name": "阿部浩二",
-  "nameEn": "Abe Koji",
+  "name": "사이토 다이키",
+  "nameEn": "Saito Daiki",
   "role": "player",
-  "age": 27,
+  "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "SP",
       "jerseyNumber": 3,
       "pitching": {
-        "ovr": 87,
-        "stamina": 89,
-        "velocity": 87,
-        "command": 93,
-        "control": 87,
-        "movement": 91,
-        "mentality": 89,
-        "recovery": 86
+        "ovr": 77,
+        "stamina": 87,
+        "velocity": 81,
+        "command": 79,
+        "control": 76,
+        "movement": 83,
+        "mentality": 79,
+        "recovery": 83
       },
       "batting": {
-        "ovr": 68,
-        "contact": 67,
-        "power": 69,
-        "eye": 69,
-        "discipline": 65,
-        "speed": 67,
-        "fielding": 70,
-        "arm": 65,
-        "battingClutch": 73
+        "ovr": 52,
+        "contact": 50,
+        "power": 50,
+        "eye": 48,
+        "discipline": 50,
+        "speed": 51,
+        "fielding": 46,
+        "arm": 49,
+        "battingClutch": 54
       },
-      "developmentRate": 43,
-      "potentialHidden": 73
+      "developmentRate": 35,
+      "potentialHidden": 89
     },
     "coach": {
       "specialty": "-",

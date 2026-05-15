@@ -1,9 +1,9 @@
 {
   "id": "PLY_02714",
-  "name": "田中徹",
-  "nameEn": "Tanaka Toru",
+  "name": "야마모토 쓰요시",
+  "nameEn": "Yamamoto Tsuyoshi",
   "role": "player",
-  "age": 26,
+  "age": 34,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "CP",
       "jerseyNumber": 13,
       "pitching": {
-        "ovr": 78,
-        "stamina": 70,
-        "velocity": 86,
-        "command": 80,
-        "control": 82,
-        "movement": 77,
-        "mentality": 77,
-        "recovery": 75
+        "ovr": 71,
+        "stamina": 59,
+        "velocity": 82,
+        "command": 76,
+        "control": 74,
+        "movement": 69,
+        "mentality": 72,
+        "recovery": 73
       },
       "batting": {
-        "ovr": 61,
-        "contact": 54,
-        "power": 57,
-        "eye": 53,
-        "discipline": 57,
-        "speed": 60,
-        "fielding": 53,
-        "arm": 54,
-        "battingClutch": 61
+        "ovr": 48,
+        "contact": 40,
+        "power": 40,
+        "eye": 46,
+        "discipline": 41,
+        "speed": 40,
+        "fielding": 41,
+        "arm": 46,
+        "battingClutch": 45
       },
-      "developmentRate": 50,
-      "potentialHidden": 75
+      "developmentRate": 47,
+      "potentialHidden": 57
     },
     "coach": {
       "specialty": "-",

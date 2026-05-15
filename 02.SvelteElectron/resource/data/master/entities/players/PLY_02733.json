@@ -1,9 +1,9 @@
 {
   "id": "PLY_02733",
-  "name": "岡本蓮",
-  "nameEn": "Okamoto Ren",
+  "name": "오타 진",
+  "nameEn": "Ota Jin",
   "role": "player",
-  "age": 29,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "RP",
       "jerseyNumber": 37,
       "pitching": {
-        "ovr": 68,
-        "stamina": 61,
-        "velocity": 70,
-        "command": 66,
-        "control": 70,
-        "movement": 67,
-        "mentality": 71,
-        "recovery": 64
+        "ovr": 62,
+        "stamina": 49,
+        "velocity": 61,
+        "command": 62,
+        "control": 61,
+        "movement": 60,
+        "mentality": 61,
+        "recovery": 57
       },
       "batting": {
-        "ovr": 44,
-        "contact": 47,
-        "power": 43,
-        "eye": 40,
-        "discipline": 45,
-        "speed": 42,
-        "fielding": 42,
-        "arm": 42,
-        "battingClutch": 45
+        "ovr": 30,
+        "contact": 31,
+        "power": 35,
+        "eye": 35,
+        "discipline": 36,
+        "speed": 31,
+        "fielding": 33,
+        "arm": 32,
+        "battingClutch": 38
       },
-      "developmentRate": 40,
-      "potentialHidden": 84
+      "developmentRate": 42,
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",

@@ -1,9 +1,9 @@
 {
   "id": "PLY_02436",
-  "name": "斎藤颯太",
-  "nameEn": "Saito Sota",
+  "name": "오카모토 히라쿠",
+  "nameEn": "Okamoto Hiraku",
   "role": "player",
-  "age": 22,
+  "age": 37,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "SP",
       "jerseyNumber": 5,
       "pitching": {
-        "ovr": 88,
-        "stamina": 95,
-        "velocity": 97,
-        "command": 91,
-        "control": 87,
-        "movement": 92,
-        "mentality": 91,
-        "recovery": 93
+        "ovr": 78,
+        "stamina": 76,
+        "velocity": 73,
+        "command": 77,
+        "control": 74,
+        "movement": 76,
+        "mentality": 71,
+        "recovery": 72
       },
       "batting": {
-        "ovr": 58,
-        "contact": 60,
-        "power": 62,
-        "eye": 58,
-        "discipline": 59,
-        "speed": 63,
-        "fielding": 58,
-        "arm": 57,
-        "battingClutch": 61
+        "ovr": 54,
+        "contact": 51,
+        "power": 52,
+        "eye": 55,
+        "discipline": 51,
+        "speed": 49,
+        "fielding": 51,
+        "arm": 49,
+        "battingClutch": 52
       },
-      "developmentRate": 37,
-      "potentialHidden": 76
+      "developmentRate": 33,
+      "potentialHidden": 85
     },
     "coach": {
       "specialty": "-",

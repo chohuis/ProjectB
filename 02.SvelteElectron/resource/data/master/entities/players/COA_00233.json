@@ -1,9 +1,9 @@
 {
   "id": "COA_00233",
-  "name": "渡辺龍",
-  "nameEn": "Watanabe Ryu",
+  "name": "스즈키 미쓰루",
+  "nameEn": "Suzuki Mitsuru",
   "role": "coach",
-  "age": 53,
+  "age": 47,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -44,15 +44,15 @@
     },
     "coach": {
       "specialty": "투수",
-      "experienceYears": 4,
+      "experienceYears": 10,
       "stats": {
-        "teaching": 55,
-        "analysis": 64,
-        "communication": 75,
-        "discipline": 83,
-        "leadership": 60
+        "teaching": 71,
+        "analysis": 62,
+        "communication": 73,
+        "discipline": 77,
+        "leadership": 69
       },
-      "trainingBuffs": "컨택 훈련 +2%"
+      "trainingBuffs": "체력 훈련 +2%"
     },
     "manager": {
       "style": "균형",

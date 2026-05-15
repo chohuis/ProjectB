@@ -1,9 +1,9 @@
 {
   "id": "COA_00188",
-  "name": "村上充",
-  "nameEn": "Murakami Mitsuru",
+  "name": "마에다 히로시",
+  "nameEn": "Maeda Hiroshi",
   "role": "coach",
-  "age": 50,
+  "age": 35,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "수비",
-      "experienceYears": 18,
+      "specialty": "타격",
+      "experienceYears": 4,
       "stats": {
-        "teaching": 64,
-        "analysis": 77,
-        "communication": 66,
-        "discipline": 52,
-        "leadership": 78
+        "teaching": 66,
+        "analysis": 52,
+        "communication": 78,
+        "discipline": 73,
+        "leadership": 55
       },
-      "trainingBuffs": "구속 훈련 +2%"
+      "trainingBuffs": "체력 훈련 +2%"
     },
     "manager": {
       "style": "균형",

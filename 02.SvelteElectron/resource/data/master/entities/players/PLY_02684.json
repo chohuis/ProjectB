@@ -1,9 +1,9 @@
 {
   "id": "PLY_02684",
-  "name": "林大輝",
-  "nameEn": "Hayashi Daiki",
+  "name": "시미즈 렌",
+  "nameEn": "Shimizu Ren",
   "role": "player",
-  "age": 19,
+  "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "SP",
       "jerseyNumber": 33,
       "pitching": {
-        "ovr": 81,
-        "stamina": 78,
-        "velocity": 79,
-        "command": 80,
-        "control": 76,
-        "movement": 75,
-        "mentality": 76,
-        "recovery": 80
+        "ovr": 75,
+        "stamina": 70,
+        "velocity": 71,
+        "command": 76,
+        "control": 68,
+        "movement": 69,
+        "mentality": 68,
+        "recovery": 70
       },
       "batting": {
-        "ovr": 51,
-        "contact": 47,
-        "power": 50,
-        "eye": 48,
-        "discipline": 44,
-        "speed": 48,
-        "fielding": 47,
-        "arm": 43,
-        "battingClutch": 45
+        "ovr": 42,
+        "contact": 36,
+        "power": 41,
+        "eye": 35,
+        "discipline": 37,
+        "speed": 34,
+        "fielding": 34,
+        "arm": 38,
+        "battingClutch": 34
       },
-      "developmentRate": 53,
-      "potentialHidden": 81
+      "developmentRate": 46,
+      "potentialHidden": 67
     },
     "coach": {
       "specialty": "-",

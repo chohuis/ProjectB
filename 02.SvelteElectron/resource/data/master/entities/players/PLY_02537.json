@@ -1,7 +1,7 @@
 {
   "id": "PLY_02537",
-  "name": "斎藤浩二",
-  "nameEn": "Saito Koji",
+  "name": "시미즈 야마토",
+  "nameEn": "Shimizu Yamato",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -19,28 +19,28 @@
       "position": "1B",
       "jerseyNumber": 16,
       "pitching": {
-        "ovr": 55,
-        "stamina": 54,
-        "velocity": 57,
-        "command": 58,
+        "ovr": 62,
+        "stamina": 63,
+        "velocity": 71,
+        "command": 61,
         "control": 61,
-        "movement": 52,
-        "mentality": 54,
-        "recovery": 57
+        "movement": 64,
+        "mentality": 61,
+        "recovery": 62
       },
       "batting": {
-        "ovr": 77,
-        "contact": 79,
-        "power": 82,
-        "eye": 75,
-        "discipline": 77,
-        "speed": 73,
-        "fielding": 81,
-        "arm": 80,
-        "battingClutch": 79
+        "ovr": 85,
+        "contact": 83,
+        "power": 89,
+        "eye": 84,
+        "discipline": 89,
+        "speed": 85,
+        "fielding": 84,
+        "arm": 88,
+        "battingClutch": 87
       },
-      "developmentRate": 52,
-      "potentialHidden": 75
+      "developmentRate": 32,
+      "potentialHidden": 73
     },
     "coach": {
       "specialty": "-",

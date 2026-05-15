@@ -1,9 +1,9 @@
 {
   "id": "PLY_02635",
-  "name": "鈴木晃",
-  "nameEn": "Suzuki Akira",
+  "name": "와타나베 마코토",
+  "nameEn": "Watanabe Makoto",
   "role": "player",
-  "age": 32,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "DH",
       "jerseyNumber": 24,
       "pitching": {
-        "ovr": 62,
-        "stamina": 64,
-        "velocity": 69,
-        "command": 64,
-        "control": 59,
-        "movement": 61,
-        "mentality": 63,
-        "recovery": 65
+        "ovr": 49,
+        "stamina": 50,
+        "velocity": 55,
+        "command": 56,
+        "control": 49,
+        "movement": 55,
+        "mentality": 50,
+        "recovery": 48
       },
       "batting": {
         "ovr": 84,
-        "contact": 93,
-        "power": 89,
-        "eye": 83,
-        "discipline": 85,
-        "speed": 85,
-        "fielding": 80,
-        "arm": 78,
-        "battingClutch": 86
+        "contact": 91,
+        "power": 90,
+        "eye": 80,
+        "discipline": 83,
+        "speed": 81,
+        "fielding": 77,
+        "arm": 81,
+        "battingClutch": 85
       },
-      "developmentRate": 48,
-      "potentialHidden": 73
+      "developmentRate": 41,
+      "potentialHidden": 78
     },
     "coach": {
       "specialty": "-",

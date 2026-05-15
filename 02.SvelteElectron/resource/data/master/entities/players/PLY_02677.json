@@ -1,9 +1,9 @@
 {
   "id": "PLY_02677",
-  "name": "石川龍",
-  "nameEn": "Ishikawa Ryu",
+  "name": "타나카 히로시",
+  "nameEn": "Tanaka Hiroshi",
   "role": "player",
-  "age": 38,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "CF",
       "jerseyNumber": 21,
       "pitching": {
-        "ovr": 59,
-        "stamina": 60,
-        "velocity": 59,
-        "command": 64,
-        "control": 60,
-        "movement": 61,
-        "mentality": 63,
-        "recovery": 55
+        "ovr": 52,
+        "stamina": 46,
+        "velocity": 52,
+        "command": 48,
+        "control": 46,
+        "movement": 51,
+        "mentality": 51,
+        "recovery": 43
       },
       "batting": {
-        "ovr": 83,
-        "contact": 81,
-        "power": 83,
-        "eye": 82,
-        "discipline": 83,
-        "speed": 91,
-        "fielding": 89,
-        "arm": 83,
-        "battingClutch": 86
+        "ovr": 70,
+        "contact": 73,
+        "power": 71,
+        "eye": 72,
+        "discipline": 75,
+        "speed": 77,
+        "fielding": 74,
+        "arm": 70,
+        "battingClutch": 78
       },
-      "developmentRate": 40,
-      "potentialHidden": 68
+      "developmentRate": 37,
+      "potentialHidden": 78
     },
     "coach": {
       "specialty": "-",

@@ -1,7 +1,7 @@
 {
   "id": "PLY_02639",
-  "name": "石田啓",
-  "nameEn": "Ishida Hiroshi",
+  "name": "콘도 야마토",
+  "nameEn": "Kondo Yamato",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -20,27 +20,27 @@
       "jerseyNumber": 33,
       "pitching": {
         "ovr": 77,
-        "stamina": 81,
-        "velocity": 79,
-        "command": 75,
+        "stamina": 78,
+        "velocity": 71,
+        "command": 70,
         "control": 73,
-        "movement": 77,
-        "mentality": 78,
-        "recovery": 75
+        "movement": 69,
+        "mentality": 72,
+        "recovery": 67
       },
       "batting": {
-        "ovr": 45,
-        "contact": 50,
-        "power": 51,
-        "eye": 50,
-        "discipline": 51,
-        "speed": 50,
-        "fielding": 42,
-        "arm": 44,
-        "battingClutch": 49
+        "ovr": 44,
+        "contact": 38,
+        "power": 45,
+        "eye": 37,
+        "discipline": 38,
+        "speed": 38,
+        "fielding": 36,
+        "arm": 43,
+        "battingClutch": 38
       },
-      "developmentRate": 45,
-      "potentialHidden": 73
+      "developmentRate": 56,
+      "potentialHidden": 72
     },
     "coach": {
       "specialty": "-",

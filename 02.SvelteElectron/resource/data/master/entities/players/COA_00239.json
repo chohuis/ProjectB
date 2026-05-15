@@ -1,9 +1,9 @@
 {
   "id": "COA_00239",
-  "name": "村上健太",
-  "nameEn": "Murakami Kenta",
+  "name": "야마구치 아키라",
+  "nameEn": "Yamaguchi Akira",
   "role": "coach",
-  "age": 43,
+  "age": 34,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "타격",
-      "experienceYears": 16,
+      "specialty": "투수",
+      "experienceYears": 4,
       "stats": {
-        "teaching": 70,
-        "analysis": 78,
-        "communication": 59,
-        "discipline": 71,
-        "leadership": 75
+        "teaching": 59,
+        "analysis": 71,
+        "communication": 75,
+        "discipline": 64,
+        "leadership": 60
       },
-      "trainingBuffs": "구속 훈련 +2%"
+      "trainingBuffs": "체력 훈련 +2%"
     },
     "manager": {
       "style": "균형",

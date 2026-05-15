@@ -1,9 +1,9 @@
 {
   "id": "COA_00218",
-  "name": "山本剛",
-  "nameEn": "Yamamoto Tsuyoshi",
+  "name": "하시모토 히로시",
+  "nameEn": "Hashimoto Hiroshi",
   "role": "coach",
-  "age": 46,
+  "age": 50,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -43,14 +43,14 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "투수",
-      "experienceYears": 11,
+      "specialty": "타격",
+      "experienceYears": 6,
       "stats": {
-        "teaching": 67,
-        "analysis": 80,
-        "communication": 61,
-        "discipline": 58,
-        "leadership": 71
+        "teaching": 77,
+        "analysis": 66,
+        "communication": 80,
+        "discipline": 71,
+        "leadership": 74
       },
       "trainingBuffs": "컨택 훈련 +2%"
     },

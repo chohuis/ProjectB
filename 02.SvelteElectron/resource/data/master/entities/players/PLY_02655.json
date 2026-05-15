@@ -1,9 +1,9 @@
 {
   "id": "PLY_02655",
-  "name": "山本晃",
-  "nameEn": "Yamamoto Akira",
+  "name": "사이토 시게루",
+  "nameEn": "Saito Shigeru",
   "role": "player",
-  "age": 31,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "RF",
       "jerseyNumber": 49,
       "pitching": {
-        "ovr": 44,
-        "stamina": 43,
-        "velocity": 48,
-        "command": 43,
-        "control": 38,
-        "movement": 44,
-        "mentality": 44,
-        "recovery": 45
+        "ovr": 34,
+        "stamina": 34,
+        "velocity": 37,
+        "command": 30,
+        "control": 34,
+        "movement": 36,
+        "mentality": 29,
+        "recovery": 36
       },
       "batting": {
-        "ovr": 80,
-        "contact": 77,
-        "power": 81,
-        "eye": 74,
-        "discipline": 79,
-        "speed": 73,
-        "fielding": 72,
-        "arm": 77,
-        "battingClutch": 77
+        "ovr": 66,
+        "contact": 70,
+        "power": 67,
+        "eye": 69,
+        "discipline": 71,
+        "speed": 71,
+        "fielding": 62,
+        "arm": 63,
+        "battingClutch": 70
       },
-      "developmentRate": 39,
-      "potentialHidden": 80
+      "developmentRate": 45,
+      "potentialHidden": 86
     },
     "coach": {
       "specialty": "-",

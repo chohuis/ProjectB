@@ -1,9 +1,9 @@
 {
   "id": "MNG_00085",
-  "name": "近藤蓮",
-  "nameEn": "Kondo Ren",
+  "name": "하시모토 소타",
+  "nameEn": "Hashimoto Sota",
   "role": "manager",
-  "age": 52,
+  "age": 44,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -56,16 +56,16 @@
     },
     "manager": {
       "style": "수비적",
-      "experienceYears": 6,
+      "experienceYears": 8,
       "stats": {
-        "tactics": 59,
-        "decision": 57,
-        "rotationMgmt": 58,
-        "bullpenMgmt": 85,
-        "moraleMgmt": 80
+        "tactics": 58,
+        "decision": 85,
+        "rotationMgmt": 80,
+        "bullpenMgmt": 68,
+        "moraleMgmt": 83
       },
       "gamePlanBias": "",
-      "riskTolerance": 57
+      "riskTolerance": 38
     },
     "owner": {
       "ownershipStyle": "안정 운영",

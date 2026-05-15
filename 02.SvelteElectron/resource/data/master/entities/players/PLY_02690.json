@@ -1,9 +1,9 @@
 {
   "id": "PLY_02690",
-  "name": "加藤悠人",
-  "nameEn": "Kato Yuto",
+  "name": "후쿠다 쓰요시",
+  "nameEn": "Fukuda Tsuyoshi",
   "role": "player",
-  "age": 23,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "CP",
       "jerseyNumber": 39,
       "pitching": {
-        "ovr": 76,
-        "stamina": 64,
-        "velocity": 85,
-        "command": 76,
-        "control": 82,
-        "movement": 75,
-        "mentality": 77,
-        "recovery": 71
+        "ovr": 62,
+        "stamina": 50,
+        "velocity": 69,
+        "command": 59,
+        "control": 64,
+        "movement": 57,
+        "mentality": 58,
+        "recovery": 62
       },
       "batting": {
-        "ovr": 56,
-        "contact": 57,
-        "power": 52,
-        "eye": 54,
-        "discipline": 48,
-        "speed": 56,
-        "fielding": 54,
-        "arm": 53,
-        "battingClutch": 50
+        "ovr": 39,
+        "contact": 44,
+        "power": 37,
+        "eye": 39,
+        "discipline": 41,
+        "speed": 43,
+        "fielding": 35,
+        "arm": 42,
+        "battingClutch": 43
       },
       "developmentRate": 40,
-      "potentialHidden": 70
+      "potentialHidden": 80
     },
     "coach": {
       "specialty": "-",

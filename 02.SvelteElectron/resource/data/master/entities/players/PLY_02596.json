@@ -1,9 +1,9 @@
 {
   "id": "PLY_02596",
-  "name": "山崎雄太",
-  "nameEn": "Yamazaki Yuta",
+  "name": "타카하시 쓰카사",
+  "nameEn": "Takahashi Tsukasa",
   "role": "player",
-  "age": 23,
+  "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "RP",
       "jerseyNumber": 35,
       "pitching": {
-        "ovr": 61,
-        "stamina": 50,
-        "velocity": 69,
-        "command": 59,
-        "control": 59,
+        "ovr": 65,
+        "stamina": 65,
+        "velocity": 72,
+        "command": 65,
+        "control": 71,
         "movement": 64,
-        "mentality": 64,
-        "recovery": 64
+        "mentality": 66,
+        "recovery": 71
       },
       "batting": {
-        "ovr": 38,
-        "contact": 45,
-        "power": 37,
-        "eye": 36,
+        "ovr": 47,
+        "contact": 48,
+        "power": 41,
+        "eye": 47,
         "discipline": 39,
-        "speed": 36,
-        "fielding": 42,
-        "arm": 37,
-        "battingClutch": 37
+        "speed": 39,
+        "fielding": 41,
+        "arm": 39,
+        "battingClutch": 47
       },
-      "developmentRate": 57,
-      "potentialHidden": 68
+      "developmentRate": 41,
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",

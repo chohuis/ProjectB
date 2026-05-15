@@ -1,9 +1,9 @@
 {
   "id": "MNG_00102",
-  "name": "山田茂",
-  "nameEn": "Yamada Shigeru",
+  "name": "오카모토 카이토",
+  "nameEn": "Okamoto Kaito",
   "role": "manager",
-  "age": 55,
+  "age": 51,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -55,14 +55,14 @@
       "trainingBuffs": ""
     },
     "manager": {
-      "style": "데이터 중심",
-      "experienceYears": 23,
+      "style": "균형",
+      "experienceYears": 17,
       "stats": {
-        "tactics": 63,
-        "decision": 60,
-        "rotationMgmt": 75,
-        "bullpenMgmt": 86,
-        "moraleMgmt": 86
+        "tactics": 86,
+        "decision": 71,
+        "rotationMgmt": 77,
+        "bullpenMgmt": 79,
+        "moraleMgmt": 64
       },
       "gamePlanBias": "",
       "riskTolerance": 75

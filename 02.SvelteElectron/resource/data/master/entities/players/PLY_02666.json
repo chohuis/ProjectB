@@ -1,9 +1,9 @@
 {
   "id": "PLY_02666",
-  "name": "林修",
-  "nameEn": "Hayashi Osamu",
+  "name": "사이토 렌",
+  "nameEn": "Saito Ren",
   "role": "player",
-  "age": 29,
+  "age": 31,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,31 +15,31 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "RP",
       "jerseyNumber": 10,
       "pitching": {
-        "ovr": 84,
-        "stamina": 71,
-        "velocity": 88,
-        "command": 81,
+        "ovr": 77,
+        "stamina": 74,
+        "velocity": 84,
+        "command": 83,
         "control": 76,
-        "movement": 79,
-        "mentality": 77,
-        "recovery": 77
+        "movement": 80,
+        "mentality": 76,
+        "recovery": 78
       },
       "batting": {
-        "ovr": 55,
+        "ovr": 59,
         "contact": 60,
-        "power": 58,
-        "eye": 60,
-        "discipline": 54,
-        "speed": 59,
-        "fielding": 53,
+        "power": 63,
+        "eye": 58,
+        "discipline": 55,
+        "speed": 58,
+        "fielding": 56,
         "arm": 57,
-        "battingClutch": 59
+        "battingClutch": 61
       },
-      "developmentRate": 44,
+      "developmentRate": 50,
       "potentialHidden": 89
     },
     "coach": {

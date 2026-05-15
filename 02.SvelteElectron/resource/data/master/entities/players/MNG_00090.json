@@ -1,9 +1,9 @@
 {
   "id": "MNG_00090",
-  "name": "村上蓮",
-  "nameEn": "Murakami Ren",
+  "name": "이노우에 쓰카사",
+  "nameEn": "Inoue Tsukasa",
   "role": "manager",
-  "age": 60,
+  "age": 65,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -55,17 +55,17 @@
       "trainingBuffs": ""
     },
     "manager": {
-      "style": "데이터 중심",
-      "experienceYears": 6,
+      "style": "균형",
+      "experienceYears": 19,
       "stats": {
-        "tactics": 67,
-        "decision": 84,
-        "rotationMgmt": 79,
-        "bullpenMgmt": 56,
-        "moraleMgmt": 69
+        "tactics": 77,
+        "decision": 78,
+        "rotationMgmt": 56,
+        "bullpenMgmt": 77,
+        "moraleMgmt": 57
       },
       "gamePlanBias": "",
-      "riskTolerance": 73
+      "riskTolerance": 64
     },
     "owner": {
       "ownershipStyle": "안정 운영",

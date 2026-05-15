@@ -1,9 +1,9 @@
 {
   "id": "PLY_02510",
-  "name": "鈴木亮",
-  "nameEn": "Suzuki Ryo",
+  "name": "사사키 렌",
+  "nameEn": "Sasaki Ren",
   "role": "player",
-  "age": 27,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "CP",
       "jerseyNumber": 39,
       "pitching": {
-        "ovr": 80,
-        "stamina": 68,
-        "velocity": 83,
-        "command": 76,
-        "control": 76,
-        "movement": 71,
-        "mentality": 74,
-        "recovery": 79
+        "ovr": 62,
+        "stamina": 56,
+        "velocity": 71,
+        "command": 63,
+        "control": 68,
+        "movement": 60,
+        "mentality": 66,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 58,
-        "contact": 54,
-        "power": 60,
-        "eye": 57,
-        "discipline": 54,
-        "speed": 58,
-        "fielding": 52,
-        "arm": 58,
-        "battingClutch": 57
+        "ovr": 28,
+        "contact": 34,
+        "power": 32,
+        "eye": 33,
+        "discipline": 28,
+        "speed": 26,
+        "fielding": 31,
+        "arm": 29,
+        "battingClutch": 33
       },
-      "developmentRate": 42,
-      "potentialHidden": 86
+      "developmentRate": 49,
+      "potentialHidden": 79
     },
     "coach": {
       "specialty": "-",

@@ -1,9 +1,9 @@
 {
   "id": "COA_00223",
-  "name": "藤井茂",
-  "nameEn": "Fujii Shigeru",
+  "name": "미우라 진",
+  "nameEn": "Miura Jin",
   "role": "coach",
-  "age": 57,
+  "age": 52,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -43,14 +43,14 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "수비",
-      "experienceYears": 16,
+      "specialty": "타격",
+      "experienceYears": 14,
       "stats": {
-        "teaching": 71,
-        "analysis": 58,
-        "communication": 53,
-        "discipline": 55,
-        "leadership": 69
+        "teaching": 56,
+        "analysis": 79,
+        "communication": 61,
+        "discipline": 80,
+        "leadership": 63
       },
       "trainingBuffs": "제구 훈련 +2%"
     },

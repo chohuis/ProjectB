@@ -1,9 +1,9 @@
 {
   "id": "MNG_00098",
-  "name": "福田隼人",
-  "nameEn": "Fukuda Hayato",
+  "name": "고토 진",
+  "nameEn": "Goto Jin",
   "role": "manager",
-  "age": 59,
+  "age": 63,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -55,17 +55,17 @@
       "trainingBuffs": ""
     },
     "manager": {
-      "style": "균형",
-      "experienceYears": 12,
+      "style": "데이터 중심",
+      "experienceYears": 5,
       "stats": {
-        "tactics": 69,
-        "decision": 81,
-        "rotationMgmt": 57,
-        "bullpenMgmt": 68,
-        "moraleMgmt": 65
+        "tactics": 73,
+        "decision": 56,
+        "rotationMgmt": 85,
+        "bullpenMgmt": 80,
+        "moraleMgmt": 80
       },
       "gamePlanBias": "",
-      "riskTolerance": 57
+      "riskTolerance": 68
     },
     "owner": {
       "ownershipStyle": "안정 운영",

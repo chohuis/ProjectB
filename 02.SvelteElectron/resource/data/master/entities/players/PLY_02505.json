@@ -1,9 +1,9 @@
 {
   "id": "PLY_02505",
-  "name": "加藤峻",
-  "nameEn": "Kato Shun",
+  "name": "오카다 켄타",
+  "nameEn": "Okada Kenta",
   "role": "player",
-  "age": 31,
+  "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "SP",
       "jerseyNumber": 34,
       "pitching": {
-        "ovr": 65,
-        "stamina": 65,
-        "velocity": 69,
-        "command": 62,
-        "control": 65,
-        "movement": 60,
-        "mentality": 66,
-        "recovery": 61
+        "ovr": 70,
+        "stamina": 75,
+        "velocity": 74,
+        "command": 75,
+        "control": 69,
+        "movement": 71,
+        "mentality": 73,
+        "recovery": 71
       },
       "batting": {
-        "ovr": 32,
-        "contact": 31,
-        "power": 34,
-        "eye": 28,
-        "discipline": 31,
-        "speed": 32,
-        "fielding": 30,
-        "arm": 28,
-        "battingClutch": 27
+        "ovr": 47,
+        "contact": 45,
+        "power": 48,
+        "eye": 49,
+        "discipline": 52,
+        "speed": 45,
+        "fielding": 44,
+        "arm": 49,
+        "battingClutch": 50
       },
-      "developmentRate": 45,
-      "potentialHidden": 78
+      "developmentRate": 52,
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",

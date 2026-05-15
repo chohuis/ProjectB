@@ -1,9 +1,9 @@
 {
   "id": "MNG_00088",
-  "name": "斎藤剛",
-  "nameEn": "Saito Tsuyoshi",
+  "name": "하야시 코지",
+  "nameEn": "Hayashi Koji",
   "role": "manager",
-  "age": 63,
+  "age": 54,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -55,17 +55,17 @@
       "trainingBuffs": ""
     },
     "manager": {
-      "style": "데이터 중심",
-      "experienceYears": 8,
+      "style": "유망주 중심",
+      "experienceYears": 13,
       "stats": {
-        "tactics": 68,
-        "decision": 75,
+        "tactics": 82,
+        "decision": 68,
         "rotationMgmt": 86,
-        "bullpenMgmt": 67,
-        "moraleMgmt": 62
+        "bullpenMgmt": 84,
+        "moraleMgmt": 60
       },
       "gamePlanBias": "",
-      "riskTolerance": 48
+      "riskTolerance": 44
     },
     "owner": {
       "ownershipStyle": "안정 운영",

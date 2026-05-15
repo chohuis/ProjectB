@@ -1,9 +1,9 @@
 {
   "id": "PLY_02782",
-  "name": "太田隼人",
-  "nameEn": "Ota Hayato",
+  "name": "기무라 츠바사",
+  "nameEn": "Kimura Tsubasa",
   "role": "player",
-  "age": 26,
+  "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "C",
       "jerseyNumber": 41,
       "pitching": {
-        "ovr": 28,
+        "ovr": 30,
         "stamina": 31,
-        "velocity": 38,
-        "command": 32,
-        "control": 33,
-        "movement": 34,
-        "mentality": 31,
-        "recovery": 30
+        "velocity": 31,
+        "command": 27,
+        "control": 24,
+        "movement": 26,
+        "mentality": 25,
+        "recovery": 25
       },
       "batting": {
-        "ovr": 67,
-        "contact": 64,
-        "power": 61,
-        "eye": 60,
-        "discipline": 67,
-        "speed": 65,
-        "fielding": 65,
-        "arm": 64,
-        "battingClutch": 61
+        "ovr": 56,
+        "contact": 56,
+        "power": 56,
+        "eye": 63,
+        "discipline": 57,
+        "speed": 60,
+        "fielding": 61,
+        "arm": 61,
+        "battingClutch": 63
       },
-      "developmentRate": 53,
-      "potentialHidden": 61
+      "developmentRate": 46,
+      "potentialHidden": 78
     },
     "coach": {
       "specialty": "-",

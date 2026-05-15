@@ -1,9 +1,9 @@
 {
   "id": "COA_00235",
-  "name": "中村光",
-  "nameEn": "Nakamura Hikaru",
+  "name": "야마자키 코지",
+  "nameEn": "Yamazaki Koji",
   "role": "coach",
-  "age": 41,
+  "age": 57,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -44,15 +44,15 @@
     },
     "coach": {
       "specialty": "투수",
-      "experienceYears": 4,
+      "experienceYears": 7,
       "stats": {
-        "teaching": 75,
-        "analysis": 65,
+        "teaching": 53,
+        "analysis": 58,
         "communication": 68,
-        "discipline": 74,
-        "leadership": 57
+        "discipline": 55,
+        "leadership": 72
       },
-      "trainingBuffs": ""
+      "trainingBuffs": "제구 훈련 +2%"
     },
     "manager": {
       "style": "균형",

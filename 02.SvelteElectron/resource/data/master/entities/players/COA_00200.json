@@ -1,7 +1,7 @@
 {
   "id": "COA_00200",
-  "name": "後藤浩二",
-  "nameEn": "Goto Koji",
+  "name": "오카다 하야토",
+  "nameEn": "Okada Hayato",
   "role": "coach",
   "age": 41,
   "status": "active",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "투수",
-      "experienceYears": 11,
+      "specialty": "타격",
+      "experienceYears": 3,
       "stats": {
-        "teaching": 65,
-        "analysis": 66,
-        "communication": 53,
-        "discipline": 64,
-        "leadership": 61
+        "teaching": 61,
+        "analysis": 53,
+        "communication": 55,
+        "discipline": 66,
+        "leadership": 81
       },
-      "trainingBuffs": ""
+      "trainingBuffs": "제구 훈련 +2%"
     },
     "manager": {
       "style": "균형",

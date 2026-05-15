@@ -1,9 +1,9 @@
 {
   "id": "PLY_02723",
-  "name": "中村龍",
-  "nameEn": "Nakamura Ryu",
+  "name": "와타나베 유토",
+  "nameEn": "Watanabe Yuto",
   "role": "player",
-  "age": 35,
+  "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "RF",
       "jerseyNumber": 22,
       "pitching": {
-        "ovr": 57,
-        "stamina": 58,
-        "velocity": 59,
-        "command": 54,
-        "control": 53,
-        "movement": 52,
+        "ovr": 59,
+        "stamina": 56,
+        "velocity": 66,
+        "command": 58,
+        "control": 57,
+        "movement": 61,
         "mentality": 58,
-        "recovery": 60
+        "recovery": 56
       },
       "batting": {
-        "ovr": 87,
-        "contact": 87,
-        "power": 93,
-        "eye": 88,
-        "discipline": 90,
-        "speed": 87,
-        "fielding": 82,
-        "arm": 84,
-        "battingClutch": 85
+        "ovr": 77,
+        "contact": 80,
+        "power": 86,
+        "eye": 78,
+        "discipline": 82,
+        "speed": 84,
+        "fielding": 78,
+        "arm": 82,
+        "battingClutch": 82
       },
-      "developmentRate": 43,
-      "potentialHidden": 61
+      "developmentRate": 32,
+      "potentialHidden": 79
     },
     "coach": {
       "specialty": "-",

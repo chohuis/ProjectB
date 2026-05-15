@@ -1,9 +1,9 @@
 {
   "id": "PLY_02482",
-  "name": "三浦健太",
-  "nameEn": "Miura Kenta",
+  "name": "마에다 야마토",
+  "nameEn": "Maeda Yamato",
   "role": "player",
-  "age": 32,
+  "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "RP",
       "jerseyNumber": 6,
       "pitching": {
-        "ovr": 77,
-        "stamina": 68,
-        "velocity": 82,
-        "command": 81,
-        "control": 79,
-        "movement": 81,
-        "mentality": 81,
-        "recovery": 76
+        "ovr": 69,
+        "stamina": 64,
+        "velocity": 75,
+        "command": 67,
+        "control": 64,
+        "movement": 67,
+        "mentality": 65,
+        "recovery": 71
       },
       "batting": {
-        "ovr": 51,
-        "contact": 55,
-        "power": 52,
-        "eye": 58,
-        "discipline": 50,
-        "speed": 51,
-        "fielding": 54,
-        "arm": 52,
-        "battingClutch": 59
+        "ovr": 42,
+        "contact": 43,
+        "power": 47,
+        "eye": 43,
+        "discipline": 49,
+        "speed": 42,
+        "fielding": 40,
+        "arm": 46,
+        "battingClutch": 49
       },
-      "developmentRate": 36,
-      "potentialHidden": 58
+      "developmentRate": 52,
+      "potentialHidden": 84
     },
     "coach": {
       "specialty": "-",

@@ -1,9 +1,9 @@
 {
   "id": "PLY_02550",
-  "name": "斎藤亮",
-  "nameEn": "Saito Ryo",
+  "name": "마에다 히카루",
+  "nameEn": "Maeda Hikaru",
   "role": "player",
-  "age": 22,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
       "jerseyNumber": 34,
       "pitching": {
-        "ovr": 67,
-        "stamina": 65,
-        "velocity": 68,
-        "command": 65,
-        "control": 67,
-        "movement": 63,
-        "mentality": 69,
-        "recovery": 64
+        "ovr": 68,
+        "stamina": 75,
+        "velocity": 71,
+        "command": 66,
+        "control": 70,
+        "movement": 64,
+        "mentality": 65,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 31,
-        "contact": 36,
-        "power": 31,
-        "eye": 30,
-        "discipline": 29,
-        "speed": 29,
-        "fielding": 35,
-        "arm": 33,
-        "battingClutch": 31
+        "ovr": 40,
+        "contact": 47,
+        "power": 44,
+        "eye": 40,
+        "discipline": 39,
+        "speed": 44,
+        "fielding": 40,
+        "arm": 45,
+        "battingClutch": 41
       },
       "developmentRate": 39,
-      "potentialHidden": 80
+      "potentialHidden": 58
     },
     "coach": {
       "specialty": "-",

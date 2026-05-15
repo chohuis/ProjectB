@@ -1,9 +1,9 @@
 {
   "id": "PLY_02585",
-  "name": "岡本龍",
-  "nameEn": "Okamoto Ryu",
+  "name": "이노우에 히로시",
+  "nameEn": "Inoue Hiroshi",
   "role": "player",
-  "age": 38,
+  "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "SS",
       "jerseyNumber": 19,
       "pitching": {
-        "ovr": 47,
-        "stamina": 45,
-        "velocity": 49,
-        "command": 51,
-        "control": 53,
-        "movement": 48,
-        "mentality": 49,
-        "recovery": 50
+        "ovr": 66,
+        "stamina": 68,
+        "velocity": 75,
+        "command": 69,
+        "control": 68,
+        "movement": 69,
+        "mentality": 65,
+        "recovery": 67
       },
       "batting": {
-        "ovr": 74,
-        "contact": 77,
-        "power": 75,
-        "eye": 75,
-        "discipline": 74,
-        "speed": 78,
-        "fielding": 82,
-        "arm": 75,
-        "battingClutch": 74
+        "ovr": 91,
+        "contact": 89,
+        "power": 85,
+        "eye": 88,
+        "discipline": 93,
+        "speed": 91,
+        "fielding": 88,
+        "arm": 86,
+        "battingClutch": 88
       },
-      "developmentRate": 35,
-      "potentialHidden": 66
+      "developmentRate": 53,
+      "potentialHidden": 87
     },
     "coach": {
       "specialty": "-",

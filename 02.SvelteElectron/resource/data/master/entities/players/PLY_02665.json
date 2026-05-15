@@ -1,9 +1,9 @@
 {
   "id": "PLY_02665",
-  "name": "藤田司",
-  "nameEn": "Fujita Tsukasa",
+  "name": "엔도 쓰요시",
+  "nameEn": "Endo Tsuyoshi",
   "role": "player",
-  "age": 38,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "RP",
       "jerseyNumber": 9,
       "pitching": {
-        "ovr": 88,
-        "stamina": 78,
-        "velocity": 93,
-        "command": 92,
-        "control": 91,
-        "movement": 82,
-        "mentality": 91,
-        "recovery": 85
+        "ovr": 78,
+        "stamina": 62,
+        "velocity": 82,
+        "command": 73,
+        "control": 77,
+        "movement": 73,
+        "mentality": 70,
+        "recovery": 71
       },
       "batting": {
-        "ovr": 58,
-        "contact": 55,
-        "power": 51,
-        "eye": 52,
-        "discipline": 50,
-        "speed": 57,
-        "fielding": 48,
-        "arm": 51,
-        "battingClutch": 57
+        "ovr": 42,
+        "contact": 49,
+        "power": 41,
+        "eye": 42,
+        "discipline": 47,
+        "speed": 40,
+        "fielding": 42,
+        "arm": 48,
+        "battingClutch": 44
       },
-      "developmentRate": 33,
-      "potentialHidden": 72
+      "developmentRate": 47,
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",

@@ -1,9 +1,9 @@
 {
   "id": "PLY_02555",
-  "name": "石田駿",
-  "nameEn": "Ishida Shun",
+  "name": "와타나베 유타",
+  "nameEn": "Watanabe Yuta",
   "role": "player",
-  "age": 29,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "CP",
       "jerseyNumber": 39,
       "pitching": {
-        "ovr": 70,
-        "stamina": 53,
-        "velocity": 74,
-        "command": 66,
-        "control": 67,
-        "movement": 63,
-        "mentality": 68,
-        "recovery": 62
+        "ovr": 75,
+        "stamina": 63,
+        "velocity": 79,
+        "command": 78,
+        "control": 74,
+        "movement": 74,
+        "mentality": 74,
+        "recovery": 78
       },
       "batting": {
-        "ovr": 45,
-        "contact": 44,
-        "power": 49,
-        "eye": 46,
-        "discipline": 43,
-        "speed": 41,
-        "fielding": 41,
-        "arm": 41,
-        "battingClutch": 44
+        "ovr": 55,
+        "contact": 52,
+        "power": 50,
+        "eye": 50,
+        "discipline": 49,
+        "speed": 51,
+        "fielding": 50,
+        "arm": 51,
+        "battingClutch": 55
       },
-      "developmentRate": 46,
-      "potentialHidden": 71
+      "developmentRate": 53,
+      "potentialHidden": 87
     },
     "coach": {
       "specialty": "-",

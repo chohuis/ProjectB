@@ -1,9 +1,9 @@
 {
   "id": "PLY_02693",
-  "name": "渡辺浩二",
-  "nameEn": "Watanabe Koji",
+  "name": "미우라 히로시",
+  "nameEn": "Miura Hiroshi",
   "role": "player",
-  "age": 30,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "C",
       "jerseyNumber": 42,
       "pitching": {
-        "ovr": 35,
-        "stamina": 33,
-        "velocity": 37,
-        "command": 33,
-        "control": 28,
-        "movement": 25,
-        "mentality": 32,
-        "recovery": 32
+        "ovr": 27,
+        "stamina": 26,
+        "velocity": 32,
+        "command": 26,
+        "control": 26,
+        "movement": 24,
+        "mentality": 31,
+        "recovery": 26
       },
       "batting": {
-        "ovr": 65,
-        "contact": 64,
-        "power": 60,
-        "eye": 64,
-        "discipline": 62,
-        "speed": 59,
-        "fielding": 59,
-        "arm": 60,
-        "battingClutch": 57
+        "ovr": 60,
+        "contact": 63,
+        "power": 55,
+        "eye": 57,
+        "discipline": 54,
+        "speed": 55,
+        "fielding": 57,
+        "arm": 63,
+        "battingClutch": 63
       },
-      "developmentRate": 55,
-      "potentialHidden": 57
+      "developmentRate": 39,
+      "potentialHidden": 85
     },
     "coach": {
       "specialty": "-",

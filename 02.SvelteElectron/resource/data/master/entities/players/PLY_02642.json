@@ -1,9 +1,9 @@
 {
   "id": "PLY_02642",
-  "name": "山本純",
-  "nameEn": "Yamamoto Jun",
+  "name": "타나카 다이키",
+  "nameEn": "Tanaka Daiki",
   "role": "player",
-  "age": 26,
+  "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "RP",
       "jerseyNumber": 36,
       "pitching": {
-        "ovr": 67,
-        "stamina": 52,
-        "velocity": 66,
-        "command": 67,
-        "control": 58,
-        "movement": 58,
-        "mentality": 62,
-        "recovery": 63
+        "ovr": 66,
+        "stamina": 59,
+        "velocity": 68,
+        "command": 63,
+        "control": 61,
+        "movement": 61,
+        "mentality": 65,
+        "recovery": 58
       },
       "batting": {
         "ovr": 36,
         "contact": 36,
-        "power": 36,
+        "power": 38,
         "eye": 36,
-        "discipline": 39,
-        "speed": 37,
-        "fielding": 41,
-        "arm": 43,
-        "battingClutch": 41
+        "discipline": 36,
+        "speed": 36,
+        "fielding": 37,
+        "arm": 31,
+        "battingClutch": 40
       },
-      "developmentRate": 48,
-      "potentialHidden": 71
+      "developmentRate": 39,
+      "potentialHidden": 73
     },
     "coach": {
       "specialty": "-",

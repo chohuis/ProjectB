@@ -1,9 +1,9 @@
 {
   "id": "PLY_02438",
-  "name": "吉田海斗",
-  "nameEn": "Yoshida Kaito",
+  "name": "이토 료",
+  "nameEn": "Ito Ryo",
   "role": "player",
-  "age": 28,
+  "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "RP",
       "jerseyNumber": 7,
       "pitching": {
-        "ovr": 74,
-        "stamina": 63,
-        "velocity": 72,
-        "command": 71,
-        "control": 70,
-        "movement": 67,
-        "mentality": 67,
+        "ovr": 66,
+        "stamina": 61,
+        "velocity": 73,
+        "command": 67,
+        "control": 65,
+        "movement": 68,
+        "mentality": 66,
         "recovery": 70
       },
       "batting": {
-        "ovr": 43,
-        "contact": 48,
-        "power": 49,
-        "eye": 43,
-        "discipline": 48,
-        "speed": 42,
-        "fielding": 41,
-        "arm": 47,
-        "battingClutch": 49
+        "ovr": 41,
+        "contact": 36,
+        "power": 41,
+        "eye": 34,
+        "discipline": 34,
+        "speed": 39,
+        "fielding": 39,
+        "arm": 35,
+        "battingClutch": 40
       },
-      "developmentRate": 40,
-      "potentialHidden": 88
+      "developmentRate": 41,
+      "potentialHidden": 71
     },
     "coach": {
       "specialty": "-",

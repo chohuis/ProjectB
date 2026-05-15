@@ -1,9 +1,9 @@
 {
   "id": "COA_00234",
-  "name": "坂本学",
-  "nameEn": "Sakamoto Manabu",
+  "name": "엔도 유토",
+  "nameEn": "Endo Yuto",
   "role": "coach",
-  "age": 45,
+  "age": 43,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -44,15 +44,15 @@
     },
     "coach": {
       "specialty": "투수",
-      "experienceYears": 9,
+      "experienceYears": 4,
       "stats": {
-        "teaching": 65,
-        "analysis": 79,
-        "communication": 57,
-        "discipline": 58,
-        "leadership": 55
+        "teaching": 59,
+        "analysis": 55,
+        "communication": 55,
+        "discipline": 81,
+        "leadership": 75
       },
-      "trainingBuffs": ""
+      "trainingBuffs": "구속 훈련 +2%"
     },
     "manager": {
       "style": "균형",

@@ -1,9 +1,9 @@
 {
   "id": "PLY_02738",
-  "name": "岡田修",
-  "nameEn": "Okada Osamu",
+  "name": "후지타 츠바사",
+  "nameEn": "Fujita Tsubasa",
   "role": "player",
-  "age": 24,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "C",
       "jerseyNumber": 42,
       "pitching": {
-        "ovr": 46,
-        "stamina": 50,
-        "velocity": 47,
-        "command": 45,
-        "control": 51,
-        "movement": 44,
-        "mentality": 51,
-        "recovery": 45
+        "ovr": 48,
+        "stamina": 47,
+        "velocity": 45,
+        "command": 47,
+        "control": 48,
+        "movement": 43,
+        "mentality": 40,
+        "recovery": 41
       },
       "batting": {
-        "ovr": 76,
-        "contact": 74,
-        "power": 77,
-        "eye": 75,
-        "discipline": 71,
-        "speed": 70,
-        "fielding": 73,
-        "arm": 78,
-        "battingClutch": 78
+        "ovr": 75,
+        "contact": 78,
+        "power": 75,
+        "eye": 76,
+        "discipline": 75,
+        "speed": 75,
+        "fielding": 80,
+        "arm": 81,
+        "battingClutch": 76
       },
-      "developmentRate": 57,
-      "potentialHidden": 81
+      "developmentRate": 52,
+      "potentialHidden": 88
     },
     "coach": {
       "specialty": "-",

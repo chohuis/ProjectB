@@ -1,9 +1,9 @@
 {
   "id": "PLY_02521",
-  "name": "佐々木隼人",
-  "nameEn": "Sasaki Hayato",
+  "name": "야마구치 쓰카사",
+  "nameEn": "Yamaguchi Tsukasa",
   "role": "player",
-  "age": 21,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "R",
+      "handedness": "L",
       "position": "DH",
       "jerseyNumber": 50,
       "pitching": {
-        "ovr": 37,
-        "stamina": 33,
-        "velocity": 37,
-        "command": 39,
-        "control": 34,
-        "movement": 35,
-        "mentality": 37,
-        "recovery": 33
+        "ovr": 48,
+        "stamina": 47,
+        "velocity": 52,
+        "command": 47,
+        "control": 46,
+        "movement": 42,
+        "mentality": 47,
+        "recovery": 43
       },
       "batting": {
-        "ovr": 56,
-        "contact": 63,
-        "power": 66,
-        "eye": 62,
-        "discipline": 59,
-        "speed": 54,
-        "fielding": 49,
-        "arm": 56,
-        "battingClutch": 58
+        "ovr": 67,
+        "contact": 71,
+        "power": 72,
+        "eye": 73,
+        "discipline": 71,
+        "speed": 68,
+        "fielding": 61,
+        "arm": 70,
+        "battingClutch": 68
       },
-      "developmentRate": 39,
-      "potentialHidden": 65
+      "developmentRate": 51,
+      "potentialHidden": 85
     },
     "coach": {
       "specialty": "-",

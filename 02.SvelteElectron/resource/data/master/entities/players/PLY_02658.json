@@ -1,9 +1,9 @@
 {
   "id": "PLY_02658",
-  "name": "木村哲",
-  "nameEn": "Kimura Satoshi",
+  "name": "마쓰모토 준",
+  "nameEn": "Matsumoto Jun",
   "role": "player",
-  "age": 28,
+  "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
       "jerseyNumber": 2,
       "pitching": {
-        "ovr": 77,
-        "stamina": 81,
-        "velocity": 81,
-        "command": 78,
-        "control": 77,
-        "movement": 78,
-        "mentality": 76,
-        "recovery": 79
+        "ovr": 71,
+        "stamina": 72,
+        "velocity": 72,
+        "command": 72,
+        "control": 68,
+        "movement": 71,
+        "mentality": 68,
+        "recovery": 64
       },
       "batting": {
-        "ovr": 52,
-        "contact": 49,
-        "power": 55,
-        "eye": 51,
-        "discipline": 50,
-        "speed": 51,
-        "fielding": 54,
-        "arm": 53,
-        "battingClutch": 55
+        "ovr": 45,
+        "contact": 42,
+        "power": 41,
+        "eye": 41,
+        "discipline": 45,
+        "speed": 43,
+        "fielding": 43,
+        "arm": 40,
+        "battingClutch": 44
       },
-      "developmentRate": 39,
-      "potentialHidden": 82
+      "developmentRate": 41,
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",

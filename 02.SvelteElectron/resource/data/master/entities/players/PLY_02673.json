@@ -1,9 +1,9 @@
 {
   "id": "PLY_02673",
-  "name": "岡田凌",
-  "nameEn": "Okada Ryo",
+  "name": "오카다 카이토",
+  "nameEn": "Okada Kaito",
   "role": "player",
-  "age": 30,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "2B",
       "jerseyNumber": 17,
       "pitching": {
-        "ovr": 61,
-        "stamina": 51,
-        "velocity": 63,
-        "command": 54,
-        "control": 56,
-        "movement": 58,
-        "mentality": 56,
-        "recovery": 51
+        "ovr": 55,
+        "stamina": 49,
+        "velocity": 55,
+        "command": 50,
+        "control": 48,
+        "movement": 49,
+        "mentality": 46,
+        "recovery": 47
       },
       "batting": {
-        "ovr": 82,
-        "contact": 80,
-        "power": 73,
-        "eye": 77,
-        "discipline": 78,
-        "speed": 80,
-        "fielding": 83,
+        "ovr": 78,
+        "contact": 75,
+        "power": 79,
+        "eye": 76,
+        "discipline": 81,
+        "speed": 81,
+        "fielding": 76,
         "arm": 77,
-        "battingClutch": 80
+        "battingClutch": 79
       },
-      "developmentRate": 39,
-      "potentialHidden": 67
+      "developmentRate": 53,
+      "potentialHidden": 61
     },
     "coach": {
       "specialty": "-",

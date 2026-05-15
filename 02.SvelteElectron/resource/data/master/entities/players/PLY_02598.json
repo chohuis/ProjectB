@@ -1,9 +1,9 @@
 {
   "id": "PLY_02598",
-  "name": "渡辺司",
-  "nameEn": "Watanabe Tsukasa",
+  "name": "이노우에 슌",
+  "nameEn": "Inoue Shun",
   "role": "player",
-  "age": 30,
+  "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "RP",
       "jerseyNumber": 37,
       "pitching": {
-        "ovr": 67,
-        "stamina": 60,
-        "velocity": 77,
-        "command": 73,
-        "control": 68,
-        "movement": 68,
-        "mentality": 73,
-        "recovery": 67
+        "ovr": 64,
+        "stamina": 58,
+        "velocity": 63,
+        "command": 60,
+        "control": 64,
+        "movement": 63,
+        "mentality": 60,
+        "recovery": 60
       },
       "batting": {
-        "ovr": 43,
-        "contact": 43,
-        "power": 41,
-        "eye": 35,
-        "discipline": 43,
-        "speed": 38,
-        "fielding": 40,
-        "arm": 41,
-        "battingClutch": 36
+        "ovr": 39,
+        "contact": 34,
+        "power": 38,
+        "eye": 37,
+        "discipline": 35,
+        "speed": 30,
+        "fielding": 37,
+        "arm": 33,
+        "battingClutch": 37
       },
-      "developmentRate": 49,
-      "potentialHidden": 65
+      "developmentRate": 53,
+      "potentialHidden": 59
     },
     "coach": {
       "specialty": "-",

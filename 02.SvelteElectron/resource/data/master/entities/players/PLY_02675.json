@@ -1,9 +1,9 @@
 {
   "id": "PLY_02675",
-  "name": "石川修",
-  "nameEn": "Ishikawa Osamu",
+  "name": "야마모토 준",
+  "nameEn": "Yamamoto Jun",
   "role": "player",
-  "age": 34,
+  "age": 38,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "SS",
       "jerseyNumber": 19,
       "pitching": {
-        "ovr": 39,
-        "stamina": 38,
-        "velocity": 44,
-        "command": 44,
-        "control": 40,
-        "movement": 40,
-        "mentality": 44,
-        "recovery": 43
+        "ovr": 47,
+        "stamina": 50,
+        "velocity": 48,
+        "command": 47,
+        "control": 47,
+        "movement": 50,
+        "mentality": 47,
+        "recovery": 45
       },
       "batting": {
-        "ovr": 77,
-        "contact": 72,
-        "power": 71,
+        "ovr": 69,
+        "contact": 75,
+        "power": 66,
         "eye": 71,
-        "discipline": 72,
-        "speed": 74,
-        "fielding": 73,
-        "arm": 76,
+        "discipline": 76,
+        "speed": 72,
+        "fielding": 76,
+        "arm": 69,
         "battingClutch": 71
       },
-      "developmentRate": 35,
-      "potentialHidden": 67
+      "developmentRate": 41,
+      "potentialHidden": 80
     },
     "coach": {
       "specialty": "-",

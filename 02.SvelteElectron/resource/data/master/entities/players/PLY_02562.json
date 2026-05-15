@@ -1,9 +1,9 @@
 {
   "id": "PLY_02562",
-  "name": "近藤拓",
-  "nameEn": "Kondo Hiraku",
+  "name": "이케다 유타",
+  "nameEn": "Ikeda Yuta",
   "role": "player",
-  "age": 32,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "SS",
       "jerseyNumber": 46,
       "pitching": {
-        "ovr": 38,
-        "stamina": 32,
-        "velocity": 40,
-        "command": 37,
-        "control": 38,
-        "movement": 34,
-        "mentality": 39,
-        "recovery": 38
+        "ovr": 49,
+        "stamina": 42,
+        "velocity": 50,
+        "command": 48,
+        "control": 46,
+        "movement": 48,
+        "mentality": 48,
+        "recovery": 47
       },
       "batting": {
-        "ovr": 60,
-        "contact": 64,
-        "power": 61,
-        "eye": 62,
-        "discipline": 65,
-        "speed": 67,
-        "fielding": 66,
-        "arm": 58,
-        "battingClutch": 60
+        "ovr": 67,
+        "contact": 68,
+        "power": 66,
+        "eye": 66,
+        "discipline": 74,
+        "speed": 72,
+        "fielding": 71,
+        "arm": 73,
+        "battingClutch": 67
       },
-      "developmentRate": 43,
-      "potentialHidden": 58
+      "developmentRate": 50,
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",

@@ -1,9 +1,9 @@
 {
   "id": "COA_00205",
-  "name": "渡辺勇",
-  "nameEn": "Watanabe Isamu",
+  "name": "미우라 코지",
+  "nameEn": "Miura Koji",
   "role": "coach",
-  "age": 45,
+  "age": 51,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "멘탈",
+      "specialty": "투수",
       "experienceYears": 18,
       "stats": {
-        "teaching": 73,
-        "analysis": 54,
-        "communication": 83,
-        "discipline": 56,
-        "leadership": 55
+        "teaching": 67,
+        "analysis": 84,
+        "communication": 73,
+        "discipline": 55,
+        "leadership": 52
       },
-      "trainingBuffs": "체력 훈련 +2%"
+      "trainingBuffs": "구속 훈련 +2%"
     },
     "manager": {
       "style": "균형",

@@ -1,9 +1,9 @@
 {
   "id": "PLY_02611",
-  "name": "藤田豊",
-  "nameEn": "Fujita Yutaka",
+  "name": "오카다 미쓰루",
+  "nameEn": "Okada Mitsuru",
   "role": "player",
-  "age": 20,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "DH",
       "jerseyNumber": 50,
       "pitching": {
-        "ovr": 45,
-        "stamina": 51,
-        "velocity": 47,
-        "command": 45,
-        "control": 46,
-        "movement": 44,
-        "mentality": 48,
-        "recovery": 50
+        "ovr": 35,
+        "stamina": 33,
+        "velocity": 33,
+        "command": 37,
+        "control": 29,
+        "movement": 36,
+        "mentality": 29,
+        "recovery": 28
       },
       "batting": {
-        "ovr": 71,
-        "contact": 76,
+        "ovr": 66,
+        "contact": 67,
         "power": 72,
-        "eye": 71,
-        "discipline": 71,
-        "speed": 67,
-        "fielding": 66,
+        "eye": 70,
+        "discipline": 67,
+        "speed": 65,
+        "fielding": 57,
         "arm": 64,
-        "battingClutch": 71
+        "battingClutch": 69
       },
-      "developmentRate": 48,
-      "potentialHidden": 81
+      "developmentRate": 53,
+      "potentialHidden": 87
     },
     "coach": {
       "specialty": "-",

@@ -1,9 +1,9 @@
 {
   "id": "MNG_00095",
-  "name": "橋本亮",
-  "nameEn": "Hashimoto Ryo",
+  "name": "사이토 류",
+  "nameEn": "Saito Ryu",
   "role": "manager",
-  "age": 55,
+  "age": 53,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -56,16 +56,16 @@
     },
     "manager": {
       "style": "공격적",
-      "experienceYears": 24,
+      "experienceYears": 13,
       "stats": {
-        "tactics": 82,
-        "decision": 71,
-        "rotationMgmt": 64,
-        "bullpenMgmt": 83,
-        "moraleMgmt": 83
+        "tactics": 63,
+        "decision": 73,
+        "rotationMgmt": 80,
+        "bullpenMgmt": 75,
+        "moraleMgmt": 86
       },
       "gamePlanBias": "",
-      "riskTolerance": 67
+      "riskTolerance": 39
     },
     "owner": {
       "ownershipStyle": "안정 운영",

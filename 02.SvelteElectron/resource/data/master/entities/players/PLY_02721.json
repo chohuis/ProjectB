@@ -1,9 +1,9 @@
 {
   "id": "PLY_02721",
-  "name": "小林充",
-  "nameEn": "Kobayashi Mitsuru",
+  "name": "아베 히로시",
+  "nameEn": "Abe Hiroshi",
   "role": "player",
-  "age": 36,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
+      "handedness": "R",
       "position": "LF",
       "jerseyNumber": 20,
       "pitching": {
-        "ovr": 48,
-        "stamina": 48,
-        "velocity": 49,
-        "command": 45,
-        "control": 47,
-        "movement": 44,
-        "mentality": 51,
-        "recovery": 50
+        "ovr": 62,
+        "stamina": 62,
+        "velocity": 59,
+        "command": 59,
+        "control": 57,
+        "movement": 61,
+        "mentality": 62,
+        "recovery": 62
       },
       "batting": {
-        "ovr": 83,
-        "contact": 80,
-        "power": 85,
-        "eye": 80,
-        "discipline": 77,
-        "speed": 76,
-        "fielding": 77,
-        "arm": 82,
-        "battingClutch": 76
+        "ovr": 88,
+        "contact": 87,
+        "power": 83,
+        "eye": 81,
+        "discipline": 83,
+        "speed": 80,
+        "fielding": 84,
+        "arm": 84,
+        "battingClutch": 84
       },
-      "developmentRate": 41,
-      "potentialHidden": 68
+      "developmentRate": 45,
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",

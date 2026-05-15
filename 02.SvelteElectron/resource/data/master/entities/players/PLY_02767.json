@@ -1,9 +1,9 @@
 {
   "id": "PLY_02767",
-  "name": "福田凌",
-  "nameEn": "Fukuda Ryo",
+  "name": "고토 히라쿠",
+  "nameEn": "Goto Hiraku",
   "role": "player",
-  "age": 24,
+  "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "CF",
       "jerseyNumber": 21,
       "pitching": {
-        "ovr": 36,
-        "stamina": 40,
-        "velocity": 42,
-        "command": 42,
-        "control": 35,
-        "movement": 38,
-        "mentality": 42,
-        "recovery": 33
+        "ovr": 62,
+        "stamina": 58,
+        "velocity": 63,
+        "command": 60,
+        "control": 58,
+        "movement": 56,
+        "mentality": 59,
+        "recovery": 55
       },
       "batting": {
-        "ovr": 75,
-        "contact": 74,
-        "power": 72,
-        "eye": 73,
-        "discipline": 69,
-        "speed": 74,
-        "fielding": 74,
-        "arm": 70,
-        "battingClutch": 72
+        "ovr": 83,
+        "contact": 81,
+        "power": 79,
+        "eye": 83,
+        "discipline": 80,
+        "speed": 88,
+        "fielding": 83,
+        "arm": 87,
+        "battingClutch": 85
       },
-      "developmentRate": 41,
-      "potentialHidden": 67
+      "developmentRate": 49,
+      "potentialHidden": 91
     },
     "coach": {
       "specialty": "-",

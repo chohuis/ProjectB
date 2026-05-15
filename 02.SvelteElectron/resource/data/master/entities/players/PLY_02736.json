@@ -1,9 +1,9 @@
 {
   "id": "PLY_02736",
-  "name": "橋本蓮",
-  "nameEn": "Hashimoto Ren",
+  "name": "사이토 준",
+  "nameEn": "Saito Jun",
   "role": "player",
-  "age": 25,
+  "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,27 +19,27 @@
       "position": "CP",
       "jerseyNumber": 40,
       "pitching": {
-        "ovr": 75,
-        "stamina": 64,
-        "velocity": 76,
-        "command": 76,
-        "control": 75,
-        "movement": 70,
-        "mentality": 67,
-        "recovery": 74
+        "ovr": 60,
+        "stamina": 45,
+        "velocity": 64,
+        "command": 58,
+        "control": 64,
+        "movement": 60,
+        "mentality": 61,
+        "recovery": 59
       },
       "batting": {
-        "ovr": 43,
-        "contact": 50,
-        "power": 50,
-        "eye": 49,
-        "discipline": 48,
-        "speed": 48,
-        "fielding": 46,
-        "arm": 42,
-        "battingClutch": 45
+        "ovr": 35,
+        "contact": 39,
+        "power": 34,
+        "eye": 35,
+        "discipline": 36,
+        "speed": 39,
+        "fielding": 38,
+        "arm": 39,
+        "battingClutch": 41
       },
-      "developmentRate": 48,
+      "developmentRate": 49,
       "potentialHidden": 86
     },
     "coach": {

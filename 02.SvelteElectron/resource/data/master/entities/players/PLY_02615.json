@@ -1,9 +1,9 @@
 {
   "id": "PLY_02615",
-  "name": "清水学",
-  "nameEn": "Shimizu Manabu",
+  "name": "무라카미 히로시",
+  "nameEn": "Murakami Hiroshi",
   "role": "player",
-  "age": 23,
+  "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "SP",
       "jerseyNumber": 4,
       "pitching": {
-        "ovr": 84,
-        "stamina": 93,
-        "velocity": 86,
-        "command": 86,
-        "control": 83,
-        "movement": 84,
-        "mentality": 84,
-        "recovery": 84
+        "ovr": 82,
+        "stamina": 85,
+        "velocity": 78,
+        "command": 83,
+        "control": 75,
+        "movement": 76,
+        "mentality": 75,
+        "recovery": 76
       },
       "batting": {
-        "ovr": 54,
-        "contact": 53,
-        "power": 53,
-        "eye": 55,
-        "discipline": 51,
-        "speed": 49,
-        "fielding": 53,
-        "arm": 55,
-        "battingClutch": 55
+        "ovr": 48,
+        "contact": 49,
+        "power": 50,
+        "eye": 48,
+        "discipline": 48,
+        "speed": 51,
+        "fielding": 46,
+        "arm": 45,
+        "battingClutch": 51
       },
-      "developmentRate": 45,
-      "potentialHidden": 91
+      "developmentRate": 47,
+      "potentialHidden": 80
     },
     "coach": {
       "specialty": "-",

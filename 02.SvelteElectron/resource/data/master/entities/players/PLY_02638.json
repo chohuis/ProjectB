@@ -1,9 +1,9 @@
 {
   "id": "PLY_02638",
-  "name": "渡辺翼",
-  "nameEn": "Watanabe Tsubasa",
+  "name": "하시모토 유타카",
+  "nameEn": "Hashimoto Yutaka",
   "role": "player",
-  "age": 31,
+  "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "SP",
       "jerseyNumber": 32,
       "pitching": {
-        "ovr": 56,
-        "stamina": 60,
-        "velocity": 62,
-        "command": 61,
-        "control": 62,
-        "movement": 59,
-        "mentality": 60,
-        "recovery": 62
+        "ovr": 80,
+        "stamina": 76,
+        "velocity": 78,
+        "command": 79,
+        "control": 77,
+        "movement": 75,
+        "mentality": 78,
+        "recovery": 77
       },
       "batting": {
-        "ovr": 27,
-        "contact": 24,
-        "power": 31,
-        "eye": 24,
-        "discipline": 26,
-        "speed": 29,
-        "fielding": 27,
-        "arm": 27,
-        "battingClutch": 30
+        "ovr": 51,
+        "contact": 55,
+        "power": 54,
+        "eye": 51,
+        "discipline": 54,
+        "speed": 51,
+        "fielding": 52,
+        "arm": 53,
+        "battingClutch": 56
       },
-      "developmentRate": 53,
-      "potentialHidden": 69
+      "developmentRate": 51,
+      "potentialHidden": 74
     },
     "coach": {
       "specialty": "-",

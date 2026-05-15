@@ -1,9 +1,9 @@
 {
   "id": "MNG_00096",
-  "name": "伊藤海斗",
-  "nameEn": "Ito Kaito",
+  "name": "스즈키 류",
+  "nameEn": "Suzuki Ryu",
   "role": "manager",
-  "age": 45,
+  "age": 57,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -56,16 +56,16 @@
     },
     "manager": {
       "style": "유망주 중심",
-      "experienceYears": 22,
+      "experienceYears": 23,
       "stats": {
-        "tactics": 63,
+        "tactics": 67,
         "decision": 75,
-        "rotationMgmt": 74,
-        "bullpenMgmt": 65,
-        "moraleMgmt": 56
+        "rotationMgmt": 66,
+        "bullpenMgmt": 77,
+        "moraleMgmt": 75
       },
       "gamePlanBias": "",
-      "riskTolerance": 60
+      "riskTolerance": 45
     },
     "owner": {
       "ownershipStyle": "안정 운영",

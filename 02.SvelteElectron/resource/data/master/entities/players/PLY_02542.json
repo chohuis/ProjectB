@@ -1,9 +1,9 @@
 {
   "id": "PLY_02542",
-  "name": "山崎凌",
-  "nameEn": "Yamazaki Ryo",
+  "name": "마쓰모토 쓰요시",
+  "nameEn": "Matsumoto Tsuyoshi",
   "role": "player",
-  "age": 25,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "CF",
       "jerseyNumber": 21,
       "pitching": {
-        "ovr": 48,
-        "stamina": 46,
-        "velocity": 46,
-        "command": 48,
-        "control": 44,
-        "movement": 50,
-        "mentality": 44,
-        "recovery": 46
+        "ovr": 57,
+        "stamina": 62,
+        "velocity": 59,
+        "command": 60,
+        "control": 57,
+        "movement": 57,
+        "mentality": 59,
+        "recovery": 59
       },
       "batting": {
-        "ovr": 76,
-        "contact": 77,
+        "ovr": 79,
+        "contact": 78,
         "power": 76,
-        "eye": 78,
-        "discipline": 75,
-        "speed": 78,
-        "fielding": 76,
-        "arm": 76,
-        "battingClutch": 79
+        "eye": 79,
+        "discipline": 81,
+        "speed": 88,
+        "fielding": 82,
+        "arm": 78,
+        "battingClutch": 77
       },
-      "developmentRate": 51,
-      "potentialHidden": 76
+      "developmentRate": 37,
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",

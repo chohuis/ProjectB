@@ -1,9 +1,9 @@
 {
   "id": "PLY_02650",
-  "name": "石川進",
-  "nameEn": "Ishikawa Susumu",
+  "name": "요시다 스스무",
+  "nameEn": "Yoshida Susumu",
   "role": "player",
-  "age": 19,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,31 +15,31 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "R",
+      "handedness": "L",
       "position": "2B",
       "jerseyNumber": 44,
       "pitching": {
-        "ovr": 39,
-        "stamina": 41,
-        "velocity": 46,
-        "command": 47,
-        "control": 39,
-        "movement": 41,
-        "mentality": 45,
-        "recovery": 39
+        "ovr": 28,
+        "stamina": 23,
+        "velocity": 31,
+        "command": 24,
+        "control": 23,
+        "movement": 27,
+        "mentality": 27,
+        "recovery": 22
       },
       "batting": {
-        "ovr": 78,
-        "contact": 71,
-        "power": 75,
-        "eye": 69,
-        "discipline": 73,
-        "speed": 73,
-        "fielding": 76,
-        "arm": 69,
-        "battingClutch": 70
+        "ovr": 62,
+        "contact": 58,
+        "power": 56,
+        "eye": 64,
+        "discipline": 64,
+        "speed": 61,
+        "fielding": 63,
+        "arm": 56,
+        "battingClutch": 63
       },
-      "developmentRate": 49,
+      "developmentRate": 57,
       "potentialHidden": 74
     },
     "coach": {

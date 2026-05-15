@@ -1,9 +1,9 @@
 {
   "id": "PLY_02576",
-  "name": "石田悠人",
-  "nameEn": "Ishida Yuto",
+  "name": "사사키 요스케",
+  "nameEn": "Sasaki Yosuke",
   "role": "player",
-  "age": 21,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "RP",
       "jerseyNumber": 10,
       "pitching": {
-        "ovr": 78,
-        "stamina": 70,
-        "velocity": 86,
-        "command": 80,
-        "control": 77,
-        "movement": 75,
-        "mentality": 78,
-        "recovery": 80
+        "ovr": 85,
+        "stamina": 74,
+        "velocity": 88,
+        "command": 84,
+        "control": 87,
+        "movement": 84,
+        "mentality": 83,
+        "recovery": 81
       },
       "batting": {
-        "ovr": 57,
-        "contact": 57,
-        "power": 55,
-        "eye": 52,
-        "discipline": 58,
-        "speed": 52,
-        "fielding": 49,
-        "arm": 56,
-        "battingClutch": 58
+        "ovr": 63,
+        "contact": 66,
+        "power": 66,
+        "eye": 65,
+        "discipline": 63,
+        "speed": 61,
+        "fielding": 66,
+        "arm": 61,
+        "battingClutch": 60
       },
-      "developmentRate": 36,
-      "potentialHidden": 83
+      "developmentRate": 48,
+      "potentialHidden": 88
     },
     "coach": {
       "specialty": "-",

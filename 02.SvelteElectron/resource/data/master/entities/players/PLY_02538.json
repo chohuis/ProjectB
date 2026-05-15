@@ -1,9 +1,9 @@
 {
   "id": "PLY_02538",
-  "name": "斎藤大輝",
-  "nameEn": "Saito Daiki",
+  "name": "요시다 다이키",
+  "nameEn": "Yoshida Daiki",
   "role": "player",
-  "age": 34,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "2B",
       "jerseyNumber": 17,
       "pitching": {
-        "ovr": 62,
-        "stamina": 68,
-        "velocity": 64,
-        "command": 68,
-        "control": 63,
-        "movement": 68,
-        "mentality": 66,
-        "recovery": 61
+        "ovr": 66,
+        "stamina": 70,
+        "velocity": 71,
+        "command": 65,
+        "control": 70,
+        "movement": 66,
+        "mentality": 68,
+        "recovery": 62
       },
       "batting": {
-        "ovr": 92,
-        "contact": 89,
-        "power": 87,
-        "eye": 84,
-        "discipline": 89,
-        "speed": 95,
-        "fielding": 87,
-        "arm": 91,
-        "battingClutch": 86
+        "ovr": 90,
+        "contact": 93,
+        "power": 83,
+        "eye": 91,
+        "discipline": 85,
+        "speed": 93,
+        "fielding": 89,
+        "arm": 90,
+        "battingClutch": 92
       },
-      "developmentRate": 49,
-      "potentialHidden": 72
+      "developmentRate": 53,
+      "potentialHidden": 81
     },
     "coach": {
       "specialty": "-",

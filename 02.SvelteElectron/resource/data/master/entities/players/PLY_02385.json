@@ -1,9 +1,9 @@
 {
   "id": "PLY_02385",
-  "name": "村上海斗",
-  "nameEn": "Murakami Kaito",
+  "name": "기무라 코지",
+  "nameEn": "Kimura Koji",
   "role": "player",
-  "age": 29,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "RF",
       "jerseyNumber": 49,
       "pitching": {
-        "ovr": 38,
-        "stamina": 32,
-        "velocity": 36,
-        "command": 37,
-        "control": 37,
-        "movement": 39,
-        "mentality": 41,
-        "recovery": 35
+        "ovr": 28,
+        "stamina": 29,
+        "velocity": 34,
+        "command": 35,
+        "control": 35,
+        "movement": 29,
+        "mentality": 28,
+        "recovery": 27
       },
       "batting": {
-        "ovr": 64,
-        "contact": 65,
-        "power": 65,
-        "eye": 62,
-        "discipline": 66,
-        "speed": 62,
-        "fielding": 65,
-        "arm": 68,
-        "battingClutch": 63
+        "ovr": 56,
+        "contact": 57,
+        "power": 62,
+        "eye": 55,
+        "discipline": 61,
+        "speed": 61,
+        "fielding": 52,
+        "arm": 58,
+        "battingClutch": 57
       },
-      "developmentRate": 46,
-      "potentialHidden": 61
+      "developmentRate": 53,
+      "potentialHidden": 67
     },
     "coach": {
       "specialty": "-",

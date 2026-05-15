@@ -1,9 +1,9 @@
 {
   "id": "PLY_02752",
-  "name": "山田哲",
-  "nameEn": "Yamada Satoshi",
+  "name": "이토 켄타",
+  "nameEn": "Ito Kenta",
   "role": "player",
-  "age": 34,
+  "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "RP",
       "jerseyNumber": 6,
       "pitching": {
-        "ovr": 71,
-        "stamina": 57,
-        "velocity": 69,
-        "command": 65,
-        "control": 68,
+        "ovr": 75,
+        "stamina": 60,
+        "velocity": 79,
+        "command": 76,
+        "control": 73,
         "movement": 66,
-        "mentality": 65,
-        "recovery": 67
+        "mentality": 67,
+        "recovery": 66
       },
       "batting": {
-        "ovr": 41,
-        "contact": 36,
-        "power": 39,
-        "eye": 36,
-        "discipline": 32,
-        "speed": 33,
-        "fielding": 36,
-        "arm": 33,
-        "battingClutch": 39
+        "ovr": 44,
+        "contact": 43,
+        "power": 41,
+        "eye": 43,
+        "discipline": 47,
+        "speed": 42,
+        "fielding": 44,
+        "arm": 43,
+        "battingClutch": 40
       },
-      "developmentRate": 52,
-      "potentialHidden": 58
+      "developmentRate": 35,
+      "potentialHidden": 79
     },
     "coach": {
       "specialty": "-",

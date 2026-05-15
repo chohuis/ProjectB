@@ -1,9 +1,9 @@
 {
   "id": "PLY_02741",
-  "name": "林博",
-  "nameEn": "Hayashi Hiroshi",
+  "name": "시미즈 진",
+  "nameEn": "Shimizu Jin",
   "role": "player",
-  "age": 25,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
+      "handedness": "R",
       "position": "3B",
       "jerseyNumber": 45,
       "pitching": {
-        "ovr": 34,
-        "stamina": 28,
-        "velocity": 38,
-        "command": 28,
-        "control": 31,
-        "movement": 34,
-        "mentality": 32,
-        "recovery": 33
+        "ovr": 38,
+        "stamina": 33,
+        "velocity": 39,
+        "command": 33,
+        "control": 40,
+        "movement": 36,
+        "mentality": 37,
+        "recovery": 39
       },
       "batting": {
-        "ovr": 60,
-        "contact": 57,
-        "power": 66,
-        "eye": 58,
-        "discipline": 63,
-        "speed": 61,
-        "fielding": 57,
-        "arm": 63,
-        "battingClutch": 61
+        "ovr": 64,
+        "contact": 69,
+        "power": 73,
+        "eye": 63,
+        "discipline": 69,
+        "speed": 64,
+        "fielding": 69,
+        "arm": 72,
+        "battingClutch": 69
       },
-      "developmentRate": 48,
-      "potentialHidden": 61
+      "developmentRate": 41,
+      "potentialHidden": 86
     },
     "coach": {
       "specialty": "-",

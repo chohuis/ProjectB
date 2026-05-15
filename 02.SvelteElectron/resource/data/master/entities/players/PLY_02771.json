@@ -1,9 +1,9 @@
 {
   "id": "PLY_02771",
-  "name": "後藤峻",
-  "nameEn": "Goto Shun",
+  "name": "후지타 기요시",
+  "nameEn": "Fujita Kiyoshi",
   "role": "player",
-  "age": 29,
+  "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
-      "position": "RF",
+      "handedness": "R",
+      "position": "2B",
       "jerseyNumber": 25,
       "pitching": {
-        "ovr": 50,
-        "stamina": 44,
-        "velocity": 50,
-        "command": 49,
-        "control": 42,
-        "movement": 45,
-        "mentality": 45,
-        "recovery": 41
+        "ovr": 38,
+        "stamina": 39,
+        "velocity": 44,
+        "command": 44,
+        "control": 38,
+        "movement": 43,
+        "mentality": 39,
+        "recovery": 40
       },
       "batting": {
-        "ovr": 76,
-        "contact": 80,
-        "power": 80,
-        "eye": 81,
-        "discipline": 76,
-        "speed": 82,
-        "fielding": 77,
-        "arm": 79,
-        "battingClutch": 76
+        "ovr": 65,
+        "contact": 73,
+        "power": 71,
+        "eye": 68,
+        "discipline": 71,
+        "speed": 64,
+        "fielding": 68,
+        "arm": 69,
+        "battingClutch": 69
       },
-      "developmentRate": 50,
-      "potentialHidden": 82
+      "developmentRate": 39,
+      "potentialHidden": 79
     },
     "coach": {
       "specialty": "-",

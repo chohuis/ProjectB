@@ -1,9 +1,9 @@
 {
   "id": "MNG_00097",
-  "name": "加藤司",
-  "nameEn": "Kato Tsukasa",
+  "name": "니시무라 토루",
+  "nameEn": "Nishimura Toru",
   "role": "manager",
-  "age": 62,
+  "age": 52,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -56,16 +56,16 @@
     },
     "manager": {
       "style": "공격적",
-      "experienceYears": 23,
+      "experienceYears": 5,
       "stats": {
-        "tactics": 57,
-        "decision": 58,
-        "rotationMgmt": 69,
-        "bullpenMgmt": 77,
-        "moraleMgmt": 65
+        "tactics": 78,
+        "decision": 72,
+        "rotationMgmt": 75,
+        "bullpenMgmt": 60,
+        "moraleMgmt": 69
       },
       "gamePlanBias": "",
-      "riskTolerance": 40
+      "riskTolerance": 54
     },
     "owner": {
       "ownershipStyle": "안정 운영",

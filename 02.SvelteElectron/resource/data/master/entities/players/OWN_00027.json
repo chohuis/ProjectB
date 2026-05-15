@@ -1,9 +1,9 @@
 {
   "id": "OWN_00027",
-  "name": "斎藤海斗",
-  "nameEn": "Saito Kaito",
+  "name": "하야시 아키라",
+  "nameEn": "Hayashi Akira",
   "role": "owner",
-  "age": 71,
+  "age": 51,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -69,13 +69,13 @@
     },
     "owner": {
       "ownershipStyle": "안정 운영",
-      "tenureYears": 11,
+      "tenureYears": 14,
       "stats": {
-        "budgetSupport": 69,
-        "patience": 61,
-        "prInfluence": 78,
-        "facilityInvestment": 52,
-        "staffTrust": 64
+        "budgetSupport": 85,
+        "patience": 68,
+        "prInfluence": 48,
+        "facilityInvestment": 61,
+        "staffTrust": 70
       },
       "budgetPolicy": "",
       "hiringPolicy": ""

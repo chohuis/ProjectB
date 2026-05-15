@@ -1,9 +1,9 @@
 {
   "id": "PLY_02785",
-  "name": "藤井颯太",
-  "nameEn": "Fujii Sota",
+  "name": "타나카 시게루",
+  "nameEn": "Tanaka Shigeru",
   "role": "player",
-  "age": 22,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "2B",
       "jerseyNumber": 44,
       "pitching": {
-        "ovr": 39,
-        "stamina": 39,
-        "velocity": 37,
-        "command": 38,
-        "control": 38,
-        "movement": 40,
-        "mentality": 38,
-        "recovery": 33
+        "ovr": 50,
+        "stamina": 43,
+        "velocity": 49,
+        "command": 45,
+        "control": 50,
+        "movement": 45,
+        "mentality": 51,
+        "recovery": 43
       },
       "batting": {
-        "ovr": 58,
-        "contact": 59,
-        "power": 55,
-        "eye": 59,
-        "discipline": 54,
-        "speed": 64,
-        "fielding": 63,
-        "arm": 57,
-        "battingClutch": 60
+        "ovr": 79,
+        "contact": 72,
+        "power": 74,
+        "eye": 70,
+        "discipline": 76,
+        "speed": 76,
+        "fielding": 76,
+        "arm": 72,
+        "battingClutch": 79
       },
-      "developmentRate": 49,
-      "potentialHidden": 58
+      "developmentRate": 45,
+      "potentialHidden": 86
     },
     "coach": {
       "specialty": "-",

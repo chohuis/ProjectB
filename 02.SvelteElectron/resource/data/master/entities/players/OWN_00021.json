@@ -1,9 +1,9 @@
 {
   "id": "OWN_00021",
-  "name": "福田悠人",
-  "nameEn": "Fukuda Yuto",
+  "name": "이토 아키라",
+  "nameEn": "Ito Akira",
   "role": "owner",
-  "age": 48,
+  "age": 60,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -68,14 +68,14 @@
       "riskTolerance": 50
     },
     "owner": {
-      "ownershipStyle": "성적 우선",
-      "tenureYears": 4,
+      "ownershipStyle": "공격 투자",
+      "tenureYears": 13,
       "stats": {
-        "budgetSupport": 86,
-        "patience": 51,
-        "prInfluence": 66,
-        "facilityInvestment": 55,
-        "staffTrust": 50
+        "budgetSupport": 64,
+        "patience": 50,
+        "prInfluence": 46,
+        "facilityInvestment": 66,
+        "staffTrust": 60
       },
       "budgetPolicy": "",
       "hiringPolicy": ""

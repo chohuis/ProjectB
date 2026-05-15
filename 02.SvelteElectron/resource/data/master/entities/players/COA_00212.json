@@ -1,9 +1,9 @@
 {
   "id": "COA_00212",
-  "name": "松本学",
-  "nameEn": "Matsumoto Manabu",
+  "name": "고토 소타",
+  "nameEn": "Goto Sota",
   "role": "coach",
-  "age": 54,
+  "age": 43,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "멘탈",
-      "experienceYears": 18,
+      "specialty": "타격",
+      "experienceYears": 12,
       "stats": {
-        "teaching": 70,
-        "analysis": 82,
-        "communication": 64,
-        "discipline": 73,
-        "leadership": 80
+        "teaching": 83,
+        "analysis": 64,
+        "communication": 56,
+        "discipline": 70,
+        "leadership": 82
       },
-      "trainingBuffs": "구속 훈련 +2%"
+      "trainingBuffs": ""
     },
     "manager": {
       "style": "균형",

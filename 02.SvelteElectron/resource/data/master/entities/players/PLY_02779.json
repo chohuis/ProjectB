@@ -1,9 +1,9 @@
 {
   "id": "PLY_02779",
-  "name": "藤井拓",
-  "nameEn": "Fujii Hiraku",
+  "name": "야마구치 히카루",
+  "nameEn": "Yamaguchi Hikaru",
   "role": "player",
-  "age": 31,
+  "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,27 +19,27 @@
       "position": "RP",
       "jerseyNumber": 38,
       "pitching": {
-        "ovr": 60,
-        "stamina": 55,
-        "velocity": 69,
-        "command": 58,
-        "control": 60,
-        "movement": 64,
-        "mentality": 57,
-        "recovery": 57
+        "ovr": 66,
+        "stamina": 53,
+        "velocity": 73,
+        "command": 65,
+        "control": 61,
+        "movement": 65,
+        "mentality": 68,
+        "recovery": 65
       },
       "batting": {
-        "ovr": 32,
-        "contact": 34,
-        "power": 34,
-        "eye": 37,
-        "discipline": 37,
-        "speed": 31,
-        "fielding": 30,
-        "arm": 34,
-        "battingClutch": 33
+        "ovr": 34,
+        "contact": 28,
+        "power": 36,
+        "eye": 35,
+        "discipline": 35,
+        "speed": 29,
+        "fielding": 29,
+        "arm": 35,
+        "battingClutch": 28
       },
-      "developmentRate": 43,
+      "developmentRate": 53,
       "potentialHidden": 68
     },
     "coach": {

@@ -1,9 +1,9 @@
 {
   "id": "COA_00204",
-  "name": "林清",
-  "nameEn": "Hayashi Kiyoshi",
+  "name": "이시카와 스스무",
+  "nameEn": "Ishikawa Susumu",
   "role": "coach",
-  "age": 34,
+  "age": 38,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "타격",
-      "experienceYears": 11,
+      "specialty": "수비",
+      "experienceYears": 3,
       "stats": {
-        "teaching": 81,
-        "analysis": 70,
-        "communication": 52,
-        "discipline": 65,
-        "leadership": 58
+        "teaching": 52,
+        "analysis": 56,
+        "communication": 82,
+        "discipline": 81,
+        "leadership": 84
       },
-      "trainingBuffs": ""
+      "trainingBuffs": "구속 훈련 +2%"
     },
     "manager": {
       "style": "균형",

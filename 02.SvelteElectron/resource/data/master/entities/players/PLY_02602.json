@@ -1,9 +1,9 @@
 {
   "id": "PLY_02602",
-  "name": "井上駿",
-  "nameEn": "Inoue Shun",
+  "name": "사카모토 쇼",
+  "nameEn": "Sakamoto Sho",
   "role": "player",
-  "age": 31,
+  "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "C",
       "jerseyNumber": 41,
       "pitching": {
-        "ovr": 53,
-        "stamina": 55,
-        "velocity": 53,
-        "command": 55,
-        "control": 51,
-        "movement": 53,
-        "mentality": 56,
-        "recovery": 54
+        "ovr": 37,
+        "stamina": 39,
+        "velocity": 38,
+        "command": 39,
+        "control": 37,
+        "movement": 40,
+        "mentality": 35,
+        "recovery": 38
       },
       "batting": {
-        "ovr": 78,
-        "contact": 74,
-        "power": 76,
-        "eye": 78,
-        "discipline": 78,
-        "speed": 74,
-        "fielding": 77,
-        "arm": 79,
-        "battingClutch": 75
+        "ovr": 62,
+        "contact": 65,
+        "power": 67,
+        "eye": 65,
+        "discipline": 63,
+        "speed": 56,
+        "fielding": 63,
+        "arm": 68,
+        "battingClutch": 65
       },
-      "developmentRate": 52,
-      "potentialHidden": 66
+      "developmentRate": 49,
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",

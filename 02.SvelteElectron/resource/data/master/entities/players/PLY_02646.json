@@ -1,9 +1,9 @@
 {
   "id": "PLY_02646",
-  "name": "木村健太",
-  "nameEn": "Kimura Kenta",
+  "name": "나카무라 쓰카사",
+  "nameEn": "Nakamura Tsukasa",
   "role": "player",
-  "age": 29,
+  "age": 31,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "CP",
       "jerseyNumber": 40,
       "pitching": {
-        "ovr": 64,
-        "stamina": 53,
-        "velocity": 73,
-        "command": 67,
-        "control": 69,
-        "movement": 68,
-        "mentality": 67,
-        "recovery": 62
+        "ovr": 75,
+        "stamina": 59,
+        "velocity": 78,
+        "command": 71,
+        "control": 77,
+        "movement": 74,
+        "mentality": 72,
+        "recovery": 71
       },
       "batting": {
-        "ovr": 46,
-        "contact": 41,
-        "power": 44,
-        "eye": 45,
-        "discipline": 47,
-        "speed": 47,
-        "fielding": 43,
-        "arm": 40,
-        "battingClutch": 43
+        "ovr": 41,
+        "contact": 40,
+        "power": 37,
+        "eye": 35,
+        "discipline": 40,
+        "speed": 43,
+        "fielding": 42,
+        "arm": 39,
+        "battingClutch": 38
       },
-      "developmentRate": 42,
-      "potentialHidden": 81
+      "developmentRate": 44,
+      "potentialHidden": 67
     },
     "coach": {
       "specialty": "-",

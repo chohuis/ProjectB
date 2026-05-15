@@ -1,9 +1,9 @@
 {
   "id": "PLY_02682",
-  "name": "斎藤翔",
-  "nameEn": "Saito Sho",
+  "name": "하야시 진",
+  "nameEn": "Hayashi Jin",
   "role": "player",
-  "age": 22,
+  "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "SP",
       "jerseyNumber": 31,
       "pitching": {
-        "ovr": 77,
-        "stamina": 74,
-        "velocity": 80,
-        "command": 71,
-        "control": 71,
-        "movement": 77,
-        "mentality": 77,
-        "recovery": 71
+        "ovr": 62,
+        "stamina": 65,
+        "velocity": 64,
+        "command": 62,
+        "control": 62,
+        "movement": 56,
+        "mentality": 58,
+        "recovery": 58
       },
       "batting": {
-        "ovr": 40,
-        "contact": 43,
-        "power": 43,
-        "eye": 41,
-        "discipline": 38,
-        "speed": 42,
-        "fielding": 40,
-        "arm": 42,
-        "battingClutch": 44
+        "ovr": 36,
+        "contact": 34,
+        "power": 40,
+        "eye": 38,
+        "discipline": 34,
+        "speed": 34,
+        "fielding": 34,
+        "arm": 34,
+        "battingClutch": 32
       },
-      "developmentRate": 44,
-      "potentialHidden": 58
+      "developmentRate": 57,
+      "potentialHidden": 85
     },
     "coach": {
       "specialty": "-",

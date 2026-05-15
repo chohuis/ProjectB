@@ -1,9 +1,9 @@
 {
   "id": "PLY_02712",
-  "name": "鈴木豊",
-  "nameEn": "Suzuki Yutaka",
+  "name": "오카다 토루",
+  "nameEn": "Okada Toru",
   "role": "player",
-  "age": 35,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "RP",
       "jerseyNumber": 11,
       "pitching": {
-        "ovr": 94,
-        "stamina": 86,
-        "velocity": 95,
-        "command": 92,
-        "control": 93,
-        "movement": 87,
-        "mentality": 93,
-        "recovery": 91
+        "ovr": 72,
+        "stamina": 67,
+        "velocity": 78,
+        "command": 71,
+        "control": 68,
+        "movement": 73,
+        "mentality": 72,
+        "recovery": 73
       },
       "batting": {
-        "ovr": 64,
-        "contact": 61,
-        "power": 65,
-        "eye": 62,
-        "discipline": 63,
-        "speed": 66,
-        "fielding": 64,
-        "arm": 62,
-        "battingClutch": 61
+        "ovr": 44,
+        "contact": 43,
+        "power": 47,
+        "eye": 44,
+        "discipline": 39,
+        "speed": 43,
+        "fielding": 38,
+        "arm": 41,
+        "battingClutch": 46
       },
-      "developmentRate": 51,
-      "potentialHidden": 79
+      "developmentRate": 48,
+      "potentialHidden": 91
     },
     "coach": {
       "specialty": "-",

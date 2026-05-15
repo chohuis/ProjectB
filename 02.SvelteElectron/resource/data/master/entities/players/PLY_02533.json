@@ -1,9 +1,9 @@
 {
   "id": "PLY_02533",
-  "name": "山崎海斗",
-  "nameEn": "Yamazaki Kaito",
+  "name": "와타나베 코지",
+  "nameEn": "Watanabe Koji",
   "role": "player",
-  "age": 22,
+  "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "CP",
       "jerseyNumber": 12,
       "pitching": {
-        "ovr": 70,
-        "stamina": 53,
-        "velocity": 75,
-        "command": 68,
-        "control": 74,
-        "movement": 64,
-        "mentality": 72,
-        "recovery": 71
+        "ovr": 73,
+        "stamina": 54,
+        "velocity": 78,
+        "command": 73,
+        "control": 67,
+        "movement": 66,
+        "mentality": 65,
+        "recovery": 68
       },
       "batting": {
-        "ovr": 35,
+        "ovr": 39,
         "contact": 37,
-        "power": 35,
+        "power": 40,
         "eye": 38,
-        "discipline": 35,
-        "speed": 33,
-        "fielding": 35,
-        "arm": 35,
-        "battingClutch": 39
+        "discipline": 41,
+        "speed": 37,
+        "fielding": 43,
+        "arm": 36,
+        "battingClutch": 41
       },
-      "developmentRate": 34,
-      "potentialHidden": 91
+      "developmentRate": 32,
+      "potentialHidden": 90
     },
     "coach": {
       "specialty": "-",

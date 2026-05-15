@@ -1,9 +1,9 @@
 {
   "id": "PLY_02700",
-  "name": "小林茂",
-  "nameEn": "Kobayashi Shigeru",
+  "name": "사카모토 기요시",
+  "nameEn": "Sakamoto Kiyoshi",
   "role": "player",
-  "age": 19,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
+      "handedness": "R",
       "position": "RF",
       "jerseyNumber": 49,
       "pitching": {
-        "ovr": 47,
-        "stamina": 53,
-        "velocity": 49,
-        "command": 51,
-        "control": 50,
-        "movement": 51,
-        "mentality": 48,
-        "recovery": 46
+        "ovr": 27,
+        "stamina": 27,
+        "velocity": 32,
+        "command": 28,
+        "control": 27,
+        "movement": 29,
+        "mentality": 30,
+        "recovery": 26
       },
       "batting": {
-        "ovr": 68,
-        "contact": 68,
-        "power": 76,
-        "eye": 73,
-        "discipline": 71,
-        "speed": 72,
-        "fielding": 65,
-        "arm": 72,
-        "battingClutch": 71
+        "ovr": 63,
+        "contact": 58,
+        "power": 62,
+        "eye": 61,
+        "discipline": 59,
+        "speed": 55,
+        "fielding": 59,
+        "arm": 63,
+        "battingClutch": 60
       },
-      "developmentRate": 39,
-      "potentialHidden": 59
+      "developmentRate": 54,
+      "potentialHidden": 58
     },
     "coach": {
       "specialty": "-",

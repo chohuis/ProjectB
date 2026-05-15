@@ -1,9 +1,9 @@
 {
   "id": "COA_00187",
-  "name": "近藤徹",
-  "nameEn": "Kondo Toru",
+  "name": "사이토 카이토",
+  "nameEn": "Saito Kaito",
   "role": "coach",
-  "age": 43,
+  "age": 55,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -44,15 +44,15 @@
     },
     "coach": {
       "specialty": "타격",
-      "experienceYears": 7,
+      "experienceYears": 10,
       "stats": {
-        "teaching": 68,
-        "analysis": 55,
-        "communication": 61,
-        "discipline": 82,
-        "leadership": 64
+        "teaching": 61,
+        "analysis": 82,
+        "communication": 64,
+        "discipline": 64,
+        "leadership": 76
       },
-      "trainingBuffs": "제구 훈련 +2%"
+      "trainingBuffs": "구속 훈련 +2%"
     },
     "manager": {
       "style": "균형",

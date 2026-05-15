@@ -1,9 +1,9 @@
 {
   "id": "PLY_02519",
-  "name": "山崎大輝",
-  "nameEn": "Yamazaki Daiki",
+  "name": "이시카와 준",
+  "nameEn": "Ishikawa Jun",
   "role": "player",
-  "age": 26,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "CF",
       "jerseyNumber": 48,
       "pitching": {
-        "ovr": 33,
-        "stamina": 34,
-        "velocity": 36,
-        "command": 34,
-        "control": 33,
-        "movement": 30,
-        "mentality": 35,
-        "recovery": 34
+        "ovr": 41,
+        "stamina": 47,
+        "velocity": 50,
+        "command": 41,
+        "control": 41,
+        "movement": 44,
+        "mentality": 42,
+        "recovery": 39
       },
       "batting": {
-        "ovr": 65,
-        "contact": 61,
-        "power": 67,
-        "eye": 67,
-        "discipline": 60,
-        "speed": 65,
-        "fielding": 67,
-        "arm": 62,
-        "battingClutch": 61
+        "ovr": 73,
+        "contact": 74,
+        "power": 76,
+        "eye": 77,
+        "discipline": 72,
+        "speed": 84,
+        "fielding": 80,
+        "arm": 74,
+        "battingClutch": 74
       },
-      "developmentRate": 39,
-      "potentialHidden": 63
+      "developmentRate": 55,
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",

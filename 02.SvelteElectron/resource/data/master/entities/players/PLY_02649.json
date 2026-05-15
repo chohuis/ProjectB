@@ -1,9 +1,9 @@
 {
   "id": "PLY_02649",
-  "name": "村上龍",
-  "nameEn": "Murakami Ryu",
+  "name": "나카무라 켄타",
+  "nameEn": "Nakamura Kenta",
   "role": "player",
-  "age": 20,
+  "age": 31,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
+      "handedness": "R",
       "position": "1B",
       "jerseyNumber": 43,
       "pitching": {
-        "ovr": 40,
-        "stamina": 36,
-        "velocity": 36,
-        "command": 36,
-        "control": 36,
-        "movement": 30,
+        "ovr": 37,
+        "stamina": 33,
+        "velocity": 43,
+        "command": 35,
+        "control": 38,
+        "movement": 37,
         "mentality": 38,
-        "recovery": 31
+        "recovery": 33
       },
       "batting": {
-        "ovr": 64,
-        "contact": 64,
-        "power": 68,
-        "eye": 64,
-        "discipline": 65,
-        "speed": 59,
-        "fielding": 68,
-        "arm": 61,
-        "battingClutch": 68
+        "ovr": 60,
+        "contact": 63,
+        "power": 65,
+        "eye": 60,
+        "discipline": 56,
+        "speed": 50,
+        "fielding": 57,
+        "arm": 57,
+        "battingClutch": 63
       },
-      "developmentRate": 48,
-      "potentialHidden": 74
+      "developmentRate": 41,
+      "potentialHidden": 72
     },
     "coach": {
       "specialty": "-",

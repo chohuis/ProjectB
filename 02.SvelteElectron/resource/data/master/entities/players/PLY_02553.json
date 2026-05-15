@@ -1,7 +1,7 @@
 {
   "id": "PLY_02553",
-  "name": "橋本浩",
-  "nameEn": "Hashimoto Hiroshi",
+  "name": "야마자키 시게루",
+  "nameEn": "Yamazaki Shigeru",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -19,28 +19,28 @@
       "position": "RP",
       "jerseyNumber": 37,
       "pitching": {
-        "ovr": 68,
-        "stamina": 63,
-        "velocity": 73,
-        "command": 72,
-        "control": 64,
-        "movement": 68,
-        "mentality": 63,
-        "recovery": 70
+        "ovr": 73,
+        "stamina": 59,
+        "velocity": 79,
+        "command": 74,
+        "control": 72,
+        "movement": 65,
+        "mentality": 74,
+        "recovery": 68
       },
       "batting": {
-        "ovr": 46,
-        "contact": 45,
-        "power": 39,
-        "eye": 46,
-        "discipline": 41,
-        "speed": 45,
-        "fielding": 45,
-        "arm": 38,
-        "battingClutch": 46
+        "ovr": 40,
+        "contact": 41,
+        "power": 33,
+        "eye": 39,
+        "discipline": 38,
+        "speed": 35,
+        "fielding": 32,
+        "arm": 33,
+        "battingClutch": 36
       },
-      "developmentRate": 53,
-      "potentialHidden": 70
+      "developmentRate": 54,
+      "potentialHidden": 59
     },
     "coach": {
       "specialty": "-",

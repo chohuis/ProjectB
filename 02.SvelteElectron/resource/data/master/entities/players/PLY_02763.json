@@ -1,7 +1,7 @@
 {
   "id": "PLY_02763",
-  "name": "藤井亮",
-  "nameEn": "Fujii Ryo",
+  "name": "니시무라 류",
+  "nameEn": "Nishimura Ryu",
   "role": "player",
   "age": 28,
   "status": "active",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "R",
+      "handedness": "L",
       "position": "2B",
       "jerseyNumber": 17,
       "pitching": {
-        "ovr": 62,
-        "stamina": 60,
-        "velocity": 57,
-        "command": 60,
-        "control": 57,
-        "movement": 53,
-        "mentality": 61,
-        "recovery": 59
+        "ovr": 65,
+        "stamina": 65,
+        "velocity": 61,
+        "command": 67,
+        "control": 59,
+        "movement": 63,
+        "mentality": 62,
+        "recovery": 60
       },
       "batting": {
-        "ovr": 82,
-        "contact": 87,
-        "power": 80,
-        "eye": 79,
-        "discipline": 85,
-        "speed": 90,
-        "fielding": 81,
-        "arm": 87,
-        "battingClutch": 81
+        "ovr": 90,
+        "contact": 88,
+        "power": 88,
+        "eye": 83,
+        "discipline": 83,
+        "speed": 94,
+        "fielding": 85,
+        "arm": 91,
+        "battingClutch": 85
       },
-      "developmentRate": 47,
-      "potentialHidden": 76
+      "developmentRate": 45,
+      "potentialHidden": 79
     },
     "coach": {
       "specialty": "-",

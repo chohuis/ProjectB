@@ -1,7 +1,7 @@
 {
   "id": "PLY_02479",
-  "name": "加藤博",
-  "nameEn": "Kato Hiroshi",
+  "name": "와타나베 유타카",
+  "nameEn": "Watanabe Yutaka",
   "role": "player",
   "age": 31,
   "status": "active",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
       "jerseyNumber": 3,
       "pitching": {
-        "ovr": 74,
-        "stamina": 73,
-        "velocity": 70,
-        "command": 67,
-        "control": 74,
-        "movement": 73,
+        "ovr": 69,
+        "stamina": 70,
+        "velocity": 78,
+        "command": 76,
+        "control": 72,
+        "movement": 70,
         "mentality": 71,
-        "recovery": 69
+        "recovery": 74
       },
       "batting": {
-        "ovr": 43,
-        "contact": 47,
-        "power": 39,
-        "eye": 46,
-        "discipline": 39,
-        "speed": 41,
-        "fielding": 43,
-        "arm": 38,
-        "battingClutch": 47
+        "ovr": 36,
+        "contact": 44,
+        "power": 37,
+        "eye": 38,
+        "discipline": 41,
+        "speed": 35,
+        "fielding": 42,
+        "arm": 43,
+        "battingClutch": 36
       },
-      "developmentRate": 52,
-      "potentialHidden": 58
+      "developmentRate": 44,
+      "potentialHidden": 89
     },
     "coach": {
       "specialty": "-",

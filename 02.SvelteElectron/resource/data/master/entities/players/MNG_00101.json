@@ -1,9 +1,9 @@
 {
   "id": "MNG_00101",
-  "name": "山口司",
-  "nameEn": "Yamaguchi Tsukasa",
+  "name": "타카하시 히라쿠",
+  "nameEn": "Takahashi Hiraku",
   "role": "manager",
-  "age": 52,
+  "age": 44,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -55,17 +55,17 @@
       "trainingBuffs": ""
     },
     "manager": {
-      "style": "균형",
-      "experienceYears": 5,
+      "style": "데이터 중심",
+      "experienceYears": 23,
       "stats": {
-        "tactics": 72,
-        "decision": 63,
-        "rotationMgmt": 58,
-        "bullpenMgmt": 64,
-        "moraleMgmt": 80
+        "tactics": 69,
+        "decision": 80,
+        "rotationMgmt": 56,
+        "bullpenMgmt": 85,
+        "moraleMgmt": 74
       },
       "gamePlanBias": "",
-      "riskTolerance": 70
+      "riskTolerance": 37
     },
     "owner": {
       "ownershipStyle": "안정 운영",

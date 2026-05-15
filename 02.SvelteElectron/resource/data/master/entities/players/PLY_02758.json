@@ -1,9 +1,9 @@
 {
   "id": "PLY_02758",
-  "name": "井上龍",
-  "nameEn": "Inoue Ryu",
+  "name": "사사키 진",
+  "nameEn": "Sasaki Jin",
   "role": "player",
-  "age": 29,
+  "age": 34,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "CP",
       "jerseyNumber": 12,
       "pitching": {
-        "ovr": 95,
-        "stamina": 79,
-        "velocity": 98,
-        "command": 89,
-        "control": 94,
-        "movement": 86,
-        "mentality": 89,
-        "recovery": 93
+        "ovr": 74,
+        "stamina": 58,
+        "velocity": 78,
+        "command": 71,
+        "control": 73,
+        "movement": 73,
+        "mentality": 76,
+        "recovery": 69
       },
       "batting": {
-        "ovr": 63,
-        "contact": 59,
-        "power": 62,
-        "eye": 59,
-        "discipline": 60,
-        "speed": 63,
-        "fielding": 64,
-        "arm": 59,
-        "battingClutch": 60
+        "ovr": 46,
+        "contact": 49,
+        "power": 48,
+        "eye": 47,
+        "discipline": 47,
+        "speed": 50,
+        "fielding": 50,
+        "arm": 46,
+        "battingClutch": 44
       },
-      "developmentRate": 45,
-      "potentialHidden": 74
+      "developmentRate": 43,
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",

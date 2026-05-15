@@ -1,9 +1,9 @@
 {
   "id": "PLY_02483",
-  "name": "近藤司",
-  "nameEn": "Kondo Tsukasa",
+  "name": "야마구치 히로시",
+  "nameEn": "Yamaguchi Hiroshi",
   "role": "player",
-  "age": 32,
+  "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "RP",
       "jerseyNumber": 7,
       "pitching": {
-        "ovr": 76,
+        "ovr": 78,
         "stamina": 69,
-        "velocity": 79,
-        "command": 74,
-        "control": 74,
-        "movement": 73,
-        "mentality": 78,
-        "recovery": 72
+        "velocity": 82,
+        "command": 78,
+        "control": 81,
+        "movement": 75,
+        "mentality": 81,
+        "recovery": 81
       },
       "batting": {
-        "ovr": 52,
-        "contact": 53,
-        "power": 45,
-        "eye": 52,
+        "ovr": 48,
+        "contact": 56,
+        "power": 56,
+        "eye": 51,
         "discipline": 52,
-        "speed": 48,
-        "fielding": 48,
-        "arm": 46,
-        "battingClutch": 49
+        "speed": 49,
+        "fielding": 50,
+        "arm": 48,
+        "battingClutch": 53
       },
-      "developmentRate": 35,
-      "potentialHidden": 79
+      "developmentRate": 45,
+      "potentialHidden": 84
     },
     "coach": {
       "specialty": "-",

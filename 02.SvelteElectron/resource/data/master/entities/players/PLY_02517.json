@@ -1,9 +1,9 @@
 {
   "id": "PLY_02517",
-  "name": "伊藤晃",
-  "nameEn": "Ito Akira",
+  "name": "니시무라 카이토",
+  "nameEn": "Nishimura Kaito",
   "role": "player",
-  "age": 25,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "SS",
       "jerseyNumber": 46,
       "pitching": {
-        "ovr": 33,
-        "stamina": 34,
-        "velocity": 34,
-        "command": 32,
-        "control": 31,
-        "movement": 30,
-        "mentality": 37,
-        "recovery": 31
+        "ovr": 35,
+        "stamina": 33,
+        "velocity": 36,
+        "command": 37,
+        "control": 40,
+        "movement": 34,
+        "mentality": 36,
+        "recovery": 39
       },
       "batting": {
-        "ovr": 65,
-        "contact": 67,
-        "power": 66,
-        "eye": 66,
-        "discipline": 66,
-        "speed": 68,
-        "fielding": 70,
-        "arm": 72,
-        "battingClutch": 68
+        "ovr": 61,
+        "contact": 59,
+        "power": 59,
+        "eye": 60,
+        "discipline": 61,
+        "speed": 67,
+        "fielding": 63,
+        "arm": 61,
+        "battingClutch": 64
       },
-      "developmentRate": 47,
-      "potentialHidden": 91
+      "developmentRate": 44,
+      "potentialHidden": 64
     },
     "coach": {
       "specialty": "-",

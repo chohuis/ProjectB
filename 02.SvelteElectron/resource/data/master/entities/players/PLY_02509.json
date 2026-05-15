@@ -1,9 +1,9 @@
 {
   "id": "PLY_02509",
-  "name": "西村司",
-  "nameEn": "Nishimura Tsukasa",
+  "name": "니시무라 아키라",
+  "nameEn": "Nishimura Akira",
   "role": "player",
-  "age": 19,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "RP",
       "jerseyNumber": 38,
       "pitching": {
-        "ovr": 67,
-        "stamina": 64,
-        "velocity": 74,
-        "command": 68,
-        "control": 73,
-        "movement": 72,
-        "mentality": 69,
-        "recovery": 72
+        "ovr": 64,
+        "stamina": 56,
+        "velocity": 69,
+        "command": 65,
+        "control": 66,
+        "movement": 68,
+        "mentality": 70,
+        "recovery": 65
       },
       "batting": {
         "ovr": 38,
-        "contact": 39,
-        "power": 39,
-        "eye": 39,
-        "discipline": 39,
-        "speed": 41,
-        "fielding": 43,
-        "arm": 45,
-        "battingClutch": 42
+        "contact": 38,
+        "power": 31,
+        "eye": 30,
+        "discipline": 34,
+        "speed": 38,
+        "fielding": 29,
+        "arm": 35,
+        "battingClutch": 38
       },
-      "developmentRate": 54,
-      "potentialHidden": 87
+      "developmentRate": 55,
+      "potentialHidden": 78
     },
     "coach": {
       "specialty": "-",

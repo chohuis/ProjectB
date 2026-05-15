@@ -1,9 +1,9 @@
 {
   "id": "PLY_02672",
-  "name": "岡田大輝",
-  "nameEn": "Okada Daiki",
+  "name": "오타 렌",
+  "nameEn": "Ota Ren",
   "role": "player",
-  "age": 24,
+  "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "R",
+      "handedness": "L",
       "position": "1B",
       "jerseyNumber": 16,
       "pitching": {
-        "ovr": 57,
-        "stamina": 53,
-        "velocity": 53,
-        "command": 50,
-        "control": 48,
-        "movement": 49,
-        "mentality": 52,
-        "recovery": 55
+        "ovr": 49,
+        "stamina": 44,
+        "velocity": 44,
+        "command": 45,
+        "control": 44,
+        "movement": 41,
+        "mentality": 49,
+        "recovery": 41
       },
       "batting": {
-        "ovr": 81,
-        "contact": 84,
-        "power": 91,
-        "eye": 80,
-        "discipline": 87,
-        "speed": 80,
-        "fielding": 79,
-        "arm": 81,
-        "battingClutch": 84
+        "ovr": 79,
+        "contact": 76,
+        "power": 80,
+        "eye": 72,
+        "discipline": 75,
+        "speed": 76,
+        "fielding": 71,
+        "arm": 78,
+        "battingClutch": 74
       },
-      "developmentRate": 36,
-      "potentialHidden": 90
+      "developmentRate": 43,
+      "potentialHidden": 88
     },
     "coach": {
       "specialty": "-",

@@ -1,9 +1,9 @@
 {
   "id": "PLY_02716",
-  "name": "藤田健太",
-  "nameEn": "Fujita Kenta",
+  "name": "이토 유토",
+  "nameEn": "Ito Yuto",
   "role": "player",
-  "age": 25,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "R",
+      "handedness": "L",
       "position": "C",
       "jerseyNumber": 15,
       "pitching": {
-        "ovr": 48,
-        "stamina": 49,
-        "velocity": 45,
-        "command": 49,
-        "control": 46,
-        "movement": 43,
-        "mentality": 43,
-        "recovery": 43
+        "ovr": 53,
+        "stamina": 55,
+        "velocity": 52,
+        "command": 57,
+        "control": 56,
+        "movement": 50,
+        "mentality": 54,
+        "recovery": 55
       },
       "batting": {
-        "ovr": 71,
-        "contact": 65,
-        "power": 66,
-        "eye": 68,
-        "discipline": 67,
-        "speed": 61,
-        "fielding": 69,
-        "arm": 75,
-        "battingClutch": 65
+        "ovr": 79,
+        "contact": 78,
+        "power": 77,
+        "eye": 75,
+        "discipline": 76,
+        "speed": 77,
+        "fielding": 78,
+        "arm": 82,
+        "battingClutch": 81
       },
-      "developmentRate": 51,
-      "potentialHidden": 86
+      "developmentRate": 52,
+      "potentialHidden": 78
     },
     "coach": {
       "specialty": "-",

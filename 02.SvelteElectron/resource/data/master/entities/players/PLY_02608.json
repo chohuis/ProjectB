@@ -1,9 +1,9 @@
 {
   "id": "PLY_02608",
-  "name": "山田充",
-  "nameEn": "Yamada Mitsuru",
+  "name": "이노우에 렌",
+  "nameEn": "Inoue Ren",
   "role": "player",
-  "age": 19,
+  "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "LF",
       "jerseyNumber": 47,
       "pitching": {
-        "ovr": 36,
-        "stamina": 37,
-        "velocity": 34,
-        "command": 40,
-        "control": 35,
-        "movement": 35,
-        "mentality": 35,
-        "recovery": 32
+        "ovr": 46,
+        "stamina": 41,
+        "velocity": 49,
+        "command": 42,
+        "control": 42,
+        "movement": 44,
+        "mentality": 38,
+        "recovery": 45
       },
       "batting": {
-        "ovr": 68,
-        "contact": 72,
-        "power": 69,
-        "eye": 66,
-        "discipline": 71,
-        "speed": 69,
-        "fielding": 67,
-        "arm": 71,
-        "battingClutch": 70
+        "ovr": 72,
+        "contact": 74,
+        "power": 74,
+        "eye": 69,
+        "discipline": 70,
+        "speed": 73,
+        "fielding": 66,
+        "arm": 69,
+        "battingClutch": 75
       },
-      "developmentRate": 51,
-      "potentialHidden": 67
+      "developmentRate": 50,
+      "potentialHidden": 83
     },
     "coach": {
       "specialty": "-",

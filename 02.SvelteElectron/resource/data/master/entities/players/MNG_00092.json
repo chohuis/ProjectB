@@ -1,9 +1,9 @@
 {
   "id": "MNG_00092",
-  "name": "林翼",
-  "nameEn": "Hayashi Tsubasa",
+  "name": "후쿠다 히카루",
+  "nameEn": "Fukuda Hikaru",
   "role": "manager",
-  "age": 48,
+  "age": 58,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -55,17 +55,17 @@
       "trainingBuffs": ""
     },
     "manager": {
-      "style": "공격적",
-      "experienceYears": 9,
+      "style": "유망주 중심",
+      "experienceYears": 18,
       "stats": {
-        "tactics": 59,
-        "decision": 86,
-        "rotationMgmt": 75,
-        "bullpenMgmt": 65,
-        "moraleMgmt": 69
+        "tactics": 57,
+        "decision": 73,
+        "rotationMgmt": 71,
+        "bullpenMgmt": 80,
+        "moraleMgmt": 60
       },
       "gamePlanBias": "",
-      "riskTolerance": 35
+      "riskTolerance": 49
     },
     "owner": {
       "ownershipStyle": "안정 운영",

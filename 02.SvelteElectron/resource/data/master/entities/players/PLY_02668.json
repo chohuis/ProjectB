@@ -1,9 +1,9 @@
 {
   "id": "PLY_02668",
-  "name": "山口隼人",
-  "nameEn": "Yamaguchi Hayato",
+  "name": "사이토 소타",
+  "nameEn": "Saito Sota",
   "role": "player",
-  "age": 36,
+  "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "CP",
       "jerseyNumber": 12,
       "pitching": {
-        "ovr": 74,
-        "stamina": 62,
-        "velocity": 79,
-        "command": 68,
-        "control": 76,
-        "movement": 70,
-        "mentality": 70,
-        "recovery": 69
+        "ovr": 83,
+        "stamina": 72,
+        "velocity": 86,
+        "command": 82,
+        "control": 81,
+        "movement": 76,
+        "mentality": 77,
+        "recovery": 82
       },
       "batting": {
-        "ovr": 36,
-        "contact": 40,
-        "power": 42,
-        "eye": 38,
-        "discipline": 41,
-        "speed": 42,
-        "fielding": 38,
-        "arm": 40,
-        "battingClutch": 39
+        "ovr": 50,
+        "contact": 48,
+        "power": 53,
+        "eye": 50,
+        "discipline": 51,
+        "speed": 47,
+        "fielding": 53,
+        "arm": 50,
+        "battingClutch": 48
       },
-      "developmentRate": 36,
-      "potentialHidden": 64
+      "developmentRate": 44,
+      "potentialHidden": 80
     },
     "coach": {
       "specialty": "-",

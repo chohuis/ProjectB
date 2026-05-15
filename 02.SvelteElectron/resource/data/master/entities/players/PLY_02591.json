@@ -1,9 +1,9 @@
 {
   "id": "PLY_02591",
-  "name": "後藤清",
-  "nameEn": "Goto Kiyoshi",
+  "name": "후쿠다 토루",
+  "nameEn": "Fukuda Toru",
   "role": "player",
-  "age": 27,
+  "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "LF",
       "jerseyNumber": 25,
       "pitching": {
-        "ovr": 46,
-        "stamina": 50,
-        "velocity": 51,
-        "command": 50,
-        "control": 50,
-        "movement": 49,
-        "mentality": 50,
-        "recovery": 48
+        "ovr": 62,
+        "stamina": 61,
+        "velocity": 67,
+        "command": 67,
+        "control": 63,
+        "movement": 68,
+        "mentality": 66,
+        "recovery": 66
       },
       "batting": {
-        "ovr": 68,
-        "contact": 70,
-        "power": 72,
-        "eye": 68,
-        "discipline": 66,
-        "speed": 65,
-        "fielding": 73,
-        "arm": 69,
-        "battingClutch": 69
+        "ovr": 89,
+        "contact": 90,
+        "power": 89,
+        "eye": 87,
+        "discipline": 83,
+        "speed": 84,
+        "fielding": 87,
+        "arm": 84,
+        "battingClutch": 83
       },
-      "developmentRate": 35,
-      "potentialHidden": 86
+      "developmentRate": 32,
+      "potentialHidden": 92
     },
     "coach": {
       "specialty": "-",

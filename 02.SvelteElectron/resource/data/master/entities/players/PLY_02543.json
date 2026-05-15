@@ -1,9 +1,9 @@
 {
   "id": "PLY_02543",
-  "name": "田中龍",
-  "nameEn": "Tanaka Ryu",
+  "name": "후쿠다 류",
+  "nameEn": "Fukuda Ryu",
   "role": "player",
-  "age": 25,
+  "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -20,27 +20,27 @@
       "jerseyNumber": 22,
       "pitching": {
         "ovr": 59,
-        "stamina": 62,
-        "velocity": 65,
-        "command": 59,
+        "stamina": 58,
+        "velocity": 63,
+        "command": 55,
         "control": 61,
-        "movement": 61,
-        "mentality": 63,
-        "recovery": 56
+        "movement": 53,
+        "mentality": 58,
+        "recovery": 53
       },
       "batting": {
-        "ovr": 85,
-        "contact": 79,
-        "power": 84,
-        "eye": 77,
-        "discipline": 76,
-        "speed": 78,
-        "fielding": 80,
-        "arm": 84,
-        "battingClutch": 82
+        "ovr": 84,
+        "contact": 87,
+        "power": 93,
+        "eye": 91,
+        "discipline": 88,
+        "speed": 90,
+        "fielding": 82,
+        "arm": 85,
+        "battingClutch": 91
       },
-      "developmentRate": 50,
-      "potentialHidden": 67
+      "developmentRate": 39,
+      "potentialHidden": 74
     },
     "coach": {
       "specialty": "-",

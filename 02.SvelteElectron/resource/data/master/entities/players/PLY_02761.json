@@ -1,9 +1,9 @@
 {
   "id": "PLY_02761",
-  "name": "伊藤修",
-  "nameEn": "Ito Osamu",
+  "name": "하시모토 쓰요시",
+  "nameEn": "Hashimoto Tsuyoshi",
   "role": "player",
-  "age": 34,
+  "age": 37,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "C",
       "jerseyNumber": 15,
       "pitching": {
-        "ovr": 54,
-        "stamina": 58,
-        "velocity": 54,
-        "command": 59,
-        "control": 51,
-        "movement": 52,
-        "mentality": 59,
-        "recovery": 55
+        "ovr": 38,
+        "stamina": 39,
+        "velocity": 42,
+        "command": 44,
+        "control": 45,
+        "movement": 41,
+        "mentality": 40,
+        "recovery": 42
       },
       "batting": {
-        "ovr": 81,
-        "contact": 77,
-        "power": 81,
-        "eye": 83,
-        "discipline": 76,
-        "speed": 76,
-        "fielding": 80,
-        "arm": 86,
-        "battingClutch": 85
+        "ovr": 65,
+        "contact": 67,
+        "power": 66,
+        "eye": 72,
+        "discipline": 64,
+        "speed": 68,
+        "fielding": 70,
+        "arm": 74,
+        "battingClutch": 72
       },
-      "developmentRate": 46,
-      "potentialHidden": 69
+      "developmentRate": 34,
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",

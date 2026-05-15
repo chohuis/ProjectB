@@ -1,9 +1,9 @@
 {
   "id": "PLY_02671",
-  "name": "遠藤学",
-  "nameEn": "Endo Manabu",
+  "name": "이케다 스스무",
+  "nameEn": "Ikeda Susumu",
   "role": "player",
-  "age": 26,
+  "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "C",
       "jerseyNumber": 15,
       "pitching": {
-        "ovr": 53,
-        "stamina": 55,
-        "velocity": 56,
-        "command": 51,
-        "control": 54,
-        "movement": 47,
-        "mentality": 55,
-        "recovery": 51
+        "ovr": 63,
+        "stamina": 61,
+        "velocity": 67,
+        "command": 66,
+        "control": 60,
+        "movement": 57,
+        "mentality": 63,
+        "recovery": 58
       },
       "batting": {
-        "ovr": 80,
-        "contact": 78,
-        "power": 74,
-        "eye": 73,
-        "discipline": 76,
-        "speed": 73,
-        "fielding": 80,
-        "arm": 83,
-        "battingClutch": 75
+        "ovr": 87,
+        "contact": 81,
+        "power": 87,
+        "eye": 87,
+        "discipline": 87,
+        "speed": 85,
+        "fielding": 88,
+        "arm": 86,
+        "battingClutch": 82
       },
-      "developmentRate": 36,
-      "potentialHidden": 81
+      "developmentRate": 32,
+      "potentialHidden": 65
     },
     "coach": {
       "specialty": "-",

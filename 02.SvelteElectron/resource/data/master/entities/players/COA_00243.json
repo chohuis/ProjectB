@@ -1,9 +1,9 @@
 {
   "id": "COA_00243",
-  "name": "佐藤修",
-  "nameEn": "Sato Osamu",
+  "name": "후지이 유토",
+  "nameEn": "Fujii Yuto",
   "role": "coach",
-  "age": 35,
+  "age": 49,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -46,13 +46,13 @@
       "specialty": "멘탈",
       "experienceYears": 3,
       "stats": {
-        "teaching": 63,
-        "analysis": 78,
-        "communication": 73,
-        "discipline": 62,
-        "leadership": 60
+        "teaching": 68,
+        "analysis": 67,
+        "communication": 55,
+        "discipline": 53,
+        "leadership": 83
       },
-      "trainingBuffs": "체력 훈련 +2%"
+      "trainingBuffs": "제구 훈련 +2%"
     },
     "manager": {
       "style": "균형",

@@ -1,9 +1,9 @@
 {
   "id": "COA_00221",
-  "name": "福田勇",
-  "nameEn": "Fukuda Isamu",
+  "name": "무라카미 켄타",
+  "nameEn": "Murakami Kenta",
   "role": "coach",
-  "age": 38,
+  "age": 53,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "수비",
-      "experienceYears": 4,
+      "specialty": "타격",
+      "experienceYears": 7,
       "stats": {
-        "teaching": 57,
-        "analysis": 68,
-        "communication": 57,
-        "discipline": 77,
-        "leadership": 57
+        "teaching": 79,
+        "analysis": 67,
+        "communication": 78,
+        "discipline": 67,
+        "leadership": 56
       },
-      "trainingBuffs": ""
+      "trainingBuffs": "제구 훈련 +2%"
     },
     "manager": {
       "style": "균형",

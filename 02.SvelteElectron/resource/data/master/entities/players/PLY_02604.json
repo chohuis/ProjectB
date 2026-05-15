@@ -1,9 +1,9 @@
 {
   "id": "PLY_02604",
-  "name": "遠藤博",
-  "nameEn": "Endo Hiroshi",
+  "name": "아베 쓰카사",
+  "nameEn": "Abe Tsukasa",
   "role": "player",
-  "age": 19,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
+      "handedness": "R",
       "position": "1B",
       "jerseyNumber": 43,
       "pitching": {
-        "ovr": 45,
-        "stamina": 47,
-        "velocity": 49,
-        "command": 46,
-        "control": 48,
-        "movement": 43,
-        "mentality": 49,
-        "recovery": 49
+        "ovr": 38,
+        "stamina": 35,
+        "velocity": 38,
+        "command": 30,
+        "control": 31,
+        "movement": 34,
+        "mentality": 33,
+        "recovery": 31
       },
       "batting": {
-        "ovr": 73,
-        "contact": 75,
-        "power": 85,
-        "eye": 78,
-        "discipline": 74,
-        "speed": 71,
-        "fielding": 77,
-        "arm": 73,
-        "battingClutch": 74
+        "ovr": 68,
+        "contact": 64,
+        "power": 73,
+        "eye": 69,
+        "discipline": 61,
+        "speed": 59,
+        "fielding": 68,
+        "arm": 65,
+        "battingClutch": 64
       },
-      "developmentRate": 42,
-      "potentialHidden": 65
+      "developmentRate": 45,
+      "potentialHidden": 81
     },
     "coach": {
       "specialty": "-",

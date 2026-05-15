@@ -1,9 +1,9 @@
 {
   "id": "PLY_02706",
-  "name": "斎藤悠人",
-  "nameEn": "Saito Yuto",
+  "name": "사토 슌",
+  "nameEn": "Sato Shun",
   "role": "player",
-  "age": 25,
+  "age": 31,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "SP",
       "jerseyNumber": 5,
       "pitching": {
-        "ovr": 78,
-        "stamina": 84,
-        "velocity": 80,
-        "command": 75,
-        "control": 81,
-        "movement": 81,
-        "mentality": 75,
-        "recovery": 73
+        "ovr": 87,
+        "stamina": 95,
+        "velocity": 95,
+        "command": 88,
+        "control": 87,
+        "movement": 84,
+        "mentality": 87,
+        "recovery": 85
       },
       "batting": {
-        "ovr": 44,
-        "contact": 50,
-        "power": 50,
-        "eye": 44,
-        "discipline": 44,
-        "speed": 42,
-        "fielding": 43,
-        "arm": 43,
-        "battingClutch": 49
+        "ovr": 70,
+        "contact": 64,
+        "power": 69,
+        "eye": 65,
+        "discipline": 68,
+        "speed": 65,
+        "fielding": 70,
+        "arm": 68,
+        "battingClutch": 71
       },
-      "developmentRate": 32,
-      "potentialHidden": 79
+      "developmentRate": 40,
+      "potentialHidden": 83
     },
     "coach": {
       "specialty": "-",

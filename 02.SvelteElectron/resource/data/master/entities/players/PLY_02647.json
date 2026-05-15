@@ -1,9 +1,9 @@
 {
   "id": "PLY_02647",
-  "name": "松本凌",
-  "nameEn": "Matsumoto Ryo",
+  "name": "타나카 료",
+  "nameEn": "Tanaka Ryo",
   "role": "player",
-  "age": 20,
+  "age": 31,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -20,27 +20,27 @@
       "jerseyNumber": 41,
       "pitching": {
         "ovr": 40,
-        "stamina": 43,
-        "velocity": 50,
-        "command": 48,
-        "control": 43,
-        "movement": 40,
-        "mentality": 41,
-        "recovery": 40
+        "stamina": 34,
+        "velocity": 40,
+        "command": 37,
+        "control": 33,
+        "movement": 33,
+        "mentality": 38,
+        "recovery": 38
       },
       "batting": {
-        "ovr": 76,
+        "ovr": 69,
         "contact": 68,
-        "power": 72,
-        "eye": 71,
-        "discipline": 73,
-        "speed": 65,
-        "fielding": 75,
-        "arm": 73,
-        "battingClutch": 72
+        "power": 66,
+        "eye": 70,
+        "discipline": 68,
+        "speed": 64,
+        "fielding": 72,
+        "arm": 68,
+        "battingClutch": 68
       },
-      "developmentRate": 46,
-      "potentialHidden": 60
+      "developmentRate": 56,
+      "potentialHidden": 80
     },
     "coach": {
       "specialty": "-",

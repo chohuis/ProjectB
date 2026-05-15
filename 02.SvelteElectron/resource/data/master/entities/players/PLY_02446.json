@@ -1,9 +1,9 @@
 {
   "id": "PLY_02446",
-  "name": "清水司",
-  "nameEn": "Shimizu Tsukasa",
+  "name": "고바야시 료",
+  "nameEn": "Kobayashi Ryo",
   "role": "player",
-  "age": 24,
+  "age": 34,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "C",
       "jerseyNumber": 15,
       "pitching": {
-        "ovr": 45,
-        "stamina": 47,
-        "velocity": 50,
-        "command": 49,
-        "control": 50,
-        "movement": 47,
-        "mentality": 47,
-        "recovery": 48
+        "ovr": 62,
+        "stamina": 61,
+        "velocity": 67,
+        "command": 63,
+        "control": 61,
+        "movement": 62,
+        "mentality": 63,
+        "recovery": 60
       },
       "batting": {
-        "ovr": 76,
-        "contact": 74,
-        "power": 77,
-        "eye": 76,
-        "discipline": 75,
-        "speed": 70,
-        "fielding": 78,
-        "arm": 74,
-        "battingClutch": 72
+        "ovr": 87,
+        "contact": 87,
+        "power": 86,
+        "eye": 83,
+        "discipline": 86,
+        "speed": 77,
+        "fielding": 83,
+        "arm": 86,
+        "battingClutch": 80
       },
-      "developmentRate": 41,
-      "potentialHidden": 58
+      "developmentRate": 35,
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",

@@ -1,9 +1,9 @@
 {
   "id": "PLY_02382",
-  "name": "後藤勇",
-  "nameEn": "Goto Isamu",
+  "name": "야마모토 유타",
+  "nameEn": "Yamamoto Yuta",
   "role": "player",
-  "age": 22,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "SS",
       "jerseyNumber": 46,
       "pitching": {
-        "ovr": 40,
-        "stamina": 34,
-        "velocity": 40,
-        "command": 36,
-        "control": 32,
-        "movement": 35,
-        "mentality": 38,
-        "recovery": 37
+        "ovr": 46,
+        "stamina": 42,
+        "velocity": 43,
+        "command": 45,
+        "control": 46,
+        "movement": 45,
+        "mentality": 41,
+        "recovery": 45
       },
       "batting": {
-        "ovr": 59,
-        "contact": 64,
-        "power": 62,
-        "eye": 60,
-        "discipline": 61,
-        "speed": 66,
-        "fielding": 64,
-        "arm": 62,
-        "battingClutch": 64
+        "ovr": 81,
+        "contact": 77,
+        "power": 75,
+        "eye": 79,
+        "discipline": 78,
+        "speed": 81,
+        "fielding": 81,
+        "arm": 77,
+        "battingClutch": 76
       },
-      "developmentRate": 48,
-      "potentialHidden": 66
+      "developmentRate": 43,
+      "potentialHidden": 76
     },
     "coach": {
       "specialty": "-",

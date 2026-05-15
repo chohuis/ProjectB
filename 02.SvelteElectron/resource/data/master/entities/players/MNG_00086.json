@@ -1,9 +1,9 @@
 {
   "id": "MNG_00086",
-  "name": "吉田健太",
-  "nameEn": "Yoshida Kenta",
+  "name": "니시무라 시게루",
+  "nameEn": "Nishimura Shigeru",
   "role": "manager",
-  "age": 58,
+  "age": 47,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -55,17 +55,17 @@
       "trainingBuffs": ""
     },
     "manager": {
-      "style": "데이터 중심",
-      "experienceYears": 18,
+      "style": "유망주 중심",
+      "experienceYears": 7,
       "stats": {
-        "tactics": 83,
-        "decision": 83,
-        "rotationMgmt": 84,
+        "tactics": 76,
+        "decision": 75,
+        "rotationMgmt": 67,
         "bullpenMgmt": 58,
-        "moraleMgmt": 69
+        "moraleMgmt": 57
       },
       "gamePlanBias": "",
-      "riskTolerance": 39
+      "riskTolerance": 52
     },
     "owner": {
       "ownershipStyle": "안정 운영",

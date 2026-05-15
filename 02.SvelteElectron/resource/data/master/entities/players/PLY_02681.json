@@ -1,9 +1,9 @@
 {
   "id": "PLY_02681",
-  "name": "遠藤勇",
-  "nameEn": "Endo Isamu",
+  "name": "와타나베 료",
+  "nameEn": "Watanabe Ryo",
   "role": "player",
-  "age": 31,
+  "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "2B",
       "jerseyNumber": 25,
       "pitching": {
-        "ovr": 45,
-        "stamina": 44,
-        "velocity": 51,
-        "command": 50,
-        "control": 50,
-        "movement": 45,
-        "mentality": 45,
-        "recovery": 44
+        "ovr": 41,
+        "stamina": 38,
+        "velocity": 39,
+        "command": 43,
+        "control": 38,
+        "movement": 41,
+        "mentality": 36,
+        "recovery": 35
       },
       "batting": {
-        "ovr": 69,
-        "contact": 73,
-        "power": 73,
-        "eye": 67,
-        "discipline": 67,
-        "speed": 70,
-        "fielding": 66,
-        "arm": 72,
-        "battingClutch": 72
+        "ovr": 70,
+        "contact": 67,
+        "power": 68,
+        "eye": 73,
+        "discipline": 71,
+        "speed": 72,
+        "fielding": 71,
+        "arm": 66,
+        "battingClutch": 71
       },
-      "developmentRate": 36,
-      "potentialHidden": 84
+      "developmentRate": 32,
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",

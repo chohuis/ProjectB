@@ -1,9 +1,9 @@
 {
   "id": "PLY_02494",
-  "name": "佐々木大輝",
-  "nameEn": "Sasaki Daiki",
+  "name": "이시카와 츠바사",
+  "nameEn": "Ishikawa Tsubasa",
   "role": "player",
-  "age": 34,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "3B",
       "jerseyNumber": 18,
       "pitching": {
-        "ovr": 56,
-        "stamina": 59,
-        "velocity": 59,
-        "command": 57,
-        "control": 58,
-        "movement": 55,
-        "mentality": 55,
-        "recovery": 59
+        "ovr": 61,
+        "stamina": 57,
+        "velocity": 60,
+        "command": 63,
+        "control": 64,
+        "movement": 60,
+        "mentality": 61,
+        "recovery": 61
       },
       "batting": {
-        "ovr": 90,
-        "contact": 87,
+        "ovr": 85,
+        "contact": 79,
         "power": 89,
-        "eye": 87,
-        "discipline": 88,
-        "speed": 80,
-        "fielding": 89,
-        "arm": 92,
-        "battingClutch": 84
+        "eye": 85,
+        "discipline": 79,
+        "speed": 76,
+        "fielding": 80,
+        "arm": 87,
+        "battingClutch": 83
       },
-      "developmentRate": 32,
-      "potentialHidden": 69
+      "developmentRate": 34,
+      "potentialHidden": 76
     },
     "coach": {
       "specialty": "-",

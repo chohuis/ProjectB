@@ -1,9 +1,9 @@
 {
   "id": "PLY_02386",
-  "name": "山田隼人",
-  "nameEn": "Yamada Hayato",
+  "name": "마에다 료",
+  "nameEn": "Maeda Ryo",
   "role": "player",
-  "age": 29,
+  "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "DH",
       "jerseyNumber": 50,
       "pitching": {
-        "ovr": 47,
-        "stamina": 41,
-        "velocity": 48,
-        "command": 49,
-        "control": 46,
-        "movement": 48,
-        "mentality": 45,
-        "recovery": 40
+        "ovr": 48,
+        "stamina": 49,
+        "velocity": 51,
+        "command": 52,
+        "control": 47,
+        "movement": 42,
+        "mentality": 49,
+        "recovery": 50
       },
       "batting": {
-        "ovr": 74,
-        "contact": 78,
-        "power": 77,
-        "eye": 71,
-        "discipline": 73,
-        "speed": 68,
-        "fielding": 67,
-        "arm": 71,
-        "battingClutch": 76
+        "ovr": 78,
+        "contact": 79,
+        "power": 83,
+        "eye": 78,
+        "discipline": 79,
+        "speed": 75,
+        "fielding": 73,
+        "arm": 73,
+        "battingClutch": 77
       },
-      "developmentRate": 50,
-      "potentialHidden": 73
+      "developmentRate": 53,
+      "potentialHidden": 83
     },
     "coach": {
       "specialty": "-",

@@ -1,9 +1,9 @@
 {
   "id": "PLY_02645",
-  "name": "池田大輝",
-  "nameEn": "Ikeda Daiki",
+  "name": "니시무라 히로시",
+  "nameEn": "Nishimura Hiroshi",
   "role": "player",
-  "age": 31,
+  "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "CP",
       "jerseyNumber": 39,
       "pitching": {
-        "ovr": 69,
-        "stamina": 56,
-        "velocity": 68,
+        "ovr": 61,
+        "stamina": 53,
+        "velocity": 64,
         "command": 65,
-        "control": 68,
-        "movement": 69,
-        "mentality": 62,
-        "recovery": 64
+        "control": 61,
+        "movement": 59,
+        "mentality": 60,
+        "recovery": 57
       },
       "batting": {
-        "ovr": 50,
-        "contact": 49,
-        "power": 44,
-        "eye": 48,
-        "discipline": 45,
-        "speed": 42,
-        "fielding": 48,
-        "arm": 49,
-        "battingClutch": 45
+        "ovr": 28,
+        "contact": 26,
+        "power": 30,
+        "eye": 26,
+        "discipline": 27,
+        "speed": 30,
+        "fielding": 28,
+        "arm": 30,
+        "battingClutch": 33
       },
-      "developmentRate": 55,
-      "potentialHidden": 64
+      "developmentRate": 52,
+      "potentialHidden": 66
     },
     "coach": {
       "specialty": "-",

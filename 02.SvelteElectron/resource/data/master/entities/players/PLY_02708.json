@@ -1,9 +1,9 @@
 {
   "id": "PLY_02708",
-  "name": "山口暁",
-  "nameEn": "Yamaguchi Akira",
+  "name": "고바야시 유타카",
+  "nameEn": "Kobayashi Yutaka",
   "role": "player",
-  "age": 28,
+  "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "RP",
       "jerseyNumber": 7,
       "pitching": {
-        "ovr": 76,
-        "stamina": 69,
-        "velocity": 84,
-        "command": 77,
-        "control": 80,
-        "movement": 82,
-        "mentality": 76,
-        "recovery": 74
+        "ovr": 89,
+        "stamina": 86,
+        "velocity": 92,
+        "command": 86,
+        "control": 93,
+        "movement": 86,
+        "mentality": 87,
+        "recovery": 86
       },
       "batting": {
-        "ovr": 58,
-        "contact": 63,
-        "power": 57,
-        "eye": 54,
-        "discipline": 62,
-        "speed": 56,
-        "fielding": 55,
-        "arm": 56,
-        "battingClutch": 57
+        "ovr": 66,
+        "contact": 68,
+        "power": 69,
+        "eye": 66,
+        "discipline": 68,
+        "speed": 69,
+        "fielding": 64,
+        "arm": 66,
+        "battingClutch": 66
       },
-      "developmentRate": 42,
-      "potentialHidden": 78
+      "developmentRate": 41,
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",

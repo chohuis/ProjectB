@@ -1,9 +1,9 @@
 {
   "id": "PLY_02491",
-  "name": "坂本颯太",
-  "nameEn": "Sakamoto Sota",
+  "name": "무라카미 유타",
+  "nameEn": "Murakami Yuta",
   "role": "player",
-  "age": 25,
+  "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "C",
       "jerseyNumber": 15,
       "pitching": {
-        "ovr": 57,
-        "stamina": 57,
-        "velocity": 64,
-        "command": 60,
-        "control": 57,
-        "movement": 56,
-        "mentality": 58,
-        "recovery": 56
+        "ovr": 47,
+        "stamina": 45,
+        "velocity": 50,
+        "command": 47,
+        "control": 50,
+        "movement": 47,
+        "mentality": 47,
+        "recovery": 49
       },
       "batting": {
-        "ovr": 87,
+        "ovr": 77,
         "contact": 85,
         "power": 84,
-        "eye": 86,
-        "discipline": 78,
-        "speed": 83,
-        "fielding": 87,
-        "arm": 84,
+        "eye": 78,
+        "discipline": 80,
+        "speed": 79,
+        "fielding": 81,
+        "arm": 82,
         "battingClutch": 83
       },
-      "developmentRate": 48,
-      "potentialHidden": 70
+      "developmentRate": 38,
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",

@@ -1,9 +1,9 @@
 {
   "id": "PLY_02561",
-  "name": "佐藤大和",
-  "nameEn": "Sato Yamato",
+  "name": "사토 히로시",
+  "nameEn": "Sato Hiroshi",
   "role": "player",
-  "age": 30,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "3B",
       "jerseyNumber": 45,
       "pitching": {
-        "ovr": 48,
-        "stamina": 48,
-        "velocity": 49,
-        "command": 55,
-        "control": 53,
-        "movement": 53,
-        "mentality": 50,
-        "recovery": 52
+        "ovr": 44,
+        "stamina": 36,
+        "velocity": 43,
+        "command": 40,
+        "control": 43,
+        "movement": 38,
+        "mentality": 44,
+        "recovery": 39
       },
       "batting": {
-        "ovr": 71,
-        "contact": 74,
-        "power": 75,
-        "eye": 76,
-        "discipline": 72,
-        "speed": 75,
-        "fielding": 72,
-        "arm": 78,
-        "battingClutch": 78
+        "ovr": 77,
+        "contact": 79,
+        "power": 76,
+        "eye": 73,
+        "discipline": 77,
+        "speed": 74,
+        "fielding": 75,
+        "arm": 75,
+        "battingClutch": 74
       },
-      "developmentRate": 47,
-      "potentialHidden": 71
+      "developmentRate": 54,
+      "potentialHidden": 74
     },
     "coach": {
       "specialty": "-",

@@ -1,9 +1,9 @@
 {
   "id": "PLY_02447",
-  "name": "渡辺清",
-  "nameEn": "Watanabe Kiyoshi",
+  "name": "야마모토 스스무",
+  "nameEn": "Yamamoto Susumu",
   "role": "player",
-  "age": 30,
+  "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -21,26 +21,26 @@
       "pitching": {
         "ovr": 42,
         "stamina": 41,
-        "velocity": 40,
-        "command": 39,
-        "control": 34,
-        "movement": 36,
-        "mentality": 35,
-        "recovery": 38
+        "velocity": 41,
+        "command": 42,
+        "control": 39,
+        "movement": 42,
+        "mentality": 42,
+        "recovery": 41
       },
       "batting": {
-        "ovr": 72,
-        "contact": 72,
-        "power": 76,
-        "eye": 67,
-        "discipline": 73,
-        "speed": 64,
-        "fielding": 68,
-        "arm": 71,
-        "battingClutch": 72
+        "ovr": 75,
+        "contact": 71,
+        "power": 81,
+        "eye": 71,
+        "discipline": 72,
+        "speed": 72,
+        "fielding": 73,
+        "arm": 73,
+        "battingClutch": 78
       },
-      "developmentRate": 44,
-      "potentialHidden": 86
+      "developmentRate": 43,
+      "potentialHidden": 67
     },
     "coach": {
       "specialty": "-",

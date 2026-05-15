@@ -1,9 +1,9 @@
 {
   "id": "PLY_02735",
-  "name": "前田拓",
-  "nameEn": "Maeda Hiraku",
+  "name": "미우라 오사무",
+  "nameEn": "Miura Osamu",
   "role": "player",
-  "age": 32,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "CP",
       "jerseyNumber": 39,
       "pitching": {
-        "ovr": 74,
-        "stamina": 67,
+        "ovr": 65,
+        "stamina": 60,
         "velocity": 77,
-        "command": 74,
-        "control": 77,
-        "movement": 75,
-        "mentality": 75,
-        "recovery": 71
+        "command": 72,
+        "control": 72,
+        "movement": 69,
+        "mentality": 69,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 51,
-        "contact": 55,
+        "ovr": 47,
+        "contact": 48,
         "power": 51,
-        "eye": 52,
-        "discipline": 48,
+        "eye": 47,
+        "discipline": 51,
         "speed": 46,
         "fielding": 47,
-        "arm": 48,
-        "battingClutch": 51
+        "arm": 50,
+        "battingClutch": 47
       },
-      "developmentRate": 56,
-      "potentialHidden": 84
+      "developmentRate": 41,
+      "potentialHidden": 61
     },
     "coach": {
       "specialty": "-",

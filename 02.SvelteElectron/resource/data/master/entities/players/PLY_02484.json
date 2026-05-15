@@ -1,9 +1,9 @@
 {
   "id": "PLY_02484",
-  "name": "近藤駿",
-  "nameEn": "Kondo Shun",
+  "name": "오카다 유타카",
+  "nameEn": "Okada Yutaka",
   "role": "player",
-  "age": 26,
+  "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -20,27 +20,27 @@
       "jerseyNumber": 8,
       "pitching": {
         "ovr": 84,
-        "stamina": 76,
-        "velocity": 87,
+        "stamina": 79,
+        "velocity": 86,
         "command": 86,
-        "control": 80,
-        "movement": 83,
-        "mentality": 82,
-        "recovery": 78
+        "control": 83,
+        "movement": 79,
+        "mentality": 81,
+        "recovery": 86
       },
       "batting": {
-        "ovr": 53,
-        "contact": 59,
-        "power": 56,
-        "eye": 53,
-        "discipline": 57,
-        "speed": 59,
-        "fielding": 57,
-        "arm": 52,
-        "battingClutch": 60
+        "ovr": 58,
+        "contact": 56,
+        "power": 60,
+        "eye": 61,
+        "discipline": 60,
+        "speed": 54,
+        "fielding": 60,
+        "arm": 54,
+        "battingClutch": 57
       },
-      "developmentRate": 35,
-      "potentialHidden": 71
+      "developmentRate": 39,
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",

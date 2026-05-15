@@ -1,9 +1,9 @@
 {
   "id": "PLY_02698",
-  "name": "遠藤仁",
-  "nameEn": "Endo Jin",
+  "name": "카토 카이토",
+  "nameEn": "Kato Kaito",
   "role": "player",
-  "age": 26,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "R",
+      "handedness": "L",
       "position": "LF",
       "jerseyNumber": 47,
       "pitching": {
-        "ovr": 56,
-        "stamina": 50,
-        "velocity": 56,
-        "command": 48,
-        "control": 47,
-        "movement": 48,
-        "mentality": 52,
-        "recovery": 49
+        "ovr": 33,
+        "stamina": 37,
+        "velocity": 37,
+        "command": 38,
+        "control": 37,
+        "movement": 32,
+        "mentality": 33,
+        "recovery": 32
       },
       "batting": {
-        "ovr": 71,
-        "contact": 70,
-        "power": 70,
-        "eye": 72,
-        "discipline": 73,
-        "speed": 72,
-        "fielding": 64,
-        "arm": 72,
-        "battingClutch": 75
+        "ovr": 64,
+        "contact": 62,
+        "power": 58,
+        "eye": 55,
+        "discipline": 55,
+        "speed": 63,
+        "fielding": 52,
+        "arm": 59,
+        "battingClutch": 60
       },
-      "developmentRate": 51,
-      "potentialHidden": 86
+      "developmentRate": 53,
+      "potentialHidden": 67
     },
     "coach": {
       "specialty": "-",

@@ -1,9 +1,9 @@
 {
   "id": "OWN_00024",
-  "name": "西村清",
-  "nameEn": "Nishimura Kiyoshi",
+  "name": "하시모토 히라쿠",
+  "nameEn": "Hashimoto Hiraku",
   "role": "owner",
-  "age": 69,
+  "age": 54,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -68,14 +68,14 @@
       "riskTolerance": 50
     },
     "owner": {
-      "ownershipStyle": "공격 투자",
-      "tenureYears": 11,
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 3,
       "stats": {
-        "budgetSupport": 68,
-        "patience": 52,
-        "prInfluence": 54,
-        "facilityInvestment": 82,
-        "staffTrust": 65
+        "budgetSupport": 67,
+        "patience": 61,
+        "prInfluence": 81,
+        "facilityInvestment": 87,
+        "staffTrust": 80
       },
       "budgetPolicy": "",
       "hiringPolicy": ""

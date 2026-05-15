@@ -1,9 +1,9 @@
 {
   "id": "PLY_02513",
-  "name": "井上翔",
-  "nameEn": "Inoue Sho",
+  "name": "이시다 기요시",
+  "nameEn": "Ishida Kiyoshi",
   "role": "player",
-  "age": 21,
+  "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "C",
       "jerseyNumber": 42,
       "pitching": {
-        "ovr": 33,
-        "stamina": 28,
-        "velocity": 28,
-        "command": 27,
-        "control": 25,
-        "movement": 30,
-        "mentality": 32,
-        "recovery": 30
+        "ovr": 34,
+        "stamina": 27,
+        "velocity": 32,
+        "command": 28,
+        "control": 34,
+        "movement": 33,
+        "mentality": 33,
+        "recovery": 32
       },
       "batting": {
-        "ovr": 59,
-        "contact": 64,
-        "power": 63,
-        "eye": 65,
-        "discipline": 60,
-        "speed": 58,
-        "fielding": 61,
-        "arm": 70,
-        "battingClutch": 67
+        "ovr": 57,
+        "contact": 56,
+        "power": 58,
+        "eye": 61,
+        "discipline": 59,
+        "speed": 53,
+        "fielding": 57,
+        "arm": 65,
+        "battingClutch": 58
       },
-      "developmentRate": 55,
-      "potentialHidden": 84
+      "developmentRate": 51,
+      "potentialHidden": 59
     },
     "coach": {
       "specialty": "-",

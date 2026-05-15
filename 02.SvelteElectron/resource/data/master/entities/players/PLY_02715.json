@@ -1,9 +1,9 @@
 {
   "id": "PLY_02715",
-  "name": "斎藤清",
-  "nameEn": "Saito Kiyoshi",
+  "name": "이시다 마나부",
+  "nameEn": "Ishida Manabu",
   "role": "player",
-  "age": 32,
+  "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
+      "handedness": "R",
       "position": "C",
       "jerseyNumber": 14,
       "pitching": {
-        "ovr": 71,
-        "stamina": 64,
-        "velocity": 67,
-        "command": 67,
-        "control": 70,
-        "movement": 67,
-        "mentality": 69,
-        "recovery": 62
+        "ovr": 64,
+        "stamina": 61,
+        "velocity": 62,
+        "command": 63,
+        "control": 64,
+        "movement": 60,
+        "mentality": 61,
+        "recovery": 58
       },
       "batting": {
         "ovr": 91,
-        "contact": 92,
-        "power": 90,
-        "eye": 92,
-        "discipline": 89,
-        "speed": 84,
-        "fielding": 93,
-        "arm": 94,
-        "battingClutch": 88
+        "contact": 86,
+        "power": 86,
+        "eye": 86,
+        "discipline": 88,
+        "speed": 87,
+        "fielding": 95,
+        "arm": 89,
+        "battingClutch": 92
       },
-      "developmentRate": 48,
-      "potentialHidden": 91
+      "developmentRate": 43,
+      "potentialHidden": 67
     },
     "coach": {
       "specialty": "-",

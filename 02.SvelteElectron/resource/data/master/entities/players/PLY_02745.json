@@ -1,9 +1,9 @@
 {
   "id": "PLY_02745",
-  "name": "小林仁",
-  "nameEn": "Kobayashi Jin",
+  "name": "아베 슌",
+  "nameEn": "Abe Shun",
   "role": "player",
-  "age": 22,
+  "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "R",
+      "handedness": "L",
       "position": "RF",
       "jerseyNumber": 49,
       "pitching": {
-        "ovr": 52,
-        "stamina": 54,
-        "velocity": 53,
-        "command": 50,
-        "control": 53,
-        "movement": 54,
-        "mentality": 52,
-        "recovery": 47
+        "ovr": 36,
+        "stamina": 28,
+        "velocity": 33,
+        "command": 32,
+        "control": 31,
+        "movement": 36,
+        "mentality": 33,
+        "recovery": 31
       },
       "batting": {
-        "ovr": 74,
-        "contact": 72,
-        "power": 76,
-        "eye": 69,
-        "discipline": 75,
-        "speed": 68,
-        "fielding": 66,
-        "arm": 72,
-        "battingClutch": 75
+        "ovr": 65,
+        "contact": 62,
+        "power": 62,
+        "eye": 59,
+        "discipline": 64,
+        "speed": 62,
+        "fielding": 59,
+        "arm": 57,
+        "battingClutch": 62
       },
-      "developmentRate": 43,
-      "potentialHidden": 81
+      "developmentRate": 49,
+      "potentialHidden": 57
     },
     "coach": {
       "specialty": "-",

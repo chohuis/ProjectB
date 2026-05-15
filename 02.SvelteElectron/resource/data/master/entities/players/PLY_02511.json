@@ -1,9 +1,9 @@
 {
   "id": "PLY_02511",
-  "name": "藤井龍",
-  "nameEn": "Fujii Ryu",
+  "name": "마에다 이사무",
+  "nameEn": "Maeda Isamu",
   "role": "player",
-  "age": 30,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "CP",
       "jerseyNumber": 40,
       "pitching": {
-        "ovr": 62,
-        "stamina": 48,
-        "velocity": 66,
-        "command": 59,
-        "control": 59,
-        "movement": 59,
-        "mentality": 60,
-        "recovery": 62
+        "ovr": 74,
+        "stamina": 60,
+        "velocity": 79,
+        "command": 77,
+        "control": 73,
+        "movement": 71,
+        "mentality": 73,
+        "recovery": 67
       },
       "batting": {
-        "ovr": 32,
-        "contact": 29,
-        "power": 26,
-        "eye": 30,
-        "discipline": 28,
-        "speed": 30,
-        "fielding": 32,
-        "arm": 28,
-        "battingClutch": 30
+        "ovr": 50,
+        "contact": 48,
+        "power": 48,
+        "eye": 45,
+        "discipline": 48,
+        "speed": 45,
+        "fielding": 46,
+        "arm": 43,
+        "battingClutch": 46
       },
-      "developmentRate": 50,
-      "potentialHidden": 59
+      "developmentRate": 41,
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",

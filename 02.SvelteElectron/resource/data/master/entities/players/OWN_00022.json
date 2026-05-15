@@ -1,9 +1,9 @@
 {
   "id": "OWN_00022",
-  "name": "中村浩",
-  "nameEn": "Nakamura Hiroshi",
+  "name": "기무라 이사무",
+  "nameEn": "Kimura Isamu",
   "role": "owner",
-  "age": 63,
+  "age": 71,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -69,13 +69,13 @@
     },
     "owner": {
       "ownershipStyle": "유망주 중심",
-      "tenureYears": 18,
+      "tenureYears": 4,
       "stats": {
-        "budgetSupport": 81,
-        "patience": 50,
-        "prInfluence": 55,
-        "facilityInvestment": 76,
-        "staffTrust": 70
+        "budgetSupport": 74,
+        "patience": 72,
+        "prInfluence": 51,
+        "facilityInvestment": 87,
+        "staffTrust": 77
       },
       "budgetPolicy": "",
       "hiringPolicy": ""

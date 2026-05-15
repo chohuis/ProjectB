@@ -1,9 +1,9 @@
 {
   "id": "PLY_02780",
-  "name": "鈴木浩二",
-  "nameEn": "Suzuki Koji",
+  "name": "마쓰모토 슌",
+  "nameEn": "Matsumoto Shun",
   "role": "player",
-  "age": 20,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "CP",
       "jerseyNumber": 39,
       "pitching": {
-        "ovr": 57,
-        "stamina": 50,
-        "velocity": 69,
-        "command": 62,
-        "control": 63,
-        "movement": 54,
-        "mentality": 63,
-        "recovery": 62
+        "ovr": 73,
+        "stamina": 58,
+        "velocity": 82,
+        "command": 75,
+        "control": 78,
+        "movement": 73,
+        "mentality": 70,
+        "recovery": 68
       },
       "batting": {
-        "ovr": 31,
-        "contact": 25,
-        "power": 26,
-        "eye": 30,
-        "discipline": 22,
-        "speed": 28,
-        "fielding": 24,
-        "arm": 29,
-        "battingClutch": 26
+        "ovr": 56,
+        "contact": 53,
+        "power": 52,
+        "eye": 53,
+        "discipline": 48,
+        "speed": 47,
+        "fielding": 51,
+        "arm": 49,
+        "battingClutch": 55
       },
-      "developmentRate": 45,
-      "potentialHidden": 81
+      "developmentRate": 46,
+      "potentialHidden": 76
     },
     "coach": {
       "specialty": "-",

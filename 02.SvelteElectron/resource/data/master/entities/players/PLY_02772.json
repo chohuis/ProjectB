@@ -1,9 +1,9 @@
 {
   "id": "PLY_02772",
-  "name": "石田哲",
-  "nameEn": "Ishida Satoshi",
+  "name": "사사키 오사무",
+  "nameEn": "Sasaki Osamu",
   "role": "player",
-  "age": 23,
+  "age": 31,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "SP",
       "jerseyNumber": 31,
       "pitching": {
-        "ovr": 79,
-        "stamina": 77,
-        "velocity": 76,
-        "command": 77,
-        "control": 75,
-        "movement": 73,
-        "mentality": 79,
-        "recovery": 74
+        "ovr": 78,
+        "stamina": 81,
+        "velocity": 80,
+        "command": 80,
+        "control": 73,
+        "movement": 75,
+        "mentality": 75,
+        "recovery": 73
       },
       "batting": {
-        "ovr": 46,
-        "contact": 46,
-        "power": 45,
-        "eye": 48,
-        "discipline": 49,
-        "speed": 46,
-        "fielding": 41,
-        "arm": 48,
-        "battingClutch": 50
+        "ovr": 53,
+        "contact": 51,
+        "power": 54,
+        "eye": 50,
+        "discipline": 53,
+        "speed": 53,
+        "fielding": 47,
+        "arm": 47,
+        "battingClutch": 46
       },
-      "developmentRate": 51,
-      "potentialHidden": 91
+      "developmentRate": 40,
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",

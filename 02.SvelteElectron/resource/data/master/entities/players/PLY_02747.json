@@ -1,9 +1,9 @@
 {
   "id": "PLY_02747",
-  "name": "山崎颯太",
-  "nameEn": "Yamazaki Sota",
+  "name": "나카무라 마나부",
+  "nameEn": "Nakamura Manabu",
   "role": "player",
-  "age": 21,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "SP",
       "jerseyNumber": 1,
       "pitching": {
-        "ovr": 86,
-        "stamina": 88,
-        "velocity": 86,
-        "command": 85,
-        "control": 88,
-        "movement": 85,
+        "ovr": 85,
+        "stamina": 82,
+        "velocity": 84,
+        "command": 82,
+        "control": 79,
+        "movement": 79,
         "mentality": 84,
-        "recovery": 85
+        "recovery": 81
       },
       "batting": {
-        "ovr": 49,
-        "contact": 55,
-        "power": 52,
-        "eye": 55,
-        "discipline": 51,
-        "speed": 48,
-        "fielding": 52,
-        "arm": 52,
-        "battingClutch": 51
+        "ovr": 60,
+        "contact": 62,
+        "power": 57,
+        "eye": 62,
+        "discipline": 59,
+        "speed": 63,
+        "fielding": 58,
+        "arm": 56,
+        "battingClutch": 62
       },
-      "developmentRate": 33,
-      "potentialHidden": 67
+      "developmentRate": 45,
+      "potentialHidden": 72
     },
     "coach": {
       "specialty": "-",

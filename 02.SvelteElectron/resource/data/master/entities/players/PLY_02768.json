@@ -1,9 +1,9 @@
 {
   "id": "PLY_02768",
-  "name": "松本大輝",
-  "nameEn": "Matsumoto Daiki",
+  "name": "마쓰모토 히라쿠",
+  "nameEn": "Matsumoto Hiraku",
   "role": "player",
-  "age": 33,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
+      "handedness": "R",
       "position": "RF",
       "jerseyNumber": 22,
       "pitching": {
-        "ovr": 55,
+        "ovr": 50,
         "stamina": 50,
-        "velocity": 58,
-        "command": 53,
-        "control": 58,
-        "movement": 54,
-        "mentality": 58,
-        "recovery": 58
+        "velocity": 53,
+        "command": 48,
+        "control": 55,
+        "movement": 52,
+        "mentality": 47,
+        "recovery": 53
       },
       "batting": {
-        "ovr": 75,
+        "ovr": 83,
         "contact": 76,
-        "power": 80,
-        "eye": 75,
-        "discipline": 75,
+        "power": 83,
+        "eye": 78,
+        "discipline": 82,
         "speed": 76,
-        "fielding": 70,
-        "arm": 75,
-        "battingClutch": 75
+        "fielding": 73,
+        "arm": 74,
+        "battingClutch": 77
       },
-      "developmentRate": 34,
-      "potentialHidden": 90
+      "developmentRate": 40,
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",

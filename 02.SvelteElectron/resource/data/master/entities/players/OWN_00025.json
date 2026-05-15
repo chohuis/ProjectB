@@ -1,9 +1,9 @@
 {
   "id": "OWN_00025",
-  "name": "渡辺峻",
-  "nameEn": "Watanabe Shun",
+  "name": "야마구치 켄타",
+  "nameEn": "Yamaguchi Kenta",
   "role": "owner",
-  "age": 70,
+  "age": 66,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -68,14 +68,14 @@
       "riskTolerance": 50
     },
     "owner": {
-      "ownershipStyle": "성적 우선",
-      "tenureYears": 14,
+      "ownershipStyle": "유망주 중심",
+      "tenureYears": 11,
       "stats": {
-        "budgetSupport": 67,
-        "patience": 59,
-        "prInfluence": 74,
-        "facilityInvestment": 60,
-        "staffTrust": 58
+        "budgetSupport": 72,
+        "patience": 72,
+        "prInfluence": 55,
+        "facilityInvestment": 55,
+        "staffTrust": 72
       },
       "budgetPolicy": "",
       "hiringPolicy": ""

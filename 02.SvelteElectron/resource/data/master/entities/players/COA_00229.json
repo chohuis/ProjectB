@@ -1,9 +1,9 @@
 {
   "id": "COA_00229",
-  "name": "林学",
-  "nameEn": "Hayashi Manabu",
+  "name": "후지이 준",
+  "nameEn": "Fujii Jun",
   "role": "coach",
-  "age": 55,
+  "age": 36,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "수비",
-      "experienceYears": 8,
+      "specialty": "멘탈",
+      "experienceYears": 3,
       "stats": {
-        "teaching": 61,
-        "analysis": 71,
-        "communication": 69,
-        "discipline": 80,
-        "leadership": 64
+        "teaching": 74,
+        "analysis": 64,
+        "communication": 58,
+        "discipline": 76,
+        "leadership": 72
       },
-      "trainingBuffs": ""
+      "trainingBuffs": "체력 훈련 +2%"
     },
     "manager": {
       "style": "균형",

@@ -1,9 +1,9 @@
 {
   "id": "PLY_02531",
-  "name": "三浦茂",
-  "nameEn": "Miura Shigeru",
+  "name": "사이토 쓰요시",
+  "nameEn": "Saito Tsuyoshi",
   "role": "player",
-  "age": 34,
+  "age": 38,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "RP",
       "jerseyNumber": 10,
       "pitching": {
-        "ovr": 75,
-        "stamina": 74,
-        "velocity": 84,
-        "command": 75,
-        "control": 76,
-        "movement": 77,
-        "mentality": 82,
-        "recovery": 81
+        "ovr": 70,
+        "stamina": 57,
+        "velocity": 71,
+        "command": 69,
+        "control": 72,
+        "movement": 71,
+        "mentality": 69,
+        "recovery": 69
       },
       "batting": {
-        "ovr": 54,
-        "contact": 55,
-        "power": 50,
-        "eye": 52,
-        "discipline": 51,
+        "ovr": 46,
+        "contact": 49,
+        "power": 48,
+        "eye": 48,
+        "discipline": 49,
         "speed": 52,
-        "fielding": 52,
-        "arm": 56,
-        "battingClutch": 49
+        "fielding": 43,
+        "arm": 48,
+        "battingClutch": 46
       },
-      "developmentRate": 43,
-      "potentialHidden": 62
+      "developmentRate": 48,
+      "potentialHidden": 59
     },
     "coach": {
       "specialty": "-",

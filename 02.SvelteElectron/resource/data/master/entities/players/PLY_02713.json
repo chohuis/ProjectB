@@ -1,9 +1,9 @@
 {
   "id": "PLY_02713",
-  "name": "斎藤隼人",
-  "nameEn": "Saito Hayato",
+  "name": "오타 야마토",
+  "nameEn": "Ota Yamato",
   "role": "player",
-  "age": 25,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -15,32 +15,32 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "CP",
       "jerseyNumber": 12,
       "pitching": {
-        "ovr": 87,
-        "stamina": 71,
-        "velocity": 90,
-        "command": 89,
-        "control": 90,
-        "movement": 89,
-        "mentality": 85,
-        "recovery": 89
+        "ovr": 74,
+        "stamina": 61,
+        "velocity": 83,
+        "command": 72,
+        "control": 73,
+        "movement": 74,
+        "mentality": 74,
+        "recovery": 70
       },
       "batting": {
-        "ovr": 55,
-        "contact": 56,
-        "power": 58,
-        "eye": 56,
-        "discipline": 57,
-        "speed": 56,
-        "fielding": 60,
-        "arm": 55,
-        "battingClutch": 56
+        "ovr": 43,
+        "contact": 48,
+        "power": 48,
+        "eye": 44,
+        "discipline": 43,
+        "speed": 43,
+        "fielding": 46,
+        "arm": 46,
+        "battingClutch": 46
       },
-      "developmentRate": 48,
-      "potentialHidden": 80
+      "developmentRate": 43,
+      "potentialHidden": 66
     },
     "coach": {
       "specialty": "-",

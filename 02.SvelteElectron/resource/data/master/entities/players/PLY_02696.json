@@ -1,9 +1,9 @@
 {
   "id": "PLY_02696",
-  "name": "加藤雄太",
-  "nameEn": "Kato Yuta",
+  "name": "야마다 히라쿠",
+  "nameEn": "Yamada Hiraku",
   "role": "player",
-  "age": 26,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
@@ -19,28 +19,28 @@
       "position": "3B",
       "jerseyNumber": 45,
       "pitching": {
-        "ovr": 44,
-        "stamina": 37,
-        "velocity": 41,
-        "command": 42,
-        "control": 39,
-        "movement": 41,
-        "mentality": 41,
-        "recovery": 38
+        "ovr": 39,
+        "stamina": 40,
+        "velocity": 46,
+        "command": 46,
+        "control": 44,
+        "movement": 44,
+        "mentality": 40,
+        "recovery": 41
       },
       "batting": {
-        "ovr": 72,
-        "contact": 76,
-        "power": 74,
-        "eye": 72,
-        "discipline": 74,
-        "speed": 68,
-        "fielding": 74,
-        "arm": 74,
-        "battingClutch": 79
+        "ovr": 69,
+        "contact": 72,
+        "power": 73,
+        "eye": 69,
+        "discipline": 64,
+        "speed": 65,
+        "fielding": 71,
+        "arm": 71,
+        "battingClutch": 71
       },
-      "developmentRate": 45,
-      "potentialHidden": 64
+      "developmentRate": 39,
+      "potentialHidden": 59
     },
     "coach": {
       "specialty": "-",
