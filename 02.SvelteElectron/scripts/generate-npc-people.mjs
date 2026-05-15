@@ -163,7 +163,7 @@ function createJblNameMaker(rng, used) {
     do {
       const last  = pick(rng, JP_LAST);
       const given = pick(rng, JP_GIVEN);
-      name   = `${last.kanji}${given.kanji}`;
+      name   = `${last.hangul} ${given.hangul}`;
       nameEn = `${last.roman} ${given.roman}`;
       tryCount++;
     } while (used.has(name) && tryCount < 200);

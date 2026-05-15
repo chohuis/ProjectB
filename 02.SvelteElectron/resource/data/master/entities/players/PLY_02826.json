@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02826",
+  "name": "타나카 미쓰루",
+  "nameEn": "Tanaka Mitsuru",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SEAGULLS",
+  "teamId": "TEAM_JBL_PL_SEAGULLS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 40,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 51,
+        "velocity": 71,
+        "command": 62,
+        "control": 64,
+        "movement": 62,
+        "mentality": 57,
+        "recovery": 64
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 37,
+        "power": 40,
+        "eye": 43,
+        "discipline": 37,
+        "speed": 39,
+        "fielding": 38,
+        "arm": 38,
+        "battingClutch": 44
+      },
+      "developmentRate": 57,
+      "potentialHidden": 74
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

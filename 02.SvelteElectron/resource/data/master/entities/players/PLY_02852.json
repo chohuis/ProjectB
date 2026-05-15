@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02852",
+  "name": "야마다 히로시",
+  "nameEn": "Yamada Hiroshi",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SUNS",
+  "teamId": "TEAM_JBL_PL_SUNS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 16,
+      "pitching": {
+        "ovr": 41,
+        "stamina": 42,
+        "velocity": 40,
+        "command": 39,
+        "control": 45,
+        "movement": 38,
+        "mentality": 43,
+        "recovery": 43
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 70,
+        "power": 79,
+        "eye": 68,
+        "discipline": 69,
+        "speed": 67,
+        "fielding": 67,
+        "arm": 70,
+        "battingClutch": 75
+      },
+      "developmentRate": 41,
+      "potentialHidden": 84
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}

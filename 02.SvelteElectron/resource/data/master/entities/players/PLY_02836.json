@@ -1,0 +1,84 @@
+{
+  "id": "PLY_02836",
+  "name": "하야시 사토시",
+  "nameEn": "Hayashi Satoshi",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SEAGULLS",
+  "teamId": "TEAM_JBL_PL_SEAGULLS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "DH",
+      "jerseyNumber": 50,
+      "pitching": {
+        "ovr": 41,
+        "stamina": 35,
+        "velocity": 42,
+        "command": 35,
+        "control": 37,
+        "movement": 34,
+        "mentality": 32,
+        "recovery": 38
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 65,
+        "power": 66,
+        "eye": 58,
+        "discipline": 64,
+        "speed": 56,
+        "fielding": 51,
+        "arm": 54,
+        "battingClutch": 62
+      },
+      "developmentRate": 45,
+      "potentialHidden": 85
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
+}
