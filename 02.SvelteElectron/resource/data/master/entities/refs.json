@@ -1,73 +1,323 @@
 {
   "version": 3,
   "leagues": [
-    { "id": "LEAGUE_HIGHSCHOOL",  "name": "고교 리그",  "nameEn": "High School League" },
-    { "id": "LEAGUE_UNIVERSITY",  "name": "대학 리그",  "nameEn": "University League" },
-    { "id": "LEAGUE_INDEPENDENT", "name": "독립 리그",  "nameEn": "Independent League" },
-    { "id": "LEAGUE_KBL",         "name": "KBL 리그",   "nameEn": "KBL League" },
-    { "id": "LEAGUE_ABL",         "name": "ABL",        "nameEn": "ABL" },
-    { "id": "LEAGUE_JBL",         "name": "JBL",        "nameEn": "JBL" }
+    {
+      "id": "LEAGUE_HIGHSCHOOL",
+      "name": "고교 리그",
+      "nameEn": "High School League"
+    },
+    {
+      "id": "LEAGUE_UNIVERSITY",
+      "name": "대학 리그",
+      "nameEn": "University League"
+    },
+    {
+      "id": "LEAGUE_INDEPENDENT",
+      "name": "독립 리그",
+      "nameEn": "Independent League"
+    },
+    {
+      "id": "LEAGUE_KBL",
+      "name": "KBL 리그",
+      "nameEn": "KBL League"
+    },
+    {
+      "id": "LEAGUE_ABL",
+      "name": "ABL",
+      "nameEn": "ABL"
+    },
+    {
+      "id": "LEAGUE_JBL",
+      "name": "JBL",
+      "nameEn": "JBL"
+    }
   ],
   "schools": [
-    { "id": "SCHOOL_NONE",                "name": "해당 없음",         "nameEn": "N/A" },
-    { "id": "SCHOOL_HS_SEOUL_INNOVATION", "name": "서울혁신고등학교",   "nameEn": "Seoul Hyeoksin High School" },
-    { "id": "SCHOOL_HS_BUSAN_WAVE",       "name": "부산해운고등학교",   "nameEn": "Busan Haeun High School" },
-    { "id": "SCHOOL_HS_DAEGU_HEAT",       "name": "대구열풍고등학교",   "nameEn": "Daegu Yeolpung High School" },
-    { "id": "SCHOOL_HS_GWANGJU_VISION",   "name": "광주미래고등학교",   "nameEn": "Gwangju Mirae High School" },
-    { "id": "SCHOOL_HS_DAEJEON_RISE",     "name": "대전도약고등학교",   "nameEn": "Daejeon Doyak High School" },
-    { "id": "SCHOOL_HS_INCHEON_HARBOR",   "name": "인천항만고등학교",   "nameEn": "Incheon Hangman High School" },
-    { "id": "SCHOOL_HS_ULSAN_CHARGE",     "name": "울산강진고등학교",   "nameEn": "Ulsan Gangjin High School" },
-    { "id": "SCHOOL_HS_SUWON_EDGE",       "name": "수원예봉고등학교",   "nameEn": "Suwon Yebong High School" }
+    {
+      "id": "SCHOOL_NONE",
+      "name": "해당 없음",
+      "nameEn": "N/A"
+    },
+    {
+      "id": "SCHOOL_HS_SEOUL_INNOVATION",
+      "name": "서울혁신고등학교",
+      "nameEn": "Seoul Hyeoksin High School"
+    },
+    {
+      "id": "SCHOOL_HS_BUSAN_WAVE",
+      "name": "부산해운고등학교",
+      "nameEn": "Busan Haeun High School"
+    },
+    {
+      "id": "SCHOOL_HS_DAEGU_HEAT",
+      "name": "대구열풍고등학교",
+      "nameEn": "Daegu Yeolpung High School"
+    },
+    {
+      "id": "SCHOOL_HS_GWANGJU_VISION",
+      "name": "광주미래고등학교",
+      "nameEn": "Gwangju Mirae High School"
+    },
+    {
+      "id": "SCHOOL_HS_DAEJEON_RISE",
+      "name": "대전도약고등학교",
+      "nameEn": "Daejeon Doyak High School"
+    },
+    {
+      "id": "SCHOOL_HS_INCHEON_HARBOR",
+      "name": "인천항만고등학교",
+      "nameEn": "Incheon Hangman High School"
+    },
+    {
+      "id": "SCHOOL_HS_ULSAN_CHARGE",
+      "name": "울산강진고등학교",
+      "nameEn": "Ulsan Gangjin High School"
+    },
+    {
+      "id": "SCHOOL_HS_SUWON_EDGE",
+      "name": "수원예봉고등학교",
+      "nameEn": "Suwon Yebong High School"
+    }
   ],
   "clubs": [
-    { "id": "CLUB_KBL_TWINWOLVES",      "name": "서울 트윈울브즈",     "nameEn": "Seoul TwinWolves",         "leagueId": "LEAGUE_KBL" },
-    { "id": "CLUB_KBL_BEARGUARDIANS",   "name": "서울 베어가디언스",   "nameEn": "Seoul BearGuardians",      "leagueId": "LEAGUE_KBL" },
-    { "id": "CLUB_KBL_SKYGULLS",        "name": "인천 스카이걸스",     "nameEn": "Incheon SkyGulls",         "leagueId": "LEAGUE_KBL" },
-    { "id": "CLUB_KBL_SOARINGEAGLES",   "name": "대전 소어링이글스",   "nameEn": "Daejeon SoaringEagles",    "leagueId": "LEAGUE_KBL" },
-    { "id": "CLUB_KBL_ROYALLIONS",      "name": "대구 로얄라이온스",   "nameEn": "Daegu RoyalLions",         "leagueId": "LEAGUE_KBL" },
-    { "id": "CLUB_KBL_EMBERTIGERS",     "name": "광주 엠버타이거스",   "nameEn": "Gwangju EmberTigers",      "leagueId": "LEAGUE_KBL" },
-    { "id": "CLUB_KBL_STEELDINOS",      "name": "창원 스틸디노스",     "nameEn": "Changwon SteelDinos",      "leagueId": "LEAGUE_KBL" },
-    { "id": "CLUB_KBL_GIANTWHALES",     "name": "부산 자이언트웨일스", "nameEn": "Busan GiantWhales",        "leagueId": "LEAGUE_KBL" },
-
-    { "id": "CLUB_ABL_EMPIRE",          "name": "뉴욕 엠파이어",       "nameEn": "New York Empire",          "leagueId": "LEAGUE_ABL" },
-    { "id": "CLUB_ABL_HARBORHAWKS",     "name": "보스턴 하버호크스",   "nameEn": "Boston HarborHawks",       "leagueId": "LEAGUE_ABL" },
-    { "id": "CLUB_ABL_LAKESPIRITS",     "name": "클리블랜드 레이크스피리츠", "nameEn": "Cleveland LakeSpirits", "leagueId": "LEAGUE_ABL" },
-    { "id": "CLUB_ABL_LONESTARS",       "name": "댈러스 론스타스",     "nameEn": "Dallas LoneStars",         "leagueId": "LEAGUE_ABL" },
-    { "id": "CLUB_ABL_MOTORWOLVES",     "name": "디트로이트 모터울브즈","nameEn": "Detroit MotorWolves",     "leagueId": "LEAGUE_ABL" },
-    { "id": "CLUB_ABL_WAVERIDERS",      "name": "마이애미 웨이브라이더스","nameEn": "Miami WaveRiders",      "leagueId": "LEAGUE_ABL" },
-    { "id": "CLUB_ABL_RAINARROWS",      "name": "시애틀 레인애로우스", "nameEn": "Seattle RainArrows",       "leagueId": "LEAGUE_ABL" },
-    { "id": "CLUB_ABL_WINDBEARS",       "name": "시카고 윈드베어스",   "nameEn": "Chicago WindBears",        "leagueId": "LEAGUE_ABL" },
-    { "id": "CLUB_ABL_MOUNTAINPEAKS",   "name": "덴버 마운틴픽스",     "nameEn": "Denver MountainPeaks",     "leagueId": "LEAGUE_ABL" },
-    { "id": "CLUB_ABL_SPACECOMETS",     "name": "휴스턴 스페이스코밋츠","nameEn": "Houston SpaceComets",    "leagueId": "LEAGUE_ABL" },
-    { "id": "CLUB_ABL_SUNDRAGONS",      "name": "LA 선드래곤스",        "nameEn": "Los Angeles SunDragons",  "leagueId": "LEAGUE_ABL" },
-    { "id": "CLUB_ABL_DESERTSERPENTS",  "name": "피닉스 데저트서펀츠", "nameEn": "Phoenix DesertSerpents",   "leagueId": "LEAGUE_ABL" },
-    { "id": "CLUB_ABL_COASTALRAYS",     "name": "샌디에이고 코스털레이스","nameEn": "San Diego CoastalRays",  "leagueId": "LEAGUE_ABL" },
-    { "id": "CLUB_ABL_BAYSEALS",        "name": "샌프란시스코 베이씰스","nameEn": "San Francisco BaySeals",  "leagueId": "LEAGUE_ABL" },
-    { "id": "CLUB_ABL_RIVERCARDINALS",  "name": "세인트루이스 리버카디널스","nameEn": "St. Louis RiverCardinals","leagueId": "LEAGUE_ABL" },
-    { "id": "CLUB_ABL_PEACHTREEFALCONS","name": "애틀랜타 피치트리팰컨스","nameEn": "Atlanta PeachtreeFalcons","leagueId": "LEAGUE_ABL" },
-
-    { "id": "CLUB_JBL_CL_NEONCRANES",    "name": "도쿄 네온 크레인즈",   "nameEn": "Tokyo Neon Cranes",         "leagueId": "LEAGUE_JBL" },
-    { "id": "CLUB_JBL_CL_TEMPOSTINGS",   "name": "오사카 템포 스팅스",   "nameEn": "Osaka Tempo Stings",        "leagueId": "LEAGUE_JBL" },
-    { "id": "CLUB_JBL_CL_IRONDRAKES",    "name": "나고야 아이언 드레이크스","nameEn": "Nagoya Iron Drakes",      "leagueId": "LEAGUE_JBL" },
-    { "id": "CLUB_JBL_CL_TIDERAVES",     "name": "요코하마 타이드 레이브스","nameEn": "Yokohama Tide Raves",     "leagueId": "LEAGUE_JBL" },
-    { "id": "CLUB_JBL_CL_SILVERWOLVES",  "name": "고베 실버 울브스",     "nameEn": "Kobe Silver Wolves",        "leagueId": "LEAGUE_JBL" },
-    { "id": "CLUB_JBL_CL_IRONSTORMS",    "name": "히로시마 아이언 스톰즈","nameEn": "Hiroshima Iron Storms",    "leagueId": "LEAGUE_JBL" },
-    { "id": "CLUB_JBL_PL_THUNDERFALCONS","name": "후쿠오카 썬더 팰컨즈", "nameEn": "Fukuoka Thunder Falcons",   "leagueId": "LEAGUE_JBL" },
-    { "id": "CLUB_JBL_PL_POLARBEARS",    "name": "삿포로 폴라 베어스",   "nameEn": "Sapporo Polar Bears",       "leagueId": "LEAGUE_JBL" },
-    { "id": "CLUB_JBL_PL_SPIRITBUFFALOS","name": "센다이 스피릿 버팔로스","nameEn": "Sendai Spirit Buffalos",   "leagueId": "LEAGUE_JBL" },
-    { "id": "CLUB_JBL_PL_MARINESOLDIERS","name": "나가사키 마린 솔저스", "nameEn": "Nagasaki Marine Soldiers",  "leagueId": "LEAGUE_JBL" },
-    { "id": "CLUB_JBL_PL_SEAGULLS",      "name": "니가타 씨걸스",        "nameEn": "Niigata Seagulls",          "leagueId": "LEAGUE_JBL" },
-    { "id": "CLUB_JBL_PL_SUNS",          "name": "오키나와 선즈",        "nameEn": "Okinawa Suns",              "leagueId": "LEAGUE_JBL" }
+    {
+      "id": "CLUB_KBL_TWINWOLVES",
+      "name": "서울 트윈울브즈",
+      "nameEn": "Seoul TwinWolves",
+      "leagueId": "LEAGUE_KBL"
+    },
+    {
+      "id": "CLUB_KBL_BEARGUARDIANS",
+      "name": "서울 베어가디언스",
+      "nameEn": "Seoul BearGuardians",
+      "leagueId": "LEAGUE_KBL"
+    },
+    {
+      "id": "CLUB_KBL_SKYGULLS",
+      "name": "인천 스카이걸스",
+      "nameEn": "Incheon SkyGulls",
+      "leagueId": "LEAGUE_KBL"
+    },
+    {
+      "id": "CLUB_KBL_SOARINGEAGLES",
+      "name": "대전 소어링이글스",
+      "nameEn": "Daejeon SoaringEagles",
+      "leagueId": "LEAGUE_KBL"
+    },
+    {
+      "id": "CLUB_KBL_ROYALLIONS",
+      "name": "대구 로얄라이온스",
+      "nameEn": "Daegu RoyalLions",
+      "leagueId": "LEAGUE_KBL"
+    },
+    {
+      "id": "CLUB_KBL_EMBERTIGERS",
+      "name": "광주 엠버타이거스",
+      "nameEn": "Gwangju EmberTigers",
+      "leagueId": "LEAGUE_KBL"
+    },
+    {
+      "id": "CLUB_KBL_STEELDINOS",
+      "name": "창원 스틸디노스",
+      "nameEn": "Changwon SteelDinos",
+      "leagueId": "LEAGUE_KBL"
+    },
+    {
+      "id": "CLUB_KBL_GIANTWHALES",
+      "name": "부산 자이언트웨일스",
+      "nameEn": "Busan GiantWhales",
+      "leagueId": "LEAGUE_KBL"
+    },
+    {
+      "id": "CLUB_ABL_EMPIRE",
+      "name": "뉴욕 엠파이어",
+      "nameEn": "New York Empire",
+      "leagueId": "LEAGUE_ABL"
+    },
+    {
+      "id": "CLUB_ABL_HARBORHAWKS",
+      "name": "보스턴 하버호크스",
+      "nameEn": "Boston HarborHawks",
+      "leagueId": "LEAGUE_ABL"
+    },
+    {
+      "id": "CLUB_ABL_LAKESPIRITS",
+      "name": "클리블랜드 레이크스피리츠",
+      "nameEn": "Cleveland LakeSpirits",
+      "leagueId": "LEAGUE_ABL"
+    },
+    {
+      "id": "CLUB_ABL_LONESTARS",
+      "name": "댈러스 론스타스",
+      "nameEn": "Dallas LoneStars",
+      "leagueId": "LEAGUE_ABL"
+    },
+    {
+      "id": "CLUB_ABL_MOTORWOLVES",
+      "name": "디트로이트 모터울브즈",
+      "nameEn": "Detroit MotorWolves",
+      "leagueId": "LEAGUE_ABL"
+    },
+    {
+      "id": "CLUB_ABL_WAVERIDERS",
+      "name": "마이애미 웨이브라이더스",
+      "nameEn": "Miami WaveRiders",
+      "leagueId": "LEAGUE_ABL"
+    },
+    {
+      "id": "CLUB_ABL_RAINARROWS",
+      "name": "시애틀 레인애로우스",
+      "nameEn": "Seattle RainArrows",
+      "leagueId": "LEAGUE_ABL"
+    },
+    {
+      "id": "CLUB_ABL_WINDBEARS",
+      "name": "시카고 윈드베어스",
+      "nameEn": "Chicago WindBears",
+      "leagueId": "LEAGUE_ABL"
+    },
+    {
+      "id": "CLUB_ABL_MOUNTAINPEAKS",
+      "name": "덴버 마운틴픽스",
+      "nameEn": "Denver MountainPeaks",
+      "leagueId": "LEAGUE_ABL"
+    },
+    {
+      "id": "CLUB_ABL_SPACECOMETS",
+      "name": "휴스턴 스페이스코밋츠",
+      "nameEn": "Houston SpaceComets",
+      "leagueId": "LEAGUE_ABL"
+    },
+    {
+      "id": "CLUB_ABL_SUNDRAGONS",
+      "name": "LA 선드래곤스",
+      "nameEn": "Los Angeles SunDragons",
+      "leagueId": "LEAGUE_ABL"
+    },
+    {
+      "id": "CLUB_ABL_DESERTSERPENTS",
+      "name": "피닉스 데저트서펀츠",
+      "nameEn": "Phoenix DesertSerpents",
+      "leagueId": "LEAGUE_ABL"
+    },
+    {
+      "id": "CLUB_ABL_COASTALRAYS",
+      "name": "샌디에이고 코스털레이스",
+      "nameEn": "San Diego CoastalRays",
+      "leagueId": "LEAGUE_ABL"
+    },
+    {
+      "id": "CLUB_ABL_BAYSEALS",
+      "name": "샌프란시스코 베이씰스",
+      "nameEn": "San Francisco BaySeals",
+      "leagueId": "LEAGUE_ABL"
+    },
+    {
+      "id": "CLUB_ABL_RIVERCARDINALS",
+      "name": "세인트루이스 리버카디널스",
+      "nameEn": "St. Louis RiverCardinals",
+      "leagueId": "LEAGUE_ABL"
+    },
+    {
+      "id": "CLUB_ABL_PEACHTREEFALCONS",
+      "name": "애틀랜타 피치트리팰컨스",
+      "nameEn": "Atlanta PeachtreeFalcons",
+      "leagueId": "LEAGUE_ABL"
+    },
+    {
+      "id": "CLUB_JBL_CL_NEONCRANES",
+      "name": "도쿄 네온 크레인즈",
+      "nameEn": "Tokyo Neon Cranes",
+      "leagueId": "LEAGUE_JBL"
+    },
+    {
+      "id": "CLUB_JBL_CL_TEMPOSTINGS",
+      "name": "오사카 템포 스팅스",
+      "nameEn": "Osaka Tempo Stings",
+      "leagueId": "LEAGUE_JBL"
+    },
+    {
+      "id": "CLUB_JBL_CL_IRONDRAKES",
+      "name": "나고야 아이언 드레이크스",
+      "nameEn": "Nagoya Iron Drakes",
+      "leagueId": "LEAGUE_JBL"
+    },
+    {
+      "id": "CLUB_JBL_CL_TIDERAVES",
+      "name": "요코하마 타이드 레이브스",
+      "nameEn": "Yokohama Tide Raves",
+      "leagueId": "LEAGUE_JBL"
+    },
+    {
+      "id": "CLUB_JBL_CL_SILVERWOLVES",
+      "name": "고베 실버 울브스",
+      "nameEn": "Kobe Silver Wolves",
+      "leagueId": "LEAGUE_JBL"
+    },
+    {
+      "id": "CLUB_JBL_CL_IRONSTORMS",
+      "name": "히로시마 아이언 스톰즈",
+      "nameEn": "Hiroshima Iron Storms",
+      "leagueId": "LEAGUE_JBL"
+    },
+    {
+      "id": "CLUB_JBL_PL_THUNDERFALCONS",
+      "name": "후쿠오카 썬더 팰컨즈",
+      "nameEn": "Fukuoka Thunder Falcons",
+      "leagueId": "LEAGUE_JBL"
+    },
+    {
+      "id": "CLUB_JBL_PL_POLARBEARS",
+      "name": "삿포로 폴라 베어스",
+      "nameEn": "Sapporo Polar Bears",
+      "leagueId": "LEAGUE_JBL"
+    },
+    {
+      "id": "CLUB_JBL_PL_SPIRITBUFFALOS",
+      "name": "센다이 스피릿 버팔로스",
+      "nameEn": "Sendai Spirit Buffalos",
+      "leagueId": "LEAGUE_JBL"
+    },
+    {
+      "id": "CLUB_JBL_PL_MARINESOLDIERS",
+      "name": "나가사키 마린 솔저스",
+      "nameEn": "Nagasaki Marine Soldiers",
+      "leagueId": "LEAGUE_JBL"
+    },
+    {
+      "id": "CLUB_JBL_PL_SEAGULLS",
+      "name": "니가타 씨걸스",
+      "nameEn": "Niigata Seagulls",
+      "leagueId": "LEAGUE_JBL"
+    },
+    {
+      "id": "CLUB_JBL_PL_SUNS",
+      "name": "오키나와 선즈",
+      "nameEn": "Okinawa Suns",
+      "leagueId": "LEAGUE_JBL"
+    }
   ],
   "teams": [
     {
-      "id": "TEAM_HS_SEOUL_INNOVATION", "name": "서울 이노베이션", "nameEn": "Seoul Innovation",
-      "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_SEOUL_INNOVATION", "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+      "id": "TEAM_HS_SEOUL_INNOVATION",
+      "name": "서울 이노베이션",
+      "nameEn": "Seoul Innovation",
+      "leagueId": "LEAGUE_HIGHSCHOOL",
+      "clubId": "TEAM_HS_SEOUL_INNOVATION",
+      "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
       "profile": {
         "style": "균형형",
         "desc": "서울 도심의 전통 야구 명가. 풍부한 재원과 체계적인 코칭 시스템을 바탕으로 매 시즌 상위권을 독점하며, 역대 47명의 프로 선수를 배출한 고교야구의 절대 강자다. 입단 즉시 프로 스카우터들의 주목을 받는 환경이 갖춰져 있다.",
-        "tags": ["야구 명가", "작전야구", "프로 산실"],
-        "strengths": ["투수력", "수비", "코칭"],
+        "tags": [
+          "야구 명가",
+          "작전야구",
+          "프로 산실"
+        ],
+        "strengths": [
+          "투수력",
+          "수비",
+          "코칭"
+        ],
         "funding": "풍부",
         "difficulty": "최상"
       },
@@ -77,23 +327,60 @@
         "proPlayers": 47,
         "nationalTitles": 18,
         "recentRecords": [
-          { "year": 2021, "national": "우승",   "regional": "1위", "note": "박동혁 KBL 드래프트 1라운드 1순위 지명" },
-          { "year": 2022, "national": "준우승", "regional": "1위", "note": "울산과 결승 연장 10회 끝에 석패" },
-          { "year": 2023, "national": "우승",   "regional": "1위", "note": "3년 연속 결승 진출, 설욕 성공" },
-          { "year": 2024, "national": "우승",   "regional": "1위", "note": "에이스 트리오 전원 KBL 1라운드 지명" },
-          { "year": 2025, "national": "4강",    "regional": "1위", "note": "세대교체 과도기, 내년 반등 예고" }
+          {
+            "year": 2021,
+            "national": "우승",
+            "regional": "1위",
+            "note": "박동혁 KBL 드래프트 1라운드 1순위 지명"
+          },
+          {
+            "year": 2022,
+            "national": "준우승",
+            "regional": "1위",
+            "note": "울산과 결승 연장 10회 끝에 석패"
+          },
+          {
+            "year": 2023,
+            "national": "우승",
+            "regional": "1위",
+            "note": "3년 연속 결승 진출, 설욕 성공"
+          },
+          {
+            "year": 2024,
+            "national": "우승",
+            "regional": "1위",
+            "note": "에이스 트리오 전원 KBL 1라운드 지명"
+          },
+          {
+            "year": 2025,
+            "national": "4강",
+            "regional": "1위",
+            "note": "세대교체 과도기, 내년 반등 예고"
+          }
         ],
         "rival": "TEAM_HS_ULSAN_CHARGE"
       }
     },
     {
-      "id": "TEAM_HS_ULSAN_CHARGE", "name": "울산 차지", "nameEn": "Ulsan Charge",
-      "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_ULSAN_CHARGE", "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+      "id": "TEAM_HS_ULSAN_CHARGE",
+      "name": "울산 차지",
+      "nameEn": "Ulsan Charge",
+      "leagueId": "LEAGUE_HIGHSCHOOL",
+      "clubId": "TEAM_HS_ULSAN_CHARGE",
+      "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
       "profile": {
         "style": "파워형",
         "desc": "서울 이노베이션의 최대 라이벌. 기업 후원을 등에 업고 강속구 투수진과 장타 타선을 구축해 최근 3년간 전국 우승 경쟁을 이끌고 있다. 단단한 조직력과 승부욕이 팀의 정체성이다.",
-        "tags": ["파워형", "강속구", "우승 경쟁권"],
-        "strengths": ["구속", "장타력", "불펜"],
+        "tags": [
+          "파워형",
+          "강속구",
+          "우승 경쟁권"
+        ],
+        "strengths": [
+          "구속",
+          "장타력",
+          "불펜"
+        ],
         "funding": "풍부",
         "difficulty": "상"
       },
@@ -103,23 +390,59 @@
         "proPlayers": 18,
         "nationalTitles": 6,
         "recentRecords": [
-          { "year": 2021, "national": "4강",    "regional": "1위", "note": "창단 이래 첫 4강 진출" },
-          { "year": 2022, "national": "우승",   "regional": "1위", "note": "서울 꺾고 창단 첫 전국 우승" },
-          { "year": 2023, "national": "4강",    "regional": "1위", "note": "우승 멤버 졸업 후 재정비" },
-          { "year": 2024, "national": "준우승", "regional": "1위", "note": "서울과 결승 재격돌, 설욕 실패" },
-          { "year": 2025, "national": "우승",   "regional": "1위", "note": "강력한 에이스 라인업으로 2년 만에 재제패" }
+          {
+            "year": 2021,
+            "national": "4강",
+            "regional": "1위",
+            "note": "창단 이래 첫 4강 진출"
+          },
+          {
+            "year": 2022,
+            "national": "우승",
+            "regional": "1위",
+            "note": "서울 꺾고 창단 첫 전국 우승"
+          },
+          {
+            "year": 2023,
+            "national": "4강",
+            "regional": "1위",
+            "note": "우승 멤버 졸업 후 재정비"
+          },
+          {
+            "year": 2024,
+            "national": "준우승",
+            "regional": "1위",
+            "note": "서울과 결승 재격돌, 설욕 실패"
+          },
+          {
+            "year": 2025,
+            "national": "우승",
+            "regional": "1위",
+            "note": "강력한 에이스 라인업으로 2년 만에 재제패"
+          }
         ],
         "rival": "TEAM_HS_SEOUL_INNOVATION"
       }
     },
     {
-      "id": "TEAM_HS_BUSAN_WAVE", "name": "부산 웨이브", "nameEn": "Busan Wave",
-      "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_BUSAN_WAVE", "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+      "id": "TEAM_HS_BUSAN_WAVE",
+      "name": "부산 웨이브",
+      "nameEn": "Busan Wave",
+      "leagueId": "LEAGUE_HIGHSCHOOL",
+      "clubId": "TEAM_HS_BUSAN_WAVE",
+      "schoolId": "SCHOOL_HS_BUSAN_WAVE",
       "profile": {
         "style": "공격형",
         "desc": "한때 전국을 호령했던 영남의 명문. 재원은 여전히 풍부하지만 에이스 계보가 끊기며 전국 무대에서 힘을 잃었다. 지역대회에서는 여전히 독보적인 1위를 유지하며 부활을 노리고 있다.",
-        "tags": ["과거 명문", "지역 최강", "재건 중"],
-        "strengths": ["타격", "지역 경험"],
+        "tags": [
+          "과거 명문",
+          "지역 최강",
+          "재건 중"
+        ],
+        "strengths": [
+          "타격",
+          "지역 경험"
+        ],
         "funding": "풍부",
         "difficulty": "중"
       },
@@ -129,23 +452,59 @@
         "proPlayers": 31,
         "nationalTitles": 9,
         "recentRecords": [
-          { "year": 2021, "national": "준우승", "regional": "1위", "note": "마지막 전성기, 에이스 이강호 졸업 후 내리막" },
-          { "year": 2022, "national": "8강",    "regional": "1위", "note": "주전 타선 전원 졸업, 전력 급하락" },
-          { "year": 2023, "national": "8강",    "regional": "1위", "note": "지역 강자 지위는 유지 중" },
-          { "year": 2024, "national": "16강",   "regional": "1위", "note": "전국 무대에서 힘 못 쓰는 모습" },
-          { "year": 2025, "national": "8강",    "regional": "1위", "note": "재정 투입으로 부분 회복세" }
+          {
+            "year": 2021,
+            "national": "준우승",
+            "regional": "1위",
+            "note": "마지막 전성기, 에이스 이강호 졸업 후 내리막"
+          },
+          {
+            "year": 2022,
+            "national": "8강",
+            "regional": "1위",
+            "note": "주전 타선 전원 졸업, 전력 급하락"
+          },
+          {
+            "year": 2023,
+            "national": "8강",
+            "regional": "1위",
+            "note": "지역 강자 지위는 유지 중"
+          },
+          {
+            "year": 2024,
+            "national": "16강",
+            "regional": "1위",
+            "note": "전국 무대에서 힘 못 쓰는 모습"
+          },
+          {
+            "year": 2025,
+            "national": "8강",
+            "regional": "1위",
+            "note": "재정 투입으로 부분 회복세"
+          }
         ],
         "rival": null
       }
     },
     {
-      "id": "TEAM_HS_DAEGU_HEAT", "name": "대구 히트", "nameEn": "Daegu Heat",
-      "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_DAEGU_HEAT", "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+      "id": "TEAM_HS_DAEGU_HEAT",
+      "name": "대구 히트",
+      "nameEn": "Daegu Heat",
+      "leagueId": "LEAGUE_HIGHSCHOOL",
+      "clubId": "TEAM_HS_DAEGU_HEAT",
+      "schoolId": "SCHOOL_HS_DAEGU_HEAT",
       "profile": {
         "style": "투수형",
         "desc": "화려함은 없지만 흔들림도 없는 팀. 제구력 중심의 정통 투수야구로 매 시즌 꾸준하게 8강 이상을 유지한다. 극단적인 업세트는 없지만 언제나 만만치 않은 상대로 통한다.",
-        "tags": ["꾸준함", "투수형", "안정적"],
-        "strengths": ["선발 투수", "제구력"],
+        "tags": [
+          "꾸준함",
+          "투수형",
+          "안정적"
+        ],
+        "strengths": [
+          "선발 투수",
+          "제구력"
+        ],
         "funding": "보통",
         "difficulty": "중"
       },
@@ -155,23 +514,59 @@
         "proPlayers": 14,
         "nationalTitles": 2,
         "recentRecords": [
-          { "year": 2021, "national": "8강",  "regional": "2위", "note": "" },
-          { "year": 2022, "national": "4강",  "regional": "1위", "note": "팀 최고 성적, 준결승서 서울에 석패" },
-          { "year": 2023, "national": "8강",  "regional": "2위", "note": "" },
-          { "year": 2024, "national": "8강",  "regional": "2위", "note": "" },
-          { "year": 2025, "national": "8강",  "regional": "1위", "note": "" }
+          {
+            "year": 2021,
+            "national": "8강",
+            "regional": "2위",
+            "note": ""
+          },
+          {
+            "year": 2022,
+            "national": "4강",
+            "regional": "1위",
+            "note": "팀 최고 성적, 준결승서 서울에 석패"
+          },
+          {
+            "year": 2023,
+            "national": "8강",
+            "regional": "2위",
+            "note": ""
+          },
+          {
+            "year": 2024,
+            "national": "8강",
+            "regional": "2위",
+            "note": ""
+          },
+          {
+            "year": 2025,
+            "national": "8강",
+            "regional": "1위",
+            "note": ""
+          }
         ],
         "rival": null
       }
     },
     {
-      "id": "TEAM_HS_GWANGJU_VISION", "name": "광주 비전", "nameEn": "Gwangju Vision",
-      "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_GWANGJU_VISION", "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+      "id": "TEAM_HS_GWANGJU_VISION",
+      "name": "광주 비전",
+      "nameEn": "Gwangju Vision",
+      "leagueId": "LEAGUE_HIGHSCHOOL",
+      "clubId": "TEAM_HS_GWANGJU_VISION",
+      "schoolId": "SCHOOL_HS_GWANGJU_VISION",
       "profile": {
         "style": "투지형",
         "desc": "돈도 시설도 없지만 열정만큼은 리그 최고인 야구부. 매년 예산 삭감 위기를 겪으면서도 선수들의 순수한 야구 사랑으로 버텨온 팀이다. 언더독의 반란을 노리는 이들에게 최적의 선택지.",
-        "tags": ["열정", "언더독", "투지"],
-        "strengths": ["팀 결속", "투지"],
+        "tags": [
+          "열정",
+          "언더독",
+          "투지"
+        ],
+        "strengths": [
+          "팀 결속",
+          "투지"
+        ],
         "funding": "부족",
         "difficulty": "최하"
       },
@@ -181,23 +576,59 @@
         "proPlayers": 3,
         "nationalTitles": 0,
         "recentRecords": [
-          { "year": 2021, "national": "16강",    "regional": "3위", "note": "예산 삭감 위기 속에서도 전국 진출" },
-          { "year": 2022, "national": "예선 탈락", "regional": "4위", "note": "핵심 선수 부상으로 예선 탈락" },
-          { "year": 2023, "national": "16강",    "regional": "3위", "note": "투지로 다시 전국 무대 복귀" },
-          { "year": 2024, "national": "예선 탈락", "regional": "4위", "note": "주전 3명 이탈, 전력 공백" },
-          { "year": 2025, "national": "16강",    "regional": "3위", "note": "열정으로 다시 전국 무대" }
+          {
+            "year": 2021,
+            "national": "16강",
+            "regional": "3위",
+            "note": "예산 삭감 위기 속에서도 전국 진출"
+          },
+          {
+            "year": 2022,
+            "national": "예선 탈락",
+            "regional": "4위",
+            "note": "핵심 선수 부상으로 예선 탈락"
+          },
+          {
+            "year": 2023,
+            "national": "16강",
+            "regional": "3위",
+            "note": "투지로 다시 전국 무대 복귀"
+          },
+          {
+            "year": 2024,
+            "national": "예선 탈락",
+            "regional": "4위",
+            "note": "주전 3명 이탈, 전력 공백"
+          },
+          {
+            "year": 2025,
+            "national": "16강",
+            "regional": "3위",
+            "note": "열정으로 다시 전국 무대"
+          }
         ],
         "rival": null
       }
     },
     {
-      "id": "TEAM_HS_DAEJEON_RISE", "name": "대전 라이즈", "nameEn": "Daejeon Rise",
-      "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_DAEJEON_RISE", "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+      "id": "TEAM_HS_DAEJEON_RISE",
+      "name": "대전 라이즈",
+      "nameEn": "Daejeon Rise",
+      "leagueId": "LEAGUE_HIGHSCHOOL",
+      "clubId": "TEAM_HS_DAEJEON_RISE",
+      "schoolId": "SCHOOL_HS_DAEJEON_RISE",
       "profile": {
         "style": "파워형",
         "desc": "2023년 대기업 후원으로 창단된 신생팀. 창단 3년 만에 전국 8강까지 오르며 고교야구계를 놀라게 했다. 풍부한 재원과 열정적인 선수들이 만들어내는 무서운 성장세가 특징이다.",
-        "tags": ["신생 팀", "급성장", "열심히"],
-        "strengths": ["구속", "체력"],
+        "tags": [
+          "신생 팀",
+          "급성장",
+          "열심히"
+        ],
+        "strengths": [
+          "구속",
+          "체력"
+        ],
         "funding": "풍부",
         "difficulty": "하"
       },
@@ -207,21 +638,47 @@
         "proPlayers": 0,
         "nationalTitles": 0,
         "recentRecords": [
-          { "year": 2023, "national": "예선 탈락", "regional": "4위", "note": "창단 첫 시즌, 첫 전국 데뷔" },
-          { "year": 2024, "national": "16강",     "regional": "2위", "note": "창단 2년차, 급성장 신호" },
-          { "year": 2025, "national": "8강",      "regional": "2위", "note": "창단 3년차, 전국 무대 존재감 각인" }
+          {
+            "year": 2023,
+            "national": "예선 탈락",
+            "regional": "4위",
+            "note": "창단 첫 시즌, 첫 전국 데뷔"
+          },
+          {
+            "year": 2024,
+            "national": "16강",
+            "regional": "2위",
+            "note": "창단 2년차, 급성장 신호"
+          },
+          {
+            "year": 2025,
+            "national": "8강",
+            "regional": "2위",
+            "note": "창단 3년차, 전국 무대 존재감 각인"
+          }
         ],
         "rival": null
       }
     },
     {
-      "id": "TEAM_HS_INCHEON_HARBOR", "name": "인천 하버", "nameEn": "Incheon Harbor",
-      "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_INCHEON_HARBOR", "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+      "id": "TEAM_HS_INCHEON_HARBOR",
+      "name": "인천 하버",
+      "nameEn": "Incheon Harbor",
+      "leagueId": "LEAGUE_HIGHSCHOOL",
+      "clubId": "TEAM_HS_INCHEON_HARBOR",
+      "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
       "profile": {
         "style": "균형형",
         "desc": "항구도시의 끈기를 닮은 팀. 두터운 선수층과 치열한 내부 경쟁으로 꾸준하고 안정적인 성적을 낸다. 매 시즌 수원 엣지와의 라이벌전이 지역 최대 이슈로, 그 승패가 지역 1위를 결정짓는다.",
-        "tags": ["균형형", "라이벌전", "끈기"],
-        "strengths": ["선수층", "계투진"],
+        "tags": [
+          "균형형",
+          "라이벌전",
+          "끈기"
+        ],
+        "strengths": [
+          "선수층",
+          "계투진"
+        ],
         "funding": "보통",
         "difficulty": "중하"
       },
@@ -231,23 +688,59 @@
         "proPlayers": 9,
         "nationalTitles": 1,
         "recentRecords": [
-          { "year": 2021, "national": "8강",  "regional": "1위", "note": "수원 엣지 꺾고 지역 1위" },
-          { "year": 2022, "national": "16강", "regional": "2위", "note": "라이벌전 패배, 지역 2위" },
-          { "year": 2023, "national": "8강",  "regional": "1위", "note": "설욕 성공, 지역 1위 탈환" },
-          { "year": 2024, "national": "16강", "regional": "2위", "note": "라이벌전 다시 패배" },
-          { "year": 2025, "national": "8강",  "regional": "1위", "note": "3번째 설욕, 지역 1위 탈환" }
+          {
+            "year": 2021,
+            "national": "8강",
+            "regional": "1위",
+            "note": "수원 엣지 꺾고 지역 1위"
+          },
+          {
+            "year": 2022,
+            "national": "16강",
+            "regional": "2위",
+            "note": "라이벌전 패배, 지역 2위"
+          },
+          {
+            "year": 2023,
+            "national": "8강",
+            "regional": "1위",
+            "note": "설욕 성공, 지역 1위 탈환"
+          },
+          {
+            "year": 2024,
+            "national": "16강",
+            "regional": "2위",
+            "note": "라이벌전 다시 패배"
+          },
+          {
+            "year": 2025,
+            "national": "8강",
+            "regional": "1위",
+            "note": "3번째 설욕, 지역 1위 탈환"
+          }
         ],
         "rival": "TEAM_HS_SUWON_EDGE"
       }
     },
     {
-      "id": "TEAM_HS_SUWON_EDGE", "name": "수원 엣지", "nameEn": "Suwon Edge",
-      "leagueId": "LEAGUE_HIGHSCHOOL", "clubId": "TEAM_HS_SUWON_EDGE", "schoolId": "SCHOOL_HS_SUWON_EDGE",
+      "id": "TEAM_HS_SUWON_EDGE",
+      "name": "수원 엣지",
+      "nameEn": "Suwon Edge",
+      "leagueId": "LEAGUE_HIGHSCHOOL",
+      "clubId": "TEAM_HS_SUWON_EDGE",
+      "schoolId": "SCHOOL_HS_SUWON_EDGE",
       "profile": {
         "style": "피네스형",
         "desc": "날카로운 변화구로 승부하는 기술야구 팀. 인천 하버와의 라이벌전이 곧 수원 야구의 전부로 불릴 만큼, 매 시즌 지역 결정전에 모든 것을 쏟아붓는다. 두 팀의 역대 전적은 박빙 그 자체다.",
-        "tags": ["피네스형", "라이벌전", "변화구"],
-        "strengths": ["무브먼트", "구종 다양성"],
+        "tags": [
+          "피네스형",
+          "라이벌전",
+          "변화구"
+        ],
+        "strengths": [
+          "무브먼트",
+          "구종 다양성"
+        ],
         "funding": "보통",
         "difficulty": "중하"
       },
@@ -257,89 +750,615 @@
         "proPlayers": 8,
         "nationalTitles": 1,
         "recentRecords": [
-          { "year": 2021, "national": "16강", "regional": "2위", "note": "라이벌전 패배" },
-          { "year": 2022, "national": "8강",  "regional": "1위", "note": "라이벌전 설욕, 첫 8강" },
-          { "year": 2023, "national": "8강",  "regional": "2위", "note": "라이벌전 패배했지만 전국 8강 유지" },
-          { "year": 2024, "national": "8강",  "regional": "1위", "note": "라이벌전 설욕, 지역 1위" },
-          { "year": 2025, "national": "16강", "regional": "2위", "note": "라이벌전 패배, 지역 2위" }
+          {
+            "year": 2021,
+            "national": "16강",
+            "regional": "2위",
+            "note": "라이벌전 패배"
+          },
+          {
+            "year": 2022,
+            "national": "8강",
+            "regional": "1위",
+            "note": "라이벌전 설욕, 첫 8강"
+          },
+          {
+            "year": 2023,
+            "national": "8강",
+            "regional": "2위",
+            "note": "라이벌전 패배했지만 전국 8강 유지"
+          },
+          {
+            "year": 2024,
+            "national": "8강",
+            "regional": "1위",
+            "note": "라이벌전 설욕, 지역 1위"
+          },
+          {
+            "year": 2025,
+            "national": "16강",
+            "regional": "2위",
+            "note": "라이벌전 패배, 지역 2위"
+          }
         ],
         "rival": "TEAM_HS_INCHEON_HARBOR"
       }
     },
-
-    { "id": "TEAM_KBL_TWINWOLVES_1",    "name": "서울 트윈울브즈 1군",     "nameEn": "Seoul TwinWolves (1st)",      "leagueId": "LEAGUE_KBL", "clubId": "CLUB_KBL_TWINWOLVES",    "tier": "1군" },
-    { "id": "TEAM_KBL_TWINWOLVES_2",    "name": "서울 트윈울브즈 2군",     "nameEn": "Seoul TwinWolves (2nd)",      "leagueId": "LEAGUE_KBL", "clubId": "CLUB_KBL_TWINWOLVES",    "tier": "2군" },
-    { "id": "TEAM_KBL_BEARGUARDIANS_1", "name": "서울 베어가디언스 1군",   "nameEn": "Seoul BearGuardians (1st)",   "leagueId": "LEAGUE_KBL", "clubId": "CLUB_KBL_BEARGUARDIANS", "tier": "1군" },
-    { "id": "TEAM_KBL_BEARGUARDIANS_2", "name": "서울 베어가디언스 2군",   "nameEn": "Seoul BearGuardians (2nd)",   "leagueId": "LEAGUE_KBL", "clubId": "CLUB_KBL_BEARGUARDIANS", "tier": "2군" },
-    { "id": "TEAM_KBL_SKYGULLS_1",      "name": "인천 스카이걸스 1군",     "nameEn": "Incheon SkyGulls (1st)",      "leagueId": "LEAGUE_KBL", "clubId": "CLUB_KBL_SKYGULLS",      "tier": "1군" },
-    { "id": "TEAM_KBL_SKYGULLS_2",      "name": "인천 스카이걸스 2군",     "nameEn": "Incheon SkyGulls (2nd)",      "leagueId": "LEAGUE_KBL", "clubId": "CLUB_KBL_SKYGULLS",      "tier": "2군" },
-    { "id": "TEAM_KBL_SOARINGEAGLES_1", "name": "대전 소어링이글스 1군",   "nameEn": "Daejeon SoaringEagles (1st)", "leagueId": "LEAGUE_KBL", "clubId": "CLUB_KBL_SOARINGEAGLES", "tier": "1군" },
-    { "id": "TEAM_KBL_SOARINGEAGLES_2", "name": "대전 소어링이글스 2군",   "nameEn": "Daejeon SoaringEagles (2nd)", "leagueId": "LEAGUE_KBL", "clubId": "CLUB_KBL_SOARINGEAGLES", "tier": "2군" },
-    { "id": "TEAM_KBL_ROYALLIONS_1",    "name": "대구 로얄라이온스 1군",   "nameEn": "Daegu RoyalLions (1st)",      "leagueId": "LEAGUE_KBL", "clubId": "CLUB_KBL_ROYALLIONS",    "tier": "1군" },
-    { "id": "TEAM_KBL_ROYALLIONS_2",    "name": "대구 로얄라이온스 2군",   "nameEn": "Daegu RoyalLions (2nd)",      "leagueId": "LEAGUE_KBL", "clubId": "CLUB_KBL_ROYALLIONS",    "tier": "2군" },
-    { "id": "TEAM_KBL_EMBERTIGERS_1",   "name": "광주 엠버타이거스 1군",   "nameEn": "Gwangju EmberTigers (1st)",   "leagueId": "LEAGUE_KBL", "clubId": "CLUB_KBL_EMBERTIGERS",   "tier": "1군" },
-    { "id": "TEAM_KBL_EMBERTIGERS_2",   "name": "광주 엠버타이거스 2군",   "nameEn": "Gwangju EmberTigers (2nd)",   "leagueId": "LEAGUE_KBL", "clubId": "CLUB_KBL_EMBERTIGERS",   "tier": "2군" },
-    { "id": "TEAM_KBL_STEELDINOS_1",    "name": "창원 스틸디노스 1군",     "nameEn": "Changwon SteelDinos (1st)",   "leagueId": "LEAGUE_KBL", "clubId": "CLUB_KBL_STEELDINOS",    "tier": "1군" },
-    { "id": "TEAM_KBL_STEELDINOS_2",    "name": "창원 스틸디노스 2군",     "nameEn": "Changwon SteelDinos (2nd)",   "leagueId": "LEAGUE_KBL", "clubId": "CLUB_KBL_STEELDINOS",    "tier": "2군" },
-    { "id": "TEAM_KBL_GIANTWHALES_1",   "name": "부산 자이언트웨일스 1군", "nameEn": "Busan GiantWhales (1st)",     "leagueId": "LEAGUE_KBL", "clubId": "CLUB_KBL_GIANTWHALES",   "tier": "1군" },
-    { "id": "TEAM_KBL_GIANTWHALES_2",   "name": "부산 자이언트웨일스 2군", "nameEn": "Busan GiantWhales (2nd)",     "leagueId": "LEAGUE_KBL", "clubId": "CLUB_KBL_GIANTWHALES",   "tier": "2군" },
-
-    { "id": "TEAM_ABL_EMPIRE_1",          "name": "뉴욕 엠파이어",           "nameEn": "New York Empire",                "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_EMPIRE",          "tier": "메이저" },
-    { "id": "TEAM_ABL_EMPIRE_2",          "name": "뉴욕 엠파이어 팜",        "nameEn": "New York Empire (Farm)",          "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_EMPIRE",          "tier": "마이너" },
-    { "id": "TEAM_ABL_HARBORHAWKS_1",     "name": "보스턴 하버호크스",       "nameEn": "Boston HarborHawks",              "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_HARBORHAWKS",     "tier": "메이저" },
-    { "id": "TEAM_ABL_HARBORHAWKS_2",     "name": "보스턴 하버호크스 팜",    "nameEn": "Boston HarborHawks (Farm)",       "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_HARBORHAWKS",     "tier": "마이너" },
-    { "id": "TEAM_ABL_LAKESPIRITS_1",     "name": "클리블랜드 레이크스피리츠","nameEn": "Cleveland LakeSpirits",          "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_LAKESPIRITS",     "tier": "메이저" },
-    { "id": "TEAM_ABL_LAKESPIRITS_2",     "name": "클리블랜드 레이크스피리츠 팜","nameEn": "Cleveland LakeSpirits (Farm)","leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_LAKESPIRITS",     "tier": "마이너" },
-    { "id": "TEAM_ABL_LONESTARS_1",       "name": "댈러스 론스타스",         "nameEn": "Dallas LoneStars",                "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_LONESTARS",       "tier": "메이저" },
-    { "id": "TEAM_ABL_LONESTARS_2",       "name": "댈러스 론스타스 팜",      "nameEn": "Dallas LoneStars (Farm)",         "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_LONESTARS",       "tier": "마이너" },
-    { "id": "TEAM_ABL_MOTORWOLVES_1",     "name": "디트로이트 모터울브즈",   "nameEn": "Detroit MotorWolves",             "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_MOTORWOLVES",     "tier": "메이저" },
-    { "id": "TEAM_ABL_MOTORWOLVES_2",     "name": "디트로이트 모터울브즈 팜","nameEn": "Detroit MotorWolves (Farm)",     "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_MOTORWOLVES",     "tier": "마이너" },
-    { "id": "TEAM_ABL_WAVERIDERS_1",      "name": "마이애미 웨이브라이더스", "nameEn": "Miami WaveRiders",                "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_WAVERIDERS",      "tier": "메이저" },
-    { "id": "TEAM_ABL_WAVERIDERS_2",      "name": "마이애미 웨이브라이더스 팜","nameEn": "Miami WaveRiders (Farm)",      "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_WAVERIDERS",      "tier": "마이너" },
-    { "id": "TEAM_ABL_RAINARROWS_1",      "name": "시애틀 레인애로우스",     "nameEn": "Seattle RainArrows",              "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_RAINARROWS",      "tier": "메이저" },
-    { "id": "TEAM_ABL_RAINARROWS_2",      "name": "시애틀 레인애로우스 팜",  "nameEn": "Seattle RainArrows (Farm)",       "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_RAINARROWS",      "tier": "마이너" },
-    { "id": "TEAM_ABL_WINDBEARS_1",       "name": "시카고 윈드베어스",       "nameEn": "Chicago WindBears",               "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_WINDBEARS",       "tier": "메이저" },
-    { "id": "TEAM_ABL_WINDBEARS_2",       "name": "시카고 윈드베어스 팜",    "nameEn": "Chicago WindBears (Farm)",        "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_WINDBEARS",       "tier": "마이너" },
-    { "id": "TEAM_ABL_MOUNTAINPEAKS_1",   "name": "덴버 마운틴픽스",         "nameEn": "Denver MountainPeaks",            "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_MOUNTAINPEAKS",   "tier": "메이저" },
-    { "id": "TEAM_ABL_MOUNTAINPEAKS_2",   "name": "덴버 마운틴픽스 팜",      "nameEn": "Denver MountainPeaks (Farm)",     "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_MOUNTAINPEAKS",   "tier": "마이너" },
-    { "id": "TEAM_ABL_SPACECOMETS_1",     "name": "휴스턴 스페이스코밋츠",   "nameEn": "Houston SpaceComets",             "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_SPACECOMETS",     "tier": "메이저" },
-    { "id": "TEAM_ABL_SPACECOMETS_2",     "name": "휴스턴 스페이스코밋츠 팜","nameEn": "Houston SpaceComets (Farm)",    "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_SPACECOMETS",     "tier": "마이너" },
-    { "id": "TEAM_ABL_SUNDRAGONS_1",      "name": "LA 선드래곤스",            "nameEn": "Los Angeles SunDragons",          "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_SUNDRAGONS",      "tier": "메이저" },
-    { "id": "TEAM_ABL_SUNDRAGONS_2",      "name": "LA 선드래곤스 팜",         "nameEn": "Los Angeles SunDragons (Farm)",   "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_SUNDRAGONS",      "tier": "마이너" },
-    { "id": "TEAM_ABL_DESERTSERPENTS_1",  "name": "피닉스 데저트서펀츠",     "nameEn": "Phoenix DesertSerpents",          "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_DESERTSERPENTS",  "tier": "메이저" },
-    { "id": "TEAM_ABL_DESERTSERPENTS_2",  "name": "피닉스 데저트서펀츠 팜",  "nameEn": "Phoenix DesertSerpents (Farm)",   "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_DESERTSERPENTS",  "tier": "마이너" },
-    { "id": "TEAM_ABL_COASTALRAYS_1",     "name": "샌디에이고 코스털레이스", "nameEn": "San Diego CoastalRays",           "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_COASTALRAYS",     "tier": "메이저" },
-    { "id": "TEAM_ABL_COASTALRAYS_2",     "name": "샌디에이고 코스털레이스 팜","nameEn": "San Diego CoastalRays (Farm)", "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_COASTALRAYS",     "tier": "마이너" },
-    { "id": "TEAM_ABL_BAYSEALS_1",        "name": "샌프란시스코 베이씰스",   "nameEn": "San Francisco BaySeals",          "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_BAYSEALS",        "tier": "메이저" },
-    { "id": "TEAM_ABL_BAYSEALS_2",        "name": "샌프란시스코 베이씰스 팜","nameEn": "San Francisco BaySeals (Farm)",  "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_BAYSEALS",        "tier": "마이너" },
-    { "id": "TEAM_ABL_RIVERCARDINALS_1",  "name": "세인트루이스 리버카디널스","nameEn": "St. Louis RiverCardinals",        "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_RIVERCARDINALS",  "tier": "메이저" },
-    { "id": "TEAM_ABL_RIVERCARDINALS_2",  "name": "세인트루이스 리버카디널스 팜","nameEn": "St. Louis RiverCardinals (Farm)","leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_RIVERCARDINALS","tier": "마이너" },
-    { "id": "TEAM_ABL_PEACHTREEFALCONS_1","name": "애틀랜타 피치트리팰컨스", "nameEn": "Atlanta PeachtreeFalcons",        "leagueId": "LEAGUE_ABL", "clubId": "CLUB_ABL_PEACHTREEFALCONS","tier": "메이저" },
-    { "id": "TEAM_ABL_PEACHTREEFALCONS_2","name": "애틀랜타 피치트리팰컨스 팜","nameEn": "Atlanta PeachtreeFalcons (Farm)","leagueId": "LEAGUE_ABL","clubId": "CLUB_ABL_PEACHTREEFALCONS","tier": "마이너" },
-
-    { "id": "TEAM_JBL_CL_NEONCRANES_1",    "name": "도쿄 네온 크레인즈 1군",    "nameEn": "Tokyo Neon Cranes (1st)",         "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_CL_NEONCRANES",    "tier": "1군" },
-    { "id": "TEAM_JBL_CL_NEONCRANES_2",    "name": "도쿄 네온 크레인즈 2군",    "nameEn": "Tokyo Neon Cranes (2nd)",         "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_CL_NEONCRANES",    "tier": "2군" },
-    { "id": "TEAM_JBL_CL_TEMPOSTINGS_1",   "name": "오사카 템포 스팅스 1군",    "nameEn": "Osaka Tempo Stings (1st)",        "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_CL_TEMPOSTINGS",   "tier": "1군" },
-    { "id": "TEAM_JBL_CL_TEMPOSTINGS_2",   "name": "오사카 템포 스팅스 2군",    "nameEn": "Osaka Tempo Stings (2nd)",        "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_CL_TEMPOSTINGS",   "tier": "2군" },
-    { "id": "TEAM_JBL_CL_IRONDRAKES_1",    "name": "나고야 아이언 드레이크스 1군","nameEn": "Nagoya Iron Drakes (1st)",       "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_CL_IRONDRAKES",    "tier": "1군" },
-    { "id": "TEAM_JBL_CL_IRONDRAKES_2",    "name": "나고야 아이언 드레이크스 2군","nameEn": "Nagoya Iron Drakes (2nd)",       "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_CL_IRONDRAKES",    "tier": "2군" },
-    { "id": "TEAM_JBL_CL_TIDERAVES_1",     "name": "요코하마 타이드 레이브스 1군","nameEn": "Yokohama Tide Raves (1st)",     "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_CL_TIDERAVES",     "tier": "1군" },
-    { "id": "TEAM_JBL_CL_TIDERAVES_2",     "name": "요코하마 타이드 레이브스 2군","nameEn": "Yokohama Tide Raves (2nd)",     "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_CL_TIDERAVES",     "tier": "2군" },
-    { "id": "TEAM_JBL_CL_SILVERWOLVES_1",  "name": "고베 실버 울브스 1군",      "nameEn": "Kobe Silver Wolves (1st)",        "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_CL_SILVERWOLVES",  "tier": "1군" },
-    { "id": "TEAM_JBL_CL_SILVERWOLVES_2",  "name": "고베 실버 울브스 2군",      "nameEn": "Kobe Silver Wolves (2nd)",        "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_CL_SILVERWOLVES",  "tier": "2군" },
-    { "id": "TEAM_JBL_CL_IRONSTORMS_1",    "name": "히로시마 아이언 스톰즈 1군","nameEn": "Hiroshima Iron Storms (1st)",     "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_CL_IRONSTORMS",    "tier": "1군" },
-    { "id": "TEAM_JBL_CL_IRONSTORMS_2",    "name": "히로시마 아이언 스톰즈 2군","nameEn": "Hiroshima Iron Storms (2nd)",     "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_CL_IRONSTORMS",    "tier": "2군" },
-    { "id": "TEAM_JBL_PL_THUNDERFALCONS_1","name": "후쿠오카 썬더 팰컨즈 1군",  "nameEn": "Fukuoka Thunder Falcons (1st)",   "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_PL_THUNDERFALCONS","tier": "1군" },
-    { "id": "TEAM_JBL_PL_THUNDERFALCONS_2","name": "후쿠오카 썬더 팰컨즈 2군",  "nameEn": "Fukuoka Thunder Falcons (2nd)",   "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_PL_THUNDERFALCONS","tier": "2군" },
-    { "id": "TEAM_JBL_PL_POLARBEARS_1",    "name": "삿포로 폴라 베어스 1군",    "nameEn": "Sapporo Polar Bears (1st)",       "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_PL_POLARBEARS",    "tier": "1군" },
-    { "id": "TEAM_JBL_PL_POLARBEARS_2",    "name": "삿포로 폴라 베어스 2군",    "nameEn": "Sapporo Polar Bears (2nd)",       "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_PL_POLARBEARS",    "tier": "2군" },
-    { "id": "TEAM_JBL_PL_SPIRITBUFFALOS_1","name": "센다이 스피릿 버팔로스 1군","nameEn": "Sendai Spirit Buffalos (1st)",    "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS","tier": "1군" },
-    { "id": "TEAM_JBL_PL_SPIRITBUFFALOS_2","name": "센다이 스피릿 버팔로스 2군","nameEn": "Sendai Spirit Buffalos (2nd)",    "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS","tier": "2군" },
-    { "id": "TEAM_JBL_PL_MARINESOLDIERS_1","name": "나가사키 마린 솔저스 1군",  "nameEn": "Nagasaki Marine Soldiers (1st)", "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_PL_MARINESOLDIERS","tier": "1군" },
-    { "id": "TEAM_JBL_PL_MARINESOLDIERS_2","name": "나가사키 마린 솔저스 2군",  "nameEn": "Nagasaki Marine Soldiers (2nd)", "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_PL_MARINESOLDIERS","tier": "2군" },
-    { "id": "TEAM_JBL_PL_SEAGULLS_1",      "name": "니가타 씨걸스 1군",         "nameEn": "Niigata Seagulls (1st)",          "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_PL_SEAGULLS",      "tier": "1군" },
-    { "id": "TEAM_JBL_PL_SEAGULLS_2",      "name": "니가타 씨걸스 2군",         "nameEn": "Niigata Seagulls (2nd)",          "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_PL_SEAGULLS",      "tier": "2군" },
-    { "id": "TEAM_JBL_PL_SUNS_1",          "name": "오키나와 선즈 1군",          "nameEn": "Okinawa Suns (1st)",              "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_PL_SUNS",          "tier": "1군" },
-    { "id": "TEAM_JBL_PL_SUNS_2",          "name": "오키나와 선즈 2군",          "nameEn": "Okinawa Suns (2nd)",              "leagueId": "LEAGUE_JBL", "clubId": "CLUB_JBL_PL_SUNS",          "tier": "2군" }
+    {
+      "id": "TEAM_KBL_TWINWOLVES_1",
+      "name": "서울 트윈울브즈",
+      "nameEn": "Seoul TwinWolves",
+      "leagueId": "LEAGUE_KBL",
+      "clubId": "CLUB_KBL_TWINWOLVES",
+      "tier": "1군"
+    },
+    {
+      "id": "TEAM_KBL_TWINWOLVES_2",
+      "name": "서울 트윈울브즈 2군",
+      "nameEn": "Seoul TwinWolves (2nd)",
+      "leagueId": "LEAGUE_KBL",
+      "clubId": "CLUB_KBL_TWINWOLVES",
+      "tier": "2군"
+    },
+    {
+      "id": "TEAM_KBL_BEARGUARDIANS_1",
+      "name": "서울 베어가디언스",
+      "nameEn": "Seoul BearGuardians",
+      "leagueId": "LEAGUE_KBL",
+      "clubId": "CLUB_KBL_BEARGUARDIANS",
+      "tier": "1군"
+    },
+    {
+      "id": "TEAM_KBL_BEARGUARDIANS_2",
+      "name": "서울 베어가디언스 2군",
+      "nameEn": "Seoul BearGuardians (2nd)",
+      "leagueId": "LEAGUE_KBL",
+      "clubId": "CLUB_KBL_BEARGUARDIANS",
+      "tier": "2군"
+    },
+    {
+      "id": "TEAM_KBL_SKYGULLS_1",
+      "name": "인천 스카이걸스",
+      "nameEn": "Incheon SkyGulls",
+      "leagueId": "LEAGUE_KBL",
+      "clubId": "CLUB_KBL_SKYGULLS",
+      "tier": "1군"
+    },
+    {
+      "id": "TEAM_KBL_SKYGULLS_2",
+      "name": "인천 스카이걸스 2군",
+      "nameEn": "Incheon SkyGulls (2nd)",
+      "leagueId": "LEAGUE_KBL",
+      "clubId": "CLUB_KBL_SKYGULLS",
+      "tier": "2군"
+    },
+    {
+      "id": "TEAM_KBL_SOARINGEAGLES_1",
+      "name": "대전 소어링이글스",
+      "nameEn": "Daejeon SoaringEagles",
+      "leagueId": "LEAGUE_KBL",
+      "clubId": "CLUB_KBL_SOARINGEAGLES",
+      "tier": "1군"
+    },
+    {
+      "id": "TEAM_KBL_SOARINGEAGLES_2",
+      "name": "대전 소어링이글스 2군",
+      "nameEn": "Daejeon SoaringEagles (2nd)",
+      "leagueId": "LEAGUE_KBL",
+      "clubId": "CLUB_KBL_SOARINGEAGLES",
+      "tier": "2군"
+    },
+    {
+      "id": "TEAM_KBL_ROYALLIONS_1",
+      "name": "대구 로얄라이온스",
+      "nameEn": "Daegu RoyalLions",
+      "leagueId": "LEAGUE_KBL",
+      "clubId": "CLUB_KBL_ROYALLIONS",
+      "tier": "1군"
+    },
+    {
+      "id": "TEAM_KBL_ROYALLIONS_2",
+      "name": "대구 로얄라이온스 2군",
+      "nameEn": "Daegu RoyalLions (2nd)",
+      "leagueId": "LEAGUE_KBL",
+      "clubId": "CLUB_KBL_ROYALLIONS",
+      "tier": "2군"
+    },
+    {
+      "id": "TEAM_KBL_EMBERTIGERS_1",
+      "name": "광주 엠버타이거스",
+      "nameEn": "Gwangju EmberTigers",
+      "leagueId": "LEAGUE_KBL",
+      "clubId": "CLUB_KBL_EMBERTIGERS",
+      "tier": "1군"
+    },
+    {
+      "id": "TEAM_KBL_EMBERTIGERS_2",
+      "name": "광주 엠버타이거스 2군",
+      "nameEn": "Gwangju EmberTigers (2nd)",
+      "leagueId": "LEAGUE_KBL",
+      "clubId": "CLUB_KBL_EMBERTIGERS",
+      "tier": "2군"
+    },
+    {
+      "id": "TEAM_KBL_STEELDINOS_1",
+      "name": "창원 스틸디노스",
+      "nameEn": "Changwon SteelDinos",
+      "leagueId": "LEAGUE_KBL",
+      "clubId": "CLUB_KBL_STEELDINOS",
+      "tier": "1군"
+    },
+    {
+      "id": "TEAM_KBL_STEELDINOS_2",
+      "name": "창원 스틸디노스 2군",
+      "nameEn": "Changwon SteelDinos (2nd)",
+      "leagueId": "LEAGUE_KBL",
+      "clubId": "CLUB_KBL_STEELDINOS",
+      "tier": "2군"
+    },
+    {
+      "id": "TEAM_KBL_GIANTWHALES_1",
+      "name": "부산 자이언트웨일스",
+      "nameEn": "Busan GiantWhales",
+      "leagueId": "LEAGUE_KBL",
+      "clubId": "CLUB_KBL_GIANTWHALES",
+      "tier": "1군"
+    },
+    {
+      "id": "TEAM_KBL_GIANTWHALES_2",
+      "name": "부산 자이언트웨일스 2군",
+      "nameEn": "Busan GiantWhales (2nd)",
+      "leagueId": "LEAGUE_KBL",
+      "clubId": "CLUB_KBL_GIANTWHALES",
+      "tier": "2군"
+    },
+    {
+      "id": "TEAM_ABL_EMPIRE_1",
+      "name": "뉴욕 엠파이어",
+      "nameEn": "New York Empire",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_EMPIRE",
+      "tier": "메이저"
+    },
+    {
+      "id": "TEAM_ABL_EMPIRE_2",
+      "name": "뉴욕 엠파이어 팜",
+      "nameEn": "New York Empire (Farm)",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_EMPIRE",
+      "tier": "마이너"
+    },
+    {
+      "id": "TEAM_ABL_HARBORHAWKS_1",
+      "name": "보스턴 하버호크스",
+      "nameEn": "Boston HarborHawks",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_HARBORHAWKS",
+      "tier": "메이저"
+    },
+    {
+      "id": "TEAM_ABL_HARBORHAWKS_2",
+      "name": "보스턴 하버호크스 팜",
+      "nameEn": "Boston HarborHawks (Farm)",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_HARBORHAWKS",
+      "tier": "마이너"
+    },
+    {
+      "id": "TEAM_ABL_LAKESPIRITS_1",
+      "name": "클리블랜드 레이크스피리츠",
+      "nameEn": "Cleveland LakeSpirits",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_LAKESPIRITS",
+      "tier": "메이저"
+    },
+    {
+      "id": "TEAM_ABL_LAKESPIRITS_2",
+      "name": "클리블랜드 레이크스피리츠 팜",
+      "nameEn": "Cleveland LakeSpirits (Farm)",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_LAKESPIRITS",
+      "tier": "마이너"
+    },
+    {
+      "id": "TEAM_ABL_LONESTARS_1",
+      "name": "댈러스 론스타스",
+      "nameEn": "Dallas LoneStars",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_LONESTARS",
+      "tier": "메이저"
+    },
+    {
+      "id": "TEAM_ABL_LONESTARS_2",
+      "name": "댈러스 론스타스 팜",
+      "nameEn": "Dallas LoneStars (Farm)",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_LONESTARS",
+      "tier": "마이너"
+    },
+    {
+      "id": "TEAM_ABL_MOTORWOLVES_1",
+      "name": "디트로이트 모터울브즈",
+      "nameEn": "Detroit MotorWolves",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_MOTORWOLVES",
+      "tier": "메이저"
+    },
+    {
+      "id": "TEAM_ABL_MOTORWOLVES_2",
+      "name": "디트로이트 모터울브즈 팜",
+      "nameEn": "Detroit MotorWolves (Farm)",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_MOTORWOLVES",
+      "tier": "마이너"
+    },
+    {
+      "id": "TEAM_ABL_WAVERIDERS_1",
+      "name": "마이애미 웨이브라이더스",
+      "nameEn": "Miami WaveRiders",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_WAVERIDERS",
+      "tier": "메이저"
+    },
+    {
+      "id": "TEAM_ABL_WAVERIDERS_2",
+      "name": "마이애미 웨이브라이더스 팜",
+      "nameEn": "Miami WaveRiders (Farm)",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_WAVERIDERS",
+      "tier": "마이너"
+    },
+    {
+      "id": "TEAM_ABL_RAINARROWS_1",
+      "name": "시애틀 레인애로우스",
+      "nameEn": "Seattle RainArrows",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_RAINARROWS",
+      "tier": "메이저"
+    },
+    {
+      "id": "TEAM_ABL_RAINARROWS_2",
+      "name": "시애틀 레인애로우스 팜",
+      "nameEn": "Seattle RainArrows (Farm)",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_RAINARROWS",
+      "tier": "마이너"
+    },
+    {
+      "id": "TEAM_ABL_WINDBEARS_1",
+      "name": "시카고 윈드베어스",
+      "nameEn": "Chicago WindBears",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_WINDBEARS",
+      "tier": "메이저"
+    },
+    {
+      "id": "TEAM_ABL_WINDBEARS_2",
+      "name": "시카고 윈드베어스 팜",
+      "nameEn": "Chicago WindBears (Farm)",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_WINDBEARS",
+      "tier": "마이너"
+    },
+    {
+      "id": "TEAM_ABL_MOUNTAINPEAKS_1",
+      "name": "덴버 마운틴픽스",
+      "nameEn": "Denver MountainPeaks",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_MOUNTAINPEAKS",
+      "tier": "메이저"
+    },
+    {
+      "id": "TEAM_ABL_MOUNTAINPEAKS_2",
+      "name": "덴버 마운틴픽스 팜",
+      "nameEn": "Denver MountainPeaks (Farm)",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_MOUNTAINPEAKS",
+      "tier": "마이너"
+    },
+    {
+      "id": "TEAM_ABL_SPACECOMETS_1",
+      "name": "휴스턴 스페이스코밋츠",
+      "nameEn": "Houston SpaceComets",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_SPACECOMETS",
+      "tier": "메이저"
+    },
+    {
+      "id": "TEAM_ABL_SPACECOMETS_2",
+      "name": "휴스턴 스페이스코밋츠 팜",
+      "nameEn": "Houston SpaceComets (Farm)",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_SPACECOMETS",
+      "tier": "마이너"
+    },
+    {
+      "id": "TEAM_ABL_SUNDRAGONS_1",
+      "name": "LA 선드래곤스",
+      "nameEn": "Los Angeles SunDragons",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_SUNDRAGONS",
+      "tier": "메이저"
+    },
+    {
+      "id": "TEAM_ABL_SUNDRAGONS_2",
+      "name": "LA 선드래곤스 팜",
+      "nameEn": "Los Angeles SunDragons (Farm)",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_SUNDRAGONS",
+      "tier": "마이너"
+    },
+    {
+      "id": "TEAM_ABL_DESERTSERPENTS_1",
+      "name": "피닉스 데저트서펀츠",
+      "nameEn": "Phoenix DesertSerpents",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_DESERTSERPENTS",
+      "tier": "메이저"
+    },
+    {
+      "id": "TEAM_ABL_DESERTSERPENTS_2",
+      "name": "피닉스 데저트서펀츠 팜",
+      "nameEn": "Phoenix DesertSerpents (Farm)",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_DESERTSERPENTS",
+      "tier": "마이너"
+    },
+    {
+      "id": "TEAM_ABL_COASTALRAYS_1",
+      "name": "샌디에이고 코스털레이스",
+      "nameEn": "San Diego CoastalRays",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_COASTALRAYS",
+      "tier": "메이저"
+    },
+    {
+      "id": "TEAM_ABL_COASTALRAYS_2",
+      "name": "샌디에이고 코스털레이스 팜",
+      "nameEn": "San Diego CoastalRays (Farm)",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_COASTALRAYS",
+      "tier": "마이너"
+    },
+    {
+      "id": "TEAM_ABL_BAYSEALS_1",
+      "name": "샌프란시스코 베이씰스",
+      "nameEn": "San Francisco BaySeals",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_BAYSEALS",
+      "tier": "메이저"
+    },
+    {
+      "id": "TEAM_ABL_BAYSEALS_2",
+      "name": "샌프란시스코 베이씰스 팜",
+      "nameEn": "San Francisco BaySeals (Farm)",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_BAYSEALS",
+      "tier": "마이너"
+    },
+    {
+      "id": "TEAM_ABL_RIVERCARDINALS_1",
+      "name": "세인트루이스 리버카디널스",
+      "nameEn": "St. Louis RiverCardinals",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_RIVERCARDINALS",
+      "tier": "메이저"
+    },
+    {
+      "id": "TEAM_ABL_RIVERCARDINALS_2",
+      "name": "세인트루이스 리버카디널스 팜",
+      "nameEn": "St. Louis RiverCardinals (Farm)",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_RIVERCARDINALS",
+      "tier": "마이너"
+    },
+    {
+      "id": "TEAM_ABL_PEACHTREEFALCONS_1",
+      "name": "애틀랜타 피치트리팰컨스",
+      "nameEn": "Atlanta PeachtreeFalcons",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_PEACHTREEFALCONS",
+      "tier": "메이저"
+    },
+    {
+      "id": "TEAM_ABL_PEACHTREEFALCONS_2",
+      "name": "애틀랜타 피치트리팰컨스 팜",
+      "nameEn": "Atlanta PeachtreeFalcons (Farm)",
+      "leagueId": "LEAGUE_ABL",
+      "clubId": "CLUB_ABL_PEACHTREEFALCONS",
+      "tier": "마이너"
+    },
+    {
+      "id": "TEAM_JBL_CL_NEONCRANES_1",
+      "name": "도쿄 네온 크레인즈 1군",
+      "nameEn": "Tokyo Neon Cranes (1st)",
+      "leagueId": "LEAGUE_JBL",
+      "clubId": "CLUB_JBL_CL_NEONCRANES",
+      "tier": "1군"
+    },
+    {
+      "id": "TEAM_JBL_CL_NEONCRANES_2",
+      "name": "도쿄 네온 크레인즈 2군",
+      "nameEn": "Tokyo Neon Cranes (2nd)",
+      "leagueId": "LEAGUE_JBL",
+      "clubId": "CLUB_JBL_CL_NEONCRANES",
+      "tier": "2군"
+    },
+    {
+      "id": "TEAM_JBL_CL_TEMPOSTINGS_1",
+      "name": "오사카 템포 스팅스 1군",
+      "nameEn": "Osaka Tempo Stings (1st)",
+      "leagueId": "LEAGUE_JBL",
+      "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
+      "tier": "1군"
+    },
+    {
+      "id": "TEAM_JBL_CL_TEMPOSTINGS_2",
+      "name": "오사카 템포 스팅스 2군",
+      "nameEn": "Osaka Tempo Stings (2nd)",
+      "leagueId": "LEAGUE_JBL",
+      "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
+      "tier": "2군"
+    },
+    {
+      "id": "TEAM_JBL_CL_IRONDRAKES_1",
+      "name": "나고야 아이언 드레이크스 1군",
+      "nameEn": "Nagoya Iron Drakes (1st)",
+      "leagueId": "LEAGUE_JBL",
+      "clubId": "CLUB_JBL_CL_IRONDRAKES",
+      "tier": "1군"
+    },
+    {
+      "id": "TEAM_JBL_CL_IRONDRAKES_2",
+      "name": "나고야 아이언 드레이크스 2군",
+      "nameEn": "Nagoya Iron Drakes (2nd)",
+      "leagueId": "LEAGUE_JBL",
+      "clubId": "CLUB_JBL_CL_IRONDRAKES",
+      "tier": "2군"
+    },
+    {
+      "id": "TEAM_JBL_CL_TIDERAVES_1",
+      "name": "요코하마 타이드 레이브스 1군",
+      "nameEn": "Yokohama Tide Raves (1st)",
+      "leagueId": "LEAGUE_JBL",
+      "clubId": "CLUB_JBL_CL_TIDERAVES",
+      "tier": "1군"
+    },
+    {
+      "id": "TEAM_JBL_CL_TIDERAVES_2",
+      "name": "요코하마 타이드 레이브스 2군",
+      "nameEn": "Yokohama Tide Raves (2nd)",
+      "leagueId": "LEAGUE_JBL",
+      "clubId": "CLUB_JBL_CL_TIDERAVES",
+      "tier": "2군"
+    },
+    {
+      "id": "TEAM_JBL_CL_SILVERWOLVES_1",
+      "name": "고베 실버 울브스 1군",
+      "nameEn": "Kobe Silver Wolves (1st)",
+      "leagueId": "LEAGUE_JBL",
+      "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+      "tier": "1군"
+    },
+    {
+      "id": "TEAM_JBL_CL_SILVERWOLVES_2",
+      "name": "고베 실버 울브스 2군",
+      "nameEn": "Kobe Silver Wolves (2nd)",
+      "leagueId": "LEAGUE_JBL",
+      "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+      "tier": "2군"
+    },
+    {
+      "id": "TEAM_JBL_CL_IRONSTORMS_1",
+      "name": "히로시마 아이언 스톰즈 1군",
+      "nameEn": "Hiroshima Iron Storms (1st)",
+      "leagueId": "LEAGUE_JBL",
+      "clubId": "CLUB_JBL_CL_IRONSTORMS",
+      "tier": "1군"
+    },
+    {
+      "id": "TEAM_JBL_CL_IRONSTORMS_2",
+      "name": "히로시마 아이언 스톰즈 2군",
+      "nameEn": "Hiroshima Iron Storms (2nd)",
+      "leagueId": "LEAGUE_JBL",
+      "clubId": "CLUB_JBL_CL_IRONSTORMS",
+      "tier": "2군"
+    },
+    {
+      "id": "TEAM_JBL_PL_THUNDERFALCONS_1",
+      "name": "후쿠오카 썬더 팰컨즈 1군",
+      "nameEn": "Fukuoka Thunder Falcons (1st)",
+      "leagueId": "LEAGUE_JBL",
+      "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+      "tier": "1군"
+    },
+    {
+      "id": "TEAM_JBL_PL_THUNDERFALCONS_2",
+      "name": "후쿠오카 썬더 팰컨즈 2군",
+      "nameEn": "Fukuoka Thunder Falcons (2nd)",
+      "leagueId": "LEAGUE_JBL",
+      "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+      "tier": "2군"
+    },
+    {
+      "id": "TEAM_JBL_PL_POLARBEARS_1",
+      "name": "삿포로 폴라 베어스 1군",
+      "nameEn": "Sapporo Polar Bears (1st)",
+      "leagueId": "LEAGUE_JBL",
+      "clubId": "CLUB_JBL_PL_POLARBEARS",
+      "tier": "1군"
+    },
+    {
+      "id": "TEAM_JBL_PL_POLARBEARS_2",
+      "name": "삿포로 폴라 베어스 2군",
+      "nameEn": "Sapporo Polar Bears (2nd)",
+      "leagueId": "LEAGUE_JBL",
+      "clubId": "CLUB_JBL_PL_POLARBEARS",
+      "tier": "2군"
+    },
+    {
+      "id": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
+      "name": "센다이 스피릿 버팔로스 1군",
+      "nameEn": "Sendai Spirit Buffalos (1st)",
+      "leagueId": "LEAGUE_JBL",
+      "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
+      "tier": "1군"
+    },
+    {
+      "id": "TEAM_JBL_PL_SPIRITBUFFALOS_2",
+      "name": "센다이 스피릿 버팔로스 2군",
+      "nameEn": "Sendai Spirit Buffalos (2nd)",
+      "leagueId": "LEAGUE_JBL",
+      "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
+      "tier": "2군"
+    },
+    {
+      "id": "TEAM_JBL_PL_MARINESOLDIERS_1",
+      "name": "나가사키 마린 솔저스 1군",
+      "nameEn": "Nagasaki Marine Soldiers (1st)",
+      "leagueId": "LEAGUE_JBL",
+      "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+      "tier": "1군"
+    },
+    {
+      "id": "TEAM_JBL_PL_MARINESOLDIERS_2",
+      "name": "나가사키 마린 솔저스 2군",
+      "nameEn": "Nagasaki Marine Soldiers (2nd)",
+      "leagueId": "LEAGUE_JBL",
+      "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+      "tier": "2군"
+    },
+    {
+      "id": "TEAM_JBL_PL_SEAGULLS_1",
+      "name": "니가타 씨걸스 1군",
+      "nameEn": "Niigata Seagulls (1st)",
+      "leagueId": "LEAGUE_JBL",
+      "clubId": "CLUB_JBL_PL_SEAGULLS",
+      "tier": "1군"
+    },
+    {
+      "id": "TEAM_JBL_PL_SEAGULLS_2",
+      "name": "니가타 씨걸스 2군",
+      "nameEn": "Niigata Seagulls (2nd)",
+      "leagueId": "LEAGUE_JBL",
+      "clubId": "CLUB_JBL_PL_SEAGULLS",
+      "tier": "2군"
+    },
+    {
+      "id": "TEAM_JBL_PL_SUNS_1",
+      "name": "오키나와 선즈 1군",
+      "nameEn": "Okinawa Suns (1st)",
+      "leagueId": "LEAGUE_JBL",
+      "clubId": "CLUB_JBL_PL_SUNS",
+      "tier": "1군"
+    },
+    {
+      "id": "TEAM_JBL_PL_SUNS_2",
+      "name": "오키나와 선즈 2군",
+      "nameEn": "Okinawa Suns (2nd)",
+      "leagueId": "LEAGUE_JBL",
+      "clubId": "CLUB_JBL_PL_SUNS",
+      "tier": "2군"
+    }
   ]
 }
