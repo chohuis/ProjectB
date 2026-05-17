@@ -26,7 +26,19 @@ import type { SimWorkerRequest, SimWorkerResponse } from "../workers/simWorker";
 // ── Web Worker 브리지 (싱글톤) ────────────────────────────────
 let _simWorker: Worker | null = null;
 let _reqId = 0;
-const _pending = new Map<number, (r: { id: string; result: MatchResult }[]) => void>();
+type PendingEntry = {
+  resolve: (r: { id: string; result: MatchResult }[]) => void;
+  games: SimWorkerRequest["games"];
+  entities: EntityRow[];
+};
+const _pending = new Map<number, PendingEntry>();
+
+function flushPendingWithSync() {
+  for (const [, { resolve, games, entities }] of _pending) {
+    resolve(games.map((g) => ({ id: g.id, result: simulateGame(g.homeTeamId, g.awayTeamId, entities) })));
+  }
+  _pending.clear();
+}
 
 function getSimWorker(): Worker | null {
   if (typeof Worker === "undefined") return null;
@@ -38,12 +50,13 @@ function getSimWorker(): Worker | null {
       );
       _simWorker.onmessage = (e: MessageEvent<SimWorkerResponse>) => {
         const { reqId, results } = e.data;
-        _pending.get(reqId)?.(results);
+        _pending.get(reqId)?.resolve(results);
         _pending.delete(reqId);
       };
       _simWorker.onerror = (err) => {
-        console.warn("[simWorker] error, will fallback to sync", err);
+        console.warn("[simWorker] error, fallback to sync", err);
         _simWorker = null;
+        flushPendingWithSync();
       };
     } catch {
       return null;
@@ -65,7 +78,7 @@ function runInWorker(
   }
   return new Promise((resolve) => {
     const reqId = _reqId++;
-    _pending.set(reqId, resolve);
+    _pending.set(reqId, { resolve, games, entities });
     worker.postMessage({ reqId, games, entities } satisfies SimWorkerRequest);
   });
 }

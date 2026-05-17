@@ -431,8 +431,8 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     gameStore.applyAchievementCheck(achResult);
   }
 
-  // 배경 리그 시뮬레이션
-  await seasonStore.simulateBackgroundLeaguesAsync(weekNum, get(gameStore).protagonist.leagueId, get(masterStore).entities);
+  // 배경 리그 시뮬레이션 (비블로킹 — 완료를 기다리지 않음)
+  void seasonStore.simulateBackgroundLeaguesAsync(weekNum, get(gameStore).protagonist.leagueId, get(masterStore).entities);
 
   return logs;
 }
@@ -688,7 +688,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         [isSportsUnit ? "군 복무(체육부대): 훈련 루틴 유지" : "군 복무(일반부대): 기본 근무 수행"],
         [], nextWeek, s.seasonYear,
       );
-      await seasonStore.simulateBackgroundLeaguesAsync(nextWeek, g.protagonist.leagueId, get(masterStore).entities);
+      void seasonStore.simulateBackgroundLeaguesAsync(nextWeek, g.protagonist.leagueId, get(masterStore).entities);
       gameStore.save(); seasonStore.save();
 
       const pending = get(seasonStore).pendingActions;
