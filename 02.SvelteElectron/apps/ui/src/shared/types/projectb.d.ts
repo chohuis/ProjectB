@@ -34,18 +34,33 @@ declare global {
         inningLimit?: number;
         initialStamina?: number;
         initialMental?: number;
+        protagonistSide?: "home" | "away";
+        role?: "SP" | "RP" | "CP";
+        entryTrigger?: { type: "inning_start"; inning: number }
+          | { type: "mid_inning"; inning: number; maxOuts: number }
+          | { type: "close_game"; inningThreshold: number; maxLeadDiff: number };
         pitcher?: {
-          command?: number;
-          velocity?: number;
-          staminaCap?: number;
-          mentalResil?: number;
-          control?: number;
-          movement?: number;
-          clutch?: number;
-          holdRunners?: number;
+          command?: number; velocity?: number; staminaCap?: number;
+          mentalResil?: number; control?: number; movement?: number;
+          clutch?: number; holdRunners?: number;
+        };
+        opponentPitcher?: {
+          command?: number; velocity?: number; staminaCap?: number;
+          mentalResil?: number; control?: number; movement?: number;
+          clutch?: number; holdRunners?: number;
+        };
+        npcStarterPitcher?: {
+          command?: number; velocity?: number; staminaCap?: number;
+          mentalResil?: number; control?: number; movement?: number;
+          clutch?: number; holdRunners?: number;
         };
         batterMean?: number;
         opponentLineup?: MatchBatterStats[];
+        myTeamLineup?: MatchBatterStats[];
+        homeLineup?: MatchBatterStats[];
+        awayLineup?: MatchBatterStats[];
+        myManager?: { tacticalIQ?: number; bullpenRead?: number; offenseMind?: number; motivator?: number; clutchDecision?: number };
+        opponentManager?: { tacticalIQ?: number; bullpenRead?: number; offenseMind?: number; motivator?: number; clutchDecision?: number };
         weather?: "sunny" | "cloudy" | "rainy" | "windy_in" | "windy_out";
         park?: "neutral" | "pitcher_park" | "hitter_park" | "dome";
         fielders?: MatchFielderStats[];
@@ -57,9 +72,10 @@ declare global {
           quality: number;
           comment: string;
           animationCues: MatchAnimationCue[];
-        };
+        } | null;
       }>;
       matchFinish: () => Promise<{ snapshot: MatchSnapshot; summary: string }>;
+      matchMoundVisit: () => Promise<{ snapshot: MatchSnapshot } | null>;
       // ── 게임 저장/불러오기 ──────────────────────────────────
       gameLoad:   () => Promise<SaveGame | null>;
       gameSave:   (data: SaveGame) => Promise<void>;
@@ -184,16 +200,24 @@ export interface MatchSnapshot {
   outs: number;
   count: { balls: number; strikes: number };
   score: { home: number; away: number };
+  inningScores: { home: number[]; away: number[] };
   runners: { first: boolean; second: boolean; third: boolean };
   pitchCount: number;
-  stamina: number;
-  mental: number;
-  batter: MatchBatterStats;
-  lineupIndex: number;
+  protagonistStamina: number;
+  protagonistMental: number;
+  protagonistHasEntered: boolean;
+  protagonistExited: boolean;
+  protagonistSide: "home" | "away";
+  role: "SP" | "RP" | "CP";
+  pitchCountSinceEntry: number;
+  moundVisitsLeft: number;
+  isProtagonistPitching: boolean;
+  currentBatter?: MatchBatterStats;
   weather: "sunny" | "cloudy" | "rainy" | "windy_in" | "windy_out";
   park: "neutral" | "pitcher_park" | "hitter_park" | "dome";
   isFinished: boolean;
   recentLogs: string[];
+  autoSimLogs?: string[];
   fielders: MatchFielderStats[];
   defenseStat: MatchDefenseStat;
 }

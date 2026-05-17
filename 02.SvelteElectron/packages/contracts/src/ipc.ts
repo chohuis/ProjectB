@@ -3,7 +3,8 @@ export const IPC_CHANNELS = {
   gameAdvanceDay: "game:advanceDay",
   matchStart: "match:start",
   matchStep: "match:step",
-  matchFinish: "match:finish"
+  matchFinish: "match:finish",
+  matchMoundVisit: "match:mound-visit",
 } as const;
 
 export type IpcChannel = (typeof IPC_CHANNELS)[keyof typeof IPC_CHANNELS];

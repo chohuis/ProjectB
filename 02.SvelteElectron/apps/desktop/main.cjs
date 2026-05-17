@@ -102,17 +102,29 @@ function randomDecision() {
 
 function simulateGames(core, games) {
   let totalAway = 0, totalHome = 0, totalPitches = 0;
+  let totalWalks = 0, totalK = 0, totalHR = 0, totalResults = 0;
   const pitchCounts = [];
-  const resultCounts = {};
+
   for (let i = 0; i < games; i += 1) {
-    let state = core.startMatch({ inningLimit: 9, initialStamina: 82, initialMental: 74, batterMean: 50, weather: "sunny", park: "neutral" });
+    let state = core.startMatch({
+      role: "SP", protagonistSide: "home",
+      inningLimit: 9, initialStamina: 82, initialMental: 74,
+      batterMean: 50, weather: "sunny", park: "neutral",
+    });
     let guard = 0;
-    while (!state.isFinished && guard < 500) {
-      const stepped = core.stepPitch(state, randomDecision());
-      state = stepped.nextState;
-      const code = stepped.outcome.resultCode;
-      resultCounts[code] = (resultCounts[code] ?? 0) + 1;
-      guard += 1;
+    while (!state.isFinished && guard++ < 2000) {
+      if (core.isProtagonistPitching(state)) {
+        const stepped = core.stepPitch(state, randomDecision());
+        state = stepped.nextState;
+        const code = stepped.outcome.resultCode;
+        totalResults++;
+        if (code === "WALK") totalWalks++;
+        if (code === "HOME_RUN") totalHR++;
+        if (code === "STRIKE_LOOK" || code === "STRIKE_SWING") totalK++;
+      } else {
+        const result = core.autoSimulateHalfInning(state);
+        state = result.nextState;
+      }
     }
     if (!state.isFinished) state = core.finishMatch(state).nextState;
     totalAway += state.score.away;
@@ -120,24 +132,19 @@ function simulateGames(core, games) {
     totalPitches += state.pitchCount;
     pitchCounts.push(state.pitchCount);
   }
-  const totalResults = Object.values(resultCounts).reduce((a, b) => a + b, 0);
-  const walk = resultCounts.WALK ?? 0;
-  const hr = resultCounts.HOME_RUN ?? 0;
-  const k = (resultCounts.STRIKE_LOOK ?? 0) + (resultCounts.STRIKE_SWING ?? 0);
+
   return {
     games,
     avgAway: Number((totalAway / games).toFixed(2)),
     avgHome: Number((totalHome / games).toFixed(2)),
     avgTotalScore: Number(((totalAway + totalHome) / games).toFixed(2)),
     avgPitches: Number((totalPitches / games).toFixed(2)),
-    bbRate: totalResults > 0 ? Number(((walk / totalResults) * 100).toFixed(2)) : 0,
-    kRate: totalResults > 0 ? Number(((k / totalResults) * 100).toFixed(2)) : 0,
-    hrRate: totalResults > 0 ? Number(((hr / totalResults) * 100).toFixed(2)) : 0,
+    bbRate: totalResults > 0 ? Number(((totalWalks / totalResults) * 100).toFixed(2)) : 0,
+    kRate: totalResults > 0 ? Number(((totalK / totalResults) * 100).toFixed(2)) : 0,
+    hrRate: totalResults > 0 ? Number(((totalHR / totalResults) * 100).toFixed(2)) : 0,
     p50Pitches: percentile(pitchCounts, 50),
     p90Pitches: percentile(pitchCounts, 90),
-    resultRates: Object.fromEntries(
-      Object.entries(resultCounts).map(([key, val]) => [key, totalResults > 0 ? Number(((val / totalResults) * 100).toFixed(2)) : 0])
-    ),
+    resultRates: {},
   };
 }
 
@@ -1309,16 +1316,50 @@ app.whenReady().then(() => {
 
   ipcMain.handle("match:start", async (_event, request = {}) => {
     const core = await loadCoreModule();
-    activeMatchState = core.startMatch(request);
-    return { snapshot: toSnapshotDto(activeMatchState) };
+    let state = core.startMatch(request);
+    const autoSimLogs = [];
+    if (!state.protagonistHasEntered) {
+      state = core.autoSimulateUntilEntry(state);
+      autoSimLogs.push(...(state.preEntryLogs ?? []));
+    }
+    activeMatchState = state;
+    return { snapshot: toSnapshotDto(activeMatchState, autoSimLogs, core) };
   });
 
   ipcMain.handle("match:step", async (_event, decision) => {
     const core = await loadCoreModule();
     if (!activeMatchState) activeMatchState = core.startMatch({});
+    if (!core.isProtagonistPitching(activeMatchState)) {
+      return { snapshot: toSnapshotDto(activeMatchState, [], core), outcome: null };
+    }
     const result = core.stepPitch(activeMatchState, decision);
     activeMatchState = result.nextState;
-    return { snapshot: toSnapshotDto(activeMatchState), outcome: result.outcome };
+    const autoSimLogs = [];
+    let guard = 0;
+    while (!activeMatchState.isFinished && guard++ < 50) {
+      const phase = core.advanceGamePhase(activeMatchState);
+      if (phase.phase === "protagonist_pitch" || phase.phase === "game_over") break;
+      if (phase.phase === "auto_batting") {
+        autoSimLogs.push(...phase.result.logs.slice(0, 15));
+        activeMatchState = phase.result.nextState;
+      } else if (phase.phase === "protagonist_entry") {
+        activeMatchState = phase.state;
+        break;
+      } else if (phase.phase === "protagonist_exit") {
+        activeMatchState = phase.state;
+        activeMatchState = core.autoSimulateToGameEnd(activeMatchState);
+        break;
+      } else if (phase.phase === "post_exit_sim") {
+        activeMatchState = core.autoSimulateToGameEnd(activeMatchState);
+        break;
+      } else if (phase.phase === "pre_entry_sim") {
+        activeMatchState = core.autoSimulateUntilEntry(activeMatchState);
+        autoSimLogs.push(...(activeMatchState.preEntryLogs ?? []));
+      } else {
+        break;
+      }
+    }
+    return { snapshot: toSnapshotDto(activeMatchState, autoSimLogs, core), outcome: result.outcome };
   });
 
   ipcMain.handle("match:finish", async () => {
@@ -1326,7 +1367,14 @@ app.whenReady().then(() => {
     if (!activeMatchState) activeMatchState = core.startMatch({});
     const result = core.finishMatch(activeMatchState);
     activeMatchState = result.nextState;
-    return { snapshot: toSnapshotDto(activeMatchState), summary: result.summary };
+    return { snapshot: toSnapshotDto(activeMatchState, [], core), summary: result.summary };
+  });
+
+  ipcMain.handle("match:mound-visit", async () => {
+    const core = await loadCoreModule();
+    if (!activeMatchState) return null;
+    activeMatchState = core.requestMoundVisit(activeMatchState);
+    return { snapshot: toSnapshotDto(activeMatchState, [], core) };
   });
 
   ipcMain.handle("game:load", () => {
@@ -1571,15 +1619,46 @@ app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });
 
-function toSnapshotDto(state) {
+function toSnapshotDto(state, autoSimLogs, core) {
+  const currentLineup = state.half === "top" ? state.awayLineup : state.homeLineup;
+  const currentIdx    = state.half === "top" ? state.awayLineupIndex : state.homeLineupIndex;
+  const currentBatter = currentLineup?.[currentIdx % Math.max(1, currentLineup?.length ?? 1)];
+
+  // Inline protagonist-pitching check (avoids needing the core module for a pure state query)
+  const ourTeamFielding =
+    (state.half === "top"    && state.protagonistSide === "home") ||
+    (state.half === "bottom" && state.protagonistSide === "away");
+  const isProtagonistPitching = ourTeamFielding && state.protagonistHasEntered && !state.protagonistExited;
+
   return {
-    matchId: state.matchId, inning: state.inning, inningLimit: state.inningLimit,
-    half: state.half, outs: state.outs, count: state.count, score: state.score,
+    matchId: state.matchId,
+    inning: state.inning,
+    inningLimit: state.inningLimit,
+    half: state.half,
+    outs: state.outs,
+    count: state.count,
+    score: state.score,
+    inningScores: state.inningScores,
     runners: { first: !!state.runners.first, second: !!state.runners.second, third: !!state.runners.third },
-    pitchCount: state.pitchCount, stamina: state.stamina, mental: state.mental,
-    batter: state.batter, lineupIndex: state.lineupIndex,
-    weather: state.weather, park: state.park, isFinished: state.isFinished,
-    recentLogs: state.logs.slice(-30), fielders: state.fielders ?? [],
+    pitchCount: state.pitchCount,
+
+    protagonistStamina: state.protagonistStamina,
+    protagonistMental: state.protagonistMental,
+    protagonistHasEntered: state.protagonistHasEntered,
+    protagonistExited: state.protagonistExited,
+    protagonistSide: state.protagonistSide,
+    role: state.role,
+    pitchCountSinceEntry: state.pitchCountSinceEntry,
+    moundVisitsLeft: state.moundVisitsLeft,
+    isProtagonistPitching,
+
+    currentBatter,
+    weather: state.weather,
+    park: state.park,
+    isFinished: state.isFinished,
+    recentLogs: state.logs.slice(-30),
+    autoSimLogs: autoSimLogs ?? [],
+    fielders: state.fielders ?? [],
     defenseStat: state.defenseStat ?? { errors: 0, assists: 0, throwOuts: 0, throwSafes: 0 },
   };
 }

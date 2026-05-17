@@ -19,7 +19,7 @@
   // 실전 MatchPage는 기본적으로 로컬 데모 백업 모드를 사용하지 않음
   export let allowLocalFallback = false;
 
-  type PitchType = "fastball" | "slider" | "curve" | "changeup";
+  type PitchType = "fastball" | "sinker" | "cutter" | "slider" | "curve" | "changeup" | "splitter" | "forkball" | "screwball" | "knuckleball";
   type PitchStrategy = "aggressive" | "balanced" | "safe";
   type PitchPower = "low" | "normal" | "high";
   type PitchResultCode =
@@ -51,11 +51,25 @@
     count: { balls: number; strikes: number };
     runners: { first: boolean; second: boolean; third: boolean };
     score: { home: number; away: number };
+    inningScores?: { home: number[]; away: number[] };
     pitchCount: number;
-    stamina: number;
-    mental: number;
+    // local fallback fields
+    stamina?: number;
+    mental?: number;
+    // engine fields
+    protagonistStamina?: number;
+    protagonistMental?: number;
+    protagonistHasEntered?: boolean;
+    protagonistExited?: boolean;
+    protagonistSide?: "home" | "away";
+    role?: "SP" | "RP" | "CP";
+    pitchCountSinceEntry?: number;
+    moundVisitsLeft?: number;
+    isProtagonistPitching?: boolean;
+    autoSimLogs?: string[];
     recentLogs: string[];
     batter?: { contact: number; power: number; eye: number };
+    currentBatter?: { contact: number; power: number; eye: number };
     weather?: WeatherType;
     park?: ParkType;
     isFinished?: boolean;
@@ -423,9 +437,15 @@
 
   const PITCH_ID_TO_ENGINE: Record<string, PitchType> = {
     PITCH_FASTBALL: "fastball",
+    PITCH_SINKER: "sinker",
+    PITCH_CUTTER: "cutter",
     PITCH_SLIDER: "slider",
     PITCH_CURVE: "curve",
     PITCH_CHANGEUP: "changeup",
+    PITCH_SPLITTER: "splitter",
+    PITCH_FORKBALL: "forkball",
+    PITCH_SCREWBALL: "screwball",
+    PITCH_KNUCKLEBALL: "knuckleball",
   };
   const fallbackPitchTypes: { id: PitchType; label: string }[] = [
     { id: "fastball", label: "Fastball" }
@@ -452,6 +472,10 @@
   let engineStarted = false;
   let isPitching = false;
   let engineErrorMsg = "";
+  let moundVisitsLeft = 3;
+  let canPitch = true;        // isProtagonistPitching from snapshot
+  let protagonistHasEntered = true;
+  let snapshotPitchCount = 0;
 
   let inning = 1;
   let half: "top" | "bottom" = "top";
@@ -591,6 +615,8 @@
         : "";
       const opponentLineup = opponentTeamId ? buildOpponentLineup(opponentTeamId) : [];
       const fielders = opponentTeamId ? buildOpponentFielders(opponentTeamId) : [];
+      const ctx = matchContext;
+      const isHome = !ctx || ctx.protagonistTeamId === ctx.homeTeamId;
       const response = await window.projectB.matchStart({
         initialStamina: player.condition,
         initialMental: 74,
@@ -598,6 +624,9 @@
         batterMean: 50,
         weather: matchWeather,
         park: matchPark,
+        role: (ctx?.role ?? "SP") as "SP" | "RP" | "CP",
+        protagonistSide: isHome ? "home" : "away",
+        ...(ctx?.entryTrigger ? { entryTrigger: ctx.entryTrigger } : {}),
         ...(opponentLineup.length >= 9 ? { opponentLineup } : {}),
         ...(fielders.length >= 9 ? { fielders } : {}),
       });
@@ -638,62 +667,78 @@
     resultCode: PitchResultCode,
     snapshot: SnapshotLike,
   ) {
-    const inningIndex = Math.max(0, Math.min(11, (snapshot.inning ?? 1) - 1));
-    const isTop = snapshot.half === "top";
-
-    scoreRows = scoreRows.map((row, idx) => {
-      const nextInningScores = [...row.inningScores];
-      if (idx === 0 && isTop) nextInningScores[inningIndex] = awayScore;
-      if (idx === 1 && !isTop) nextInningScores[inningIndex] = homeScore;
-
-      if (idx === 0) {
+    if (snapshot.inningScores) {
+      // Engine provides per-inning scores directly
+      const eng = snapshot.inningScores;
+      scoreRows = scoreRows.map((row, idx) => {
+        const isAway = idx === 0;
+        const source = isAway ? eng.away : eng.home;
+        const padded = source.slice(0, 12).concat(Array(Math.max(0, 12 - source.length)).fill(0));
         return {
           ...row,
-          inningScores: nextInningScores,
-          r: awayScore,
+          inningScores: padded,
+          r: isAway ? awayScore : homeScore,
+          h: isAway
+            ? row.h + (resultCode === "HIT_SINGLE" || resultCode === "HIT_DOUBLE" || resultCode === "HIT_TRIPLE" || resultCode === "HOME_RUN" ? 1 : 0)
+            : row.h,
+          b: isAway ? row.b + (resultCode === "WALK" ? 1 : 0) : row.b,
+        };
+      });
+      return;
+    }
+
+    // Local fallback: only the current batting half scores in the current inning cell
+    const inningIndex = Math.max(0, Math.min(11, (snapshot.inning ?? 1) - 1));
+    const isTop = snapshot.half === "top";
+    scoreRows = scoreRows.map((row, idx) => {
+      const nextInningScores = [...row.inningScores];
+      if (idx === 0 && isTop)  nextInningScores[inningIndex] = awayScore - (scoreRows[0].r - (scoreRows[0].inningScores[inningIndex] ?? 0));
+      if (idx === 1 && !isTop) nextInningScores[inningIndex] = homeScore - (scoreRows[1].r - (scoreRows[1].inningScores[inningIndex] ?? 0));
+      if (idx === 0) {
+        return {
+          ...row, inningScores: nextInningScores, r: awayScore,
           h: row.h + (resultCode === "HIT_SINGLE" || resultCode === "HIT_DOUBLE" || resultCode === "HIT_TRIPLE" || resultCode === "HOME_RUN" ? 1 : 0),
-          b: row.b + (resultCode === "WALK" ? 1 : 0)
+          b: row.b + (resultCode === "WALK" ? 1 : 0),
         };
       }
-
-      return {
-        ...row,
-        inningScores: nextInningScores,
-        r: homeScore
-      };
+      return { ...row, inningScores: nextInningScores, r: homeScore };
     });
   }
 
   function applySnapshot(snapshot: SnapshotLike, line?: string, resultCode: PitchResultCode = "BALL") {
     inning = snapshot.inning;
     half = snapshot.half;
-    count = {
-      strike: snapshot.count.strikes,
-      ball: snapshot.count.balls,
-      out: snapshot.outs
-    };
+    count = { strike: snapshot.count.strikes, ball: snapshot.count.balls, out: snapshot.outs };
     runners = { ...snapshot.runners };
-    pitcherState = {
-      ...pitcherState,
-      stamina: snapshot.stamina,
-      mental: snapshot.mental
-    };
 
-    if (snapshot.batter) {
+    const stamina = snapshot.protagonistStamina ?? snapshot.stamina ?? pitcherState.stamina;
+    const mental  = snapshot.protagonistMental  ?? snapshot.mental  ?? pitcherState.mental;
+    pitcherState = { ...pitcherState, stamina, mental };
+
+    const batter = snapshot.currentBatter ?? snapshot.batter;
+    if (batter) {
       batterInfo = [
-        { label: "컨택", value: String(snapshot.batter.contact) },
-        { label: "파워", value: String(snapshot.batter.power) },
-        { label: "선구", value: String(snapshot.batter.eye) }
+        { label: "컨택", value: String(batter.contact) },
+        { label: "파워", value: String(batter.power) },
+        { label: "선구", value: String(batter.eye) }
       ];
     }
     if (snapshot.weather) matchWeather = snapshot.weather;
     if (snapshot.park) matchPark = snapshot.park;
     if (snapshot.defenseStat) matchDefenseStat = { ...snapshot.defenseStat };
 
+    if (snapshot.moundVisitsLeft !== undefined) moundVisitsLeft = snapshot.moundVisitsLeft;
+    if (snapshot.isProtagonistPitching !== undefined) canPitch = snapshot.isProtagonistPitching;
+    if (snapshot.protagonistHasEntered !== undefined) protagonistHasEntered = snapshot.protagonistHasEntered;
+    snapshotPitchCount = snapshot.pitchCount;
+
     updateScoreRows(snapshot.score.away, snapshot.score.home, resultCode, snapshot);
 
-    if (line) {
-      pushLog(line, resultToCls(resultCode));
+    if (line) pushLog(line, resultToCls(resultCode));
+
+    // Print auto-sim logs (inning transitions, NPC batting results)
+    if (snapshot.autoSimLogs?.length) {
+      for (const log of snapshot.autoSimLogs.slice(-8)) pushLog(log, "log-auto");
     }
   }
 
@@ -781,6 +826,9 @@
     localEngineState.pitchCount += 1;
     localEngineState.stamina = Math.max(0, Number((localEngineState.stamina - 0.8).toFixed(1)));
 
+    // In local mode: top = away batting, bottom = home batting
+    const battingTeam = localEngineState.half === "top" ? "away" : "home";
+
     if (resultCode === "BALL") {
       localEngineState.count.balls += 1;
       if (localEngineState.count.balls >= 4) {
@@ -788,7 +836,7 @@
         localEngineState.count.strikes = 0;
         resultCode = "WALK";
         if (localEngineState.runners.first && localEngineState.runners.second && localEngineState.runners.third) {
-          localEngineState.score.away += 1;
+          localEngineState.score[battingTeam] += 1;
         }
         localEngineState.runners.third = localEngineState.runners.third || localEngineState.runners.second;
         localEngineState.runners.second = localEngineState.runners.second || localEngineState.runners.first;
@@ -810,34 +858,34 @@
       localEngineState.count.balls = 0;
       localEngineState.count.strikes = 0;
     } else if (resultCode === "HIT_SINGLE") {
-      if (localEngineState.runners.third) localEngineState.score.away += 1;
+      if (localEngineState.runners.third) localEngineState.score[battingTeam] += 1;
       localEngineState.runners.third = localEngineState.runners.second;
       localEngineState.runners.second = localEngineState.runners.first;
       localEngineState.runners.first = true;
       localEngineState.count.balls = 0;
       localEngineState.count.strikes = 0;
     } else if (resultCode === "HIT_DOUBLE") {
-      if (localEngineState.runners.third) localEngineState.score.away += 1;
-      if (localEngineState.runners.second) localEngineState.score.away += 1;
+      if (localEngineState.runners.third) localEngineState.score[battingTeam] += 1;
+      if (localEngineState.runners.second) localEngineState.score[battingTeam] += 1;
       localEngineState.runners.third = localEngineState.runners.first;
       localEngineState.runners.second = true;
       localEngineState.runners.first = false;
       localEngineState.count.balls = 0;
       localEngineState.count.strikes = 0;
     } else if (resultCode === "HIT_TRIPLE") {
-      if (localEngineState.runners.third) localEngineState.score.away += 1;
-      if (localEngineState.runners.second) localEngineState.score.away += 1;
-      if (localEngineState.runners.first) localEngineState.score.away += 1;
+      if (localEngineState.runners.third) localEngineState.score[battingTeam] += 1;
+      if (localEngineState.runners.second) localEngineState.score[battingTeam] += 1;
+      if (localEngineState.runners.first) localEngineState.score[battingTeam] += 1;
       localEngineState.runners.third = true;
       localEngineState.runners.second = false;
       localEngineState.runners.first = false;
       localEngineState.count.balls = 0;
       localEngineState.count.strikes = 0;
     } else if (resultCode === "HOME_RUN") {
-      if (localEngineState.runners.third) localEngineState.score.away += 1;
-      if (localEngineState.runners.second) localEngineState.score.away += 1;
-      if (localEngineState.runners.first) localEngineState.score.away += 1;
-      localEngineState.score.away += 1;
+      if (localEngineState.runners.third) localEngineState.score[battingTeam] += 1;
+      if (localEngineState.runners.second) localEngineState.score[battingTeam] += 1;
+      if (localEngineState.runners.first) localEngineState.score[battingTeam] += 1;
+      localEngineState.score[battingTeam] += 1;
       localEngineState.runners.third = false;
       localEngineState.runners.second = false;
       localEngineState.runners.first = false;
@@ -980,6 +1028,13 @@
         power: selectedPower
       });
 
+      if (!response.outcome) {
+        // Not protagonist's turn — just sync state
+        applySnapshot(response.snapshot);
+        isPitching = false;
+        return;
+      }
+
       resultCode = response.outcome.resultCode as PitchResultCode;
       line = `${inningHalfLabel} ${pitchTypes.find((p) => p.id === selectedPitchType)?.label} ${response.outcome.comment}`;
       const prevOuts = count.out;
@@ -1098,7 +1153,7 @@
 
     gameResult = {
       awayScore, homeScore,
-      pitchCount: localEngineState.pitchCount,
+      pitchCount: engineAvailable ? snapshotPitchCount : localEngineState.pitchCount,
       strikeouts: totalStrikeouts,
       errors: matchDefenseStat.errors,
       won, summary,
@@ -1136,6 +1191,17 @@
     }
     isGameOver = false;
     onCancel();
+  }
+
+  async function handleMoundVisit() {
+    if (!window.projectB?.matchMoundVisit) return;
+    if (moundVisitsLeft <= 0 || !canPitch || isPitching) return;
+    try {
+      const result = await window.projectB.matchMoundVisit();
+      if (result?.snapshot) {
+        applySnapshot(result.snapshot, "감독 마운드 방문 — 멘탈 회복", "BALL");
+      }
+    } catch { /* ignore */ }
   }
 
   function localComment(code: PitchResultCode): string {
@@ -1397,9 +1463,28 @@
             {/each}
           </div>
 
-          <button type="button" class="execute-btn" disabled={isPitching || (!engineAvailable && !allowLocalFallback)} on:click={runPitch}>
-            {isPitching ? "투구 진행 중..." : "투구 실행"}
+          <button
+            type="button"
+            class="execute-btn"
+            disabled={isPitching || (!engineAvailable && !allowLocalFallback) || (engineAvailable && !canPitch)}
+            on:click={runPitch}
+          >
+            {#if isPitching}
+              투구 진행 중...
+            {:else if engineAvailable && !protagonistHasEntered}
+              등판 대기 중...
+            {:else if engineAvailable && !canPitch}
+              자동 진행 중...
+            {:else}
+              투구 실행
+            {/if}
           </button>
+
+          {#if engineAvailable && canPitch && moundVisitsLeft > 0 && !isPitching}
+            <button type="button" class="mound-visit-btn" on:click={handleMoundVisit}>
+              마운드 방문 ({moundVisitsLeft})
+            </button>
+          {/if}
 
           <p class="engine-state" class:on={engineAvailable}>
             {engineAvailable
@@ -1443,7 +1528,7 @@
               <div class="gauge-wrap"><div class="gauge-bar" style="width:{pitcherState.mental}%;background:{mentalColor};"></div></div>
               <strong>{pitcherState.mental.toFixed(1)}</strong>
             </li>
-            <li><span>투구수</span><strong>{localEngineState.pitchCount}</strong></li>
+            <li><span>투구수</span><strong>{engineAvailable ? snapshotPitchCount : localEngineState.pitchCount}</strong></li>
           </ul>
         </section>
       </div>
@@ -2043,6 +2128,21 @@
     50% { box-shadow: 0 0 20px rgba(61, 120, 223, 0.45); }
   }
 
+  .mound-visit-btn {
+    width: 100%;
+    margin-top: 6px;
+    border: 1px solid #5a8040;
+    border-radius: 8px;
+    background: linear-gradient(180deg, #3a6030 0%, #2a4a22 100%);
+    color: #a8d88a;
+    padding: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .mound-visit-btn:hover { background: linear-gradient(180deg, #4a7838 0%, #365a2a 100%); }
+
   .engine-state {
     margin: 8px 0 0;
     font-size: 12px;
@@ -2178,6 +2278,7 @@
   .play-text-panel li.log-ball    { color: #7a8fa8; }
   .play-text-panel li.log-out     { color: #ff8c42; }
   .play-text-panel li.log-walk    { color: #8ecfff; }
+  .play-text-panel li.log-auto    { color: #6a7a9a; font-style: italic; }
 
   .play-text-panel li.log-separator {
     list-style: none;

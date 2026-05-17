@@ -127,6 +127,11 @@ export interface InteractiveMatchContext {
   protagonistTeamId: string;
   weather?: "sunny" | "cloudy" | "rainy" | "windy_in" | "windy_out";
   park?: "neutral" | "pitcher_park" | "hitter_park" | "dome";
+  role?: "SP" | "RP" | "CP";
+  entryTrigger?:
+    | { type: "inning_start"; inning: number }
+    | { type: "mid_inning"; inning: number; maxOuts: number }
+    | { type: "close_game"; inningThreshold: number; maxLeadDiff: number };
 }
 
 export interface InteractiveMatchResult {

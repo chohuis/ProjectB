@@ -1,5 +1,6 @@
 export type MatchMode = "interactive" | "simulation" | "text_highlight";
 export type HalfInning = "top" | "bottom";
+export type PitcherRole = "SP" | "RP" | "CP";
 
 export type PitchType =
   | "fastball"
@@ -46,6 +47,38 @@ export interface MatchCountDto {
   strikes: number;
 }
 
+export interface BatterStatsDto {
+  contact: number;
+  power: number;
+  eye: number;
+  discipline: number;
+  battingClutch: number;
+  platoon: number;
+  speed: number;
+  baseInstinct: number;
+  fielding: number;
+  arm: number;
+}
+
+export interface PitcherStatsDto {
+  command?: number;
+  velocity?: number;
+  staminaCap?: number;
+  mentalResil?: number;
+  control?: number;
+  movement?: number;
+  clutch?: number;
+  holdRunners?: number;
+}
+
+export interface ManagerStatsDto {
+  tacticalIQ?: number;
+  bullpenRead?: number;
+  offenseMind?: number;
+  motivator?: number;
+  clutchDecision?: number;
+}
+
 export interface MatchSnapshotDto {
   matchId: string;
   inning: number;
@@ -54,27 +87,27 @@ export interface MatchSnapshotDto {
   outs: number;
   count: MatchCountDto;
   score: MatchScoreDto;
+  inningScores: { home: number[]; away: number[] };
   runners: MatchRunnersDto;
   pitchCount: number;
-  stamina: number;
-  mental: number;
-  batter?: {
-    contact: number;
-    power: number;
-    eye: number;
-    discipline: number;
-    battingClutch: number;
-    platoon: number;
-    speed: number;
-    baseInstinct: number;
-    fielding: number;
-    arm: number;
-  };
-  lineupIndex?: number;
+
+  // protagonist state
+  protagonistStamina: number;
+  protagonistMental: number;
+  protagonistHasEntered: boolean;
+  protagonistExited: boolean;
+  protagonistSide: "home" | "away";
+  role: PitcherRole;
+  pitchCountSinceEntry: number;
+  moundVisitsLeft: number;
+  isProtagonistPitching: boolean;
+
+  currentBatter?: BatterStatsDto;
   weather?: "sunny" | "cloudy" | "rainy" | "windy_in" | "windy_out";
   park?: "neutral" | "pitcher_park" | "hitter_park" | "dome";
   isFinished: boolean;
   recentLogs: string[];
+  autoSimLogs?: string[];
   fielders?: Array<{
     position: "P" | "C" | "1B" | "2B" | "3B" | "SS" | "LF" | "CF" | "RF";
     name: string;
@@ -92,37 +125,53 @@ export interface MatchSnapshotDto {
   };
 }
 
+export type EntryTriggerDto =
+  | { type: "inning_start"; inning: number }
+  | { type: "mid_inning"; inning: number; maxOuts: number }
+  | { type: "close_game"; inningThreshold: number; maxLeadDiff: number }
+  | { type: "manual"; inning: number; half: HalfInning; outs: number };
+
 export interface MatchStartRequestDto {
   matchId?: string;
   mode?: MatchMode;
   inningLimit?: number;
   initialStamina?: number;
   initialMental?: number;
-  pitcher?: {
-    command?: number;
-    velocity?: number;
-    staminaCap?: number;
-    mentalResil?: number;
-    control?: number;
-    movement?: number;
-    clutch?: number;
-    holdRunners?: number;
-  };
+
+  // protagonist identity
+  protagonistSide?: "home" | "away";
+  role?: PitcherRole;
+  entryTrigger?: EntryTriggerDto;
+
+  // pitchers
+  pitcher?: PitcherStatsDto;           // legacy alias for protagonistPitcher
+  protagonistPitcher?: PitcherStatsDto;
+  opponentPitcher?: PitcherStatsDto;
+  npcStarterPitcher?: PitcherStatsDto;
+
+  // lineups
   batterMean?: number;
-  opponentLineup?: Array<{
-    contact: number;
-    power: number;
-    eye: number;
-    discipline: number;
-    battingClutch: number;
-    platoon: number;
-    speed: number;
-    baseInstinct: number;
-    fielding: number;
-    arm: number;
-  }>;
+  opponentLineup?: BatterStatsDto[];   // legacy alias
+  myTeamLineup?: BatterStatsDto[];
+  homeLineup?: BatterStatsDto[];
+  awayLineup?: BatterStatsDto[];
+
+  // managers
+  myManager?: ManagerStatsDto;
+  opponentManager?: ManagerStatsDto;
+
+  // env
   weather?: "sunny" | "cloudy" | "rainy" | "windy_in" | "windy_out";
   park?: "neutral" | "pitcher_park" | "hitter_park" | "dome";
+  fielders?: Array<{
+    position: "P" | "C" | "1B" | "2B" | "3B" | "SS" | "LF" | "CF" | "RF";
+    name: string;
+    fielding: number;
+    arm: number;
+    speed: number;
+    x: number;
+    y: number;
+  }>;
 }
 
 export interface PitchDecisionDto {
@@ -158,4 +207,8 @@ export interface MatchStepResponseDto {
 export interface MatchFinishResponseDto {
   snapshot: MatchSnapshotDto;
   summary: string;
+}
+
+export interface MatchMoundVisitResponseDto {
+  snapshot: MatchSnapshotDto;
 }

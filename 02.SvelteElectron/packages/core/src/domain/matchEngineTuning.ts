@@ -20,6 +20,25 @@ export interface MatchEngineTuning {
   };
   parkQualityModifier: Record<"neutral" | "pitcher_park" | "hitter_park" | "dome", number>;
   doublePlayBaseProb: number;
+
+  // ── 감독 교체 판단 임계값 ────────────────────────────────────────────────────
+  managerChangeThresholds: {
+    npcStarterStaminaLimit: number;   // NPC 선발 즉시 교체 체력 임계값
+    npcStarterPitchCountSoft: number; // NPC 선발 교체 검토 시작 투구수
+    npcStarterPitchCountHard: number; // NPC 선발 강제 교체 투구수
+    protagonistPitchCountSoft: number;// 주인공 교체 검토 시작 투구수
+    protagonistPitchCountHard: number;// 주인공 강제 교체 투구수 (절대 한도)
+    protagonistStaminaEmergency: number; // 주인공 긴급 강판 체력 임계값
+  };
+
+  // ── 마운드 방문 효과 ────────────────────────────────────────────────────────
+  moundVisitMentalRecovery: number;  // 방문당 멘탈 회복 기본량 (motivator 배율 적용 전)
+  moundVisitStaminaRecovery: number; // 방문당 체력 소폭 회복량
+  moundVisitMinPitchGap: number;     // 방문 간 최소 투구수 간격
+
+  // ── 공격 전술 확률 ──────────────────────────────────────────────────────────
+  offenseBuntBaseProb: number;       // 번트 기본 시도 확률 (offenseMind 보정 전)
+  offenseStealModifier: number;      // 도루 시도율 감독 보정 계수
 }
 
 export const DEFAULT_MATCH_ENGINE_TUNING: MatchEngineTuning = {
@@ -41,14 +60,27 @@ export const DEFAULT_MATCH_ENGINE_TUNING: MatchEngineTuning = {
   hitUpgradeDoubleToHomeRunBase: 0.05,
   weatherPowerModifier: { sunny: 0, cloudy: 0, rainy: 0, windy_in: -0.1, windy_out: 0.1 },
   weatherQualityModifier: {
-    rainyFastball: -1,
-    rainyBreaking: -3,
-    windyOut: -2,
-    windyIn: 2,
-    cloudy: -0.5,
+    rainyFastball: -1, rainyBreaking: -3,
+    windyOut: -2, windyIn: 2, cloudy: -0.5,
   },
   parkQualityModifier: { neutral: 0, pitcher_park: 3, hitter_park: -3, dome: 0 },
   doublePlayBaseProb: 0.4,
+
+  managerChangeThresholds: {
+    npcStarterStaminaLimit: 25,
+    npcStarterPitchCountSoft: 80,
+    npcStarterPitchCountHard: 110,
+    protagonistPitchCountSoft: 90,
+    protagonistPitchCountHard: 120,
+    protagonistStaminaEmergency: 5,
+  },
+
+  moundVisitMentalRecovery: 8,
+  moundVisitStaminaRecovery: 3,
+  moundVisitMinPitchGap: 6,
+
+  offenseBuntBaseProb: 0.25,
+  offenseStealModifier: 0.006,
 };
 
 let activeMatchEngineTuning: MatchEngineTuning = JSON.parse(JSON.stringify(DEFAULT_MATCH_ENGINE_TUNING));
