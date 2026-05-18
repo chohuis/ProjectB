@@ -116,22 +116,26 @@ export function getTeamLineup(teamId: string, entities: EntityRow[]): string[] {
 }
 
 function sortBattingOrder(ids: string[], entities: EntityRow[]): string[] {
+  if (ids.length === 0) return [];
+
   const map = new Map(entities.map((e) => [e.id, e]));
   const scored = ids.map((id) => {
     const e = map.get(id);
     if (!e) return { id, lead: 0, power: 0, contact: 0 };
     const b = playerDetails(e).batting;
-    const lead    = (b?.eye ?? 50) + (b?.speed ?? 50);   // 리드오프 점수
-    const power   = (b?.power ?? 50) + (b?.contact ?? 50); // 클린업 점수
+    const lead    = (b?.eye ?? 50) + (b?.speed ?? 50);
+    const power   = (b?.power ?? 50) + (b?.contact ?? 50);
     const contact = b?.contact ?? 50;
     return { id, lead, power, contact };
   });
+
+  if (scored.length < 3) return scored.map((s) => s.id);
 
   // 리드오프: lead 최고, 클린업: power 최고 (3·4번)
   scored.sort((a, b) => b.lead - a.lead);
   const leadoff = scored.shift()!;
   scored.sort((a, b) => b.power - a.power);
-  const cleanup = [scored.shift()!, scored.shift()!].filter(Boolean);
+  const cleanup = [scored.shift(), scored.shift()].filter((s): s is typeof scored[0] => !!s);
   const rest = scored.map((s) => s.id);
 
   return [leadoff.id, rest[0] ?? "", ...cleanup.map((c) => c.id), ...rest.slice(1)].filter(Boolean);
