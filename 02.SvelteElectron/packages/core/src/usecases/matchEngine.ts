@@ -271,6 +271,37 @@ export function autoSimulateHalfInning(state: MatchState): HalfInningSimResult {
   return { nextState: s, runs, hits, walks, strikeouts, logs };
 }
 
+/**
+ * 감독 자동 마운드 방문 판단 — 투구 직후 호출.
+ * 조건 충족 시 방문 효과를 적용한 새 상태 반환, 아니면 그대로 반환.
+ */
+export function autoMoundVisitIfNeeded(state: MatchState): MatchState {
+  if (state.moundVisitsLeft <= 0) return state;
+  if (!state.protagonistHasEntered || state.protagonistExited) return state;
+
+  const tuning = getMatchEngineTuning();
+  if (state.pitchCount - state.lastMoundVisitPitch < tuning.moundVisitMinPitchGap) return state;
+
+  const { protagonistMental, runners, inning, inningLimit } = state;
+  const { clutchDecision, tacticalIQ } = state.myManager;
+
+  // clutchDecision: 위기 감지 민감도 — 높을수록 더 이른 멘탈에서 방문 결정
+  const crisisThreshold = 35 + (clutchDecision - 50) * 0.2;   // 25~45
+
+  // tacticalIQ: 상황 판단력 — 높을수록 득점권+후반에서 더 적극적으로 방문
+  const situationalThreshold = 52 + (tacticalIQ - 50) * 0.1; // 47~57
+
+  const hasScoringPosition = !!(runners.second || runners.third);
+  const isLateGame = inning >= inningLimit - 2;
+
+  const shouldVisit =
+    protagonistMental < crisisThreshold ||
+    (protagonistMental < situationalThreshold && hasScoringPosition && isLateGame);
+
+  if (!shouldVisit) return state;
+  return requestMoundVisit(state);
+}
+
 /** 마운드 방문 */
 export function requestMoundVisit(state: MatchState): MatchState {
   if (state.moundVisitsLeft <= 0) return state;
@@ -421,6 +452,46 @@ function protagonistExitsGame(state: MatchState, reason: ExitReason): MatchState
   };
 }
 
+// ── 투구 위치 이탈 시스템 ─────────────────────────────────────────────────────
+
+const ADJACENT_LOCATIONS: Record<PitchLocation, PitchLocation[]> = {
+  1: [2, 4],        2: [1, 3, 5],     3: [2, 6],
+  4: [1, 5, 7],     5: [2, 4, 6, 8],  6: [3, 5, 9],
+  7: [4, 8],        8: [5, 7, 9],     9: [6, 8],
+};
+
+function resolveEffectiveLocation(
+  intended: PitchLocation,
+  pitcher: PitcherStats,
+  stamina: number,
+  mental: number,
+  state: MatchState,
+): { effectiveLocation: PitchLocation; isBallZone: boolean; missLog: string | null } {
+  const tuning = getMatchEngineTuning();
+  // control=50 기준: 높을수록 miss 감소, 낮을수록 증가 (최소 3% floor)
+  const baseMissProb = Math.max(0.03, tuning.controlMissBaseProb - (pitcher.control - 50) * tuning.controlMissControlScale);
+  const staminaMult = stamina < 50 ? 1 + (50 - stamina) * tuning.controlMissStaminaScale : 1.0;
+  const mentalMult  = mental  < 50 ? 1 + (50 - mental)  * tuning.controlMissMentalScale  : 1.0;
+  const hasScoringPosition = !!(state.runners.second || state.runners.third);
+  const isFullBase  = !!(state.runners.first && state.runners.second && state.runners.third);
+  const isLateGame  = state.inning >= state.inningLimit - 2;
+  const pressureMult = 1.0
+    + (hasScoringPosition ? 0.15 : 0)
+    + (isFullBase ? 0.10 : 0)
+    + (isLateGame ? 0.08 : 0);
+  const missProb = clamp(baseMissProb * staminaMult * mentalMult * pressureMult, 0.0, 0.60);
+
+  if (Math.random() >= missProb) {
+    return { effectiveLocation: intended, isBallZone: false, missLog: null };
+  }
+  if (Math.random() < tuning.controlMissBallZoneRatio) {
+    return { effectiveLocation: intended, isBallZone: true, missLog: "제구 실패 (볼존 이탈)" };
+  }
+  const adj = ADJACENT_LOCATIONS[intended];
+  const effectiveLocation = adj[Math.floor(Math.random() * adj.length)] as PitchLocation;
+  return { effectiveLocation, isBallZone: false, missLog: `제구 불안 (${intended}→${effectiveLocation})` };
+}
+
 // ── 핵심 투구 처리 엔진 (내부용) ──────────────────────────────────────────────
 
 function stepPitchCore(
@@ -462,10 +533,14 @@ function stepPitchCore(
   const currentStamina = getActiveStamina(preState);
   const currentMental  = getActiveMental(preState);
 
-  // ── 3. 투구 결과 계산 ────────────────────────────────────────────────────────
-  const quality    = calculatePitchQuality(preState, currentPitcher, currentBatter, currentStamina, currentMental, decision);
-  let resultCode   = applyHitUpgrade(resolvePitchResult(quality, decision), currentBatter.power, preState.weather);
-  const ballInPlay = resolveBallInPlay(resultCode, decision, quality);
+  // ── 3. 제구 이탈 체크 → 투구 결과 계산 ────────────────────────────────────
+  const missResult = resolveEffectiveLocation(decision.location, currentPitcher, currentStamina, currentMental, preState);
+  const effectiveDecision: PitchDecision = { ...decision, location: missResult.effectiveLocation };
+  const quality = calculatePitchQuality(preState, currentPitcher, currentBatter, currentStamina, currentMental, effectiveDecision);
+  let resultCode: PitchResultCode = missResult.isBallZone
+    ? "BALL"
+    : applyHitUpgrade(resolvePitchResult(quality, effectiveDecision), currentBatter.power, preState.weather);
+  const ballInPlay = missResult.isBallZone ? undefined : resolveBallInPlay(resultCode, effectiveDecision, quality);
 
   // 수비 처리 (INPLAY_OUT 케이스)
   let fieldingResult: FieldingResult | undefined;
@@ -617,11 +692,16 @@ function stepPitchCore(
     : preState.pitchCountSinceEntry;
 
   // ── 6. 로그 조합 ──────────────────────────────────────────────────────────────
-  const pitchLog  = buildPitchLog(preState, decision, resultCode, quality);
-  const allNewLogs = [...stealResult.stealLogs, pitchLog, ...runningLogs];
+  const pitchLog  = buildPitchLog(preState, effectiveDecision, resultCode, quality);
+  const allNewLogs = [
+    ...stealResult.stealLogs,
+    ...(missResult.missLog ? [missResult.missLog] : []),
+    pitchLog,
+    ...runningLogs,
+  ];
 
   // ── 7. 애니메이션 큐 생성 ─────────────────────────────────────────────────────
-  const animationCues = buildAnimationCues({ decision, resultCode, ballInPlay, fieldingResult, preRunners: preState.runners });
+  const animationCues = buildAnimationCues({ decision: effectiveDecision, resultCode, ballInPlay, fieldingResult, preRunners: preState.runners });
 
   let nextState: MatchState = {
     ...preState,
@@ -721,20 +801,26 @@ function resolvePitchResult(quality: number, decision: PitchDecision): PitchResu
 
 function resolveBaseResult(quality: number, roll: number): PitchResultCode | "STRIKE" {
   if (quality >= 72) {
-    if (roll < 0.82) return "STRIKE";
-    if (roll < 0.92) return "FOUL";
+    // 지배적 투구: 스트라이크 80%, 파울 10%, 볼 10%
+    if (roll < 0.80) return "STRIKE";
+    if (roll < 0.90) return "FOUL";
     return "BALL";
   }
   if (quality >= 60) {
-    if (roll < 0.58) return "STRIKE";
-    if (roll < 0.78) return "FOUL";
-    return "BALL";
+    // 양호한 투구: 스트라이크 50%, 파울 12%, 볼 14%, 약타구 14%, 단타 10%
+    if (roll < 0.50) return "STRIKE";
+    if (roll < 0.62) return "FOUL";
+    if (roll < 0.76) return "BALL";
+    if (roll < 0.90) return "INPLAY_OUT";
+    return "HIT_SINGLE";
   }
   if (quality >= 52) {
-    if (roll < 0.24) return "STRIKE";
-    if (roll < 0.44) return "FOUL";
-    if (roll < 0.72) return "INPLAY_OUT";
-    return "BALL";
+    // 경계선 투구: 스트라이크 15%, 파울 12%, 볼 19%, 약타구 40%, 단타 14%
+    if (roll < 0.15) return "STRIKE";
+    if (roll < 0.27) return "FOUL";
+    if (roll < 0.46) return "BALL";
+    if (roll < 0.86) return "INPLAY_OUT";
+    return "HIT_SINGLE";
   }
   if (quality >= 45) {
     if (roll < 0.16) return "FOUL";
@@ -1156,13 +1242,19 @@ function applyHitUpgrade(code: PitchResultCode, power: number, weather: WeatherT
   if (code !== "HIT_SINGLE" && code !== "HIT_DOUBLE") return code;
   const powerFactor = (power - 50) / 50;
   const windBonus   = weatherPowerModifier(weather);
-  if (code === "HIT_SINGLE") {
-    if (Math.random() < Math.max(0, tuning.hitUpgradeSingleToDoubleBase + powerFactor * 0.10 + windBonus)) return "HIT_DOUBLE";
+  // single → double → HR 체인을 순차 평가 (early return 제거)
+  let result: PitchResultCode = code;
+  if (result === "HIT_SINGLE") {
+    if (Math.random() < Math.max(0, tuning.hitUpgradeSingleToDoubleBase + powerFactor * 0.10 + windBonus)) {
+      result = "HIT_DOUBLE";
+    }
   }
-  if (code === "HIT_DOUBLE") {
-    if (Math.random() < Math.max(0, tuning.hitUpgradeDoubleToHomeRunBase + powerFactor * 0.08 + windBonus)) return "HOME_RUN";
+  if (result === "HIT_DOUBLE") {
+    if (Math.random() < Math.max(0, tuning.hitUpgradeDoubleToHomeRunBase + powerFactor * 0.08 + windBonus)) {
+      result = "HOME_RUN";
+    }
   }
-  return code;
+  return result;
 }
 
 function weatherQualityModifier(weather: WeatherType, pitchType: PitchType): number {

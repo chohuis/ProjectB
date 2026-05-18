@@ -39,32 +39,39 @@ export interface MatchEngineTuning {
   // ── 공격 전술 확률 ──────────────────────────────────────────────────────────
   offenseBuntBaseProb: number;       // 번트 기본 시도 확률 (offenseMind 보정 전)
   offenseStealModifier: number;      // 도루 시도율 감독 보정 계수
+
+  // ── 투구 위치 이탈 시스템 ────────────────────────────────────────────────────
+  controlMissBaseProb: number;       // control=50 기준 이탈 기본 확률
+  controlMissControlScale: number;   // control 1pt당 이탈 변화량
+  controlMissStaminaScale: number;   // stamina 1pt당 추가 이탈률 (50 이하 구간)
+  controlMissMentalScale: number;    // mental 1pt당 추가 이탈률 (50 이하 구간)
+  controlMissBallZoneRatio: number;  // 이탈 중 볼존(즉시 BALL) 비율
 }
 
 export const DEFAULT_MATCH_ENGINE_TUNING: MatchEngineTuning = {
   pitchBase: {
-    fastball: 63, sinker: 61, cutter: 60,
-    slider: 60, curve: 58,
-    changeup: 57, splitter: 58, forkball: 57,
-    screwball: 56, knuckleball: 54,
+    fastball: 59, sinker: 57, cutter: 56,
+    slider: 56, curve: 54,
+    changeup: 53, splitter: 54, forkball: 53,
+    screwball: 52, knuckleball: 50,
   },
   strategyBonus: { aggressive: 2, balanced: 0, safe: -2 },
   powerBonus: { low: -1.5, normal: 0, high: 2.8 },
   locationBonus: { 1: 3, 2: 0, 3: 3, 4: 0, 5: -4, 6: 0, 7: 3, 8: 0, 9: 3 },
-  staminaBase: 0.85,
-  staminaAggressiveBonus: 0.25,
-  staminaFastballBonus: 0.2,
-  staminaPowerCost: { low: 0.1, normal: 0.3, high: 0.55 },
+  staminaBase: 0.45,
+  staminaAggressiveBonus: 0.12,
+  staminaFastballBonus: 0.10,
+  staminaPowerCost: { low: 0.05, normal: 0.15, high: 0.30 },
   mentalRecoveryOnInningEnd: 1.5,
-  hitUpgradeSingleToDoubleBase: 0.15,
-  hitUpgradeDoubleToHomeRunBase: 0.05,
+  hitUpgradeSingleToDoubleBase: 0.18,
+  hitUpgradeDoubleToHomeRunBase: 0.22,
   weatherPowerModifier: { sunny: 0, cloudy: 0, rainy: 0, windy_in: -0.1, windy_out: 0.1 },
   weatherQualityModifier: {
     rainyFastball: -1, rainyBreaking: -3,
     windyOut: -2, windyIn: 2, cloudy: -0.5,
   },
   parkQualityModifier: { neutral: 0, pitcher_park: 3, hitter_park: -3, dome: 0 },
-  doublePlayBaseProb: 0.4,
+  doublePlayBaseProb: 0.22,
 
   managerChangeThresholds: {
     npcStarterStaminaLimit: 25,
@@ -81,6 +88,12 @@ export const DEFAULT_MATCH_ENGINE_TUNING: MatchEngineTuning = {
 
   offenseBuntBaseProb: 0.25,
   offenseStealModifier: 0.006,
+
+  controlMissBaseProb: 0.14,
+  controlMissControlScale: 0.008,
+  controlMissStaminaScale: 0.018,
+  controlMissMentalScale: 0.012,
+  controlMissBallZoneRatio: 0.50,
 };
 
 let activeMatchEngineTuning: MatchEngineTuning = JSON.parse(JSON.stringify(DEFAULT_MATCH_ENGINE_TUNING));
@@ -89,6 +102,16 @@ export function getMatchEngineTuning(): MatchEngineTuning {
   return activeMatchEngineTuning;
 }
 
-export function setMatchEngineTuning(next: MatchEngineTuning): void {
-  activeMatchEngineTuning = JSON.parse(JSON.stringify(next));
+export function setMatchEngineTuning(next: Partial<MatchEngineTuning>): void {
+  const base = JSON.parse(JSON.stringify(DEFAULT_MATCH_ENGINE_TUNING)) as MatchEngineTuning;
+  const incoming = JSON.parse(JSON.stringify(next)) as Partial<MatchEngineTuning>;
+  const merged = { ...base, ...incoming } as MatchEngineTuning;
+  for (const key of Object.keys(base) as (keyof MatchEngineTuning)[]) {
+    const bVal = base[key];
+    const iVal = incoming[key];
+    if (iVal !== undefined && typeof bVal === 'object' && !Array.isArray(bVal)) {
+      (merged as any)[key] = { ...(bVal as object), ...(iVal as object) };
+    }
+  }
+  activeMatchEngineTuning = merged;
 }
