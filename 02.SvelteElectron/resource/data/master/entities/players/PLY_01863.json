@@ -19,36 +19,36 @@
       "position": "LF",
       "jerseyNumber": 35,
       "pitching": {
-        "ovr": 63,
-        "stamina": 71,
-        "velocity": 69,
-        "command": 60,
-        "control": 57,
-        "movement": 68,
-        "mentality": 55,
-        "recovery": 60,
-        "clutch": 50,
-        "holdRunners": 50
+        "ovr": 38,
+        "stamina": 40,
+        "velocity": 40,
+        "command": 38,
+        "control": 40,
+        "movement": 36,
+        "mentality": 35,
+        "recovery": 42,
+        "clutch": 34,
+        "holdRunners": 40
       },
       "batting": {
-        "ovr": 63,
-        "contact": 64,
-        "power": 71,
-        "eye": 72,
-        "discipline": 70,
-        "speed": 63,
-        "fielding": 72,
-        "arm": 66,
-        "battingClutch": 50,
-        "baseInstinct": 50,
-        "bunting": 45,
+        "ovr": 58,
+        "contact": 59,
+        "power": 61,
+        "eye": 56,
+        "discipline": 55,
+        "speed": 59,
+        "fielding": 60,
+        "arm": 53,
+        "battingClutch": 52,
+        "baseInstinct": 52,
+        "bunting": 51,
         "platoon": 50
       },
       "developmentRate": 70,
       "potentialHidden": 70,
       "primaryPosition": "LF",
       "positionRatings": {
-        "LF": 63
+        "LF": 58
       },
       "pitches": [
         {

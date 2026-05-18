@@ -21,34 +21,34 @@
       "pitching": {
         "ovr": 60,
         "stamina": 62,
-        "velocity": 67,
-        "command": 61,
-        "control": 63,
+        "velocity": 63,
+        "command": 58,
+        "control": 56,
         "movement": 60,
-        "mentality": 64,
-        "recovery": 60,
-        "clutch": 50,
-        "holdRunners": 50
+        "mentality": 60,
+        "recovery": 57,
+        "clutch": 57,
+        "holdRunners": 56
       },
       "batting": {
-        "ovr": 82,
-        "contact": 84,
-        "power": 80,
-        "eye": 79,
-        "discipline": 83,
-        "speed": 83,
-        "fielding": 83,
-        "arm": 83,
-        "battingClutch": 80,
-        "baseInstinct": 50,
-        "bunting": 45,
-        "platoon": 50
+        "ovr": 80,
+        "contact": 77,
+        "power": 77,
+        "eye": 77,
+        "discipline": 79,
+        "speed": 87,
+        "fielding": 79,
+        "arm": 77,
+        "battingClutch": 70,
+        "baseInstinct": 80,
+        "bunting": 68,
+        "platoon": 74
       },
       "developmentRate": 51,
       "potentialHidden": 77,
       "primaryPosition": "CF",
       "positionRatings": {
-        "CF": 82
+        "CF": 80
       }
     },
     "coach": {

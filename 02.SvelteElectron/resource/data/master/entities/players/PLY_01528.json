@@ -19,36 +19,36 @@
       "position": "RP",
       "jerseyNumber": 48,
       "pitching": {
-        "ovr": 65,
-        "stamina": 64,
-        "velocity": 77,
-        "command": 72,
-        "control": 68,
-        "movement": 67,
-        "mentality": 74,
-        "recovery": 67,
-        "clutch": 50,
-        "holdRunners": 50
+        "ovr": 67,
+        "stamina": 67,
+        "velocity": 73,
+        "command": 65,
+        "control": 66,
+        "movement": 69,
+        "mentality": 71,
+        "recovery": 64,
+        "clutch": 59,
+        "holdRunners": 57
       },
       "batting": {
-        "ovr": 40,
-        "contact": 40,
-        "power": 37,
-        "eye": 40,
-        "discipline": 41,
-        "speed": 37,
-        "fielding": 39,
-        "arm": 39,
-        "battingClutch": 44,
-        "baseInstinct": 50,
-        "bunting": 45,
-        "platoon": 50
+        "ovr": 49,
+        "contact": 46,
+        "power": 50,
+        "eye": 49,
+        "discipline": 49,
+        "speed": 43,
+        "fielding": 51,
+        "arm": 48,
+        "battingClutch": 43,
+        "baseInstinct": 43,
+        "bunting": 35,
+        "platoon": 44
       },
       "developmentRate": 41,
       "potentialHidden": 76,
       "primaryPosition": "RP",
       "positionRatings": {
-        "RP": 65
+        "RP": 67
       },
       "pitches": [
         {
