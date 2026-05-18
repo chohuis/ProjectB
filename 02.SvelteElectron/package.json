@@ -27,13 +27,15 @@
     "gen:npc": "node scripts/generate-npc-people.mjs",
     "deploy": "node scripts/deploy-staging.mjs",
     "migrate:entities": "node scripts/migrate-entities.mjs",
-    "migrate:append:jbl": "node scripts/migrate-entities.mjs -- --append people_jbl.json"
+    "migrate:append:jbl": "node scripts/migrate-entities.mjs -- --append people_jbl.json",
+    "postinstall": "electron-rebuild -f -w better-sqlite3"
   },
   "dependencies": {
     "better-sqlite3": "^12.10.0",
     "svelte": "^5.38.7"
   },
   "devDependencies": {
+    "@electron/rebuild": "^4.0.4",
     "@sveltejs/vite-plugin-svelte": "^5.1.1",
     "@types/node": "^22.15.21",
     "concurrently": "^9.2.0",

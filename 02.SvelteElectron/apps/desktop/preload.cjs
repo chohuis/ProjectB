@@ -29,6 +29,7 @@ contextBridge.exposeInMainWorld("projectB", {
 
   // ── 마운드 방문 ─────────────────────────────────────────────────────────
   matchMoundVisit: () => ipcRenderer.invoke("match:mound-visit"),
+  matchNextInning: () => ipcRenderer.invoke("match:next-inning"),
 
   // ── 매치 엔진 튜닝 (관리자 도구) ───────────────────────────────────────
   tuningLoad: () => ipcRenderer.invoke("tuning:load"),

@@ -1317,13 +1317,37 @@ app.whenReady().then(() => {
   ipcMain.handle("match:start", async (_event, request = {}) => {
     const core = await loadCoreModule();
     let state = core.startMatch(request);
-    const autoSimLogs = [];
+
+    // RP/CP: 등판 트리거 충족 시점까지 자동 시뮬
     if (!state.protagonistHasEntered) {
       state = core.autoSimulateUntilEntry(state);
-      autoSimLogs.push(...(state.preEntryLogs ?? []));
     }
+
+    // protagonist_pitch 시점까지 자동 진행 (SP AWAY 등 첫 이닝이 타격 half인 경우 처리)
+    let guard = 0;
+    while (!state.isFinished && guard++ < 50) {
+      const phase = core.advanceGamePhase(state);
+      if (phase.phase === "protagonist_pitch" || phase.phase === "game_over") break;
+      if (phase.phase === "auto_batting") {
+        state = phase.result.nextState;
+      } else if (phase.phase === "protagonist_entry") {
+        state = phase.state;
+      } else if (phase.phase === "pre_entry_sim") {
+        state = core.autoSimulateUntilEntry(state);
+      } else if (phase.phase === "protagonist_exit") {
+        state = phase.state;
+        state = core.autoSimulateToGameEnd(state);
+        break;
+      } else if (phase.phase === "post_exit_sim") {
+        state = core.autoSimulateToGameEnd(state);
+        break;
+      } else {
+        break;
+      }
+    }
+
     activeMatchState = state;
-    return { snapshot: toSnapshotDto(activeMatchState, autoSimLogs, core) };
+    return { snapshot: toSnapshotDto(activeMatchState, [], core) };
   });
 
   ipcMain.handle("match:step", async (_event, decision) => {
@@ -1334,32 +1358,59 @@ app.whenReady().then(() => {
     }
     const result = core.stepPitch(activeMatchState, decision);
     activeMatchState = result.nextState;
-    const autoSimLogs = [];
-    let guard = 0;
-    while (!activeMatchState.isFinished && guard++ < 50) {
-      const phase = core.advanceGamePhase(activeMatchState);
-      if (phase.phase === "protagonist_pitch" || phase.phase === "game_over") break;
-      if (phase.phase === "auto_batting") {
-        autoSimLogs.push(...phase.result.logs.slice(0, 15));
-        activeMatchState = phase.result.nextState;
-      } else if (phase.phase === "protagonist_entry") {
-        activeMatchState = phase.state;
-        break;
-      } else if (phase.phase === "protagonist_exit") {
-        activeMatchState = phase.state;
-        activeMatchState = core.autoSimulateToGameEnd(activeMatchState);
-        break;
-      } else if (phase.phase === "post_exit_sim") {
-        activeMatchState = core.autoSimulateToGameEnd(activeMatchState);
-        break;
-      } else if (phase.phase === "pre_entry_sim") {
-        activeMatchState = core.autoSimulateUntilEntry(activeMatchState);
-        autoSimLogs.push(...(activeMatchState.preEntryLogs ?? []));
-      } else {
-        break;
-      }
+    // 강판 조건이 충족됐으면 즉시 적용 (mid-inning 강판 시 state 일관성 유지)
+    const nextPhase = core.advanceGamePhase(activeMatchState);
+    if (nextPhase.phase === "protagonist_exit") {
+      activeMatchState = nextPhase.state;
     }
-    return { snapshot: toSnapshotDto(activeMatchState, autoSimLogs, core), outcome: result.outcome };
+    // 감독 자동 마운드 방문 체크
+    if (!activeMatchState.isFinished && !activeMatchState.protagonistExited) {
+      activeMatchState = core.autoMoundVisitIfNeeded(activeMatchState);
+    }
+    return { snapshot: toSnapshotDto(activeMatchState, [], core), outcome: result.outcome };
+  });
+
+  ipcMain.handle("match:next-inning", async () => {
+    const core = await loadCoreModule();
+    if (!activeMatchState || activeMatchState.isFinished) {
+      return { snapshot: toSnapshotDto(activeMatchState ?? core.startMatch({}), [], core), logs: [] };
+    }
+
+    const prevInning = activeMatchState.inning;
+    const prevHalf   = activeMatchState.half;
+    const phase = core.advanceGamePhase(activeMatchState);
+    const allLogs = [];
+
+    if (phase.phase === "auto_batting") {
+      activeMatchState = phase.result.nextState;
+      const halfLabel = prevHalf === "top" ? "초" : "말";
+      allLogs.push(`── ${prevInning}회${halfLabel} (${phase.result.runs}득점 ${phase.result.hits}안타) ──`);
+      for (const ab of phase.result.atBats) {
+        const resultLabel = {
+          STRIKE_SWING: "삼진", STRIKE_LOOK: "삼진(루킹)",
+          WALK: "볼넷", INPLAY_OUT: "아웃", FIELDING_ERROR: "실책",
+          HIT_SINGLE: "안타", HIT_DOUBLE: "2루타",
+          HIT_TRIPLE: "3루타", HOME_RUN: "홈런",
+          FOUL: "파울", BALL: "볼",
+        }[ab.resultCode] ?? ab.resultCode;
+        const runMark = ab.runsScored > 0 ? ` ★${ab.runsScored}득점` : "";
+        allLogs.push(`투수: ${ab.pitcherName} / 타자: ${ab.batterName} → ${resultLabel} (${ab.pitchCount}구)${runMark}`);
+      }
+    } else if (phase.phase === "protagonist_entry") {
+      activeMatchState = phase.state;
+    } else if (phase.phase === "pre_entry_sim") {
+      const prevCount = activeMatchState.preEntryLogs?.length ?? 0;
+      activeMatchState = core.autoSimulateUntilEntry(activeMatchState);
+      allLogs.push(...(activeMatchState.preEntryLogs ?? []).slice(prevCount).slice(-4));
+    } else if (phase.phase === "protagonist_exit") {
+      activeMatchState = phase.state;
+      activeMatchState = core.autoSimulateToGameEnd(activeMatchState);
+    } else if (phase.phase === "post_exit_sim") {
+      activeMatchState = core.autoSimulateToGameEnd(activeMatchState);
+    }
+    // protagonist_pitch / game_over: 상태 변경 없음
+
+    return { snapshot: toSnapshotDto(activeMatchState, [], core), logs: allLogs };
   });
 
   ipcMain.handle("match:finish", async () => {
@@ -1624,11 +1675,15 @@ function toSnapshotDto(state, autoSimLogs, core) {
   const currentIdx    = state.half === "top" ? state.awayLineupIndex : state.homeLineupIndex;
   const currentBatter = currentLineup?.[currentIdx % Math.max(1, currentLineup?.length ?? 1)];
 
-  // Inline protagonist-pitching check (avoids needing the core module for a pure state query)
   const ourTeamFielding =
     (state.half === "top"    && state.protagonistSide === "home") ||
     (state.half === "bottom" && state.protagonistSide === "away");
   const isProtagonistPitching = ourTeamFielding && state.protagonistHasEntered && !state.protagonistExited;
+  const phase = state.isFinished
+    ? "game_over"
+    : isProtagonistPitching
+    ? "protagonist_pitch"
+    : "auto_inning";
 
   return {
     matchId: state.matchId,
@@ -1651,6 +1706,7 @@ function toSnapshotDto(state, autoSimLogs, core) {
     pitchCountSinceEntry: state.pitchCountSinceEntry,
     moundVisitsLeft: state.moundVisitsLeft,
     isProtagonistPitching,
+    phase,
 
     currentBatter,
     weather: state.weather,

@@ -40,17 +40,17 @@ declare global {
           | { type: "mid_inning"; inning: number; maxOuts: number }
           | { type: "close_game"; inningThreshold: number; maxLeadDiff: number };
         pitcher?: {
-          command?: number; velocity?: number; staminaCap?: number;
+          name?: string; command?: number; velocity?: number; staminaCap?: number;
           mentalResil?: number; control?: number; movement?: number;
           clutch?: number; holdRunners?: number;
         };
         opponentPitcher?: {
-          command?: number; velocity?: number; staminaCap?: number;
+          name?: string; command?: number; velocity?: number; staminaCap?: number;
           mentalResil?: number; control?: number; movement?: number;
           clutch?: number; holdRunners?: number;
         };
         npcStarterPitcher?: {
-          command?: number; velocity?: number; staminaCap?: number;
+          name?: string; command?: number; velocity?: number; staminaCap?: number;
           mentalResil?: number; control?: number; movement?: number;
           clutch?: number; holdRunners?: number;
         };
@@ -72,10 +72,12 @@ declare global {
           quality: number;
           comment: string;
           animationCues: MatchAnimationCue[];
+          landingTarget: { x: number; y: number };
         } | null;
       }>;
       matchFinish: () => Promise<{ snapshot: MatchSnapshot; summary: string }>;
       matchMoundVisit: () => Promise<{ snapshot: MatchSnapshot } | null>;
+      matchNextInning: () => Promise<{ snapshot: MatchSnapshot; logs: string[] }>;
       // ── 게임 저장/불러오기 ──────────────────────────────────
       gameLoad:   () => Promise<SaveGame | null>;
       gameSave:   (data: SaveGame) => Promise<void>;
@@ -158,11 +160,14 @@ export type GameSaveData = Record<string, unknown>;
 export interface PitchDecision {
   pitchType: "fastball" | "slider" | "curve" | "changeup";
   location: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  /** 연속 좌표 타겟. 스트라이크존 밖이면 의도적 볼 */
+  target?: { x: number; y: number };
   strategy: "aggressive" | "balanced" | "safe";
   power: "low" | "normal" | "high";
 }
 
 export interface MatchBatterStats {
+  name?: string;
   contact: number;
   power: number;
   eye: number;

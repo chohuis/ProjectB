@@ -7,6 +7,8 @@ export type PitchType =
 export type PitchStrategy = "aggressive" | "balanced" | "safe";
 export type PitchPower = "low" | "normal" | "high";
 export type PitchLocation = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+/** 연속 좌표 투구 타겟. 스트라이크존 = x∈[-1,1], y∈[-1,1] (중심=0,0) */
+export type PitchTarget = { x: number; y: number };
 export type WeatherType = "sunny" | "cloudy" | "rainy" | "windy_in" | "windy_out";
 export type ParkType = "neutral" | "pitcher_park" | "hitter_park" | "dome";
 export type FieldPosition = "P" | "C" | "1B" | "2B" | "3B" | "SS" | "LF" | "CF" | "RF";
@@ -59,6 +61,7 @@ export const FIELDER_DEFAULT_POSITIONS: Record<FieldPosition, { x: number; y: nu
 };
 
 export interface PitcherStats {
+  name?: string;
   command: number;
   velocity: number;
   staminaCap: number;
@@ -70,6 +73,7 @@ export interface PitcherStats {
 }
 
 export interface BatterStats {
+  name?: string;
   contact: number;
   power: number;
   eye: number;
@@ -239,6 +243,7 @@ export function createInitialMatchState(options: MatchStartOptions = {}): MatchS
   const npcStarterOpts         = options.npcStarterPitcher ?? {};
 
   const buildPitcher = (opts: Partial<PitcherStats>): PitcherStats => ({
+    ...(opts.name ? { name: opts.name } : {}),
     command:     opts.command     ?? 50,
     velocity:    opts.velocity    ?? 52,
     staminaCap:  opts.staminaCap  ?? 55,

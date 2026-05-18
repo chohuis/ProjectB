@@ -2,6 +2,7 @@ export interface MatchEngineTuning {
   pitchBase: Record<"fastball" | "sinker" | "cutter" | "slider" | "curve" | "changeup" | "splitter" | "forkball" | "screwball" | "knuckleball", number>;
   strategyBonus: Record<"aggressive" | "balanced" | "safe", number>;
   powerBonus: Record<"low" | "normal" | "high", number>;
+  /** @deprecated Phase A 이후 사용 안 함. locationCenterPenalty / locationDistanceScale 로 대체 */
   locationBonus: Record<1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9, number>;
   staminaBase: number;
   staminaAggressiveBonus: number;
@@ -40,12 +41,21 @@ export interface MatchEngineTuning {
   offenseBuntBaseProb: number;       // 번트 기본 시도 확률 (offenseMind 보정 전)
   offenseStealModifier: number;      // 도루 시도율 감독 보정 계수
 
-  // ── 투구 위치 이탈 시스템 ────────────────────────────────────────────────────
-  controlMissBaseProb: number;       // control=50 기준 이탈 기본 확률
-  controlMissControlScale: number;   // control 1pt당 이탈 변화량
-  controlMissStaminaScale: number;   // stamina 1pt당 추가 이탈률 (50 이하 구간)
-  controlMissMentalScale: number;    // mental 1pt당 추가 이탈률 (50 이하 구간)
-  controlMissBallZoneRatio: number;  // 이탈 중 볼존(즉시 BALL) 비율
+  // ── Phase A: 착탄 분산 시스템 (Gaussian) ─────────────────────────────────────
+  dispersionBase: number;          // control=50 기준 σ (스트라이크존 반폭 단위)
+  dispersionControlScale: number;  // control 1pt당 σ 감소량
+  dispersionStaminaScale: number;  // stamina 50 이하 1pt당 σ 증가량
+  dispersionMentalScale: number;   // mental  50 이하 1pt당 σ 증가량
+  shadowZoneHalf: number;          // 경계선 shadow zone 반폭
+  locationCenterPenalty: number;   // 중심(dist=0) 기준 quality 패널티
+  locationDistanceScale: number;   // dist 1 단위당 quality 보너스
+
+  // ── Phase B: 타자 스윙 결정 ──────────────────────────────────────────────────
+  swingMarginBase: number;         // discipline=50 기준 스윙존 마진 (스트라이크존 밖)
+  swingDisciplineScale: number;    // discipline 1pt당 마진 감소량
+  swingEyeScale: number;           // eye 1pt당 마진 감소량
+  swingFastballBonus: number;      // fastball 추가 마진 (반응시간 부족)
+  shadowUmpireStrikeProb: number;  // shadow zone 심판 스트라이크 콜 확률
 }
 
 export const DEFAULT_MATCH_ENGINE_TUNING: MatchEngineTuning = {
@@ -89,11 +99,19 @@ export const DEFAULT_MATCH_ENGINE_TUNING: MatchEngineTuning = {
   offenseBuntBaseProb: 0.25,
   offenseStealModifier: 0.006,
 
-  controlMissBaseProb: 0.14,
-  controlMissControlScale: 0.008,
-  controlMissStaminaScale: 0.018,
-  controlMissMentalScale: 0.012,
-  controlMissBallZoneRatio: 0.50,
+  dispersionBase: 0.15,
+  dispersionControlScale: 0.003,
+  dispersionStaminaScale: 0.002,
+  dispersionMentalScale: 0.001,
+  shadowZoneHalf: 0.20,
+  locationCenterPenalty: -4.0,
+  locationDistanceScale: 5.0,
+
+  swingMarginBase: 0.18,
+  swingDisciplineScale: 0.003,
+  swingEyeScale: 0.002,
+  swingFastballBonus: 0.08,
+  shadowUmpireStrikeProb: 0.45,
 };
 
 let activeMatchEngineTuning: MatchEngineTuning = JSON.parse(JSON.stringify(DEFAULT_MATCH_ENGINE_TUNING));

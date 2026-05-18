@@ -21,6 +21,7 @@ import {
   type NpcPitcherTracker,
   type ParkType,
   type PitchLocation,
+  type PitchTarget,
   type PitchPower,
   type PitchResultCode,
   type PitchStrategy,
@@ -37,6 +38,8 @@ import { getMatchEngineTuning } from "../domain/matchEngineTuning";
 export interface PitchDecision {
   pitchType: PitchType;
   location: PitchLocation;
+  /** 연속 좌표 타겟. 미제공 시 location으로 역산. 스트라이크존 밖 좌표 = 의도적 볼 */
+  target?: PitchTarget;
   strategy: PitchStrategy;
   power: PitchPower;
 }
@@ -48,11 +51,20 @@ export interface PitchOutcome {
   ballInPlay?: BallInPlay;
   fieldingResult?: FieldingResult;
   animationCues: AnimationCue[];
+  landingTarget: PitchTarget;
 }
 
 export interface MatchStepResult {
   nextState: MatchState;
   outcome: PitchOutcome;
+}
+
+export interface AtBatLog {
+  pitcherName: string;
+  batterName:  string;
+  resultCode:  PitchResultCode;
+  pitchCount:  number;
+  runsScored:  number;
 }
 
 export interface HalfInningSimResult {
@@ -62,6 +74,7 @@ export interface HalfInningSimResult {
   walks: number;
   strikeouts: number;
   logs: string[];
+  atBats: AtBatLog[];
 }
 
 export type ExitReason = "pitch_limit" | "stamina" | "performance" | "tactical";
@@ -155,7 +168,7 @@ export function stepPitch(state: MatchState, decision: PitchDecision): MatchStep
   if (state.isFinished) {
     return {
       nextState: state,
-      outcome: { resultCode: "GAME_OVER", quality: 0, comment: "이미 종료된 경기입니다.", animationCues: [] },
+      outcome: { resultCode: "GAME_OVER", quality: 0, comment: "이미 종료된 경기입니다.", animationCues: [], landingTarget: { x: 0, y: 0 } },
     };
   }
   if (!isProtagonistActivelyPitching(state)) {
@@ -245,30 +258,57 @@ export function autoSimulateHalfInning(state: MatchState): HalfInningSimResult {
   let s = { ...state };
   let runs = 0, hits = 0, walks = 0, strikeouts = 0;
   const logs: string[] = [];
+  const atBats: AtBatLog[] = [];
   let safety = 300;
 
+  // 현재 타석 추적용
+  let abPitchCount = 0;
+  let abStartScore = s.score[startHalf === "top" ? "away" : "home"];
+
   while (!s.isFinished && safety-- > 0) {
-    // half가 전환되면 이 반이닝 완료
     if (s.half !== startHalf || s.inning !== startInning) break;
 
     const prevStrikes = s.count.strikes;
     const prevScore   = { ...s.score };
+    const pitcher     = getActivePitcher(s);
+    const batter      = getCurrentBatter(s);
     const result      = stepPitchCore(s, autoPickDecision(s), false);
     const code        = result.outcome.resultCode;
-
-    // 득점 집계
     const battingTeam = startHalf === "top" ? "away" : "home";
-    runs += result.nextState.score[battingTeam] - prevScore[battingTeam];
+    const scored      = result.nextState.score[battingTeam] - prevScore[battingTeam];
+
+    runs += scored;
+    abPitchCount++;
 
     if (code === "HIT_SINGLE" || code === "HIT_DOUBLE" || code === "HIT_TRIPLE" || code === "HOME_RUN") hits++;
     if (code === "WALK") walks++;
     if ((code === "STRIKE_LOOK" || code === "STRIKE_SWING") && prevStrikes === 2) strikeouts++;
 
+    // 타석 종료 코드
+    const AB_TERMINAL = new Set<PitchResultCode>([
+      "WALK", "INPLAY_OUT", "FIELDING_ERROR",
+      "HIT_SINGLE", "HIT_DOUBLE", "HIT_TRIPLE", "HOME_RUN",
+    ]);
+    const isKOut = (code === "STRIKE_LOOK" || code === "STRIKE_SWING") && prevStrikes === 2;
+    if (isKOut || AB_TERMINAL.has(code)) {
+      const terminalCode = isKOut ? code : code;
+      const runsThisAb   = result.nextState.score[battingTeam] - abStartScore;
+      atBats.push({
+        pitcherName: pitcher.name ?? "투수",
+        batterName:  batter.name  ?? "타자",
+        resultCode:  terminalCode,
+        pitchCount:  abPitchCount,
+        runsScored:  Math.max(0, runsThisAb),
+      });
+      abPitchCount = 0;
+      abStartScore = result.nextState.score[battingTeam];
+    }
+
     logs.push(...result.nextState.logs.slice(s.logs.length));
     s = result.nextState;
   }
 
-  return { nextState: s, runs, hits, walks, strikeouts, logs };
+  return { nextState: s, runs, hits, walks, strikeouts, logs, atBats };
 }
 
 /**
@@ -452,44 +492,172 @@ function protagonistExitsGame(state: MatchState, reason: ExitReason): MatchState
   };
 }
 
-// ── 투구 위치 이탈 시스템 ─────────────────────────────────────────────────────
+// ── Phase A: 연속 좌표 착탄 시스템 ──────────────────────────────────────────
 
-const ADJACENT_LOCATIONS: Record<PitchLocation, PitchLocation[]> = {
-  1: [2, 4],        2: [1, 3, 5],     3: [2, 6],
-  4: [1, 5, 7],     5: [2, 4, 6, 8],  6: [3, 5, 9],
-  7: [4, 8],        8: [5, 7, 9],     9: [6, 8],
+/** 존 번호 → 스트라이크존 정규화 좌표 (중심=0,0, 범위=[-1,1]) */
+const ZONE_TO_TARGET: Record<PitchLocation, PitchTarget> = {
+  7: { x: -0.67, y: -0.67 }, 8: { x:  0.00, y: -0.67 }, 9: { x:  0.67, y: -0.67 },
+  4: { x: -0.67, y:  0.00 }, 5: { x:  0.00, y:  0.00 }, 6: { x:  0.67, y:  0.00 },
+  1: { x: -0.67, y:  0.67 }, 2: { x:  0.00, y:  0.67 }, 3: { x:  0.67, y:  0.67 },
 };
 
-function resolveEffectiveLocation(
-  intended: PitchLocation,
+function gaussianRandom(mean: number, std: number): number {
+  const u = Math.max(1e-10, Math.random());
+  const v = Math.random();
+  return mean + std * (Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v));
+}
+
+function resolveActualLanding(
+  target: PitchTarget,
   pitcher: PitcherStats,
   stamina: number,
   mental: number,
   state: MatchState,
-): { effectiveLocation: PitchLocation; isBallZone: boolean; missLog: string | null } {
+): { landing: PitchTarget; inZone: boolean; inShadow: boolean; isBallZone: boolean; missLog: string | null } {
   const tuning = getMatchEngineTuning();
-  // control=50 기준: 높을수록 miss 감소, 낮을수록 증가 (최소 3% floor)
-  const baseMissProb = Math.max(0.03, tuning.controlMissBaseProb - (pitcher.control - 50) * tuning.controlMissControlScale);
-  const staminaMult = stamina < 50 ? 1 + (50 - stamina) * tuning.controlMissStaminaScale : 1.0;
-  const mentalMult  = mental  < 50 ? 1 + (50 - mental)  * tuning.controlMissMentalScale  : 1.0;
+  let sigma = Math.max(0.02,
+    tuning.dispersionBase - (pitcher.control - 50) * tuning.dispersionControlScale
+    + (stamina < 50 ? (50 - stamina) * tuning.dispersionStaminaScale : 0)
+    + (mental  < 50 ? (50 - mental)  * tuning.dispersionMentalScale  : 0),
+  );
   const hasScoringPosition = !!(state.runners.second || state.runners.third);
-  const isFullBase  = !!(state.runners.first && state.runners.second && state.runners.third);
-  const isLateGame  = state.inning >= state.inningLimit - 2;
-  const pressureMult = 1.0
-    + (hasScoringPosition ? 0.15 : 0)
-    + (isFullBase ? 0.10 : 0)
-    + (isLateGame ? 0.08 : 0);
-  const missProb = clamp(baseMissProb * staminaMult * mentalMult * pressureMult, 0.0, 0.60);
+  const isFullBase = !!(state.runners.first && state.runners.second && state.runners.third);
+  const isLateGame = state.inning >= state.inningLimit - 2;
+  sigma *= 1 + (hasScoringPosition ? 0.10 : 0) + (isFullBase ? 0.08 : 0) + (isLateGame ? 0.06 : 0);
 
-  if (Math.random() >= missProb) {
-    return { effectiveLocation: intended, isBallZone: false, missLog: null };
+  const landing: PitchTarget = {
+    x: target.x + gaussianRandom(0, sigma),
+    y: target.y + gaussianRandom(0, sigma),
+  };
+  const ax = Math.abs(landing.x), ay = Math.abs(landing.y);
+  const sh = tuning.shadowZoneHalf;
+  const inZone   = ax <= 1 && ay <= 1;
+  const inShadow = !inZone && ax <= 1 + sh && ay <= 1 + sh;
+  const isBallZone = !inZone && !inShadow;
+
+  const drift = Math.sqrt((landing.x - target.x) ** 2 + (landing.y - target.y) ** 2);
+  const missLog = isBallZone && drift > 0.25 ? "제구 이탈 (볼존)"
+    : inShadow && drift > 0.25 ? "제구 불안 (경계선)"
+    : inZone   && drift > 0.40 ? `제구 불안 (편차 ${drift.toFixed(2)})`
+    : null;
+
+  return { landing, inZone, inShadow, isBallZone, missLog };
+}
+
+// ── Phase B: 타자 스윙 결정 ──────────────────────────────────────────────────
+
+function swingDecision(
+  landing: PitchTarget,
+  pitchType: PitchType,
+  batter: BatterStats,
+  inZone: boolean,
+  inShadow: boolean,
+): { swings: boolean; umpireStrike: boolean } {
+  const tuning = getMatchEngineTuning();
+  const ax = Math.abs(landing.x), ay = Math.abs(landing.y);
+
+  const margin = Math.max(0,
+    tuning.swingMarginBase
+    - (batter.discipline - 50) * tuning.swingDisciplineScale
+    - (batter.eye        - 50) * tuning.swingEyeScale
+    + (pitchType === "fastball" ? tuning.swingFastballBonus : 0),
+  );
+  const inSwingZone = ax <= 1 + margin && ay <= 1 + margin;
+
+  const umpireStrike = inZone || (inShadow && Math.random() < tuning.shadowUmpireStrikeProb);
+
+  let swingProb: number;
+  if (inZone) {
+    swingProb = clamp(0.78 + (50 - batter.discipline) * 0.003, 0.55, 0.97);
+  } else if (inShadow) {
+    swingProb = inSwingZone
+      ? clamp(0.45 + (50 - batter.discipline) * 0.004, 0.20, 0.80)
+      : 0.12;
+  } else {
+    swingProb = inSwingZone
+      ? clamp(0.22 + (50 - batter.discipline) * 0.003, 0.05, 0.55)
+      : 0.02;
   }
-  if (Math.random() < tuning.controlMissBallZoneRatio) {
-    return { effectiveLocation: intended, isBallZone: true, missLog: "제구 실패 (볼존 이탈)" };
+
+  return { swings: Math.random() < swingProb, umpireStrike };
+}
+
+// ── Phase C: 컨택 품질 분리 계산 ────────────────────────────────────────────
+// pitchQuality에 이미 batter.contact*0.10 포함 → 추가로 *0.20 반영 (합산 0.30)
+// 볼 존 스윙은 컨택 어려움 패널티 부가
+function calculateContactQuality(
+  pitchQuality: number,
+  batter: BatterStats,
+  inZone: boolean,
+  inShadow: boolean,
+): number {
+  const extraContact = (batter.contact - 50) * 0.20;
+  const chasePenalty = !inZone ? (inShadow ? 5 : 12) : 0;
+  return Number((pitchQuality - extraContact + chasePenalty).toFixed(2));
+}
+
+// Phase C: contactQuality로 whiff/foul 분기
+// Phase D: pitchQuality + batter.power로 히트 등급 결정
+function resolveContact(
+  pitchQuality: number,
+  contactQuality: number,
+  batter: BatterStats,
+): PitchResultCode {
+  const roll = Math.random();
+  // Phase D 파워 보정: 낮은 pitchQuality + 높은 power → 히트 등급 ↑
+  const hitBonus = clamp(
+    (60 - pitchQuality) * 0.003 + (batter.power - 50) * 0.002,
+    -0.12, 0.20,
+  );
+
+  if (contactQuality >= 72) {
+    if (roll < 0.55) return "STRIKE_SWING";
+    if (roll < 0.80) return "FOUL";
+    if (roll < 0.95) return "INPLAY_OUT";
+    return "HIT_SINGLE";
   }
-  const adj = ADJACENT_LOCATIONS[intended];
-  const effectiveLocation = adj[Math.floor(Math.random() * adj.length)] as PitchLocation;
-  return { effectiveLocation, isBallZone: false, missLog: `제구 불안 (${intended}→${effectiveLocation})` };
+  if (contactQuality >= 60) {
+    if (roll < 0.30) return "STRIKE_SWING";
+    if (roll < 0.50) return "FOUL";
+    if (roll < 0.75) return "INPLAY_OUT";
+    return "HIT_SINGLE";
+  }
+  if (contactQuality >= 52) {
+    if (roll < 0.15) return "STRIKE_SWING";
+    if (roll < 0.30) return "FOUL";
+    if (roll < 0.65) return "INPLAY_OUT";
+    return "HIT_SINGLE";
+  }
+  if (contactQuality >= 45) {
+    if (roll < 0.08) return "STRIKE_SWING";
+    if (roll < 0.20) return "FOUL";
+    if (roll < clamp(0.55 - hitBonus, 0.32, 0.68)) return "INPLAY_OUT";
+    if (roll < clamp(0.88 - hitBonus * 0.5, 0.74, 0.94)) return "HIT_SINGLE";
+    return "HIT_DOUBLE";
+  }
+  if (contactQuality >= 38) {
+    if (roll < 0.05) return "STRIKE_SWING";
+    if (roll < 0.14) return "FOUL";
+    if (roll < clamp(0.35 - hitBonus, 0.18, 0.48)) return "INPLAY_OUT";
+    if (roll < clamp(0.72 - hitBonus * 0.5, 0.56, 0.82)) return "HIT_SINGLE";
+    if (roll < clamp(0.92 - hitBonus * 0.3, 0.86, 0.96)) return "HIT_DOUBLE";
+    return "HIT_TRIPLE";
+  }
+  if (contactQuality >= 32) {
+    if (roll < 0.03) return "STRIKE_SWING";
+    if (roll < 0.10) return "FOUL";
+    if (roll < clamp(0.25 - hitBonus, 0.10, 0.36)) return "INPLAY_OUT";
+    if (roll < clamp(0.58 - hitBonus * 0.5, 0.44, 0.70)) return "HIT_SINGLE";
+    if (roll < clamp(0.82 - hitBonus * 0.3, 0.75, 0.90)) return "HIT_DOUBLE";
+    if (roll < clamp(0.95 + hitBonus * 0.2, 0.92, 0.98)) return "HIT_TRIPLE";
+    return "HOME_RUN";
+  }
+  if (roll < 0.05) return "FOUL";
+  if (roll < clamp(0.15 - hitBonus, 0.05, 0.24)) return "INPLAY_OUT";
+  if (roll < clamp(0.48 - hitBonus * 0.5, 0.36, 0.58)) return "HIT_SINGLE";
+  if (roll < clamp(0.72 - hitBonus * 0.3, 0.64, 0.80)) return "HIT_DOUBLE";
+  if (roll < clamp(0.87 + hitBonus * 0.2, 0.83, 0.92)) return "HIT_TRIPLE";
+  return "HOME_RUN";
 }
 
 // ── 핵심 투구 처리 엔진 (내부용) ──────────────────────────────────────────────
@@ -502,7 +670,7 @@ function stepPitchCore(
   if (state.isFinished) {
     const outcome: PitchOutcome = {
       resultCode: "GAME_OVER", quality: 0,
-      comment: "이미 종료된 경기입니다.", animationCues: [],
+      comment: "이미 종료된 경기입니다.", animationCues: [], landingTarget: { x: 0, y: 0 },
     };
     return { nextState: state, outcome };
   }
@@ -533,14 +701,20 @@ function stepPitchCore(
   const currentStamina = getActiveStamina(preState);
   const currentMental  = getActiveMental(preState);
 
-  // ── 3. 제구 이탈 체크 → 투구 결과 계산 ────────────────────────────────────
-  const missResult = resolveEffectiveLocation(decision.location, currentPitcher, currentStamina, currentMental, preState);
-  const effectiveDecision: PitchDecision = { ...decision, location: missResult.effectiveLocation };
-  const quality = calculatePitchQuality(preState, currentPitcher, currentBatter, currentStamina, currentMental, effectiveDecision);
-  let resultCode: PitchResultCode = missResult.isBallZone
-    ? "BALL"
-    : applyHitUpgrade(resolvePitchResult(quality, effectiveDecision), currentBatter.power, preState.weather);
-  const ballInPlay = missResult.isBallZone ? undefined : resolveBallInPlay(resultCode, effectiveDecision, quality);
+  // ── 3. 착탄 위치 결정 → 스윙 결정 → 투구 결과 계산 ───────────────────────
+  const target = decision.target ?? ZONE_TO_TARGET[decision.location];
+  const landingResult = resolveActualLanding(target, currentPitcher, currentStamina, currentMental, preState);
+  const { landing, inZone, inShadow, missLog } = landingResult;
+  const quality = calculatePitchQuality(preState, currentPitcher, currentBatter, currentStamina, currentMental, decision, landing);
+  const { swings, umpireStrike } = swingDecision(landing, decision.pitchType, currentBatter, inZone, inShadow);
+  let resultCode: PitchResultCode;
+  if (!swings) {
+    resultCode = umpireStrike ? "STRIKE_LOOK" : "BALL";
+  } else {
+    const contactQuality = calculateContactQuality(quality, currentBatter, inZone, inShadow);
+    resultCode = applyHitUpgrade(resolveContact(quality, contactQuality, currentBatter), currentBatter.power, preState.weather);
+  }
+  const ballInPlay = INPLAY_CODES.has(resultCode) ? resolveBallInPlay(resultCode, decision, quality) : undefined;
 
   // 수비 처리 (INPLAY_OUT 케이스)
   let fieldingResult: FieldingResult | undefined;
@@ -692,16 +866,16 @@ function stepPitchCore(
     : preState.pitchCountSinceEntry;
 
   // ── 6. 로그 조합 ──────────────────────────────────────────────────────────────
-  const pitchLog  = buildPitchLog(preState, effectiveDecision, resultCode, quality);
+  const pitchLog  = buildPitchLog(preState, decision, landing, resultCode, quality);
   const allNewLogs = [
     ...stealResult.stealLogs,
-    ...(missResult.missLog ? [missResult.missLog] : []),
+    ...(missLog ? [missLog] : []),
     pitchLog,
     ...runningLogs,
   ];
 
   // ── 7. 애니메이션 큐 생성 ─────────────────────────────────────────────────────
-  const animationCues = buildAnimationCues({ decision: effectiveDecision, resultCode, ballInPlay, fieldingResult, preRunners: preState.runners });
+  const animationCues = buildAnimationCues({ decision, resultCode, ballInPlay, fieldingResult, preRunners: preState.runners });
 
   let nextState: MatchState = {
     ...preState,
@@ -730,7 +904,7 @@ function stepPitchCore(
 
   const outcome: PitchOutcome = {
     resultCode, quality, comment: getResultComment(resultCode),
-    ballInPlay, fieldingResult, animationCues,
+    ballInPlay, fieldingResult, animationCues, landingTarget: landing,
   };
   return { nextState, outcome };
 }
@@ -744,12 +918,16 @@ function calculatePitchQuality(
   stamina: number,
   mental: number,
   decision: PitchDecision,
+  landing: PitchTarget,
 ): number {
   const tuning = getMatchEngineTuning();
   const pitchBase:     Record<PitchType,     number> = tuning.pitchBase;
   const strategyBonus: Record<PitchStrategy, number> = tuning.strategyBonus;
   const powerBonus:    Record<PitchPower,    number> = tuning.powerBonus;
-  const locationBonus: Record<PitchLocation, number> = tuning.locationBonus;
+
+  // 연속 좌표 기반 위치 품질: 중심(0,0)에서 멀수록 투수에게 유리
+  const dist = Math.sqrt(landing.x * landing.x + landing.y * landing.y);
+  const locationQ = tuning.locationCenterPenalty + dist * tuning.locationDistanceScale;
 
   const commandBonus  = (pitcher.command  - 50) * 0.10;
   const velocityBonus = decision.pitchType === "fastball"
@@ -782,7 +960,7 @@ function calculatePitchQuality(
     pitchBase[decision.pitchType] +
     strategyBonus[decision.strategy] +
     powerBonus[decision.power] +
-    locationBonus[decision.location] +
+    locationQ +
     commandBonus + velocityBonus + controlBonus + movementBonus +
     countMod + fullCountNoise -
     batterPenalty +
@@ -790,73 +968,6 @@ function calculatePitchQuality(
     weatherMod + parkMod + patternMod + jamMod + clutchMod +
     randomNoise
   ).toFixed(2));
-}
-
-function resolvePitchResult(quality: number, decision: PitchDecision): PitchResultCode {
-  const roll = Math.random();
-  const base = resolveBaseResult(quality, roll);
-  if (base === "STRIKE") return resolveStrikeType(decision, roll);
-  return base;
-}
-
-function resolveBaseResult(quality: number, roll: number): PitchResultCode | "STRIKE" {
-  if (quality >= 72) {
-    // 지배적 투구: 스트라이크 80%, 파울 10%, 볼 10%
-    if (roll < 0.80) return "STRIKE";
-    if (roll < 0.90) return "FOUL";
-    return "BALL";
-  }
-  if (quality >= 60) {
-    // 양호한 투구: 스트라이크 50%, 파울 12%, 볼 14%, 약타구 14%, 단타 10%
-    if (roll < 0.50) return "STRIKE";
-    if (roll < 0.62) return "FOUL";
-    if (roll < 0.76) return "BALL";
-    if (roll < 0.90) return "INPLAY_OUT";
-    return "HIT_SINGLE";
-  }
-  if (quality >= 52) {
-    // 경계선 투구: 스트라이크 15%, 파울 12%, 볼 19%, 약타구 40%, 단타 14%
-    if (roll < 0.15) return "STRIKE";
-    if (roll < 0.27) return "FOUL";
-    if (roll < 0.46) return "BALL";
-    if (roll < 0.86) return "INPLAY_OUT";
-    return "HIT_SINGLE";
-  }
-  if (quality >= 45) {
-    if (roll < 0.16) return "FOUL";
-    if (roll < 0.44) return "INPLAY_OUT";
-    if (roll < 0.80) return "HIT_SINGLE";
-    return "BALL";
-  }
-  if (quality >= 38) {
-    if (roll < 0.20) return "INPLAY_OUT";
-    if (roll < 0.62) return "HIT_SINGLE";
-    if (roll < 0.90) return "HIT_DOUBLE";
-    return "BALL";
-  }
-  if (quality >= 32) {
-    if (roll < 0.18) return "INPLAY_OUT";
-    if (roll < 0.45) return "HIT_SINGLE";
-    if (roll < 0.80) return "HIT_DOUBLE";
-    return "HIT_TRIPLE";
-  }
-  if (roll < 0.25) return "BALL";
-  if (roll < 0.58) return "HIT_SINGLE";
-  if (roll < 0.82) return "HIT_DOUBLE";
-  if (roll < 0.92) return "HIT_TRIPLE";
-  return "HOME_RUN";
-}
-
-function resolveStrikeType(decision: PitchDecision, roll: number): "STRIKE_LOOK" | "STRIKE_SWING" {
-  const isCorner   = [1, 3, 7, 9].includes(decision.location);
-  const isFastball = decision.pitchType === "fastball";
-  const isBreaking = decision.pitchType === "curve" || decision.pitchType === "changeup";
-  let lookProb = 0.50;
-  if (isCorner)              lookProb += 0.15;
-  if (isBreaking)            lookProb += 0.12;
-  if (isFastball)            lookProb -= 0.18;
-  if (decision.location === 5) lookProb -= 0.10;
-  return roll < clamp(lookProb, 0.15, 0.85) ? "STRIKE_LOOK" : "STRIKE_SWING";
 }
 
 // ── Ball-in-play ─────────────────────────────────────────────────────────────
@@ -1347,8 +1458,9 @@ function getResultComment(resultCode: PitchResultCode): string {
   }
 }
 
-function buildPitchLog(state: MatchState, decision: PitchDecision, resultCode: PitchResultCode, quality: number): string {
-  return `[${state.inning}회${state.half === "top" ? "초" : "말"}] ${decision.pitchType} Z${decision.location} ${decision.strategy}/${decision.power} -> ${resultCode} (Q:${quality.toFixed(1)})`;
+function buildPitchLog(state: MatchState, decision: PitchDecision, landing: PitchTarget, resultCode: PitchResultCode, quality: number): string {
+  const lx = landing.x.toFixed(2), ly = landing.y.toFixed(2);
+  return `[${state.inning}회${state.half === "top" ? "초" : "말"}] ${decision.pitchType} (${lx},${ly}) ${decision.strategy}/${decision.power} -> ${resultCode} (Q:${quality.toFixed(1)})`;
 }
 
 function buildSummary(state: MatchState): string {
@@ -1357,39 +1469,52 @@ function buildSummary(state: MatchState): string {
 
 // ── NPC 자동 투구 결정 ────────────────────────────────────────────────────────
 
-const CORNERS: PitchLocation[] = [1, 3, 7, 9];
-const EDGES:   PitchLocation[] = [2, 4, 6, 8];
-const AUTO_TYPES: PitchType[]  = ["fastball", "fastball", "slider", "changeup"];
+const AUTO_TYPES: PitchType[] = ["fastball", "fastball", "slider", "changeup"];
+
+/** target 좌표에서 가장 가까운 zone 번호 반환 (로그용) */
+function targetToZone(t: PitchTarget): PitchLocation {
+  const col = t.x < -0.33 ? 0 : t.x < 0.33 ? 1 : 2;
+  const row = t.y < -0.33 ? 0 : t.y < 0.33 ? 1 : 2;
+  return ([[7, 8, 9], [4, 5, 6], [1, 2, 3]] as PitchLocation[][])[row][col];
+}
 
 function autoPickDecision(state: MatchState): PitchDecision {
   const { balls, strikes } = state.count;
+  let target: PitchTarget;
+  let pitchType: PitchType;
+  let strategy: PitchDecision["strategy"];
+
   if (balls >= 3) {
-    return { pitchType: "fastball", location: EDGES[Math.floor(Math.random() * 4)], strategy: "safe", power: "normal" };
+    // 볼카운트 불리: 존 안쪽으로 확실히
+    target = { x: (Math.random() - 0.5) * 1.0, y: (Math.random() - 0.5) * 1.0 };
+    pitchType = "fastball"; strategy = "safe";
+  } else if (strikes === 2) {
+    // 2스트라이크: 코너 공략
+    target = {
+      x: (Math.random() < 0.5 ? -1 : 1) * (0.55 + Math.random() * 0.40),
+      y: (Math.random() < 0.5 ? -1 : 1) * (0.55 + Math.random() * 0.40),
+    };
+    pitchType = "slider"; strategy = "aggressive";
+  } else {
+    // 일반: 코너~엣지 주변
+    target = { x: (Math.random() - 0.5) * 1.6, y: (Math.random() - 0.5) * 1.6 };
+    pitchType = AUTO_TYPES[Math.floor(Math.random() * AUTO_TYPES.length)];
+    strategy = "balanced";
   }
-  if (strikes === 2) {
-    return { pitchType: "slider", location: CORNERS[Math.floor(Math.random() * 4)], strategy: "aggressive", power: "normal" };
-  }
-  const all = [...CORNERS, ...EDGES] as PitchLocation[];
-  return {
-    pitchType: AUTO_TYPES[Math.floor(Math.random() * AUTO_TYPES.length)],
-    location:  all[Math.floor(Math.random() * all.length)],
-    strategy: "balanced",
-    power: "normal",
-  };
+  return { pitchType, location: targetToZone(target), target, strategy, power: "normal" };
 }
 
 // ── 헤드리스 시뮬 (튜닝 랩 용) ───────────────────────────────────────────────
 
-const _CORNERS: PitchLocation[] = [1, 3, 7, 9];
-const _EDGES:   PitchLocation[] = [2, 4, 6, 8];
 function randomDecisionForSim(): PitchDecision {
-  const types: PitchType[] = ["fastball", "slider", "curve", "changeup"];
+  const types: PitchType[]    = ["fastball", "slider", "curve", "changeup"];
   const strats: PitchStrategy[] = ["aggressive", "balanced", "safe"];
   const powers: PitchPower[]    = ["low", "normal", "high"];
-  const all = [..._CORNERS, ..._EDGES] as PitchLocation[];
+  const target: PitchTarget = { x: (Math.random() - 0.5) * 2.2, y: (Math.random() - 0.5) * 2.2 };
   return {
     pitchType: types[Math.floor(Math.random() * types.length)],
-    location:  all[Math.floor(Math.random() * all.length)],
+    location:  targetToZone(target),
+    target,
     strategy:  strats[Math.floor(Math.random() * strats.length)],
     power:     powers[Math.floor(Math.random() * powers.length)],
   };

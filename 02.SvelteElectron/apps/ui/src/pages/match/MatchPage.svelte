@@ -66,6 +66,7 @@
     pitchCountSinceEntry?: number;
     moundVisitsLeft?: number;
     isProtagonistPitching?: boolean;
+    phase?: "protagonist_pitch" | "auto_inning" | "game_over";
     autoSimLogs?: string[];
     recentLogs: string[];
     batter?: { contact: number; power: number; eye: number };
@@ -228,7 +229,14 @@
 
   const zones = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
 
-  // 클릭 위치 기반 존 선택 (0~1 비율)
+  /** 착탄 좌표(x,y) → 캔버스 비율(px,py) 변환. 스트라이크존 = x∈[-1,1], y∈[-1,1] */
+  function landingToPct(x: number, y: number): { px: number; py: number } {
+    return {
+      px: 0.10 + ((x + 1) / 2) * 0.80,
+      py: 0.08 + ((y + 1) / 2) * 0.84,
+    };
+  }
+
   let zoneClickPct = { px: 0.5, py: 0.5 };
   let zoneHoverPct: { px: number; py: number } | null = null;
   let lastPitchPct: { px: number; py: number } | null = null;
@@ -242,14 +250,21 @@
     y: Number((724.3 + zoneClickPct.py * 71.4).toFixed(1))
   } as FieldPoint;
 
-  // 스트라이크존 상대 위치 비율로 zone 1~9 계산 (경계값은 가까운 칸으로 보정)
-  function getZoneFromClick(px: number, py: number): (typeof zones)[number] {
-    const normX = Math.max(0, Math.min(1, (px - 0.10) / 0.80));
-    const normY = Math.max(0, Math.min(1, (py - 0.08) / 0.84));
+  // 클릭 위치 → zone(로그용) + target(연속 좌표, 엔진 전달용)
+  function getZoneFromClick(px: number, py: number): { zone: (typeof zones)[number]; target: { x: number; y: number } } {
+    const normX = (px - 0.10) / 0.80;   // 스트라이크존 내 비율 (밖은 0~1 초과)
+    const normY = (py - 0.08) / 0.84;
+    // 연속 좌표: [-1,1] 범위, 존 밖도 그대로 전달
+    const target = { x: normX * 2 - 1, y: normY * 2 - 1 };
     const zoneMap: (typeof zones)[number][][] = [[7,8,9],[4,5,6],[1,2,3]];
-    return zoneMap[Math.min(2, Math.floor(normY * 3))][Math.min(2, Math.floor(normX * 3))];
+    const zone = zoneMap[Math.min(2, Math.floor(Math.max(0, Math.min(1, normY)) * 3))][Math.min(2, Math.floor(Math.max(0, Math.min(1, normX)) * 3))];
+    return { zone, target };
   }
-  $: selectedZone = getZoneFromClick(zoneClickPct.px, zoneClickPct.py);
+  let selectedZone: (typeof zones)[number] = 5;
+  let pitchTarget: { x: number; y: number } = { x: 0, y: 0 };
+  let isIntentionalBall = false;
+  $: ({ zone: selectedZone, target: pitchTarget } = getZoneFromClick(zoneClickPct.px, zoneClickPct.py));
+  $: isIntentionalBall = Math.abs(pitchTarget.x) > 1 || Math.abs(pitchTarget.y) > 1;
 
   function handleZoneClick(e: MouseEvent) {
     if (!zoneCanvasEl) return;
@@ -397,6 +412,7 @@
     return picked.slice(0, 9).map((e: EntityRow) => {
       const bat = (e.details as any)?.player?.batting ?? {};
       return {
+        name: e.name ?? undefined,
         contact: bat.contact ?? 50, power: bat.power ?? 50,
         eye: bat.eye ?? 50, discipline: bat.discipline ?? 50,
         battingClutch: bat.battingClutch ?? 50, platoon: bat.platoon ?? 50,
@@ -404,6 +420,45 @@
         fielding: bat.fielding ?? 50, arm: bat.arm ?? 50,
       };
     });
+  }
+
+  function buildLineupForTeam(teamId: string): import('../../shared/types/projectb').MatchBatterStats[] {
+    return buildOpponentLineup(teamId);
+  }
+
+  function buildPitcherStatsForTeam(teamId: string): {
+    command?: number; velocity?: number; staminaCap?: number;
+    mentalResil?: number; control?: number; movement?: number;
+    clutch?: number; holdRunners?: number;
+  } | undefined {
+    const entities = get(masterStore).entities;
+    const pitcherPos = ['SP', 'RP', 'CP'];
+    const pitchers = entities.filter((e: EntityRow) =>
+      e.teamId === teamId &&
+      e.role === 'player' &&
+      pitcherPos.includes(String((e.details as any)?.player?.position ?? ''))
+    );
+    if (pitchers.length === 0) return undefined;
+    const sorted = [...pitchers].sort((a: EntityRow, b: EntityRow) => {
+      const posOrder: Record<string, number> = { SP: 0, RP: 1, CP: 2 };
+      const aDiff = posOrder[String((a.details as any)?.player?.position ?? 'RP')] ?? 1;
+      const bDiff = posOrder[String((b.details as any)?.player?.position ?? 'RP')] ?? 1;
+      if (aDiff !== bDiff) return aDiff - bDiff;
+      return ((b.details as any)?.player?.pitching?.ovr ?? 0) - ((a.details as any)?.player?.pitching?.ovr ?? 0);
+    });
+    const src = sorted[0];
+    const pit = (src.details as any)?.player?.pitching ?? {};
+    return {
+      name: src.name ?? undefined,
+      command: pit.command ?? 50,
+      velocity: pit.velocity ?? 50,
+      staminaCap: pit.stamina ?? 50,
+      mentalResil: pit.mentality ?? 50,
+      control: pit.control ?? 50,
+      movement: pit.movement ?? 50,
+      clutch: pit.clutch ?? 50,
+      holdRunners: pit.holdRunners ?? 50,
+    };
   }
 
   function buildOpponentFielders(opponentTeamId: string): import('../../shared/types/projectb').MatchFielderStats[] {
@@ -471,9 +526,9 @@
   let engineAvailable = false;
   let engineStarted = false;
   let isPitching = false;
+  let isAutoSimming = false;
   let engineErrorMsg = "";
-  let moundVisitsLeft = 3;
-  let canPitch = true;        // isProtagonistPitching from snapshot
+  let currentPhase: "protagonist_pitch" | "auto_inning" | "game_over" = "protagonist_pitch";
   let protagonistHasEntered = true;
   let snapshotPitchCount = 0;
 
@@ -615,25 +670,33 @@
         : "";
       const opponentLineup = opponentTeamId ? buildOpponentLineup(opponentTeamId) : [];
       const fielders = opponentTeamId ? buildOpponentFielders(opponentTeamId) : [];
+      const myLineup = myTeamId ? buildLineupForTeam(myTeamId) : [];
+      const opponentPitcherStats = opponentTeamId ? buildPitcherStatsForTeam(opponentTeamId) : undefined;
       const ctx = matchContext;
+      const myNpcStarterStats = (ctx?.role !== 'SP' && myTeamId) ? buildPitcherStatsForTeam(myTeamId) : undefined;
       const isHome = !ctx || ctx.protagonistTeamId === ctx.homeTeamId;
       const response = await window.projectB.matchStart({
         initialStamina: player.condition,
         initialMental: 74,
-        pitcher: player.pitcherStats,
-        batterMean: 50,
+        pitcher: { ...player.pitcherStats, name: player.name },
         weather: matchWeather,
         park: matchPark,
         role: (ctx?.role ?? "SP") as "SP" | "RP" | "CP",
         protagonistSide: isHome ? "home" : "away",
         ...(ctx?.entryTrigger ? { entryTrigger: ctx.entryTrigger } : {}),
         ...(opponentLineup.length >= 9 ? { opponentLineup } : {}),
+        ...(myLineup.length >= 9 ? { myTeamLineup: myLineup } : { batterMean: 50 }),
         ...(fielders.length >= 9 ? { fielders } : {}),
+        ...(opponentPitcherStats ? { opponentPitcher: opponentPitcherStats } : {}),
+        ...(myNpcStarterStats ? { npcStarterPitcher: myNpcStarterStats } : {}),
       });
       engineAvailable = true;
       engineStarted = true;
       engineErrorMsg = "";
       applySnapshot(response.snapshot, "매치 엔진 연결 완료");
+      if (currentPhase === "auto_inning") {
+        await runAutoInnings();
+      }
     } catch (e) {
       engineAvailable = false;
       engineStarted = false;
@@ -727,8 +790,7 @@
     if (snapshot.park) matchPark = snapshot.park;
     if (snapshot.defenseStat) matchDefenseStat = { ...snapshot.defenseStat };
 
-    if (snapshot.moundVisitsLeft !== undefined) moundVisitsLeft = snapshot.moundVisitsLeft;
-    if (snapshot.isProtagonistPitching !== undefined) canPitch = snapshot.isProtagonistPitching;
+    if (snapshot.phase !== undefined) currentPhase = snapshot.phase;
     if (snapshot.protagonistHasEntered !== undefined) protagonistHasEntered = snapshot.protagonistHasEntered;
     snapshotPitchCount = snapshot.pitchCount;
 
@@ -924,6 +986,27 @@
     };
   }
 
+  async function runAutoInnings() {
+    if (!window.projectB?.matchNextInning) return;
+    isAutoSimming = true;
+    try {
+      while (currentPhase === "auto_inning" && !isGameOver) {
+        const response = await window.projectB.matchNextInning();
+        for (const log of response.logs) {
+          pushLog(log, "log-auto");
+          await sleep(600);
+        }
+        applySnapshot(response.snapshot);
+        if (response.snapshot.isFinished) {
+          await handleGameOver();
+          break;
+        }
+      }
+    } finally {
+      isAutoSimming = false;
+    }
+  }
+
   function showChangeAlert() {
     if (changeTimer) clearTimeout(changeTimer);
     changeAlert = { visible: true };
@@ -1009,6 +1092,7 @@
 
     let resultCode: PitchResultCode;
     let line: string;
+    let effectivePitchedAt = pitchedAt;
 
     if (engineAvailable && window.projectB?.matchStep) {
       if (!engineStarted && window.projectB.matchStart) {
@@ -1024,9 +1108,12 @@
       const response = await window.projectB.matchStep({
         pitchType: selectedPitchType,
         location: selectedZone,
+        target: pitchTarget,
         strategy: selectedStrategy,
-        power: selectedPower
+        power: selectedPower,
       });
+      const lt = response.outcome?.landingTarget;
+      effectivePitchedAt = lt ? landingToPct(lt.x, lt.y) : pitchedAt;
 
       if (!response.outcome) {
         // Not protagonist's turn — just sync state
@@ -1079,8 +1166,15 @@
 
       if (response.snapshot.isFinished && !isGameOver) {
         await handleGameOver();
-        lastPitchPct = pitchedAt;
+        lastPitchPct = effectivePitchedAt;
         isPitching = false;
+        return;
+      }
+
+      if (currentPhase === "auto_inning") {
+        isPitching = false;
+        await runAutoInnings();
+        lastPitchPct = effectivePitchedAt;
         return;
       }
     } else if (allowLocalFallback) {
@@ -1131,7 +1225,7 @@
       return;
     }
 
-    lastPitchPct = pitchedAt;
+    lastPitchPct = effectivePitchedAt;
     isPitching = false;
   }
 
@@ -1191,17 +1285,6 @@
     }
     isGameOver = false;
     onCancel();
-  }
-
-  async function handleMoundVisit() {
-    if (!window.projectB?.matchMoundVisit) return;
-    if (moundVisitsLeft <= 0 || !canPitch || isPitching) return;
-    try {
-      const result = await window.projectB.matchMoundVisit();
-      if (result?.snapshot) {
-        applySnapshot(result.snapshot, "감독 마운드 방문 — 멘탈 회복", "BALL");
-      }
-    } catch { /* ignore */ }
   }
 
   function localComment(code: PitchResultCode): string {
@@ -1418,7 +1501,7 @@
             {#if zoneHoverPct && !isPitching}
               <div class="zone-hover-dot" style="left:{zoneHoverPct.px * 100}%;top:{zoneHoverPct.py * 100}%;"></div>
             {/if}
-            <div class="zone-target-dot" style="left:{zoneClickPct.px * 100}%;top:{zoneClickPct.py * 100}%;"></div>
+            <div class="zone-target-dot" class:ball-zone={isIntentionalBall} style="left:{zoneClickPct.px * 100}%;top:{zoneClickPct.py * 100}%;"></div>
           </div>
         </section>
 
@@ -1466,33 +1549,20 @@
           <button
             type="button"
             class="execute-btn"
-            disabled={isPitching || (!engineAvailable && !allowLocalFallback) || (engineAvailable && !canPitch)}
+            disabled={isPitching || isAutoSimming || (!engineAvailable && !allowLocalFallback) || (engineAvailable && currentPhase !== "protagonist_pitch")}
             on:click={runPitch}
           >
             {#if isPitching}
               투구 진행 중...
+            {:else if isAutoSimming}
+              이닝 진행 중...
             {:else if engineAvailable && !protagonistHasEntered}
               등판 대기 중...
-            {:else if engineAvailable && !canPitch}
-              자동 진행 중...
             {:else}
               투구 실행
             {/if}
           </button>
 
-          {#if engineAvailable && canPitch && moundVisitsLeft > 0 && !isPitching}
-            <button type="button" class="mound-visit-btn" on:click={handleMoundVisit}>
-              마운드 방문 ({moundVisitsLeft})
-            </button>
-          {/if}
-
-          <p class="engine-state" class:on={engineAvailable}>
-            {engineAvailable
-              ? "엔진 연동"
-              : allowLocalFallback
-              ? "로컬 시뮬레이터"
-              : "엔진 미연결"}
-          </p>
           {#if engineErrorMsg}
             <p class="engine-state">{engineErrorMsg}</p>
           {/if}
@@ -2032,6 +2102,16 @@
     inset: 4px;
     border-radius: 50%;
     background: rgba(150, 210, 255, 0.5);
+  }
+
+  .zone-target-dot.ball-zone {
+    border-color: #ff7043;
+    background: rgba(255, 112, 67, 0.2);
+    box-shadow: 0 0 8px rgba(255, 112, 67, 0.6);
+  }
+
+  .zone-target-dot.ball-zone::after {
+    background: rgba(255, 150, 100, 0.5);
   }
 
   /* 마지막 투구 위치 dot (흰색) */
