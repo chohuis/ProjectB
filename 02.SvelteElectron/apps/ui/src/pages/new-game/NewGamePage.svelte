@@ -23,7 +23,6 @@
 
   const formOptions: { value: PitchingForm; label: string; desc: string }[] = [
     { value: "overhand",     label: "오버핸드",  desc: "표준 릴리스. 낙차 있는 직구와 커브에 유리" },
-    { value: "threeQuarter", label: "스리쿼터",  desc: "각도로 승부. 슬라이더·투심 효과 증대" },
     { value: "sidearm",      label: "사이드암",  desc: "횡방향 무브먼트 특화. 동일 손 타자 봉쇄" },
     { value: "underhand",    label: "언더스로",  desc: "타이밍 파괴형. 구위 손실, 무브먼트 극대화" },
   ];
@@ -53,7 +52,7 @@
   $: teamPlayers = teamEntities.filter((e) => e.role === "player").slice(0, 4);
 
   // ── Step 3 상태 ────────────────────────────────────────────────
-  type PresetKey = "balanced" | "power" | "control" | "stamina" | "crafty";
+  type PresetKey = "balanced" | "power" | "control" | "stamina";
   let selectedPreset: PresetKey = "balanced";
 
   const PRESETS: Record<
@@ -64,14 +63,14 @@
       label: "균형형",
       desc: "모든 부분이 고르게 발달. 성장 방향 자유도가 가장 높음",
       tags: ["정통파", "균형형"],
-      pitching: { ovr: 53, velocity: 56, command: 56, control: 54, movement: 52, mentality: 55, stamina: 55, recovery: 53, clutch: 50, holdRunners: 50 },
+      pitching: { ovr: 49, velocity: 52, command: 52, control: 50, movement: 48, mentality: 50, stamina: 50, recovery: 48, clutch: 45, holdRunners: 46 },
       pitches: [{ id: "PITCH_FASTBALL", grade: 1 }],
     },
     power: {
       label: "파워피처",
       desc: "속도 하나로 승부. 제구는 미완성이지만 잠재력은 최상",
       tags: ["급성장", "파워피처"],
-      pitching: { ovr: 50, velocity: 70, command: 45, control: 42, movement: 48, mentality: 50, stamina: 54, recovery: 46, clutch: 48, holdRunners: 45 },
+      pitching: { ovr: 47, velocity: 66, command: 42, control: 39, movement: 45, mentality: 47, stamina: 51, recovery: 42, clutch: 46, holdRunners: 45 },
       pitches: [{ id: "PITCH_FASTBALL", grade: 2 }],
     },
     control: {
@@ -85,15 +84,8 @@
       label: "체력형",
       desc: "이닝이터 스타일. 멘탈과 체력이 강점, 후반까지 무너지지 않음",
       tags: ["체력형", "이닝이터"],
-      pitching: { ovr: 56, velocity: 53, command: 52, control: 50, movement: 50, mentality: 65, stamina: 68, recovery: 65, clutch: 52, holdRunners: 50 },
+      pitching: { ovr: 46, velocity: 44, command: 42, control: 40, movement: 40, mentality: 55, stamina: 60, recovery: 57, clutch: 39, holdRunners: 39 },
       pitches: [{ id: "PITCH_FASTBALL", grade: 1 }],
-    },
-    crafty: {
-      label: "기교파",
-      desc: "변화구와 두뇌로 승부. 직구는 느리지만 무브먼트와 멘탈로 커버",
-      tags: ["기교파", "두뇌파"],
-      pitching: { ovr: 55, velocity: 46, command: 60, control: 58, movement: 66, mentality: 62, stamina: 50, recovery: 52, clutch: 55, holdRunners: 50 },
-      pitches: [{ id: "PITCH_FASTBALL", grade: 1 }, { id: "PITCH_SLIDER", grade: 1 }],
     },
   };
 
