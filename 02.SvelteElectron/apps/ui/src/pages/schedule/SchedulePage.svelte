@@ -349,7 +349,7 @@
                           <td class="team-name">{teamLabel(s.teamId)}</td>
                           <td>{s.wins}</td>
                           <td>{s.losses}</td>
-                          <td>{s.winPct.toFixed(3)}</td>
+                          <td>{s.winPct.toFixed(2)}</td>
                         </tr>
                       {/each}
                     </tbody>

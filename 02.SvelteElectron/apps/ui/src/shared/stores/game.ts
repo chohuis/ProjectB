@@ -448,7 +448,7 @@ function buildNpcStatLine(stat: PlayerSeasonStats): string {
     const era = stat.era.toFixed(2);
     return `${stat.w}승 ${stat.l}패 ERA ${era} ${ip}이닝 ${stat.k}K`;
   }
-  const avg = stat.avg.toFixed(3).replace(/^0\./, ".");
+  const avg = stat.avg.toFixed(2).replace(/^0\./, ".");
   return `타율 ${avg} ${stat.hr}홈런 ${stat.rbi}타점 ${stat.ab}타수`;
 }
 

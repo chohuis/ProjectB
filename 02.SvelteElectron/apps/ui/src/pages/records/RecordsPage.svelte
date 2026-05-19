@@ -72,7 +72,7 @@
     : visibleGames[0] ?? null;
   $: wins          = visibleGames.filter((g) => g.won).length;
   $: losses        = visibleGames.length - wins;
-  $: winPct        = visibleGames.length > 0 ? (wins / visibleGames.length).toFixed(3) : "-";
+  $: winPct        = visibleGames.length > 0 ? (wins / visibleGames.length).toFixed(2) : "-";
   $: runsScored    = visibleGames.reduce((s, g) => s + g.myScore, 0);
   $: runsAllow     = visibleGames.reduce((s, g) => s + g.opScore, 0);
 
@@ -256,7 +256,7 @@
           <div class="kpi-grid">
             <div><span>순위</span><strong>{myRank > 0 ? `${myRank}위` : "-"}</strong></div>
             <div><span>승-패-무</span><strong>{myStanding?.wins ?? 0}-{myStanding?.losses ?? 0}-{myStanding?.draws ?? 0}</strong></div>
-            <div><span>승률</span><strong>{myStanding ? myStanding.winPct.toFixed(3) : "-"}</strong></div>
+            <div><span>승률</span><strong>{myStanding ? myStanding.winPct.toFixed(2) : "-"}</strong></div>
             <div><span>득점</span><strong>{myStanding?.runsFor ?? 0}</strong></div>
             <div><span>실점</span><strong>{myStanding?.runsAgainst ?? 0}</strong></div>
             <div><span>연속</span><strong>{myStanding?.streak || "-"}</strong></div>
@@ -270,7 +270,7 @@
                 <tr class:my-row={s.teamId === myTeamId}>
                   <td>{i + 1}</td><td class="t-name">{tName(s.teamId)}</td>
                   <td>{s.wins}</td><td>{s.losses}</td>
-                  <td>{s.winPct.toFixed(3)}</td><td>{s.runsFor}-{s.runsAgainst}</td>
+                  <td>{s.winPct.toFixed(2)}</td><td>{s.runsFor}-{s.runsAgainst}</td>
                 </tr>
               {/each}
             </tbody>
@@ -312,7 +312,7 @@
                     <td class="w">{s.wins}</td>
                     <td class="l">{s.losses}</td>
                     <td>{s.draws}</td>
-                    <td>{s.winPct.toFixed(3)}</td>
+                    <td>{s.winPct.toFixed(2)}</td>
                     <td>{s.runsFor}</td>
                     <td>{s.runsAgainst}</td>
                     <td class:streak-w={s.streak.startsWith("W")} class:streak-l={s.streak.startsWith("L")}>
@@ -387,8 +387,8 @@
                       <td>{i + 1}</td>
                       <td class="t-name">{row.name}</td>
                       <td>{row.team}</td>
-                      <td class="avg">{row.avg.toFixed(3).replace(/^0\./, ".")}</td>
-                      <td>{row.ops.toFixed(3).replace(/^0\./, ".")}</td>
+                      <td class="avg">{row.avg.toFixed(2).replace(/^0\./, ".")}</td>
+                      <td>{row.ops.toFixed(2).replace(/^0\./, ".")}</td>
                       <td class="w">{row.hr}</td>
                       <td>{row.rbi}</td>
                       <td>{row.ab}</td>

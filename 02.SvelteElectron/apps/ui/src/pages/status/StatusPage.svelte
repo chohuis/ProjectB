@@ -1,15 +1,19 @@
 <script lang="ts">
   import { gameStore } from "../../shared/stores/game";
+  import { seasonStore } from "../../shared/stores/season";
   import { teamMap } from "../../shared/stores/master";
   import { t } from "../../shared/i18n";
+
+  type StatusTab = "stats" | "record";
+  let activeTab: StatusTab = "stats";
 
   type StatGroup = {
     title: string;
     items: Array<{ label: string; value: number }>;
   };
 
-  // 주인공 능력치 → statGroups 변환
   $: statGroups = buildStatGroups($gameStore.protagonist);
+  $: myStats = $seasonStore.stats[$gameStore.protagonist.id] ?? null;
 
   function buildStatGroups(p: typeof $gameStore.protagonist): StatGroup[] {
     const pit = p.pitching;
@@ -117,77 +121,118 @@
     </div>
   </article>
 
-  <section class="stats-grid">
-    {#each statGroups as group}
-      <article class="card stat-card">
-        <h3>{group.title}</h3>
-        <div class="stat-list">
-          {#each group.items as stat}
-            <div class="stat-item">
-              <span class="label">{stat.label}</span>
-              <span class={`value ${statTone(stat.value)}`}>{stat.value}</span>
-            </div>
-          {/each}
-        </div>
-      </article>
-    {/each}
-  </section>
+  <nav class="tab-bar">
+    <button class:tab-active={activeTab === "stats"} on:click={() => (activeTab = "stats")}>능력치</button>
+    <button class:tab-active={activeTab === "record"} on:click={() => (activeTab = "record")}>성적</button>
+  </nav>
 
-  {#if $gameStore.protagonist.playerType === "pitcher" || $gameStore.protagonist.playerType === "twoWay"}
-    {#if ($gameStore.protagonist.pitches ?? []).length > 0}
-      <article class="card pitches-card">
-        <h3>보유 구종</h3>
-        <div class="pitch-list">
-          {#each $gameStore.protagonist.pitches as pitch}
-            <div class="pitch-item grade-{pitch.grade}">
-              <span class="pitch-name">{PITCH_NAMES[pitch.id] ?? pitch.id}</span>
-              <span class="pitch-grade">{GRADE_LABEL[pitch.grade] ?? pitch.grade}</span>
+  <div class="tab-content">
+    {#if activeTab === "stats"}
+      <div class="stats-grid">
+        {#each statGroups as group}
+          <article class="card stat-card">
+            <h3>{group.title}</h3>
+            <div class="stat-list">
+              {#each group.items as stat}
+                <div class="stat-item">
+                  <span class="label">{stat.label}</span>
+                  <span class={`value ${statTone(stat.value)}`}>{stat.value}</span>
+                </div>
+              {/each}
             </div>
-          {/each}
-        </div>
+          </article>
+        {/each}
+      </div>
+
+      {#if $gameStore.protagonist.playerType === "pitcher" || $gameStore.protagonist.playerType === "twoWay"}
+        {#if ($gameStore.protagonist.pitches ?? []).length > 0}
+          <article class="card pitches-card">
+            <h3>보유 구종</h3>
+            <div class="pitch-list">
+              {#each $gameStore.protagonist.pitches as pitch}
+                <div class="pitch-item grade-{pitch.grade}">
+                  <span class="pitch-name">{PITCH_NAMES[pitch.id] ?? pitch.id}</span>
+                  <span class="pitch-grade">{GRADE_LABEL[pitch.grade] ?? pitch.grade}</span>
+                </div>
+              {/each}
+            </div>
+          </article>
+        {/if}
+      {/if}
+
+    {:else}
+      <article class="card record-card">
+        <h3>시즌 누적 성적</h3>
+        {#if myStats?.type === "pitcher"}
+          <div class="record-grid">
+            {#each [
+              ["G",    myStats.g],
+              ["W",    myStats.w],
+              ["L",    myStats.l],
+              ["SV",   myStats.sv],
+              ["HD",   myStats.hd],
+              ["IP",   myStats.ip],
+              ["ERA",  myStats.era?.toFixed(2)],
+              ["WHIP", myStats.whip?.toFixed(2)],
+              ["K",    myStats.k],
+              ["BB",   myStats.bb],
+              ["H",    myStats.h],
+              ["ER",   myStats.er],
+            ] as [lbl, val]}
+              <div class="record-item">
+                <span class="rec-label">{lbl}</span>
+                <strong class="rec-value">{val ?? "-"}</strong>
+              </div>
+            {/each}
+          </div>
+        {:else if myStats?.type === "batter"}
+          <div class="record-grid">
+            {#each [
+              ["G",   myStats.g],
+              ["AVG", myStats.avg?.toFixed(2)],
+              ["OPS", myStats.ops?.toFixed(2)],
+              ["HR",  myStats.hr],
+              ["RBI", myStats.rbi],
+              ["SB",  myStats.sb],
+              ["BB",  myStats.bb],
+              ["K",   myStats.k],
+              ["H",   myStats.h],
+              ["AB",  myStats.ab],
+              ["PA",  myStats.pa],
+              ["OBP", myStats.obp?.toFixed(2)],
+            ] as [lbl, val]}
+              <div class="record-item">
+                <span class="rec-label">{lbl}</span>
+                <strong class="rec-value">{val ?? "-"}</strong>
+              </div>
+            {/each}
+          </div>
+        {:else}
+          <p class="pending">시즌 누적 집계 중</p>
+        {/if}
       </article>
     {/if}
-  {/if}
-
-  <article class="card changes-card">
-    <h3>최근 활동</h3>
-    <ul class="changes-list">
-      {#each $gameStore.logs.slice(0, 6) as log}
-        <li>
-          <span class="desc">{log}</span>
-        </li>
-      {/each}
-    </ul>
-  </article>
+  </div>
 </section>
 
 <style>
   .page {
     display: grid;
-    grid-template-rows: auto auto minmax(0, 1fr) auto auto;
+    grid-template-rows: auto auto auto minmax(0, 1fr);
     gap: 12px;
     height: 100%;
     min-height: 0;
     overflow: hidden;
   }
 
-  h2,
-  h3,
-  p {
-    margin: 0;
-  }
-
-  h2 {
-    font-size: 22px;
-  }
+  h2, h3, p { margin: 0; }
+  h2 { font-size: 22px; }
 
   .card {
     background: #161f33;
     border: 1px solid #2d3956;
     border-radius: 10px;
     padding: 12px;
-    min-height: 0;
-    overflow: hidden;
   }
 
   .profile-card {
@@ -197,32 +242,14 @@
     align-items: center;
   }
 
-  .name {
-    font-size: 22px;
-    font-weight: 700;
-    color: #f1f6ff;
-  }
+  .name { font-size: 22px; font-weight: 700; color: #f1f6ff; }
+  .meta { margin-top: 4px; color: #aebddd; font-size: 14px; }
 
-  .meta {
-    margin-top: 4px;
-    color: #aebddd;
-    font-size: 14px;
-  }
-
-  .tags {
-    margin-top: 10px;
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-
+  .tags { margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
   .tags span {
-    font-size: 12px;
-    color: #d5e2fd;
-    border: 1px solid #3c4f74;
-    background: #233250;
-    border-radius: 999px;
-    padding: 4px 8px;
+    font-size: 12px; color: #d5e2fd;
+    border: 1px solid #3c4f74; background: #233250;
+    border-radius: 999px; padding: 4px 8px;
   }
 
   .summary-grid {
@@ -230,164 +257,100 @@
     grid-template-columns: repeat(4, minmax(70px, 1fr));
     gap: 8px;
   }
-
   .summary-item {
-    background: #0f1830;
-    border: 1px solid #314362;
-    border-radius: 8px;
-    padding: 8px;
-    text-align: center;
+    background: #0f1830; border: 1px solid #314362;
+    border-radius: 8px; padding: 8px; text-align: center;
+  }
+  .summary-item span { font-size: 12px; color: #92a8ce; }
+  .summary-item strong { display: block; margin-top: 4px; font-size: 20px; color: #f1f6ff; }
+
+  .tab-bar {
+    display: flex;
+    gap: 6px;
+    border-bottom: 1px solid #253451;
+    padding-bottom: 8px;
+  }
+  .tab-bar button {
+    background: none; border: 1px solid transparent;
+    border-radius: 7px; color: #7a9ac8;
+    font-size: 13px; padding: 5px 20px; cursor: pointer;
+  }
+  .tab-bar button.tab-active {
+    background: #1d3760; border-color: #3a5a96;
+    color: #d8e8ff; font-weight: 600;
   }
 
-  .summary-item span {
-    font-size: 12px;
-    color: #92a8ce;
-  }
-
-  .summary-item strong {
-    display: block;
-    margin-top: 4px;
-    font-size: 20px;
-    color: #f1f6ff;
+  .tab-content {
+    min-height: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
 
   .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 12px;
-    overflow: hidden;
   }
 
-  .stat-card {
-    overflow: hidden;
-  }
-
-  .stat-card h3 {
-    font-size: 16px;
-    margin-bottom: 10px;
-    color: #ebf2ff;
-  }
-
-  .changes-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
+  .stat-card h3 { font-size: 16px; margin-bottom: 10px; color: #ebf2ff; }
 
   .stat-list {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 6px;
   }
-
   .stat-item {
-    border: 1px solid #2e486f;
-    border-radius: 8px;
-    background: #152b4f;
-    padding: 8px 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
+    border: 1px solid #2e486f; border-radius: 8px;
+    background: #152b4f; padding: 8px 10px;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
   }
+  .label { color: #9eb6de; font-size: 11px; }
+  .value { font-size: 18px; font-weight: 700; }
+  .value.good { color: #68de92; }
+  .value.mid  { color: #d8e8ff; }
+  .value.low  { color: #ffb58a; }
 
-  .label {
-    color: #9eb6de;
-    font-size: 11px;
-  }
-
-  .value {
-    font-size: 18px;
-    font-weight: 700;
-  }
-
-  .value.good {
-    color: #68de92;
-  }
-
-  .value.mid {
-    color: #d8e8ff;
-  }
-
-  .value.low {
-    color: #ffb58a;
-  }
-
-  .changes-card h3 {
-    margin-bottom: 10px;
-  }
-
-  .changes-list li {
-    padding: 8px 0;
-    border-top: 1px solid #253451;
-  }
-
-  .changes-list li:first-child {
-    border-top: 0;
-    padding-top: 0;
-  }
-
-  .desc {
-    color: #e4edff;
-    font-size: 14px;
-  }
-
-  .pitches-card h3 {
-    margin-bottom: 10px;
-  }
-
-  .pitch-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
+  .pitches-card h3 { margin-bottom: 10px; }
+  .pitch-list { display: flex; flex-wrap: wrap; gap: 8px; }
   .pitch-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
-    background: #152b4f;
-    border: 1px solid #2e486f;
-    border-radius: 8px;
-    padding: 8px 12px;
-    min-width: 72px;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    background: #152b4f; border: 1px solid #2e486f;
+    border-radius: 8px; padding: 8px 12px; min-width: 72px;
   }
-
-  .pitch-name {
-    font-size: 13px;
-    font-weight: 700;
-    color: #d5e2fd;
-  }
-
-  .pitch-grade {
-    font-size: 11px;
-    color: #7a9ac8;
-  }
-
+  .pitch-name { font-size: 13px; font-weight: 700; color: #d5e2fd; }
+  .pitch-grade { font-size: 11px; color: #7a9ac8; }
   .pitch-item.grade-5 { border-color: #c8a030; background: #2a1e06; }
   .pitch-item.grade-5 .pitch-name { color: #f0c860; }
   .pitch-item.grade-5 .pitch-grade { color: #c8a030; }
-
   .pitch-item.grade-4 { border-color: #3a7ad8; background: #0e2040; }
   .pitch-item.grade-4 .pitch-name { color: #88b8f8; }
   .pitch-item.grade-4 .pitch-grade { color: #5a8fd8; }
-
   .pitch-item.grade-1 { border-color: #3a4060; background: #10142a; }
   .pitch-item.grade-1 .pitch-name { color: #6878a8; }
   .pitch-item.grade-1 .pitch-grade { color: #485878; }
 
+  .record-card h3 { font-size: 16px; margin-bottom: 12px; color: #ebf2ff; }
+  .record-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .record-item {
+    background: #0f1830; border: 1px solid #314362;
+    border-radius: 8px; padding: 10px 8px;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  .rec-label { font-size: 11px; color: #92a8ce; }
+  .rec-value { font-size: 18px; font-weight: 700; color: #f1f6ff; }
+
+  .pending { color: #9db2d8; font-size: 13px; }
+
   @media (max-width: 960px) {
-    .profile-card {
-      grid-template-columns: 1fr;
-    }
-
-    .summary-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .stats-grid {
-      grid-template-columns: 1fr;
-    }
+    .profile-card { grid-template-columns: 1fr; }
+    .summary-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .stats-grid { grid-template-columns: 1fr; }
+    .record-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
 </style>

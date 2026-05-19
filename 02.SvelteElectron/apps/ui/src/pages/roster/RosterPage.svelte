@@ -104,7 +104,13 @@
   $: selected = sortedRows.find((x) => x.id === selectedId) ?? null;
 
   $: selectedStats = selected ? $seasonStore.stats[selected.id] ?? null : null;
-  $: modalStats = modalEntity ? $seasonStore.stats[modalEntity.id] ?? null : null;
+  $: modalStats = modalEntity
+    ? ($seasonStore.stats[modalEntity.id]
+        ?? Object.values($seasonStore.leagueState ?? {})
+            .map((ls) => (ls as any).stats?.[modalEntity!.id])
+            .find(Boolean)
+        ?? null)
+    : null;
 
   // 모달 열릴 때 탭 초기화
   $: if (modalEntityId) modalTab = "stats";
@@ -242,7 +248,7 @@
                   </ul>
                 {:else}
                   <ul class="stat-list">
-                    <li>G: {selectedStats.g}</li><li>AVG: {selectedStats.avg.toFixed(3)}</li>
+                    <li>G: {selectedStats.g}</li><li>AVG: {selectedStats.avg.toFixed(2)}</li>
                     <li>HR: {selectedStats.hr}</li><li>RBI: {selectedStats.rbi}</li>
                   </ul>
                 {/if}
@@ -490,8 +496,8 @@
               <div class="modal-stat-grid cols-4">
                 {#each [
                   ["G",   modalStats.g],
-                  ["AVG", modalStats.avg?.toFixed(3)],
-                  ["OPS", modalStats.ops?.toFixed(3)],
+                  ["AVG", modalStats.avg?.toFixed(2)],
+                  ["OPS", modalStats.ops?.toFixed(2)],
                   ["HR",  modalStats.hr],
                   ["RBI", modalStats.rbi],
                   ["SB",  modalStats.sb],
@@ -505,7 +511,7 @@
                 {/each}
               </div>
             {:else}
-              <p class="modal-pending">집계 중</p>
+              <p class="modal-pending">미집계</p>
             {/if}
           </section>
 
@@ -542,7 +548,7 @@
                       {:else if line?.role === "batter"}
                         <td>{line.ab}</td>
                         <td>{line.h}</td>
-                        <td>{line.ab > 0 ? (line.h / line.ab).toFixed(3) : "---"}</td>
+                        <td>{line.ab > 0 ? (line.h / line.ab).toFixed(2) : "---"}</td>
                         <td>{line.hr}</td>
                         <td>{line.rbi}</td>
                       {:else}

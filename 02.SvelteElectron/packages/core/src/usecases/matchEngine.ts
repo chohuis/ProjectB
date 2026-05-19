@@ -1427,14 +1427,27 @@ function clutchModifier(state: MatchState, pitcherClutch: number): number {
 
 // ── 게임 종료 판단 ────────────────────────────────────────────────────────────
 
+function isColdGame(state: MatchState): boolean {
+  if (state.half !== "bottom" || state.outs < 3) return false;
+  const diff = Math.abs(state.score.home - state.score.away);
+  if (state.inning >= 5 && diff >= 10) return true;
+  if (state.inning >= 7 && diff >= 7) return true;
+  return false;
+}
+
 function shouldAutoFinish(state: MatchState): boolean {
   if (state.half === "bottom" && state.inning >= state.inningLimit && state.score.home > state.score.away) return true;
   if (state.inning > state.inningLimit && state.score.home !== state.score.away) return true;
+  if (isColdGame(state)) return true;
   return false;
 }
 
 function finishLog(state: MatchState): string {
   if (state.half === "bottom" && state.inning >= state.inningLimit && state.score.home > state.score.away) return "끝내기!";
+  if (isColdGame(state)) {
+    const diff = Math.abs(state.score.home - state.score.away);
+    return `콜드게임 (${state.inning}회 종료, ${diff}점차)`;
+  }
   return "규정 이닝 종료";
 }
 

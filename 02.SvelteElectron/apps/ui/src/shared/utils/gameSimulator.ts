@@ -304,6 +304,10 @@ export function simulateGame(
     aPitOuts    = bot.newPitcherOuts;
     if (bot.runs > 0) leadEvents.push({ inning, half: "bot", pitcherId: aPitId, diff: homeScore - awayScore });
 
+    // 콜드게임 (5이닝 10점차, 7이닝 7점차)
+    const coldDiff = Math.abs(homeScore - awayScore);
+    if ((inning >= 5 && coldDiff >= 10) || (inning >= 7 && coldDiff >= 7)) break;
+
     // 9회 말 동점 → 연장 (최대 3이닝)
     if (inning === 9 && homeScore === awayScore) {
       for (let ex = 10; ex <= 12 && homeScore === awayScore; ex++) {

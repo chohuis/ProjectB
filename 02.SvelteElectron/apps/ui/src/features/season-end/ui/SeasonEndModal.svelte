@@ -181,7 +181,7 @@
         </div>
         <div class="kpi">
           <span>승률</span>
-          <strong>{myStanding ? myStanding.winPct.toFixed(3) : "-"}</strong>
+          <strong>{myStanding ? myStanding.winPct.toFixed(2) : "-"}</strong>
         </div>
         <div class="kpi">
           <span>투구 OVR</span>
@@ -249,7 +249,7 @@
             <div class="award">
               <span class="award-label">타격왕</span>
               <strong class="award-name">{seasonAwards.avgKing.name}</strong>
-              <span class="award-val">{seasonAwards.avgKing.avg.toFixed(3).replace(/^0\./, ".")}</span>
+              <span class="award-val">{seasonAwards.avgKing.avg.toFixed(2).replace(/^0\./, ".")}</span>
             </div>
           {/if}
           {#if seasonAwards.hrKing}
@@ -314,7 +314,7 @@
               <td class="team-name">{tName(s.teamId)}</td>
               <td>{s.wins}</td>
               <td>{s.losses}</td>
-              <td>{s.winPct.toFixed(3)}</td>
+              <td>{s.winPct.toFixed(2)}</td>
               <td>{s.runsFor}-{s.runsAgainst}</td>
             </tr>
           {/each}
