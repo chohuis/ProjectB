@@ -54,16 +54,20 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
   const matchResult: MatchResult = { ...teamResult, playerLines: [pitcherLine] };
 
   seasonStore.applyMatchResult(outcome.scheduleId, matchResult);
-  seasonStore.syncProtagonistLeagueResult(protagonist.leagueId, matchResult);
+  seasonStore.syncProtagonistLeagueResult(protagonist.leagueId, matchResult, outcome.homeTeamId);
   seasonStore.resolvePendingAction("game", outcome.scheduleId);
 
   const myScore = outcome.homeTeamId === myTeamId ? outcome.homeScore : outcome.awayScore;
   const oppScore = outcome.homeTeamId === myTeamId ? outcome.awayScore : outcome.homeScore;
   const diff = Math.abs(myScore - oppScore);
   const growth = calcGameGrowth(protagonist, won, diff, outcome.strikeouts);
+  const teamById = new Map(get(masterStore).teams.map((t) => [t.id, t.name]));
+  const awayTeamName = teamById.get(outcome.awayTeamId) ?? outcome.awayTeamId;
+  const homeTeamName = teamById.get(outcome.homeTeamId) ?? outcome.homeTeamId;
+
   gameStore.applyWeekResult(
     growth.protagonistPatch,
-    [`W${outcome.week} ${outcome.awayTeamId} ${outcome.awayScore}:${outcome.homeScore} ${outcome.homeTeamId}`, ...growth.logs],
+    [`W${outcome.week} ${awayTeamName} ${outcome.awayScore}:${outcome.homeScore} ${homeTeamName}`, ...growth.logs],
     [],
     sBefore.currentWeek,
   );
@@ -83,7 +87,7 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
     preview: `${outcome.awayScore}:${outcome.homeScore} ${won ? "win" : isDraw ? "draw" : "loss"} / ${outcome.strikeouts}K / ${outcome.hitsAllowed}H / ${outcome.walksAllowed}BB`,
     body:
       outcome.summary ||
-      `W${outcome.week} ${outcome.awayTeamId} ${outcome.awayScore}:${outcome.homeScore} ${outcome.homeTeamId}\n` +
+      `W${outcome.week} ${awayTeamName} ${outcome.awayScore}:${outcome.homeScore} ${homeTeamName}\n` +
         `Line: ${outcome.strikeouts}K / ${outcome.hitsAllowed}H / ${outcome.walksAllowed}BB / ${outcome.errors}E`,
     createdAt: `W${outcome.week}`,
     readAt: null,

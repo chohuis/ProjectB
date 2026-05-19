@@ -185,10 +185,19 @@ export interface PostseasonSeries {
   nextSeriesSlot: "home" | "away" | null;
 }
 
+// ── 선수 경기간 컨디션 ────────────────────────────────────────
+export interface PlayerCondition {
+  fatigue: number;          // 0~100, 100 = 완전 회복
+  lastPitchedWeek: number;  // 마지막 등판 주차 (0 = 미등판)
+  pitchOutsLast: number;    // 직전 경기 던진 아웃 수
+}
+
 // ── 리그별 순위·스탯 ─────────────────────────────────────────
 export interface LeagueSeasonState {
   standings: Standing[];
   stats: Record<string, PlayerSeasonStats>;
+  playerConditions: Record<string, PlayerCondition>;  // 투수 피로도·컨디션
+  teamRotationIndex: Record<string, number>;           // teamId → 다음 선발 로테이션 슬롯
 }
 
 // ── save_season.json 전체 구조 ─────────────────────────────────

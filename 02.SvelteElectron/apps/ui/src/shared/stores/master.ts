@@ -659,6 +659,18 @@ function createMasterStore() {
     }
   }
 
+  async function reloadEntities() {
+    try {
+      const index = await fetchMaster<EntityIndex>("entities/players/_index.json");
+      if (!index?.byLeague) return;
+      const allIds = Object.values(index.byLeague).flat();
+      const rows = await batchFetch<EntityRow>(allIds, (id) => `entities/players/${id}.json`);
+      update((s) => ({ ...s, entities: rows }));
+    } catch (e) {
+      console.warn("[masterStore] reloadEntities failed", e);
+    }
+  }
+
   async function loadEntities(leagueId: string) {
     let rows: EntityRow[];
     if (window.projectB?.masterLoadEntities) {
@@ -692,6 +704,8 @@ function createMasterStore() {
       } else if (filename.includes("characters/")) {
         const contactId = filename.split("/").pop()?.replace(".json", "");
         reloadArcs(contactId || undefined).catch(console.warn);
+      } else if (filename.includes("entities/players/")) {
+        reloadEntities().catch(console.warn);
       }
     });
   }

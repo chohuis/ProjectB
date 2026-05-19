@@ -3,6 +3,7 @@ import type {
   LeagueSeasonState,
   MatchResult,
   PendingAction,
+  PlayerCondition,
   PlayerGameLine,
   PostseasonSeries,
   SaveSeason,
@@ -21,13 +22,26 @@ import {
   shuffleHsGroups,
 } from "../utils/leagueScheduler";
 import { simulateGame } from "../utils/gameSimulator";
-import type { SimWorkerRequest, SimWorkerResponse } from "../workers/simWorker";
+import type { SimWorkerRequest, SimWorkerResponse, SimWorkerResultItem } from "../workers/simWorker";
+
+// ── 피로 주간 회복량 ──────────────────────────────────────────
+const WEEKLY_FATIGUE_RECOVERY = 28; // 주당 회복 (3~4일 휴식 기준)
+
+// ── leagueState 마이그레이션 헬퍼 ────────────────────────────
+function migrateLeagueState(ls: Partial<LeagueSeasonState>): LeagueSeasonState {
+  return {
+    standings:         ls.standings         ?? [],
+    stats:             ls.stats             ?? {},
+    playerConditions:  ls.playerConditions  ?? {},
+    teamRotationIndex: ls.teamRotationIndex ?? {},
+  };
+}
 
 // ── Web Worker 브리지 (싱글톤) ────────────────────────────────
 let _simWorker: Worker | null = null;
 let _reqId = 0;
 type PendingEntry = {
-  resolve: (r: { id: string; result: MatchResult }[]) => void;
+  resolve: (r: SimWorkerResultItem[]) => void;
   games: SimWorkerRequest["games"];
   entities: EntityRow[];
 };
@@ -35,7 +49,21 @@ const _pending = new Map<number, PendingEntry>();
 
 function flushPendingWithSync() {
   for (const [, { resolve, games, entities }] of _pending) {
-    resolve(games.map((g) => ({ id: g.id, result: simulateGame(g.homeTeamId, g.awayTeamId, entities) })));
+    resolve(games.map((g) => {
+      const sim = simulateGame(g.homeTeamId, g.awayTeamId, entities, {
+        conditions: g.conditions,
+        homeRotIdx: g.homeRotIdx ?? 0,
+        awayRotIdx: g.awayRotIdx ?? 0,
+        week:       g.week ?? 0,
+      });
+      return {
+        id:                g.id,
+        result:            sim.result,
+        nextHomeRotIdx:    sim.nextHomeRotIdx,
+        nextAwayRotIdx:    sim.nextAwayRotIdx,
+        pitcherConditions: sim.pitcherConditions,
+      };
+    }));
   }
   _pending.clear();
 }
@@ -68,12 +96,25 @@ function getSimWorker(): Worker | null {
 function runInWorker(
   games: SimWorkerRequest["games"],
   entities: EntityRow[],
-): Promise<{ id: string; result: MatchResult }[]> {
+): Promise<SimWorkerResultItem[]> {
   const worker = getSimWorker();
   if (!worker) {
-    // 동기 폴백
     return Promise.resolve(
-      games.map((g) => ({ id: g.id, result: simulateGame(g.homeTeamId, g.awayTeamId, entities) })),
+      games.map((g) => {
+        const sim = simulateGame(g.homeTeamId, g.awayTeamId, entities, {
+          conditions: g.conditions,
+          homeRotIdx: g.homeRotIdx ?? 0,
+          awayRotIdx: g.awayRotIdx ?? 0,
+          week:       g.week ?? 0,
+        });
+        return {
+          id:                g.id,
+          result:            sim.result,
+          nextHomeRotIdx:    sim.nextHomeRotIdx,
+          nextAwayRotIdx:    sim.nextAwayRotIdx,
+          pitcherConditions: sim.pitcherConditions,
+        };
+      }),
     );
   }
   return new Promise((resolve) => {
@@ -108,7 +149,9 @@ function createSeasonStore() {
             ...saved,
             currentDate:     saved.currentDate     ?? `${saved.seasonYear ?? 2026}-03-01`,
             leagueSchedules: saved.leagueSchedules ?? {},
-            leagueState:     saved.leagueState     ?? {},
+            leagueState: Object.fromEntries(
+              Object.entries(saved.leagueState ?? {}).map(([lid, ls]) => [lid, migrateLeagueState(ls as Partial<LeagueSeasonState>)])
+            ),
             hsGroupA:           saved.hsGroupA           ?? [],
             hsGroupB:           saved.hsGroupB           ?? [],
             postseasonBrackets: saved.postseasonBrackets  ?? {},
@@ -167,10 +210,11 @@ function createSeasonStore() {
     // 경기 결과 반영: 순위 업데이트 + 스탯 누적
     applyMatchResult(scheduleId: string, result: MatchResult) {
       update((s) => {
-        const schedule = s.schedule.map((entry) =>
-          entry.id === scheduleId ? { ...entry, result } : entry
+        const entry = s.schedule.find((e) => e.id === scheduleId);
+        const schedule = s.schedule.map((e) =>
+          e.id === scheduleId ? { ...e, result } : e
         );
-        const standings = updateStandings(s.standings, result);
+        const standings = updateStandings(s.standings, result, entry?.homeTeamId ?? result.winnerId);
         const stats     = accumulateStats(s.stats, result.playerLines);
         return { ...s, schedule, standings, stats };
       });
@@ -243,11 +287,11 @@ function createSeasonStore() {
 
       // 리그별 초기 순위표 (HIGHSCHOOL 제외 — protagonist 조는 seasonStore.standings, NPC 조는 별도)
       const leagueState: Record<string, LeagueSeasonState> = {
-        LEAGUE_HIGHSCHOOL_NPC: { standings: makeStandings(npcGroup), stats: {} },
+        LEAGUE_HIGHSCHOOL_NPC: { standings: makeStandings(npcGroup), stats: {}, playerConditions: {}, teamRotationIndex: {} },
       };
       for (const [lid, teams] of Object.entries(ALL_TEAMS_BY_LEAGUE)) {
         if (lid === "LEAGUE_HIGHSCHOOL") continue;
-        leagueState[lid] = { standings: makeStandings(teams), stats: {} };
+        leagueState[lid] = { standings: makeStandings(teams), stats: {}, playerConditions: {}, teamRotationIndex: {} };
       }
 
       update((s) => ({
@@ -274,11 +318,11 @@ function createSeasonStore() {
 
       update((s) => {
         const leagueState: Record<string, LeagueSeasonState> = {
-          LEAGUE_HIGHSCHOOL_NPC: { standings: makeStandings(npcGroup), stats: {} },
+          LEAGUE_HIGHSCHOOL_NPC: { standings: makeStandings(npcGroup), stats: {}, playerConditions: {}, teamRotationIndex: {} },
         };
         for (const [lid, teams] of Object.entries(ALL_TEAMS_BY_LEAGUE)) {
           if (lid === "LEAGUE_HIGHSCHOOL") continue;
-          leagueState[lid] = { standings: makeStandings(teams), stats: {} };
+          leagueState[lid] = { standings: makeStandings(teams), stats: {}, playerConditions: {}, teamRotationIndex: {} };
         }
         return {
           ...s,
@@ -299,7 +343,7 @@ function createSeasonStore() {
       return protagonistSchedule;
     },
 
-    // L1: 해당 주차 모든 NPC 리그 경기 시뮬레이션 (protagonist 리그 제외)
+    // L1: 해당 주차 모든 NPC 리그 경기 시뮬레이션 (protagonist 리그 제외) — 동기 버전
     simulateBackgroundLeagues(week: number, protagonistLeagueId: string, entities?: EntityRow[]) {
       update((s) => {
         const nextState = { ...s.leagueState };
@@ -310,19 +354,30 @@ function createSeasonStore() {
           const weekGames = schedule.filter((e) => e.week === week && !e.result);
           if (weekGames.length === 0) continue;
 
-          let lState = nextState[lid] ?? { standings: makeStandings(ALL_TEAMS_BY_LEAGUE[lid] ?? []), stats: {} };
+          let lState = migrateLeagueState(nextState[lid] ?? { standings: makeStandings(ALL_TEAMS_BY_LEAGUE[lid] ?? []) });
           const updatedSchedule = [...schedule];
 
           for (const game of weekGames) {
-            const result = entities && entities.length > 0
-              ? simulateGame(game.homeTeamId, game.awayTeamId, entities)
-              : simpleNpcResult(game.homeTeamId, game.awayTeamId);
+            const homeRotIdx = lState.teamRotationIndex[game.homeTeamId] ?? 0;
+            const awayRotIdx = lState.teamRotationIndex[game.awayTeamId] ?? 0;
+
+            const simResult = entities && entities.length > 0
+              ? simulateGame(game.homeTeamId, game.awayTeamId, entities, { conditions: lState.playerConditions, homeRotIdx, awayRotIdx, week })
+              : { result: simpleNpcResult(game.homeTeamId, game.awayTeamId), nextHomeRotIdx: homeRotIdx + 1, nextAwayRotIdx: awayRotIdx + 1, pitcherConditions: {} };
+
             const idx = updatedSchedule.findIndex((e) => e.id === game.id);
-            if (idx >= 0) updatedSchedule[idx] = { ...game, result };
+            if (idx >= 0) updatedSchedule[idx] = { ...game, result: simResult.result };
+
             lState = {
               ...lState,
-              standings: updateStandings(lState.standings, result),
-              stats:     accumulateStats(lState.stats, result.playerLines),
+              standings: updateStandings(lState.standings, simResult.result, game.homeTeamId),
+              stats:     accumulateStats(lState.stats, simResult.result.playerLines),
+              playerConditions: { ...lState.playerConditions, ...simResult.pitcherConditions },
+              teamRotationIndex: {
+                ...lState.teamRotationIndex,
+                [game.homeTeamId]: simResult.nextHomeRotIdx,
+                [game.awayTeamId]: simResult.nextAwayRotIdx,
+              },
             };
           }
 
@@ -334,6 +389,28 @@ function createSeasonStore() {
       });
     },
 
+    // 주차 시작 시 투수 피로 회복 처리 (recovery 능력치 반영)
+    applyWeeklyConditionRecovery(entities: EntityRow[]) {
+      const entityMap = new Map(entities.map((e) => [e.id, e]));
+      update((s) => {
+        const nextState = { ...s.leagueState };
+        for (const [lid, ls] of Object.entries(nextState)) {
+          const nextConditions = { ...ls.playerConditions };
+          for (const [pid, cond] of Object.entries(nextConditions)) {
+            const rec = (entityMap.get(pid)?.details?.player as import("./master").EntityPlayerDetails | undefined)?.pitching?.recovery ?? 50;
+            const recoveryMod = 0.6 + rec * 0.008; // recovery 50 → 1.0, 80 → 1.24, 20 → 0.76
+            const gain = Math.round(WEEKLY_FATIGUE_RECOVERY * recoveryMod);
+            nextConditions[pid] = {
+              ...cond,
+              fatigue: Math.min(100, cond.fatigue + gain),
+            };
+          }
+          nextState[lid] = { ...ls, playerConditions: nextConditions };
+        }
+        return { ...s, leagueState: nextState };
+      });
+    },
+
     // L5: 배경 리그 시뮬레이션 — Web Worker 비동기 버전
     async simulateBackgroundLeaguesAsync(
       week: number,
@@ -342,42 +419,54 @@ function createSeasonStore() {
     ): Promise<void> {
       const s = get({ subscribe });
 
-      // 이번 주 시뮬레이션할 경기 수집
-      const batch: { leagueId: string; id: string; homeTeamId: string; awayTeamId: string }[] = [];
+      // 이번 주 시뮬레이션할 경기 수집 (리그별 컨디션·로테이션 인덱스 포함)
+      const batch: SimWorkerRequest["games"] = [];
       for (const [lid, schedule] of Object.entries(s.leagueSchedules)) {
         if (lid === protagonistLeagueId) continue;
+        const lState = migrateLeagueState(s.leagueState[lid] ?? {});
         for (const e of schedule) {
-          if (e.week === week && !e.result) {
-            batch.push({ leagueId: lid, id: e.id, homeTeamId: e.homeTeamId, awayTeamId: e.awayTeamId });
+          if (e.week <= week && !e.result) {
+            batch.push({
+              leagueId:   lid,
+              id:         e.id,
+              homeTeamId: e.homeTeamId,
+              awayTeamId: e.awayTeamId,
+              homeRotIdx:  lState.teamRotationIndex[e.homeTeamId] ?? 0,
+              awayRotIdx:  lState.teamRotationIndex[e.awayTeamId] ?? 0,
+              conditions:  lState.playerConditions,
+              week,
+            });
           }
         }
       }
       if (batch.length === 0) return;
 
-      // Worker(또는 동기 폴백)로 전체 경기 병렬 처리
       const simmed = await runInWorker(batch, entities);
-      const resultMap = new Map(simmed.map((r) => [r.id, r.result]));
+      const simMap = new Map(simmed.map((r) => [r.id, r]));
 
-      // 결과를 스토어에 동기 반영
       update((st) => {
         const nextSchedules = { ...st.leagueSchedules };
         const nextState = { ...st.leagueState };
 
         for (const item of batch) {
-          const res = resultMap.get(item.id);
-          if (!res) continue;
+          const sim = simMap.get(item.id);
+          if (!sim) continue;
           const lid = item.leagueId;
 
-          // 스케줄에 결과 기록
           nextSchedules[lid] = (nextSchedules[lid] ?? []).map((e) =>
-            e.id === item.id ? { ...e, result: res } : e,
+            e.id === item.id ? { ...e, result: sim.result } : e,
           );
 
-          // 순위 + 스탯 업데이트
-          const cur = nextState[lid] ?? { standings: makeStandings(ALL_TEAMS_BY_LEAGUE[lid] ?? []), stats: {} };
+          const cur = migrateLeagueState(nextState[lid] ?? { standings: makeStandings(ALL_TEAMS_BY_LEAGUE[lid] ?? []) });
           nextState[lid] = {
-            standings: updateStandings(cur.standings, res),
-            stats: accumulateStats(cur.stats, res.playerLines),
+            standings: updateStandings(cur.standings, sim.result, item.homeTeamId),
+            stats:     accumulateStats(cur.stats, sim.result.playerLines),
+            playerConditions: { ...cur.playerConditions, ...sim.pitcherConditions },
+            teamRotationIndex: {
+              ...cur.teamRotationIndex,
+              [item.homeTeamId]: sim.nextHomeRotIdx,
+              [item.awayTeamId]: sim.nextAwayRotIdx,
+            },
           };
         }
 
@@ -386,15 +475,16 @@ function createSeasonStore() {
     },
 
     // L1: 주인공 리그 경기 결과를 leagueState에도 동기화
-    syncProtagonistLeagueResult(leagueId: string, result: MatchResult) {
+    syncProtagonistLeagueResult(leagueId: string, result: MatchResult, homeTeamId: string) {
       update((s) => {
-        const cur = s.leagueState[leagueId] ?? { standings: [], stats: {} };
+        const cur = migrateLeagueState(s.leagueState[leagueId] ?? {});
         return {
           ...s,
           leagueState: {
             ...s.leagueState,
             [leagueId]: {
-              standings: updateStandings(cur.standings, result),
+              ...cur,
+              standings: updateStandings(cur.standings, result, homeTeamId),
               stats:     accumulateStats(cur.stats, result.playerLines),
             },
           },
@@ -451,7 +541,7 @@ function simpleNpcResult(homeTeamId: string, awayTeamId: string): MatchResult {
 }
 
 // ── 순위표 업데이트 ────────────────────────────────────────────
-function updateStandings(standings: Standing[], result: MatchResult): Standing[] {
+function updateStandings(standings: Standing[], result: MatchResult, homeTeamId: string): Standing[] {
   return standings.map((s) => {
     if (s.teamId !== result.winnerId && s.teamId !== result.loserId) return s;
 
@@ -464,7 +554,7 @@ function updateStandings(standings: Standing[], result: MatchResult): Standing[]
     const total  = wins + losses;
     const winPct = total > 0 ? Math.round((wins / total) * 1000) / 1000 : 0;
 
-    const isHome = s.teamId === result.winnerId;
+    const isHome = s.teamId === homeTeamId;
     const runsFor     = s.runsFor     + (isHome ? result.homeScore : result.awayScore);
     const runsAgainst = s.runsAgainst + (isHome ? result.awayScore : result.homeScore);
 
@@ -484,22 +574,10 @@ function updateStreak(current: string, result: "W" | "L" | "D"): string {
 }
 
 function updateLast10(current: string, result: "W" | "L" | "D"): string {
-  const entries: Array<{ char: string; n: number }> = [];
-  const re = /([WLD])(\d+)/g;
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(current)) !== null) entries.push({ char: m[1], n: parseInt(m[2]) });
-  const last = entries[entries.length - 1];
-  if (last && last.char === result) { last.n++; } else { entries.push({ char: result, n: 1 }); }
-  const total = entries.reduce((a, e) => a + e.n, 0);
-  if (total > 10) {
-    let excess = total - 10;
-    while (excess > 0 && entries.length > 0) {
-      const first = entries[0];
-      if (first.n <= excess) { excess -= first.n; entries.shift(); }
-      else { first.n -= excess; excess = 0; }
-    }
-  }
-  return entries.map((e) => `${e.char}${e.n}`).join("");
+  // 구 압축 포맷 "W3L2" → 확장 "WWWLL" 변환
+  const expanded = current.replace(/([WLD])(\d+)/g, (_, c: string, n: string) => c.repeat(parseInt(n)));
+  const chars = [...expanded.replace(/[^WLD]/g, ""), result];
+  return chars.slice(-10).join("");
 }
 
 // ── 스탯 누적 ─────────────────────────────────────────────────
