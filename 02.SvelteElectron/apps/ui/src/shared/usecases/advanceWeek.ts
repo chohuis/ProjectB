@@ -537,6 +537,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       if (lid === "LEAGUE_HIGHSCHOOL_NPC" && gFinal.protagonist.careerStage !== "highschool") continue;
       const sorted = [...ls.standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
       if (sorted.length === 0) continue;
+      if (!sorted.some((s) => s.wins + s.losses + s.draws > 0)) continue;
 
       const leagueName = lid === "LEAGUE_HIGHSCHOOL_NPC"
         ? (protagonistIsA ? "B조" : "A조")
