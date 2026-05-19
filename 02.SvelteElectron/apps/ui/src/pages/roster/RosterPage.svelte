@@ -80,8 +80,51 @@
 
   $: myTeamId = $gameStore.protagonist.teamId;
   $: activeTeamId = filterTeamId || myTeamId;
-  $: teamRows = $masterStore.entities.filter((e) => e.teamId === activeTeamId);
-  $: modalEntity = modalEntityId ? $masterStore.entities.find((e) => e.id === modalEntityId) ?? null : null;
+
+  $: protagonistRow = (() => {
+    const p = $gameStore.protagonist;
+    return {
+      id: p.id,
+      name: p.name,
+      nameEn: p.nameEn,
+      role: "player" as const,
+      age: p.age,
+      status: "active" as const,
+      originLeagueId: p.leagueId,
+      leagueId: p.leagueId,
+      clubId: "",
+      teamId: p.teamId,
+      schoolId: p.schoolId ?? "",
+      grade: p.grade,
+      notes: "",
+      details: {
+        player: {
+          playerType: p.playerType,
+          handedness: p.handedness,
+          position: p.position,
+          jerseyNumber: p.jerseyNumber,
+          pitching: p.pitching,
+          batting: p.batting,
+          positionRatings: p.positionRatings,
+          primaryPosition: p.primaryPosition,
+          diligence: p.diligence,
+          popularity: p.popularity,
+          developmentRate: p.developmentRate,
+          potentialHidden: p.potentialHidden,
+        },
+      } as any,
+    };
+  })();
+
+  $: teamRows = [
+    ...(protagonistRow.teamId === activeTeamId ? [protagonistRow] : []),
+    ...$masterStore.entities.filter((e) => e.teamId === activeTeamId),
+  ];
+  $: modalEntity = modalEntityId
+    ? (modalEntityId === $gameStore.protagonist.id
+        ? protagonistRow
+        : $masterStore.entities.find((e) => e.id === modalEntityId) ?? null)
+    : null;
   $: normalized = keyword.trim().toLowerCase();
   $: searchedRows = teamRows.filter((e) => e.name.toLowerCase().includes(normalized));
 
