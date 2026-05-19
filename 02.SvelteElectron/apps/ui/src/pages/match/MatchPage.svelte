@@ -531,6 +531,7 @@
   let currentPhase: "protagonist_pitch" | "auto_inning" | "game_over" = "protagonist_pitch";
   let protagonistHasEntered = true;
   let snapshotPitchCount = 0;
+  let protagonistSide: "home" | "away" = "home";
 
   let inning = 1;
   let half: "top" | "bottom" = "top";
@@ -792,6 +793,7 @@
 
     if (snapshot.phase !== undefined) currentPhase = snapshot.phase;
     if (snapshot.protagonistHasEntered !== undefined) protagonistHasEntered = snapshot.protagonistHasEntered;
+    if (snapshot.protagonistSide !== undefined) protagonistSide = snapshot.protagonistSide;
     snapshotPitchCount = snapshot.pitchCount;
 
     updateScoreRows(snapshot.score.away, snapshot.score.home, resultCode, snapshot);
@@ -1243,7 +1245,7 @@
 
     const awayScore = scoreRows[0].r;
     const homeScore = scoreRows[1].r;
-    const won = homeScore > awayScore;
+    const won = protagonistSide === "home" ? homeScore > awayScore : awayScore > homeScore;
 
     gameResult = {
       awayScore, homeScore,
@@ -1334,9 +1336,10 @@
         </tr>
       </thead>
       <tbody>
-        {#each scoreRows as row}
-          <tr>
-            <th class="team-col">{row.team}</th>
+        {#each scoreRows as row, i}
+          {@const isMyTeam = (i === 0 && protagonistSide === "away") || (i === 1 && protagonistSide === "home")}
+          <tr class:my-team-row={isMyTeam}>
+            <th class="team-col">{row.team}{isMyTeam ? " ★" : ""}</th>
             {#each row.inningScores as inningScore, i}
               <td class:current-inning={i + 1 === inning}>{inningScore}</td>
             {/each}
@@ -2377,6 +2380,11 @@
   .scoreboard td.current-inning {
     background: rgba(70, 120, 200, 0.18);
     color: #aad0ff;
+  }
+
+  .scoreboard tr.my-team-row th,
+  .scoreboard tr.my-team-row td {
+    color: #ffe27a;
   }
 
   @media (max-width: 1280px) {
