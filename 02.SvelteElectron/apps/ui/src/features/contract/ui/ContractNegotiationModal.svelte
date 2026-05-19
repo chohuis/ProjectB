@@ -50,7 +50,7 @@
       .map((t) => t.id);
     const seasonYear = ($seasonStore.seasonYear || 2026) + 1;
     const isAbl = action.leagueId === "LEAGUE_ABL";
-    const totalWeeks = isAbl ? 28 : 30;
+    const totalWeeks = isAbl ? 33 : 30;
     seasonStore.initSeason(action.leagueId, seasonYear, totalWeeks, proTeamIds);
     seasonStore.setSchedule(
       isAbl

@@ -538,6 +538,9 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       const sorted = [...ls.standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
       if (sorted.length === 0) continue;
       if (!sorted.some((s) => s.wins + s.losses + s.draws > 0)) continue;
+      const lgSchedule = sAfterSim.leagueSchedules[lid] ?? [];
+      const lastGameWeek = lgSchedule.reduce((mx, e) => Math.max(mx, e.week), 0);
+      if (lastGameWeek > 0 && weekInYear > lastGameWeek) continue;
 
       const leagueName = lid === "LEAGUE_HIGHSCHOOL_NPC"
         ? (protagonistIsA ? "B조" : "A조")
