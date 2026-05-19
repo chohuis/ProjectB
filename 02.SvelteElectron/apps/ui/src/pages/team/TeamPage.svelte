@@ -3,6 +3,7 @@
   import { createEventDispatcher } from "svelte";
   import { t } from "../../shared/i18n";
   import { masterStore } from "../../shared/stores/master";
+  import { gameStore } from "../../shared/stores/game";
 
   const dispatch = createEventDispatcher<{ gotoRoster: { teamId: string } }>();
 
@@ -49,8 +50,21 @@
   $: selectedTeam = sortedTeams.find((t) => t.id === selectedTeamId) ?? null;
   $: selectedTeamLeagueId = selectedTeam?.leagueId ?? "";
 
+  $: protagonistTeamRow = (() => {
+    const p = $gameStore.protagonist;
+    if (!p.teamId) return null;
+    return {
+      id: p.id, name: p.name, role: "player" as const,
+      teamId: p.teamId, age: p.age, status: "active" as const,
+      details: { player: { position: p.position, playerType: p.playerType } } as any,
+    };
+  })();
+
   $: teamRows = selectedTeamId
-    ? $masterStore.entities.filter((e) => e.teamId === selectedTeamId).sort((a, b) => {
+    ? [
+        ...(protagonistTeamRow?.teamId === selectedTeamId ? [protagonistTeamRow] : []),
+        ...$masterStore.entities.filter((e) => e.teamId === selectedTeamId),
+      ].sort((a, b) => {
         const roleOrder: Record<string, number> = { owner: 0, manager: 1, coach: 2, player: 3 };
         const diff = (roleOrder[a.role] ?? 9) - (roleOrder[b.role] ?? 9);
         if (diff !== 0) return diff;
