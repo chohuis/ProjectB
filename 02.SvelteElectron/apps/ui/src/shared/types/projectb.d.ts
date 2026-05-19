@@ -77,7 +77,7 @@ declare global {
       }>;
       matchFinish: () => Promise<{ snapshot: MatchSnapshot; summary: string }>;
       matchMoundVisit: () => Promise<{ snapshot: MatchSnapshot } | null>;
-      matchNextInning: () => Promise<{ snapshot: MatchSnapshot; logs: string[] }>;
+      matchNextInning: () => Promise<{ snapshot: MatchSnapshot; logs: string[]; batchStats: { hits: number; walks: number; errors: number; isTop: boolean } | null; protagonistJustExited: boolean; exitReason: string | null }>;
       // ── 게임 저장/불러오기 ──────────────────────────────────
       gameLoad:   () => Promise<SaveGame | null>;
       gameSave:   (data: SaveGame) => Promise<void>;

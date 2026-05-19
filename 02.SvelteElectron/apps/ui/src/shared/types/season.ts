@@ -11,6 +11,7 @@ export interface PitcherGameLine {
   k: number;
   bb: number;
   decision: "W" | "L" | "SV" | "HD" | "ND";
+  pitchCount?: number;
 }
 
 export interface BatterGameLine {
@@ -270,12 +271,12 @@ export function makeEmptySeason(
 
 // ── 스탯 계산 헬퍼 ─────────────────────────────────────────────
 export function calcEra(er: number, ip: number): number {
-  if (ip === 0) return 0;
+  if (!ip || isNaN(ip)) return 0;
   return Math.round((er * 9) / ip * 100) / 100;
 }
 
 export function calcWhip(bb: number, h: number, ip: number): number {
-  if (ip === 0) return 0;
+  if (!ip || isNaN(ip)) return 0;
   return Math.round(((bb + h) / ip) * 100) / 100;
 }
 

@@ -3,6 +3,7 @@
   import { seasonStore } from "../../shared/stores/season";
   import { teamMap } from "../../shared/stores/master";
   import { t } from "../../shared/i18n";
+  import type { PitcherGameLine } from "../../shared/types/season";
 
   type StatusTab = "stats" | "record";
   let activeTab: StatusTab = "stats";
@@ -14,6 +15,23 @@
 
   $: statGroups = buildStatGroups($gameStore.protagonist);
   $: myStats = $seasonStore.stats[$gameStore.protagonist.id] ?? null;
+
+  $: recentGames = (() => {
+    const protagonistId = $gameStore.protagonist.id;
+    const myTeamId = $gameStore.protagonist.teamId;
+    return $seasonStore.schedule
+      .filter(e => e.result && e.result.playerLines.some(l => l.playerId === protagonistId))
+      .sort((a, b) => b.week - a.week)
+      .slice(0, 5)
+      .map(e => {
+        const line = e.result!.playerLines.find(l => l.playerId === protagonistId) as PitcherGameLine;
+        const isHome = e.homeTeamId === myTeamId;
+        const opponentId = isHome ? e.awayTeamId : e.homeTeamId;
+        const myScore = isHome ? e.result!.homeScore : e.result!.awayScore;
+        const oppScore = isHome ? e.result!.awayScore : e.result!.homeScore;
+        return { week: e.week, opponentId, myScore, oppScore, line };
+      });
+  })();
 
   function buildStatGroups(p: typeof $gameStore.protagonist): StatGroup[] {
     const pit = p.pitching;
@@ -211,6 +229,50 @@
           <p class="pending">시즌 누적 집계 중</p>
         {/if}
       </article>
+
+      {#if myStats?.type === "pitcher"}
+        <article class="card recent-card">
+          <h3>최근 5경기</h3>
+          {#if recentGames.length === 0}
+            <p class="pending">아직 출전 기록이 없습니다.</p>
+          {:else}
+            <div class="recent-table-wrap">
+              <table class="recent-table">
+                <thead>
+                  <tr>
+                    <th>주차</th>
+                    <th>상대</th>
+                    <th>결과</th>
+                    <th>점수</th>
+                    <th>IP</th>
+                    <th>H</th>
+                    <th>BB</th>
+                    <th>K</th>
+                    <th>ER</th>
+                    <th>투구수</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {#each recentGames as g}
+                    <tr>
+                      <td>W{g.week}</td>
+                      <td class="opp-name">{$teamMap.get(g.opponentId)?.name ?? g.opponentId}</td>
+                      <td><span class="decision decision-{g.line.decision}">{g.line.decision}</span></td>
+                      <td class="score">{g.myScore}:{g.oppScore}</td>
+                      <td>{g.line.ip ?? '-'}</td>
+                      <td>{g.line.h ?? '-'}</td>
+                      <td>{g.line.bb ?? '-'}</td>
+                      <td>{g.line.k ?? '-'}</td>
+                      <td>{g.line.er ?? '-'}</td>
+                      <td>{g.line.pitchCount ?? '—'}</td>
+                    </tr>
+                  {/each}
+                </tbody>
+              </table>
+            </div>
+          {/if}
+        </article>
+      {/if}
     {/if}
   </div>
 </section>
@@ -346,6 +408,55 @@
   .rec-value { font-size: 18px; font-weight: 700; color: #f1f6ff; }
 
   .pending { color: #9db2d8; font-size: 13px; }
+
+  .recent-card h3 { font-size: 16px; margin-bottom: 12px; color: #ebf2ff; }
+
+  .recent-table-wrap { overflow-x: auto; }
+
+  .recent-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    color: #c8d8f0;
+  }
+
+  .recent-table th {
+    padding: 6px 10px;
+    text-align: center;
+    color: #7a9ac8;
+    font-weight: 600;
+    font-size: 11px;
+    border-bottom: 1px solid #253451;
+    white-space: nowrap;
+  }
+
+  .recent-table td {
+    padding: 8px 10px;
+    text-align: center;
+    border-bottom: 1px solid #1a2640;
+  }
+
+  .recent-table tbody tr:last-child td { border-bottom: none; }
+
+  .recent-table tbody tr:hover { background: #0f1d35; }
+
+  .opp-name { text-align: left; color: #d5e2fd; }
+
+  .score { font-weight: 700; color: #edf2ff; }
+
+  .decision {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .decision-W   { background: rgba(55, 214, 122, 0.12); color: #37d67a; border: 1px solid #2a5a3a; }
+  .decision-L   { background: rgba(255,  74,  74, 0.10); color: #ff6a6a; border: 1px solid #5a2a2a; }
+  .decision-SV  { background: rgba( 80, 180, 255, 0.12); color: #60c8ff; border: 1px solid #1a4a6a; }
+  .decision-HD  { background: rgba(160, 120, 255, 0.12); color: #b88fff; border: 1px solid #3a2a6a; }
+  .decision-ND  { background: rgba(160, 180, 210, 0.10); color: #90a8c8; border: 1px solid #2a3a50; }
 
   @media (max-width: 960px) {
     .profile-card { grid-template-columns: 1fr; }

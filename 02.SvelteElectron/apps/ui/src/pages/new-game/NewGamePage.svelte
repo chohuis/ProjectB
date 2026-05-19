@@ -33,8 +33,11 @@
 
   // 전체 고교팀 (16개) — 리그 구성용
   $: hsAllTeams = $masterStore.teams.filter((t) => t.leagueId === "LEAGUE_HIGHSCHOOL");
-  // 선택 가능한 팀 (8개) — 캐릭터 생성 UI 표시용
-  $: hsTeams = hsAllTeams.filter((t) => HS_SELECTABLE_TEAMS.includes(t.id));
+  // 선택 가능한 팀 (8개) — 캐릭터 생성 UI 표시용 (어려운 순 정렬)
+  const DIFFICULTY_ORDER: Record<string, number> = { "최상": 5, "상": 4, "중": 3, "하": 2, "최하": 1 };
+  $: hsTeams = hsAllTeams
+    .filter((t) => HS_SELECTABLE_TEAMS.includes(t.id))
+    .sort((a, b) => (DIFFICULTY_ORDER[b.profile?.difficulty ?? ""] ?? 0) - (DIFFICULTY_ORDER[a.profile?.difficulty ?? ""] ?? 0));
   $: selectedTeam = hsTeams.find((t) => t.id === selectedTeamId) ?? null;
 
   // Step 2 진입 시 엔티티 로드

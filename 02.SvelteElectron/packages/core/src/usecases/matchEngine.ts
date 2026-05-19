@@ -1477,7 +1477,7 @@ function buildPitchLog(state: MatchState, decision: PitchDecision, landing: Pitc
 }
 
 function buildSummary(state: MatchState): string {
-  return `${state.score.away}:${state.score.home} 종료 (투구수 ${state.pitchCount}, 체력 ${state.protagonistStamina.toFixed(1)}, 멘탈 ${state.protagonistMental.toFixed(1)})`;
+  return `${state.score.away}:${state.score.home} 종료 (투구수 ${state.pitchCountSinceEntry}, 체력 ${state.protagonistStamina.toFixed(1)}, 멘탈 ${state.protagonistMental.toFixed(1)})`;
 }
 
 // ── NPC 자동 투구 결정 ────────────────────────────────────────────────────────

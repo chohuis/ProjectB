@@ -40,7 +40,8 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
   const won = !isDraw && teamResult.winnerId === myTeamId;
 
   const runsAllowed = outcome.homeTeamId === myTeamId ? outcome.awayScore : outcome.homeScore;
-  const inningsPitched = Number((Math.max(0, outcome.outsRecorded) / 3).toFixed(1));
+  const safeOuts = (typeof outcome.outsRecorded === "number" && !isNaN(outcome.outsRecorded)) ? outcome.outsRecorded : 0;
+  const inningsPitched = Number((Math.max(0, safeOuts) / 3).toFixed(1));
   const pitcherLine: PitcherGameLine = {
     role: "pitcher",
     playerId: protagonist.id,
@@ -50,6 +51,7 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
     k: Math.max(0, outcome.strikeouts),
     bb: Math.max(0, outcome.walksAllowed),
     decision: won ? "W" : isDraw ? "ND" : "L",
+    pitchCount: outcome.pitchCount > 0 ? outcome.pitchCount : undefined,
   };
   const matchResult: MatchResult = { ...teamResult, playerLines: [pitcherLine] };
 

@@ -144,9 +144,27 @@ function createSeasonStore() {
         const raw = await window.projectB?.seasonLoad?.();
         if (raw) {
           const saved = raw as SaveSeason;
+          const safeN = (v: unknown) => (typeof v === "number" && !isNaN(v) ? v : 0);
+          const sanitizedStats: Record<string, PlayerSeasonStats> = {};
+          for (const [pid, st] of Object.entries(saved.stats ?? {})) {
+            if ((st as PitcherSeasonStats).type === "pitcher") {
+              const s = st as PitcherSeasonStats;
+              const ip = safeN(s.ip);
+              sanitizedStats[pid] = {
+                ...s,
+                g: safeN(s.g), gs: safeN(s.gs), w: safeN(s.w), l: safeN(s.l),
+                sv: safeN(s.sv), hd: safeN(s.hd), ip,
+                er: safeN(s.er), h: safeN(s.h), k: safeN(s.k), bb: safeN(s.bb),
+                era: calcEra(safeN(s.er), ip), whip: calcWhip(safeN(s.bb), safeN(s.h), ip),
+              };
+            } else {
+              sanitizedStats[pid] = st as PlayerSeasonStats;
+            }
+          }
           // L1 필드 마이그레이션 (구버전 세이브 호환)
           set({
             ...saved,
+            stats: sanitizedStats,
             currentDate:     saved.currentDate     ?? `${saved.seasonYear ?? 2026}-03-01`,
             leagueSchedules: saved.leagueSchedules ?? {},
             leagueState: Object.fromEntries(
@@ -591,11 +609,12 @@ function accumulateStats(
       const prev = (next[line.playerId] as PitcherSeasonStats | undefined) ?? {
         type: "pitcher", g:0, gs:0, w:0, l:0, sv:0, hd:0, ip:0, er:0, h:0, k:0, bb:0, era:0, whip:0,
       };
-      const ip  = prev.ip  + (line.ip  ?? 0);
-      const er  = prev.er  + (line.er  ?? 0);
-      const h   = prev.h   + (line.h   ?? 0);
-      const k   = prev.k   + (line.k   ?? 0);
-      const bb  = prev.bb  + (line.bb  ?? 0);
+      const safeNum = (v: unknown) => (typeof v === "number" && !isNaN(v) ? v : 0);
+      const ip  = safeNum(prev.ip)  + safeNum(line.ip);
+      const er  = safeNum(prev.er)  + safeNum(line.er);
+      const h   = safeNum(prev.h)   + safeNum(line.h);
+      const k   = safeNum(prev.k)   + safeNum(line.k);
+      const bb  = safeNum(prev.bb)  + safeNum(line.bb);
       const w   = prev.w   + (line.decision === "W"  ? 1 : 0);
       const l   = prev.l   + (line.decision === "L"  ? 1 : 0);
       const sv  = prev.sv  + (line.decision === "SV" ? 1 : 0);

@@ -1380,22 +1380,33 @@ app.whenReady().then(() => {
     const prevHalf   = activeMatchState.half;
     const phase = core.advanceGamePhase(activeMatchState);
     const allLogs = [];
+    let batchStats = null;
+    let protagonistJustExited = false;
+    let exitReason = null;
+
+    const AB_RESULT_LABEL = {
+      STRIKE_SWING: "삼진", STRIKE_LOOK: "삼진(루킹)",
+      WALK: "볼넷", INPLAY_OUT: "아웃", FIELDING_ERROR: "실책",
+      HIT_SINGLE: "안타", HIT_DOUBLE: "2루타",
+      HIT_TRIPLE: "3루타", HOME_RUN: "홈런",
+      FOUL: "파울", BALL: "볼",
+    };
+
+    function pushHalfInningLogs(halfResult, inning, half) {
+      const halfLabel = half === "top" ? "초" : "말";
+      allLogs.push(`── ${inning}회${halfLabel} (${halfResult.runs}득점 ${halfResult.hits}안타) ──`);
+      for (const ab of halfResult.atBats) {
+        const label = AB_RESULT_LABEL[ab.resultCode] ?? ab.resultCode;
+        const runMark = ab.runsScored > 0 ? ` ★${ab.runsScored}득점` : "";
+        allLogs.push(`투수: ${ab.pitcherName} / 타자: ${ab.batterName} → ${label} (${ab.pitchCount}구)${runMark}`);
+      }
+    }
 
     if (phase.phase === "auto_batting") {
       activeMatchState = phase.result.nextState;
-      const halfLabel = prevHalf === "top" ? "초" : "말";
-      allLogs.push(`── ${prevInning}회${halfLabel} (${phase.result.runs}득점 ${phase.result.hits}안타) ──`);
-      for (const ab of phase.result.atBats) {
-        const resultLabel = {
-          STRIKE_SWING: "삼진", STRIKE_LOOK: "삼진(루킹)",
-          WALK: "볼넷", INPLAY_OUT: "아웃", FIELDING_ERROR: "실책",
-          HIT_SINGLE: "안타", HIT_DOUBLE: "2루타",
-          HIT_TRIPLE: "3루타", HOME_RUN: "홈런",
-          FOUL: "파울", BALL: "볼",
-        }[ab.resultCode] ?? ab.resultCode;
-        const runMark = ab.runsScored > 0 ? ` ★${ab.runsScored}득점` : "";
-        allLogs.push(`투수: ${ab.pitcherName} / 타자: ${ab.batterName} → ${resultLabel} (${ab.pitchCount}구)${runMark}`);
-      }
+      const errors = phase.result.atBats.filter(ab => ab.resultCode === "FIELDING_ERROR").length;
+      batchStats = { hits: phase.result.hits, walks: phase.result.walks, errors, isTop: prevHalf === "top" };
+      pushHalfInningLogs(phase.result, prevInning, prevHalf);
     } else if (phase.phase === "protagonist_entry") {
       activeMatchState = phase.state;
     } else if (phase.phase === "pre_entry_sim") {
@@ -1404,18 +1415,34 @@ app.whenReady().then(() => {
       allLogs.push(...(activeMatchState.preEntryLogs ?? []).slice(prevCount).slice(-4));
     } else if (phase.phase === "protagonist_exit") {
       activeMatchState = phase.state;
-      activeMatchState = core.autoSimulateToGameEnd(activeMatchState);
+      const exitReasonMap = {
+        pitch_limit: "투구수 제한으로 교체됩니다",
+        stamina:     "체력 부족으로 교체됩니다",
+        performance: "성적 부진으로 교체됩니다",
+        tactical:    "전술적 교체를 합니다",
+      };
+      exitReason = exitReasonMap[phase.reason] ?? "교체됩니다";
+      const lastLog = phase.state.logs[phase.state.logs.length - 1];
+      if (lastLog) allLogs.push(lastLog);
+      protagonistJustExited = true;
     } else if (phase.phase === "post_exit_sim") {
-      activeMatchState = core.autoSimulateToGameEnd(activeMatchState);
+      const halfResult = core.autoSimulateHalfInning(activeMatchState);
+      activeMatchState = halfResult.nextState;
+      const errors = halfResult.atBats.filter(ab => ab.resultCode === "FIELDING_ERROR").length;
+      batchStats = { hits: halfResult.hits, walks: halfResult.walks, errors, isTop: prevHalf === "top" };
+      pushHalfInningLogs(halfResult, prevInning, prevHalf);
     }
     // protagonist_pitch / game_over: 상태 변경 없음
 
-    return { snapshot: toSnapshotDto(activeMatchState, [], core), logs: allLogs };
+    return { snapshot: toSnapshotDto(activeMatchState, [], core), logs: allLogs, batchStats, protagonistJustExited, exitReason };
   });
 
   ipcMain.handle("match:finish", async () => {
     const core = await loadCoreModule();
     if (!activeMatchState) activeMatchState = core.startMatch({});
+    if (!activeMatchState.isFinished) {
+      activeMatchState = core.autoSimulateToGameEnd(activeMatchState);
+    }
     const result = core.finishMatch(activeMatchState);
     activeMatchState = result.nextState;
     return { snapshot: toSnapshotDto(activeMatchState, [], core), summary: result.summary };

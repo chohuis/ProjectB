@@ -600,7 +600,7 @@
   function showResultOverlay(code: PitchResultCode) {
     const map: Partial<Record<PitchResultCode, { text: string; color: string }>> = {
       STRIKE_SWING: { text: '헛스윙!',  color: '#37d67a' },
-      STRIKE_LOOK:  { text: '루킹!',    color: '#37d67a' },
+      STRIKE_LOOK:  { text: '스트라이크!',    color: '#37d67a' },
       BALL:         { text: '볼',       color: '#7a8fa8' },
       FOUL:         { text: '파울',     color: '#ffd54f' },
       INPLAY_OUT:   { text: '아웃!',    color: '#ff8c42' },

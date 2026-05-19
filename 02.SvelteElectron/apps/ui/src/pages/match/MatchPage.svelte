@@ -531,7 +531,10 @@
   let currentPhase: "protagonist_pitch" | "auto_inning" | "game_over" = "protagonist_pitch";
   let protagonistHasEntered = true;
   let snapshotPitchCount = 0;
+  let snapshotPitchCountSinceEntry = 0;
   let protagonistSide: "home" | "away" = "home";
+  let postExitPopupVisible = false;
+  let postExitReason = "";
 
   let inning = 1;
   let half: "top" | "bottom" = "top";
@@ -731,6 +734,11 @@
     resultCode: PitchResultCode,
     snapshot: SnapshotLike,
   ) {
+    // top이닝 = away팀 타격, bottom이닝 = home팀 타격
+    const battingTeamIsAway = snapshot.half === "top";
+    const isHit = resultCode === "HIT_SINGLE" || resultCode === "HIT_DOUBLE" || resultCode === "HIT_TRIPLE" || resultCode === "HOME_RUN";
+    const isError = resultCode === "FIELDING_ERROR";
+
     if (snapshot.inningScores) {
       // Engine provides per-inning scores directly
       const eng = snapshot.inningScores;
@@ -738,14 +746,15 @@
         const isAway = idx === 0;
         const source = isAway ? eng.away : eng.home;
         const padded = source.slice(0, 12).concat(Array(Math.max(0, 12 - source.length)).fill(0));
+        const isBattingTeam = isAway === battingTeamIsAway;
+        const isProtSide = (isAway && protagonistSide === "away") || (!isAway && protagonistSide === "home");
         return {
           ...row,
           inningScores: padded,
           r: isAway ? awayScore : homeScore,
-          h: isAway
-            ? row.h + (resultCode === "HIT_SINGLE" || resultCode === "HIT_DOUBLE" || resultCode === "HIT_TRIPLE" || resultCode === "HOME_RUN" ? 1 : 0)
-            : row.h,
-          b: isAway ? row.b + (resultCode === "WALK" ? 1 : 0) : row.b,
+          h: row.h + (isBattingTeam && isHit ? 1 : 0),
+          b: row.b + (isBattingTeam && resultCode === "WALK" ? 1 : 0),
+          e: row.e + (isError && isProtSide ? 1 : 0),
         };
       });
       return;
@@ -753,19 +762,21 @@
 
     // Local fallback: only the current batting half scores in the current inning cell
     const inningIndex = Math.max(0, Math.min(11, (snapshot.inning ?? 1) - 1));
-    const isTop = snapshot.half === "top";
+    const isTop = battingTeamIsAway;
     scoreRows = scoreRows.map((row, idx) => {
       const nextInningScores = [...row.inningScores];
       if (idx === 0 && isTop)  nextInningScores[inningIndex] = awayScore - (scoreRows[0].r - (scoreRows[0].inningScores[inningIndex] ?? 0));
       if (idx === 1 && !isTop) nextInningScores[inningIndex] = homeScore - (scoreRows[1].r - (scoreRows[1].inningScores[inningIndex] ?? 0));
-      if (idx === 0) {
-        return {
-          ...row, inningScores: nextInningScores, r: awayScore,
-          h: row.h + (resultCode === "HIT_SINGLE" || resultCode === "HIT_DOUBLE" || resultCode === "HIT_TRIPLE" || resultCode === "HOME_RUN" ? 1 : 0),
-          b: row.b + (resultCode === "WALK" ? 1 : 0),
-        };
-      }
-      return { ...row, inningScores: nextInningScores, r: homeScore };
+      const isBattingTeam = (idx === 0 && isTop) || (idx === 1 && !isTop);
+      const isProtSide = (idx === 0 && protagonistSide === "away") || (idx === 1 && protagonistSide === "home");
+      return {
+        ...row,
+        inningScores: nextInningScores,
+        r: idx === 0 ? awayScore : homeScore,
+        h: row.h + (isBattingTeam && isHit ? 1 : 0),
+        b: row.b + (isBattingTeam && resultCode === "WALK" ? 1 : 0),
+        e: row.e + (isError && isProtSide ? 1 : 0),
+      };
     });
   }
 
@@ -795,6 +806,7 @@
     if (snapshot.protagonistHasEntered !== undefined) protagonistHasEntered = snapshot.protagonistHasEntered;
     if (snapshot.protagonistSide !== undefined) protagonistSide = snapshot.protagonistSide;
     snapshotPitchCount = snapshot.pitchCount;
+    snapshotPitchCountSinceEntry = snapshot.pitchCountSinceEntry ?? 0;
 
     updateScoreRows(snapshot.score.away, snapshot.score.home, resultCode, snapshot);
 
@@ -849,7 +861,7 @@
   function showResultOverlay(code: PitchResultCode) {
     const map: Partial<Record<PitchResultCode, { text: string; color: string }>> = {
       STRIKE_SWING: { text: "헛스윙!", color: "#37d67a" },
-      STRIKE_LOOK: { text: "루킹!", color: "#37d67a" },
+      STRIKE_LOOK: { text: "스트라이크!", color: "#37d67a" },
       BALL: { text: "볼", color: "#7a8fa8" },
       FOUL: { text: "파울", color: "#ffd54f" },
       INPLAY_OUT: { text: "아웃!", color: "#ff8c42" },
@@ -988,6 +1000,18 @@
     };
   }
 
+  function applyBatchStats(batchStats: { hits: number; walks: number; errors: number; isTop: boolean } | null) {
+    if (!batchStats) return;
+    const { hits, walks, errors, isTop } = batchStats;
+    const battingIdx = isTop ? 0 : 1;
+    const fieldingIdx = isTop ? 1 : 0;
+    scoreRows = scoreRows.map((row, idx) => {
+      if (idx === battingIdx) return { ...row, h: row.h + hits, b: row.b + walks };
+      if (idx === fieldingIdx) return { ...row, e: row.e + errors };
+      return row;
+    });
+  }
+
   async function runAutoInnings() {
     if (!window.projectB?.matchNextInning) return;
     isAutoSimming = true;
@@ -999,6 +1023,12 @@
           await sleep(600);
         }
         applySnapshot(response.snapshot);
+        applyBatchStats(response.batchStats);
+        if (response.protagonistJustExited) {
+          postExitReason = response.exitReason ?? "";
+          postExitPopupVisible = true;
+          break;
+        }
         if (response.snapshot.isFinished) {
           await handleGameOver();
           break;
@@ -1240,6 +1270,7 @@
       try {
         const result = await window.projectB.matchFinish();
         summary = result.summary;
+        if (result.snapshot) applySnapshot(result.snapshot);
       } catch { /* ignore */ }
     }
 
@@ -1249,7 +1280,7 @@
 
     gameResult = {
       awayScore, homeScore,
-      pitchCount: engineAvailable ? snapshotPitchCount : localEngineState.pitchCount,
+      pitchCount: engineAvailable ? snapshotPitchCountSinceEntry : localEngineState.pitchCount,
       strikeouts: totalStrikeouts,
       errors: matchDefenseStat.errors,
       won, summary,
@@ -1265,6 +1296,33 @@
       [],
       matchContext?.week ?? 1
     );
+  }
+
+  async function handlePostExitWatchInning() {
+    if (!window.projectB?.matchNextInning) return;
+    postExitPopupVisible = false;
+    isAutoSimming = true;
+    try {
+      const response = await window.projectB.matchNextInning();
+      for (const log of response.logs) {
+        pushLog(log, "log-auto");
+        await sleep(600);
+      }
+      applySnapshot(response.snapshot);
+      applyBatchStats(response.batchStats);
+      if (response.snapshot.isFinished) {
+        await handleGameOver();
+      } else {
+        postExitPopupVisible = true;
+      }
+    } finally {
+      isAutoSimming = false;
+    }
+  }
+
+  async function handlePostExitShowResult() {
+    postExitPopupVisible = false;
+    await handleGameOver();
   }
 
   function handleExitAfterGame() {
@@ -1601,12 +1659,32 @@
               <div class="gauge-wrap"><div class="gauge-bar" style="width:{pitcherState.mental}%;background:{mentalColor};"></div></div>
               <strong>{pitcherState.mental.toFixed(1)}</strong>
             </li>
-            <li><span>투구수</span><strong>{engineAvailable ? snapshotPitchCount : localEngineState.pitchCount}</strong></li>
+            <li><span>투구수</span><strong>{engineAvailable ? snapshotPitchCountSinceEntry : localEngineState.pitchCount}</strong></li>
           </ul>
         </section>
       </div>
     </div>
   </div>
+
+  {#if postExitPopupVisible}
+    <div class="gameover-overlay">
+      <div class="gameover-box">
+        <h2 class="gameover-title">교체 타이밍</h2>
+        {#if postExitReason}
+          <p class="gameover-summary">{postExitReason}</p>
+        {/if}
+        <p class="post-exit-question">남은 경기를 어떻게 볼까요?</p>
+        <div class="post-exit-btns">
+          <button class="post-exit-btn watch-btn" type="button" on:click={handlePostExitWatchInning} disabled={isAutoSimming}>
+            진행 보기
+          </button>
+          <button class="post-exit-btn result-btn" type="button" on:click={handlePostExitShowResult} disabled={isAutoSimming}>
+            결과 보기
+          </button>
+        </div>
+      </div>
+    </div>
+  {/if}
 
   {#if isGameOver}
     <div class="gameover-overlay">
@@ -2585,6 +2663,57 @@
   .gameover-exit-btn:hover {
     transform: translateY(-1px);
     box-shadow: 0 6px 22px rgba(50, 100, 200, 0.55);
+  }
+
+  .post-exit-question {
+    margin: 0;
+    font-size: 14px;
+    color: #a0b8d4;
+    text-align: center;
+  }
+
+  .post-exit-btns {
+    display: flex;
+    gap: 12px;
+    margin-top: 4px;
+  }
+
+  .post-exit-btn {
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+
+  .post-exit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .watch-btn {
+    background: linear-gradient(180deg, #3a6abf 0%, #2050a0 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(50, 100, 200, 0.4);
+  }
+
+  .watch-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 22px rgba(50, 100, 200, 0.55);
+  }
+
+  .result-btn {
+    background: linear-gradient(180deg, #3a4a5e 0%, #22303f 100%);
+    color: #c8d8f0;
+    box-shadow: 0 4px 16px rgba(20, 40, 70, 0.4);
+  }
+
+  .result-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 22px rgba(20, 40, 70, 0.55);
   }
 </style>
 
