@@ -1,6 +1,7 @@
 const path = require("node:path");
 const fs = require("node:fs");
 const { pathToFileURL } = require("node:url");
+const { createHmac, createHash } = require("node:crypto");
 const { app, BrowserWindow, ipcMain, session } = require("electron");
 const Database = require("better-sqlite3");
 
@@ -38,6 +39,60 @@ function loadCoreModule() {
 function isPathInside(target, base) {
   const rel = path.relative(base, target);
   return rel && !rel.startsWith("..") && !path.isAbsolute(rel);
+}
+
+// ── 세이브 무결성 (HMAC-SHA256) ─────────────────────────────────────────────
+const SAVE_HMAC_KEY = "pb-save-integrity-2025-v1";
+
+function computeSig(data) {
+  return createHmac("sha256", SAVE_HMAC_KEY).update(data).digest("hex");
+}
+
+function signSlot(db, slotId, game, season) {
+  const snapshot = JSON.stringify({ game: game ?? null, season: season ?? null });
+  const sig = computeSig(snapshot);
+  db.prepare(`
+    INSERT INTO save_integrity (slot_id, snapshot, sig, updated_at)
+    VALUES (?, ?, ?, ?)
+    ON CONFLICT(slot_id) DO UPDATE SET
+      snapshot=excluded.snapshot, sig=excluded.sig, updated_at=excluded.updated_at
+  `).run(slotId, snapshot, sig, new Date().toISOString());
+}
+
+function verifySlot(db, slotId) {
+  const row = db.prepare("SELECT snapshot, sig FROM save_integrity WHERE slot_id = ?").get(slotId);
+  if (!row) return { ok: true, missing: true };
+  if (computeSig(row.snapshot) !== row.sig) return { ok: false, reason: "sig_mismatch" };
+  return { ok: true };
+}
+
+// ── 마스터 데이터 체크섬 (SHA-256) ──────────────────────────────────────────
+function computeFileSha256(filePath) {
+  if (!fs.existsSync(filePath)) return null;
+  return createHash("sha256").update(fs.readFileSync(filePath)).digest("hex");
+}
+
+function checkMasterIntegrity(masterDbPath, userDataDir) {
+  const checksumFile = path.join(userDataDir, "master_checksum.json");
+  const currentHash = computeFileSha256(masterDbPath);
+  if (!currentHash) return;
+  try {
+    if (fs.existsSync(checksumFile)) {
+      const stored = JSON.parse(fs.readFileSync(checksumFile, "utf8"));
+      if (stored.hash !== currentHash) {
+        console.warn("[integrity] master.db 체크섬 불일치 — 파일이 변경되었습니다.");
+        console.warn(`  이전: ${stored.hash}`);
+        console.warn(`  현재: ${currentHash}`);
+      }
+    }
+    fs.writeFileSync(
+      checksumFile,
+      JSON.stringify({ hash: currentHash, updatedAt: new Date().toISOString() }),
+      "utf8",
+    );
+  } catch (e) {
+    console.warn("[integrity] 마스터 체크섬 처리 실패:", e.message);
+  }
 }
 
 function loadTuningSchema(resourceBase) {
@@ -653,6 +708,13 @@ function openDatabase(dbPath) {
       sb INTEGER, bb_b INTEGER, k_b INTEGER,
       avg_v REAL, obp REAL, slg REAL, ops REAL,
       PRIMARY KEY (slot_id, league_id, player_id)
+    );
+
+    CREATE TABLE IF NOT EXISTS save_integrity (
+      slot_id    TEXT PRIMARY KEY REFERENCES save_slots(slot_id) ON DELETE CASCADE,
+      snapshot   TEXT NOT NULL,
+      sig        TEXT NOT NULL,
+      updated_at TEXT NOT NULL
     );
   `);
   return db;
@@ -1334,6 +1396,9 @@ app.whenReady().then(() => {
     console.warn("[master.db] 열기 실패:", e.message);
   }
 
+  // master.db 체크섬 검증 (프로덕션에서 파일 변조 감지)
+  if (!isDev) checkMasterIntegrity(masterDbPath, userDataDir);
+
   applyTuningFromFile(resourceBase, tuningSchema).then((res) => {
     if (!res.ok) console.warn("[tuning] invalid tuning file. fallback to defaults.", res.errors);
   }).catch((e) => {
@@ -1486,7 +1551,12 @@ app.whenReady().then(() => {
   });
 
   ipcMain.handle("game:load", () => {
-    return dbLoadSlot(db, DEFAULT_SLOT_ID)?.game ?? null;
+    const data = dbLoadSlot(db, DEFAULT_SLOT_ID);
+    if (data) {
+      const v = verifySlot(db, DEFAULT_SLOT_ID);
+      if (!v.ok) console.warn("[integrity] game:load 조작 감지:", v.reason);
+    }
+    return data?.game ?? null;
   });
 
   ipcMain.handle("game:save", (_event, data) => {
@@ -1494,13 +1564,19 @@ app.whenReady().then(() => {
     try {
       const cur = dbLoadSlot(db, DEFAULT_SLOT_ID);
       dbSaveSlot(db, DEFAULT_SLOT_ID, data, cur?.season ?? null);
+      signSlot(db, DEFAULT_SLOT_ID, data, cur?.season ?? null);
     } catch (e) {
       console.error("[game:save] 저장 실패:", e);
     }
   });
 
   ipcMain.handle("season:load", () => {
-    return dbLoadSlot(db, DEFAULT_SLOT_ID)?.season ?? null;
+    const data = dbLoadSlot(db, DEFAULT_SLOT_ID);
+    if (data) {
+      const v = verifySlot(db, DEFAULT_SLOT_ID);
+      if (!v.ok) console.warn("[integrity] season:load 조작 감지:", v.reason);
+    }
+    return data?.season ?? null;
   });
 
   ipcMain.handle("season:save", (_event, data) => {
@@ -1508,6 +1584,7 @@ app.whenReady().then(() => {
     try {
       const cur = dbLoadSlot(db, DEFAULT_SLOT_ID);
       dbSaveSlot(db, DEFAULT_SLOT_ID, cur?.game ?? null, data);
+      signSlot(db, DEFAULT_SLOT_ID, cur?.game ?? null, data);
     } catch (e) {
       console.error("[season:save] 저장 실패:", e);
     }
@@ -1517,14 +1594,23 @@ app.whenReady().then(() => {
 
   ipcMain.handle("save:loadSlot", (_event, slotId) => {
     if (typeof slotId !== "string" || !slotId.trim()) return null;
-    return dbLoadSlot(db, slotId.trim());
+    const id   = slotId.trim();
+    const data = dbLoadSlot(db, id);
+    if (!data) return null;
+    const integrity = verifySlot(db, id);
+    if (!integrity.ok) console.warn(`[integrity] 슬롯 '${id}' 조작 감지:`, integrity.reason);
+    return { ...data, _integrity: integrity };
   });
 
   ipcMain.handle("save:saveSlot", (_event, payload) => {
     try {
       const slotId = String(payload?.slotId ?? DEFAULT_SLOT_ID).trim();
       if (!slotId) throw new Error("slotId is required");
-      return { ok: true, slot: dbSaveSlot(db, slotId, payload?.game ?? null, payload?.season ?? null) };
+      const game   = payload?.game   ?? null;
+      const season = payload?.season ?? null;
+      const slot = dbSaveSlot(db, slotId, game, season);
+      signSlot(db, slotId, game, season);
+      return { ok: true, slot };
     } catch (e) {
       return { ok: false, error: String(e?.message ?? e) };
     }
