@@ -70,56 +70,15 @@ export interface ExamResult {
   messageBody: string;
 }
 
-export function calcExamResult(
+export async function calcExamResult(
   accumScore: number,
   warningCount: number,
   examType: "midterm" | "final",
-): ExamResult {
-  const penalty  = warningCount * 8;
-  const rand     = Math.floor(Math.random() * 25);
-  const raw      = Math.max(0, Math.min(100, accumScore - penalty + rand));
-
-  const grade =
-    raw >= 90 ? 1 :
-    raw >= 80 ? 2 :
-    raw >= 65 ? 3 :
-    raw >= 50 ? 4 :
-    raw >= 38 ? 5 :
-    raw >= 28 ? 6 :
-    raw >= 18 ? 7 :
-    raw >= 10 ? 8 : 9;
-
-  const riskLevel: GradeRisk =
-    grade <= 6 ? "ok" :
-    grade <= 7 ? "warn" : "danger";
-
-  const moraleDelta =
-    grade === 1 ?  12 :
-    grade === 2 ?   8 :
-    grade <= 4  ?   4 :
-    grade <= 6  ?   0 :
-    grade <= 7  ?  -8 : -15;
-
-  const eligibilityBlocked = grade >= 9;
-
-  const label = examType === "midterm" ? "중간고사" : "기말고사";
-  const gradeStr = `${grade}등급`;
-
-  const messageBody =
-    grade <= 2 ? `${label} 결과: ${gradeStr}\n\n탁월한 성적입니다! 학업과 훈련을 훌륭하게 병행하고 있습니다. 사기 +${moraleDelta}` :
-    grade <= 4 ? `${label} 결과: ${gradeStr}\n\n양호한 성적입니다. 꾸준한 학업 관리를 유지하고 있습니다. 사기 +${moraleDelta}` :
-    grade <= 6 ? `${label} 결과: ${gradeStr}\n\n평균 수준의 성적입니다. 다음 시험에는 학업에 좀 더 집중해보세요.` :
-    grade <= 7 ? `${label} 결과: ${gradeStr}\n\n성적 부진으로 출전 자격 경고가 발령되었습니다. 다음 시험까지 학업에 집중하세요. 사기 ${moraleDelta}` :
-                 `${label} 결과: ${gradeStr}\n\n성적 불량으로 학사 경고가 발령되었습니다. 이번 주 경기 출전이 제한됩니다. 즉시 학업 개선이 필요합니다. 사기 ${moraleDelta}`;
-
-  return {
-    grade,
-    riskLevel,
-    moraleDelta,
-    eligibilityBlocked,
-    messageSubject: `${label} 성적 통보 — ${gradeStr}`,
-    messageBody,
-  };
+): Promise<ExamResult> {
+  const raw = JSON.parse(await (window as any).projectB.weekCalcExamResult(
+    JSON.stringify({ accumScore, warningCount, examType })
+  )) as ExamResult;
+  return raw;
 }
 
 // ── 대학 전공별 훈련 효율 보너스 ──────────────────────────────

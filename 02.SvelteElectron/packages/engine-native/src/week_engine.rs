@@ -215,3 +215,154 @@ pub fn calc_trade_rumor(p: TradeRumorPayload) -> TradeRumorResult {
         TradeRumorResult { should_trigger: false, to_team_id: None }
     }
 }
+
+// ── Exam Result ───────────────────────────────────────────────
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ExamPayload {
+    pub accum_score: f64,
+    pub warning_count: u32,
+    pub exam_type: String,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ExamResult {
+    pub grade: u32,
+    pub raw: u32,
+    pub risk_level: String,
+    pub morale_delta: i32,
+    pub eligibility_blocked: bool,
+    pub message_subject: String,
+    pub message_body: String,
+}
+
+pub fn calc_exam_result(p: ExamPayload) -> ExamResult {
+    let mut rng = rand::thread_rng();
+    let penalty = p.warning_count * 8;
+    let rand_val = rng.gen_range(0u32..25);
+    let raw = ((p.accum_score as i64 - penalty as i64 + rand_val as i64).clamp(0, 100)) as u32;
+
+    let grade: u32 =
+        if raw >= 90 { 1 } else if raw >= 80 { 2 } else if raw >= 65 { 3 }
+        else if raw >= 50 { 4 } else if raw >= 38 { 5 } else if raw >= 28 { 6 }
+        else if raw >= 18 { 7 } else if raw >= 10 { 8 } else { 9 };
+
+    let risk_level = if grade <= 6 { "ok" } else if grade <= 7 { "warn" } else { "danger" };
+
+    let morale_delta: i32 = match grade {
+        1 => 12, 2 => 8, 3 | 4 => 4, 5 | 6 => 0, 7 => -8, _ => -15,
+    };
+
+    let eligibility_blocked = grade >= 9;
+    let label = if p.exam_type == "midterm" { "중간고사" } else { "기말고사" };
+    let grade_str = format!("{}등급", grade);
+
+    let message_body = if grade <= 2 {
+        format!("{} 결과: {}\n\n탁월한 성적입니다! 학업과 훈련을 훌륭하게 병행하고 있습니다. 사기 +{}", label, grade_str, morale_delta)
+    } else if grade <= 4 {
+        format!("{} 결과: {}\n\n양호한 성적입니다. 꾸준한 학업 관리를 유지하고 있습니다. 사기 +{}", label, grade_str, morale_delta)
+    } else if grade <= 6 {
+        format!("{} 결과: {}\n\n평균 수준의 성적입니다. 다음 시험에는 학업에 좀 더 집중해보세요.", label, grade_str)
+    } else if grade <= 7 {
+        format!("{} 결과: {}\n\n성적 부진으로 출전 자격 경고가 발령되었습니다. 다음 시험까지 학업에 집중하세요. 사기 {}", label, grade_str, morale_delta)
+    } else {
+        format!("{} 결과: {}\n\n성적 불량으로 학사 경고가 발령되었습니다. 이번 주 경기 출전이 제한됩니다. 즉시 학업 개선이 필요합니다. 사기 {}", label, grade_str, morale_delta)
+    };
+
+    ExamResult {
+        grade, raw, risk_level: risk_level.to_string(), morale_delta, eligibility_blocked,
+        message_subject: format!("{} 성적 통보 — {}", label, grade_str),
+        message_body,
+    }
+}
+
+// ── Military Week ─────────────────────────────────────────────
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MilitaryWeekPayload {
+    pub is_sports_unit: bool,
+    pub stamina: u32,
+    pub recovery: u32,
+    pub command: u32,
+    pub control: u32,
+    pub morale: i32,
+    pub fatigue: i32,
+    pub military_event_count: usize,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MilitaryWeekResult {
+    pub stamina: u32,
+    pub recovery: u32,
+    pub command: u32,
+    pub control: u32,
+    pub morale: i32,
+    pub fatigue: i32,
+    pub event_index: Option<usize>,
+}
+
+pub fn calc_military_week(p: MilitaryWeekPayload) -> MilitaryWeekResult {
+    let mut rng = rand::thread_rng();
+
+    let (stamina, recovery, command, control) = if p.is_sports_unit {
+        let cmd = (p.command + if rng.gen::<f64>() < 0.4 { 1 } else { 0 }).min(99);
+        (p.stamina.saturating_add(1).min(99), p.recovery.saturating_add(1).min(99), cmd, p.control)
+    } else {
+        let cmd = p.command.saturating_sub(if rng.gen::<f64>() < 0.50 { 1 } else { 0 }).max(1);
+        let ctl = p.control.saturating_sub(if rng.gen::<f64>() < 0.45 { 1 } else { 0 }).max(1);
+        let rec = p.recovery.saturating_sub(if rng.gen::<f64>() < 0.35 { 1 } else { 0 }).max(1);
+        (p.stamina, rec, cmd, ctl)
+    };
+
+    let morale_delta: i32 = if p.is_sports_unit { 1 } else { -1 };
+    let fatigue_delta: i32 = if p.is_sports_unit { -2 } else { 2 };
+    let morale  = (p.morale  + morale_delta).clamp(0, 100);
+    let fatigue = (p.fatigue + fatigue_delta).clamp(0, 100);
+
+    let event_index = if p.military_event_count > 0 && rng.gen::<f64>() < 0.35 {
+        Some(rng.gen_range(0..p.military_event_count))
+    } else {
+        None
+    };
+
+    MilitaryWeekResult { stamina, recovery, command, control, morale, fatigue, event_index }
+}
+
+// ── NPC Fallback Score ────────────────────────────────────────
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NpcFallbackPayload {
+    pub home_team_id: String,
+    pub away_team_id: String,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NpcFallbackResult {
+    pub home_score: u32,
+    pub away_score: u32,
+    pub winner_id: String,
+    pub loser_id: String,
+}
+
+pub fn calc_npc_fallback(p: NpcFallbackPayload) -> NpcFallbackResult {
+    let mut rng = rand::thread_rng();
+    let score = |rng: &mut rand::rngs::ThreadRng| -> u32 {
+        let raw: f64 = rng.gen::<f64>() + rng.gen::<f64>() + rng.gen::<f64>() - 1.5;
+        (raw * 4.0).round().max(0.0) as u32
+    };
+    let mut h = score(&mut rng);
+    let mut a = score(&mut rng);
+    if h == a { if h > 0 { h -= 1; } else { a += 1; } }
+    let (winner_id, loser_id) = if h > a {
+        (p.home_team_id.clone(), p.away_team_id.clone())
+    } else {
+        (p.away_team_id.clone(), p.home_team_id.clone())
+    };
+    NpcFallbackResult { home_score: h, away_score: a, winner_id, loser_id }
+}

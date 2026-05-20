@@ -2011,6 +2011,18 @@ app.whenReady().then(() => {
     try { return engineNative.weekCalcTradeRumorNative(p); }
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
+  ipcMain.handle("week:calcExamResult", (_event, p) => {
+    try { return engineNative.weekCalcExamResultNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("week:calcMilitary", (_event, p) => {
+    try { return engineNative.weekCalcMilitaryNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("week:calcNpcFallback", (_event, p) => {
+    try { return engineNative.weekCalcNpcFallbackNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
 
   // CSP 헤더 주입 (dev/prod 분기)
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {

@@ -70,16 +70,10 @@ async function simulateNpcGame(homeTeamId: string, awayTeamId: string): Promise<
   if (entities.length > 0) {
     return (await simulateGame(homeTeamId, awayTeamId, entities)).result;
   }
-  const score = () => Math.max(0, Math.round((Math.random() + Math.random() + Math.random() - 1.5) * 4));
-  let h = score();
-  let a = score();
-  if (h === a) { h > 0 ? h-- : a++; }
-  return {
-    homeScore: h, awayScore: a,
-    winnerId: h > a ? homeTeamId : awayTeamId,
-    loserId:  h > a ? awayTeamId : homeTeamId,
-    playerLines: [], events: [],
-  };
+  const fb = JSON.parse(await (window as any).projectB.weekCalcNpcFallback(
+    JSON.stringify({ homeTeamId, awayTeamId })
+  )) as { homeScore: number; awayScore: number; winnerId: string; loserId: string };
+  return { homeScore: fb.homeScore, awayScore: fb.awayScore, winnerId: fb.winnerId, loserId: fb.loserId, playerLines: [], events: [] };
 }
 
 export async function simulateProtagonistGame(homeTeamId: string, awayTeamId: string): Promise<MatchResult> {
@@ -251,7 +245,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   const triggeredExamId = Object.keys(evResult.updatedTriggers).find((id) => EXAM_EVENT_IDS.has(id));
   if (triggeredExamId && (g.protagonist.careerStage === "highschool" || g.protagonist.careerStage === "university")) {
     const examType = triggeredExamId === "EVT_HS_MIDTERM" ? "midterm" : "final";
-    const examRes  = calcExamResult(gAfterStudy.schoolState.examAccumScore, gAfterStudy.schoolState.warningCount, examType);
+    const examRes  = await calcExamResult(gAfterStudy.schoolState.examAccumScore, gAfterStudy.schoolState.warningCount, examType);
     gameStore.applyExamResult(examRes);
     gameStore.addMessage(makeExamMessage(weekNum, examRes.messageSubject, examRes.messageBody));
     logs.push(`[시험] ${examRes.messageSubject}`);
@@ -758,26 +752,30 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       gameStore.advanceMilitaryWeek();
       const isSportsUnit = g.protagonist.militaryUnit === "sports";
       const militaryEvents = get(masterStore).militaryEvents;
-      if (militaryEvents.length > 0 && Math.random() < 0.35) {
-        const evt = militaryEvents[Math.floor(Math.random() * militaryEvents.length)];
+      const milCalc = JSON.parse(await (window as any).projectB.weekCalcMilitary(JSON.stringify({
+        isSportsUnit,
+        stamina:  g.protagonist.pitching.stamina,
+        recovery: g.protagonist.pitching.recovery,
+        command:  g.protagonist.pitching.command,
+        control:  g.protagonist.pitching.control,
+        morale:   g.protagonist.morale,
+        fatigue:  g.protagonist.fatigue,
+        militaryEventCount: militaryEvents.length,
+      }))) as { stamina: number; recovery: number; command: number; control: number; morale: number; fatigue: number; eventIndex: number | null };
+      if (milCalc.eventIndex !== null) {
+        const evt = militaryEvents[milCalc.eventIndex];
         seasonStore.pushPendingAction({
           type: "event", eventId: evt.id, title: evt.title, description: evt.description,
           choices: [{ id: "ok", label: "확인", effects: { moraleDelta: evt.moraleDelta ?? 0, fatigueDelta: evt.fatigueDelta ?? 0 } }],
         });
       }
-      const pitching = { ...g.protagonist.pitching };
-      if (isSportsUnit) {
-        pitching.stamina  = Math.min(99, pitching.stamina  + 1);
-        pitching.recovery = Math.min(99, pitching.recovery + 1);
-        pitching.command  = Math.min(99, pitching.command  + (Math.random() < 0.4 ? 1 : 0));
-      } else {
-        pitching.command  = Math.max(1, pitching.command  - (Math.random() < 0.50 ? 1 : 0));
-        pitching.control  = Math.max(1, pitching.control  - (Math.random() < 0.45 ? 1 : 0));
-        pitching.recovery = Math.max(1, pitching.recovery - (Math.random() < 0.35 ? 1 : 0));
-      }
+      const pitching = {
+        ...g.protagonist.pitching,
+        stamina: milCalc.stamina, recovery: milCalc.recovery,
+        command: milCalc.command, control: milCalc.control,
+      };
       gameStore.applyWeekResult(
-        { morale: Math.max(0, Math.min(100, g.protagonist.morale + (isSportsUnit ? 1 : -1))),
-          fatigue: Math.max(0, Math.min(100, g.protagonist.fatigue + (isSportsUnit ? -2 : 2))), pitching },
+        { morale: milCalc.morale, fatigue: milCalc.fatigue, pitching },
         [isSportsUnit ? "군 복무(체육부대): 훈련 루틴 유지" : "군 복무(일반부대): 기본 근무 수행"],
         [], nextWeek, s.seasonYear,
       );

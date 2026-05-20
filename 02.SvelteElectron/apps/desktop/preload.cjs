@@ -84,6 +84,9 @@ contextBridge.exposeInMainWorld("projectB", {
   weekCalcInjury:        (p) => ipcRenderer.invoke("week:calcInjury",        p),
   weekCalcHsAdmissions:  (p) => ipcRenderer.invoke("week:calcHsAdmissions",  p),
   weekCalcTradeRumor:    (p) => ipcRenderer.invoke("week:calcTradeRumor",    p),
+  weekCalcExamResult:    (p) => ipcRenderer.invoke("week:calcExamResult",    p),
+  weekCalcMilitary:      (p) => ipcRenderer.invoke("week:calcMilitary",      p),
+  weekCalcNpcFallback:   (p) => ipcRenderer.invoke("week:calcNpcFallback",   p),
 
   // ── dev 전용 (프로덕션 빌드에서 미노출) ────────────────────────────────
   ...(isDev && {

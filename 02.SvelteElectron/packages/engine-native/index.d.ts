@@ -94,3 +94,6 @@ export declare function weekCalcWeeklyNetNative(p: string): string
 export declare function weekCalcInjuryNative(p: string): string
 export declare function weekCalcHsAdmissionsNative(p: string): string
 export declare function weekCalcTradeRumorNative(p: string): string
+export declare function weekCalcExamResultNative(p: string): string
+export declare function weekCalcMilitaryNative(p: string): string
+export declare function weekCalcNpcFallbackNative(p: string): string
