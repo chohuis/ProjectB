@@ -1341,6 +1341,7 @@ app.whenReady().then(() => {
   });
 
   ipcMain.handle("match:start", async (_event, request = {}) => {
+    if (request === null || typeof request !== "object" || Array.isArray(request)) request = {};
     const core = await loadCoreModule();
     let state = core.startMatch(request);
 
@@ -1380,6 +1381,9 @@ app.whenReady().then(() => {
     const core = await loadCoreModule();
     if (!activeMatchState) activeMatchState = core.startMatch({});
     if (!core.isProtagonistPitching(activeMatchState)) {
+      return { snapshot: toSnapshotDto(activeMatchState, [], core), outcome: null };
+    }
+    if (!decision || typeof decision !== "object" || Array.isArray(decision)) {
       return { snapshot: toSnapshotDto(activeMatchState, [], core), outcome: null };
     }
     const result = core.stepPitch(activeMatchState, decision);
@@ -1486,6 +1490,7 @@ app.whenReady().then(() => {
   });
 
   ipcMain.handle("game:save", (_event, data) => {
+    if (!data || typeof data !== "object" || Array.isArray(data)) return;
     try {
       const cur = dbLoadSlot(db, DEFAULT_SLOT_ID);
       dbSaveSlot(db, DEFAULT_SLOT_ID, data, cur?.season ?? null);
@@ -1499,6 +1504,7 @@ app.whenReady().then(() => {
   });
 
   ipcMain.handle("season:save", (_event, data) => {
+    if (!data || typeof data !== "object" || Array.isArray(data)) return;
     try {
       const cur = dbLoadSlot(db, DEFAULT_SLOT_ID);
       dbSaveSlot(db, DEFAULT_SLOT_ID, cur?.game ?? null, data);
@@ -1574,6 +1580,9 @@ app.whenReady().then(() => {
   });
 
   ipcMain.handle("day:advance", async (_event, coreState) => {
+    if (!coreState || typeof coreState !== "object" || Array.isArray(coreState)) {
+      return { snapshot: null, logs: [] };
+    }
     const core = await loadCoreModule();
     const result = core.advanceDay(coreState);
     return { snapshot: result.nextState, logs: result.logs };
@@ -1626,6 +1635,7 @@ app.whenReady().then(() => {
   });
 
   ipcMain.handle("tuning:load", async () => {
+    if (!isDev) return { ok: false, error: "unauthorized" };
     try {
       const core = await loadCoreModule();
       const fullPath = path.resolve(resourceBase, tuningRelPath);
@@ -1640,12 +1650,14 @@ app.whenReady().then(() => {
   });
 
   ipcMain.handle("tuning:validate", async (_event, payload) => {
+    if (!isDev) return { ok: false, error: "unauthorized" };
     const tuning = payload?.tuning ?? payload;
     const validate = validateMatchEngineTuning(tuning, tuningSchema);
     return { ok: validate.ok, errors: validate.errors };
   });
 
   ipcMain.handle("tuning:save", async (_event, payload) => {
+    if (!isDev) return { ok: false, error: "unauthorized" };
     try {
       const core = await loadCoreModule();
       const tuning    = payload?.tuning ?? payload;
@@ -1675,6 +1687,7 @@ app.whenReady().then(() => {
   });
 
   ipcMain.handle("tuning:apply", async (_event, payload) => {
+    if (!isDev) return { ok: false, error: "unauthorized" };
     try {
       const core = await loadCoreModule();
       const tuning = payload?.tuning ?? payload;
@@ -1690,6 +1703,7 @@ app.whenReady().then(() => {
   });
 
   ipcMain.handle("tuning:smoke", async (_event, payload) => {
+    if (!isDev) return { ok: false, error: "unauthorized" };
     try {
       const core  = await loadCoreModule();
       const games = Math.max(1, Math.min(500, Number(payload?.games ?? SMOKE_GAMES)));
