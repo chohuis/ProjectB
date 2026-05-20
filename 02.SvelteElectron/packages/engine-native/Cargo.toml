@@ -1,0 +1,22 @@
+[package]
+name = "engine-native"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+napi        = { version = "2", default-features = false, features = ["napi4"] }
+napi-derive = "2"
+hmac        = "0.12"
+sha2        = "0.10"
+hex         = "0.4"
+
+[build-dependencies]
+napi-build = "1"
+
+[profile.release]
+lto       = true
+strip     = true
+opt-level = 3

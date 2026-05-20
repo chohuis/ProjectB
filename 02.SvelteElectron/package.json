@@ -11,6 +11,7 @@
   "scripts": {
     "build:contracts": "npm run -w @projectb/contracts build",
     "build:core": "npm run -w @projectb/core build",
+    "build:native": "npm run -w @projectb/engine-native build",
     "build:packages": "npm run build:contracts && npm run build:core",
     "gen:manifest": "node scripts/gen-manifest.mjs",
     "dev:ui": "npm run gen:manifest && vite --config vite.config.ts",
@@ -20,7 +21,7 @@
     "prebuild:masterdb": "npm rebuild better-sqlite3",
     "build:masterdb": "node scripts/generate_master_db.cjs",
     "postbuild:masterdb": "electron-rebuild -f -w better-sqlite3",
-    "build": "npm run build:masterdb && npm run build:packages && npm run build:ui",
+    "build": "npm run build:masterdb && npm run build:packages && npm run build:native && npm run build:ui",
     "preview:ui": "vite preview --config vite.config.ts",
     "start": "electron apps/desktop/main.cjs",
     "pack": "npm run build && electron-builder --dir",
@@ -44,14 +45,19 @@
       "apps/desktop/**",
       "dist/ui/**",
       "packages/*/dist/**",
+      "packages/engine-native/index.js",
+      "packages/engine-native/index.d.ts",
+      "packages/engine-native/*.node",
       "resource/**",
       "!resource/data/staging/**",
+      "!resource/data/balance/**",
       "!scripts/**",
       "!docs/**"
     ],
     "asarUnpack": [
       "resource/**",
-      "packages/*/dist/**"
+      "packages/*/dist/**",
+      "packages/engine-native/*.node"
     ],
     "win": {
       "target": [

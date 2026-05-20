@@ -1,0 +1,58 @@
+name: Build Native Addon (Windows)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/engine-native/src/**'
+      - 'packages/engine-native/Cargo.toml'
+      - 'packages/engine-native/build.rs'
+  pull_request:
+    paths:
+      - 'packages/engine-native/src/**'
+      - 'packages/engine-native/Cargo.toml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build .node (Windows x64)
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Cache Cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            packages/engine-native/target
+          key: cargo-${{ hashFiles('packages/engine-native/Cargo.toml') }}
+          restore-keys: cargo-
+
+      - name: Install engine-native deps
+        run: npm install
+        working-directory: packages/engine-native
+
+      - name: Build .node binary
+        run: npm run build
+        working-directory: packages/engine-native
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: engine-native-win32-x64
+          path: packages/engine-native/engine-native.win32-x64-msvc.node
+          if-no-files-found: error

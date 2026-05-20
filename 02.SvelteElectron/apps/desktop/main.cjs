@@ -1,7 +1,8 @@
 const path = require("node:path");
 const fs = require("node:fs");
 const { pathToFileURL } = require("node:url");
-const { createHmac, createHash } = require("node:crypto");
+const { createHash } = require("node:crypto");
+const engineNative  = require("../../packages/engine-native");
 const { app, BrowserWindow, ipcMain, session, protocol, net } = require("electron");
 const Database = require("better-sqlite3");
 
@@ -41,11 +42,9 @@ function isPathInside(target, base) {
   return rel && !rel.startsWith("..") && !path.isAbsolute(rel);
 }
 
-// ── 세이브 무결성 (HMAC-SHA256) ─────────────────────────────────────────────
-const SAVE_HMAC_KEY = "pb-save-integrity-2025-v1";
-
+// ── 세이브 무결성 (HMAC-SHA256 — 키는 Rust 바이너리 내부) ─────────────────
 function computeSig(data) {
-  return createHmac("sha256", SAVE_HMAC_KEY).update(data).digest("hex");
+  return engineNative.computeSaveSig(data);
 }
 
 function signSlot(db, slotId, game, season) {
