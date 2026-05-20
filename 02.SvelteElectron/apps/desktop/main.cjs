@@ -1991,6 +1991,27 @@ app.whenReady().then(() => {
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
 
+  ipcMain.handle("week:calcFacilityEff", (_event, p) => {
+    try { return engineNative.weekCalcFacilityEffNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("week:calcWeeklyNet", (_event, p) => {
+    try { return engineNative.weekCalcWeeklyNetNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("week:calcInjury", (_event, p) => {
+    try { return engineNative.weekCalcInjuryNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("week:calcHsAdmissions", (_event, p) => {
+    try { return engineNative.weekCalcHsAdmissionsNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("week:calcTradeRumor", (_event, p) => {
+    try { return engineNative.weekCalcTradeRumorNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
   // CSP 헤더 주입 (dev/prod 분기)
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     const csp = isDev

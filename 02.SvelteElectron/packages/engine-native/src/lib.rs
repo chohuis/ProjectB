@@ -12,6 +12,7 @@ mod growth_engine;
 mod player_engine;
 mod schedule_engine;
 mod postseason_engine;
+mod week_engine;
 
 use types::*;
 use sim_types::*;
@@ -440,3 +441,11 @@ pub fn calc_draft_rank_native(params_json: String) -> String {
 #[napi] pub fn resolve_non_protagonist_series_native(p: String) -> String { let params: ResolveNpcSeriesParams = match serde_json::from_str(&p) { Ok(v) => v, Err(e) => return parse_err("resolveNonProtagonistSeriesNative", e) }; serde_json::to_string(&postseason_engine::resolve_non_protagonist_series(params)).unwrap_or_else(|e| parse_err("resolveNonProtagonistSeriesNative/s", e)) }
 #[napi] pub fn make_series_game_native(p: String) -> String { let params: MakeSeriesGameParams = match serde_json::from_str(&p) { Ok(v) => v, Err(e) => return parse_err("makeSeriesGameNative", e) }; serde_json::to_string(&postseason_engine::make_series_game(params)).unwrap_or_else(|e| parse_err("makeSeriesGameNative/s", e)) }
 #[napi] pub fn shuffle_abl_conferences_native(p: String) -> String { let params: ShuffleAblConferencesParams = match serde_json::from_str(&p) { Ok(v) => v, Err(e) => return parse_err("shuffleAblConferencesNative", e) }; serde_json::to_string(&postseason_engine::shuffle_abl_conferences(params)).unwrap_or_else(|e| parse_err("shuffleAblConferencesNative/s", e)) }
+
+// ── 주간 엔진 (Phase 6) ───────────────────────────────────────────────────────
+
+#[napi] pub fn week_calc_facility_eff_native(p: String) -> String { let params: week_engine::FacilityEffPayload = match serde_json::from_str(&p) { Ok(v) => v, Err(e) => return parse_err("weekCalcFacilityEffNative", e) }; serde_json::json!(week_engine::calc_facility_eff(params)).to_string() }
+#[napi] pub fn week_calc_weekly_net_native(p: String) -> String { let params: week_engine::WeeklyNetPayload = match serde_json::from_str(&p) { Ok(v) => v, Err(e) => return parse_err("weekCalcWeeklyNetNative", e) }; serde_json::json!(week_engine::calc_weekly_net(params)).to_string() }
+#[napi] pub fn week_calc_injury_native(p: String) -> String { let params: week_engine::InjuryPayload = match serde_json::from_str(&p) { Ok(v) => v, Err(e) => return parse_err("weekCalcInjuryNative", e) }; serde_json::to_string(&week_engine::calc_injury(params)).unwrap_or_else(|e| parse_err("weekCalcInjuryNative/s", e)) }
+#[napi] pub fn week_calc_hs_admissions_native(p: String) -> String { let params: week_engine::HsAdmissionsPayload = match serde_json::from_str(&p) { Ok(v) => v, Err(e) => return parse_err("weekCalcHsAdmissionsNative", e) }; serde_json::to_string(&week_engine::calc_hs_admissions(params)).unwrap_or_else(|e| parse_err("weekCalcHsAdmissionsNative/s", e)) }
+#[napi] pub fn week_calc_trade_rumor_native(p: String) -> String { let params: week_engine::TradeRumorPayload = match serde_json::from_str(&p) { Ok(v) => v, Err(e) => return parse_err("weekCalcTradeRumorNative", e) }; serde_json::to_string(&week_engine::calc_trade_rumor(params)).unwrap_or_else(|e| parse_err("weekCalcTradeRumorNative/s", e)) }

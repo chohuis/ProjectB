@@ -79,6 +79,11 @@ contextBridge.exposeInMainWorld("projectB", {
   postseasonResolveNpc: (p) => ipcRenderer.invoke("postseason:resolveNpc", p),
   postseasonMakeGame:   (p) => ipcRenderer.invoke("postseason:makeGame",   p),
   postseasonShuffleAbl: (p) => ipcRenderer.invoke("postseason:shuffleAbl", p),
+  weekCalcFacilityEff:   (p) => ipcRenderer.invoke("week:calcFacilityEff",   p),
+  weekCalcWeeklyNet:     (p) => ipcRenderer.invoke("week:calcWeeklyNet",     p),
+  weekCalcInjury:        (p) => ipcRenderer.invoke("week:calcInjury",        p),
+  weekCalcHsAdmissions:  (p) => ipcRenderer.invoke("week:calcHsAdmissions",  p),
+  weekCalcTradeRumor:    (p) => ipcRenderer.invoke("week:calcTradeRumor",    p),
 
   // ── dev 전용 (프로덕션 빌드에서 미노출) ────────────────────────────────
   ...(isDev && {

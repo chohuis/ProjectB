@@ -37,38 +37,6 @@ const MONTHLY_STANDINGS_LEAGUES = new Set([
   "LEAGUE_INDEPENDENT", "LEAGUE_HIGHSCHOOL_NPC",
 ]);
 
-// ── 시설 효율 계산 ─────────────────────────────────────────────
-function calcFacilityEffMod(p: ProtagonistSave, teamTier?: string): number {
-  switch (p.careerStage) {
-    case "highschool":  return 0.92;
-    case "university":  return 0.95;
-    case "military":    return 0.88;
-    case "independent": return 0.85;
-    case "pro":
-    case "pro_kbl":
-    case "pro_abl":
-      return teamTier === "1군" ? 1.05 : 0.95;
-    default: return 0.92;
-  }
-}
-
-// ── 주간 순수입 계산 ───────────────────────────────────────────
-function calcWeeklyNet(p: ProtagonistSave): number {
-  switch (p.careerStage) {
-    case "highschool":   return Math.round((42 - 18) / 4);
-    case "university":   return Math.round((62 - 21) / 4);
-    case "military":     return Math.round((196 - 13) / 4);
-    case "pro":
-    case "pro_kbl":
-    case "pro_abl": {
-      const salary = p.contract?.salary ?? 3000;
-      return Math.round(salary / 52 - 54);
-    }
-    case "independent": return Math.round((80 - 30) / 4);
-    default: return 0;
-  }
-}
-
 const EXAM_EVENT_IDS = new Set(["EVT_HS_MIDTERM", "EVT_HS_FINAL"]);
 
 function makeTrainingMessage(week: number, logs: string[]): MessageItem {
@@ -198,42 +166,29 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   const coachTeaching  = (pitchCoach?.details as import("../stores/master").EntityDetails)?.coach?.stats?.teaching ?? 50;
   const coachEffBonus  = Math.max(-0.10, Math.min(0.20, (coachTeaching - 50) * 0.004));
   const teamRef        = m.teams.find((t) => t.id === g.protagonist.teamId);
-  const facilityEffMod = calcFacilityEffMod(g.protagonist, teamRef?.tier);
+  const facilityEffMod = JSON.parse(await (window as any).projectB.weekCalcFacilityEff(
+    JSON.stringify({ careerStage: g.protagonist.careerStage, teamTier: teamRef?.tier ?? null })
+  )) as number;
 
-  const prevLowMoraleWeeks  = g.protagonist.consecutiveLowMoraleWeeks ?? 0;
-  const isLowMorale         = g.protagonist.morale < 35;
-  const newLowMoraleWeeks   = isLowMorale ? prevLowMoraleWeeks + 1 : 0;
-  const slumpPenalty        = newLowMoraleWeeks >= 3 ? 0.70 : 1.0;
+  const prevLowMoraleWeeks = g.protagonist.consecutiveLowMoraleWeeks ?? 0;
+  const isLowMorale        = g.protagonist.morale < 35;
+  const newLowMoraleWeeks  = isLowMorale ? prevLowMoraleWeeks + 1 : 0;
+  const slumpPenalty       = newLowMoraleWeeks >= 3 ? 0.70 : 1.0;
 
-  const prevHighFatigueWeeks = g.protagonist.consecutiveHighFatigueWeeks ?? 0;
-  const isHighFatigue        = g.protagonist.fatigue >= 85;
-  const newHighFatigueWeeks  = isHighFatigue ? prevHighFatigueWeeks + 1 : 0;
-  const alreadyInjured       = !!g.protagonist.injury;
+  const alreadyInjured = !!g.protagonist.injury;
+  const injuryCalc = JSON.parse(await (window as any).projectB.weekCalcInjury(JSON.stringify({
+    fatigue: g.protagonist.fatigue,
+    consecutiveHighFatigueWeeks: g.protagonist.consecutiveHighFatigueWeeks ?? 0,
+    hasInjury: alreadyInjured,
+    injuryType: g.protagonist.injury?.type ?? null,
+    recoveryWeeksLeft: g.protagonist.injury?.recoveryWeeksLeft ?? null,
+  }))) as { injuryUpdate: { type: string; recoveryWeeksLeft: number } | null; justOccurred: boolean; justHealed: boolean; effMod: number; newConsecutiveHighFatigueWeeks: number };
+  const injuryUpdate = injuryCalc.injuryUpdate as ProtagonistSave["injury"] | undefined;
+  const injuryJustOccurred = injuryCalc.justOccurred;
+  const injuryJustHealed   = injuryCalc.justHealed;
 
-  let injuryUpdate: ProtagonistSave["injury"] | undefined = g.protagonist.injury;
-  let injuryJustOccurred = false;
-  let injuryJustHealed   = false;
-
-  if (!alreadyInjured && newHighFatigueWeeks >= 2) {
-    const chance = Math.min(0.65, 0.30 + Math.max(0, newHighFatigueWeeks - 2) * 0.25);
-    if (Math.random() < chance) {
-      const type = g.protagonist.fatigue >= 92 ? "moderate" : "light";
-      injuryUpdate       = { type, recoveryWeeksLeft: type === "moderate" ? 3 : 2 };
-      injuryJustOccurred = true;
-    }
-  } else if (alreadyInjured && g.protagonist.injury) {
-    const weeksLeft = g.protagonist.injury.recoveryWeeksLeft - 1;
-    if (weeksLeft <= 0) {
-      injuryUpdate     = undefined;
-      injuryJustHealed = true;
-    } else {
-      injuryUpdate = { ...g.protagonist.injury, recoveryWeeksLeft: weeksLeft };
-    }
-  }
-
-  const injuryEffMod = alreadyInjured && !injuryJustHealed ? 0.20 : 1.0;
-  const finalEffMod  = studyResult.efficiencyMod * (1 + majorEffBonus + coachEffBonus)
-    * facilityEffMod * slumpPenalty * injuryEffMod;
+  const finalEffMod = studyResult.efficiencyMod * (1 + majorEffBonus + coachEffBonus)
+    * facilityEffMod * slumpPenalty * injuryCalc.effMod;
 
   const growth = await calcTrainingGrowth(g.protagonist, g.trainingPlan, finalEffMod);
 
@@ -251,11 +206,14 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     growth.logs.push(`[학업] 주간 효율 ${Math.round(studyResult.efficiencyMod * 100)}%`);
   }
 
-  growth.protagonistPatch.consecutiveLowMoraleWeeks   = newLowMoraleWeeks;
-  growth.protagonistPatch.consecutiveHighFatigueWeeks  = injuryJustOccurred ? 0 : newHighFatigueWeeks;
-  growth.protagonistPatch.injury                       = injuryUpdate;
+  growth.protagonistPatch.consecutiveLowMoraleWeeks  = newLowMoraleWeeks;
+  growth.protagonistPatch.consecutiveHighFatigueWeeks = injuryCalc.newConsecutiveHighFatigueWeeks;
+  growth.protagonistPatch.injury                      = injuryUpdate;
 
-  gameStore.applyMoneyChange(calcWeeklyNet(g.protagonist));
+  const weeklyNet = JSON.parse(await (window as any).projectB.weekCalcWeeklyNet(
+    JSON.stringify({ careerStage: g.protagonist.careerStage, salary: g.protagonist.contract?.salary ?? null })
+  )) as number;
+  gameStore.applyMoneyChange(weeklyNet);
   gameStore.recordTrainingWeek();
 
   const ovrBefore = g.protagonist.pitching.ovr;
@@ -360,27 +318,12 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     const avgPct = subjects.length ? subjects.reduce((a, s2) => a + s2.percentile, 0) / subjects.length : 50;
     const univChoices = gDraft.schoolState.fallbackUniversityChoices.slice(0, 3);
     const indieChoices = gDraft.schoolState.fallbackIndependentChoices.slice(0, 3);
-    const evalUnivPass = (ovr: number, idx: number): boolean => {
-      const cutByChoice = [58, 53, 48][idx] ?? 48;
-      const score = ovr * 0.62 + avgPct * 0.38;
-      if (score < cutByChoice - 8) return false;
-      const base = 28 + (score - cutByChoice) * 3.4;
-      return Math.random() * 100 < Math.max(8, Math.min(94, base));
-    };
-    const evalIndiePass = (ovr: number, idx: number): boolean => {
-      const cutByChoice = [52, 48, 44][idx] ?? 44;
-      if (ovr < cutByChoice - 10) return false;
-      const base = 36 + (ovr - cutByChoice) * 3.2;
-      return Math.random() * 100 < Math.max(12, Math.min(96, base));
-    };
-    const evalSportsMilitaryPass = (ovr: number): boolean => {
-      if (ovr < 56) return false;
-      const base = 22 + (ovr - 56) * 2.1;
-      return Math.random() * 100 < Math.max(6, Math.min(84, base));
-    };
-    const univPassed  = univChoices.filter((_, i) => evalUnivPass(p.pitching.ovr, i));
-    const indiePassed = indieChoices.filter((_, i) => evalIndiePass(p.pitching.ovr, i));
-    const sportsPassed = evalSportsMilitaryPass(p.pitching.ovr);
+    const admissionsCalc = JSON.parse(await (window as any).projectB.weekCalcHsAdmissions(JSON.stringify({
+      ovr: p.pitching.ovr, avgPct, univChoices, indieChoices,
+    }))) as { univPassed: string[]; indiePassed: string[]; sportsPassed: boolean };
+    const univPassed  = admissionsCalc.univPassed;
+    const indiePassed = admissionsCalc.indiePassed;
+    const sportsPassed = admissionsCalc.sportsPassed;
     gameStore.setFallbackAdmissions({
       universityChoices: univChoices, independentChoices: indieChoices,
       universityPassed: univPassed,   independentPassed: indiePassed,
@@ -438,23 +381,21 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     const standings = get(seasonStore).standings;
     const myRank = [...standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins)
       .findIndex((sRow) => sRow.teamId === gTrade.protagonist.teamId) + 1;
-    const bottomTeam = myRank > 0 && myRank >= standings.length - 1;
-    const poorPerf  = myEra >= 5.0;
-    const elitePerf = myEra <= 2.5;
-    const shouldCheck = weekInYear >= 12 && weekInYear <= 40 && weekInYear % 4 === 0;
-    if (shouldCheck && (poorPerf || elitePerf || bottomTeam)) {
-      const sameLeagueTeams = m.teams
-        .filter((t) => t.leagueId === gTrade.protagonist.leagueId && t.id !== gTrade.protagonist.teamId)
-        .map((t) => t.id);
-      if (sameLeagueTeams.length > 0 && Math.random() < 0.24) {
-        const toTeamId = sameLeagueTeams[Math.floor(Math.random() * sameLeagueTeams.length)];
+    const sameLeagueTeams = m.teams
+      .filter((t) => t.leagueId === gTrade.protagonist.leagueId && t.id !== gTrade.protagonist.teamId)
+      .map((t) => t.id);
+    if (sameLeagueTeams.length > 0) {
+      const tradeCalc = JSON.parse(await (window as any).projectB.weekCalcTradeRumor(JSON.stringify({
+        era: myEra, myRank, totalTeams: standings.length, weekInYear, sameLeagueTeams,
+      }))) as { shouldTrigger: boolean; toTeamId: string | null };
+      if (tradeCalc.shouldTrigger && tradeCalc.toTeamId) {
         seasonStore.pushPendingAction({
           type: "event", eventId: "EVT_TRADE_RUMOR",
           title: "트레이드 루머",
           description: "타 구단에서 관심을 보이고 있다는 소문이 돌고 있습니다.",
           choices: [{ id: "ok", label: "확인" }],
         });
-        seasonStore.pushPendingAction({ type: "trade", fromTeamId: gTrade.protagonist.teamId, toTeamId });
+        seasonStore.pushPendingAction({ type: "trade", fromTeamId: gTrade.protagonist.teamId, toTeamId: tradeCalc.toTeamId });
       }
     }
   }

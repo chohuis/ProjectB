@@ -89,3 +89,8 @@ export declare function fillNextSeriesNative(p: string): string
 export declare function resolveNonProtagonistSeriesNative(p: string): string
 export declare function makeSeriesGameNative(p: string): string
 export declare function shuffleAblConferencesNative(p: string): string
+export declare function weekCalcFacilityEffNative(p: string): string
+export declare function weekCalcWeeklyNetNative(p: string): string
+export declare function weekCalcInjuryNative(p: string): string
+export declare function weekCalcHsAdmissionsNative(p: string): string
+export declare function weekCalcTradeRumorNative(p: string): string
