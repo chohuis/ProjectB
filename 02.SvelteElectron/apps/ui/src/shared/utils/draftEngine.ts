@@ -15,6 +15,6 @@ export async function calcDraftRank(
 ): Promise<DraftRankResult> {
   const params = { scoutScore, pitchingOvr, year, kblTeamIds: KBL_TEAM_IDS };
   return JSON.parse(
-    await (window as any).projectB.draftCalcDraftRank(JSON.stringify(params))
+    await window.projectB!.draftCalcDraftRank(JSON.stringify(params))
   ) as DraftRankResult;
 }

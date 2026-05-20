@@ -70,7 +70,7 @@ async function simulateNpcGame(homeTeamId: string, awayTeamId: string): Promise<
   if (entities.length > 0) {
     return (await simulateGame(homeTeamId, awayTeamId, entities)).result;
   }
-  const fb = JSON.parse(await (window as any).projectB.weekCalcNpcFallback(
+  const fb = JSON.parse(await window.projectB!.weekCalcNpcFallback(
     JSON.stringify({ homeTeamId, awayTeamId })
   )) as { homeScore: number; awayScore: number; winnerId: string; loserId: string };
   return { homeScore: fb.homeScore, awayScore: fb.awayScore, winnerId: fb.winnerId, loserId: fb.loserId, playerLines: [], events: [] };
@@ -160,7 +160,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   const coachTeaching  = (pitchCoach?.details as import("../stores/master").EntityDetails)?.coach?.stats?.teaching ?? 50;
   const coachEffBonus  = Math.max(-0.10, Math.min(0.20, (coachTeaching - 50) * 0.004));
   const teamRef        = m.teams.find((t) => t.id === g.protagonist.teamId);
-  const facilityEffMod = JSON.parse(await (window as any).projectB.weekCalcFacilityEff(
+  const facilityEffMod = JSON.parse(await window.projectB!.weekCalcFacilityEff(
     JSON.stringify({ careerStage: g.protagonist.careerStage, teamTier: teamRef?.tier ?? null })
   )) as number;
 
@@ -170,7 +170,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   const slumpPenalty       = newLowMoraleWeeks >= 3 ? 0.70 : 1.0;
 
   const alreadyInjured = !!g.protagonist.injury;
-  const injuryCalc = JSON.parse(await (window as any).projectB.weekCalcInjury(JSON.stringify({
+  const injuryCalc = JSON.parse(await window.projectB!.weekCalcInjury(JSON.stringify({
     fatigue: g.protagonist.fatigue,
     consecutiveHighFatigueWeeks: g.protagonist.consecutiveHighFatigueWeeks ?? 0,
     hasInjury: alreadyInjured,
@@ -204,7 +204,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   growth.protagonistPatch.consecutiveHighFatigueWeeks = injuryCalc.newConsecutiveHighFatigueWeeks;
   growth.protagonistPatch.injury                      = injuryUpdate;
 
-  const weeklyNet = JSON.parse(await (window as any).projectB.weekCalcWeeklyNet(
+  const weeklyNet = JSON.parse(await window.projectB!.weekCalcWeeklyNet(
     JSON.stringify({ careerStage: g.protagonist.careerStage, salary: g.protagonist.contract?.salary ?? null })
   )) as number;
   gameStore.applyMoneyChange(weeklyNet);
@@ -231,7 +231,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     triggeredEvents: sForEvent.triggeredEvents,
   };
   const randCount = m.eventPools.length + m.eventPools.reduce((s, p) => s + p.maxPicksPerWeek, 0);
-  const eventRands = JSON.parse(await (window as any).projectB.weekRollRandomBatch(randCount)) as number[];
+  const eventRands = JSON.parse(await window.projectB!.weekRollRandomBatch(randCount)) as number[];
   const evResult = runEventEngine(
     m.eventRules, m.eventPools,
     new Map(m.messageTmpls.map((t) => [t.id, t])),
@@ -315,7 +315,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     const avgPct = subjects.length ? subjects.reduce((a, s2) => a + s2.percentile, 0) / subjects.length : 50;
     const univChoices = gDraft.schoolState.fallbackUniversityChoices.slice(0, 3);
     const indieChoices = gDraft.schoolState.fallbackIndependentChoices.slice(0, 3);
-    const admissionsCalc = JSON.parse(await (window as any).projectB.weekCalcHsAdmissions(JSON.stringify({
+    const admissionsCalc = JSON.parse(await window.projectB!.weekCalcHsAdmissions(JSON.stringify({
       ovr: p.pitching.ovr, avgPct, univChoices, indieChoices,
     }))) as { univPassed: string[]; indiePassed: string[]; sportsPassed: boolean };
     const univPassed  = admissionsCalc.univPassed;
@@ -382,7 +382,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       .filter((t) => t.leagueId === gTrade.protagonist.leagueId && t.id !== gTrade.protagonist.teamId)
       .map((t) => t.id);
     if (sameLeagueTeams.length > 0) {
-      const tradeCalc = JSON.parse(await (window as any).projectB.weekCalcTradeRumor(JSON.stringify({
+      const tradeCalc = JSON.parse(await window.projectB!.weekCalcTradeRumor(JSON.stringify({
         era: myEra, myRank, totalTeams: standings.length, weekInYear, sameLeagueTeams,
       }))) as { shouldTrigger: boolean; toTeamId: string | null };
       if (tradeCalc.shouldTrigger && tradeCalc.toTeamId) {
@@ -755,7 +755,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       gameStore.advanceMilitaryWeek();
       const isSportsUnit = g.protagonist.militaryUnit === "sports";
       const militaryEvents = get(masterStore).militaryEvents;
-      const milCalc = JSON.parse(await (window as any).projectB.weekCalcMilitary(JSON.stringify({
+      const milCalc = JSON.parse(await window.projectB!.weekCalcMilitary(JSON.stringify({
         isSportsUnit,
         stamina:  g.protagonist.pitching.stamina,
         recovery: g.protagonist.pitching.recovery,

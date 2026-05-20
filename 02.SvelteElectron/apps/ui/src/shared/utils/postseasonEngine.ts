@@ -15,7 +15,7 @@ export function getActiveSeries(bracket: PostseasonSeries[]): PostseasonSeries |
 
 // ── Rust IPC 래퍼 ────────────────────────────────────────────────
 export async function buildKblBracket(standings: Standing[]): Promise<PostseasonSeries[]> {
-  const raw = await (window as any).projectB.postseasonBuildKbl(
+  const raw = await window.projectB!.postseasonBuildKbl(
     JSON.stringify({ standings })
   );
   return JSON.parse(raw);
@@ -25,21 +25,21 @@ export async function buildAblBracket(
   eastStandings: Standing[],
   westStandings: Standing[],
 ): Promise<PostseasonSeries[]> {
-  const raw = await (window as any).projectB.postseasonBuildAbl(
+  const raw = await window.projectB!.postseasonBuildAbl(
     JSON.stringify({ eastStandings, westStandings })
   );
   return JSON.parse(raw);
 }
 
 export async function buildUnivBracket(standings: Standing[]): Promise<PostseasonSeries[]> {
-  const raw = await (window as any).projectB.postseasonBuildUniv(
+  const raw = await window.projectB!.postseasonBuildUniv(
     JSON.stringify({ standings })
   );
   return JSON.parse(raw);
 }
 
 export async function buildIndBracket(standings: Standing[]): Promise<PostseasonSeries[]> {
-  const raw = await (window as any).projectB.postseasonBuildInd(
+  const raw = await window.projectB!.postseasonBuildInd(
     JSON.stringify({ standings })
   );
   return JSON.parse(raw);
@@ -49,7 +49,7 @@ export async function applyGameToSeries(
   series: PostseasonSeries,
   winnerId: string,
 ): Promise<PostseasonSeries> {
-  const raw = await (window as any).projectB.postseasonApplyGame(
+  const raw = await window.projectB!.postseasonApplyGame(
     JSON.stringify({ series, winnerId })
   );
   return JSON.parse(raw);
@@ -59,7 +59,7 @@ export async function fillNextSeries(
   bracket: PostseasonSeries[],
   completed: PostseasonSeries,
 ): Promise<PostseasonSeries[]> {
-  const raw = await (window as any).projectB.postseasonFillNext(
+  const raw = await window.projectB!.postseasonFillNext(
     JSON.stringify({ bracket, completed })
   );
   return JSON.parse(raw);
@@ -69,7 +69,7 @@ export async function resolveNonProtagonistSeries(
   bracket: PostseasonSeries[],
   protagonistTeamId: string,
 ): Promise<PostseasonSeries[]> {
-  const raw = await (window as any).projectB.postseasonResolveNpc(
+  const raw = await window.projectB!.postseasonResolveNpc(
     JSON.stringify({ bracket, protagonistTeamId })
   );
   return JSON.parse(raw);
@@ -82,7 +82,7 @@ export async function makeSeriesGame(
   protagonistTeamId: string,
   seasonYear: number,
 ): Promise<ScheduleEntry> {
-  const raw = await (window as any).projectB.postseasonMakeGame(
+  const raw = await window.projectB!.postseasonMakeGame(
     JSON.stringify({ series, gameNum, baseWeek, protagonistTeamId, seasonYear })
   );
   return JSON.parse(raw);
@@ -91,7 +91,7 @@ export async function makeSeriesGame(
 export async function shuffleAblConferences(
   allTeams: string[],
 ): Promise<{ east: string[]; west: string[] }> {
-  const raw = await (window as any).projectB.postseasonShuffleAbl(
+  const raw = await window.projectB!.postseasonShuffleAbl(
     JSON.stringify({ allTeams })
   );
   return JSON.parse(raw);

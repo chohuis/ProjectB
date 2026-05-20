@@ -26,7 +26,7 @@ export async function generateHsSchedule(
   protagonistTeamId: string,
   seasonYear = 2026,
 ): Promise<ScheduleEntry[]> {
-  const raw = await (window as any).projectB.scheduleHs(
+  const raw = await window.projectB!.scheduleHs(
     JSON.stringify({ groupA, groupB, protagonistTeamId, seasonYear })
   );
   return JSON.parse(raw);
@@ -41,7 +41,7 @@ export async function generateLeagueSchedule(
   protagonistTeamId: string,
   seasonYear = 2026,
 ): Promise<ScheduleEntry[]> {
-  const raw = await (window as any).projectB.scheduleLeague(
+  const raw = await window.projectB!.scheduleLeague(
     JSON.stringify({ leagueId, teams, startWeek, endWeek, cycles, protagonistTeamId, seasonYear })
   );
   return JSON.parse(raw);
@@ -52,7 +52,7 @@ export async function generateAllLeagueSchedules(
   protagonistTeamId: string,
   seasonYear = 2026,
 ): Promise<Record<string, ScheduleEntry[]>> {
-  const raw = await (window as any).projectB.scheduleAllLeagues(
+  const raw = await window.projectB!.scheduleAllLeagues(
     JSON.stringify({ configs, protagonistTeamId, seasonYear })
   );
   return JSON.parse(raw);
@@ -61,7 +61,7 @@ export async function generateAllLeagueSchedules(
 export async function shuffleHsGroups(
   allTeams: string[] = HS_ALL_TEAMS,
 ): Promise<{ groupA: string[]; groupB: string[] }> {
-  const raw = await (window as any).projectB.scheduleShuffleHsGroups(
+  const raw = await window.projectB!.scheduleShuffleHsGroups(
     JSON.stringify({ allTeams })
   );
   return JSON.parse(raw);

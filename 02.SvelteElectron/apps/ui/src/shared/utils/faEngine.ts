@@ -25,7 +25,7 @@ export async function generateFaOffers(
     teams:           teams.map((t) => ({ id: t.id, leagueId: t.leagueId })),
   };
   return JSON.parse(
-    await (window as any).projectB.faGenerateOffers(JSON.stringify(params))
+    await window.projectB!.faGenerateOffers(JSON.stringify(params))
   ) as FaOffer[];
 }
 

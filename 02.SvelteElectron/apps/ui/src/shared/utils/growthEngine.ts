@@ -31,7 +31,7 @@ export async function calcTrainingGrowth(
   };
 
   const raw = JSON.parse(
-    await (window as any).projectB.growthCalcTraining(JSON.stringify(params))
+    await window.projectB!.growthCalcTraining(JSON.stringify(params))
   );
 
   const patch: Partial<ProtagonistSave> = { ...raw.protagonistPatch };
@@ -74,7 +74,7 @@ export async function calcGameGrowth(
   };
 
   const raw = JSON.parse(
-    await (window as any).projectB.growthCalcGame(JSON.stringify(params))
+    await window.projectB!.growthCalcGame(JSON.stringify(params))
   );
 
   const patch: Partial<ProtagonistSave> = { ...raw.protagonistPatch };

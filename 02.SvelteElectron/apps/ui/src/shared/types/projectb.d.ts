@@ -94,6 +94,59 @@ declare global {
       renameSlot: (payload: { slotId: string; name: string }) => Promise<{ ok: boolean; error?: string }>;
       // ── 주 진행 ────────────────────────────────────────────
       dayAdvance: (state: CoreGameState) => Promise<DayAdvanceResult>;
+      // ── NPC 시뮬 ───────────────────────────────────────────
+      npcSimGame:                   (p: string) => Promise<string>;
+      npcRunOffseason:              (p: string) => Promise<string>;
+      npcAdvanceGrades:             (p: string) => Promise<string>;
+      npcGenerateFreshmen:          (p: string) => Promise<string>;
+      npcRunDraft:                  (p: string) => Promise<string>;
+      npcApplyDraft:                (p: string) => Promise<string>;
+      npcDetermineProtagonistDraft: (p: string) => Promise<string>;
+      npcAdvanceProtagonistGrade:   (p: string) => Promise<string>;
+      // ── 성장 엔진 ───────────────────────────────────────────
+      growthCalcTraining: (p: string) => Promise<string>;
+      growthCalcGame:     (p: string) => Promise<string>;
+      // ── 플레이어 엔진 ──────────────────────────────────────
+      careerResolveChoice:                   (p: string) => Promise<string>;
+      pitcherAssignHighschoolPosition:       (p: string) => Promise<string>;
+      pitcherAssignRole:                     (p: string) => Promise<string>;
+      pitcherRelieverWouldPitch:             (p: string) => Promise<string>;
+      salaryCalcSeasonRating:                (p: string) => Promise<string>;
+      salaryCalcMarketSalary:                (p: string) => Promise<string>;
+      salaryCalcOfferedSalary:               (p: string) => Promise<string>;
+      salaryCalcOfferedSalaryForProtagonist: (p: string) => Promise<string>;
+      faGenerateOffers:                      (p: string) => Promise<string>;
+      draftCalcDraftRank:                    (p: string) => Promise<string>;
+      // ── 스케줄 엔진 ────────────────────────────────────────
+      scheduleGeneric:           (p: string) => Promise<string>;
+      scheduleKbl:               (p: string) => Promise<string>;
+      scheduleAbl:               (p: string) => Promise<string>;
+      scheduleHs:                (p: string) => Promise<string>;
+      scheduleLeague:            (p: string) => Promise<string>;
+      scheduleAllLeagues:        (p: string) => Promise<string>;
+      scheduleHsPostseasonSemis: (p: string) => Promise<string>;
+      scheduleHsPostseasonFinal: (p: string) => Promise<string>;
+      scheduleShuffleHsGroups:   (p: string) => Promise<string>;
+      // ── 포스트시즌 엔진 ────────────────────────────────────
+      postseasonBuildKbl:   (p: string) => Promise<string>;
+      postseasonBuildAbl:   (p: string) => Promise<string>;
+      postseasonBuildUniv:  (p: string) => Promise<string>;
+      postseasonBuildInd:   (p: string) => Promise<string>;
+      postseasonApplyGame:  (p: string) => Promise<string>;
+      postseasonFillNext:   (p: string) => Promise<string>;
+      postseasonResolveNpc: (p: string) => Promise<string>;
+      postseasonMakeGame:   (p: string) => Promise<string>;
+      postseasonShuffleAbl: (p: string) => Promise<string>;
+      // ── 주간 엔진 ──────────────────────────────────────────
+      weekCalcFacilityEff:  (p: string) => Promise<string>;
+      weekCalcWeeklyNet:    (p: string) => Promise<string>;
+      weekCalcInjury:       (p: string) => Promise<string>;
+      weekCalcHsAdmissions: (p: string) => Promise<string>;
+      weekCalcTradeRumor:   (p: string) => Promise<string>;
+      weekCalcExamResult:   (p: string) => Promise<string>;
+      weekCalcMilitary:     (p: string) => Promise<string>;
+      weekCalcNpcFallback:  (p: string) => Promise<string>;
+      weekRollRandomBatch:  (count: number) => Promise<string>;
       // ── 마스터 데이터 (Electron 패키징 환경용 fallback) ──────
       masterFetch: (relPath: string) => Promise<unknown>;
       masterLoadEntities: (leagueId: string) => Promise<unknown[]>;
@@ -136,6 +189,7 @@ declare global {
         smokeGate?: { ok: boolean; failures: string[] };
         thresholds?: MatchEngineSmokeThresholds;
       }>;
+      onContentChanged?: (cb: (data: unknown) => void) => void;
     };
   }
 }

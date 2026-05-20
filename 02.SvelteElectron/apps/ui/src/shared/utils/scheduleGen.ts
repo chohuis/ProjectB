@@ -28,7 +28,7 @@ export async function generateSchedule(
   postseasonEnd = 44,
   seasonYear = 2026,
 ): Promise<ScheduleEntry[]> {
-  const raw = await (window as any).projectB.scheduleGeneric(
+  const raw = await window.projectB!.scheduleGeneric(
     JSON.stringify({ teamIds, protagonistTeamId, totalWeeks, seasonStart, seasonEnd, postseasonEnd, seasonYear })
   );
   return JSON.parse(raw);
@@ -39,7 +39,7 @@ export async function generateKblSchedule(
   protagonistTeamId: string,
   seasonYear = 2026,
 ): Promise<ScheduleEntry[]> {
-  const raw = await (window as any).projectB.scheduleKbl(
+  const raw = await window.projectB!.scheduleKbl(
     JSON.stringify({ teamIds, protagonistTeamId, seasonYear })
   );
   return JSON.parse(raw);
@@ -50,7 +50,7 @@ export async function generateAblSchedule(
   protagonistTeamId: string,
   seasonYear = 2026,
 ): Promise<ScheduleEntry[]> {
-  const raw = await (window as any).projectB.scheduleAbl(
+  const raw = await window.projectB!.scheduleAbl(
     JSON.stringify({ teamIds, protagonistTeamId, seasonYear })
   );
   return JSON.parse(raw);
@@ -62,7 +62,7 @@ export async function generateHsPostseasonSemis(
   week: number,
   seasonYear = 2026,
 ): Promise<ScheduleEntry[]> {
-  const raw = await (window as any).projectB.scheduleHsPostseasonSemis(
+  const raw = await window.projectB!.scheduleHsPostseasonSemis(
     JSON.stringify({ top4, protagonistTeamId, week, seasonYear })
   );
   return JSON.parse(raw);
@@ -75,7 +75,7 @@ export async function generateHsPostseasonFinal(
   week: number,
   seasonYear = 2026,
 ): Promise<ScheduleEntry> {
-  const raw = await (window as any).projectB.scheduleHsPostseasonFinal(
+  const raw = await window.projectB!.scheduleHsPostseasonFinal(
     JSON.stringify({ winnerA, winnerB, protagonistTeamId, week, seasonYear })
   );
   return JSON.parse(raw);

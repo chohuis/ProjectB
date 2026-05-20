@@ -115,7 +115,7 @@ export async function resolveChoice(
   avgGrade: number,
 ): Promise<CareerStep> {
   return JSON.parse(
-    await (window as any).projectB.careerResolveChoice(
+    await window.projectB!.careerResolveChoice(
       JSON.stringify({ step, choiceId, ovr, avgGrade })
     )
   ) as CareerStep;

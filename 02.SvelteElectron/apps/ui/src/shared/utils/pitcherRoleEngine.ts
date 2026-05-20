@@ -18,7 +18,7 @@ export async function assignHighschoolPosition(
     .map((e) => (e.details as any)?.player?.pitching?.ovr ?? 0);
 
   const result = JSON.parse(
-    await (window as any).projectB.pitcherAssignHighschoolPosition(
+    await window.projectB!.pitcherAssignHighschoolPosition(
       JSON.stringify({ myOvr, teamPitcherOvrs })
     )
   );
@@ -45,7 +45,7 @@ export async function assignProtagonistRole(
     .map((e) => (e.details as any)?.player?.pitching?.ovr ?? 50);
 
   const result = JSON.parse(
-    await (window as any).projectB.pitcherAssignRole(
+    await window.projectB!.pitcherAssignRole(
       JSON.stringify({ position: protagonist.position, ovr: myOvr, teamSpOvrs })
     )
   );
@@ -56,7 +56,7 @@ export async function assignProtagonistRole(
 
 export async function relieverWouldPitch(role: PitcherRole): Promise<boolean> {
   const result = JSON.parse(
-    await (window as any).projectB.pitcherRelieverWouldPitch(JSON.stringify({ role }))
+    await window.projectB!.pitcherRelieverWouldPitch(JSON.stringify({ role }))
   );
   return result.wouldPitch as boolean;
 }

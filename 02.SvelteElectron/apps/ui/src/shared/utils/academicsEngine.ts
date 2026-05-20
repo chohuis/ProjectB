@@ -75,7 +75,7 @@ export async function calcExamResult(
   warningCount: number,
   examType: "midterm" | "final",
 ): Promise<ExamResult> {
-  const raw = JSON.parse(await (window as any).projectB.weekCalcExamResult(
+  const raw = JSON.parse(await window.projectB!.weekCalcExamResult(
     JSON.stringify({ accumScore, warningCount, examType })
   )) as ExamResult;
   return raw;

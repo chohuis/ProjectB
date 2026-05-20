@@ -295,7 +295,7 @@
       contacts = contacts.map((c) => (c.id === editing!.id ? editing! : c));
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const saver = (window as any).projectB?.masterSave;
+      const saver = window.projectB!?.masterSave;
       if (!saver) { alert("masterSave IPC 없음"); return; }
 
       await saver({ relPath: `characters/${editing.id}.json`, data: editing, backup: false });
