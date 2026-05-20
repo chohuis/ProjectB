@@ -14,7 +14,7 @@ import type { EventContext } from "../types/event";
 import type { MessageItem } from "../types/main";
 import type { ProtagonistSave } from "../types/save";
 import { toGameDate, generateHsPostseasonSemis, generateHsPostseasonFinal } from "../utils/scheduleGen";
-import { assignProtagonistRole, ROLE_DESCRIPTION, isReliefsRole, relieverWouldPitch } from "../utils/pitcherRoleEngine";
+import { assignProtagonistRole, assignHighschoolPosition, ROLE_DESCRIPTION, isReliefsRole, relieverWouldPitch } from "../utils/pitcherRoleEngine";
 import {
   buildKblBracket, buildAblBracket, buildUnivBracket, buildIndBracket,
   applyGameToSeries, fillNextSeries, resolveNonProtagonistSeries,
@@ -140,21 +140,44 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   const m = get(masterStore);
   const logs: string[] = [];
 
-  // W1: 투수 역할 배정 + 시즌 시작 브리핑
+  // W1: 투수 포지션/역할 배정 + 시즌 시작 브리핑
   if (weekNum === 1 && g.protagonist.playerType === "pitcher") {
-    const role = assignProtagonistRole(g.protagonist, m.entities);
-    gameStore.setCurrentRole(role);
-    gameStore.addMessage({
-      id: `msg-season-brief-${Date.now()}`,
-      category: "system",
-      sender: "코칭스태프",
-      subject: `${s.seasonYear}시즌 시작 브리핑`,
-      preview: `이번 시즌 역할: ${role}`,
-      body: `이번 시즌 당신의 역할은 [${role}]로 배정되었습니다.\n\n${ROLE_DESCRIPTION[role]}\n\n팀과 함께 최고의 시즌을 만들어 가세요.`,
-      createdAt: `W1`,
-      readAt: null,
-    });
-    logs.push(`[역할 배정] ${role}`);
+    if (g.protagonist.careerStage === "highschool") {
+      // 고교: SP / RP 두 범주만 사용
+      const pos = assignHighschoolPosition(g.protagonist, m.entities);
+      const posLabel = pos === "SP" ? "선발 투수" : "중계 투수";
+      gameStore.setPosition(pos);
+      gameStore.setCurrentRole(pos === "SP" ? "1선발" : "중간계투");
+      gameStore.addMessage({
+        id: `msg-season-brief-${Date.now()}`,
+        category: "system",
+        sender: "코칭스태프",
+        subject: `${s.seasonYear}시즌 시작 브리핑`,
+        preview: `이번 시즌 보직: ${posLabel}`,
+        body: `이번 시즌 당신의 보직은 [${posLabel}]로 배정되었습니다.\n\n팀과 함께 최고의 시즌을 만들어 가세요.`,
+        createdAt: `W1`,
+        readAt: null,
+      });
+      logs.push(`[보직 배정] ${posLabel}`);
+    } else {
+      // 프로(대학·독립 포함): 상세 역할 배정
+      const role = assignProtagonistRole(g.protagonist, m.entities);
+      const pos: "SP" | "RP" | "CP" =
+        role === "마무리" ? "CP" : isReliefsRole(role) ? "RP" : "SP";
+      gameStore.setPosition(pos);
+      gameStore.setCurrentRole(role);
+      gameStore.addMessage({
+        id: `msg-season-brief-${Date.now()}`,
+        category: "system",
+        sender: "코칭스태프",
+        subject: `${s.seasonYear}시즌 시작 브리핑`,
+        preview: `이번 시즌 역할: ${role}`,
+        body: `이번 시즌 당신의 역할은 [${role}]로 배정되었습니다.\n\n${ROLE_DESCRIPTION[role]}\n\n팀과 함께 최고의 시즌을 만들어 가세요.`,
+        createdAt: `W1`,
+        readAt: null,
+      });
+      logs.push(`[역할 배정] ${role}`);
+    }
   }
 
   const isUniversity = g.protagonist.careerStage === "university";

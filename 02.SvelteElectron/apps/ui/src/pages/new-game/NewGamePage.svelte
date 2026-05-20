@@ -1,9 +1,11 @@
 <script lang="ts">
+  import { get } from "svelte/store";
   import { masterStore } from "../../shared/stores/master";
   import { gameStore } from "../../shared/stores/game";
   import { seasonStore } from "../../shared/stores/season";
   import { generateSchedule } from "../../shared/utils/scheduleGen";
   import { HS_SELECTABLE_TEAMS, shuffleHsGroups } from "../../shared/utils/leagueScheduler";
+  import { assignHighschoolPosition } from "../../shared/utils/pitcherRoleEngine";
   import type { Handedness, PitchEntry, PitchingForm, ProtagonistSave } from "../../shared/types/save";
 
   export let onComplete: () => void;
@@ -122,7 +124,7 @@
       grade: 1,
       age: 17,
       playerType: "pitcher",
-      position: "",
+      position: assignHighschoolPosition({ teamId: selectedTeamId, pitching: preset.pitching }, get(masterStore).entities),
       handedness,
       pitchingForm,
       jerseyNumber: 18,

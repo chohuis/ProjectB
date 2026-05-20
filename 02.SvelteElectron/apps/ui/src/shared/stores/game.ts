@@ -770,6 +770,10 @@ function createGameStore() {
       update((s) => ({ ...s, protagonist: { ...s.protagonist, currentRole: role } }));
     },
 
+    setPosition(pos: "SP" | "RP" | "CP") {
+      update((s) => ({ ...s, protagonist: { ...s.protagonist, position: pos } }));
+    },
+
     setTrainingPlan(plan: Partial<TrainingPlanState>) {
       update((s) => ({ ...s, trainingPlan: { ...s.trainingPlan, ...plan } }));
     },

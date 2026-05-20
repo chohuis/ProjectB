@@ -1,6 +1,26 @@
 import type { ProtagonistSave, PitcherRole } from "../types/save";
 import type { EntityRow } from "../stores/master";
 
+// ── 고교 투수 포지션 3분류 (SP / RP) ─────────────────────────
+// 고교는 마무리(CP) 전담 구분 없음 → SP / RP 두 범주만 사용
+export function assignHighschoolPosition(
+  protagonist: Pick<ProtagonistSave, "teamId" | "pitching">,
+  entities: EntityRow[],
+): "SP" | "RP" {
+  const myOvr = protagonist.pitching.ovr;
+  const teamPitchers = entities.filter(
+    (e) =>
+      e.teamId === protagonist.teamId &&
+      e.role === "player" &&
+      (e.details as any)?.player?.playerType === "pitcher",
+  );
+  const higherCount = teamPitchers.filter(
+    (e) => ((e.details as any)?.player?.pitching?.ovr ?? 0) > myOvr,
+  ).length;
+  // 팀 내 나보다 OVR 높은 투수가 2명 이하 → 선발, 3명 이상 → 중계
+  return higherCount <= 2 ? "SP" : "RP";
+}
+
 function teamPitcherOvr(e: EntityRow): number {
   return (e.details as { player?: { pitching?: { ovr?: number } } }).player?.pitching?.ovr ?? 50;
 }
