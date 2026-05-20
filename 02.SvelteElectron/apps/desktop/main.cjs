@@ -1,7 +1,7 @@
 const path = require("node:path");
 const fs = require("node:fs");
 const { pathToFileURL } = require("node:url");
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, session } = require("electron");
 const Database = require("better-sqlite3");
 
 // 패키징 여부에 따라 asarUnpack 실제 경로 vs 개발 경로 반환
@@ -191,6 +191,8 @@ async function applyTuningFromFile(resourceBase, tuningSchema) {
 }
 
 function createWindow() {
+  const isDev = !!process.env.VITE_DEV_SERVER_URL;
+
   const win = new BrowserWindow({
     width: 1440, height: 900, minWidth: 1200, minHeight: 720,
     autoHideMenuBar: true,
@@ -198,11 +200,26 @@ function createWindow() {
       preload: path.join(__dirname, "preload.cjs"),
       contextIsolation: true,
       nodeIntegration: false,
+      sandbox: true,
     },
   });
-  const devServerUrl = process.env.VITE_DEV_SERVER_URL;
-  if (devServerUrl) {
-    win.loadURL(devServerUrl);
+
+  // 허용된 origin 외 네비게이션 차단
+  win.webContents.on("will-navigate", (event, url) => {
+    const allowed = isDev ? /^http:\/\/localhost:5173/ : /^file:\/\//;
+    if (!allowed.test(url)) event.preventDefault();
+  });
+
+  // 새 창(팝업) 차단
+  win.webContents.setWindowOpenHandler(() => ({ action: "deny" }));
+
+  // 프로덕션에서 DevTools 차단
+  if (!isDev) {
+    win.webContents.on("devtools-opened", () => win.webContents.closeDevTools());
+  }
+
+  if (isDev) {
+    win.loadURL(process.env.VITE_DEV_SERVER_URL);
     win.webContents.openDevTools({ mode: "detach" });
   } else {
     win.loadFile(path.resolve(__dirname, "../../dist/ui/index.html"));
@@ -1688,6 +1705,31 @@ app.whenReady().then(() => {
     } catch (e) {
       return { ok: false, error: String(e?.message ?? e) };
     }
+  });
+
+  // CSP 헤더 주입 (dev/prod 분기)
+  const isDev = !!process.env.VITE_DEV_SERVER_URL;
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    const csp = isDev
+      ? [
+          "default-src 'self' 'unsafe-eval'",
+          "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
+          "connect-src 'self' ws://localhost:5173 http://localhost:5173",
+          "style-src 'self' 'unsafe-inline'",
+        ].join("; ")
+      : [
+          "default-src 'self'",
+          "script-src 'self'",
+          "style-src 'self' 'unsafe-inline'",
+          "img-src 'self' data:",
+          "font-src 'self' data:",
+        ].join("; ");
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        "Content-Security-Policy": [csp],
+      },
+    });
   });
 
   _mainWindow = createWindow();

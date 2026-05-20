@@ -31,6 +31,7 @@
     "deploy": "node scripts/deploy-staging.mjs",
     "migrate:entities": "node scripts/migrate-entities.mjs",
     "migrate:append:jbl": "node scripts/migrate-entities.mjs -- --append people_jbl.json",
+    "audit": "npm audit --audit-level=high",
     "postinstall": "electron-rebuild -f -w better-sqlite3"
   },
   "build": {
