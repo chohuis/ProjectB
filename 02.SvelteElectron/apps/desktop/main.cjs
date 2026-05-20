@@ -4,6 +4,15 @@ const { pathToFileURL } = require("node:url");
 const { app, BrowserWindow, ipcMain } = require("electron");
 const Database = require("better-sqlite3");
 
+// 패키징 여부에 따라 asarUnpack 실제 경로 vs 개발 경로 반환
+// asarUnpack 대상(resource/, packages/*/dist/)은 app.asar.unpacked/ 에 위치
+function unpackedPath(...segments) {
+  if (app.isPackaged) {
+    return path.join(process.resourcesPath, "app.asar.unpacked", ...segments);
+  }
+  return path.resolve(__dirname, "../..", ...segments);
+}
+
 let activeMatchState = null;
 let coreModulePromise = null;
 const tuningRelPath = "balance/match_engine_tuning.json";
@@ -20,7 +29,7 @@ const SMOKE_THRESHOLDS = {
 
 function loadCoreModule() {
   if (!coreModulePromise) {
-    const coreDistPath = path.resolve(__dirname, "../../packages/core/dist/index.js");
+    const coreDistPath = unpackedPath("packages", "core", "dist", "index.js");
     coreModulePromise = import(pathToFileURL(coreDistPath).href);
   }
   return coreModulePromise;
@@ -1285,8 +1294,8 @@ function migrateOldDb(newDb, oldDbPath) {
 }
 
 app.whenReady().then(() => {
-  const resourceBase = path.resolve(__dirname, "../../resource/data/master");
-  const masterDbPath = path.resolve(__dirname, "../../resource/master.db");
+  const resourceBase = unpackedPath("resource", "data", "master");
+  const masterDbPath = unpackedPath("resource", "master.db");
   const rootDir      = path.resolve(__dirname, "../../");
   const tuningSchema = loadTuningSchema(resourceBase);
   const userDataDir  = app.getPath("userData");

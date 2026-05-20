@@ -23,6 +23,7 @@
     "build": "npm run build:masterdb && npm run build:packages && npm run build:ui",
     "preview:ui": "vite preview --config vite.config.ts",
     "start": "electron apps/desktop/main.cjs",
+    "pack": "npm run build && electron-builder --dir",
     "check:i18n:keys": "node scripts/check-i18n-keys.mjs",
     "check:mojibake": "node scripts/check-mojibake.mjs",
     "check:encoding": "npm run check:mojibake",
@@ -31,6 +32,34 @@
     "migrate:entities": "node scripts/migrate-entities.mjs",
     "migrate:append:jbl": "node scripts/migrate-entities.mjs -- --append people_jbl.json",
     "postinstall": "electron-rebuild -f -w better-sqlite3"
+  },
+  "build": {
+    "appId": "com.projectb.desktop",
+    "productName": "ProjectB",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "apps/desktop/**",
+      "dist/ui/**",
+      "packages/*/dist/**",
+      "resource/**",
+      "!resource/data/staging/**",
+      "!scripts/**",
+      "!docs/**"
+    ],
+    "asarUnpack": [
+      "resource/**",
+      "packages/*/dist/**"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "dir"
+        }
+      ]
+    },
+    "npmRebuild": true
   },
   "dependencies": {
     "better-sqlite3": "^12.10.0",
@@ -43,6 +72,7 @@
     "concurrently": "^9.2.0",
     "cross-env": "^7.0.3",
     "electron": "^33.2.0",
+    "electron-builder": "^25.1.8",
     "typescript": "^5.8.3",
     "vite": "^6.2.2"
   }

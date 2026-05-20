@@ -11,6 +11,7 @@ export default defineConfig({
       "@core": path.resolve(__dirname, "packages/core/src"),
     }
   },
+  base: "./",
   build: {
     outDir: path.resolve(__dirname, "dist/ui"),
     emptyOutDir: true
