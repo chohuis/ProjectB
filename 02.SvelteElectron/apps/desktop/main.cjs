@@ -2,7 +2,7 @@ const path = require("node:path");
 const fs = require("node:fs");
 const { pathToFileURL } = require("node:url");
 const { createHmac, createHash } = require("node:crypto");
-const { app, BrowserWindow, ipcMain, session } = require("electron");
+const { app, BrowserWindow, ipcMain, session, protocol, net } = require("electron");
 const Database = require("better-sqlite3");
 
 // 패키징 여부에 따라 asarUnpack 실제 경로 vs 개발 경로 반환
@@ -261,7 +261,7 @@ function createWindow() {
 
   // 허용된 origin 외 네비게이션 차단
   win.webContents.on("will-navigate", (event, url) => {
-    const allowed = isDev ? /^http:\/\/localhost:5173/ : /^file:\/\//;
+    const allowed = isDev ? /^http:\/\/localhost:5173/ : /^app:\/\/bundle\//;
     if (!allowed.test(url)) event.preventDefault();
   });
 
@@ -277,7 +277,7 @@ function createWindow() {
     win.loadURL(process.env.VITE_DEV_SERVER_URL);
     win.webContents.openDevTools({ mode: "detach" });
   } else {
-    win.loadFile(path.resolve(__dirname, "../../dist/ui/index.html"));
+    win.loadURL("app://bundle/index.html");
   }
   return win;
 }
@@ -1372,6 +1372,12 @@ function migrateOldDb(newDb, oldDbPath) {
   }
 }
 
+// app.ready 이전에 호출 필수
+protocol.registerSchemesAsPrivileged([{
+  scheme: "app",
+  privileges: { secure: true, standard: true, supportFetchAPI: true, corsEnabled: true },
+}]);
+
 app.whenReady().then(() => {
   const resourceBase = unpackedPath("resource", "data", "master");
   const masterDbPath = unpackedPath("resource", "master.db");
@@ -1831,6 +1837,20 @@ app.whenReady().then(() => {
       },
     });
   });
+
+  // app:// 커스텀 프로토콜 핸들러 (프로덕션 전용)
+  if (!isDev) {
+    const uiRoot = path.resolve(__dirname, "../../dist/ui");
+    protocol.handle("app", (request) => {
+      const url = new URL(request.url);
+      const relPath = url.pathname === "/" ? "/index.html" : url.pathname;
+      const filePath = path.join(uiRoot, relPath);
+      if (!filePath.startsWith(uiRoot + path.sep) && filePath !== uiRoot) {
+        return new Response("Forbidden", { status: 403 });
+      }
+      return net.fetch(`file://${filePath}`);
+    });
+  }
 
   _mainWindow = createWindow();
 

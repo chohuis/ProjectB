@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => ({
       "@core": path.resolve(__dirname, "packages/core/src"),
     }
   },
-  base: "./",
+  base: mode === "production" ? "app://bundle/" : "./",
   build: {
     outDir: path.resolve(__dirname, "dist/ui"),
     emptyOutDir: true,
