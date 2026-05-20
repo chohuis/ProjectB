@@ -1915,6 +1915,82 @@ app.whenReady().then(() => {
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
 
+  // ── 스케줄 엔진 (Phase 5) ────────────────────────────────────────────────────
+  ipcMain.handle("schedule:generic", (_event, p) => {
+    try { return engineNative.generateScheduleNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("schedule:kbl", (_event, p) => {
+    try { return engineNative.generateKblScheduleNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("schedule:abl", (_event, p) => {
+    try { return engineNative.generateAblScheduleNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("schedule:hs", (_event, p) => {
+    try { return engineNative.generateHsScheduleNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("schedule:league", (_event, p) => {
+    try { return engineNative.generateLeagueScheduleNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("schedule:allLeagues", (_event, p) => {
+    try { return engineNative.generateAllLeagueSchedulesNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("schedule:hsPostseasonSemis", (_event, p) => {
+    try { return engineNative.generateHsPostseasonSemisNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("schedule:hsPostseasonFinal", (_event, p) => {
+    try { return engineNative.generateHsPostseasonFinalNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("schedule:shuffleHsGroups", (_event, p) => {
+    try { return engineNative.shuffleHsGroupsNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  // ── 포스트시즌 엔진 (Phase 5) ────────────────────────────────────────────────
+  ipcMain.handle("postseason:buildKbl", (_event, p) => {
+    try { return engineNative.buildKblBracketNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("postseason:buildAbl", (_event, p) => {
+    try { return engineNative.buildAblBracketNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("postseason:buildUniv", (_event, p) => {
+    try { return engineNative.buildUnivBracketNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("postseason:buildInd", (_event, p) => {
+    try { return engineNative.buildIndBracketNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("postseason:applyGame", (_event, p) => {
+    try { return engineNative.applyGameToSeriesNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("postseason:fillNext", (_event, p) => {
+    try { return engineNative.fillNextSeriesNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("postseason:resolveNpc", (_event, p) => {
+    try { return engineNative.resolveNonProtagonistSeriesNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("postseason:makeGame", (_event, p) => {
+    try { return engineNative.makeSeriesGameNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("postseason:shuffleAbl", (_event, p) => {
+    try { return engineNative.shuffleAblConferencesNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
   // CSP 헤더 주입 (dev/prod 분기)
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     const csp = isDev

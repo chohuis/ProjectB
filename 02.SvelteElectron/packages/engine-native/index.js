@@ -310,7 +310,7 @@ if (!nativeBinding) {
   throw new Error(`Failed to load native binding`)
 }
 
-const { computeSaveSig, verifySaveSig, startMatchNative, stepPitchNative, finishMatchNative, isProtagonistPitchingNative, advanceGamePhaseNative, simUntilEntry, simToGameEnd, simHalfInning, autoMoundVisitNative, requestMoundVisitNative, shouldProtagonistExitNative, runSimpleGame, simGameNative, runOffseasonNative, advanceGradesNative, generateFreshmenNative, runDraftNative, applyDraftNative, determineProtagonistDraftNative, advanceProtagonistGradeNative, calcTrainingGrowthNative, calcGameGrowthNative, resolveCareerChoiceNative, assignHighschoolPositionNative, assignProtagonistRoleNative, relieverWouldPitchNative, calcSeasonRatingNative, calcMarketSalaryNative, calcOfferedSalaryNative, calcOfferedSalaryForProtagonistNative, generateFaOffersNative, calcDraftRankNative } = nativeBinding
+const { computeSaveSig, verifySaveSig, startMatchNative, stepPitchNative, finishMatchNative, isProtagonistPitchingNative, advanceGamePhaseNative, simUntilEntry, simToGameEnd, simHalfInning, autoMoundVisitNative, requestMoundVisitNative, shouldProtagonistExitNative, runSimpleGame, simGameNative, runOffseasonNative, advanceGradesNative, generateFreshmenNative, runDraftNative, applyDraftNative, determineProtagonistDraftNative, advanceProtagonistGradeNative, calcTrainingGrowthNative, calcGameGrowthNative, resolveCareerChoiceNative, assignHighschoolPositionNative, assignProtagonistRoleNative, relieverWouldPitchNative, calcSeasonRatingNative, calcMarketSalaryNative, calcOfferedSalaryNative, calcOfferedSalaryForProtagonistNative, generateFaOffersNative, calcDraftRankNative, generateScheduleNative, generateKblScheduleNative, generateAblScheduleNative, generateHsScheduleNative, generateLeagueScheduleNative, generateAllLeagueSchedulesNative, generateHsPostseasonSemisNative, generateHsPostseasonFinalNative, shuffleHsGroupsNative, buildKblBracketNative, buildAblBracketNative, buildUnivBracketNative, buildIndBracketNative, applyGameToSeriesNative, fillNextSeriesNative, resolveNonProtagonistSeriesNative, makeSeriesGameNative, shuffleAblConferencesNative } = nativeBinding
 
 module.exports.computeSaveSig = computeSaveSig
 module.exports.verifySaveSig = verifySaveSig
@@ -346,3 +346,21 @@ module.exports.calcOfferedSalaryNative = calcOfferedSalaryNative
 module.exports.calcOfferedSalaryForProtagonistNative = calcOfferedSalaryForProtagonistNative
 module.exports.generateFaOffersNative = generateFaOffersNative
 module.exports.calcDraftRankNative = calcDraftRankNative
+module.exports.generateScheduleNative = generateScheduleNative
+module.exports.generateKblScheduleNative = generateKblScheduleNative
+module.exports.generateAblScheduleNative = generateAblScheduleNative
+module.exports.generateHsScheduleNative = generateHsScheduleNative
+module.exports.generateLeagueScheduleNative = generateLeagueScheduleNative
+module.exports.generateAllLeagueSchedulesNative = generateAllLeagueSchedulesNative
+module.exports.generateHsPostseasonSemisNative = generateHsPostseasonSemisNative
+module.exports.generateHsPostseasonFinalNative = generateHsPostseasonFinalNative
+module.exports.shuffleHsGroupsNative = shuffleHsGroupsNative
+module.exports.buildKblBracketNative = buildKblBracketNative
+module.exports.buildAblBracketNative = buildAblBracketNative
+module.exports.buildUnivBracketNative = buildUnivBracketNative
+module.exports.buildIndBracketNative = buildIndBracketNative
+module.exports.applyGameToSeriesNative = applyGameToSeriesNative
+module.exports.fillNextSeriesNative = fillNextSeriesNative
+module.exports.resolveNonProtagonistSeriesNative = resolveNonProtagonistSeriesNative
+module.exports.makeSeriesGameNative = makeSeriesGameNative
+module.exports.shuffleAblConferencesNative = shuffleAblConferencesNative

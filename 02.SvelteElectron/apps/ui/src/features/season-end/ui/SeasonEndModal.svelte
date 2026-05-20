@@ -150,7 +150,7 @@
       const allHsIds = $masterStore.teams
         .filter((t) => t.leagueId === "LEAGUE_HIGHSCHOOL")
         .map((t) => t.id);
-      const newSchedule = seasonStore.reinitHighschoolSeason(p.teamId, allHsIds);
+      const newSchedule = await seasonStore.reinitHighschoolSeason(p.teamId, allHsIds);
       seasonStore.setSchedule(newSchedule);
     }
 

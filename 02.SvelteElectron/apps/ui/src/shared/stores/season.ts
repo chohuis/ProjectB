@@ -263,26 +263,20 @@ function createSeasonStore() {
 
     // ── L1: 멀티리그 초기화 ────────────────────────────────────
     // hsGroupA/hsGroupB: NewGamePage에서 미리 셔플한 조 배정 (매 시즌 전달)
-    initAllLeagues(seasonYear: number, protagonistTeamId: string, hsGroupA: string[], hsGroupB: string[]) {
-      // protagonist가 속한 조와 NPC 조 구분
+    async initAllLeagues(seasonYear: number, protagonistTeamId: string, hsGroupA: string[], hsGroupB: string[]) {
       const protagonistGroup = hsGroupA.includes(protagonistTeamId) ? hsGroupA : hsGroupB;
       const npcGroup         = hsGroupA.includes(protagonistTeamId) ? hsGroupB : hsGroupA;
 
-      // NPC 조 스케줄만 background sim 대상으로 등록 (protagonist 조는 seasonStore.schedule에서 관리)
-      const npcHsSchedule = generateLeagueSchedule("LEAGUE_HIGHSCHOOL_NPC", npcGroup, 10, 42, 2, protagonistTeamId);
-
-      // 나머지 리그 스케줄
-      const otherSchedules = generateAllLeagueSchedules(
-        DEFAULT_LEAGUE_CONFIGS.map((c) => ({ ...c })),
-        protagonistTeamId,
-      );
+      const [npcHsSchedule, otherSchedules] = await Promise.all([
+        generateLeagueSchedule("LEAGUE_HIGHSCHOOL_NPC", npcGroup, 10, 42, 2, protagonistTeamId),
+        generateAllLeagueSchedules(DEFAULT_LEAGUE_CONFIGS.map((c) => ({ ...c })), protagonistTeamId),
+      ]);
 
       const leagueSchedules: Record<string, ScheduleEntry[]> = {
         LEAGUE_HIGHSCHOOL_NPC: npcHsSchedule,
         ...otherSchedules,
       };
 
-      // 리그별 초기 순위표 (HIGHSCHOOL 제외 — protagonist 조는 seasonStore.standings, NPC 조는 별도)
       const leagueState: Record<string, LeagueSeasonState> = {
         LEAGUE_HIGHSCHOOL_NPC: { standings: makeStandings(npcGroup), stats: {}, playerConditions: {}, teamRotationIndex: {} },
       };
@@ -298,44 +292,43 @@ function createSeasonStore() {
         leagueState,
         hsGroupA,
         hsGroupB,
-        // protagonist 조 순위표를 standings에도 반영
         standings: makeStandings(protagonistGroup),
       }));
     },
 
     // HS 연간 그룹 재편 (고교 2·3학년 시즌 시작 시 호출)
     // protagonist 조 schedule[]을 반환 → 호출자가 setSchedule()에 넘겨야 함
-    reinitHighschoolSeason(protagonistTeamId: string, allHsTeams: string[]): ScheduleEntry[] {
-      const { groupA, groupB } = shuffleHsGroups(allHsTeams);
+    async reinitHighschoolSeason(protagonistTeamId: string, allHsTeams: string[]): Promise<ScheduleEntry[]> {
+      const { groupA, groupB } = await shuffleHsGroups(allHsTeams);
       const protagonistGroup = groupA.includes(protagonistTeamId) ? groupA : groupB;
       const npcGroup         = groupA.includes(protagonistTeamId) ? groupB : groupA;
 
-      const npcHsSchedule = generateLeagueSchedule("LEAGUE_HIGHSCHOOL_NPC", npcGroup, 10, 42, 2, protagonistTeamId);
-      const protagonistSchedule = generateLeagueSchedule("LEAGUE_HIGHSCHOOL", protagonistGroup, 10, 42, 2, protagonistTeamId);
+      const otherCfgs = DEFAULT_LEAGUE_CONFIGS;
+      const [npcHsSchedule, protagonistSchedule, ...otherScheduleList] = await Promise.all([
+        generateLeagueSchedule("LEAGUE_HIGHSCHOOL_NPC", npcGroup, 10, 42, 2, protagonistTeamId),
+        generateLeagueSchedule("LEAGUE_HIGHSCHOOL", protagonistGroup, 10, 42, 2, protagonistTeamId),
+        ...otherCfgs.map((cfg) => generateLeagueSchedule(cfg.leagueId, cfg.teams, cfg.startWeek, cfg.endWeek, cfg.cycles, protagonistTeamId)),
+      ]);
 
-      update((s) => {
-        const leagueState: Record<string, LeagueSeasonState> = {
-          LEAGUE_HIGHSCHOOL_NPC: { standings: makeStandings(npcGroup), stats: {}, playerConditions: {}, teamRotationIndex: {} },
-        };
-        for (const [lid, teams] of Object.entries(ALL_TEAMS_BY_LEAGUE)) {
-          if (lid === "LEAGUE_HIGHSCHOOL") continue;
-          leagueState[lid] = { standings: makeStandings(teams), stats: {}, playerConditions: {}, teamRotationIndex: {} };
-        }
-        return {
-          ...s,
-          standings: makeStandings(protagonistGroup),
-          leagueSchedules: {
-            LEAGUE_HIGHSCHOOL_NPC: npcHsSchedule,
-            ...DEFAULT_LEAGUE_CONFIGS.reduce<Record<string, ScheduleEntry[]>>((acc, cfg) => {
-              acc[cfg.leagueId] = generateLeagueSchedule(cfg.leagueId, cfg.teams, cfg.startWeek, cfg.endWeek, cfg.cycles, protagonistTeamId);
-              return acc;
-            }, {}),
-          },
-          leagueState,
-          hsGroupA: groupA,
-          hsGroupB: groupB,
-        };
-      });
+      const leagueSchedules: Record<string, ScheduleEntry[]> = { LEAGUE_HIGHSCHOOL_NPC: npcHsSchedule };
+      otherCfgs.forEach((cfg, i) => { leagueSchedules[cfg.leagueId] = otherScheduleList[i]; });
+
+      const leagueState: Record<string, LeagueSeasonState> = {
+        LEAGUE_HIGHSCHOOL_NPC: { standings: makeStandings(npcGroup), stats: {}, playerConditions: {}, teamRotationIndex: {} },
+      };
+      for (const [lid, teams] of Object.entries(ALL_TEAMS_BY_LEAGUE)) {
+        if (lid === "LEAGUE_HIGHSCHOOL") continue;
+        leagueState[lid] = { standings: makeStandings(teams), stats: {}, playerConditions: {}, teamRotationIndex: {} };
+      }
+
+      update((s) => ({
+        ...s,
+        standings: makeStandings(protagonistGroup),
+        leagueSchedules,
+        leagueState,
+        hsGroupA: groupA,
+        hsGroupB: groupB,
+      }));
 
       return protagonistSchedule;
     },

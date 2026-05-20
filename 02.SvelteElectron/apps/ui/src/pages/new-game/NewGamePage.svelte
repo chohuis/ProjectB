@@ -162,16 +162,16 @@
 
     // 16개 팀을 A/B조로 랜덤 분배
     const allHsIds = hsAllTeams.map((t) => t.id);
-    const { groupA, groupB } = shuffleHsGroups(allHsIds);
+    const { groupA, groupB } = await shuffleHsGroups(allHsIds);
     // protagonist 조 결정
     const protagonistGroup = groupA.includes(selectedTeamId) ? groupA : groupB;
 
     gameStore.initNew(protagonist);
     // protagonist 조(8팀) 기준으로 시즌·스케줄 초기화
     seasonStore.initSeason("LEAGUE_HIGHSCHOOL", 2026, 52, protagonistGroup);
-    const schedule = generateSchedule(protagonistGroup, selectedTeamId, 52);
+    const schedule = await generateSchedule(protagonistGroup, selectedTeamId, 52);
     seasonStore.setSchedule(schedule);
-    seasonStore.initAllLeagues(2026, selectedTeamId, groupA, groupB);
+    await seasonStore.initAllLeagues(2026, selectedTeamId, groupA, groupB);
 
     onComplete();
   }

@@ -71,3 +71,21 @@ export declare function calcOfferedSalaryForProtagonistNative(paramsJson: string
 export declare function generateFaOffersNative(paramsJson: string): string
 /** 드래프트 순위/계약금 계산 */
 export declare function calcDraftRankNative(paramsJson: string): string
+export declare function generateScheduleNative(p: string): string
+export declare function generateKblScheduleNative(p: string): string
+export declare function generateAblScheduleNative(p: string): string
+export declare function generateHsScheduleNative(p: string): string
+export declare function generateLeagueScheduleNative(p: string): string
+export declare function generateAllLeagueSchedulesNative(p: string): string
+export declare function generateHsPostseasonSemisNative(p: string): string
+export declare function generateHsPostseasonFinalNative(p: string): string
+export declare function shuffleHsGroupsNative(p: string): string
+export declare function buildKblBracketNative(p: string): string
+export declare function buildAblBracketNative(p: string): string
+export declare function buildUnivBracketNative(p: string): string
+export declare function buildIndBracketNative(p: string): string
+export declare function applyGameToSeriesNative(p: string): string
+export declare function fillNextSeriesNative(p: string): string
+export declare function resolveNonProtagonistSeriesNative(p: string): string
+export declare function makeSeriesGameNative(p: string): string
+export declare function shuffleAblConferencesNative(p: string): string

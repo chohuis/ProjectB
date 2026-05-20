@@ -10,11 +10,15 @@ mod sim_types;
 mod npc_sim;
 mod growth_engine;
 mod player_engine;
+mod schedule_engine;
+mod postseason_engine;
 
 use types::*;
 use sim_types::*;
 use growth_engine::*;
 use player_engine::*;
+use schedule_engine::*;
+use postseason_engine::*;
 
 // ── HMAC (Phase 1) ────────────────────────────────────────────────────────────
 
@@ -412,3 +416,27 @@ pub fn calc_draft_rank_native(params_json: String) -> String {
     let result = player_engine::calc_draft_rank(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcDraftRankNative/serialize", e))
 }
+
+// ── 스케줄 엔진 (Phase 5) ─────────────────────────────────────────────────────
+
+#[napi] pub fn generate_schedule_native(p: String) -> String { let params: GenerateScheduleParams = match serde_json::from_str(&p) { Ok(v) => v, Err(e) => return parse_err("generateScheduleNative", e) }; serde_json::to_string(&schedule_engine::generate_schedule(params)).unwrap_or_else(|e| parse_err("generateScheduleNative/s", e)) }
+#[napi] pub fn generate_kbl_schedule_native(p: String) -> String { let params: GenerateProScheduleParams = match serde_json::from_str(&p) { Ok(v) => v, Err(e) => return parse_err("generateKblScheduleNative", e) }; serde_json::to_string(&schedule_engine::generate_kbl_schedule(params)).unwrap_or_else(|e| parse_err("generateKblScheduleNative/s", e)) }
+#[napi] pub fn generate_abl_schedule_native(p: String) -> String { let params: GenerateProScheduleParams = match serde_json::from_str(&p) { Ok(v) => v, Err(e) => return parse_err("generateAblScheduleNative", e) }; serde_json::to_string(&schedule_engine::generate_abl_schedule(params)).unwrap_or_else(|e| parse_err("generateAblScheduleNative/s", e)) }
+#[napi] pub fn generate_hs_schedule_native(p: String) -> String { let params: GenerateHsScheduleParams = match serde_json::from_str(&p) { Ok(v) => v, Err(e) => return parse_err("generateHsScheduleNative", e) }; serde_json::to_string(&schedule_engine::generate_hs_schedule(params)).unwrap_or_else(|e| parse_err("generateHsScheduleNative/s", e)) }
+#[napi] pub fn generate_league_schedule_native(p: String) -> String { let params: GenerateLeagueScheduleParams = match serde_json::from_str(&p) { Ok(v) => v, Err(e) => return parse_err("generateLeagueScheduleNative", e) }; serde_json::to_string(&schedule_engine::generate_league_schedule(params)).unwrap_or_else(|e| parse_err("generateLeagueScheduleNative/s", e)) }
+#[napi] pub fn generate_all_league_schedules_native(p: String) -> String { let params: GenerateAllLeagueSchedulesParams = match serde_json::from_str(&p) { Ok(v) => v, Err(e) => return parse_err("generateAllLeagueSchedulesNative", e) }; serde_json::to_string(&schedule_engine::generate_all_league_schedules(params)).unwrap_or_else(|e| parse_err("generateAllLeagueSchedulesNative/s", e)) }
+#[napi] pub fn generate_hs_postseason_semis_native(p: String) -> String { let params: GenerateHsPostseasonSemisParams = match serde_json::from_str(&p) { Ok(v) => v, Err(e) => return parse_err("generateHsPostseasonSemisNative", e) }; serde_json::to_string(&schedule_engine::generate_hs_postseason_semis(params)).unwrap_or_else(|e| parse_err("generateHsPostseasonSemisNative/s", e)) }
+#[napi] pub fn generate_hs_postseason_final_native(p: String) -> String { let params: GenerateHsPostseasonFinalParams = match serde_json::from_str(&p) { Ok(v) => v, Err(e) => return parse_err("generateHsPostseasonFinalNative", e) }; serde_json::to_string(&schedule_engine::generate_hs_postseason_final(params)).unwrap_or_else(|e| parse_err("generateHsPostseasonFinalNative/s", e)) }
+#[napi] pub fn shuffle_hs_groups_native(p: String) -> String { let params: ShuffleHsGroupsParams = match serde_json::from_str(&p) { Ok(v) => v, Err(e) => return parse_err("shuffleHsGroupsNative", e) }; serde_json::to_string(&schedule_engine::shuffle_hs_groups(params)).unwrap_or_else(|e| parse_err("shuffleHsGroupsNative/s", e)) }
+
+// ── 포스트시즌 엔진 (Phase 5) ─────────────────────────────────────────────────
+
+#[napi] pub fn build_kbl_bracket_native(p: String) -> String { let params: BuildBracketParams = match serde_json::from_str(&p) { Ok(v) => v, Err(e) => return parse_err("buildKblBracketNative", e) }; serde_json::to_string(&postseason_engine::build_kbl_bracket(params)).unwrap_or_else(|e| parse_err("buildKblBracketNative/s", e)) }
+#[napi] pub fn build_abl_bracket_native(p: String) -> String { let params: BuildAblBracketParams = match serde_json::from_str(&p) { Ok(v) => v, Err(e) => return parse_err("buildAblBracketNative", e) }; serde_json::to_string(&postseason_engine::build_abl_bracket(params)).unwrap_or_else(|e| parse_err("buildAblBracketNative/s", e)) }
+#[napi] pub fn build_univ_bracket_native(p: String) -> String { let params: BuildBracketParams = match serde_json::from_str(&p) { Ok(v) => v, Err(e) => return parse_err("buildUnivBracketNative", e) }; serde_json::to_string(&postseason_engine::build_univ_bracket(params)).unwrap_or_else(|e| parse_err("buildUnivBracketNative/s", e)) }
+#[napi] pub fn build_ind_bracket_native(p: String) -> String { let params: BuildBracketParams = match serde_json::from_str(&p) { Ok(v) => v, Err(e) => return parse_err("buildIndBracketNative", e) }; serde_json::to_string(&postseason_engine::build_ind_bracket(params)).unwrap_or_else(|e| parse_err("buildIndBracketNative/s", e)) }
+#[napi] pub fn apply_game_to_series_native(p: String) -> String { let params: ApplyGameToSeriesParams = match serde_json::from_str(&p) { Ok(v) => v, Err(e) => return parse_err("applyGameToSeriesNative", e) }; serde_json::to_string(&postseason_engine::apply_game_to_series(params)).unwrap_or_else(|e| parse_err("applyGameToSeriesNative/s", e)) }
+#[napi] pub fn fill_next_series_native(p: String) -> String { let params: FillNextSeriesParams = match serde_json::from_str(&p) { Ok(v) => v, Err(e) => return parse_err("fillNextSeriesNative", e) }; serde_json::to_string(&postseason_engine::fill_next_series(params)).unwrap_or_else(|e| parse_err("fillNextSeriesNative/s", e)) }
+#[napi] pub fn resolve_non_protagonist_series_native(p: String) -> String { let params: ResolveNpcSeriesParams = match serde_json::from_str(&p) { Ok(v) => v, Err(e) => return parse_err("resolveNonProtagonistSeriesNative", e) }; serde_json::to_string(&postseason_engine::resolve_non_protagonist_series(params)).unwrap_or_else(|e| parse_err("resolveNonProtagonistSeriesNative/s", e)) }
+#[napi] pub fn make_series_game_native(p: String) -> String { let params: MakeSeriesGameParams = match serde_json::from_str(&p) { Ok(v) => v, Err(e) => return parse_err("makeSeriesGameNative", e) }; serde_json::to_string(&postseason_engine::make_series_game(params)).unwrap_or_else(|e| parse_err("makeSeriesGameNative/s", e)) }
+#[napi] pub fn shuffle_abl_conferences_native(p: String) -> String { let params: ShuffleAblConferencesParams = match serde_json::from_str(&p) { Ok(v) => v, Err(e) => return parse_err("shuffleAblConferencesNative", e) }; serde_json::to_string(&postseason_engine::shuffle_abl_conferences(params)).unwrap_or_else(|e| parse_err("shuffleAblConferencesNative/s", e)) }

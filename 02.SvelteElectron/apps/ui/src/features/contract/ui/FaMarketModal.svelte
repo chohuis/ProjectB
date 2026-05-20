@@ -37,11 +37,11 @@
     seasonStore.initSeason(contract.leagueId, seasonYear, totalWeeks, proTeamIds);
     seasonStore.setSchedule(
       isAbl
-        ? generateAblSchedule(proTeamIds, contract.teamId)
-        : generateKblSchedule(proTeamIds, contract.teamId),
+        ? await generateAblSchedule(proTeamIds, contract.teamId)
+        : await generateKblSchedule(proTeamIds, contract.teamId),
     );
     if (isAbl) {
-      const { east, west } = shuffleAblConferences(proTeamIds);
+      const { east, west } = await shuffleAblConferences(proTeamIds);
       seasonStore.setAblConferences(east, west);
     }
     seasonStore.resolvePendingAction("faMarket");

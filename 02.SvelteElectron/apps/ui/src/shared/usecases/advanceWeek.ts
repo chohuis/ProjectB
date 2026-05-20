@@ -657,7 +657,7 @@ async function handleSeasonEnd(): Promise<WeekAdvanceResult> {
 }
 
 // ── HS 포스트시즌 주입 ─────────────────────────────────────────
-function injectHsPostseason(nextWeek: number): void {
+async function injectHsPostseason(nextWeek: number): Promise<void> {
   const g  = get(gameStore);
   const sPS = get(seasonStore);
 
@@ -672,7 +672,7 @@ function injectHsPostseason(nextWeek: number): void {
     );
     const top4 = sortedStandings.slice(0, 4).map((st) => st.teamId);
     if (top4.length >= 4) {
-      const semis = generateHsPostseasonSemis(top4, g.protagonist.teamId, nextWeek, sPS.seasonYear);
+      const semis = await generateHsPostseasonSemis(top4, g.protagonist.teamId, nextWeek, sPS.seasonYear);
       seasonStore.injectPostseasonEntries(semis);
     }
   } else if (hasPostseason) {
@@ -685,7 +685,7 @@ function injectHsPostseason(nextWeek: number): void {
       if (semi1?.result && semi2?.result) {
         const finalWeek = Math.max(semi1.week, semi2.week) + 1;
         seasonStore.injectPostseasonEntries([
-          generateHsPostseasonFinal(semi1.result.winnerId, semi2.result.winnerId, g.protagonist.teamId, finalWeek, sPS.seasonYear)
+          await generateHsPostseasonFinal(semi1.result.winnerId, semi2.result.winnerId, g.protagonist.teamId, finalWeek, sPS.seasonYear)
         ]);
       }
     }
@@ -694,7 +694,7 @@ function injectHsPostseason(nextWeek: number): void {
 
 // ── 통합 포스트시즌 주입 (KBL / ABL / UNIV / IND) ───────────────
 // 매 게임 처리 후 호출. 정규시즌 종료 감지 → 브라켓 초기화 → 다음 경기 주입
-function injectLeaguePostseason(nextWeek: number): void {
+async function injectLeaguePostseason(nextWeek: number): Promise<void> {
   const s   = get(seasonStore);
   const g   = get(gameStore);
   const leagueId      = g.protagonist.leagueId;
@@ -711,21 +711,21 @@ function injectLeaguePostseason(nextWeek: number): void {
 
   // ── 브라켓 미초기화: 빌드 후 비주인공 시리즈 즉시 시뮬 ──────
   if (!bracket) {
-    let built = (() => {
-      if (leagueId === "LEAGUE_KBL") return buildKblBracket(s.standings);
-      if (leagueId === "LEAGUE_UNIVERSITY") return buildUnivBracket(s.standings);
-      if (leagueId === "LEAGUE_INDEPENDENT") return buildIndBracket(s.standings);
-      if (leagueId === "LEAGUE_ABL") {
-        const east = s.ablEastTeams ?? [];
-        const west = s.ablWestTeams ?? [];
-        const eastSt = s.standings.filter((st) => east.includes(st.teamId));
-        const westSt = s.standings.filter((st) => west.includes(st.teamId));
-        return buildAblBracket(eastSt, westSt);
-      }
-      return [];
-    })();
+    let built: import("../types/season").PostseasonSeries[];
+    if (leagueId === "LEAGUE_KBL") built = await buildKblBracket(s.standings);
+    else if (leagueId === "LEAGUE_UNIVERSITY") built = await buildUnivBracket(s.standings);
+    else if (leagueId === "LEAGUE_INDEPENDENT") built = await buildIndBracket(s.standings);
+    else if (leagueId === "LEAGUE_ABL") {
+      const east = s.ablEastTeams ?? [];
+      const west = s.ablWestTeams ?? [];
+      const eastSt = s.standings.filter((st) => east.includes(st.teamId));
+      const westSt = s.standings.filter((st) => west.includes(st.teamId));
+      built = await buildAblBracket(eastSt, westSt);
+    } else {
+      return;
+    }
     if (built.length === 0) return;
-    built = resolveNonProtagonistSeries(built, protagonistId);
+    built = await resolveNonProtagonistSeries(built, protagonistId);
     seasonStore.initPostseasonBracket(leagueId, built);
     return; // 다음 루프 이터레이션에서 경기 주입
   }
@@ -747,7 +747,7 @@ function injectLeaguePostseason(nextWeek: number): void {
     if (hasUnresolved) {
       seasonStore.updatePostseasonBracket(
         leagueId,
-        resolveNonProtagonistSeries(bracket, protagonistId),
+        await resolveNonProtagonistSeries(bracket, protagonistId),
       );
     }
     return;
@@ -758,13 +758,12 @@ function injectLeaguePostseason(nextWeek: number): void {
   const gId   = `${activeSeries.id}_G${gNum}`;
   if (s.schedule.some((e) => e.id === gId)) return; // 이미 주입됨
 
-  const game = makeSeriesGame(activeSeries, gNum, nextWeek, protagonistId, seasonYear);
+  const game = await makeSeriesGame(activeSeries, gNum, nextWeek, protagonistId, seasonYear);
   seasonStore.injectPostseasonEntries([game]);
 }
 
 // ── 포스트시즌 경기 결과 → 브라켓 업데이트 ──────────────────────
-function applyPostseasonResult(scheduleId: string, result: MatchResult): void {
-  // scheduleId가 시리즈 게임 패턴인지 확인 (e.g. "KBL_KS_G3")
+async function applyPostseasonResult(scheduleId: string, result: MatchResult): Promise<void> {
   const match = scheduleId.match(/^(.+)_G(\d+)$/);
   if (!match) return;
   const seriesId = match[1];
@@ -778,12 +777,12 @@ function applyPostseasonResult(scheduleId: string, result: MatchResult): void {
   const idx = bracket.findIndex((ser) => ser.id === seriesId);
   if (idx < 0) return;
 
-  let updated = applyGameToSeries(bracket[idx], result.winnerId);
+  const updated = await applyGameToSeries(bracket[idx], result.winnerId);
   let newBracket = bracket.map((ser, i) => (i === idx ? updated : ser));
 
   if (updated.winner) {
-    newBracket = fillNextSeries(newBracket, updated);
-    newBracket = resolveNonProtagonistSeries(newBracket, g.protagonist.teamId);
+    newBracket = await fillNextSeries(newBracket, updated);
+    newBracket = await resolveNonProtagonistSeries(newBracket, g.protagonist.teamId);
   }
 
   seasonStore.updatePostseasonBracket(leagueId, newBracket);
@@ -962,9 +961,9 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
 
     // 포스트시즌 주입 (리그별 분기)
     if (g.protagonist.careerStage === "highschool") {
-      injectHsPostseason(nextGame.week);
+      await injectHsPostseason(nextGame.week);
     } else {
-      injectLeaguePostseason(nextGame.week);
+      await injectLeaguePostseason(nextGame.week);
     }
 
     // injectLeaguePostseason이 새 경기를 주입했을 수 있으므로 re-fetch
@@ -997,7 +996,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         gameStore.clearEligibilityBlock();
         const result = await simulateNpcGame(nextGame.homeTeamId, nextGame.awayTeamId);
         seasonStore.applyMatchResult(nextGame.id, result);
-        applyPostseasonResult(nextGame.id, result);
+        await applyPostseasonResult(nextGame.id, result);
         accResults.push(result);
         accLogs.push("학사 경고로 인해 경기 출전 불가");
       } else {

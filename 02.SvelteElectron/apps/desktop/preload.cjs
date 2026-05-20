@@ -58,6 +58,28 @@ contextBridge.exposeInMainWorld("projectB", {
   faGenerateOffers:                      (p) => ipcRenderer.invoke("fa:generateOffers",                           p),
   draftCalcDraftRank:                    (p) => ipcRenderer.invoke("draft:calcDraftRank",                         p),
 
+  // ── 스케줄 엔진 (Phase 5) ────────────────────────────────────────────────
+  scheduleGeneric:           (p) => ipcRenderer.invoke("schedule:generic",           p),
+  scheduleKbl:               (p) => ipcRenderer.invoke("schedule:kbl",               p),
+  scheduleAbl:               (p) => ipcRenderer.invoke("schedule:abl",               p),
+  scheduleHs:                (p) => ipcRenderer.invoke("schedule:hs",                p),
+  scheduleLeague:            (p) => ipcRenderer.invoke("schedule:league",            p),
+  scheduleAllLeagues:        (p) => ipcRenderer.invoke("schedule:allLeagues",        p),
+  scheduleHsPostseasonSemis: (p) => ipcRenderer.invoke("schedule:hsPostseasonSemis", p),
+  scheduleHsPostseasonFinal: (p) => ipcRenderer.invoke("schedule:hsPostseasonFinal", p),
+  scheduleShuffleHsGroups:   (p) => ipcRenderer.invoke("schedule:shuffleHsGroups",   p),
+
+  // ── 포스트시즌 엔진 (Phase 5) ──────────────────────────────────────────────
+  postseasonBuildKbl:   (p) => ipcRenderer.invoke("postseason:buildKbl",   p),
+  postseasonBuildAbl:   (p) => ipcRenderer.invoke("postseason:buildAbl",   p),
+  postseasonBuildUniv:  (p) => ipcRenderer.invoke("postseason:buildUniv",  p),
+  postseasonBuildInd:   (p) => ipcRenderer.invoke("postseason:buildInd",   p),
+  postseasonApplyGame:  (p) => ipcRenderer.invoke("postseason:applyGame",  p),
+  postseasonFillNext:   (p) => ipcRenderer.invoke("postseason:fillNext",   p),
+  postseasonResolveNpc: (p) => ipcRenderer.invoke("postseason:resolveNpc", p),
+  postseasonMakeGame:   (p) => ipcRenderer.invoke("postseason:makeGame",   p),
+  postseasonShuffleAbl: (p) => ipcRenderer.invoke("postseason:shuffleAbl", p),
+
   // ── dev 전용 (프로덕션 빌드에서 미노출) ────────────────────────────────
   ...(isDev && {
     masterSave: (payload)        => ipcRenderer.invoke("master:save",       payload),
