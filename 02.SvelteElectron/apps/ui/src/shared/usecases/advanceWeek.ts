@@ -230,11 +230,14 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     stats:           sForEvent.stats,
     triggeredEvents: sForEvent.triggeredEvents,
   };
+  const randCount = m.eventPools.length + m.eventPools.reduce((s, p) => s + p.maxPicksPerWeek, 0);
+  const eventRands = JSON.parse(await (window as any).projectB.weekRollRandomBatch(randCount)) as number[];
   const evResult = runEventEngine(
     m.eventRules, m.eventPools,
     new Map(m.messageTmpls.map((t) => [t.id, t])),
     new Map(m.decisionTmpls.map((d) => [d.id, d])),
     eventCtx, sForEvent.seasonYear, careerStageYear,
+    eventRands,
   );
   for (const action of evResult.pendingActions) seasonStore.pushPendingAction(action);
   for (const msg of evResult.newMessages) gameStore.addMessage(msg);

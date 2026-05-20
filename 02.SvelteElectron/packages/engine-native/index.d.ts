@@ -97,3 +97,4 @@ export declare function weekCalcTradeRumorNative(p: string): string
 export declare function weekCalcExamResultNative(p: string): string
 export declare function weekCalcMilitaryNative(p: string): string
 export declare function weekCalcNpcFallbackNative(p: string): string
+export declare function weekRollRandomBatchNative(count: number): string

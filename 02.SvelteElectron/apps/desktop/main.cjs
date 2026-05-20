@@ -2023,6 +2023,10 @@ app.whenReady().then(() => {
     try { return engineNative.weekCalcNpcFallbackNative(p); }
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
+  ipcMain.handle("week:rollRandomBatch", (_event, count) => {
+    try { return engineNative.weekRollRandomBatchNative(count); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
 
   // CSP 헤더 주입 (dev/prod 분기)
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {

@@ -74,10 +74,10 @@ function ruleToOutput(
 }
 
 // ── 가중치 기반 랜덤 선택 ─────────────────────────────────────
-function weightedPick<T extends { weight?: number }>(items: T[]): T | null {
+function weightedPick<T extends { weight?: number }>(items: T[], rand01: number): T | null {
   if (items.length === 0) return null;
   const total = items.reduce((s, x) => s + (x.weight ?? 1), 0);
-  let rand = Math.random() * total;
+  let rand = rand01 * total;
   for (const item of items) {
     rand -= item.weight ?? 1;
     if (rand <= 0) return item;
@@ -100,11 +100,14 @@ export function runEventEngine(
   ctx: EventContext,
   seasonYear: number,
   careerStageYear: number,
+  randoms: number[],
 ): EventEngineResult {
   const pendingActions: PendingAction[] = [];
   const newMessages: MessageItem[] = [];
   const updatedTriggers: Record<string, number> = {};
   const week = ctx.currentWeek;
+  let ri = 0;
+  const nextRand = () => randoms[ri++] ?? Math.random();
 
   function tryEmit(rule: EventRule) {
     if (!checkOncePolicy(rule, ctx, seasonYear, careerStageYear)) return;
@@ -149,20 +152,18 @@ export function runEventEngine(
   }
 
   for (const pool of pools) {
-    // 풀 발동 확률 롤
-    if (Math.random() * 100 > pool.baseRoll.value) continue;
+    if (nextRand() * 100 > pool.baseRoll.value) continue;
 
     const poolRules = poolRuleMap.get(pool.id) ?? [];
-    // 이번 주에 이미 고른 수 확인
     let picksThisWeek = 0;
 
     for (let i = 0; i < pool.maxPicksPerWeek; i++) {
       const eligible = poolRules.filter((r) =>
         evaluateConditions(r.conditions ?? [], ctx) &&
         checkOncePolicy(r, ctx, seasonYear, careerStageYear) &&
-        !updatedTriggers[r.id] // 이번 엔진 호출에서 이미 발생시키지 않은 것
+        !updatedTriggers[r.id]
       );
-      const picked = weightedPick(eligible);
+      const picked = weightedPick(eligible, nextRand());
       if (!picked) break;
       tryEmit(picked);
       picksThisWeek++;

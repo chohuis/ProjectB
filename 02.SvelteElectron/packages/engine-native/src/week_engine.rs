@@ -366,3 +366,10 @@ pub fn calc_npc_fallback(p: NpcFallbackPayload) -> NpcFallbackResult {
     };
     NpcFallbackResult { home_score: h, away_score: a, winner_id, loser_id }
 }
+
+// ── Event Random Batch ────────────────────────────────────────
+
+pub fn roll_random_batch(count: u32) -> Vec<f64> {
+    let mut rng = rand::thread_rng();
+    (0..count).map(|_| rng.gen::<f64>()).collect()
+}

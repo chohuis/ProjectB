@@ -87,6 +87,7 @@ contextBridge.exposeInMainWorld("projectB", {
   weekCalcExamResult:    (p) => ipcRenderer.invoke("week:calcExamResult",    p),
   weekCalcMilitary:      (p) => ipcRenderer.invoke("week:calcMilitary",      p),
   weekCalcNpcFallback:   (p) => ipcRenderer.invoke("week:calcNpcFallback",   p),
+  weekRollRandomBatch:   (count) => ipcRenderer.invoke("week:rollRandomBatch", count),
 
   // ── dev 전용 (프로덕션 빌드에서 미노출) ────────────────────────────────
   ...(isDev && {
