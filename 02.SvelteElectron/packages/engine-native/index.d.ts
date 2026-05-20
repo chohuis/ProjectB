@@ -31,3 +31,19 @@ export declare function requestMoundVisitNative(stateJson: string): string
 export declare function shouldProtagonistExitNative(stateJson: string): string
 /** 헤드리스 게임 시뮬 (튜닝 랩용) */
 export declare function runSimpleGame(paramsJson: string): string
+/** NPC 게임 헤드리스 시뮬 */
+export declare function simGameNative(paramsJson: string): string
+/** 오프시즌 전체 처리 */
+export declare function runOffseasonNative(paramsJson: string): string
+/** 고교 학년 진급 */
+export declare function advanceGradesNative(paramsJson: string): string
+/** 신입생 벌크 생성 */
+export declare function generateFreshmenNative(paramsJson: string): string
+/** NPC 드래프트 시뮬 */
+export declare function runDraftNative(paramsJson: string): string
+/** 드래프트 결과 NPC에 적용 */
+export declare function applyDraftNative(paramsJson: string): string
+/** 주인공 드래프트 결과 결정 */
+export declare function determineProtagonistDraftNative(paramsJson: string): string
+/** 주인공 학년 진급 */
+export declare function advanceProtagonistGradeNative(paramsJson: string): string

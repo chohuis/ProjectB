@@ -36,6 +36,9 @@ function loadCoreModule() {
       if (typeof core.setNativeEngine === "function") {
         core.setNativeEngine(engineNative);
       }
+      if (typeof core.setNpcSimEngine === "function") {
+        core.setNpcSimEngine(engineNative);
+      }
       return core;
     });
   }
@@ -1816,6 +1819,48 @@ app.whenReady().then(() => {
     } catch (e) {
       return { ok: false, error: String(e?.message ?? e) };
     }
+  });
+
+  // ── NPC 시뮬 IPC (Phase 3) ─────────────────────────────────────────────────
+
+  ipcMain.handle("npc:simGame", (_event, paramsJson) => {
+    try { return engineNative.simGameNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  ipcMain.handle("npc:runOffseason", (_event, paramsJson) => {
+    try { return engineNative.runOffseasonNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  ipcMain.handle("npc:advanceGrades", (_event, paramsJson) => {
+    try { return engineNative.advanceGradesNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  ipcMain.handle("npc:generateFreshmen", (_event, paramsJson) => {
+    try { return engineNative.generateFreshmenNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  ipcMain.handle("npc:runDraft", (_event, paramsJson) => {
+    try { return engineNative.runDraftNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  ipcMain.handle("npc:applyDraft", (_event, paramsJson) => {
+    try { return engineNative.applyDraftNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  ipcMain.handle("npc:determineProtagonistDraft", (_event, paramsJson) => {
+    try { return engineNative.determineProtagonistDraftNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  ipcMain.handle("npc:advanceProtagonistGrade", (_event, paramsJson) => {
+    try { return engineNative.advanceProtagonistGradeNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
 
   // CSP 헤더 주입 (dev/prod 분기)

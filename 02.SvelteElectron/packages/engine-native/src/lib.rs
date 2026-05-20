@@ -6,8 +6,11 @@ mod hmac;
 mod types;
 mod tuning;
 mod match_engine;
+mod sim_types;
+mod npc_sim;
 
 use types::*;
+use sim_types::*;
 
 // ── HMAC (Phase 1) ────────────────────────────────────────────────────────────
 
@@ -178,4 +181,94 @@ pub fn run_simple_game(params_json: String) -> String {
     let mut rng = rand::thread_rng();
     let result = match_engine::run_simple_game(&params, &mut rng);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("runSimpleGame/serialize", e))
+}
+
+// ── NPC 시뮬 (Phase 3) ────────────────────────────────────────────────────────
+
+/// NPC 게임 헤드리스 시뮬
+#[napi]
+pub fn sim_game_native(params_json: String) -> String {
+    let params: SimGameParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("simGameNative", e),
+    };
+    let result = npc_sim::sim_game(&params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("simGameNative/serialize", e))
+}
+
+/// 오프시즌 전체 처리
+#[napi]
+pub fn run_offseason_native(params_json: String) -> String {
+    let params: OffseasonParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("runOffseasonNative", e),
+    };
+    let result = npc_sim::run_offseason(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("runOffseasonNative/serialize", e))
+}
+
+/// 고교 학년 진급
+#[napi]
+pub fn advance_grades_native(params_json: String) -> String {
+    let params: AdvanceGradesParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("advanceGradesNative", e),
+    };
+    let result = npc_sim::advance_grades(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("advanceGradesNative/serialize", e))
+}
+
+/// 신입생 벌크 생성
+#[napi]
+pub fn generate_freshmen_native(params_json: String) -> String {
+    let params: GenerateFreshmenParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("generateFreshmenNative", e),
+    };
+    let result = npc_sim::generate_freshmen(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("generateFreshmenNative/serialize", e))
+}
+
+/// NPC 드래프트 시뮬
+#[napi]
+pub fn run_draft_native(params_json: String) -> String {
+    let params: DraftSimParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("runDraftNative", e),
+    };
+    let result = npc_sim::run_draft(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("runDraftNative/serialize", e))
+}
+
+/// 드래프트 결과 NPC에 적용
+#[napi]
+pub fn apply_draft_native(params_json: String) -> String {
+    let params: ApplyDraftParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("applyDraftNative", e),
+    };
+    let result = npc_sim::apply_draft(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("applyDraftNative/serialize", e))
+}
+
+/// 주인공 드래프트 결과 결정
+#[napi]
+pub fn determine_protagonist_draft_native(params_json: String) -> String {
+    let params: ProtagonistDraftParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("determineProtagonistDraftNative", e),
+    };
+    let result = npc_sim::determine_protagonist_draft(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("determineProtagonistDraftNative/serialize", e))
+}
+
+/// 주인공 학년 진급
+#[napi]
+pub fn advance_protagonist_grade_native(params_json: String) -> String {
+    let params: ProtagonistGradeParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("advanceProtagonistGradeNative", e),
+    };
+    let result = npc_sim::advance_protagonist_grade(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("advanceProtagonistGradeNative/serialize", e))
 }

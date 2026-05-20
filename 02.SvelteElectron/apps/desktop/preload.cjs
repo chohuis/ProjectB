@@ -32,6 +32,16 @@ contextBridge.exposeInMainWorld("projectB", {
   matchMoundVisit: () => ipcRenderer.invoke("match:mound-visit"),
   matchNextInning: () => ipcRenderer.invoke("match:next-inning"),
 
+  // ── NPC 시뮬 (Phase 3) ──────────────────────────────────────────────────────
+  npcSimGame:                   (p) => ipcRenderer.invoke("npc:simGame",                   p),
+  npcRunOffseason:              (p) => ipcRenderer.invoke("npc:runOffseason",              p),
+  npcAdvanceGrades:             (p) => ipcRenderer.invoke("npc:advanceGrades",             p),
+  npcGenerateFreshmen:          (p) => ipcRenderer.invoke("npc:generateFreshmen",          p),
+  npcRunDraft:                  (p) => ipcRenderer.invoke("npc:runDraft",                  p),
+  npcApplyDraft:                (p) => ipcRenderer.invoke("npc:applyDraft",                p),
+  npcDetermineProtagonistDraft: (p) => ipcRenderer.invoke("npc:determineProtagonistDraft", p),
+  npcAdvanceProtagonistGrade:   (p) => ipcRenderer.invoke("npc:advanceProtagonistGrade",   p),
+
   // ── dev 전용 (프로덕션 빌드에서 미노출) ────────────────────────────────
   ...(isDev && {
     masterSave: (payload)        => ipcRenderer.invoke("master:save",       payload),

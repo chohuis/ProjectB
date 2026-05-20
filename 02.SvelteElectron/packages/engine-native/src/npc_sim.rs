@@ -1,0 +1,954 @@
+use std::collections::{HashMap, HashSet};
+use rand::Rng;
+
+use crate::sim_types::*;
+
+// ── 유틸 ─────────────────────────────────────────────────────────────────────
+
+fn clamp_f(v: f64, lo: f64, hi: f64) -> f64 { v.max(lo).min(hi) }
+fn clamp_stat(v: f64) -> f64 { v.max(1.0).min(99.0).round() }
+
+// ── 시드 기반 LCG (TS makeRand와 동일 알고리즘) ──────────────────────────────
+
+struct LcgRand { s: u32 }
+
+impl LcgRand {
+    fn new(seed: u32) -> Self { LcgRand { s: seed } }
+    fn next(&mut self) -> f64 {
+        self.s = (self.s ^ (self.s >> 16)).wrapping_mul(0x045d9f3b);
+        self.s = (self.s ^ (self.s >> 16)).wrapping_mul(0x045d9f3b);
+        self.s ^= self.s >> 16;
+        (self.s as f64) / 0xffffffff_u32 as f64
+    }
+}
+
+// ── 게임 시뮬레이션 ──────────────────────────────────────────────────────────
+
+enum PaOutcome { K, BB, HR, Single, Double, Triple, Out }
+
+fn cond_start_mod(pitcher_id: &str, conditions: &HashMap<String, SimPlayerCondition>) -> f64 {
+    let fatigue = conditions.get(pitcher_id).map(|c| c.fatigue).unwrap_or(100.0);
+    clamp_f(0.60 + fatigue * 0.004, 0.60, 1.0)
+}
+
+fn simulate_pa(bat: &SimBatter, pit: &SimPitcher, fatigue_mod: f64, rng: &mut impl Rng) -> PaOutcome {
+    let vel = pit.velocity * fatigue_mod;
+    let mov = pit.movement * fatigue_mod;
+    let cmd = pit.command  * fatigue_mod;
+    let ctl = pit.control  * fatigue_mod;
+    let con = bat.contact;
+    let eye = bat.eye;
+    let dis = bat.discipline;
+    let pow = bat.power;
+
+    let k_rate  = clamp_f(0.225 + (vel-50.0)*0.002 + (mov-50.0)*0.0015 - (con-50.0)*0.003,          0.08, 0.42);
+    let bb_rate = clamp_f(0.085 + (eye-50.0)*0.002  + (dis-50.0)*0.0015 - (cmd-50.0)*0.002 - (ctl-50.0)*0.0015, 0.02, 0.18);
+    let hr_rate = clamp_f(0.030 + (pow-50.0)*0.0015 - (vel-50.0)*0.001  - (mov-50.0)*0.001,          0.005, 0.08);
+
+    let r: f64 = rng.gen();
+    if r < k_rate                          { return PaOutcome::K; }
+    if r < k_rate + bb_rate               { return PaOutcome::BB; }
+    if r < k_rate + bb_rate + hr_rate     { return PaOutcome::HR; }
+
+    let hit_chance = clamp_f(0.30 + (con-50.0)*0.003 - (cmd-50.0)*0.002, 0.18, 0.46);
+    if rng.gen::<f64>() < hit_chance {
+        let h: f64 = rng.gen();
+        if h < 0.04 { return PaOutcome::Triple; }
+        if h < 0.30 { return PaOutcome::Double; }
+        return PaOutcome::Single;
+    }
+    PaOutcome::Out
+}
+
+struct ApplyResult { outs_added: i32, runs_scored: i32, new_bases: [bool;3], is_hit: bool, is_hr: bool }
+
+fn apply_outcome(outcome: &PaOutcome, bases: [bool;3], rng: &mut impl Rng) -> ApplyResult {
+    let [b1, b2, b3] = bases;
+    let mut runs = 0i32;
+
+    match outcome {
+        PaOutcome::K => ApplyResult { outs_added: 1, runs_scored: 0, new_bases: bases, is_hit: false, is_hr: false },
+        PaOutcome::Out => {
+            if b1 && rng.gen::<f64>() < 0.12 {
+                return ApplyResult { outs_added: 2, runs_scored: 0, new_bases: bases, is_hit: false, is_hr: false };
+            }
+            if b3 && rng.gen::<f64>() < 0.10 {
+                return ApplyResult { outs_added: 1, runs_scored: 1, new_bases: [b1, b2, false], is_hit: false, is_hr: false };
+            }
+            ApplyResult { outs_added: 1, runs_scored: 0, new_bases: bases, is_hit: false, is_hr: false }
+        },
+        PaOutcome::BB => {
+            if b1 && b2 && b3 { runs += 1; }
+            let nb3 = if b1 && b2 { true } else { b3 };
+            let nb2 = if b1 { true } else { b2 };
+            ApplyResult { outs_added: 0, runs_scored: runs, new_bases: [true, nb2, nb3], is_hit: false, is_hr: false }
+        },
+        PaOutcome::Single => {
+            let nb2 = b1;
+            let mut nb3 = false;
+            if b3 { runs += 1; }
+            if b2 { if rng.gen::<f64>() < 0.45 { runs += 1; } else { nb3 = true; } }
+            ApplyResult { outs_added: 0, runs_scored: runs, new_bases: [true, nb2, nb3], is_hit: true, is_hr: false }
+        },
+        PaOutcome::Double => {
+            let mut nb3 = false;
+            if b3 { runs += 1; }
+            if b2 { runs += 1; }
+            if b1 { if rng.gen::<f64>() < 0.5 { runs += 1; } else { nb3 = true; } }
+            ApplyResult { outs_added: 0, runs_scored: runs, new_bases: [false, true, nb3], is_hit: true, is_hr: false }
+        },
+        PaOutcome::Triple => {
+            if b3 { runs += 1; }
+            if b2 { runs += 1; }
+            if b1 { runs += 1; }
+            ApplyResult { outs_added: 0, runs_scored: runs, new_bases: [false, false, true], is_hit: true, is_hr: false }
+        },
+        PaOutcome::HR => {
+            if b3 { runs += 1; }
+            if b2 { runs += 1; }
+            if b1 { runs += 1; }
+            runs += 1;
+            ApplyResult { outs_added: 0, runs_scored: runs, new_bases: [false, false, false], is_hit: true, is_hr: true }
+        },
+    }
+}
+
+struct PitAccum { outs: i32, er: i32, h: i32, k: i32, bb: i32 }
+struct BatAccum { ab: i32, h: i32, hr: i32, rbi: i32, bb: i32, k: i32 }
+
+fn sim_max_outs(pit: &SimPitcher, is_starter: bool, cond_mod: f64, rng: &mut impl Rng) -> i32 {
+    let eff_stam = pit.stamina * cond_mod;
+    if is_starter {
+        (12.0 + (eff_stam / 99.0) * 15.0 + (rng.gen::<f64>() - 0.5) * 6.0).round() as i32
+    } else {
+        3 + (rng.gen::<f64>() * 4.0) as i32
+    }
+}
+
+fn sim_half_inning(
+    lineup: &[SimBatter],
+    lineup_pos: usize,
+    pit: &SimPitcher,
+    pit_outs: i32,
+    pit_max: i32,
+    start_cond_mod: f64,
+    pit_map: &mut HashMap<String, PitAccum>,
+    bat_map: &mut HashMap<String, BatAccum>,
+    rng: &mut impl Rng,
+) -> (i32, usize, i32) {  // (runs, new_lineup_pos, new_pit_outs)
+    let mut bases = [false; 3];
+    let mut outs = 0i32;
+    let mut runs = 0i32;
+    let mut lpos = lineup_pos;
+    let mut cur_pit_outs = pit_outs;
+    let n = lineup.len().max(1);
+
+    let in_game_fatigue = clamp_f(
+        1.0 - (0i32.max(cur_pit_outs - (pit_max as f64 * 0.6) as i32)) as f64
+            / (pit_max.max(1) as f64) * 0.4,
+        0.68, 1.0,
+    );
+    let fmod = in_game_fatigue * start_cond_mod;
+
+    let pa_entry = pit_map.entry(pit.id.clone()).or_insert(PitAccum { outs: 0, er: 0, h: 0, k: 0, bb: 0 });
+    let pit_entry = pa_entry as *mut PitAccum;
+
+    while outs < 3 {
+        if lineup.is_empty() { outs += 1; cur_pit_outs += 1; continue; }
+        let batter = &lineup[lpos % n];
+        lpos += 1;
+
+        let outcome = simulate_pa(batter, pit, fmod, rng);
+        let res = apply_outcome(&outcome, bases, rng);
+
+        bases = res.new_bases;
+        outs += res.outs_added;
+        runs += res.runs_scored;
+        cur_pit_outs += res.outs_added;
+
+        // pitcher accum (safe because we hold exclusive ref via *mut)
+        let pa = unsafe { &mut *pit_entry };
+        pa.outs += res.outs_added;
+        pa.er   += res.runs_scored;
+        if res.is_hit                         { pa.h  += 1; }
+        if matches!(outcome, PaOutcome::K)    { pa.k  += 1; }
+        if matches!(outcome, PaOutcome::BB)   { pa.bb += 1; }
+
+        // batter accum
+        let ba = bat_map.entry(batter.id.clone()).or_insert(BatAccum { ab: 0, h: 0, hr: 0, rbi: 0, bb: 0, k: 0 });
+        if !matches!(outcome, PaOutcome::BB) { ba.ab += 1; }
+        if res.is_hit  { ba.h  += 1; }
+        if res.is_hr   { ba.hr += 1; }
+        if matches!(outcome, PaOutcome::BB) { ba.bb += 1; }
+        if matches!(outcome, PaOutcome::K)  { ba.k  += 1; }
+        ba.rbi += res.runs_scored;
+    }
+
+    (runs, lpos, cur_pit_outs)
+}
+
+fn build_pit_queue(
+    rotation: &[SimPitcher],
+    bullpen: &[SimPitcher],
+    closer: &Option<SimPitcher>,
+    rot_idx: usize,
+) -> Vec<SimPitcher> {
+    let mut q: Vec<SimPitcher> = Vec::new();
+    if !rotation.is_empty() {
+        q.push(rotation[rot_idx % rotation.len()].clone());
+    }
+    for p in bullpen {
+        if !q.iter().any(|x| x.id == p.id) { q.push(p.clone()); }
+    }
+    if let Some(c) = closer {
+        if !q.iter().any(|x| x.id == c.id) { q.push(c.clone()); }
+    }
+    q
+}
+
+pub fn sim_game(params: &SimGameParams) -> SimGameResult {
+    let mut rng = rand::thread_rng();
+
+    let home_pit_q = build_pit_queue(&params.home_rotation, &params.home_bullpen, &params.home_closer, params.home_rot_idx);
+    let away_pit_q = build_pit_queue(&params.away_rotation, &params.away_bullpen, &params.away_closer, params.away_rot_idx);
+
+    let home_pit_ids: HashSet<String> = home_pit_q.iter().map(|p| p.id.clone()).collect();
+
+    let mut pit_max_map: HashMap<String, i32> = HashMap::new();
+
+    // pre-compute max outs for all pitchers
+    for (i, p) in home_pit_q.iter().enumerate() {
+        let cond_mod = cond_start_mod(&p.id, &params.conditions);
+        let m = sim_max_outs(p, i == 0, cond_mod, &mut rng);
+        pit_max_map.insert(p.id.clone(), m);
+    }
+    for (i, p) in away_pit_q.iter().enumerate() {
+        let cond_mod = cond_start_mod(&p.id, &params.conditions);
+        let m = sim_max_outs(p, i == 0, cond_mod, &mut rng);
+        pit_max_map.insert(p.id.clone(), m);
+    }
+
+    let mut pit_map: HashMap<String, PitAccum> = HashMap::new();
+    let mut bat_map: HashMap<String, BatAccum> = HashMap::new();
+
+    let mut home_score = 0i32;
+    let mut away_score = 0i32;
+    let mut home_lpos  = 0usize;
+    let mut away_lpos  = 0usize;
+    let mut h_pit_idx  = 0usize;
+    let mut a_pit_idx  = 0usize;
+    let mut h_pit_outs = 0i32;
+    let mut a_pit_outs = 0i32;
+
+    for inning in 1i32..=9 {
+        // 홈 투수 교체
+        if h_pit_idx + 1 < home_pit_q.len() {
+            let max = *pit_max_map.get(&home_pit_q[h_pit_idx].id).unwrap_or(&27);
+            if h_pit_outs >= max { h_pit_idx += 1; h_pit_outs = 0; }
+        }
+        let h_pit = &home_pit_q[h_pit_idx.min(home_pit_q.len().saturating_sub(1))];
+        let h_cond = cond_start_mod(&h_pit.id, &params.conditions);
+
+        // 원정 공격 (상반기)
+        let h_max = *pit_max_map.get(&h_pit.id).unwrap_or(&27);
+        let (top_runs, new_away_lpos, new_h_outs) = sim_half_inning(
+            &params.away_lineup, away_lpos, h_pit, h_pit_outs, h_max, h_cond,
+            &mut pit_map, &mut bat_map, &mut rng,
+        );
+        away_score  += top_runs;
+        away_lpos    = new_away_lpos;
+        h_pit_outs   = new_h_outs;
+
+        // 원정 투수 교체
+        if a_pit_idx + 1 < away_pit_q.len() {
+            let max = *pit_max_map.get(&away_pit_q[a_pit_idx].id).unwrap_or(&27);
+            if a_pit_outs >= max { a_pit_idx += 1; a_pit_outs = 0; }
+        }
+        let a_pit = &away_pit_q[a_pit_idx.min(away_pit_q.len().saturating_sub(1))];
+        let a_cond = cond_start_mod(&a_pit.id, &params.conditions);
+
+        // 9회 말 홈팀 앞서면 walk-off
+        if inning == 9 && home_score > away_score { break; }
+
+        // 홈 공격 (하반기)
+        let a_max = *pit_max_map.get(&a_pit.id).unwrap_or(&27);
+        let (bot_runs, new_home_lpos, new_a_outs) = sim_half_inning(
+            &params.home_lineup, home_lpos, a_pit, a_pit_outs, a_max, a_cond,
+            &mut pit_map, &mut bat_map, &mut rng,
+        );
+        home_score  += bot_runs;
+        home_lpos    = new_home_lpos;
+        a_pit_outs   = new_a_outs;
+
+        // 콜드게임
+        let diff = (home_score - away_score).abs();
+        if (inning >= 5 && diff >= 10) || (inning >= 7 && diff >= 7) { break; }
+
+        // 9회 연장
+        if inning == 9 && home_score == away_score {
+            let mut ex_inning = 10i32;
+            while ex_inning <= 12 && home_score == away_score {
+                let ex_h = &home_pit_q[h_pit_idx.min(home_pit_q.len().saturating_sub(1))];
+                let ex_h_cond = cond_start_mod(&ex_h.id, &params.conditions);
+                let (t, new_al, _) = sim_half_inning(
+                    &params.away_lineup, away_lpos, ex_h, 27, 3, ex_h_cond,
+                    &mut pit_map, &mut bat_map, &mut rng,
+                );
+                away_score += t;
+                away_lpos   = new_al;
+
+                let ex_a = &away_pit_q[a_pit_idx.min(away_pit_q.len().saturating_sub(1))];
+                let ex_a_cond = cond_start_mod(&ex_a.id, &params.conditions);
+                let (b, new_hl, _) = sim_half_inning(
+                    &params.home_lineup, home_lpos, ex_a, 27, 3, ex_a_cond,
+                    &mut pit_map, &mut bat_map, &mut rng,
+                );
+                home_score += b;
+                home_lpos   = new_hl;
+                ex_inning   += 1;
+            }
+            if home_score == away_score {
+                if rng.gen::<f64>() < 0.5 { home_score += 1; } else { away_score += 1; }
+            }
+        }
+    }
+
+    let home_won  = home_score > away_score;
+    let winner_id = if home_won { params.home_team_id.clone() } else { params.away_team_id.clone() };
+    let loser_id  = if home_won { params.away_team_id.clone() } else { params.home_team_id.clone() };
+    let margin    = (home_score - away_score).abs();
+
+    // W/L/SV/HD 결정
+    let pitcher_decision = |pit_id: &str, team_won: bool, pit_q: &[SimPitcher], final_idx: usize| -> String {
+        let acc = match pit_map.get(pit_id) { Some(a) => a, None => return "ND".into() };
+        let is_starter = pit_q.first().map(|p| p.id == pit_id).unwrap_or(false);
+        let is_closer  = pit_q.len() > 1 && pit_q.last().map(|p| p.id == pit_id).unwrap_or(false);
+        let _ = final_idx;
+        if team_won {
+            if is_starter && acc.outs >= 15  { return "W".into(); }
+            if is_closer && margin <= 3       { return "SV".into(); }
+            if !is_starter && !is_closer && acc.outs >= 3 { return "HD".into(); }
+        } else if is_starter {
+            return "L".into();
+        }
+        "ND".into()
+    };
+
+    let mut player_lines: Vec<PlayerGameLine> = Vec::new();
+
+    for (id, acc) in &pit_map {
+        let is_home   = home_pit_ids.contains(id);
+        let pit_q     = if is_home { &home_pit_q } else { &away_pit_q };
+        let final_idx = if is_home { h_pit_idx } else { a_pit_idx };
+        let team_won  = if is_home { home_won } else { !home_won };
+        let decision  = pitcher_decision(id, team_won, pit_q, final_idx);
+        let ip        = (acc.outs / 3) as f64 + (acc.outs % 3) as f64 / 10.0;
+        player_lines.push(PlayerGameLine::Pitcher {
+            player_id: id.clone(), ip, er: acc.er, h: acc.h, k: acc.k, bb: acc.bb, decision,
+        });
+    }
+
+    let all_batter_ids: HashSet<String> = params.home_lineup.iter().chain(params.away_lineup.iter())
+        .map(|b| b.id.clone()).collect();
+    for id in &all_batter_ids {
+        let acc = match bat_map.get(id) { Some(a) if a.ab > 0 => a, _ => continue };
+        player_lines.push(PlayerGameLine::Batter {
+            player_id: id.clone(), ab: acc.ab, h: acc.h, hr: acc.hr,
+            rbi: acc.rbi, bb: acc.bb, k: acc.k, sb: 0,
+        });
+    }
+
+    // 투수 컨디션 업데이트 (아웃당 ~2.7pt 피로)
+    let mut pitcher_conditions: HashMap<String, SimPlayerCondition> = HashMap::new();
+    for (id, acc) in &pit_map {
+        let prev_fatigue = params.conditions.get(id).map(|c| c.fatigue).unwrap_or(100.0);
+        let fatigue_loss = acc.outs as f64 * 2.7;
+        pitcher_conditions.insert(id.clone(), SimPlayerCondition {
+            fatigue: clamp_f(prev_fatigue - fatigue_loss, 0.0, 100.0),
+            last_pitched_week: params.week,
+            pitch_outs_last: acc.outs,
+        });
+    }
+
+    SimGameResult {
+        result: MatchResult {
+            home_score, away_score, winner_id, loser_id, player_lines, events: vec![],
+        },
+        next_home_rot_idx: params.home_rot_idx as i32 + 1,
+        next_away_rot_idx: params.away_rot_idx as i32 + 1,
+        pitcher_conditions,
+    }
+}
+
+// ── NPC 공통 헬퍼 ────────────────────────────────────────────────────────────
+
+fn npc_core_ovr(npc: &NpcSaveState) -> f64 {
+    if npc.player_type == "pitcher" {
+        npc.pitching.as_ref().map(|p| p.ovr).unwrap_or(0.0)
+    } else {
+        npc.batting.as_ref().map(|b| b.ovr).unwrap_or(0.0)
+    }
+}
+
+fn apply_aging_decay(mut npc: NpcSaveState) -> NpcSaveState {
+    let age = npc.age;
+    if age < 30 { return npc; }
+    let factor = if age >= 33 { 2.0 } else { 1.0 };
+
+    if npc.player_type == "pitcher" {
+        if let Some(p) = npc.pitching.take() {
+            npc.pitching = Some(NpcPitchingAttrs {
+                velocity: clamp_stat(p.velocity - 0.4 * factor),
+                stamina:  clamp_stat(p.stamina  - 0.3 * factor),
+                recovery: clamp_stat(p.recovery - 0.2 * factor),
+                ovr:      clamp_stat(p.ovr      - 0.3 * factor),
+                ..p
+            });
+        }
+    } else if npc.player_type == "batter" {
+        if let Some(b) = npc.batting.take() {
+            npc.batting = Some(NpcBattingAttrs {
+                speed:    clamp_stat(b.speed    - 0.4 * factor),
+                power:    clamp_stat(b.power    - 0.2 * factor),
+                fielding: clamp_stat(b.fielding - 0.2 * factor),
+                ovr:      clamp_stat(b.ovr      - 0.3 * factor),
+                ..b
+            });
+        }
+    }
+    npc
+}
+
+fn kbl_farm_team(team_id: &str) -> Option<&'static str> {
+    match team_id {
+        "PKT_Busan_GiantWhales"     => Some("TEAM_KBL_GIANTWHALES_2"),
+        "PKT_Changwon_SteelDinos"   => Some("TEAM_KBL_STEELDINOS_2"),
+        "PKT_Daegu_RoyalLions"      => Some("TEAM_KBL_ROYALLIONS_2"),
+        "PKT_Daejeon_SoaringEagles" => Some("TEAM_KBL_SOARINGEAGLES_2"),
+        "PKT_Gwangju_EmberTigers"   => Some("TEAM_KBL_EMBERTIGERS_2"),
+        "PKT_Incheon_SkyGulls"      => Some("TEAM_KBL_SKYGULLS_2"),
+        "PKT_Seoul_BearGuardians"   => Some("TEAM_KBL_BEARGUARDIANS_2"),
+        "PKT_Seoul_TwinWolves"      => Some("TEAM_KBL_TWINWOLVES_2"),
+        _ => None,
+    }
+}
+
+fn is_kbl_farm_team(team_id: &str) -> bool {
+    matches!(team_id,
+        "TEAM_KBL_GIANTWHALES_2"  | "TEAM_KBL_STEELDINOS_2"  |
+        "TEAM_KBL_ROYALLIONS_2"   | "TEAM_KBL_SOARINGEAGLES_2" |
+        "TEAM_KBL_EMBERTIGERS_2"  | "TEAM_KBL_SKYGULLS_2"    |
+        "TEAM_KBL_BEARGUARDIANS_2"| "TEAM_KBL_TWINWOLVES_2"
+    )
+}
+
+fn roster_rule(league_id: &str) -> Option<(i32, i32)> {
+    match league_id {
+        "LEAGUE_HIGHSCHOOL"  => Some((18, 30)),
+        "LEAGUE_UNIVERSITY"  => Some((20, 40)),
+        "LEAGUE_INDEPENDENT" => Some((18, 45)),
+        "LEAGUE_KBL"         => Some((40, 65)),
+        "LEAGUE_ABL"         => Some((50, 90)),
+        _ => None,
+    }
+}
+
+// ── 은퇴 판정 + 로스터 캡 정규화 ────────────────────────────────────────────
+
+fn normalize_offseason_npcs(
+    npcs: Vec<NpcSaveState>,
+    season_year: i32,
+    summary: &mut SeasonEndSummary,
+    logs: &mut Vec<String>,
+    rng: &mut impl Rng,
+) -> Vec<NpcSaveState> {
+    let mut next = npcs;
+
+    // 은퇴 판정
+    for npc in next.iter_mut() {
+        if npc.career_status == "injured" {
+            npc.career_status = "active".into();
+            continue;
+        }
+        if npc.career_status != "active" { continue; }
+        if npc.current_league == "LEAGUE_RETIRED" { continue; }
+        if npc.age < 35 { continue; }
+
+        let age_over = npc.age - 34;
+        let ovr = npc_core_ovr(npc);
+        let low_ovr_penalty = if ovr < 55.0 { (55.0 - ovr) * 0.01 } else { 0.0 };
+        let retire_chance = (0.06 * age_over as f64 + low_ovr_penalty).min(0.72);
+        if rng.gen::<f64>() < retire_chance {
+            let history = NpcCareerEntry {
+                year: season_year,
+                league_id: npc.current_league.clone(),
+                team_id: npc.current_team.clone(),
+                stat_line: "retired".into(),
+                highlights: vec![],
+            };
+            npc.career_history.push(history);
+            npc.career_status   = "retired".into();
+            npc.current_league  = "LEAGUE_RETIRED".into();
+            npc.current_team    = "".into();
+            summary.retired_count += 1;
+            logs.push(format!("{} retired", npc.name));
+        }
+    }
+
+    // 리그·팀별 그룹화 및 로스터 캡
+    let mut by_league_team: HashMap<String, Vec<usize>> = HashMap::new();
+    for (i, npc) in next.iter().enumerate() {
+        if npc.career_status != "active" { continue; }
+        let key = format!("{}::{}", npc.current_league, npc.current_team);
+        by_league_team.entry(key).or_default().push(i);
+    }
+
+    for (key, indices) in &by_league_team {
+        let league_id = key.split("::").next().unwrap_or("");
+        let rule = match roster_rule(league_id) { Some(r) => r, None => continue };
+        let (_min, max) = rule;
+
+        if indices.len() as i32 > max {
+            let overflow = indices.len() as i32 - max;
+            let mut sorted_i = indices.clone();
+            sorted_i.sort_by(|&a, &b| {
+                let ovr_a = npc_core_ovr(&next[a]);
+                let ovr_b = npc_core_ovr(&next[b]);
+                ovr_a.partial_cmp(&ovr_b).unwrap_or(std::cmp::Ordering::Equal)
+                    .then(next[b].age.cmp(&next[a].age))
+            });
+            for &idx in sorted_i.iter().take(overflow as usize) {
+                let npc = &mut next[idx];
+                if league_id == "LEAGUE_KBL" {
+                    if let Some(farm) = kbl_farm_team(&npc.current_team) {
+                        logs.push(format!("{} → 2군 강등", npc.name));
+                        npc.current_team = farm.into();
+                    } else {
+                        logs.push(format!("{} → 독립리그", npc.name));
+                        npc.current_league = "LEAGUE_INDEPENDENT".into();
+                        npc.current_team   = "".into();
+                    }
+                } else if league_id == "LEAGUE_ABL" {
+                    logs.push(format!("{} → 독립리그 (ABL 로스터 초과)", npc.name));
+                    npc.current_league = "LEAGUE_INDEPENDENT".into();
+                    npc.current_team   = "".into();
+                } else {
+                    logs.push(format!("{} 은퇴 (로스터 초과)", npc.name));
+                    npc.career_status  = "retired".into();
+                    npc.current_league = "LEAGUE_RETIRED".into();
+                    npc.current_team   = "".into();
+                    summary.retired_count += 1;
+                }
+            }
+        }
+    }
+
+    next
+}
+
+// ── 오프시즌 전체 처리 ────────────────────────────────────────────────────────
+
+pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
+    let mut rng = rand::thread_rng();
+    let mut summary = SeasonEndSummary::default();
+    let mut new_pending: Vec<NpcSaveState> = Vec::new();
+    let season_year = params.season_year;
+
+    let processed: Vec<NpcSaveState> = params.npcs.into_iter().map(|npc| {
+        if npc.current_league == "LEAGUE_HIGHSCHOOL" { return npc; }
+
+        let mut n = npc;
+
+        // 1. 군 전역
+        if n.career_status == "military" {
+            if let Some(dy) = n.military_discharge_year {
+                if dy <= season_year {
+                    n.career_status   = "active".into();
+                    n.military_status = "군필".into();
+                    n.current_league  = "LEAGUE_INDEPENDENT".into();
+                    n.current_team    = "".into();
+                    summary.military_discharged_count += 1;
+                }
+            }
+        }
+
+        if n.career_status == "retired" || n.current_league == "LEAGUE_RETIRED" { return n; }
+
+        // 2. 나이 +1
+        n.age += 1;
+
+        if n.current_league == "LEAGUE_DRAFT_POOL" || n.current_league == "LEAGUE_FREE_AGENT" { return n; }
+        if n.career_status != "active" { return n; }
+
+        // 3. 대학 학년 진급 + 졸업
+        if n.current_league == "LEAGUE_UNIVERSITY" {
+            if n.grade == Some(3) {
+                let entry = NpcCareerEntry {
+                    year: season_year,
+                    league_id: "LEAGUE_UNIVERSITY".into(),
+                    team_id: n.current_team.clone(),
+                    stat_line: "-".into(),
+                    highlights: vec![],
+                };
+                n.grade          = None;
+                n.current_league = "LEAGUE_DRAFT_POOL".into();
+                n.career_history.push(entry);
+                new_pending.push(n.clone());
+                summary.univ_graduated_count += 1;
+                return n;
+            } else if let Some(g) = n.grade {
+                if g < 3 { n.grade = Some(g + 1); }
+            }
+            return n;
+        }
+
+        // 4. 에이징
+        n = apply_aging_decay(n);
+
+        // 5. 프로 연차 + FA
+        if n.current_league == "LEAGUE_KBL" || n.current_league == "LEAGUE_ABL" {
+            n.pro_service_years = Some(n.pro_service_years.unwrap_or(0) + 1);
+            if n.pro_service_years.unwrap_or(0) >= 9 && rng.gen::<f64>() < 0.6 {
+                n.current_league = "LEAGUE_FREE_AGENT".into();
+                n.current_team   = "".into();
+                summary.fa_count += 1;
+                return n;
+            }
+        }
+
+        // 6. 군입대 판정
+        if n.military_status == "미필" {
+            let is_kbl = n.current_league == "LEAGUE_KBL" || n.current_league == "LEAGUE_ABL";
+            let threshold = if is_kbl { 27 } else { 24 };
+            let chance    = if is_kbl { 0.25 } else { 0.35 };
+            if n.age >= threshold && rng.gen::<f64>() < chance {
+                n.career_status        = "military".into();
+                n.military_status      = "현역".into();
+                n.military_enlist_year = Some(season_year);
+                n.military_discharge_year = Some(season_year + 2);
+                n.current_league       = "LEAGUE_MILITARY".into();
+                n.current_team         = "".into();
+                summary.military_enlisted_count += 1;
+                return n;
+            }
+        }
+        n
+    }).collect();
+
+    // 7. 은퇴 판정 + 로스터 캡
+    let mut logs: Vec<String> = Vec::new();
+    let mut after_normalize = normalize_offseason_npcs(processed, season_year, &mut summary, &mut logs, &mut rng);
+
+    // 8. FA → KBL 1군 재배치
+    let kbl_teams: Vec<String> = {
+        let mut seen: HashSet<String> = HashSet::new();
+        after_normalize.iter()
+            .filter(|n| n.current_league == "LEAGUE_KBL" && !is_kbl_farm_team(&n.current_team))
+            .map(|n| n.current_team.clone())
+            .filter(|t| seen.insert(t.clone()))
+            .collect()
+    };
+
+    for npc in after_normalize.iter_mut() {
+        if npc.current_league != "LEAGUE_FREE_AGENT" { continue; }
+        if !kbl_teams.is_empty() {
+            let idx = (rng.gen::<f64>() * kbl_teams.len() as f64) as usize % kbl_teams.len();
+            npc.current_league = "LEAGUE_KBL".into();
+            npc.current_team   = kbl_teams[idx].clone();
+        } else {
+            npc.current_league = "LEAGUE_INDEPENDENT".into();
+            npc.current_team   = "".into();
+        }
+    }
+
+    OffseasonOutput {
+        npcs: after_normalize,
+        pending_draft: [params.pending_draft, new_pending].concat(),
+        summary,
+        logs,
+    }
+}
+
+// ── 학년 진급 ─────────────────────────────────────────────────────────────────
+
+pub fn advance_grades(params: AdvanceGradesParams) -> GradeAdvanceResult {
+    let mut updated   = Vec::new();
+    let mut graduated = Vec::new();
+    let season_year   = params.season_year;
+
+    for npc in params.npcs {
+        let is_hs = npc.current_league == "LEAGUE_HIGHSCHOOL"
+            && npc.career_status == "active"
+            && npc.grade.is_some();
+
+        if !is_hs { updated.push(npc); continue; }
+
+        let grade = npc.grade.unwrap();
+
+        if grade == 3 {
+            let entry = NpcCareerEntry {
+                year: season_year,
+                league_id: "LEAGUE_HIGHSCHOOL".into(),
+                team_id: npc.current_team.clone(),
+                stat_line: "-".into(),
+                highlights: vec![],
+            };
+            let mut g = npc;
+            g.grade          = None;
+            g.age           += 1;
+            g.current_league = "LEAGUE_DRAFT_POOL".into();
+            g.career_history.push(entry);
+            graduated.push(g.clone());
+            updated.push(g);
+        } else {
+            let mut n = npc;
+            n.grade = Some(grade + 1);
+            n.age  += 1;
+            updated.push(n);
+        }
+    }
+
+    GradeAdvanceResult { updated, graduated }
+}
+
+// ── 신입생 생성 ───────────────────────────────────────────────────────────────
+
+const SURNAMES:    &[&str] = &["김","이","박","최","정","강","조","윤","장","임","한","오","서","신","권","황","안","송","류","전"];
+const SYLLABLES_A: &[&str] = &["민","준","현","재","우","지","도","성","진","동","태","수","영","혁","훈","기","상","정","세","찬"];
+const SYLLABLES_B: &[&str] = &["준","혁","원","환","빈","욱","식","윤","완","호","진","우","기","수","민","찬","훈","성","재","현"];
+const POSITIONS:   &[&str] = &["C","1B","2B","3B","SS","LF","CF","RF"];
+
+fn gen_name(rng: &mut LcgRand) -> (String, String) {
+    let sur = SURNAMES[(rng.next() * SURNAMES.len() as f64) as usize % SURNAMES.len()];
+    let a   = SYLLABLES_A[(rng.next() * SYLLABLES_A.len() as f64) as usize % SYLLABLES_A.len()];
+    let b   = SYLLABLES_B[(rng.next() * SYLLABLES_B.len() as f64) as usize % SYLLABLES_B.len()];
+    (format!("{}{}{}", sur, a, b), format!("{} {}{}", sur, a, b))
+}
+
+fn make_pitching(ovr: f64, rng: &mut LcgRand) -> NpcPitchingAttrs {
+    let stamina      = clamp_stat(ovr - 2.0  + (rng.next() - 0.5) * 12.0);
+    let velocity     = clamp_stat(ovr + 4.0  + (rng.next() - 0.5) * 12.0);
+    let command      = clamp_stat(ovr - 5.0  + (rng.next() - 0.5) * 12.0);
+    let control      = clamp_stat(ovr - 3.0  + (rng.next() - 0.5) * 12.0);
+    let movement     = clamp_stat(ovr - 4.0  + (rng.next() - 0.5) * 12.0);
+    let mentality    = clamp_stat(ovr        + (rng.next() - 0.5) * 12.0);
+    let recovery     = clamp_stat(ovr - 6.0  + (rng.next() - 0.5) * 12.0);
+    let clutch       = clamp_stat(ovr - 8.0  + (rng.next() - 0.5) * 12.0);
+    let hold_runners = clamp_stat(ovr - 10.0 + (rng.next() - 0.5) * 12.0);
+    NpcPitchingAttrs { ovr, stamina, velocity, command, control, movement, mentality, recovery, clutch, hold_runners }
+}
+
+fn make_batting(ovr: f64, rng: &mut LcgRand) -> NpcBattingAttrs {
+    let contact       = clamp_stat(ovr - 2.0  + (rng.next() - 0.5) * 12.0);
+    let power         = clamp_stat(ovr - 5.0  + (rng.next() - 0.5) * 12.0);
+    let eye           = clamp_stat(ovr - 3.0  + (rng.next() - 0.5) * 12.0);
+    let discipline    = clamp_stat(ovr - 4.0  + (rng.next() - 0.5) * 12.0);
+    let speed         = clamp_stat(ovr        + (rng.next() - 0.5) * 12.0);
+    let base_instinct = clamp_stat(ovr - 5.0  + (rng.next() - 0.5) * 12.0);
+    let bunting       = clamp_stat(ovr - 15.0 + (rng.next() - 0.5) * 12.0);
+    let fielding      = clamp_stat(ovr - 5.0  + (rng.next() - 0.5) * 12.0);
+    let arm           = clamp_stat(ovr - 5.0  + (rng.next() - 0.5) * 12.0);
+    let batting_clutch = clamp_stat(ovr - 8.0 + (rng.next() - 0.5) * 12.0);
+    NpcBattingAttrs {
+        ovr, contact, power, eye, discipline, speed, base_instinct,
+        bunting, platoon: 50.0, fielding, arm, batting_clutch,
+    }
+}
+
+pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
+    let mut result = params.named_npcs;
+    let named_count = result.len();
+    let bulk_count  = (params.annual_roster_size - named_count as i32).max(0);
+    let seed = (params.school_id.len() as u32).wrapping_mul(997)
+        .wrapping_add((params.season_year as u32).wrapping_mul(31));
+    let mut rng = LcgRand::new(seed);
+
+    for i in 0..bulk_count as usize {
+        let npc_id = format!("GEN_{}_Y{}_{:03}", params.school_id, params.season_year, params.id_offset as usize + i + 1);
+        let (name, name_en) = gen_name(&mut rng);
+        let is_sp = rng.next() < 0.3;
+        let ovr_p = params.pitching_ovr_min + rng.next() * (params.pitching_ovr_max - params.pitching_ovr_min);
+        let ovr_b = params.batting_ovr_min  + rng.next() * (params.batting_ovr_max  - params.batting_ovr_min);
+        let dev_r = params.dev_rate_min     + rng.next() * (params.dev_rate_max      - params.dev_rate_min);
+        let position = if is_sp { "SP".to_string() } else {
+            POSITIONS[(rng.next() * POSITIONS.len() as f64) as usize % POSITIONS.len()].to_string()
+        };
+
+        result.push(NpcSaveState {
+            npc_id,
+            name,
+            name_en: Some(name_en),
+            player_type:    if is_sp { "pitcher".into() } else { "batter".into() },
+            position,
+            grade:          Some(1),
+            age:            16,
+            school_id:      params.school_id.clone(),
+            graduation_year: params.season_year + 2,
+            career_status:  "active".into(),
+            current_league: "LEAGUE_HIGHSCHOOL".into(),
+            current_team:   params.team_id.clone(),
+            military_status: "미필".into(),
+            pitching:       Some(make_pitching(ovr_p.round(), &mut rng)),
+            batting:        Some(make_batting(ovr_b.round(),  &mut rng)),
+            development_rate: dev_r.round() as i32,
+            career_history:  vec![],
+            achievements:    vec![],
+            military_enlist_year:    None,
+            military_discharge_year: None,
+            pro_service_years:       None,
+        });
+    }
+    result
+}
+
+// ── 드래프트 시뮬레이션 ───────────────────────────────────────────────────────
+
+fn potential_bonus(tier: &str) -> f64 {
+    match tier { "S" => 30.0, "A" => 20.0, "B" => 10.0, _ => 0.0 }
+}
+
+fn calc_draft_score(npc: &NpcSaveState, meta: Option<&NamedNpcMeta>) -> f64 {
+    let ovr     = npc_core_ovr(npc);
+    let pot     = meta.map(|m| potential_bonus(&m.pro_potential_tier)).unwrap_or(0.0);
+    ovr * 0.6 + npc.development_rate as f64 * 0.3 + pot * 0.1
+}
+
+fn weighted_pick(weights: &[f64], rng: &mut LcgRand) -> usize {
+    let total: f64 = weights.iter().sum();
+    let mut r = rng.next() * total;
+    for (i, &w) in weights.iter().enumerate() {
+        r -= w;
+        if r <= 0.0 { return i; }
+    }
+    weights.len().saturating_sub(1)
+}
+
+pub fn run_draft(params: DraftSimParams) -> DraftSimResult {
+    let meta_map: HashMap<String, &NamedNpcMeta> = params.named_metas.iter()
+        .map(|m| (m.npc_id.clone(), m)).collect();
+    let pool: Vec<&NpcSaveState> = params.candidates.iter()
+        .filter(|n| n.current_league == "LEAGUE_DRAFT_POOL").collect();
+    let year  = params.year;
+    let mut rng = LcgRand::new(
+        (year as u32).wrapping_mul(1337).wrapping_add((pool.len() as u32).wrapping_mul(7))
+    );
+
+    let mut picks: Vec<DraftPick> = Vec::new();
+    let mut remaining_ids: Vec<String> = pool.iter().map(|n| n.npc_id.clone()).collect();
+    let candidate_map: HashMap<String, &NpcSaveState> = params.candidates.iter()
+        .map(|n| (n.npc_id.clone(), n)).collect();
+
+    for r in 1..=params.rounds {
+        let mut t = 0;
+        while t < params.team_ids.len() as i32 && !remaining_ids.is_empty() {
+            let pick_num = (r - 1) * params.team_ids.len() as i32 + t + 1;
+            let scores: Vec<f64> = remaining_ids.iter().map(|id| {
+                let npc = candidate_map[id];
+                let base = calc_draft_score(npc, meta_map.get(id).copied());
+                let noise = (rng.next() - 0.5) * (r as f64 * 8.0);
+                (base + noise).max(0.1)
+            }).collect();
+            let idx = weighted_pick(&scores, &mut rng);
+            let npc_id = remaining_ids[idx].clone();
+            picks.push(DraftPick {
+                round: r,
+                pick: pick_num,
+                team_id: params.team_ids[t as usize].clone(),
+                npc_id,
+            });
+            remaining_ids.remove(idx);
+            t += 1;
+        }
+    }
+
+    DraftSimResult { year, picks, undrafted_ids: remaining_ids }
+}
+
+pub fn apply_draft(params: ApplyDraftParams) -> Vec<NpcSaveState> {
+    let pick_map: HashMap<String, &DraftPick> = params.result.picks.iter()
+        .map(|p| (p.npc_id.clone(), p)).collect();
+    let undrafted: HashSet<String> = params.result.undrafted_ids.iter().cloned().collect();
+
+    params.npcs.into_iter().map(|mut npc| {
+        if npc.current_league != "LEAGUE_DRAFT_POOL" { return npc; }
+        if let Some(pick) = pick_map.get(&npc.npc_id) {
+            npc.career_history.push(NpcCareerEntry {
+                year: params.result.year,
+                league_id: "LEAGUE_DRAFT".into(),
+                team_id: pick.team_id.clone(),
+                stat_line: format!("드래프트 {}라운드 {}번 지명", pick.round, pick.pick),
+                highlights: vec![format!("{}라운드 지명", pick.round)],
+            });
+            npc.current_league = "LEAGUE_KBL".into();
+            npc.current_team   = pick.team_id.clone();
+        } else if undrafted.contains(&npc.npc_id) {
+            let ovr = npc_core_ovr(&npc);
+            let go_independent = ovr >= 45.0;
+            let stat_line = if go_independent { "미지명 → 독립리그" } else { "미지명 → 은퇴" };
+            npc.career_history.push(NpcCareerEntry {
+                year: params.result.year,
+                league_id: "LEAGUE_DRAFT".into(),
+                team_id: "".into(),
+                stat_line: stat_line.into(),
+                highlights: vec![],
+            });
+            if go_independent {
+                npc.current_league = "LEAGUE_INDEPENDENT".into();
+                npc.current_team   = "".into();
+            } else {
+                npc.career_status  = "retired".into();
+                npc.current_league = "LEAGUE_RETIRED".into();
+                npc.current_team   = "".into();
+            }
+        }
+        npc
+    }).collect()
+}
+
+pub fn determine_protagonist_draft(params: ProtagonistDraftParams) -> ProtagonistDraftOutcome {
+    let score = params.scout_score * 0.6 + params.pitching_ovr * 0.4;
+
+    let round = if      score >= 82.0 { 1 }
+    else if score >= 68.0 { 2 }
+    else if score >= 55.0 { 3 }
+    else if score >= 44.0 { (4.0 + (55.0 - score) / 5.0).ceil() as i32 }
+    else if score >= 30.0 { 9 }
+    else                  { return ProtagonistDraftOutcome { drafted: false, round: None, pick: None, team_id: None }; };
+
+    let round = round.min(10);  // DRAFT_ROUNDS = 10
+    let teams = &params.team_ids;
+    if teams.is_empty() {
+        return ProtagonistDraftOutcome { drafted: false, round: None, pick: None, team_id: None };
+    }
+
+    let mut rng = LcgRand::new(
+        (params.year as u32).wrapping_mul(997).wrapping_add((score.round() as u32).wrapping_mul(13))
+    );
+    let t_idx  = (rng.next() * teams.len() as f64) as usize % teams.len();
+    let p_idx  = (rng.next() * teams.len() as f64) as usize % teams.len();
+    let pick   = (round - 1) * teams.len() as i32 + p_idx as i32 + 1;
+
+    ProtagonistDraftOutcome {
+        drafted: true,
+        round:   Some(round),
+        pick:    Some(pick),
+        team_id: Some(teams[t_idx].clone()),
+    }
+}
+
+pub fn advance_protagonist_grade(params: ProtagonistGradeParams) -> ProtagonistGradeResult {
+    let new_age = params.current_age + 1;
+    if params.current_grade == 3 {
+        return ProtagonistGradeResult {
+            new_grade: serde_json::Value::String("graduated".into()),
+            new_age,
+            is_graduating: true,
+        };
+    }
+    let next = params.current_grade + 1;
+    ProtagonistGradeResult {
+        new_grade: serde_json::Value::Number(next.into()),
+        new_age,
+        is_graduating: false,
+    }
+}

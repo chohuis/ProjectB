@@ -310,7 +310,7 @@ if (!nativeBinding) {
   throw new Error(`Failed to load native binding`)
 }
 
-const { computeSaveSig, verifySaveSig, startMatchNative, stepPitchNative, finishMatchNative, isProtagonistPitchingNative, advanceGamePhaseNative, simUntilEntry, simToGameEnd, simHalfInning, autoMoundVisitNative, requestMoundVisitNative, shouldProtagonistExitNative, runSimpleGame } = nativeBinding
+const { computeSaveSig, verifySaveSig, startMatchNative, stepPitchNative, finishMatchNative, isProtagonistPitchingNative, advanceGamePhaseNative, simUntilEntry, simToGameEnd, simHalfInning, autoMoundVisitNative, requestMoundVisitNative, shouldProtagonistExitNative, runSimpleGame, simGameNative, runOffseasonNative, advanceGradesNative, generateFreshmenNative, runDraftNative, applyDraftNative, determineProtagonistDraftNative, advanceProtagonistGradeNative } = nativeBinding
 
 module.exports.computeSaveSig = computeSaveSig
 module.exports.verifySaveSig = verifySaveSig
@@ -326,3 +326,11 @@ module.exports.autoMoundVisitNative = autoMoundVisitNative
 module.exports.requestMoundVisitNative = requestMoundVisitNative
 module.exports.shouldProtagonistExitNative = shouldProtagonistExitNative
 module.exports.runSimpleGame = runSimpleGame
+module.exports.simGameNative = simGameNative
+module.exports.runOffseasonNative = runOffseasonNative
+module.exports.advanceGradesNative = advanceGradesNative
+module.exports.generateFreshmenNative = generateFreshmenNative
+module.exports.runDraftNative = runDraftNative
+module.exports.applyDraftNative = applyDraftNative
+module.exports.determineProtagonistDraftNative = determineProtagonistDraftNative
+module.exports.advanceProtagonistGradeNative = advanceProtagonistGradeNative
