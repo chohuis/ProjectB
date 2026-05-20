@@ -1,6 +1,7 @@
 node_modules/
 dist/
 .vite/
+release/
 
 # 빌드 생성 DB (build:masterdb 결과물)
 resource/master.db
