@@ -32,7 +32,12 @@ const SMOKE_THRESHOLDS = {
 function loadCoreModule() {
   if (!coreModulePromise) {
     const coreDistPath = unpackedPath("packages", "core", "dist", "index.js");
-    coreModulePromise = import(pathToFileURL(coreDistPath).href);
+    coreModulePromise = import(pathToFileURL(coreDistPath).href).then((core) => {
+      if (typeof core.setNativeEngine === "function") {
+        core.setNativeEngine(engineNative);
+      }
+      return core;
+    });
   }
   return coreModulePromise;
 }
@@ -1378,6 +1383,7 @@ protocol.registerSchemesAsPrivileged([{
 }]);
 
 app.whenReady().then(() => {
+  const isDev        = !!process.env.VITE_DEV_SERVER_URL;
   const resourceBase = unpackedPath("resource", "data", "master");
   const masterDbPath = unpackedPath("resource", "master.db");
   const rootDir      = path.resolve(__dirname, "../../");
@@ -1813,7 +1819,6 @@ app.whenReady().then(() => {
   });
 
   // CSP 헤더 주입 (dev/prod 분기)
-  const isDev = !!process.env.VITE_DEV_SERVER_URL;
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     const csp = isDev
       ? [

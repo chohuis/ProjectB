@@ -3,6 +3,10 @@ dist/
 .vite/
 release/
 
+# Rust 빌드 아티팩트
+packages/engine-native/target/
+packages/engine-native/*.node
+
 # 빌드 생성 DB (build:masterdb 결과물)
 resource/master.db
 resource/master.db-shm
