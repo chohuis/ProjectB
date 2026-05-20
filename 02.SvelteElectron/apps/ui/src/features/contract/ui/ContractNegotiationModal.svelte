@@ -22,12 +22,14 @@
   $: acceptThreshold = Math.round(action.offeredSalary * 1.15);
   $: acceptedByTeam = requestedSalary <= acceptThreshold;
   $: myPitcherStats = (($seasonStore.stats[$gameStore.protagonist.id] ?? null) as PitcherSeasonStats | null);
-  $: seasonRating = calcSeasonRating(myPitcherStats);
-  $: marketSalary = calcMarketSalary(
+  let seasonRating = 50;
+  let marketSalary = 0;
+  $: calcSeasonRating(myPitcherStats).then((r) => (seasonRating = r));
+  $: calcMarketSalary(
     $gameStore.protagonist.pitching.ovr,
     $gameStore.protagonist.fame,
     action.leagueId,
-  );
+  ).then((r) => (marketSalary = r));
 
   async function accept() {
     if (resolving) return;

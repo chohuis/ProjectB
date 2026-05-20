@@ -13,7 +13,7 @@
   let lastCounterMessage = "";
 
   $: if (offers.length === 0 && $masterStore.teams.length > 0) {
-    offers = generateFaOffers($gameStore.protagonist, $masterStore.teams);
+    generateFaOffers($gameStore.protagonist, $masterStore.teams).then((o) => (offers = o));
   }
   $: selectedOffer = offers.find((o) => o.teamId === selectedTeamId) ?? offers[0] ?? null;
   $: requestedSalary = selectedOffer ? Math.round(selectedOffer.salary * (1 + raiseRatio)) : 0;

@@ -47,3 +47,27 @@ export declare function applyDraftNative(paramsJson: string): string
 export declare function determineProtagonistDraftNative(paramsJson: string): string
 /** 주인공 학년 진급 */
 export declare function advanceProtagonistGradeNative(paramsJson: string): string
+/** 주간 훈련 성장 계산 */
+export declare function calcTrainingGrowthNative(paramsJson: string): string
+/** 경기 성장 계산 */
+export declare function calcGameGrowthNative(paramsJson: string): string
+/** 진로 선택 → 다음 스텝 */
+export declare function resolveCareerChoiceNative(paramsJson: string): string
+/** 고교 투수 포지션 배정 (SP / RP) */
+export declare function assignHighschoolPositionNative(paramsJson: string): string
+/** 주인공 투수 역할 배정 */
+export declare function assignProtagonistRoleNative(paramsJson: string): string
+/** 불펜 등판 판정 */
+export declare function relieverWouldPitchNative(paramsJson: string): string
+/** 시즌 레이팅 계산 */
+export declare function calcSeasonRatingNative(paramsJson: string): string
+/** 시장 연봉 계산 */
+export declare function calcMarketSalaryNative(paramsJson: string): string
+/** 제안 연봉 계산 */
+export declare function calcOfferedSalaryNative(paramsJson: string): string
+/** 주인공 제안 연봉 계산 (시즌 스탯 반영) */
+export declare function calcOfferedSalaryForProtagonistNative(paramsJson: string): string
+/** FA 오퍼 생성 */
+export declare function generateFaOffersNative(paramsJson: string): string
+/** 드래프트 순위/계약금 계산 */
+export declare function calcDraftRankNative(paramsJson: string): string

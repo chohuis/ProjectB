@@ -1863,6 +1863,58 @@ app.whenReady().then(() => {
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
 
+  // ── 성장 엔진 (Phase 4) ──────────────────────────────────────────────────────
+  ipcMain.handle("growth:calcTraining", (_event, paramsJson) => {
+    try { return engineNative.calcTrainingGrowthNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("growth:calcGame", (_event, paramsJson) => {
+    try { return engineNative.calcGameGrowthNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  // ── 플레이어 엔진 (Phase 4) ──────────────────────────────────────────────────
+  ipcMain.handle("career:resolveChoice", (_event, paramsJson) => {
+    try { return engineNative.resolveCareerChoiceNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("pitcher:assignHighschoolPosition", (_event, paramsJson) => {
+    try { return engineNative.assignHighschoolPositionNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("pitcher:assignRole", (_event, paramsJson) => {
+    try { return engineNative.assignProtagonistRoleNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("pitcher:relieverWouldPitch", (_event, paramsJson) => {
+    try { return engineNative.relieverWouldPitchNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("salary:calcSeasonRating", (_event, paramsJson) => {
+    try { return engineNative.calcSeasonRatingNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("salary:calcMarketSalary", (_event, paramsJson) => {
+    try { return engineNative.calcMarketSalaryNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("salary:calcOfferedSalary", (_event, paramsJson) => {
+    try { return engineNative.calcOfferedSalaryNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("salary:calcOfferedSalaryForProtagonist", (_event, paramsJson) => {
+    try { return engineNative.calcOfferedSalaryForProtagonistNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("fa:generateOffers", (_event, paramsJson) => {
+    try { return engineNative.generateFaOffersNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("draft:calcDraftRank", (_event, paramsJson) => {
+    try { return engineNative.calcDraftRankNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
   // CSP 헤더 주입 (dev/prod 분기)
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     const csp = isDev

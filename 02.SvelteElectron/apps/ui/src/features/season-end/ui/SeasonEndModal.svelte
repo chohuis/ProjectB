@@ -111,7 +111,7 @@
     if (p.careerStage === "highschool" && p.schoolId) {
       const ctx = await loadHighschoolContext(p.schoolId);
       if (ctx) {
-        gameStore.processSeasonEnd(now, ctx.school, ctx.namedRegistry, ctx.entities, now * 100);
+        await gameStore.processSeasonEnd(now, ctx.school, ctx.namedRegistry, ctx.entities, now * 100);
         progressedByHighschoolSync = true;
         gameStore.addMessage({
           id: `msg-season-hs-sync-${Date.now()}`,
@@ -138,7 +138,7 @@
     gameStore.applySeasonHistory($seasonStore.stats, leagueStats, now);
 
     // L6: 전체 리그 NPC 오프시즌 처리 (에이징·감퇴·UNIV졸업·은퇴·로스터 정리)
-    gameStore.processAllLeaguesSeasonEnd(now);
+    await gameStore.processAllLeaguesSeasonEnd(now);
 
     if (!progressedByHighschoolSync) {
       gameStore.advanceSeasonYear($seasonStore.seasonYear);

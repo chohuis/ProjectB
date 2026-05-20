@@ -41,7 +41,6 @@ import type { ContactDef, ContactEffect } from "../types/messenger";
 import type { CoreGameState } from "../types/projectb.d";
 import type { ProContract } from "../types/save";
 import {
-  applyAgingDecay as _applyAgingDecay,
   KBL_FARM_MAP,
   runOffseasonProcessing,
 } from "../utils/npcEngine";
@@ -1414,20 +1413,19 @@ function createGameStore() {
     },
 
     // L6: 전체 리그 NPC 오프시즌 처리 (에이징·감퇴·UNIV졸업·군입대·전역·FA·은퇴·로스터 정리)
-    processAllLeaguesSeasonEnd(seasonYear: number) {
-      update((s) => {
-        const result = runOffseasonProcessing(s.npcs, s.pendingDraft, seasonYear);
-        return {
-          ...s,
-          npcs: result.npcs,
-          pendingDraft: result.pendingDraft,
-          seasonEndSummary: result.summary,
-          logs: [...result.logs, ...s.logs].slice(0, 30),
-          mailbox: result.mailboxEntry
-            ? trimMailbox([result.mailboxEntry, ...s.mailbox])
-            : s.mailbox,
-        };
-      });
+    async processAllLeaguesSeasonEnd(seasonYear: number) {
+      const s = get({ subscribe });
+      const result = await runOffseasonProcessing(s.npcs, s.pendingDraft, seasonYear);
+      update((st) => ({
+        ...st,
+        npcs: result.npcs,
+        pendingDraft: result.pendingDraft,
+        seasonEndSummary: result.summary,
+        logs: [...result.logs, ...st.logs].slice(0, 30),
+        mailbox: result.mailboxEntry
+          ? trimMailbox([result.mailboxEntry, ...st.mailbox])
+          : st.mailbox,
+      }));
     },
 
     toCoreState(): CoreGameState {
@@ -1471,48 +1469,48 @@ function createGameStore() {
     ) {
       update((s) => ({
         ...s,
-        npcs: initHighSchoolNpcs(entities, scenario, seasonYear),
+        npcs: initHighSchoolNpcs(entities, seasonYear),
       }));
     },
 
     // 시즌 종료 처리: 학년 진급 + 졸업 + 신입생 생성
-    processSeasonEnd(
+    async processSeasonEnd(
       seasonYear: number,
       school: HighSchoolMaster,
       namedRegistry: NamedNpcMeta[],
       namedEntities: import("../stores/master").EntityRow[],
       genIdOffset: number,
     ) {
-      update((s) => {
-        // 1. 학년 진급 + 졸업
-        const { updated, graduated } = advanceHighSchoolGrades(s.npcs, seasonYear);
+      const s = get({ subscribe });
 
-        // 2. 주인공 학년 진급
-        const proto = s.protagonist;
-        const gradeResult = proto.grade != null && proto.careerStage === "highschool"
-          ? advanceProtagonistGrade(proto.grade, proto.age)
-          : null;
+      // 1. 학년 진급 + 졸업
+      const { updated, graduated } = await advanceHighSchoolGrades(s.npcs, seasonYear);
 
-        // 3. 신입생 생성 (이번 학교의 Grade 1 명명 NPC 필터링)
-        const namedGrade1 = namedRegistry.filter(
-          m => m.schoolId === school.id &&
-               namedEntities.some(e => e.id === m.npcId && e.grade === 1)
-        );
-        const freshmen = generateFreshmenNpcs(
-          school, namedGrade1, namedEntities, seasonYear + 1, genIdOffset
-        );
+      // 2. 주인공 학년 진급
+      const proto = s.protagonist;
+      const gradeResult = proto.grade != null && proto.careerStage === "highschool"
+        ? advanceProtagonistGrade(proto.grade, proto.age)
+        : null;
 
-        const updatedProto = gradeResult
-          ? { ...proto, ...gradeResult.patch }
-          : proto;
+      // 3. 신입생 생성 (이번 학교의 Grade 1 명명 NPC 필터링)
+      const namedGrade1 = namedRegistry.filter(
+        m => m.schoolId === school.id &&
+             namedEntities.some(e => e.id === m.npcId && e.grade === 1)
+      );
+      const freshmen = await generateFreshmenNpcs(
+        school, namedGrade1, namedEntities, seasonYear + 1, genIdOffset
+      );
 
-        return {
-          ...s,
-          npcs: [...updated, ...freshmen],
-          protagonist: updatedProto,
-          pendingDraft: graduated,
-        };
-      });
+      const updatedProto = gradeResult
+        ? { ...proto, ...gradeResult.patch }
+        : proto;
+
+      update((st) => ({
+        ...st,
+        npcs: [...updated, ...freshmen],
+        protagonist: updatedProto,
+        pendingDraft: graduated,
+      }));
     },
 
     // L4: 시즌 종료 시 NPC careerHistory 기록
@@ -1547,20 +1545,20 @@ function createGameStore() {
     },
 
     // 드래프트 시뮬레이션 실행 → NPC 반영 + 주인공 결과 반환
-    processDraft(
+    async processDraft(
       namedMetas: NamedNpcMeta[],
       year: number,
-    ): { simResult: DraftSimResult; protagonistOutcome: ProtagonistDraftOutcome } {
+    ): Promise<{ simResult: DraftSimResult; protagonistOutcome: ProtagonistDraftOutcome }> {
       const s = get({ subscribe });
 
       // 1. NPC 드래프트 시뮬레이션
-      const simResult = runDraftSimulation(s.pendingDraft, namedMetas, year);
+      const simResult = await runDraftSimulation(s.pendingDraft, namedMetas, year);
 
       // 2. 주인공 드래프트 결과 (고교 졸업 시즌에만)
       const isGraduating = s.protagonist.careerStage === "highschool"
         && s.pendingDraft.length > 0;
       const protagonistOutcome: ProtagonistDraftOutcome = isGraduating
-        ? determineProtagonistDraft(
+        ? await determineProtagonistDraft(
             s.protagonist.scoutScore,
             s.protagonist.pitching.ovr,
             year,
@@ -1568,7 +1566,7 @@ function createGameStore() {
         : { drafted: false };
 
       // 3. NpcSaveState에 드래프트 결과 반영
-      const updatedNpcs = applyDraftToNpcs(s.npcs, simResult);
+      const updatedNpcs = await applyDraftToNpcs(s.npcs, simResult);
 
       update(st => ({
         ...st,

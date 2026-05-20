@@ -20,7 +20,7 @@
     : null;
 
   $: if (result === null) {
-    result = calcDraftRank($gameStore.protagonist.scoutScore);
+    calcDraftRank($gameStore.protagonist.scoutScore).then((r) => (result = r));
   }
 
   function pickTopTeams(leagueId: string, count: number): string[] {

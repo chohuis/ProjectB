@@ -97,10 +97,10 @@ function makeExamMessage(week: number, subject: string, body: string): MessageIt
   };
 }
 
-function simulateNpcGame(homeTeamId: string, awayTeamId: string): MatchResult {
+async function simulateNpcGame(homeTeamId: string, awayTeamId: string): Promise<MatchResult> {
   const entities = get(masterStore).entities;
   if (entities.length > 0) {
-    return simulateGame(homeTeamId, awayTeamId, entities).result;
+    return (await simulateGame(homeTeamId, awayTeamId, entities)).result;
   }
   const score = () => Math.max(0, Math.round((Math.random() + Math.random() + Math.random() - 1.5) * 4));
   let h = score();
@@ -114,7 +114,7 @@ function simulateNpcGame(homeTeamId: string, awayTeamId: string): MatchResult {
   };
 }
 
-export function simulateProtagonistGame(homeTeamId: string, awayTeamId: string): MatchResult {
+export async function simulateProtagonistGame(homeTeamId: string, awayTeamId: string): Promise<MatchResult> {
   return simulateNpcGame(homeTeamId, awayTeamId);
 }
 
@@ -144,7 +144,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   if (weekNum === 1 && g.protagonist.playerType === "pitcher") {
     if (g.protagonist.careerStage === "highschool") {
       // 고교: SP / RP 두 범주만 사용
-      const pos = assignHighschoolPosition(g.protagonist, m.entities);
+      const pos = await assignHighschoolPosition(g.protagonist, m.entities);
       const posLabel = pos === "SP" ? "선발 투수" : "중계 투수";
       gameStore.setPosition(pos);
       gameStore.setCurrentRole(pos === "SP" ? "1선발" : "중간계투");
@@ -161,7 +161,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       logs.push(`[보직 배정] ${posLabel}`);
     } else {
       // 프로(대학·독립 포함): 상세 역할 배정
-      const role = assignProtagonistRole(g.protagonist, m.entities);
+      const role = await assignProtagonistRole(g.protagonist, m.entities);
       const pos: "SP" | "RP" | "CP" =
         role === "마무리" ? "CP" : isReliefsRole(role) ? "RP" : "SP";
       gameStore.setPosition(pos);
@@ -235,7 +235,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   const finalEffMod  = studyResult.efficiencyMod * (1 + majorEffBonus + coachEffBonus)
     * facilityEffMod * slumpPenalty * injuryEffMod;
 
-  const growth = calcTrainingGrowth(g.protagonist, g.trainingPlan, finalEffMod);
+  const growth = await calcTrainingGrowth(g.protagonist, g.trainingPlan, finalEffMod);
 
   if (newLowMoraleWeeks >= 3) growth.logs.push(`[슬럼프] 사기 저하 ${newLowMoraleWeeks}주 연속 — 훈련 효율 -30%`);
   if (coachEffBonus > 0.01) growth.logs.push(`[코치] 투수 코치 지도 보너스 +${Math.round(coachEffBonus * 100)}%`);
@@ -624,8 +624,8 @@ async function handleSeasonEnd(): Promise<WeekAdvanceResult> {
     if (!contract) return { processedWeek: s.currentWeek, logs: ["시즌이 종료되었습니다."], newMessages: [], matchResults: [], stoppedBy: null };
 
     const myStats      = (s.stats[g.protagonist.id] ?? null) as import("../types/save").PitcherSeasonStats | null;
-    const seasonRating = calcSeasonRating(myStats);
-    const offeredSalary = calcOfferedSalaryForProtagonist(g.protagonist, myStats);
+    const seasonRating = await calcSeasonRating(myStats);
+    const offeredSalary = await calcOfferedSalaryForProtagonist(g.protagonist, myStats);
 
     if (contract.remainingYears === 0) {
       if (contract.teamOptionYears > 0) {
@@ -988,14 +988,14 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       g.protagonist.playerType === "pitcher" &&
       !!currentRole &&
       isReliefsRole(currentRole) &&
-      relieverWouldPitch(currentRole);
+      await relieverWouldPitch(currentRole);
 
     // 경기 처리
     if (nextGame.isProtagonistGame || relieverPitching) {
       const eligibilityBlocked = g.schoolState.eligibilityBlocked;
       if (eligibilityBlocked) {
         gameStore.clearEligibilityBlock();
-        const result = simulateNpcGame(nextGame.homeTeamId, nextGame.awayTeamId);
+        const result = await simulateNpcGame(nextGame.homeTeamId, nextGame.awayTeamId);
         seasonStore.applyMatchResult(nextGame.id, result);
         applyPostseasonResult(nextGame.id, result);
         accResults.push(result);
@@ -1008,7 +1008,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       }
     } else {
       // NPC 경기 자동 처리
-      const result = simulateNpcGame(nextGame.homeTeamId, nextGame.awayTeamId);
+      const result = await simulateNpcGame(nextGame.homeTeamId, nextGame.awayTeamId);
       seasonStore.applyMatchResult(nextGame.id, result);
       applyPostseasonResult(nextGame.id, result);
       accResults.push(result);

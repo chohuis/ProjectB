@@ -33,10 +33,10 @@ export interface SimWorkerResponse {
   results: SimWorkerResultItem[];
 }
 
-self.onmessage = (e: MessageEvent<SimWorkerRequest>) => {
+self.onmessage = async (e: MessageEvent<SimWorkerRequest>) => {
   const { reqId, games, entities } = e.data;
-  const results: SimWorkerResultItem[] = games.map((g) => {
-    const sim: SimGameResult = simulateGame(g.homeTeamId, g.awayTeamId, entities, {
+  const results = await Promise.all(games.map(async (g) => {
+    const sim: SimGameResult = await simulateGame(g.homeTeamId, g.awayTeamId, entities, {
       conditions:  g.conditions,
       homeRotIdx:  g.homeRotIdx ?? 0,
       awayRotIdx:  g.awayRotIdx ?? 0,
@@ -49,6 +49,6 @@ self.onmessage = (e: MessageEvent<SimWorkerRequest>) => {
       nextAwayRotIdx:     sim.nextAwayRotIdx,
       pitcherConditions:  sim.pitcherConditions,
     };
-  });
+  }));
   (self as unknown as { postMessage: (data: SimWorkerResponse) => void }).postMessage({ reqId, results });
 };

@@ -62,7 +62,7 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
   const myScore = outcome.homeTeamId === myTeamId ? outcome.homeScore : outcome.awayScore;
   const oppScore = outcome.homeTeamId === myTeamId ? outcome.awayScore : outcome.homeScore;
   const diff = Math.abs(myScore - oppScore);
-  const growth = calcGameGrowth(protagonist, won, diff, outcome.strikeouts);
+  const growth = await calcGameGrowth(protagonist, won, diff, outcome.strikeouts);
   const teamById = new Map(get(masterStore).teams.map((t) => [t.id, t.name]));
   const awayTeamName = teamById.get(outcome.awayTeamId) ?? outcome.awayTeamId;
   const homeTeamName = teamById.get(outcome.homeTeamId) ?? outcome.homeTeamId;

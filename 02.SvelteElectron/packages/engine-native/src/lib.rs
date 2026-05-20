@@ -8,9 +8,13 @@ mod tuning;
 mod match_engine;
 mod sim_types;
 mod npc_sim;
+mod growth_engine;
+mod player_engine;
 
 use types::*;
 use sim_types::*;
+use growth_engine::*;
+use player_engine::*;
 
 // ── HMAC (Phase 1) ────────────────────────────────────────────────────────────
 
@@ -271,4 +275,140 @@ pub fn advance_protagonist_grade_native(params_json: String) -> String {
     };
     let result = npc_sim::advance_protagonist_grade(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("advanceProtagonistGradeNative/serialize", e))
+}
+
+// ── 성장 엔진 (Phase 4) ───────────────────────────────────────────────────────
+
+/// 주간 훈련 성장 계산
+#[napi]
+pub fn calc_training_growth_native(params_json: String) -> String {
+    let params: TrainingGrowthParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("calcTrainingGrowthNative", e),
+    };
+    let result = growth_engine::calc_training_growth(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcTrainingGrowthNative/serialize", e))
+}
+
+/// 경기 성장 계산
+#[napi]
+pub fn calc_game_growth_native(params_json: String) -> String {
+    let params: GameGrowthParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("calcGameGrowthNative", e),
+    };
+    let result = growth_engine::calc_game_growth(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcGameGrowthNative/serialize", e))
+}
+
+// ── 플레이어 엔진 (Phase 4) ───────────────────────────────────────────────────
+
+/// 진로 선택 → 다음 스텝
+#[napi]
+pub fn resolve_career_choice_native(params_json: String) -> String {
+    let params: ResolveChoiceParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("resolveCareerChoiceNative", e),
+    };
+    let result = player_engine::resolve_career_choice(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("resolveCareerChoiceNative/serialize", e))
+}
+
+/// 고교 투수 포지션 배정 (SP / RP)
+#[napi]
+pub fn assign_highschool_position_native(params_json: String) -> String {
+    let params: AssignHighschoolPositionParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("assignHighschoolPositionNative", e),
+    };
+    let result = player_engine::assign_highschool_position(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("assignHighschoolPositionNative/serialize", e))
+}
+
+/// 주인공 투수 역할 배정
+#[napi]
+pub fn assign_protagonist_role_native(params_json: String) -> String {
+    let params: AssignRoleParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("assignProtagonistRoleNative", e),
+    };
+    let result = player_engine::assign_protagonist_role(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("assignProtagonistRoleNative/serialize", e))
+}
+
+/// 불펜 등판 판정
+#[napi]
+pub fn reliever_would_pitch_native(params_json: String) -> String {
+    let params: RelieverPitchParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("relieverWouldPitchNative", e),
+    };
+    let result = player_engine::reliever_would_pitch(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("relieverWouldPitchNative/serialize", e))
+}
+
+/// 시즌 레이팅 계산
+#[napi]
+pub fn calc_season_rating_native(params_json: String) -> String {
+    let params: CalcSeasonRatingParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("calcSeasonRatingNative", e),
+    };
+    let result = player_engine::calc_season_rating(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcSeasonRatingNative/serialize", e))
+}
+
+/// 시장 연봉 계산
+#[napi]
+pub fn calc_market_salary_native(params_json: String) -> String {
+    let params: CalcMarketSalaryParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("calcMarketSalaryNative", e),
+    };
+    let result = player_engine::calc_market_salary(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcMarketSalaryNative/serialize", e))
+}
+
+/// 제안 연봉 계산
+#[napi]
+pub fn calc_offered_salary_native(params_json: String) -> String {
+    let params: CalcOfferedSalaryParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("calcOfferedSalaryNative", e),
+    };
+    let result = player_engine::calc_offered_salary(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcOfferedSalaryNative/serialize", e))
+}
+
+/// 주인공 제안 연봉 계산 (시즌 스탯 반영)
+#[napi]
+pub fn calc_offered_salary_for_protagonist_native(params_json: String) -> String {
+    let params: CalcOfferedSalaryForProtagonistParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("calcOfferedSalaryForProtagonistNative", e),
+    };
+    let result = player_engine::calc_offered_salary_for_protagonist(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcOfferedSalaryForProtagonistNative/serialize", e))
+}
+
+/// FA 오퍼 생성
+#[napi]
+pub fn generate_fa_offers_native(params_json: String) -> String {
+    let params: GenerateFaOffersParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("generateFaOffersNative", e),
+    };
+    let result = player_engine::generate_fa_offers(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("generateFaOffersNative/serialize", e))
+}
+
+/// 드래프트 순위/계약금 계산
+#[napi]
+pub fn calc_draft_rank_native(params_json: String) -> String {
+    let params: CalcDraftRankParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("calcDraftRankNative", e),
+    };
+    let result = player_engine::calc_draft_rank(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcDraftRankNative/serialize", e))
 }

@@ -124,7 +124,7 @@
       grade: 1,
       age: 17,
       playerType: "pitcher",
-      position: assignHighschoolPosition({ teamId: selectedTeamId, pitching: preset.pitching }, get(masterStore).entities),
+      position: await assignHighschoolPosition({ teamId: selectedTeamId, pitching: preset.pitching }, get(masterStore).entities),
       handedness,
       pitchingForm,
       jerseyNumber: 18,

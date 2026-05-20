@@ -42,6 +42,22 @@ contextBridge.exposeInMainWorld("projectB", {
   npcDetermineProtagonistDraft: (p) => ipcRenderer.invoke("npc:determineProtagonistDraft", p),
   npcAdvanceProtagonistGrade:   (p) => ipcRenderer.invoke("npc:advanceProtagonistGrade",   p),
 
+  // ── 성장 엔진 (Phase 4) ──────────────────────────────────────────────────
+  growthCalcTraining:                    (p) => ipcRenderer.invoke("growth:calcTraining",                         p),
+  growthCalcGame:                        (p) => ipcRenderer.invoke("growth:calcGame",                             p),
+
+  // ── 플레이어 엔진 (Phase 4) ──────────────────────────────────────────────
+  careerResolveChoice:                   (p) => ipcRenderer.invoke("career:resolveChoice",                        p),
+  pitcherAssignHighschoolPosition:       (p) => ipcRenderer.invoke("pitcher:assignHighschoolPosition",            p),
+  pitcherAssignRole:                     (p) => ipcRenderer.invoke("pitcher:assignRole",                          p),
+  pitcherRelieverWouldPitch:             (p) => ipcRenderer.invoke("pitcher:relieverWouldPitch",                  p),
+  salaryCalcSeasonRating:                (p) => ipcRenderer.invoke("salary:calcSeasonRating",                     p),
+  salaryCalcMarketSalary:                (p) => ipcRenderer.invoke("salary:calcMarketSalary",                     p),
+  salaryCalcOfferedSalary:               (p) => ipcRenderer.invoke("salary:calcOfferedSalary",                    p),
+  salaryCalcOfferedSalaryForProtagonist: (p) => ipcRenderer.invoke("salary:calcOfferedSalaryForProtagonist",      p),
+  faGenerateOffers:                      (p) => ipcRenderer.invoke("fa:generateOffers",                           p),
+  draftCalcDraftRank:                    (p) => ipcRenderer.invoke("draft:calcDraftRank",                         p),
+
   // ── dev 전용 (프로덕션 빌드에서 미노출) ────────────────────────────────
   ...(isDev && {
     masterSave: (payload)        => ipcRenderer.invoke("master:save",       payload),

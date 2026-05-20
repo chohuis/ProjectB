@@ -310,7 +310,7 @@ if (!nativeBinding) {
   throw new Error(`Failed to load native binding`)
 }
 
-const { computeSaveSig, verifySaveSig, startMatchNative, stepPitchNative, finishMatchNative, isProtagonistPitchingNative, advanceGamePhaseNative, simUntilEntry, simToGameEnd, simHalfInning, autoMoundVisitNative, requestMoundVisitNative, shouldProtagonistExitNative, runSimpleGame, simGameNative, runOffseasonNative, advanceGradesNative, generateFreshmenNative, runDraftNative, applyDraftNative, determineProtagonistDraftNative, advanceProtagonistGradeNative } = nativeBinding
+const { computeSaveSig, verifySaveSig, startMatchNative, stepPitchNative, finishMatchNative, isProtagonistPitchingNative, advanceGamePhaseNative, simUntilEntry, simToGameEnd, simHalfInning, autoMoundVisitNative, requestMoundVisitNative, shouldProtagonistExitNative, runSimpleGame, simGameNative, runOffseasonNative, advanceGradesNative, generateFreshmenNative, runDraftNative, applyDraftNative, determineProtagonistDraftNative, advanceProtagonistGradeNative, calcTrainingGrowthNative, calcGameGrowthNative, resolveCareerChoiceNative, assignHighschoolPositionNative, assignProtagonistRoleNative, relieverWouldPitchNative, calcSeasonRatingNative, calcMarketSalaryNative, calcOfferedSalaryNative, calcOfferedSalaryForProtagonistNative, generateFaOffersNative, calcDraftRankNative } = nativeBinding
 
 module.exports.computeSaveSig = computeSaveSig
 module.exports.verifySaveSig = verifySaveSig
@@ -334,3 +334,15 @@ module.exports.runDraftNative = runDraftNative
 module.exports.applyDraftNative = applyDraftNative
 module.exports.determineProtagonistDraftNative = determineProtagonistDraftNative
 module.exports.advanceProtagonistGradeNative = advanceProtagonistGradeNative
+module.exports.calcTrainingGrowthNative = calcTrainingGrowthNative
+module.exports.calcGameGrowthNative = calcGameGrowthNative
+module.exports.resolveCareerChoiceNative = resolveCareerChoiceNative
+module.exports.assignHighschoolPositionNative = assignHighschoolPositionNative
+module.exports.assignProtagonistRoleNative = assignProtagonistRoleNative
+module.exports.relieverWouldPitchNative = relieverWouldPitchNative
+module.exports.calcSeasonRatingNative = calcSeasonRatingNative
+module.exports.calcMarketSalaryNative = calcMarketSalaryNative
+module.exports.calcOfferedSalaryNative = calcOfferedSalaryNative
+module.exports.calcOfferedSalaryForProtagonistNative = calcOfferedSalaryForProtagonistNative
+module.exports.generateFaOffersNative = generateFaOffersNative
+module.exports.calcDraftRankNative = calcDraftRankNative

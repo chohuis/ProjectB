@@ -14,31 +14,13 @@ export interface CareerOption {
   desc: string;
 }
 
-// ── 확률 계산 ──────────────────────────────────────────────────
-export function calcDraftSuccess(ovr: number): boolean {
-  const pct = Math.max(5, Math.min(70, (ovr - 40) * 1.375 + 15));
-  return Math.random() * 100 < pct;
-}
+// ── UI 데이터 (TS 유지) ───────────────────────────────────────
 
-export function calcUnivSuccess(avgGrade: number): boolean {
-  const pct =
-    avgGrade <= 4 ? 85 :
-    avgGrade <= 6 ? 55 :
-    avgGrade <= 7 ? 30 : 10;
-  return Math.random() * 100 < pct;
-}
-
-export function calcIndieSuccess(ovr: number): boolean {
-  const pct = Math.max(35, Math.min(80, (ovr - 30) * 0.9 + 40));
-  return Math.random() * 100 < pct;
-}
-
-// ── 각 Step의 UI 데이터 ────────────────────────────────────────
 export interface StepView {
   title: string;
   body: string;
   options: CareerOption[];
-  isResultScreen: boolean;   // 결과 표시 화면 (OK 버튼 1개)
+  isResultScreen: boolean;
   resultSuccess?: boolean;
 }
 
@@ -56,7 +38,6 @@ export function getStepView(step: CareerStep): StepView {
           { id: "military",   label: "군입대",         desc: "군 복무를 선택합니다. 약 18개월 복무 후 복귀할 수 있습니다." },
         ],
       };
-
     case "draftResult":
       return {
         title: step.success ? "드래프트 성공!" : "드래프트 실패",
@@ -67,7 +48,6 @@ export function getStepView(step: CareerStep): StepView {
         resultSuccess: step.success,
         options: [{ id: "ok", label: "확인", desc: "" }],
       };
-
     case "univResult":
       return {
         title: step.success ? "대학 합격!" : "대학 불합격",
@@ -85,7 +65,6 @@ export function getStepView(step: CareerStep): StepView {
               { id: "military", label: "군입대",        desc: "군 복무를 선택합니다." },
             ],
       };
-
     case "univFailRoute":
       return {
         title: "진로 재선택",
@@ -96,7 +75,6 @@ export function getStepView(step: CareerStep): StepView {
           { id: "military", label: "군입대",        desc: "군 복무를 선택합니다." },
         ],
       };
-
     case "indieResult":
       return {
         title: step.success ? "독립리그 입단!" : "독립리그 지원 실패",
@@ -107,7 +85,6 @@ export function getStepView(step: CareerStep): StepView {
         resultSuccess: step.success,
         options: [{ id: "ok", label: "확인", desc: "" }],
       };
-
     case "resolved":
       return {
         title: "진로 확정",
@@ -129,47 +106,17 @@ function stageLabel(stage: CareerStage): string {
   }
 }
 
-// ── 선택 → 다음 Step 계산 ──────────────────────────────────────
-export function resolveChoice(
+// ── IPC 래퍼 ──────────────────────────────────────────────────
+
+export async function resolveChoice(
   step: CareerStep,
   choiceId: string,
   ovr: number,
   avgGrade: number,
-): CareerStep {
-  switch (step.type) {
-    case "initial": {
-      if (choiceId === "draft")      return { type: "draftResult",  success: calcDraftSuccess(ovr) };
-      if (choiceId === "university") return { type: "univResult",   success: calcUnivSuccess(avgGrade), source: "direct" };
-      if (choiceId === "indie")      return { type: "indieResult",  success: calcIndieSuccess(ovr) };
-      return { type: "resolved", stage: "military" };
-    }
-
-    case "draftResult": {
-      if (step.success) return { type: "resolved", stage: "pro" };
-      // 드래프트 실패 → 대학 자동 시도
-      return { type: "univResult", success: calcUnivSuccess(avgGrade), source: "afterDraft" };
-    }
-
-    case "univResult": {
-      if (step.success) return { type: "resolved", stage: "university" };
-      if (step.source === "afterDraft") {
-        // 드래프트→대학 모두 실패 → 독립리그 자동 시도
-        return { type: "indieResult", success: calcIndieSuccess(ovr) };
-      }
-      // 대학 직접 실패 → 재선택
-      return { type: "univFailRoute" };
-    }
-
-    case "univFailRoute": {
-      if (choiceId === "indie") return { type: "indieResult", success: calcIndieSuccess(ovr) };
-      return { type: "resolved", stage: "military" };
-    }
-
-    case "indieResult": {
-      return { type: "resolved", stage: step.success ? "independent" : "military" };
-    }
-
-    default:
-      return step;
-  }
+): Promise<CareerStep> {
+  return JSON.parse(
+    await (window as any).projectB.careerResolveChoice(
+      JSON.stringify({ step, choiceId, ovr, avgGrade })
+    )
+  ) as CareerStep;
 }

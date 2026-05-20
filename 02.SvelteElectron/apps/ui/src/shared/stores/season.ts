@@ -47,10 +47,12 @@ type PendingEntry = {
 };
 const _pending = new Map<number, PendingEntry>();
 
-function flushPendingWithSync() {
-  for (const [, { resolve, games, entities }] of _pending) {
-    resolve(games.map((g) => {
-      const sim = simulateGame(g.homeTeamId, g.awayTeamId, entities, {
+async function flushPendingWithSync() {
+  const entries = [..._pending.entries()];
+  _pending.clear();
+  for (const [, { resolve, games, entities }] of entries) {
+    const results = await Promise.all(games.map(async (g) => {
+      const sim = await simulateGame(g.homeTeamId, g.awayTeamId, entities, {
         conditions: g.conditions,
         homeRotIdx: g.homeRotIdx ?? 0,
         awayRotIdx: g.awayRotIdx ?? 0,
@@ -64,33 +66,12 @@ function flushPendingWithSync() {
         pitcherConditions: sim.pitcherConditions,
       };
     }));
+    resolve(results);
   }
-  _pending.clear();
 }
 
 function getSimWorker(): Worker | null {
-  if (typeof Worker === "undefined") return null;
-  if (!_simWorker) {
-    try {
-      _simWorker = new Worker(
-        new URL("../workers/simWorker.ts", import.meta.url),
-        { type: "module" },
-      );
-      _simWorker.onmessage = (e: MessageEvent<SimWorkerResponse>) => {
-        const { reqId, results } = e.data;
-        _pending.get(reqId)?.resolve(results);
-        _pending.delete(reqId);
-      };
-      _simWorker.onerror = (err) => {
-        console.warn("[simWorker] error, fallback to sync", err);
-        _simWorker = null;
-        flushPendingWithSync();
-      };
-    } catch {
-      return null;
-    }
-  }
-  return _simWorker;
+  return null; // Workers can't use window.projectB IPC
 }
 
 function runInWorker(
@@ -99,23 +80,21 @@ function runInWorker(
 ): Promise<SimWorkerResultItem[]> {
   const worker = getSimWorker();
   if (!worker) {
-    return Promise.resolve(
-      games.map((g) => {
-        const sim = simulateGame(g.homeTeamId, g.awayTeamId, entities, {
-          conditions: g.conditions,
-          homeRotIdx: g.homeRotIdx ?? 0,
-          awayRotIdx: g.awayRotIdx ?? 0,
-          week:       g.week ?? 0,
-        });
-        return {
-          id:                g.id,
-          result:            sim.result,
-          nextHomeRotIdx:    sim.nextHomeRotIdx,
-          nextAwayRotIdx:    sim.nextAwayRotIdx,
-          pitcherConditions: sim.pitcherConditions,
-        };
-      }),
-    );
+    return Promise.all(games.map(async (g) => {
+      const sim = await simulateGame(g.homeTeamId, g.awayTeamId, entities, {
+        conditions: g.conditions,
+        homeRotIdx: g.homeRotIdx ?? 0,
+        awayRotIdx: g.awayRotIdx ?? 0,
+        week:       g.week ?? 0,
+      });
+      return {
+        id:                g.id,
+        result:            sim.result,
+        nextHomeRotIdx:    sim.nextHomeRotIdx,
+        nextAwayRotIdx:    sim.nextAwayRotIdx,
+        pitcherConditions: sim.pitcherConditions,
+      };
+    }));
   }
   return new Promise((resolve) => {
     const reqId = _reqId++;
@@ -379,9 +358,7 @@ function createSeasonStore() {
             const homeRotIdx = lState.teamRotationIndex[game.homeTeamId] ?? 0;
             const awayRotIdx = lState.teamRotationIndex[game.awayTeamId] ?? 0;
 
-            const simResult = entities && entities.length > 0
-              ? simulateGame(game.homeTeamId, game.awayTeamId, entities, { conditions: lState.playerConditions, homeRotIdx, awayRotIdx, week })
-              : { result: simpleNpcResult(game.homeTeamId, game.awayTeamId), nextHomeRotIdx: homeRotIdx + 1, nextAwayRotIdx: awayRotIdx + 1, pitcherConditions: {} };
+            const simResult = { result: simpleNpcResult(game.homeTeamId, game.awayTeamId), nextHomeRotIdx: homeRotIdx + 1, nextAwayRotIdx: awayRotIdx + 1, pitcherConditions: {} };
 
             const idx = updatedSchedule.findIndex((e) => e.id === game.id);
             if (idx >= 0) updatedSchedule[idx] = { ...game, result: simResult.result };
