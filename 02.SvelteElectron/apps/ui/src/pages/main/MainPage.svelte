@@ -550,6 +550,10 @@
     devToolsHubOpen = false;
     messengerManagerOpen = true;
   }}
+  on:openMatchEngine={() => {
+    devToolsHubOpen = false;
+    currentTab = "test";
+  }}
 />
 
 <EventManagerModal open={eventManagerOpen} on:close={() => (eventManagerOpen = false)} />
