@@ -50,27 +50,30 @@ function isPathInside(target, base) {
   return rel && !rel.startsWith("..") && !path.isAbsolute(rel);
 }
 
-// ── 세이브 무결성 (HMAC-SHA256 — 키는 Rust 바이너리 내부) ─────────────────
+// ── 세이브 무결성 + 암호화 (Rust 바이너리 내부 키) ──────────────────────────
 function computeSig(data) {
   return engineNative.computeSaveSig(data);
 }
 
 function signSlot(db, slotId, game, season) {
-  const snapshot = JSON.stringify({ game: game ?? null, season: season ?? null });
-  const sig = computeSig(snapshot);
+  const plaintext = JSON.stringify({ game: game ?? null, season: season ?? null });
+  const encrypted = engineNative.encryptSaveNative(plaintext);
+  const sig = computeSig(encrypted);
   db.prepare(`
     INSERT INTO save_integrity (slot_id, snapshot, sig, updated_at)
     VALUES (?, ?, ?, ?)
     ON CONFLICT(slot_id) DO UPDATE SET
       snapshot=excluded.snapshot, sig=excluded.sig, updated_at=excluded.updated_at
-  `).run(slotId, snapshot, sig, new Date().toISOString());
+  `).run(slotId, encrypted, sig, new Date().toISOString());
 }
 
 function verifySlot(db, slotId) {
   const row = db.prepare("SELECT snapshot, sig FROM save_integrity WHERE slot_id = ?").get(slotId);
   if (!row) return { ok: true, missing: true };
   if (computeSig(row.snapshot) !== row.sig) return { ok: false, reason: "sig_mismatch" };
-  return { ok: true };
+  const plaintext = engineNative.decryptSaveNative(row.snapshot);
+  if (!plaintext) return { ok: false, reason: "decrypt_failed" };
+  return { ok: true, plaintext };
 }
 
 // ── 마스터 데이터 체크섬 (SHA-256) ──────────────────────────────────────────

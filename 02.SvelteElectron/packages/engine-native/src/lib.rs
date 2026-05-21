@@ -3,6 +3,7 @@
 use napi_derive::napi;
 
 mod hmac;
+mod crypto;
 mod types;
 mod tuning;
 mod match_engine;
@@ -27,6 +28,18 @@ use postseason_engine::*;
 #[napi]
 pub fn compute_save_sig(snapshot: String) -> String {
     hmac::compute_save_sig(&snapshot)
+}
+
+/// 세이브 데이터 암호화 → base64(nonce || ciphertext)
+#[napi]
+pub fn encrypt_save_native(plaintext: String) -> String {
+    crypto::encrypt_save(&plaintext)
+}
+
+/// 세이브 데이터 복호화 (구 평문 포맷 자동 감지)
+#[napi]
+pub fn decrypt_save_native(ciphertext: String) -> String {
+    crypto::decrypt_save(&ciphertext).unwrap_or_default()
 }
 
 /// 서명 검증 — 일치하면 true

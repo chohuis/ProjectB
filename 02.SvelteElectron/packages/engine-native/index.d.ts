@@ -5,6 +5,10 @@
 
 /** 세이브 데이터 HMAC-SHA256 서명 (키는 바이너리 내부) */
 export declare function computeSaveSig(snapshot: string): string
+/** 세이브 데이터 암호화 → base64(nonce || ciphertext) */
+export declare function encryptSaveNative(plaintext: string): string
+/** 세이브 데이터 복호화 (구 평문 포맷 자동 감지) */
+export declare function decryptSaveNative(ciphertext: string): string
 /** 서명 검증 — 일치하면 true */
 export declare function verifySaveSig(snapshot: string, sig: string): boolean
 /** 초기 경기 상태 생성 */

@@ -49,7 +49,6 @@
       "dist/ui/**",
       "packages/*/dist/**",
       "packages/engine-native/index.js",
-      "packages/engine-native/index.d.ts",
       "packages/engine-native/*.node",
       "resource/**",
       "!resource/data/staging/**",
@@ -60,7 +59,7 @@
     "asarUnpack": [
       "resource/**",
       "packages/*/dist/**",
-      "packages/engine-native/*.node"
+      "packages/engine-native/**"
     ],
     "win": {
       "target": [
