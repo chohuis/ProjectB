@@ -4,6 +4,7 @@
 
 | 추가할 것 | 방법 |
 |---|---|
+| **새 게임 핵심 로직** | `packages/engine-native/src/*.rs` → `DEV_GUIDE.md` 6단계 체크리스트 따를 것 |
 | 새 캐릭터 (아크 포함) | `resource/data/staging/CONTACT_{ID}.json` → `npm run deploy` |
 | 메신저 스크립트 | `resource/data/staging/SCRIPT_{ID}.json` → `npm run deploy` |
 | 필수/조건부/랜덤 이벤트 | `resource/data/staging/EVT_{ID}.json` → `npm run deploy` |
@@ -14,7 +15,6 @@
 | 새 UI 기능 | `apps/ui/src/features/{기능명}/ui/{기능명}Modal.svelte` |
 | 새 페이지 | `apps/ui/src/pages/{페이지명}/{페이지명}Page.svelte` |
 | 새 스토어 | `apps/ui/src/shared/stores/{이름}.ts` |
-| 새 유틸 | `apps/ui/src/shared/utils/{이름}.ts` |
 | 새 타입 | `apps/ui/src/shared/types/{이름}.ts` |
 | 빌드 스크립트 | `scripts/{이름}.mjs` |
 
@@ -150,17 +150,19 @@
 │               │   └── season.ts                            ← 시즌 타입
 │               ├── usecases/
 │               │   └── advanceWeek.ts                       ← 주차 진행 유스케이스
-│               └── utils/                  ← 게임 로직 엔진
-│                   ├── academicsEngine.ts                   ← 학업 엔진
-│                   ├── achievementEngine.ts                 ← 업적 엔진
-│                   ├── careerChain.ts                       ← 커리어 진행 로직
-│                   ├── conditionEvaluator.ts                ← 이벤트 조건 평가
-│                   ├── draftEngine.ts                       ← 드래프트 엔진
-│                   ├── eventEngine.ts                       ← 이벤트 발동 엔진
-│                   ├── faEngine.ts                          ← FA 엔진
-│                   ├── growthEngine.ts                      ← 성장 엔진
-│                   ├── salaryEngine.ts                      ← 연봉 계산 엔진
-│                   └── scheduleGen.ts                       ← 일정 생성기
+│               └── utils/                  ← Rust DLL IPC 래퍼 (로직은 Rust에 있음)
+│                   ├── academicsEngine.ts                   ← 학업 (시험결과: Rust IPC)
+│                   ├── achievementEngine.ts                 ← 업적 (순수 TS)
+│                   ├── careerChain.ts                       ← 커리어 (Rust IPC 래퍼)
+│                   ├── conditionEvaluator.ts                ← 이벤트 조건 평가 (순수 TS)
+│                   ├── draftEngine.ts                       ← 드래프트 (Rust IPC 래퍼)
+│                   ├── eventEngine.ts                       ← 이벤트 발동 (랜덤: Rust IPC)
+│                   ├── faEngine.ts                          ← FA (Rust IPC 래퍼)
+│                   ├── growthEngine.ts                      ← 성장 (Rust IPC 래퍼)
+│                   ├── pitcherRoleEngine.ts                 ← 투수 역할 (Rust IPC 래퍼)
+│                   ├── postseasonEngine.ts                  ← 포스트시즌 (Rust IPC 래퍼)
+│                   ├── salaryEngine.ts                      ← 연봉 (Rust IPC 래퍼)
+│                   └── scheduleGen.ts                       ← 일정 생성 (Rust IPC 래퍼)
 │
 │
 ├── packages/                               ← 공유 패키지 (monorepo)
@@ -175,7 +177,26 @@
 │   │   │   └── match.ts                    ← 경기 관련 타입
 │   │   └── dist/                           ← 빌드 결과물 (자동생성)
 │   │
-│   └── core/                               ← 게임 핵심 엔진
+│   ├── engine-native/                      ← ★ Rust DLL — 게임 본체
+│   │   ├── src/
+│   │   │   ├── lib.rs                      ← napi #[napi] export 정의
+│   │   │   ├── hmac.rs                     ← 세이브 HMAC-SHA256 서명
+│   │   │   ├── crypto.rs                   ← 세이브 ChaCha20-Poly1305 암호화
+│   │   │   ├── types.rs                    ← 매치 엔진 공유 타입
+│   │   │   ├── tuning.rs                   ← 매치 엔진 밸런스 상수
+│   │   │   ├── match_engine.rs             ← 인터랙티브 투구 엔진
+│   │   │   ├── sim_types.rs                ← NPC 시뮬 공유 타입
+│   │   │   ├── npc_sim.rs                  ← NPC 게임·오프시즌·드래프트
+│   │   │   ├── growth_engine.rs            ← 훈련/경기 성장 계산
+│   │   │   ├── player_engine.rs            ← 커리어·FA·연봉·드래프트 순위
+│   │   │   ├── schedule_engine.rs          ← 리그 일정 생성
+│   │   │   ├── postseason_engine.rs        ← 포스트시즌 브래킷/진행
+│   │   │   └── week_engine.rs              ← 주간 처리 (부상·시설·입시·시험·군복무 등)
+│   │   ├── index.js                        ← Node.js 진입점 (napi-rs 자동생성)
+│   │   ├── index.d.ts                      ← TS 타입 선언 (napi-rs 자동생성)
+│   │   └── Cargo.toml                      ← Rust 의존성
+│   │
+│   └── core/                               ← TypeScript 얇은 래퍼 (IPC 직렬화만)
 │       ├── package.json
 │       ├── tsconfig.json
 │       ├── src/
@@ -186,7 +207,7 @@
 │       │   │   └── matchState.ts           ← 경기 상태 도메인
 │       │   └── usecases/
 │       │       ├── advanceDay.ts           ← 날짜 진행 유스케이스
-│       │       └── matchEngine.ts          ← 경기 시뮬레이션 엔진
+│       │       └── matchEngine.ts          ← Rust DLL IPC 래퍼
 │       └── dist/                           ← 빌드 결과물 (자동생성)
 │
 │
