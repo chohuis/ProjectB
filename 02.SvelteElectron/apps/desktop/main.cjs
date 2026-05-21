@@ -2027,7 +2027,10 @@ app.whenReady().then(() => {
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
   ipcMain.handle("week:rollRandomBatch", (_event, count) => {
-    try { return engineNative.weekRollRandomBatchNative(count); }
+    try {
+      const safe = Math.min(Math.max(0, Number(count) || 0), 10000);
+      return engineNative.weekRollRandomBatchNative(safe);
+    }
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
 
