@@ -1,4 +1,5 @@
 import { derived, get, writable } from "svelte/store";
+import { gameStore, _registerSeasonGetter } from "./game";
 import type {
   LeagueSeasonState,
   MatchResult,
@@ -117,7 +118,7 @@ function createSeasonStore() {
   return {
     subscribe,
 
-    // 앱 시작 시 save_season.json에서 복원
+    // 앱 시작 시 save_season.json에서 복원 (레거시 — 슬롯 미사용 시 폴백)
     async load() {
       try {
         const raw = await window.projectB?.seasonLoad?.();
@@ -165,8 +166,41 @@ function createSeasonStore() {
       }
     },
 
-    // 현재 상태를 save_season.json에 저장
+    // 현재 상태를 SaveSeason 객체로 반환 (부수효과 없음)
+    toSaveSeason(): SaveSeason {
+      const s = get({ subscribe });
+      return { ...s, savedAt: new Date().toISOString() };
+    },
+
+    // 슬롯에서 복원
+    hydrateFromSlot(season: SaveSeason) {
+      const safeN = (v: unknown) => (typeof v === "number" && !isNaN(v) ? v : 0);
+      const sanitizedStats: Record<string, import("../types/save").PlayerSeasonStats> = {};
+      for (const [pid, st] of Object.entries(season.stats ?? {})) {
+        if ((st as import("../types/save").PitcherSeasonStats).type === "pitcher") {
+          const s = st as import("../types/save").PitcherSeasonStats;
+          const ip = safeN(s.ip);
+          sanitizedStats[pid] = { ...s, g: safeN(s.g), gs: safeN(s.gs), w: safeN(s.w), l: safeN(s.l), sv: safeN(s.sv), hd: safeN(s.hd), ip, er: safeN(s.er), h: safeN(s.h), k: safeN(s.k), bb: safeN(s.bb), era: calcEra(safeN(s.er), ip), whip: calcWhip(safeN(s.bb), safeN(s.h), ip) };
+        } else { sanitizedStats[pid] = st as import("../types/save").PlayerSeasonStats; }
+      }
+      set({
+        ...season,
+        stats: sanitizedStats,
+        currentDate:     season.currentDate     ?? `${season.seasonYear ?? 2026}-03-01`,
+        leagueSchedules: season.leagueSchedules ?? {},
+        leagueState: Object.fromEntries(
+          Object.entries(season.leagueState ?? {}).map(([lid, ls]) => [lid, migrateLeagueState(ls as Partial<LeagueSeasonState>)])
+        ),
+        hsGroupA: season.hsGroupA ?? [], hsGroupB: season.hsGroupB ?? {},
+        postseasonBrackets: season.postseasonBrackets ?? {},
+        ablEastTeams: season.ablEastTeams ?? [], ablWestTeams: season.ablWestTeams ?? [],
+        schedule: (season.schedule ?? []).map((e) => e.gameDate ? e : { ...e, gameDate: `${season.seasonYear ?? 2026}-03-01` }),
+      });
+    },
+
+    // 저장: 슬롯 활성 시 game.ts의 save()가 처리 → no-op. 아니면 레거시 seasonSave
     async save() {
+      if (get(gameStore).currentSlotId) return; // gameStore.save()가 통합 저장
       const s = get({ subscribe });
       const data: SaveSeason = { ...s, savedAt: new Date().toISOString() };
       try {
@@ -432,6 +466,14 @@ function createSeasonStore() {
       const simmed = await runInWorker(batch, entities);
       const simMap = new Map(simmed.map((r) => [r.id, r]));
 
+      // 경기 기록 수집 (npc_game_log 적재용)
+      const gameLogs: { npcId: string; role: string; statJson: string }[] = [];
+      for (const sim of simmed) {
+        for (const line of sim.result.playerLines) {
+          gameLogs.push({ npcId: line.playerId, role: line.role, statJson: JSON.stringify(line) });
+        }
+      }
+
       update((st) => {
         const nextSchedules = { ...st.leagueSchedules };
         const nextState = { ...st.leagueState };
@@ -460,6 +502,13 @@ function createSeasonStore() {
 
         return { ...st, leagueSchedules: nextSchedules, leagueState: nextState };
       });
+
+      // 경기 기록 DB 적재
+      if (gameLogs.length > 0 && window.projectB?.npcBulkInsertGameLogs) {
+        const slotId = get(gameStore).currentSlotId ?? "default";
+        await window.projectB.npcBulkInsertGameLogs(JSON.stringify({ slotId, season: s.seasonYear, week, logs: gameLogs }));
+        await window.projectB.npcTrimGameLogs(JSON.stringify({ slotId, keep: 5 }));
+      }
     },
 
     // L1: 주인공 리그 경기 결과를 leagueState에도 동기화
@@ -510,6 +559,37 @@ function createSeasonStore() {
     // L1: 특정 리그 순위표 조회 헬퍼
     getLeagueStandings(leagueId: string): Standing[] {
       return get({ subscribe }).leagueState[leagueId]?.standings ?? [];
+    },
+
+    // 시즌 종료 시 전 리그 누적 스탯 → npc_season_stats DB flush
+    async flushAllLeagueStatsToDb(seasonYear: number): Promise<void> {
+      if (!window.projectB?.npcFlushSeasonStats) return;
+      const s = get({ subscribe });
+      const slotId = get(gameStore).currentSlotId ?? "default";
+      for (const [leagueId, ls] of Object.entries(s.leagueState)) {
+        if (!ls.stats || Object.keys(ls.stats).length === 0) continue;
+        const statsByPlayer: Record<string, object> = {};
+        for (const [npcId, stat] of Object.entries(ls.stats)) {
+          if (stat.type === "pitcher") {
+            statsByPlayer[npcId] = {
+              role: "pitcher", games: stat.g, wins: stat.w, losses: stat.l,
+              saves: stat.sv, holds: stat.hd, ip: stat.ip, er: stat.er,
+              hitsAllowed: stat.h, strikeouts: stat.k, walks: stat.bb, pitchCount: 0,
+              atBats: 0, hits: 0, homeRuns: 0, rbi: 0, walksBat: 0, strikeoutsBat: 0, stolenBases: 0,
+            };
+          } else {
+            statsByPlayer[npcId] = {
+              role: "batter", games: stat.g, wins: 0, losses: 0, saves: 0, holds: 0,
+              ip: 0, er: 0, hitsAllowed: 0, strikeouts: 0, walks: 0, pitchCount: 0,
+              atBats: stat.ab, hits: stat.h, homeRuns: stat.hr, rbi: stat.rbi,
+              walksBat: stat.bb, strikeoutsBat: stat.k, stolenBases: stat.sb,
+            };
+          }
+        }
+        await window.projectB.npcFlushSeasonStats(
+          JSON.stringify({ slotId, season: seasonYear, leagueId, statsByPlayer })
+        );
+      }
     },
   };
 }
@@ -618,6 +698,9 @@ function accumulateStats(
 }
 
 export const seasonStore = createSeasonStore();
+
+// gameStore.save()가 슬롯 저장 시 season 데이터를 읽을 수 있도록 getter 등록
+_registerSeasonGetter(() => seasonStore.toSaveSeason());
 
 // ── 파생 스토어 ───────────────────────────────────────────────
 export const currentStandings = derived(

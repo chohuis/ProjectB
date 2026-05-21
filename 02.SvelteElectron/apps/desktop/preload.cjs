@@ -41,6 +41,11 @@ contextBridge.exposeInMainWorld("projectB", {
   npcApplyDraft:                (p) => ipcRenderer.invoke("npc:applyDraft",                p),
   npcDetermineProtagonistDraft: (p) => ipcRenderer.invoke("npc:determineProtagonistDraft", p),
   npcAdvanceProtagonistGrade:   (p) => ipcRenderer.invoke("npc:advanceProtagonistGrade",   p),
+  npcBulkInsertGameLogs:        (p) => ipcRenderer.invoke("npc:bulkInsertGameLogs",        p),
+  npcTrimGameLogs:              (p) => ipcRenderer.invoke("npc:trimGameLogs",              p),
+  npcGetRecentGames:            (p) => ipcRenderer.invoke("npc:getRecentGames",            p),
+  npcFlushSeasonStats:          (p) => ipcRenderer.invoke("npc:flushSeasonStats",          p),
+  npcGetCareerStats:            (p) => ipcRenderer.invoke("npc:getCareerStats",            p),
 
   // ── 성장 엔진 (Phase 4) ──────────────────────────────────────────────────
   growthCalcTraining:                    (p) => ipcRenderer.invoke("growth:calcTraining",                         p),

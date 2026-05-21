@@ -199,6 +199,8 @@ pub struct ProtagonistDraftParams {
 
 // ── 게임 시뮬 파라미터 ────────────────────────────────────────────────────────
 
+fn default_stamina_cap() -> f64 { 60.0 }
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SimPitcher {
@@ -208,6 +210,8 @@ pub struct SimPitcher {
     pub command: f64,
     pub control: f64,
     pub stamina: f64,
+    #[serde(default = "default_stamina_cap")]
+    pub stamina_cap: f64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -261,6 +265,7 @@ pub enum PlayerGameLine {
         h: i32,
         k: i32,
         bb: i32,
+        pc: i32,
         decision: String,
     },
     #[serde(rename = "batter")]

@@ -24,96 +24,12 @@ impl LcgRand {
 
 // ── 게임 시뮬레이션 ──────────────────────────────────────────────────────────
 
-enum PaOutcome { K, BB, HR, Single, Double, Triple, Out }
-
 fn cond_start_mod(pitcher_id: &str, conditions: &HashMap<String, SimPlayerCondition>) -> f64 {
     let fatigue = conditions.get(pitcher_id).map(|c| c.fatigue).unwrap_or(100.0);
     clamp_f(0.60 + fatigue * 0.004, 0.60, 1.0)
 }
 
-fn simulate_pa(bat: &SimBatter, pit: &SimPitcher, fatigue_mod: f64, rng: &mut impl Rng) -> PaOutcome {
-    let vel = pit.velocity * fatigue_mod;
-    let mov = pit.movement * fatigue_mod;
-    let cmd = pit.command  * fatigue_mod;
-    let ctl = pit.control  * fatigue_mod;
-    let con = bat.contact;
-    let eye = bat.eye;
-    let dis = bat.discipline;
-    let pow = bat.power;
-
-    let k_rate  = clamp_f(0.225 + (vel-50.0)*0.002 + (mov-50.0)*0.0015 - (con-50.0)*0.003,          0.08, 0.42);
-    let bb_rate = clamp_f(0.085 + (eye-50.0)*0.002  + (dis-50.0)*0.0015 - (cmd-50.0)*0.002 - (ctl-50.0)*0.0015, 0.02, 0.18);
-    let hr_rate = clamp_f(0.030 + (pow-50.0)*0.0015 - (vel-50.0)*0.001  - (mov-50.0)*0.001,          0.005, 0.08);
-
-    let r: f64 = rng.gen();
-    if r < k_rate                          { return PaOutcome::K; }
-    if r < k_rate + bb_rate               { return PaOutcome::BB; }
-    if r < k_rate + bb_rate + hr_rate     { return PaOutcome::HR; }
-
-    let hit_chance = clamp_f(0.30 + (con-50.0)*0.003 - (cmd-50.0)*0.002, 0.18, 0.46);
-    if rng.gen::<f64>() < hit_chance {
-        let h: f64 = rng.gen();
-        if h < 0.04 { return PaOutcome::Triple; }
-        if h < 0.30 { return PaOutcome::Double; }
-        return PaOutcome::Single;
-    }
-    PaOutcome::Out
-}
-
-struct ApplyResult { outs_added: i32, runs_scored: i32, new_bases: [bool;3], is_hit: bool, is_hr: bool }
-
-fn apply_outcome(outcome: &PaOutcome, bases: [bool;3], rng: &mut impl Rng) -> ApplyResult {
-    let [b1, b2, b3] = bases;
-    let mut runs = 0i32;
-
-    match outcome {
-        PaOutcome::K => ApplyResult { outs_added: 1, runs_scored: 0, new_bases: bases, is_hit: false, is_hr: false },
-        PaOutcome::Out => {
-            if b1 && rng.gen::<f64>() < 0.12 {
-                return ApplyResult { outs_added: 2, runs_scored: 0, new_bases: bases, is_hit: false, is_hr: false };
-            }
-            if b3 && rng.gen::<f64>() < 0.10 {
-                return ApplyResult { outs_added: 1, runs_scored: 1, new_bases: [b1, b2, false], is_hit: false, is_hr: false };
-            }
-            ApplyResult { outs_added: 1, runs_scored: 0, new_bases: bases, is_hit: false, is_hr: false }
-        },
-        PaOutcome::BB => {
-            if b1 && b2 && b3 { runs += 1; }
-            let nb3 = if b1 && b2 { true } else { b3 };
-            let nb2 = if b1 { true } else { b2 };
-            ApplyResult { outs_added: 0, runs_scored: runs, new_bases: [true, nb2, nb3], is_hit: false, is_hr: false }
-        },
-        PaOutcome::Single => {
-            let nb2 = b1;
-            let mut nb3 = false;
-            if b3 { runs += 1; }
-            if b2 { if rng.gen::<f64>() < 0.45 { runs += 1; } else { nb3 = true; } }
-            ApplyResult { outs_added: 0, runs_scored: runs, new_bases: [true, nb2, nb3], is_hit: true, is_hr: false }
-        },
-        PaOutcome::Double => {
-            let mut nb3 = false;
-            if b3 { runs += 1; }
-            if b2 { runs += 1; }
-            if b1 { if rng.gen::<f64>() < 0.5 { runs += 1; } else { nb3 = true; } }
-            ApplyResult { outs_added: 0, runs_scored: runs, new_bases: [false, true, nb3], is_hit: true, is_hr: false }
-        },
-        PaOutcome::Triple => {
-            if b3 { runs += 1; }
-            if b2 { runs += 1; }
-            if b1 { runs += 1; }
-            ApplyResult { outs_added: 0, runs_scored: runs, new_bases: [false, false, true], is_hit: true, is_hr: false }
-        },
-        PaOutcome::HR => {
-            if b3 { runs += 1; }
-            if b2 { runs += 1; }
-            if b1 { runs += 1; }
-            runs += 1;
-            ApplyResult { outs_added: 0, runs_scored: runs, new_bases: [false, false, false], is_hit: true, is_hr: true }
-        },
-    }
-}
-
-struct PitAccum { outs: i32, er: i32, h: i32, k: i32, bb: i32 }
+struct PitAccum { outs: i32, er: i32, h: i32, k: i32, bb: i32, pc: i32 }
 struct BatAccum { ab: i32, h: i32, hr: i32, rbi: i32, bb: i32, k: i32 }
 
 fn sim_max_outs(pit: &SimPitcher, is_starter: bool, cond_mod: f64, rng: &mut impl Rng) -> i32 {
@@ -125,66 +41,228 @@ fn sim_max_outs(pit: &SimPitcher, is_starter: bool, cond_mod: f64, rng: &mut imp
     }
 }
 
-fn sim_half_inning(
+// ── 투구 단위 반이닝 시뮬 ────────────────────────────────────────────────────
+
+enum NpcPitchResult { Ball, StrikeLook, StrikeSwing, Foul, Out, Single, Double, Triple, HR }
+
+// 타석 결과 (투구 루프 종료 후 반환)
+enum AbResult { K, BB, Out, DoublePlay, Single, Double, Triple, HR }
+
+fn npc_sim_one_pitch(
+    vel: f64, cmd: f64, ctl: f64, mov: f64,
+    contact: f64, eye: f64, discipline: f64, power: f64,
+    balls: u8, strikes: u8,
+    rng: &mut impl Rng,
+) -> NpcPitchResult {
+    // 3-0 카운트: 타자가 거의 지켜봄 (선구안 높을수록 더 적극적으로 기다림)
+    if balls == 3 && strikes == 0 {
+        let take_prob = clamp_f(0.80 + (discipline - 50.0) * 0.003, 0.65, 0.95);
+        if rng.gen::<f64>() < take_prob {
+            let in_zone = rng.gen::<f64>() < clamp_f(0.58 + (ctl - 50.0) * 0.003, 0.42, 0.72);
+            return if in_zone { NpcPitchResult::StrikeLook } else { NpcPitchResult::Ball };
+        }
+    }
+    let strike_prob = clamp_f(0.58 + (ctl - 50.0) * 0.003 + (cmd - 50.0) * 0.002, 0.42, 0.72);
+    if rng.gen::<f64>() >= strike_prob {
+        let chase = clamp_f(0.28 - (discipline - 50.0) * 0.003, 0.10, 0.42);
+        return if rng.gen::<f64>() < chase { NpcPitchResult::StrikeSwing } else { NpcPitchResult::Ball };
+    }
+    let swing_prob = clamp_f(0.70 + (contact - 50.0) * 0.003 - (eye - 50.0) * 0.002, 0.50, 0.88);
+    if rng.gen::<f64>() >= swing_prob { return NpcPitchResult::StrikeLook; }
+
+    let base_contact = clamp_f(
+        0.78 + (contact - 50.0) * 0.004 - (vel - 50.0) * 0.003 - (mov - 50.0) * 0.002,
+        0.40, 0.92,
+    );
+    let contact_prob = if strikes == 2 { clamp_f(base_contact + 0.06, 0.40, 0.92) } else { base_contact };
+    if rng.gen::<f64>() >= contact_prob { return NpcPitchResult::StrikeSwing; }
+
+    let foul_prob = clamp_f(0.36 - (contact - 50.0) * 0.003, 0.18, 0.52);
+    if rng.gen::<f64>() < foul_prob { return NpcPitchResult::Foul; }
+
+    let hr_rate  = clamp_f(0.030 + (power - 50.0) * 0.0015 - (vel - 50.0) * 0.001, 0.005, 0.08);
+    let out_rate = clamp_f(0.62  - (contact - 50.0) * 0.004, 0.40, 0.78);
+    let r: f64   = rng.gen();
+    if r < hr_rate              { return NpcPitchResult::HR; }
+    if r < hr_rate + out_rate   { return NpcPitchResult::Out; }
+    let h: f64 = rng.gen();
+    if h < 0.04        { NpcPitchResult::Triple }
+    else if h < 0.28   { NpcPitchResult::Double }
+    else               { NpcPitchResult::Single }
+}
+
+// 투구 루프로 타석 1개 처리 → (결과, 투구수)
+fn sim_at_bat(
+    vel: f64, cmd: f64, ctl: f64, mov: f64,
+    contact: f64, eye: f64, discipline: f64, power: f64,
+    bases: &[bool; 3], outs: i32,
+    rng: &mut impl Rng,
+) -> (AbResult, u32) {
+    let mut balls = 0u8;
+    let mut strikes = 0u8;
+    let mut pc = 0u32;
+    loop {
+        let r = npc_sim_one_pitch(vel, cmd, ctl, mov, contact, eye, discipline, power, balls, strikes, rng);
+        pc += 1;
+        match r {
+            NpcPitchResult::Ball => {
+                balls += 1;
+                if balls >= 4 { return (AbResult::BB, pc); }
+            }
+            NpcPitchResult::StrikeLook | NpcPitchResult::StrikeSwing => {
+                strikes += 1;
+                if strikes >= 3 { return (AbResult::K, pc); }
+            }
+            NpcPitchResult::Foul => { if strikes < 2 { strikes += 1; } }
+            NpcPitchResult::Out => {
+                if bases[0] && outs < 2 && rng.gen::<f64>() < 0.12 {
+                    return (AbResult::DoublePlay, pc);
+                }
+                return (AbResult::Out, pc);
+            }
+            NpcPitchResult::Single => return (AbResult::Single, pc),
+            NpcPitchResult::Double => return (AbResult::Double, pc),
+            NpcPitchResult::Triple => return (AbResult::Triple, pc),
+            NpcPitchResult::HR     => return (AbResult::HR, pc),
+        }
+        if pc >= 12 { return (AbResult::Out, pc); } // 안전장치
+    }
+}
+
+// 타석 결과를 베이스/득점에 적용 → (outs_added, runs_scored, is_hit, is_hr)
+fn apply_ab_result(
+    result: &AbResult,
+    bases: &mut [bool; 3],
+    rng: &mut impl Rng,
+) -> (i32, i32, bool, bool) {
+    match result {
+        AbResult::K | AbResult::Out => {
+            if matches!(result, AbResult::Out) && bases[2] && rng.gen::<f64>() < 0.10 {
+                bases[2] = false;
+                return (1, 1, false, false); // 희생플라이
+            }
+            (1, 0, false, false)
+        }
+        AbResult::DoublePlay => (2, 0, false, false),
+        AbResult::BB => {
+            let (b1, b2, b3) = (bases[0], bases[1], bases[2]);
+            let runs = if b1 && b2 && b3 { 1 } else { 0 };
+            bases[2] = if b1 && b2 { true } else { b3 };
+            bases[1] = if b1 { true } else { b2 };
+            bases[0] = true;
+            (0, runs, false, false)
+        }
+        AbResult::Single => {
+            let (b1, b2, b3) = (bases[0], bases[1], bases[2]);
+            let mut runs = 0;
+            if b3 { runs += 1; }
+            let new_b3 = if b2 { if rng.gen::<f64>() < 0.45 { runs += 1; false } else { true } } else { false };
+            bases[2] = new_b3;
+            bases[1] = b1;
+            bases[0] = true;
+            (0, runs, true, false)
+        }
+        AbResult::Double => {
+            let (b1, b2, b3) = (bases[0], bases[1], bases[2]);
+            let mut runs = 0;
+            if b3 { runs += 1; }
+            if b2 { runs += 1; }
+            let new_b3 = if b1 { if rng.gen::<f64>() < 0.5 { true } else { runs += 1; false } } else { false };
+            bases[2] = new_b3;
+            bases[1] = true;
+            bases[0] = false;
+            (0, runs, true, false)
+        }
+        AbResult::Triple => {
+            let mut runs = 0;
+            for i in 0..3 { if bases[i] { runs += 1; bases[i] = false; } }
+            bases[2] = true;
+            (0, runs, true, false)
+        }
+        AbResult::HR => {
+            let mut runs = 1;
+            for i in 0..3 { if bases[i] { runs += 1; bases[i] = false; } }
+            (0, runs, true, true)
+        }
+    }
+}
+
+fn sim_half_inning_pitch(
     lineup: &[SimBatter],
     lineup_pos: usize,
     pit: &SimPitcher,
+    pit_stamina: f64,
     pit_outs: i32,
-    pit_max: i32,
     start_cond_mod: f64,
     pit_map: &mut HashMap<String, PitAccum>,
     bat_map: &mut HashMap<String, BatAccum>,
     rng: &mut impl Rng,
-) -> (i32, usize, i32) {  // (runs, new_lineup_pos, new_pit_outs)
-    let mut bases = [false; 3];
-    let mut outs = 0i32;
-    let mut runs = 0i32;
-    let mut lpos = lineup_pos;
+) -> (i32, usize, i32, f64) {  // (runs, new_lineup_pos, new_pit_outs, new_stamina)
+    let mut bases        = [false; 3];
+    let mut outs         = 0i32;
+    let mut runs         = 0i32;
+    let mut lpos         = lineup_pos;
     let mut cur_pit_outs = pit_outs;
-    let n = lineup.len().max(1);
+    let mut stamina      = pit_stamina;
+    let n                = lineup.len().max(1);
 
-    let in_game_fatigue = clamp_f(
-        1.0 - (0i32.max(cur_pit_outs - (pit_max as f64 * 0.6) as i32)) as f64
-            / (pit_max.max(1) as f64) * 0.4,
-        0.68, 1.0,
-    );
-    let fmod = in_game_fatigue * start_cond_mod;
+    let stamina_loss = 100.0 / (60.0 + (pit.stamina_cap - 50.0) * 1.5).max(30.0);
+    let quality = |st: f64| -> f64 {
+        if st < 40.0 { clamp_f(0.75 + st * 0.00625, 0.75, 1.0) }
+        else if st < 70.0 { clamp_f(1.0 - (70.0 - st) * 0.004, 0.88, 1.0) }
+        else { 1.0 }
+    };
 
-    let pa_entry = pit_map.entry(pit.id.clone()).or_insert(PitAccum { outs: 0, er: 0, h: 0, k: 0, bb: 0 });
-    let pit_entry = pa_entry as *mut PitAccum;
+    let acc = pit_map.entry(pit.id.clone())
+        .or_insert(PitAccum { outs: 0, er: 0, h: 0, k: 0, bb: 0, pc: 0 });
+    let acc_ptr = acc as *mut PitAccum;
 
     while outs < 3 {
         if lineup.is_empty() { outs += 1; cur_pit_outs += 1; continue; }
         let batter = &lineup[lpos % n];
         lpos += 1;
 
-        let outcome = simulate_pa(batter, pit, fmod, rng);
-        let res = apply_outcome(&outcome, bases, rng);
+        let q   = quality(stamina) * start_cond_mod;
+        let vel = pit.velocity * q;
+        let cmd = pit.command  * q;
+        let ctl = pit.control  * q;
+        let mov = pit.movement * q;
 
-        bases = res.new_bases;
-        outs += res.outs_added;
-        runs += res.runs_scored;
-        cur_pit_outs += res.outs_added;
+        let (ab_result, pc) = sim_at_bat(
+            vel, cmd, ctl, mov,
+            batter.contact, batter.eye, batter.discipline, batter.power,
+            &bases, outs, rng,
+        );
+        stamina = (stamina - stamina_loss * pc as f64).max(0.0);
 
-        // pitcher accum (safe because we hold exclusive ref via *mut)
-        let pa = unsafe { &mut *pit_entry };
-        pa.outs += res.outs_added;
-        pa.er   += res.runs_scored;
-        if res.is_hit                         { pa.h  += 1; }
-        if matches!(outcome, PaOutcome::K)    { pa.k  += 1; }
-        if matches!(outcome, PaOutcome::BB)   { pa.bb += 1; }
+        let (outs_added, runs_scored, is_hit, is_hr) = apply_ab_result(&ab_result, &mut bases, rng);
 
-        // batter accum
-        let ba = bat_map.entry(batter.id.clone()).or_insert(BatAccum { ab: 0, h: 0, hr: 0, rbi: 0, bb: 0, k: 0 });
-        if !matches!(outcome, PaOutcome::BB) { ba.ab += 1; }
-        if res.is_hit  { ba.h  += 1; }
-        if res.is_hr   { ba.hr += 1; }
-        if matches!(outcome, PaOutcome::BB) { ba.bb += 1; }
-        if matches!(outcome, PaOutcome::K)  { ba.k  += 1; }
-        ba.rbi += res.runs_scored;
+        outs         += outs_added;
+        cur_pit_outs += outs_added;
+        runs         += runs_scored;
+
+        let is_k  = matches!(ab_result, AbResult::K);
+        let is_bb = matches!(ab_result, AbResult::BB);
+
+        let pa = unsafe { &mut *acc_ptr };
+        pa.outs += outs_added;
+        pa.er   += runs_scored;
+        pa.pc   += pc as i32;
+        if is_hit { pa.h  += 1; }
+        if is_k   { pa.k  += 1; }
+        if is_bb  { pa.bb += 1; }
+
+        let ba = bat_map.entry(batter.id.clone())
+            .or_insert(BatAccum { ab: 0, h: 0, hr: 0, rbi: 0, bb: 0, k: 0 });
+        if !is_bb { ba.ab += 1; }
+        if is_hit  { ba.h  += 1; }
+        if is_hr   { ba.hr += 1; }
+        if is_bb   { ba.bb += 1; }
+        if is_k    { ba.k  += 1; }
+        ba.rbi += runs_scored;
     }
 
-    (runs, lpos, cur_pit_outs)
+    (runs, lpos, cur_pit_outs, stamina)
 }
 
 fn build_pit_queue(
@@ -231,6 +309,12 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
     let mut pit_map: HashMap<String, PitAccum> = HashMap::new();
     let mut bat_map: HashMap<String, BatAccum> = HashMap::new();
 
+    // 경기 중 투수별 현재 스태미나 추적 (초기값 = stamina 필드)
+    let mut pit_stamina_map: HashMap<String, f64> = HashMap::new();
+    for p in home_pit_q.iter().chain(away_pit_q.iter()) {
+        pit_stamina_map.entry(p.id.clone()).or_insert(p.stamina);
+    }
+
     let mut home_score = 0i32;
     let mut away_score = 0i32;
     let mut home_lpos  = 0usize;
@@ -248,16 +332,17 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
         }
         let h_pit = &home_pit_q[h_pit_idx.min(home_pit_q.len().saturating_sub(1))];
         let h_cond = cond_start_mod(&h_pit.id, &params.conditions);
+        let h_stamina = *pit_stamina_map.get(&h_pit.id).unwrap_or(&h_pit.stamina);
 
         // 원정 공격 (상반기)
-        let h_max = *pit_max_map.get(&h_pit.id).unwrap_or(&27);
-        let (top_runs, new_away_lpos, new_h_outs) = sim_half_inning(
-            &params.away_lineup, away_lpos, h_pit, h_pit_outs, h_max, h_cond,
+        let (top_runs, new_away_lpos, new_h_outs, new_h_stamina) = sim_half_inning_pitch(
+            &params.away_lineup, away_lpos, h_pit, h_stamina, h_pit_outs, h_cond,
             &mut pit_map, &mut bat_map, &mut rng,
         );
         away_score  += top_runs;
         away_lpos    = new_away_lpos;
         h_pit_outs   = new_h_outs;
+        pit_stamina_map.insert(h_pit.id.clone(), new_h_stamina);
 
         // 원정 투수 교체
         if a_pit_idx + 1 < away_pit_q.len() {
@@ -266,19 +351,20 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
         }
         let a_pit = &away_pit_q[a_pit_idx.min(away_pit_q.len().saturating_sub(1))];
         let a_cond = cond_start_mod(&a_pit.id, &params.conditions);
+        let a_stamina = *pit_stamina_map.get(&a_pit.id).unwrap_or(&a_pit.stamina);
 
         // 9회 말 홈팀 앞서면 walk-off
         if inning == 9 && home_score > away_score { break; }
 
         // 홈 공격 (하반기)
-        let a_max = *pit_max_map.get(&a_pit.id).unwrap_or(&27);
-        let (bot_runs, new_home_lpos, new_a_outs) = sim_half_inning(
-            &params.home_lineup, home_lpos, a_pit, a_pit_outs, a_max, a_cond,
+        let (bot_runs, new_home_lpos, new_a_outs, new_a_stamina) = sim_half_inning_pitch(
+            &params.home_lineup, home_lpos, a_pit, a_stamina, a_pit_outs, a_cond,
             &mut pit_map, &mut bat_map, &mut rng,
         );
         home_score  += bot_runs;
         home_lpos    = new_home_lpos;
         a_pit_outs   = new_a_outs;
+        pit_stamina_map.insert(a_pit.id.clone(), new_a_stamina);
 
         // 콜드게임
         let diff = (home_score - away_score).abs();
@@ -290,21 +376,25 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
             while ex_inning <= 12 && home_score == away_score {
                 let ex_h = &home_pit_q[h_pit_idx.min(home_pit_q.len().saturating_sub(1))];
                 let ex_h_cond = cond_start_mod(&ex_h.id, &params.conditions);
-                let (t, new_al, _) = sim_half_inning(
-                    &params.away_lineup, away_lpos, ex_h, 27, 3, ex_h_cond,
+                let ex_h_st = *pit_stamina_map.get(&ex_h.id).unwrap_or(&ex_h.stamina);
+                let (t, new_al, _, new_ex_h_st) = sim_half_inning_pitch(
+                    &params.away_lineup, away_lpos, ex_h, ex_h_st, 27, ex_h_cond,
                     &mut pit_map, &mut bat_map, &mut rng,
                 );
                 away_score += t;
                 away_lpos   = new_al;
+                pit_stamina_map.insert(ex_h.id.clone(), new_ex_h_st);
 
                 let ex_a = &away_pit_q[a_pit_idx.min(away_pit_q.len().saturating_sub(1))];
                 let ex_a_cond = cond_start_mod(&ex_a.id, &params.conditions);
-                let (b, new_hl, _) = sim_half_inning(
-                    &params.home_lineup, home_lpos, ex_a, 27, 3, ex_a_cond,
+                let ex_a_st = *pit_stamina_map.get(&ex_a.id).unwrap_or(&ex_a.stamina);
+                let (b, new_hl, _, new_ex_a_st) = sim_half_inning_pitch(
+                    &params.home_lineup, home_lpos, ex_a, ex_a_st, 27, ex_a_cond,
                     &mut pit_map, &mut bat_map, &mut rng,
                 );
                 home_score += b;
                 home_lpos   = new_hl;
+                pit_stamina_map.insert(ex_a.id.clone(), new_ex_a_st);
                 ex_inning   += 1;
             }
             if home_score == away_score {
@@ -344,7 +434,7 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
         let decision  = pitcher_decision(id, team_won, pit_q, final_idx);
         let ip        = (acc.outs / 3) as f64 + (acc.outs % 3) as f64 / 10.0;
         player_lines.push(PlayerGameLine::Pitcher {
-            player_id: id.clone(), ip, er: acc.er, h: acc.h, k: acc.k, bb: acc.bb, decision,
+            player_id: id.clone(), ip, er: acc.er, h: acc.h, k: acc.k, bb: acc.bb, pc: acc.pc, decision,
         });
     }
 

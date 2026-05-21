@@ -47,8 +47,14 @@ import {
 import type { SeasonEndSummary } from "../utils/npcEngine";
 export type { SeasonEndSummary } from "../utils/npcEngine";
 
+// ── 시즌 데이터 getter 등록 (season.ts → game.ts 역방향 의존 없이 슬롯 저장 연동) ──
+import type { SaveSeason } from "../types/season";
+let _getSeasonData: (() => SaveSeason) | null = null;
+export function _registerSeasonGetter(fn: () => SaveSeason) { _getSeasonData = fn; }
+
 // ── gameStore 내부 상태 ────────────────────────────────────────
 export interface GameStoreState {
+  currentSlotId: string | null;
   protagonist: ProtagonistSave;
   mailbox: MessageItem[];
   trainingPlan: TrainingPlanState;
@@ -299,6 +305,7 @@ export function computeWeekLabel(week: number, seasonYear: number = BASE_SEASON_
 function buildInitialState(): GameStoreState {
   const p = DEFAULT_PROTAGONIST;
   return {
+    currentSlotId: null,
     protagonist:  p,
     mailbox:      DEFAULT_MAILBOX,
     trainingPlan: DEFAULT_TRAINING_PLAN,
@@ -361,6 +368,7 @@ function fromSaveGame(saved: SaveGame): GameStoreState {
   const metrics = { ...DEFAULT_ACHIEVEMENT_METRICS, ...(saved.achievementMetrics ?? {}) };
   const achievements = saved.achievements ?? DEFAULT_ACHIEVEMENTS;
   return {
+    currentSlotId: null,
     protagonist:  p,
     mailbox:      saved.mailbox,
     trainingPlan: saved.trainingPlan,
@@ -458,7 +466,7 @@ function createGameStore() {
   return {
     subscribe,
 
-    // 앱 시작 시 save_game.json에서 복원
+    // 앱 시작 시 save_game.json에서 복원 (레거시 — 슬롯 미사용 시 폴백)
     async load() {
       try {
         const raw = await window.projectB?.gameLoad?.();
@@ -468,16 +476,41 @@ function createGameStore() {
       }
     },
 
-    // 현재 상태를 save_game.json에 저장
+    // 슬롯에서 복원 (game + slotId 설정)
+    hydrateFromSlot(game: SaveGame, slotId: string) {
+      const state = fromSaveGame(migrateSaveGame(game as unknown as Record<string, unknown>));
+      set({ ...state, currentSlotId: slotId });
+    },
+
+    // 현재 상태를 SaveGame 객체로 반환 (부수효과 없음)
+    toSaveGame(): SaveGame {
+      const s = get({ subscribe });
+      return makeSaveGame(
+        s.protagonist, s.mailbox, s.trainingPlan,
+        s.schoolState, s.achievements, s.achievementMetrics, s.logs, s.upcoming,
+        s.contacts, s.npcs,
+      );
+    },
+
+    // 활성 슬롯 ID 설정 (새 게임 시작 시 슬롯 선택 후 호출)
+    setCurrentSlotId(slotId: string | null) {
+      update((s) => ({ ...s, currentSlotId: slotId }));
+    },
+
+    // 저장: 슬롯 활성 시 saveSlot, 아니면 레거시 gameSave
     async save() {
       const s = get({ subscribe });
-      const data = makeSaveGame(
+      const gameData = makeSaveGame(
         s.protagonist, s.mailbox, s.trainingPlan,
         s.schoolState, s.achievements, s.achievementMetrics, s.logs, s.upcoming,
         s.contacts, s.npcs,
       );
       try {
-        await window.projectB?.gameSave?.(data);
+        if (s.currentSlotId && _getSeasonData) {
+          await window.projectB?.saveSlot?.({ slotId: s.currentSlotId, game: gameData, season: _getSeasonData() });
+        } else {
+          await window.projectB?.gameSave?.(gameData);
+        }
       } catch (e) {
         console.warn("[gameStore] save failed", e);
       }
@@ -1440,8 +1473,10 @@ function createGameStore() {
     },
 
     // 새 게임 시작: 캐릭터 생성 완료 시 호출
-    initNew(protagonist: ProtagonistSave) {
+    initNew(protagonist: ProtagonistSave, slotId?: string) {
+      const cur = get({ subscribe });
       set({
+        currentSlotId: slotId ?? cur.currentSlotId,
         protagonist,
         mailbox: [],
         trainingPlan: DEFAULT_TRAINING_PLAN,

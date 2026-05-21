@@ -3,8 +3,6 @@
   export let onContinue: () => void;
 
   export let hasSave = false;
-  export let loading = false;
-  export let errorMsg = "";
 </script>
 
 <div class="intro">
@@ -15,14 +13,8 @@
 
     <div class="buttons">
       <button class="btn primary" on:click={onNew}>새 게임 시작</button>
-      <button class="btn secondary" on:click={onContinue} disabled={!hasSave || loading}>
-        {loading ? "불러오는 중..." : "이어하기"}
-      </button>
+      <button class="btn secondary" on:click={onContinue} disabled={!hasSave}>이어하기</button>
     </div>
-
-    {#if errorMsg}
-      <p class="error">{errorMsg}</p>
-    {/if}
 
     {#if !hasSave}
       <p class="hint">저장된 데이터가 없습니다</p>

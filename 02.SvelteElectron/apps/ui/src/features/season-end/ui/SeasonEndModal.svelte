@@ -137,6 +137,9 @@
     }
     gameStore.applySeasonHistory($seasonStore.stats, leagueStats, now);
 
+    // L5: 시즌 스탯 → npc_season_stats DB flush (startNewSeason 전에 실행)
+    await seasonStore.flushAllLeagueStatsToDb(now);
+
     // L6: 전체 리그 NPC 오프시즌 처리 (에이징·감퇴·UNIV졸업·은퇴·로스터 정리)
     await gameStore.processAllLeaguesSeasonEnd(now);
 

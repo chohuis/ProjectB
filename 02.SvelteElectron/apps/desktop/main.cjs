@@ -612,6 +612,47 @@ function openDatabase(dbPath) {
       PRIMARY KEY (slot_id, npc_id, sort_order)
     );
 
+    CREATE TABLE IF NOT EXISTS npc_game_log (
+      id        INTEGER PRIMARY KEY AUTOINCREMENT,
+      slot_id   TEXT    NOT NULL REFERENCES save_slots(slot_id) ON DELETE CASCADE,
+      npc_id    TEXT    NOT NULL,
+      season    INTEGER NOT NULL,
+      week      INTEGER NOT NULL,
+      role      TEXT    NOT NULL,
+      stat_json TEXT    NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_ngl_player
+      ON npc_game_log(slot_id, npc_id, season DESC, week DESC);
+
+    CREATE TABLE IF NOT EXISTS npc_season_stats (
+      slot_id        TEXT    NOT NULL,
+      npc_id         TEXT    NOT NULL,
+      season         INTEGER NOT NULL,
+      league_id      TEXT    NOT NULL DEFAULT '',
+      role           TEXT    NOT NULL,
+      games          INTEGER NOT NULL DEFAULT 0,
+      wins           INTEGER NOT NULL DEFAULT 0,
+      losses         INTEGER NOT NULL DEFAULT 0,
+      saves          INTEGER NOT NULL DEFAULT 0,
+      holds          INTEGER NOT NULL DEFAULT 0,
+      ip             REAL    NOT NULL DEFAULT 0,
+      er             INTEGER NOT NULL DEFAULT 0,
+      hits_allowed   INTEGER NOT NULL DEFAULT 0,
+      strikeouts     INTEGER NOT NULL DEFAULT 0,
+      walks          INTEGER NOT NULL DEFAULT 0,
+      pitch_count    INTEGER NOT NULL DEFAULT 0,
+      at_bats        INTEGER NOT NULL DEFAULT 0,
+      hits           INTEGER NOT NULL DEFAULT 0,
+      home_runs      INTEGER NOT NULL DEFAULT 0,
+      rbi            INTEGER NOT NULL DEFAULT 0,
+      walks_bat      INTEGER NOT NULL DEFAULT 0,
+      strikeouts_bat INTEGER NOT NULL DEFAULT 0,
+      stolen_bases   INTEGER NOT NULL DEFAULT 0,
+      PRIMARY KEY (slot_id, npc_id, season)
+    );
+    CREATE INDEX IF NOT EXISTS idx_nss_player
+      ON npc_season_stats(slot_id, npc_id);
+
     CREATE TABLE IF NOT EXISTS season_meta (
       slot_id      TEXT PRIMARY KEY REFERENCES save_slots(slot_id) ON DELETE CASCADE,
       version      INTEGER NOT NULL DEFAULT 1,
@@ -1864,6 +1905,138 @@ app.whenReady().then(() => {
   ipcMain.handle("npc:advanceProtagonistGrade", (_event, paramsJson) => {
     try { return engineNative.advanceProtagonistGradeNative(paramsJson); }
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  // ── NPC 경기 기록 IPC ───────────────────────────────────────────────────────
+
+  ipcMain.handle("npc:bulkInsertGameLogs", (_event, p) => {
+    try {
+      const { slotId, season, week, logs } = JSON.parse(p);
+      if (!slotId || !Array.isArray(logs) || logs.length === 0)
+        return JSON.stringify({ ok: true, inserted: 0 });
+      const stmt = db.prepare(
+        "INSERT INTO npc_game_log(slot_id, npc_id, season, week, role, stat_json) VALUES(?,?,?,?,?,?)"
+      );
+      const insertMany = db.transaction((rows) => {
+        for (const r of rows)
+          stmt.run(slotId, r.npcId, season, week, r.role, r.statJson);
+      });
+      insertMany(logs);
+      return JSON.stringify({ ok: true, inserted: logs.length });
+    } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  ipcMain.handle("npc:trimGameLogs", (_event, p) => {
+    try {
+      const { slotId, keep = 5 } = JSON.parse(p);
+      db.prepare(`
+        DELETE FROM npc_game_log
+        WHERE slot_id = ? AND id NOT IN (
+          SELECT id FROM (
+            SELECT id,
+              ROW_NUMBER() OVER (
+                PARTITION BY slot_id, npc_id
+                ORDER BY season DESC, week DESC, id DESC
+              ) AS rn
+            FROM npc_game_log WHERE slot_id = ?
+          ) WHERE rn <= ?
+        )
+      `).run(slotId, slotId, keep);
+      return JSON.stringify({ ok: true });
+    } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  ipcMain.handle("npc:getRecentGames", (_event, p) => {
+    try {
+      const { slotId, npcId, limit = 5 } = JSON.parse(p);
+      const rows = db.prepare(`
+        SELECT season, week, role, stat_json
+        FROM npc_game_log
+        WHERE slot_id = ? AND npc_id = ?
+        ORDER BY season DESC, week DESC, id DESC
+        LIMIT ?
+      `).all(slotId, npcId, limit);
+      return JSON.stringify(rows);
+    } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  ipcMain.handle("npc:flushSeasonStats", (_event, p) => {
+    try {
+      const { slotId, season, leagueId, statsByPlayer } = JSON.parse(p);
+      // statsByPlayer: { [npcId]: { role, games, wins, losses, saves, holds,
+      //   ip, er, hitsAllowed, strikeouts, walks, pitchCount,
+      //   atBats, hits, homeRuns, rbi, walksBat, strikeoutsBat, stolenBases } }
+      const stmt = db.prepare(`
+        INSERT INTO npc_season_stats
+          (slot_id, npc_id, season, league_id, role,
+           games, wins, losses, saves, holds,
+           ip, er, hits_allowed, strikeouts, walks, pitch_count,
+           at_bats, hits, home_runs, rbi, walks_bat, strikeouts_bat, stolen_bases)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+        ON CONFLICT(slot_id, npc_id, season) DO UPDATE SET
+          games          = excluded.games,
+          wins           = excluded.wins,
+          losses         = excluded.losses,
+          saves          = excluded.saves,
+          holds          = excluded.holds,
+          ip             = excluded.ip,
+          er             = excluded.er,
+          hits_allowed   = excluded.hits_allowed,
+          strikeouts     = excluded.strikeouts,
+          walks          = excluded.walks,
+          pitch_count    = excluded.pitch_count,
+          at_bats        = excluded.at_bats,
+          hits           = excluded.hits,
+          home_runs      = excluded.home_runs,
+          rbi            = excluded.rbi,
+          walks_bat      = excluded.walks_bat,
+          strikeouts_bat = excluded.strikeouts_bat,
+          stolen_bases   = excluded.stolen_bases
+      `);
+      const flush = db.transaction((entries) => {
+        for (const [npcId, s] of entries) {
+          stmt.run(
+            slotId, npcId, season, leagueId, s.role,
+            s.games ?? 0, s.wins ?? 0, s.losses ?? 0, s.saves ?? 0, s.holds ?? 0,
+            s.ip ?? 0, s.er ?? 0, s.hitsAllowed ?? 0, s.strikeouts ?? 0, s.walks ?? 0, s.pitchCount ?? 0,
+            s.atBats ?? 0, s.hits ?? 0, s.homeRuns ?? 0, s.rbi ?? 0,
+            s.walksBat ?? 0, s.strikeoutsBat ?? 0, s.stolenBases ?? 0,
+          );
+        }
+      });
+      flush(Object.entries(statsByPlayer));
+      return JSON.stringify({ ok: true, flushed: Object.keys(statsByPlayer).length });
+    } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  ipcMain.handle("npc:getCareerStats", (_event, p) => {
+    try {
+      const { slotId, npcId } = JSON.parse(p);
+      const seasons = db.prepare(`
+        SELECT season, league_id, role,
+               games, wins, losses, saves, holds,
+               ip, er, hits_allowed, strikeouts, walks, pitch_count,
+               at_bats, hits, home_runs, rbi, walks_bat, strikeouts_bat, stolen_bases
+        FROM npc_season_stats
+        WHERE slot_id = ? AND npc_id = ?
+        ORDER BY season ASC
+      `).all(slotId, npcId);
+      // 전체 통합 (role별 SUM)
+      const totals = db.prepare(`
+        SELECT role,
+               SUM(games) AS games, SUM(wins) AS wins, SUM(losses) AS losses,
+               SUM(saves) AS saves, SUM(holds) AS holds,
+               SUM(ip) AS ip, SUM(er) AS er, SUM(hits_allowed) AS hits_allowed,
+               SUM(strikeouts) AS strikeouts, SUM(walks) AS walks, SUM(pitch_count) AS pitch_count,
+               SUM(at_bats) AS at_bats, SUM(hits) AS hits, SUM(home_runs) AS home_runs,
+               SUM(rbi) AS rbi, SUM(walks_bat) AS walks_bat,
+               SUM(strikeouts_bat) AS strikeouts_bat, SUM(stolen_bases) AS stolen_bases
+        FROM npc_season_stats
+        WHERE slot_id = ? AND npc_id = ?
+        GROUP BY role
+      `).all(slotId, npcId);
+      return JSON.stringify({ seasons, totals });
+    } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
 
   // ── 성장 엔진 (Phase 4) ──────────────────────────────────────────────────────
