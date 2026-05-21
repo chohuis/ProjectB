@@ -206,6 +206,8 @@ fn sim_half_inning_pitch(
     let mut stamina      = pit_stamina;
     let n                = lineup.len().max(1);
 
+    if lineup.is_empty() { return (0, lineup_pos, pit_outs, pit_stamina); }
+
     let stamina_loss = 100.0 / (60.0 + (pit.stamina_cap - 50.0) * 1.5).max(30.0);
     let quality = |st: f64| -> f64 {
         if st < 40.0 { clamp_f(0.75 + st * 0.00625, 0.75, 1.0) }
@@ -289,6 +291,25 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
 
     let home_pit_q = build_pit_queue(&params.home_rotation, &params.home_bullpen, &params.home_closer, params.home_rot_idx);
     let away_pit_q = build_pit_queue(&params.away_rotation, &params.away_bullpen, &params.away_closer, params.away_rot_idx);
+
+    // 투수 또는 타자 데이터 없으면 시뮬 불가 — 기본 결과 반환
+    if home_pit_q.is_empty() || away_pit_q.is_empty()
+        || params.home_lineup.is_empty() || params.away_lineup.is_empty()
+    {
+        return SimGameResult {
+            result: MatchResult {
+                home_score: 0,
+                away_score: 0,
+                winner_id: String::new(),
+                loser_id: String::new(),
+                player_lines: vec![],
+                events: vec![],
+            },
+            next_home_rot_idx: params.home_rot_idx as i32,
+            next_away_rot_idx: params.away_rot_idx as i32,
+            pitcher_conditions: HashMap::new(),
+        };
+    }
 
     let home_pit_ids: HashSet<String> = home_pit_q.iter().map(|p| p.id.clone()).collect();
 
