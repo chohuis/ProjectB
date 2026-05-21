@@ -623,6 +623,10 @@ function createMasterStore() {
         contactDefs,
         militaryEvents: militaryPoolData?.events ?? [],
       }));
+
+      // 전체 엔티티 사전 로드 — 배경 리그 시뮬에 모든 팀 선수 데이터 필요
+      // loaded: true 이후에 실행하므로 게임 진입을 블로킹하지 않음
+      await reloadEntities();
     } catch (e) {
       console.warn("[masterStore] load failed", e);
       update((s) => ({ ...s, loaded: true }));
@@ -661,11 +665,17 @@ function createMasterStore() {
 
   async function reloadEntities() {
     try {
-      const index = await fetchMaster<EntityIndex>("entities/players/_index.json");
-      if (!index?.byLeague) return;
-      const allIds = Object.values(index.byLeague).flat();
-      const rows = await batchFetch<EntityRow>(allIds, (id) => `entities/players/${id}.json`);
-      update((s) => ({ ...s, entities: rows }));
+      let rows: EntityRow[];
+      if (window.projectB?.masterLoadEntities) {
+        // SQLite 단일 쿼리 — leagueId 없으면 전체 로드
+        rows = (await window.projectB.masterLoadEntities("")) as EntityRow[];
+      } else {
+        const index = await fetchMaster<EntityIndex>("entities/players/_index.json");
+        if (!index?.byLeague) return;
+        const allIds = Object.values(index.byLeague).flat();
+        rows = await batchFetch<EntityRow>(allIds, (id) => `entities/players/${id}.json`);
+      }
+      if (rows.length > 0) update((s) => ({ ...s, entities: rows }));
     } catch (e) {
       console.warn("[masterStore] reloadEntities failed", e);
     }
