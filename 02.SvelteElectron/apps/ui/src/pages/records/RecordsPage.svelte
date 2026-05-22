@@ -14,6 +14,7 @@
   let lbTab:  LbTab     = "pitcher";
   let selectedWeek: number | null = null;
   let selectedLeagueId: string = "";
+  let lbLeagueId: string = "";
 
   $: myTeamId   = $gameStore.protagonist.teamId;
   $: myLeagueId = $gameStore.protagonist.leagueId;
@@ -44,6 +45,18 @@
       const isGroupA = hsGroupA.includes($gameStore.protagonist.teamId);
       return isGroupA ? "고등학교 B리그" : "고등학교 A리그";
     }
+    return map[lid] ?? lid;
+  }
+
+  function lbLeagueName(lid: string): string {
+    const map: Record<string, string> = {
+      LEAGUE_HIGHSCHOOL:  "고교리그",
+      LEAGUE_UNIVERSITY:  "대학리그",
+      LEAGUE_INDEPENDENT: "독립리그",
+      LEAGUE_KBL:         "KBL",
+      LEAGUE_ABL:         "ABL",
+      LEAGUE_JBL:         "JBL",
+    };
     return map[lid] ?? lid;
   }
 
@@ -99,15 +112,40 @@
   $: selectedStandings = getLeagueStandings(selectedLeagueId || myLeagueId);
 
   // ── 스탯 리더보드 ─────────────────────────────────────────────
-  // 모든 리그 stats 통합
-  $: allStats = (() => {
-    const merged: Record<string, PlayerSeasonStats> = { ...$seasonStore.stats };
-    for (const ls of Object.values($seasonStore.leagueState)) {
-      for (const [id, st] of Object.entries(ls.stats)) {
-        if (!merged[id]) merged[id] = st;
-      }
+  // 리더보드 리그 목록 (LEAGUE_HIGHSCHOOL_NPC는 고교리그로 합산)
+  $: lbLeagueIds = (() => {
+    const effectiveMyLeague = myLeagueId === "LEAGUE_HIGHSCHOOL_NPC" ? "LEAGUE_HIGHSCHOOL" : myLeagueId;
+    const others = Object.keys($seasonStore.leagueState)
+      .filter((lid) => lid !== myLeagueId && lid !== "LEAGUE_HIGHSCHOOL_NPC" && lid !== effectiveMyLeague);
+    return [effectiveMyLeague, ...others].filter(Boolean);
+  })();
+
+  $: if (!lbLeagueId && lbLeagueIds.length > 0) lbLeagueId = lbLeagueIds[0];
+
+  $: {
+    if (lbLeagueId) {
+      masterStore.loadEntities(lbLeagueId);
+      if (lbLeagueId === "LEAGUE_HIGHSCHOOL") masterStore.loadEntities("LEAGUE_HIGHSCHOOL_NPC");
     }
-    return merged;
+  }
+
+  // 선택 리그 stats (고교는 두 조 합산 + 주인공 스탯 포함)
+  $: lbStats = (() => {
+    if (!lbLeagueId) return {} as Record<string, PlayerSeasonStats>;
+    const ls1 = $seasonStore.leagueState[lbLeagueId];
+    const base: Record<string, PlayerSeasonStats> = ls1?.stats ? { ...ls1.stats } : {};
+    if (lbLeagueId === "LEAGUE_HIGHSCHOOL") {
+      const ls2 = $seasonStore.leagueState["LEAGUE_HIGHSCHOOL_NPC"];
+      if (ls2?.stats) Object.assign(base, ls2.stats);
+    }
+    const heroLeague = $gameStore.protagonist.leagueId;
+    const heroMatchesHs = lbLeagueId === "LEAGUE_HIGHSCHOOL" &&
+      (heroLeague === "LEAGUE_HIGHSCHOOL" || heroLeague === "LEAGUE_HIGHSCHOOL_NPC");
+    if (heroLeague === lbLeagueId || heroMatchesHs) {
+      const hero = $seasonStore.stats[$gameStore.protagonist.id];
+      if (hero) base[$gameStore.protagonist.id] = hero;
+    }
+    return base;
   })();
 
   interface PitcherRow {
@@ -120,16 +158,18 @@
   }
 
   function entityName(id: string): string {
+    if (id === $gameStore.protagonist.id) return $gameStore.protagonist.name;
     const e = $masterStore.entities.find((en) => en.id === id);
     return e?.name ?? id;
   }
   function entityTeam(id: string): string {
+    if (id === $gameStore.protagonist.id) return tName($gameStore.protagonist.teamId);
     const e = $masterStore.entities.find((en) => en.id === id);
     return e ? tName(e.teamId) : "-";
   }
 
-  $: pitcherRows = Object.entries(allStats)
-    .filter(([, s]) => s.type === "pitcher" && (s as PitcherSeasonStats).ip >= 20)
+  $: pitcherRows = Object.entries(lbStats)
+    .filter(([, s]) => s.type === "pitcher" && (s as PitcherSeasonStats).ip >= 10)
     .map(([id, s]) => {
       const p = s as PitcherSeasonStats;
       return { id, name: entityName(id), team: entityTeam(id), w: p.w, l: p.l, era: p.era, whip: p.whip, ip: p.ip, k: p.k, bb: p.bb };
@@ -137,8 +177,8 @@
     .sort((a, b) => a.era - b.era)
     .slice(0, 20) as PitcherRow[];
 
-  $: batterRows = Object.entries(allStats)
-    .filter(([, s]) => s.type === "batter" && (s as BatterSeasonStats).ab >= 50)
+  $: batterRows = Object.entries(lbStats)
+    .filter(([, s]) => s.type === "batter" && (s as BatterSeasonStats).ab >= 20)
     .map(([id, s]) => {
       const b = s as BatterSeasonStats;
       return { id, name: entityName(id), team: entityTeam(id), avg: b.avg, hr: b.hr, rbi: b.rbi, ops: b.ops, ab: b.ab, h: b.h, bb: b.bb };
@@ -330,77 +370,91 @@
     <!-- ── 스탯 순위 ── -->
     {:else if tab === "leaderboard"}
       <section class="lb-layout">
-        <div class="lb-tabs">
-          <button class:active={lbTab === "pitcher"} on:click={() => (lbTab = "pitcher")}>투수</button>
-          <button class:active={lbTab === "batter"}  on:click={() => (lbTab = "batter")}>타자</button>
-        </div>
+        <!-- 리그 선택 사이드바 -->
+        <nav class="league-nav">
+          {#each lbLeagueIds as lid}
+            {@const isMyLeague = lid === myLeagueId || (lid === "LEAGUE_HIGHSCHOOL" && (myLeagueId === "LEAGUE_HIGHSCHOOL" || myLeagueId === "LEAGUE_HIGHSCHOOL_NPC"))}
+            <button class:active={lbLeagueId === lid} on:click={() => (lbLeagueId = lid)}>
+              {lbLeagueName(lid)}
+              {#if isMyLeague}<span class="my-badge">내 리그</span>{/if}
+            </button>
+          {/each}
+        </nav>
 
-        {#if lbTab === "pitcher"}
-          {#if pitcherRows.length === 0}
-            <p class="empty" style="padding:16px">스탯 데이터가 아직 없습니다. (최소 20이닝 필요)</p>
-          {:else}
-            <div class="lb-table-wrap">
-              <table class="stbl full">
-                <thead>
-                  <tr>
-                    <th>#</th><th>선수</th><th>팀</th>
-                    <th>ERA</th><th>WHIP</th><th>이닝</th>
-                    <th>승</th><th>패</th><th>K</th><th>BB</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {#each pitcherRows as row, i}
-                    <tr class:my-row={row.id === $gameStore.protagonist.id}>
-                      <td>{i + 1}</td>
-                      <td class="t-name">{row.name}</td>
-                      <td>{row.team}</td>
-                      <td class="era">{row.era.toFixed(2)}</td>
-                      <td>{row.whip.toFixed(2)}</td>
-                      <td>{row.ip.toFixed(1)}</td>
-                      <td class="w">{row.w}</td>
-                      <td class="l">{row.l}</td>
-                      <td>{row.k}</td>
-                      <td>{row.bb}</td>
-                    </tr>
-                  {/each}
-                </tbody>
-              </table>
-            </div>
-          {/if}
+        <!-- 선택 리그 스탯 테이블 -->
+        <div class="lb-content panel">
+          <div class="lb-tabs">
+            <button class:active={lbTab === "pitcher"} on:click={() => (lbTab = "pitcher")}>투수</button>
+            <button class:active={lbTab === "batter"}  on:click={() => (lbTab = "batter")}>타자</button>
+          </div>
 
-        {:else}
-          {#if batterRows.length === 0}
-            <p class="empty" style="padding:16px">스탯 데이터가 아직 없습니다. (최소 50타수 필요)</p>
-          {:else}
-            <div class="lb-table-wrap">
-              <table class="stbl full">
-                <thead>
-                  <tr>
-                    <th>#</th><th>선수</th><th>팀</th>
-                    <th>AVG</th><th>OPS</th><th>HR</th>
-                    <th>RBI</th><th>타수</th><th>안타</th><th>BB</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {#each batterRows as row, i}
+          {#if lbTab === "pitcher"}
+            {#if pitcherRows.length === 0}
+              <p class="empty" style="padding:16px">스탯 데이터가 아직 없습니다. (최소 10이닝 필요)</p>
+            {:else}
+              <div class="lb-table-wrap">
+                <table class="stbl full">
+                  <thead>
                     <tr>
-                      <td>{i + 1}</td>
-                      <td class="t-name">{row.name}</td>
-                      <td>{row.team}</td>
-                      <td class="avg">{row.avg.toFixed(2).replace(/^0\./, ".")}</td>
-                      <td>{row.ops.toFixed(2).replace(/^0\./, ".")}</td>
-                      <td class="w">{row.hr}</td>
-                      <td>{row.rbi}</td>
-                      <td>{row.ab}</td>
-                      <td>{row.h}</td>
-                      <td>{row.bb}</td>
+                      <th>#</th><th>선수</th><th>팀</th>
+                      <th>ERA</th><th>WHIP</th><th>이닝</th>
+                      <th>승</th><th>패</th><th>K</th><th>BB</th>
                     </tr>
-                  {/each}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {#each pitcherRows as row, i}
+                      <tr class:my-row={row.id === $gameStore.protagonist.id}>
+                        <td>{i + 1}</td>
+                        <td class="t-name">{row.name}</td>
+                        <td>{row.team}</td>
+                        <td class="era">{row.era.toFixed(2)}</td>
+                        <td>{row.whip.toFixed(2)}</td>
+                        <td>{row.ip.toFixed(1)}</td>
+                        <td class="w">{row.w}</td>
+                        <td class="l">{row.l}</td>
+                        <td>{row.k}</td>
+                        <td>{row.bb}</td>
+                      </tr>
+                    {/each}
+                  </tbody>
+                </table>
+              </div>
+            {/if}
+
+          {:else}
+            {#if batterRows.length === 0}
+              <p class="empty" style="padding:16px">스탯 데이터가 아직 없습니다. (최소 20타수 필요)</p>
+            {:else}
+              <div class="lb-table-wrap">
+                <table class="stbl full">
+                  <thead>
+                    <tr>
+                      <th>#</th><th>선수</th><th>팀</th>
+                      <th>AVG</th><th>OPS</th><th>HR</th>
+                      <th>RBI</th><th>타수</th><th>안타</th><th>BB</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {#each batterRows as row, i}
+                      <tr class:my-row={row.id === $gameStore.protagonist.id}>
+                        <td>{i + 1}</td>
+                        <td class="t-name">{row.name}</td>
+                        <td>{row.team}</td>
+                        <td class="avg">{row.avg.toFixed(2).replace(/^0\./, ".")}</td>
+                        <td>{row.ops.toFixed(2).replace(/^0\./, ".")}</td>
+                        <td class="w">{row.hr}</td>
+                        <td>{row.rbi}</td>
+                        <td>{row.ab}</td>
+                        <td>{row.h}</td>
+                        <td>{row.bb}</td>
+                      </tr>
+                    {/each}
+                  </tbody>
+                </table>
+              </div>
+            {/if}
           {/if}
-        {/if}
+        </div>
       </section>
     {/if}
   </article>
@@ -604,9 +658,16 @@
   /* 스탯 순위 레이아웃 */
   .lb-layout {
     display: grid;
+    grid-template-columns: 100px minmax(0, 1fr);
+    gap: 10px;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .lb-content {
+    display: grid;
     grid-template-rows: auto minmax(0, 1fr);
     gap: 8px;
-    min-height: 0;
     overflow: hidden;
   }
 
@@ -669,5 +730,6 @@
     .content-grid { grid-template-columns: 1fr; }
     .detail-panel { display: none; }
     .standings-layout { grid-template-columns: 80px 1fr; }
+    .lb-layout { grid-template-columns: 80px 1fr; }
   }
 </style>

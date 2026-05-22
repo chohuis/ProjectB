@@ -78,6 +78,14 @@ declare global {
       matchFinish: () => Promise<{ snapshot: MatchSnapshot; summary: string }>;
       matchMoundVisit: () => Promise<{ snapshot: MatchSnapshot } | null>;
       matchNextInning: () => Promise<{ snapshot: MatchSnapshot; logs: string[]; batchStats: { hits: number; walks: number; errors: number; isTop: boolean } | null; protagonistJustExited: boolean; exitReason: string | null }>;
+      matchRunSimpleGame: (paramsJson: string) => Promise<string>;
+      matchSimulateToEntry: (request?: {
+        pitcher?: { name?: string; command?: number; velocity?: number; staminaCap?: number; mentalResil?: number; };
+        batterMean?: number;
+        role?: "SP" | "RP" | "CP";
+        protagonistSide?: "home" | "away";
+      }) => Promise<string>;
+      matchAutoFinishFromEntry: () => Promise<string>;
       // ── 게임 저장/불러오기 ──────────────────────────────────
       gameLoad:   () => Promise<SaveGame | null>;
       gameSave:   (data: SaveGame) => Promise<void>;
@@ -227,6 +235,7 @@ export interface PitchDecision {
 }
 
 export interface MatchBatterStats {
+  id?: string;
   name?: string;
   contact: number;
   power: number;

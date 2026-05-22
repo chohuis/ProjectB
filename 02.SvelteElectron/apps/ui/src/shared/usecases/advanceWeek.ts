@@ -937,7 +937,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       if (eligibilityBlocked) {
         gameStore.clearEligibilityBlock();
         const result = await simulateNpcGame(nextGame.homeTeamId, nextGame.awayTeamId);
-        seasonStore.applyMatchResult(nextGame.id, result);
+        seasonStore.applyMatchResult(nextGame.id, result, g.protagonist.leagueId);
         await applyPostseasonResult(nextGame.id, result);
         accResults.push(result);
         accLogs.push("학사 경고로 인해 경기 출전 불가");
@@ -950,7 +950,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     } else {
       // NPC 경기 자동 처리
       const result = await simulateNpcGame(nextGame.homeTeamId, nextGame.awayTeamId);
-      seasonStore.applyMatchResult(nextGame.id, result);
+      seasonStore.applyMatchResult(nextGame.id, result, g.protagonist.leagueId);
       applyPostseasonResult(nextGame.id, result);
       accResults.push(result);
       accLogs.push(`${nextGame.homeTeamId} ${result.homeScore}:${result.awayScore} ${nextGame.awayTeamId}`);

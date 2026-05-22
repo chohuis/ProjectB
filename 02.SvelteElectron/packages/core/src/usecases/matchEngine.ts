@@ -119,7 +119,7 @@ export function startMatch(options: MatchStartOptions = {}): MatchState {
   return parse<MatchState>(n().startMatchNative(JSON.stringify(options)));
 }
 
-export function finishMatch(state: MatchState): { nextState: MatchState; summary: string } {
+export function finishMatch(state: MatchState): { nextState: MatchState; summary: string; batterLines: Array<{ playerId: string; pa: number; ab: number; h: number; hr: number; rbi: number; bb: number; k: number }> } {
   return parse(n().finishMatchNative(JSON.stringify(state)));
 }
 

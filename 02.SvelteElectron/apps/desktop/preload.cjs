@@ -29,8 +29,11 @@ contextBridge.exposeInMainWorld("projectB", {
   masterLoadEntities: (leagueId) => ipcRenderer.invoke("master:loadEntities", leagueId),
 
   // ── 마운드 방문 ─────────────────────────────────────────────────────────
-  matchMoundVisit: () => ipcRenderer.invoke("match:mound-visit"),
-  matchNextInning: () => ipcRenderer.invoke("match:next-inning"),
+  matchMoundVisit:        ()    => ipcRenderer.invoke("match:mound-visit"),
+  matchNextInning:        ()    => ipcRenderer.invoke("match:next-inning"),
+  matchRunSimpleGame:     (p)   => ipcRenderer.invoke("match:runSimpleGame", p),
+  matchSimulateToEntry:   (req) => ipcRenderer.invoke("match:simulateToEntry", req),
+  matchAutoFinishFromEntry: ()  => ipcRenderer.invoke("match:autoFinishFromEntry"),
 
   // ── NPC 시뮬 (Phase 3) ──────────────────────────────────────────────────────
   npcSimGame:                   (p) => ipcRenderer.invoke("npc:simGame",                   p),

@@ -1598,7 +1598,7 @@ app.whenReady().then(() => {
     }
     const result = core.finishMatch(activeMatchState);
     activeMatchState = result.nextState;
-    return { snapshot: toSnapshotDto(activeMatchState, [], core), summary: result.summary };
+    return { snapshot: toSnapshotDto(activeMatchState, [], core), summary: result.summary, batterLines: result.batterLines ?? [] };
   });
 
   ipcMain.handle("match:mound-visit", async () => {
@@ -1606,6 +1606,68 @@ app.whenReady().then(() => {
     if (!activeMatchState) return null;
     activeMatchState = core.requestMoundVisit(activeMatchState);
     return { snapshot: toSnapshotDto(activeMatchState, [], core) };
+  });
+
+  ipcMain.handle("match:simulateToEntry", async (_event, request = {}) => {
+    if (!request || typeof request !== "object" || Array.isArray(request)) request = {};
+    try {
+      const core = await loadCoreModule();
+      let state = core.startMatch(request);
+      if (!state.protagonistHasEntered) {
+        state = core.autoSimulateUntilEntry(state);
+      }
+      activeMatchState = state;
+      if (state.isFinished) {
+        return JSON.stringify({ entryReached: false, homeScore: state.score.home, awayScore: state.score.away });
+      }
+      return JSON.stringify({ entryReached: true, inning: state.inning, half: state.half, homeScore: state.score.home, awayScore: state.score.away });
+    } catch (e) {
+      return JSON.stringify({ error: String(e?.message ?? e) });
+    }
+  });
+
+  ipcMain.handle("match:autoFinishFromEntry", async () => {
+    try {
+      const core = await loadCoreModule();
+      if (!activeMatchState) return JSON.stringify({ error: "no active match state" });
+      let state = core.autoSimulateToGameEnd(activeMatchState);
+      const result = core.finishMatch(state);
+      activeMatchState = result.nextState;
+      const ns = result.nextState;
+      return JSON.stringify({
+        homeScore: ns.score.home,
+        awayScore: ns.score.away,
+        summary: result.summary ?? "",
+        strikeouts:    ns.kSinceEntry    ?? 0,
+        hitsAllowed:   ns.hSinceEntry    ?? 0,
+        walksAllowed:  ns.bbSinceEntry   ?? 0,
+        outsRecorded:  ns.outsSinceEntry ?? 0,
+        pitchCount:    ns.pitchCountSinceEntry ?? 0,
+      });
+    } catch (e) {
+      return JSON.stringify({ error: String(e?.message ?? e) });
+    }
+  });
+
+  const AUTO_SIM_AB_LABEL = {
+    STRIKE_SWING: "삼진", STRIKE_LOOK: "삼진(루킹)",
+    WALK: "볼넷", INPLAY_OUT: "아웃", FIELDING_ERROR: "실책",
+    HIT_SINGLE: "안타", HIT_DOUBLE: "2루타",
+    HIT_TRIPLE: "3루타", HOME_RUN: "홈런",
+  };
+  ipcMain.handle("match:runSimpleGame", (_event, paramsJson) => {
+    try {
+      const raw = engineNative.runSimpleGame(paramsJson);
+      const result = JSON.parse(raw);
+      const logs = (result.atBatLogs ?? []).map((ab) => {
+        const label = AUTO_SIM_AB_LABEL[ab.resultCode] ?? ab.resultCode;
+        const runMark = ab.runsScored > 0 ? ` ★${ab.runsScored}득점` : "";
+        return `투수: ${ab.pitcherName} / 타자: ${ab.batterName} → ${label} (${ab.pitchCount}구)${runMark}`;
+      });
+      return JSON.stringify({ ...result, logs });
+    } catch (e) {
+      return JSON.stringify({ error: String(e?.message ?? e) });
+    }
   });
 
   ipcMain.handle("game:load", () => {

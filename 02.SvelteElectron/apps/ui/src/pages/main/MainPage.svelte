@@ -3,7 +3,6 @@
   import { gameStore, unreadCount, showAcademicsTab } from "../../shared/stores/game";
   import { seasonStore, nextPendingAction, seasonEnded } from "../../shared/stores/season";
   import { teamMap } from "../../shared/stores/master";
-  import { runSimpleGame } from "@core/usecases/matchEngine";
   import { applyGameOutcome } from "../../shared/usecases/applyGameOutcome";
   import type { PendingAction } from "../../shared/types/season";
   import { t } from "../../shared/i18n";
@@ -262,18 +261,81 @@
   }
   $: pendingReady = armedPendingKey !== "" && armedPendingKey === currentPendingKey;
 
-  // 경기 자동 시뮬 후 pendingAction 제거
-  async function autoSimGame() {
-    if (!pendingGameEntry) return;
-    const p = $gameStore.protagonist;
-    const pitcherStats = {
-      command:    p.pitching.command,
-      velocity:   p.pitching.velocity,
-      staminaCap: p.pitching.stamina,
-      mentalResil: p.pitching.mentality,
-    };
-    const gameSummary = runSimpleGame(pitcherStats, 55, p.pitching.ovr);
+  type GameSimState = "idle" | "loading" | "no_entry" | "ready";
+  let gameSimState: GameSimState = "idle";
+  let gameEntryInfo: { inning: number; half: string; homeScore: number; awayScore: number } | null = null;
+  let gameNoEntryInfo: { homeScore: number; awayScore: number } | null = null;
+  let autoSimRunning = false;
 
+  $: if (pendingReady && pendingGameEntry && gameSimState === "idle") {
+    startEntrySimulation();
+  }
+  $: if (!pendingReady) {
+    gameSimState = "idle";
+    gameEntryInfo = null;
+    gameNoEntryInfo = null;
+  }
+
+  async function startEntrySimulation() {
+    if (!pendingGameEntry || gameSimState !== "idle") return;
+    gameSimState = "loading";
+    try {
+      const p = $gameStore.protagonist;
+      const isHome = pendingGameEntry.homeTeamId === p.teamId;
+      const raw = await window.projectB!.matchSimulateToEntry({
+        pitcher: { name: p.name, command: p.pitching.command, velocity: p.pitching.velocity, staminaCap: p.pitching.stamina, mentalResil: p.pitching.mentality },
+        batterMean: 55,
+        role: (p.position as "SP" | "RP" | "CP") ?? "SP",
+        protagonistSide: isHome ? "home" : "away",
+      });
+      const result = JSON.parse(raw) as { entryReached: boolean; inning?: number; half?: string; homeScore: number; awayScore: number; error?: string };
+      if (result.error) { gameSimState = "idle"; return; }
+      if (result.entryReached) {
+        gameEntryInfo = { inning: result.inning!, half: result.half!, homeScore: result.homeScore, awayScore: result.awayScore };
+        gameSimState = "ready";
+      } else {
+        gameNoEntryInfo = { homeScore: result.homeScore, awayScore: result.awayScore };
+        gameSimState = "no_entry";
+      }
+    } catch {
+      gameSimState = "idle";
+    }
+  }
+
+  async function autoFinishFromEntry() {
+    if (!pendingGameEntry || autoSimRunning) return;
+    autoSimRunning = true;
+    try {
+      const raw = await window.projectB!.matchAutoFinishFromEntry();
+      const result = JSON.parse(raw) as { homeScore: number; awayScore: number; summary: string; strikeouts?: number; hitsAllowed?: number; walksAllowed?: number; outsRecorded?: number; pitchCount?: number; error?: string };
+      if (result.error) return;
+      const p = $gameStore.protagonist;
+      const outcome: UnifiedGameOutcome = {
+        source: "auto",
+        scheduleId: pendingGameEntry.id,
+        week: pendingGameEntry.week,
+        homeTeamId: pendingGameEntry.homeTeamId,
+        awayTeamId: pendingGameEntry.awayTeamId,
+        protagonistTeamId: p.teamId,
+        homeScore: result.homeScore,
+        awayScore: result.awayScore,
+        strikeouts:   result.strikeouts   ?? 0,
+        hitsAllowed:  result.hitsAllowed  ?? 0,
+        walksAllowed: result.walksAllowed ?? 0,
+        outsRecorded: result.outsRecorded ?? 0,
+        errors: 0,
+        pitchCount:   result.pitchCount   ?? 0,
+        summary: result.summary ?? "",
+      };
+      await applyGameOutcome(outcome);
+    } finally {
+      autoSimRunning = false;
+    }
+  }
+
+  async function confirmNoEntry() {
+    if (!pendingGameEntry || !gameNoEntryInfo) return;
+    const p = $gameStore.protagonist;
     const outcome: UnifiedGameOutcome = {
       source: "auto",
       scheduleId: pendingGameEntry.id,
@@ -281,17 +343,13 @@
       homeTeamId: pendingGameEntry.homeTeamId,
       awayTeamId: pendingGameEntry.awayTeamId,
       protagonistTeamId: p.teamId,
-      homeScore: gameSummary.homeScore,
-      awayScore: gameSummary.awayScore,
-      strikeouts: gameSummary.strikeouts,
-      hitsAllowed: gameSummary.hits,
-      walksAllowed: gameSummary.walks,
-      outsRecorded: Math.round(gameSummary.inningsPitched * 3),
-      errors: 0,
-      pitchCount: gameSummary.pitchCount,
-      summary: "",
+      homeScore: gameNoEntryInfo.homeScore,
+      awayScore: gameNoEntryInfo.awayScore,
+      strikeouts: 0, hitsAllowed: 0, walksAllowed: 0, outsRecorded: 0, errors: 0, pitchCount: 0,
+      summary: "등판하지 못했습니다",
     };
     await applyGameOutcome(outcome);
+    gameSimState = "idle";
   }
 
   // 업적 알림 배지 갱신
@@ -387,6 +445,7 @@
       errors: result.errors,
       pitchCount: result.pitchCount,
       summary: result.summary,
+      batterLines: result.batterLines,
     };
     await applyGameOutcome(outcome);
     activeMatchContext = null;
@@ -623,10 +682,32 @@
           {tName(pendingGameEntry.awayTeamId)}
         </span>
       </div>
-      <div class="game-actions">
-        <button class="btn-auto" on:click={autoSimGame}>자동 시뮬</button>
-        <button class="btn-play" on:click={startInteractiveMatch}>직접 플레이</button>
-      </div>
+
+      {#if gameSimState === "loading"}
+        <p class="sim-status">경기 상황 분석 중…</p>
+
+      {:else if gameSimState === "no_entry" && gameNoEntryInfo}
+        <p class="sim-status no-entry">이번 경기 등판 기회 없음</p>
+        <p class="sim-final-score">{gameNoEntryInfo.homeScore} : {gameNoEntryInfo.awayScore}</p>
+        <div class="game-actions single">
+          <button class="btn-play" on:click={confirmNoEntry}>확인</button>
+        </div>
+
+      {:else if gameSimState === "ready" && gameEntryInfo}
+        <div class="entry-info">
+          <span class="entry-label">{gameEntryInfo.inning}회 {gameEntryInfo.half === "top" ? "초" : "말"} 등판</span>
+          <span class="entry-score">{gameEntryInfo.homeScore} : {gameEntryInfo.awayScore}</span>
+        </div>
+        <div class="game-actions">
+          <button class="btn-auto" on:click={autoFinishFromEntry} disabled={autoSimRunning}>
+            {autoSimRunning ? "시뮬 중…" : "자동 시뮬"}
+          </button>
+          <button class="btn-play" on:click={startInteractiveMatch} disabled={autoSimRunning}>직접 플레이</button>
+        </div>
+
+      {:else}
+        <p class="sim-status">경기 준비 중…</p>
+      {/if}
     </div>
   </div>
 {/if}
@@ -835,8 +916,63 @@
     cursor: pointer;
   }
 
-  .btn-auto:hover {
+  .btn-auto:hover:not(:disabled) {
     background: #22854f;
+  }
+
+  .btn-auto:disabled,
+  .btn-play:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .sim-status {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: #8aafd6;
+    text-align: center;
+  }
+
+  .sim-status.no-entry {
+    font-size: 15px;
+    color: #c8a060;
+    font-weight: 600;
+  }
+
+  .sim-final-score {
+    margin: 6px 0 0;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: #d8eaff;
+    letter-spacing: 4px;
+  }
+
+  .entry-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #0d1e36;
+    border: 1px solid #2c4870;
+    border-radius: 8px;
+    padding: 10px 16px;
+  }
+
+  .entry-label {
+    font-size: 15px;
+    font-weight: 600;
+    color: #7ec8f8;
+  }
+
+  .entry-score {
+    font-size: 20px;
+    font-weight: 700;
+    color: #e8f4ff;
+    letter-spacing: 3px;
+  }
+
+  .game-actions.single {
+    justify-content: center;
   }
 
   .btn-play {

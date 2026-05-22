@@ -1,4 +1,4 @@
-﻿<script lang="ts">
+<script lang="ts">
   import { onMount } from "svelte";
   import { createEventDispatcher } from "svelte";
   import { t } from "../../shared/i18n";
@@ -155,6 +155,7 @@
         {/if}
       </aside>
     </div>
+
   </article>
 </section>
 

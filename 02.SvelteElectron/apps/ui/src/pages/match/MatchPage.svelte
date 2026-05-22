@@ -328,6 +328,7 @@
     awayScore: number; homeScore: number;
     pitchCount: number; strikeouts: number; errors: number;
     won: boolean; summary: string;
+    batterLines?: import('../../shared/types/season').BatterGameLine[];
   }
   let isGameOver = false;
   let gameResult: GameResult = { awayScore: 0, homeScore: 0, pitchCount: 0, strikeouts: 0, errors: 0, won: false, summary: '' };
@@ -412,6 +413,7 @@
     return picked.slice(0, 9).map((e: EntityRow) => {
       const bat = (e.details as any)?.player?.batting ?? {};
       return {
+        id: e.id,
         name: e.name ?? undefined,
         contact: bat.contact ?? 50, power: bat.power ?? 50,
         eye: bat.eye ?? 50, discipline: bat.discipline ?? 50,
@@ -1266,11 +1268,19 @@
     isGameOver = true;
 
     let summary = '';
+    let batterLines: import('../../shared/types/season').BatterGameLine[] | undefined;
     if (window.projectB?.matchFinish) {
       try {
         const result = await window.projectB.matchFinish();
         summary = result.summary;
         if (result.snapshot) applySnapshot(result.snapshot);
+        if (Array.isArray(result.batterLines)) {
+          batterLines = result.batterLines.map((bl: { playerId: string; pa: number; ab: number; h: number; hr: number; rbi: number; bb: number; k: number }) => ({
+            role: "batter" as const,
+            playerId: bl.playerId,
+            ab: bl.ab, h: bl.h, hr: bl.hr, rbi: bl.rbi, bb: bl.bb, k: bl.k, sb: 0,
+          }));
+        }
       } catch { /* ignore */ }
     }
 
@@ -1283,7 +1293,7 @@
       pitchCount: engineAvailable ? snapshotPitchCountSinceEntry : localEngineState.pitchCount,
       strikeouts: totalStrikeouts,
       errors: matchDefenseStat.errors,
-      won, summary,
+      won, summary, batterLines,
     };
 
     const staminaUsed = Math.max(0, 82 - pitcherState.stamina);
@@ -1341,6 +1351,7 @@
         errors: gameResult.errors,
         pitchCount: gameResult.pitchCount,
         summary: gameResult.summary,
+        batterLines: gameResult.batterLines,
       });
     }
     isGameOver = false;

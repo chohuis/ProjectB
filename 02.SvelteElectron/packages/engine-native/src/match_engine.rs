@@ -1,6 +1,7 @@
 #![allow(clippy::too_many_arguments)]
 
 use rand::Rng;
+use std::collections::HashMap;
 use std::f64::consts::PI;
 
 use crate::types::*;
@@ -83,7 +84,7 @@ pub fn create_batter(rng: &mut impl Rng, mean: f64) -> BatterStats {
     let spread = 18.0_f64;
     macro_rules! r { () => { clamp(mean + (rng.gen::<f64>() * 2.0 - 1.0) * spread, 10.0, 95.0).round() } }
     BatterStats {
-        name: None,
+        id: None, name: None,
         contact: r!(), power: r!(), eye: r!(), discipline: r!(),
         batting_clutch: r!(), platoon: 50.0,
         speed: r!(), base_instinct: r!(), fielding: r!(), arm: r!(),
@@ -187,6 +188,10 @@ pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) 
         protagonist_has_entered: is_immediate,
         protagonist_exited: false,
         pitch_count_since_entry: 0,
+        k_since_entry: 0,
+        h_since_entry: 0,
+        bb_since_entry: 0,
+        outs_since_entry: 0,
         protagonist_stamina: initial_stamina,
         protagonist_mental: initial_mental,
         npc_pitcher_stamina:    NpcPitcherTracker { my: 80.0, opponent: 80.0 },
@@ -204,6 +209,7 @@ pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) 
         logs: vec!["경기 시작".to_string()],
         fielders,
         defense_stat: DefenseStat { errors: 0, assists: 0, throw_outs: 0, throw_safes: 0 },
+        batter_accum: HashMap::new(),
     }
 }
 
@@ -1291,6 +1297,13 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         }
     }
 
+    // 콜드게임: 3아웃 전환 전에 판정해야 half=Bottom 조건이 살아있음
+    let cold_game_inning_end = next_outs >= 3
+        && next_half == HalfInning::Bottom
+        && { let d = (next_score.home - next_score.away).unsigned_abs() as u8;
+             (next_inning >= 5 && d >= 10) || (next_inning >= 7 && d >= 7) };
+    let cold_game_completed_inning = next_inning as u8;
+
     // 3아웃 → half 전환
     if next_outs >= 3 {
         next_outs    = 0;
@@ -1356,9 +1369,38 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
     next_last_types.push(decision.pitch_type);
     if next_last_types.len() > 5 { next_last_types.remove(0); }
 
-    let next_pc_since_entry = if is_protagonist && is_protagonist_actively_pitching(&pre_state) {
+    let is_protagonist_active = is_protagonist && is_protagonist_actively_pitching(&pre_state);
+    let next_pc_since_entry = if is_protagonist_active {
         pre_state.pitch_count_since_entry + 1
     } else { pre_state.pitch_count_since_entry };
+
+    let is_hit = matches!(result_code, PitchResultCode::HitSingle | PitchResultCode::HitDouble | PitchResultCode::HitTriple | PitchResultCode::HomeRun);
+    let is_out_result = is_k_out || result_code == PitchResultCode::InplayOut;
+    let next_k_since_entry    = pre_state.k_since_entry    + if is_protagonist_active && is_k_out { 1 } else { 0 };
+    let next_h_since_entry    = pre_state.h_since_entry    + if is_protagonist_active && is_hit { 1 } else { 0 };
+    let next_bb_since_entry   = pre_state.bb_since_entry   + if is_protagonist_active && result_code == PitchResultCode::Walk { 1 } else { 0 };
+    let next_outs_since_entry = pre_state.outs_since_entry + if is_protagonist_active && is_out_result { 1 } else { 0 };
+
+    // ── 6b. 타자 스탯 누적 ────────────────────────────────────────────────────
+    let mut next_batter_accum = pre_state.batter_accum.clone();
+    if ab_ended {
+        if let Some(ref batter_id) = current_batter.id {
+            let is_bb = result_code == PitchResultCode::Walk;
+            let batting_runs = if pre_state.half == HalfInning::Top {
+                (next_score.away - pre_state.score.away).max(0) as u32
+            } else {
+                (next_score.home - pre_state.score.home).max(0) as u32
+            };
+            let accum = next_batter_accum.entry(batter_id.clone()).or_default();
+            accum.pa += 1;
+            if !is_bb { accum.ab += 1; }
+            if is_hit { accum.h += 1; }
+            if result_code == PitchResultCode::HomeRun { accum.hr += 1; }
+            if is_bb { accum.bb += 1; }
+            if is_k_out { accum.k += 1; }
+            accum.rbi += batting_runs;
+        }
+    }
 
     // ── 7. 로그 조합 ─────────────────────────────────────────────────────────
     let pitch_log = build_pitch_log(&pre_state, decision, lr.landing, result_code, quality);
@@ -1382,9 +1424,14 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         npc_pitcher_stamina: next_npc_stamina, npc_pitcher_mental: next_npc_mental,
         npc_pitcher_pitch_count: next_npc_pc,
         pitch_count_since_entry: next_pc_since_entry,
+        k_since_entry: next_k_since_entry,
+        h_since_entry: next_h_since_entry,
+        bb_since_entry: next_bb_since_entry,
+        outs_since_entry: next_outs_since_entry,
         home_lineup_index: next_home_idx, away_lineup_index: next_away_idx,
         last_pitch_types: next_last_types,
         defense_stat: next_defense_stat,
+        batter_accum: next_batter_accum,
         logs: {
             let mut l = state.logs.clone();
             l.extend(all_new_logs);
@@ -1393,7 +1440,12 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         ..pre_state
     };
 
-    if should_auto_finish(&next_state) {
+    if cold_game_inning_end {
+        let diff = (next_state.score.home - next_state.score.away).unsigned_abs();
+        let fl = format!("콜드게임 ({}회 종료, {}점차)", cold_game_completed_inning, diff);
+        next_state.is_finished = true;
+        next_state.logs.push(fl);
+    } else if should_auto_finish(&next_state) {
         let fl = finish_log(&next_state);
         next_state.is_finished = true;
         next_state.logs.push(fl);
@@ -1409,14 +1461,18 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
 // ── 공개 오케스트레이션 함수 ─────────────────────────────────────────────────
 
 pub fn finish_match(state: &MatchState) -> FinishMatchResult {
+    let batter_lines: Vec<BatterLine> = state.batter_accum.iter().map(|(id, a)| BatterLine {
+        player_id: id.clone(), pa: a.pa, ab: a.ab, h: a.h, hr: a.hr, rbi: a.rbi, bb: a.bb, k: a.k,
+    }).collect();
+
     if state.is_finished {
-        return FinishMatchResult { next_state: state.clone(), summary: build_summary(state) };
+        return FinishMatchResult { next_state: state.clone(), summary: build_summary(state), batter_lines };
     }
     let mut next = state.clone();
     next.is_finished = true;
     next.logs.push("경기 종료".to_string());
     let summary = build_summary(&next);
-    FinishMatchResult { next_state: next, summary }
+    FinishMatchResult { next_state: next, summary, batter_lines }
 }
 
 pub fn advance_game_phase(state: &MatchState, rng: &mut impl Rng) -> GamePhaseResult {
@@ -1531,7 +1587,8 @@ pub fn auto_simulate_to_game_end(state: &MatchState, rng: &mut impl Rng) -> Matc
     while !s.is_finished && safety > 0 {
         safety -= 1;
         let decision = auto_pick_decision(&s, rng);
-        s = step_pitch_core(&s, &decision, false, rng).next_state;
+        let protagonist_pitching = is_protagonist_actively_pitching(&s);
+        s = step_pitch_core(&s, &decision, protagonist_pitching, rng).next_state;
     }
     if !s.is_finished {
         s.is_finished = true;
@@ -1553,6 +1610,7 @@ pub fn run_simple_game(params: &RunSimpleGameParams, rng: &mut impl Rng) -> Game
     };
     let mut state = create_initial_match_state(&opts, rng);
     let mut strikeouts = 0i32; let mut hits = 0i32; let mut walks = 0i32;
+    let mut at_bat_logs: Vec<crate::types::AtBatLog> = vec![];
     let mut safety = 800i32;
 
     while !state.is_finished && safety > 0 {
@@ -1568,16 +1626,20 @@ pub fn run_simple_game(params: &RunSimpleGameParams, rng: &mut impl Rng) -> Game
 
         if !state.is_finished && !is_protagonist_pitching(&state) {
             let sim = auto_simulate_half_inning(&state, rng);
+            at_bat_logs.extend(sim.at_bats);
             state = sim.next_state;
         }
     }
 
-    let runs_allowed = state.score.away + state.score.home;
+    let runs_allowed = state.score.away;
     let offense_base = 3.0 + (protagonist_ovr - opponent_ovr) * 0.05;
     let noise = (rng.gen::<f64>() + rng.gen::<f64>() + rng.gen::<f64>() - 1.5) * 2.0;
     let mut home_score = (offense_base + noise).max(0.0).round() as i32;
     let mut away_score = runs_allowed;
     if home_score == away_score { if home_score > 0 { home_score -= 1; } else { away_score += 1; } }
 
-    GameSummary { home_score, away_score, strikeouts, hits, walks }
+    let finish_note = state.logs.last().cloned().unwrap_or_default();
+    let summary = if finish_note.contains("콜드게임") { finish_note } else { String::new() };
+
+    GameSummary { home_score, away_score, strikeouts, hits, walks, at_bat_logs, summary }
 }

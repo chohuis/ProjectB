@@ -146,7 +146,11 @@
   $: if (sortedRows.length > 0 && !sortedRows.some((x) => x.id === selectedId)) selectedId = sortedRows[0].id;
   $: selected = sortedRows.find((x) => x.id === selectedId) ?? null;
 
-  $: selectedStats = selected ? $seasonStore.stats[selected.id] ?? null : null;
+  $: selectedStats = selected
+    ? ($seasonStore.stats[selected.id]
+        ?? Object.values($seasonStore.leagueState ?? {}).map((ls) => ls.stats?.[selected!.id]).find(Boolean)
+        ?? null)
+    : null;
   $: modalStats = modalEntity
     ? ($seasonStore.stats[modalEntity.id]
         ?? Object.values($seasonStore.leagueState ?? {})
@@ -165,23 +169,43 @@
   $: isProtagonistModal = !!modalEntityId && modalEntityId === $gameStore.protagonist.id;
 
   // 최근 5경기
-  $: modalRecentGames = !modalEntityId
-    ? []
-    : isProtagonistModal
-    ? $seasonStore.schedule
+  $: modalRecentGames = (() => {
+    if (!modalEntityId) return [];
+    if (isProtagonistModal) {
+      return $seasonStore.schedule
         .filter((e) => e.result?.playerLines.some((l) => l.playerId === $gameStore.protagonist.id))
         .sort((a, b) => b.week - a.week)
-        .slice(0, 5)
-    : $seasonStore.schedule
-        .filter((e) => !!e.result && (e.homeTeamId === (modalEntity?.teamId ?? "") || e.awayTeamId === (modalEntity?.teamId ?? "")))
-        .sort((a, b) => b.week - a.week)
         .slice(0, 5);
+    }
+    const teamId   = modalEntity?.teamId ?? "";
+    const leagueId = (modalEntity as any)?.leagueId ?? (modalEntity as any)?.originLeagueId ?? "";
+    const entries = [
+      ...($seasonStore.leagueSchedules[leagueId] ?? []),
+      ...$seasonStore.schedule.filter((e) => e.leagueId === leagueId),
+    ];
+    const seen = new Set<string>();
+    return entries
+      .filter((e) => {
+        if (!e.result || seen.has(e.id)) return false;
+        seen.add(e.id);
+        return e.homeTeamId === teamId || e.awayTeamId === teamId;
+      })
+      .sort((a, b) => b.week - a.week)
+      .slice(0, 5);
+  })();
 
   // 리그 순위
   $: modalTeamRank = (() => {
     if (!modalEntity) return null;
-    const sorted = [...$seasonStore.standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
-    const idx = sorted.findIndex((s) => s.teamId === modalEntity!.teamId);
+    const teamId   = modalEntity.teamId;
+    const leagueId = (modalEntity as any)?.leagueId ?? (modalEntity as any)?.originLeagueId ?? "";
+    let standings = $seasonStore.standings;
+    if (!standings.find((s) => s.teamId === teamId)) {
+      const ls = ($seasonStore.leagueState ?? {})[leagueId];
+      if (ls?.standings?.length) standings = ls.standings;
+    }
+    const sorted = [...standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
+    const idx = sorted.findIndex((s) => s.teamId === teamId);
     if (idx < 0) return null;
     const s = sorted[idx];
     return { rank: idx + 1, wins: s.wins, losses: s.losses, draws: s.draws, winPct: s.winPct };
@@ -286,13 +310,16 @@
               {#if selectedStats}
                 {#if selectedStats.type === "pitcher"}
                   <ul class="stat-list">
-                    <li>G: {selectedStats.g}</li><li>IP: {selectedStats.ip}</li>
-                    <li>ERA: {selectedStats.era.toFixed(2)}</li><li>K: {selectedStats.k}</li>
+                    <li>G: {selectedStats.g}</li><li>W: {selectedStats.w}</li>
+                    <li>L: {selectedStats.l}</li><li>SV: {selectedStats.sv ?? 0}</li>
+                    <li>IP: {selectedStats.ip}</li><li>ERA: {selectedStats.era.toFixed(2)}</li>
+                    <li>WHIP: {selectedStats.whip.toFixed(2)}</li><li>K: {selectedStats.k}</li>
                   </ul>
                 {:else}
                   <ul class="stat-list">
-                    <li>G: {selectedStats.g}</li><li>AVG: {selectedStats.avg.toFixed(2)}</li>
-                    <li>HR: {selectedStats.hr}</li><li>RBI: {selectedStats.rbi}</li>
+                    <li>G: {selectedStats.g}</li><li>AVG: {selectedStats.avg.toFixed(3)}</li>
+                    <li>OPS: {selectedStats.ops.toFixed(3)}</li><li>HR: {selectedStats.hr}</li>
+                    <li>RBI: {selectedStats.rbi}</li><li>SB: {selectedStats.sb}</li>
                   </ul>
                 {/if}
               {:else}
@@ -521,13 +548,18 @@
               <div class="modal-stat-grid cols-4">
                 {#each [
                   ["G",    modalStats.g],
+                  ["GS",   modalStats.gs],
                   ["W",    modalStats.w],
                   ["L",    modalStats.l],
                   ["SV",   modalStats.sv ?? 0],
+                  ["HD",   modalStats.hd ?? 0],
                   ["IP",   modalStats.ip],
+                  ["ER",   modalStats.er],
+                  ["H",    modalStats.h],
+                  ["K",    modalStats.k],
+                  ["BB",   modalStats.bb],
                   ["ERA",  modalStats.era?.toFixed(2)],
                   ["WHIP", modalStats.whip?.toFixed(2)],
-                  ["K",    modalStats.k],
                 ] as [lbl, val]}
                   <div class="modal-stat-item">
                     <span class="ms-label">{lbl}</span>
@@ -539,13 +571,18 @@
               <div class="modal-stat-grid cols-4">
                 {#each [
                   ["G",   modalStats.g],
-                  ["AVG", modalStats.avg?.toFixed(2)],
-                  ["OPS", modalStats.ops?.toFixed(2)],
+                  ["PA",  modalStats.pa],
+                  ["AB",  modalStats.ab],
+                  ["H",   modalStats.h],
                   ["HR",  modalStats.hr],
                   ["RBI", modalStats.rbi],
                   ["SB",  modalStats.sb],
                   ["BB",  modalStats.bb],
                   ["K",   modalStats.k],
+                  ["AVG", modalStats.avg?.toFixed(3)],
+                  ["OBP", modalStats.obp?.toFixed(3)],
+                  ["SLG", modalStats.slg?.toFixed(3)],
+                  ["OPS", modalStats.ops?.toFixed(3)],
                 ] as [lbl, val]}
                   <div class="modal-stat-item">
                     <span class="ms-label">{lbl}</span>
@@ -602,24 +639,40 @@
                 </tbody>
               </table>
             {:else}
-              <!-- NPC: 팀 결과만 -->
+              <!-- NPC: 개인 스탯 라인 (있으면) + 팀 결과 -->
               <table class="game-table">
                 <thead>
-                  <tr><th>상대팀</th><th>결과</th><th>점수</th></tr>
+                  <tr>
+                    <th>상대팀</th><th>결과</th>
+                    {#if isPitcher}
+                      <th>IP</th><th>ER</th><th>K</th><th>BB</th>
+                    {:else}
+                      <th>AB</th><th>H</th><th>AVG</th><th>HR</th><th>RBI</th>
+                    {/if}
+                  </tr>
                 </thead>
                 <tbody>
                   {#each modalRecentGames as entry}
+                    {@const line = entry.result?.playerLines.find((l) => l.playerId === modalEntityId)}
                     {@const isHome = entry.homeTeamId === (modalEntity?.teamId ?? "")}
                     {@const oppId  = isHome ? entry.awayTeamId : entry.homeTeamId}
-                    {@const myScore  = isHome ? (entry.result?.homeScore ?? 0) : (entry.result?.awayScore ?? 0)}
-                    {@const oppScore = isHome ? (entry.result?.awayScore ?? 0) : (entry.result?.homeScore ?? 0)}
                     {@const isDraw = entry.result?.loserId === null}
                     {@const won = !isDraw && entry.result?.winnerId === (modalEntity?.teamId ?? "")}
                     {@const outcome = isDraw ? "D" : won ? "W" : "L"}
                     <tr>
                       <td>{teamById.get(oppId) ?? oppId}</td>
                       <td class={outcomeClass(outcome)}><strong>{outcome}</strong></td>
-                      <td>{myScore} : {oppScore}</td>
+                      {#if line?.role === "pitcher"}
+                        <td>{line.ip}</td><td>{line.er}</td><td>{line.k}</td><td>{line.bb}</td>
+                      {:else if line?.role === "batter"}
+                        <td>{line.ab}</td>
+                        <td>{line.h}</td>
+                        <td>{line.ab > 0 ? (line.h / line.ab).toFixed(3) : "---"}</td>
+                        <td>{line.hr}</td>
+                        <td>{line.rbi}</td>
+                      {:else}
+                        <td colspan={isPitcher ? 4 : 5} class="modal-pending">기록 없음</td>
+                      {/if}
                     </tr>
                   {/each}
                 </tbody>

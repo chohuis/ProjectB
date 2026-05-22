@@ -191,7 +191,7 @@ function createSeasonStore() {
         leagueState: Object.fromEntries(
           Object.entries(season.leagueState ?? {}).map(([lid, ls]) => [lid, migrateLeagueState(ls as Partial<LeagueSeasonState>)])
         ),
-        hsGroupA: season.hsGroupA ?? [], hsGroupB: season.hsGroupB ?? {},
+        hsGroupA: season.hsGroupA ?? [], hsGroupB: season.hsGroupB ?? [],
         postseasonBrackets: season.postseasonBrackets ?? {},
         ablEastTeams: season.ablEastTeams ?? [], ablWestTeams: season.ablWestTeams ?? [],
         schedule: (season.schedule ?? []).map((e) => e.gameDate ? e : { ...e, gameDate: `${season.seasonYear ?? 2026}-03-01` }),
@@ -239,15 +239,28 @@ function createSeasonStore() {
     },
 
     // 경기 결과 반영: 순위 업데이트 + 스탯 누적
-    applyMatchResult(scheduleId: string, result: MatchResult) {
+    applyMatchResult(scheduleId: string, result: MatchResult, leagueId?: string) {
       update((s) => {
         const entry = s.schedule.find((e) => e.id === scheduleId);
+        const homeTeamId = entry?.homeTeamId ?? result.winnerId;
         const schedule = s.schedule.map((e) =>
           e.id === scheduleId ? { ...e, result } : e
         );
-        const standings = updateStandings(s.standings, result, entry?.homeTeamId ?? result.winnerId);
+        const standings = updateStandings(s.standings, result, homeTeamId);
         const stats     = accumulateStats(s.stats, result.playerLines);
-        return { ...s, schedule, standings, stats };
+
+        if (!leagueId) return { ...s, schedule, standings, stats };
+
+        const cur = migrateLeagueState(s.leagueState[leagueId] ?? {});
+        const leagueState = {
+          ...s.leagueState,
+          [leagueId]: {
+            ...cur,
+            standings: updateStandings(cur.standings, result, homeTeamId),
+            stats:     accumulateStats(cur.stats, result.playerLines),
+          },
+        };
+        return { ...s, schedule, standings, stats, leagueState };
       });
     },
 
@@ -302,7 +315,7 @@ function createSeasonStore() {
       const npcGroup         = hsGroupA.includes(protagonistTeamId) ? hsGroupB : hsGroupA;
 
       const [npcHsSchedule, otherSchedules] = await Promise.all([
-        generateLeagueSchedule("LEAGUE_HIGHSCHOOL_NPC", npcGroup, 10, 42, 2, protagonistTeamId),
+        generateLeagueSchedule("LEAGUE_HIGHSCHOOL_NPC", npcGroup, 5, 42, 2, protagonistTeamId),
         generateAllLeagueSchedules(DEFAULT_LEAGUE_CONFIGS.map((c) => ({ ...c })), protagonistTeamId),
       ]);
 
@@ -339,8 +352,8 @@ function createSeasonStore() {
 
       const otherCfgs = DEFAULT_LEAGUE_CONFIGS;
       const [npcHsSchedule, protagonistSchedule, ...otherScheduleList] = await Promise.all([
-        generateLeagueSchedule("LEAGUE_HIGHSCHOOL_NPC", npcGroup, 10, 42, 2, protagonistTeamId),
-        generateLeagueSchedule("LEAGUE_HIGHSCHOOL", protagonistGroup, 10, 42, 2, protagonistTeamId),
+        generateLeagueSchedule("LEAGUE_HIGHSCHOOL_NPC", npcGroup, 5, 42, 2, protagonistTeamId),
+        generateLeagueSchedule("LEAGUE_HIGHSCHOOL", protagonistGroup, 5, 42, 2, protagonistTeamId),
         ...otherCfgs.map((cfg) => generateLeagueSchedule(cfg.leagueId, cfg.teams, cfg.startWeek, cfg.endWeek, cfg.cycles, protagonistTeamId)),
       ]);
 

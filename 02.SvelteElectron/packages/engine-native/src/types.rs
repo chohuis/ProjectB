@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 
 // ── 기본 열거형 ────────────────────────────────────────────────────────────────
@@ -140,6 +141,8 @@ pub struct PartialPitcherStats {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BatterStats {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     pub contact: f64,
@@ -226,6 +229,32 @@ pub struct DefenseStat {
     pub assists: u32,
     #[serde(rename = "throwOuts")]  pub throw_outs: u32,
     #[serde(rename = "throwSafes")] pub throw_safes: u32,
+}
+
+// ── 타자 스탯 누적 (인터랙티브 경기용) ───────────────────────────────────────
+
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+pub struct BatterStatAccum {
+    pub pa: u32,
+    pub ab: u32,
+    pub h: u32,
+    pub hr: u32,
+    pub rbi: u32,
+    pub bb: u32,
+    pub k: u32,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BatterLine {
+    pub player_id: String,
+    pub pa: u32,
+    pub ab: u32,
+    pub h: u32,
+    pub hr: u32,
+    pub rbi: u32,
+    pub bb: u32,
+    pub k: u32,
 }
 
 // ── 등판 조건 ─────────────────────────────────────────────────────────────────
@@ -324,6 +353,14 @@ pub struct MatchState {
     pub pitch_count_since_entry: u32,
     pub protagonist_stamina: f64,
     pub protagonist_mental: f64,
+    #[serde(default)]
+    pub k_since_entry: u32,
+    #[serde(default)]
+    pub h_since_entry: u32,
+    #[serde(default)]
+    pub bb_since_entry: u32,
+    #[serde(default)]
+    pub outs_since_entry: u32,
 
     pub npc_pitcher_stamina: NpcPitcherTracker,
     pub npc_pitcher_mental: NpcPitcherTracker,
@@ -346,6 +383,8 @@ pub struct MatchState {
     pub logs: Vec<String>,
     pub fielders: Vec<FielderStats>,
     pub defense_stat: DefenseStat,
+    #[serde(default)]
+    pub batter_accum: HashMap<String, BatterStatAccum>,
 }
 
 // ── 투구 결정 / 결과 ──────────────────────────────────────────────────────────
@@ -473,6 +512,8 @@ pub struct GameSummary {
     pub strikeouts: i32,
     pub hits: i32,
     pub walks: i32,
+    pub at_bat_logs: Vec<AtBatLog>,
+    pub summary: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -480,4 +521,5 @@ pub struct GameSummary {
 pub struct FinishMatchResult {
     pub next_state: MatchState,
     pub summary: String,
+    pub batter_lines: Vec<BatterLine>,
 }

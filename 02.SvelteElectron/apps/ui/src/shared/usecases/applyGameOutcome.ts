@@ -53,7 +53,10 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
     decision: won ? "W" : isDraw ? "ND" : "L",
     pitchCount: outcome.pitchCount > 0 ? outcome.pitchCount : undefined,
   };
-  const matchResult: MatchResult = { ...teamResult, playerLines: [pitcherLine] };
+  const matchResult: MatchResult = {
+    ...teamResult,
+    playerLines: [pitcherLine, ...(outcome.batterLines ?? [])],
+  };
 
   seasonStore.applyMatchResult(outcome.scheduleId, matchResult);
   seasonStore.syncProtagonistLeagueResult(protagonist.leagueId, matchResult, outcome.homeTeamId);
@@ -69,7 +72,7 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
 
   gameStore.applyWeekResult(
     growth.protagonistPatch,
-    [`W${outcome.week} ${awayTeamName} ${outcome.awayScore}:${outcome.homeScore} ${homeTeamName}`, ...growth.logs],
+    [`W${outcome.week} ${awayTeamName} ${outcome.awayScore}:${outcome.homeScore} ${homeTeamName}`, ...(growth.logs ?? [])],
     [],
     sBefore.currentWeek,
   );
