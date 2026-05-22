@@ -139,6 +139,7 @@
 
   let activeLeagueFile = "LEAGUE_HIGHSCHOOL";
   let entityIndex: Record<string, string[]> = {};
+  let loadedEntityIds = new Set<string>();
 
   const FALLBACK_LEAGUES: LeagueRef[] = [
     { id: "LEAGUE_HIGHSCHOOL",  name: "고교 리그", nameEn: "High School League" },
@@ -519,19 +520,15 @@
     persistError = "";
     persistValidationErrors = [];
     try {
-      const indexData = await window.projectB?.masterFetch?.("entities/players/_index.json");
-      const maybe = indexData as { byLeague?: Record<string, string[]> } | null | undefined;
-      if (maybe?.byLeague) entityIndex = maybe.byLeague;
-      const ids = entityIndex[activeLeagueFile] ?? [];
-      if (ids.length === 0) {
+      const fetched = (await window.projectB?.masterLoadEntities?.(activeLeagueFile)) ?? [];
+      rows = fetched.filter(Boolean).map((item) => normalizeEntity(item));
+      loadedEntityIds = new Set(rows.map((row) => row.id));
+      entityIndex = { ...entityIndex, [activeLeagueFile]: [...loadedEntityIds] };
+      if (rows.length === 0) {
         rows = [];
         persistMessage = `[${activeLeagueFile}] 등록된 데이터가 없습니다. 추가 버튼으로 새 항목을 등록하세요.`;
         return;
       }
-      const fetched = await Promise.all(
-        ids.map((id) => window.projectB?.masterFetch?.(`entities/players/${id}.json`))
-      );
-      rows = fetched.filter(Boolean).map((item) => normalizeEntity(item));
       persistMessage = `[${activeLeagueFile}] ${rows.length}건 로드됨`;
     } catch (error) {
       persistError = `불러오기 실패: ${String((error as Error)?.message ?? error)}`;
@@ -552,29 +549,54 @@
         return;
       }
 
-      if (!window.projectB?.masterSave) {
-        persistError = "masterSave API를 사용할 수 없습니다. 개발자 모드/IPC 연결 상태를 확인하세요.";
-        return;
-      }
+      const projectBAny = window.projectB as unknown as {
+        masterUpsertEntity?: (entity: unknown) => Promise<{ ok: boolean; error?: string }>;
+        masterDeleteEntity?: (payload: { id: string; leagueId?: string }) => Promise<{ ok: boolean; error?: string }>;
+      };
+      const canUseDbApi = !!projectBAny.masterUpsertEntity && !!projectBAny.masterDeleteEntity;
+      if (canUseDbApi) {
+        for (const row of rows) {
+          const result = await projectBAny.masterUpsertEntity!(row);
+          if (!result?.ok) {
+            persistError = `DB 저장 실패 [${row.id}]: ${result?.error ?? "알 수 없는 오류"}`;
+            return;
+          }
+        }
 
-      for (const row of rows) {
-        const result = await window.projectB.masterSave({ relPath: `entities/players/${row.id}.json`, data: row, backup: false });
-        if (!result?.ok) {
-          persistError = `파일 저장 실패 [${row.id}]: ${result?.error ?? "알 수 없는 오류"}`;
+        const currentIds = new Set(rows.map((row) => row.id));
+        const deletedIds = [...loadedEntityIds].filter((id) => !currentIds.has(id));
+        for (const id of deletedIds) {
+          const result = await projectBAny.masterDeleteEntity!({ id, leagueId: activeLeagueFile });
+          if (!result?.ok) {
+            persistError = `DB 삭제 실패 [${id}]: ${result?.error ?? "알 수 없는 오류"}`;
+            return;
+          }
+        }
+        loadedEntityIds = currentIds;
+        entityIndex = { ...entityIndex, [activeLeagueFile]: [...currentIds] };
+      } else {
+        if (!window.projectB?.masterSave) {
+          persistError = "master entity API를 사용할 수 없습니다.";
           return;
         }
-      }
-
-      const idxRaw = await window.projectB?.masterFetch?.("entities/players/_index.json");
-      const idx = (idxRaw as { generated?: string; byLeague?: Record<string, string[]> }) ?? { generated: "", byLeague: {} };
-      if (!idx.byLeague) idx.byLeague = {};
-      idx.byLeague[activeLeagueFile] = rows.map((r) => r.id);
-      idx.generated = new Date().toISOString();
-      entityIndex = { ...idx.byLeague };
-      const idxResult = await window.projectB.masterSave({ relPath: "entities/players/_index.json", data: idx, backup: false });
-      if (!idxResult?.ok) {
-        persistError = `인덱스 저장 실패: ${idxResult?.error ?? "알 수 없는 오류"}`;
-        return;
+        for (const row of rows) {
+          const result = await window.projectB.masterSave({ relPath: `entities/players/${row.id}.json`, data: row, backup: false });
+          if (!result?.ok) {
+            persistError = `파일 저장 실패 [${row.id}]: ${result?.error ?? "알 수 없는 오류"}`;
+            return;
+          }
+        }
+        const idxRaw = await window.projectB?.masterFetch?.("entities/players/_index.json");
+        const idx = (idxRaw as { generated?: string; byLeague?: Record<string, string[]> }) ?? { generated: "", byLeague: {} };
+        if (!idx.byLeague) idx.byLeague = {};
+        idx.byLeague[activeLeagueFile] = rows.map((r) => r.id);
+        idx.generated = new Date().toISOString();
+        entityIndex = { ...idx.byLeague };
+        const idxResult = await window.projectB.masterSave({ relPath: "entities/players/_index.json", data: idx, backup: false });
+        if (!idxResult?.ok) {
+          persistError = `인덱스 저장 실패: ${idxResult?.error ?? "알 수 없는 오류"}`;
+          return;
+        }
       }
       persistMessage = `[${activeLeagueFile}] 저장 완료 (${rows.length}건)`;
     } catch (error) {
@@ -1432,5 +1454,3 @@
     gap: 8px;
   }
 </style>
-
-

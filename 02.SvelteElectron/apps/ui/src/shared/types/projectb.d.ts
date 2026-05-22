@@ -75,7 +75,7 @@ declare global {
           landingTarget: { x: number; y: number };
         } | null;
       }>;
-      matchFinish: () => Promise<{ snapshot: MatchSnapshot; summary: string }>;
+      matchFinish: () => Promise<{ snapshot: MatchSnapshot; summary: string; batterLines?: unknown[]; playerLines?: unknown[] }>;
       matchMoundVisit: () => Promise<{ snapshot: MatchSnapshot } | null>;
       matchNextInning: () => Promise<{ snapshot: MatchSnapshot; logs: string[]; batchStats: { hits: number; walks: number; errors: number; isTop: boolean } | null; protagonistJustExited: boolean; exitReason: string | null }>;
       matchRunSimpleGame: (paramsJson: string) => Promise<string>;
@@ -164,6 +164,8 @@ declare global {
       // ── 마스터 데이터 (Electron 패키징 환경용 fallback) ──────
       masterFetch: (relPath: string) => Promise<unknown>;
       masterLoadEntities: (leagueId: string) => Promise<unknown[]>;
+      masterUpsertEntity: (entity: unknown) => Promise<{ ok: boolean; error?: string }>;
+      masterDeleteEntity: (payload: { id: string; leagueId?: string }) => Promise<{ ok: boolean; error?: string }>;
       masterSave: (payload: { relPath: string; data: unknown; backup?: boolean }) => Promise<{
         ok: boolean;
         error?: string;

@@ -264,7 +264,7 @@
   type GameSimState = "idle" | "loading" | "no_entry" | "ready";
   let gameSimState: GameSimState = "idle";
   let gameEntryInfo: { inning: number; half: string; homeScore: number; awayScore: number } | null = null;
-  let gameNoEntryInfo: { homeScore: number; awayScore: number } | null = null;
+  let gameNoEntryInfo: { homeScore: number; awayScore: number; playerLines?: import('../../shared/types/season').PlayerGameLine[] } | null = null;
   let autoSimRunning = false;
 
   $: if (pendingReady && pendingGameEntry && gameSimState === "idle") {
@@ -288,13 +288,17 @@
         role: (p.position as "SP" | "RP" | "CP") ?? "SP",
         protagonistSide: isHome ? "home" : "away",
       });
-      const result = JSON.parse(raw) as { entryReached: boolean; inning?: number; half?: string; homeScore: number; awayScore: number; error?: string };
+      const result = JSON.parse(raw) as { entryReached: boolean; inning?: number; half?: string; homeScore: number; awayScore: number; playerLines?: import('../../shared/types/season').PlayerGameLine[]; error?: string };
       if (result.error) { gameSimState = "idle"; return; }
       if (result.entryReached) {
         gameEntryInfo = { inning: result.inning!, half: result.half!, homeScore: result.homeScore, awayScore: result.awayScore };
         gameSimState = "ready";
       } else {
-        gameNoEntryInfo = { homeScore: result.homeScore, awayScore: result.awayScore };
+        gameNoEntryInfo = {
+          homeScore: result.homeScore,
+          awayScore: result.awayScore,
+          playerLines: Array.isArray(result.playerLines) ? result.playerLines : undefined,
+        };
         gameSimState = "no_entry";
       }
     } catch {
@@ -307,7 +311,7 @@
     autoSimRunning = true;
     try {
       const raw = await window.projectB!.matchAutoFinishFromEntry();
-      const result = JSON.parse(raw) as { homeScore: number; awayScore: number; summary: string; strikeouts?: number; hitsAllowed?: number; walksAllowed?: number; outsRecorded?: number; pitchCount?: number; error?: string };
+      const result = JSON.parse(raw) as { homeScore: number; awayScore: number; summary: string; strikeouts?: number; hitsAllowed?: number; walksAllowed?: number; outsRecorded?: number; pitchCount?: number; playerLines?: import('../../shared/types/season').PlayerGameLine[]; error?: string };
       if (result.error) return;
       const p = $gameStore.protagonist;
       const outcome: UnifiedGameOutcome = {
@@ -326,6 +330,7 @@
         errors: 0,
         pitchCount:   result.pitchCount   ?? 0,
         summary: result.summary ?? "",
+        playerLines: Array.isArray(result.playerLines) ? result.playerLines : undefined,
       };
       await applyGameOutcome(outcome);
     } finally {
@@ -346,6 +351,7 @@
       homeScore: gameNoEntryInfo.homeScore,
       awayScore: gameNoEntryInfo.awayScore,
       strikeouts: 0, hitsAllowed: 0, walksAllowed: 0, outsRecorded: 0, errors: 0, pitchCount: 0,
+      playerLines: gameNoEntryInfo.playerLines,
       summary: "등판하지 못했습니다",
     };
     await applyGameOutcome(outcome);
@@ -446,6 +452,7 @@
       pitchCount: result.pitchCount,
       summary: result.summary,
       batterLines: result.batterLines,
+      playerLines: result.playerLines,
     };
     await applyGameOutcome(outcome);
     activeMatchContext = null;

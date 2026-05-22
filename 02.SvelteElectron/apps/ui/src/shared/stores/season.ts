@@ -1,5 +1,6 @@
 import { derived, get, writable } from "svelte/store";
 import { gameStore, _registerSeasonGetter } from "./game";
+import { masterStore } from "./master";
 import type {
   LeagueSeasonState,
   MatchResult,
@@ -315,7 +316,7 @@ function createSeasonStore() {
       const npcGroup         = hsGroupA.includes(protagonistTeamId) ? hsGroupB : hsGroupA;
 
       const [npcHsSchedule, otherSchedules] = await Promise.all([
-        generateLeagueSchedule("LEAGUE_HIGHSCHOOL_NPC", npcGroup, 5, 42, 2, protagonistTeamId),
+        generateLeagueSchedule("LEAGUE_HIGHSCHOOL_NPC", npcGroup, 5, 42, 2, ""),
         generateAllLeagueSchedules(DEFAULT_LEAGUE_CONFIGS.map((c) => ({ ...c })), protagonistTeamId),
       ]);
 
@@ -352,7 +353,7 @@ function createSeasonStore() {
 
       const otherCfgs = DEFAULT_LEAGUE_CONFIGS;
       const [npcHsSchedule, protagonistSchedule, ...otherScheduleList] = await Promise.all([
-        generateLeagueSchedule("LEAGUE_HIGHSCHOOL_NPC", npcGroup, 5, 42, 2, protagonistTeamId),
+        generateLeagueSchedule("LEAGUE_HIGHSCHOOL_NPC", npcGroup, 5, 42, 2, ""),
         generateLeagueSchedule("LEAGUE_HIGHSCHOOL", protagonistGroup, 5, 42, 2, protagonistTeamId),
         ...otherCfgs.map((cfg) => generateLeagueSchedule(cfg.leagueId, cfg.teams, cfg.startWeek, cfg.endWeek, cfg.cycles, protagonistTeamId)),
       ]);
@@ -453,6 +454,11 @@ function createSeasonStore() {
       entities: EntityRow[],
     ): Promise<void> {
       const s = get({ subscribe });
+      let simEntities = entities;
+      if (simEntities.length === 0) {
+        await masterStore.loadEntities("");
+        simEntities = get(masterStore).entities;
+      }
 
       // 이번 주 시뮬레이션할 경기 수집 (리그별 컨디션·로테이션 인덱스 포함)
       const batch: SimWorkerRequest["games"] = [];
@@ -476,7 +482,7 @@ function createSeasonStore() {
       }
       if (batch.length === 0) return;
 
-      const simmed = await runInWorker(batch, entities);
+      const simmed = await runInWorker(batch, simEntities);
       const simMap = new Map(simmed.map((r) => [r.id, r]));
 
       // 경기 기록 수집 (npc_game_log 적재용)
@@ -538,6 +544,41 @@ function createSeasonStore() {
               stats:     accumulateStats(cur.stats, result.playerLines),
             },
           },
+        };
+      });
+    },
+
+    applyBackgroundLeagueResult(
+      leagueId: string,
+      scheduleId: string,
+      homeTeamId: string,
+      awayTeamId: string,
+      result: MatchResult,
+      nextHomeRotIdx: number,
+      nextAwayRotIdx: number,
+      pitcherConditions: Record<string, PlayerCondition>,
+    ) {
+      update((s) => {
+        const nextSchedules = { ...s.leagueSchedules };
+        const curSched = nextSchedules[leagueId] ?? [];
+        nextSchedules[leagueId] = curSched.map((e) => (e.id === scheduleId ? { ...e, result } : e));
+
+        const cur = migrateLeagueState(s.leagueState[leagueId] ?? { standings: makeStandings(ALL_TEAMS_BY_LEAGUE[leagueId] ?? []) });
+        const nextLeagueState: LeagueSeasonState = {
+          standings: updateStandings(cur.standings, result, homeTeamId),
+          stats: accumulateStats(cur.stats, result.playerLines),
+          playerConditions: { ...cur.playerConditions, ...pitcherConditions },
+          teamRotationIndex: {
+            ...cur.teamRotationIndex,
+            [homeTeamId]: nextHomeRotIdx,
+            [awayTeamId]: nextAwayRotIdx,
+          },
+        };
+
+        return {
+          ...s,
+          leagueSchedules: nextSchedules,
+          leagueState: { ...s.leagueState, [leagueId]: nextLeagueState },
         };
       });
     },

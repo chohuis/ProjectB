@@ -329,6 +329,7 @@
     pitchCount: number; strikeouts: number; errors: number;
     won: boolean; summary: string;
     batterLines?: import('../../shared/types/season').BatterGameLine[];
+    playerLines?: import('../../shared/types/season').PlayerGameLine[];
   }
   let isGameOver = false;
   let gameResult: GameResult = { awayScore: 0, homeScore: 0, pitchCount: 0, strikeouts: 0, errors: 0, won: false, summary: '' };
@@ -1269,6 +1270,7 @@
 
     let summary = '';
     let batterLines: import('../../shared/types/season').BatterGameLine[] | undefined;
+    let playerLines: import('../../shared/types/season').PlayerGameLine[] | undefined;
     if (window.projectB?.matchFinish) {
       try {
         const result = await window.projectB.matchFinish();
@@ -1280,6 +1282,9 @@
             playerId: bl.playerId,
             ab: bl.ab, h: bl.h, hr: bl.hr, rbi: bl.rbi, bb: bl.bb, k: bl.k, sb: 0,
           }));
+        }
+        if (Array.isArray(result.playerLines)) {
+          playerLines = result.playerLines as import('../../shared/types/season').PlayerGameLine[];
         }
       } catch { /* ignore */ }
     }
@@ -1293,7 +1298,7 @@
       pitchCount: engineAvailable ? snapshotPitchCountSinceEntry : localEngineState.pitchCount,
       strikeouts: totalStrikeouts,
       errors: matchDefenseStat.errors,
-      won, summary, batterLines,
+      won, summary, batterLines, playerLines,
     };
 
     const staminaUsed = Math.max(0, 82 - pitcherState.stamina);
@@ -1352,6 +1357,7 @@
         pitchCount: gameResult.pitchCount,
         summary: gameResult.summary,
         batterLines: gameResult.batterLines,
+        playerLines: gameResult.playerLines,
       });
     }
     isGameOver = false;
@@ -2727,8 +2733,6 @@
     box-shadow: 0 6px 22px rgba(20, 40, 70, 0.55);
   }
 </style>
-
-
 
 
 

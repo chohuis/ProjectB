@@ -66,7 +66,11 @@ function makeExamMessage(week: number, subject: string, body: string): MessageIt
 }
 
 async function simulateNpcGame(homeTeamId: string, awayTeamId: string): Promise<MatchResult> {
-  const entities = get(masterStore).entities;
+  let entities = get(masterStore).entities;
+  if (entities.length === 0) {
+    await masterStore.loadEntities("");
+    entities = get(masterStore).entities;
+  }
   if (entities.length > 0) {
     return (await simulateGame(homeTeamId, awayTeamId, entities)).result;
   }
@@ -74,6 +78,64 @@ async function simulateNpcGame(homeTeamId: string, awayTeamId: string): Promise<
     JSON.stringify({ homeTeamId, awayTeamId })
   )) as { homeScore: number; awayScore: number; winnerId: string; loserId: string };
   return { homeScore: fb.homeScore, awayScore: fb.awayScore, winnerId: fb.winnerId, loserId: fb.loserId, playerLines: [], events: [] };
+}
+
+async function syncHighschoolNpcByGameDate(targetDate: string, targetWeek: number): Promise<void> {
+  const g = get(gameStore);
+  if (g.protagonist.careerStage !== "highschool") return;
+
+  const s = get(seasonStore);
+  const npcLeagueId = "LEAGUE_HIGHSCHOOL_NPC";
+  const npcSchedule = s.leagueSchedules[npcLeagueId] ?? [];
+  const pending = npcSchedule.filter((e) => !e.result && e.week === targetWeek && e.gameDate <= targetDate);
+  if (pending.length === 0) return;
+
+  let entities = get(masterStore).entities;
+  if (entities.length === 0) {
+    await masterStore.loadEntities("");
+    entities = get(masterStore).entities;
+  }
+
+  for (const game of pending.sort((a, b) => a.gameDate.localeCompare(b.gameDate))) {
+    if (entities.length === 0) {
+      const result = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
+      seasonStore.applyBackgroundLeagueResult(
+        npcLeagueId,
+        game.id,
+        game.homeTeamId,
+        game.awayTeamId,
+        result,
+        0,
+        0,
+        {},
+      );
+      continue;
+    }
+
+    const latest = get(seasonStore);
+    const npcState = (latest.leagueState ?? {})[npcLeagueId];
+    const homeRotIdx = npcState?.teamRotationIndex?.[game.homeTeamId] ?? 0;
+    const awayRotIdx = npcState?.teamRotationIndex?.[game.awayTeamId] ?? 0;
+    const conditions = npcState?.playerConditions ?? {};
+
+    const sim = await simulateGame(game.homeTeamId, game.awayTeamId, entities, {
+      conditions,
+      homeRotIdx,
+      awayRotIdx,
+      week: game.week,
+    });
+
+    seasonStore.applyBackgroundLeagueResult(
+      npcLeagueId,
+      game.id,
+      game.homeTeamId,
+      game.awayTeamId,
+      sim.result,
+      sim.nextHomeRotIdx,
+      sim.nextAwayRotIdx,
+      sim.pitcherConditions,
+    );
+  }
 }
 
 export async function simulateProtagonistGame(homeTeamId: string, awayTeamId: string): Promise<MatchResult> {
@@ -431,9 +493,9 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       const myGroupLabel  = protagonistIsA ? "A조" : "B조";
       const npcGroupLabel = protagonistIsA ? "B조" : "A조";
 
-      const myGames  = sAfterSim.schedule.filter((e) => e.week === weekNum - 1 && !e.isProtagonistGame && !!e.result);
+      const myGames  = sAfterSim.schedule.filter((e) => e.week === weekNum && !e.isProtagonistGame && !!e.result);
       const npcGames = (sAfterSim.leagueSchedules["LEAGUE_HIGHSCHOOL_NPC"] ?? []).filter(
-        (e) => e.week === weekNum - 1 && !!e.result,
+        (e) => e.week === weekNum && !!e.result,
       );
 
       if (myGames.length > 0 || npcGames.length > 0) {
@@ -447,9 +509,9 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         if (myGames.length > 0)  parts.push(`[${myGroupLabel}]\n${myGames.map(toLine).join("\n")}`);
         if (npcGames.length > 0) parts.push(`[${npcGroupLabel}]\n${npcGames.map(toLine).join("\n")}`);
         const body = parts.join("\n\n");
-        const monthLabel = weekToMonthLabel(weekNum - 1);
+        const monthLabel = weekToMonthLabel(weekNum);
         gameStore.addMessage({
-          id: `msg-league-results-w${weekNum - 1}-${Date.now()}`,
+          id: `msg-league-results-w${weekNum}-${Date.now()}`,
           category: "system",
           sender: "리그 사무국",
           subject: `${monthLabel} 고교 리그 경기 결과`,
@@ -460,10 +522,10 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         });
       }
     } else {
-      const myGames = sAfterSim.schedule.filter((e) => e.week === weekNum - 1 && !e.isProtagonistGame && !!e.result);
+      const myGames = sAfterSim.schedule.filter((e) => e.week === weekNum && !e.isProtagonistGame && !!e.result);
       if (myGames.length > 0) {
         const leagueName = LEAGUE_NAMES[gFinal.protagonist.leagueId] ?? gFinal.protagonist.leagueId;
-        const monthLabel = weekToMonthLabel(weekNum - 1);
+        const monthLabel = weekToMonthLabel(weekNum);
         const lines = myGames.map((e) => {
           const home = teamById.get(e.homeTeamId) ?? e.homeTeamId;
           const away = teamById.get(e.awayTeamId) ?? e.awayTeamId;
@@ -471,7 +533,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
           return `${away} ${r.awayScore} : ${r.homeScore} ${home}`;
         });
         gameStore.addMessage({
-          id: `msg-league-results-w${weekNum - 1}-${Date.now()}`,
+          id: `msg-league-results-w${weekNum}-${Date.now()}`,
           category: "system",
           sender: "리그 사무국",
           subject: `${monthLabel} ${leagueName} 경기 결과`,
@@ -939,6 +1001,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         const result = await simulateNpcGame(nextGame.homeTeamId, nextGame.awayTeamId);
         seasonStore.applyMatchResult(nextGame.id, result, g.protagonist.leagueId);
         await applyPostseasonResult(nextGame.id, result);
+        await syncHighschoolNpcByGameDate(nextGame.gameDate, nextGame.week);
         accResults.push(result);
         accLogs.push("학사 경고로 인해 경기 출전 불가");
       } else {
@@ -952,6 +1015,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       const result = await simulateNpcGame(nextGame.homeTeamId, nextGame.awayTeamId);
       seasonStore.applyMatchResult(nextGame.id, result, g.protagonist.leagueId);
       applyPostseasonResult(nextGame.id, result);
+      await syncHighschoolNpcByGameDate(nextGame.gameDate, nextGame.week);
       accResults.push(result);
       accLogs.push(`${nextGame.homeTeamId} ${result.homeScore}:${result.awayScore} ${nextGame.awayTeamId}`);
     }

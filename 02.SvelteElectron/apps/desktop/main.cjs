@@ -1352,8 +1352,12 @@ function dbLoadSlot(db, slotId) {
 }
 
 function masterRowToEntityRow(r) {
+  const normalizedPlayerType =
+    r.player_type === "pitcher" || r.player_type === "batter" || r.player_type === "twoWay"
+      ? r.player_type
+      : "pitcher";
   const player = {
-    playerType:      r.player_type    ?? "player",
+    playerType:      normalizedPlayerType,
     handedness:      r.handedness     ?? "R",
     position:        r.position       ?? "",
     jerseyNumber:    r.jersey_number  ?? 18,
@@ -1455,6 +1459,25 @@ app.whenReady().then(() => {
   }
 
   // master.db 체크섬 검증 (프로덕션에서 파일 변조 감지)
+  const masterOverlayDbPath = path.join(savesDir, "master_overlay.db");
+  const masterOverlayDb = new Database(masterOverlayDbPath);
+  masterOverlayDb.pragma("journal_mode = WAL");
+  masterOverlayDb.exec(`
+    CREATE TABLE IF NOT EXISTS entity_overlay (
+      id           TEXT PRIMARY KEY,
+      league_id    TEXT NOT NULL,
+      payload_json TEXT NOT NULL,
+      updated_at   TEXT NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_entity_overlay_league ON entity_overlay(league_id);
+    CREATE TABLE IF NOT EXISTS entity_overlay_deleted (
+      id         TEXT PRIMARY KEY,
+      league_id  TEXT,
+      deleted_at TEXT NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_entity_overlay_deleted_league ON entity_overlay_deleted(league_id);
+  `);
+
   if (!isDev) checkMasterIntegrity(masterDbPath, userDataDir);
 
   applyTuningFromFile(resourceBase, tuningSchema).then((res) => {
@@ -1598,7 +1621,12 @@ app.whenReady().then(() => {
     }
     const result = core.finishMatch(activeMatchState);
     activeMatchState = result.nextState;
-    return { snapshot: toSnapshotDto(activeMatchState, [], core), summary: result.summary, batterLines: result.batterLines ?? [] };
+    return {
+      snapshot: toSnapshotDto(activeMatchState, [], core),
+      summary: result.summary,
+      batterLines: result.batterLines ?? [],
+      playerLines: result.playerLines ?? [],
+    };
   });
 
   ipcMain.handle("match:mound-visit", async () => {
@@ -1618,7 +1646,15 @@ app.whenReady().then(() => {
       }
       activeMatchState = state;
       if (state.isFinished) {
-        return JSON.stringify({ entryReached: false, homeScore: state.score.home, awayScore: state.score.away });
+        const final = core.finishMatch(state);
+        activeMatchState = final.nextState;
+        return JSON.stringify({
+          entryReached: false,
+          homeScore: state.score.home,
+          awayScore: state.score.away,
+          batterLines: final.batterLines ?? [],
+          playerLines: final.playerLines ?? [],
+        });
       }
       return JSON.stringify({ entryReached: true, inning: state.inning, half: state.half, homeScore: state.score.home, awayScore: state.score.away });
     } catch (e) {
@@ -1643,6 +1679,8 @@ app.whenReady().then(() => {
         walksAllowed:  ns.bbSinceEntry   ?? 0,
         outsRecorded:  ns.outsSinceEntry ?? 0,
         pitchCount:    ns.pitchCountSinceEntry ?? 0,
+        batterLines: result.batterLines ?? [],
+        playerLines: result.playerLines ?? [],
       });
     } catch (e) {
       return JSON.stringify({ error: String(e?.message ?? e) });
@@ -1828,18 +1866,75 @@ app.whenReady().then(() => {
 
   // master.db에서 leagueId로 entity 일괄 조회
   ipcMain.handle("master:loadEntities", (_event, leagueId) => {
-    if (!masterDb) return [];
     try {
-      const rows = typeof leagueId === "string" && leagueId
-        ? masterDb.prepare("SELECT * FROM npc_master WHERE league_id = ?").all(leagueId)
-        : masterDb.prepare("SELECT * FROM npc_master").all();
-      return rows.map(masterRowToEntityRow);
+      const baseRows = masterDb
+        ? (typeof leagueId === "string" && leagueId
+            ? masterDb.prepare("SELECT * FROM npc_master WHERE league_id = ?").all(leagueId)
+            : masterDb.prepare("SELECT * FROM npc_master").all())
+        : [];
+      const deletedRows = typeof leagueId === "string" && leagueId
+        ? masterOverlayDb.prepare("SELECT id FROM entity_overlay_deleted WHERE league_id = ? OR league_id IS NULL").all(leagueId)
+        : masterOverlayDb.prepare("SELECT id FROM entity_overlay_deleted").all();
+      const deletedIds = new Set(deletedRows.map((r) => r.id));
+      const overlayRows = typeof leagueId === "string" && leagueId
+        ? masterOverlayDb.prepare("SELECT payload_json FROM entity_overlay WHERE league_id = ?").all(leagueId)
+        : masterOverlayDb.prepare("SELECT payload_json FROM entity_overlay").all();
+      const byId = new Map();
+      for (const row of baseRows.map(masterRowToEntityRow)) {
+        if (!deletedIds.has(row.id)) byId.set(row.id, row);
+      }
+      for (const row of overlayRows) {
+        const entity = JSON.parse(row.payload_json);
+        if (!deletedIds.has(entity.id)) byId.set(entity.id, entity);
+      }
+      return [...byId.values()];
     } catch (e) {
-      console.error("[master:loadEntities] 오류:", e);
+      console.error("[master:loadEntities] error:", e);
       return [];
     }
   });
 
+  ipcMain.handle("master:upsertEntity", (_event, payload) => {
+    try {
+      if (!payload || typeof payload !== "object" || Array.isArray(payload)) throw new Error("payload is required");
+      const id = String(payload.id ?? "").trim();
+      const leagueId = String(payload.leagueId ?? "").trim();
+      if (!id) throw new Error("id is required");
+      if (!leagueId) throw new Error("leagueId is required");
+      const now = new Date().toISOString();
+      masterOverlayDb.prepare(`
+        INSERT INTO entity_overlay (id, league_id, payload_json, updated_at)
+        VALUES (?, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET
+          league_id=excluded.league_id,
+          payload_json=excluded.payload_json,
+          updated_at=excluded.updated_at
+      `).run(id, leagueId, JSON.stringify(payload), now);
+      masterOverlayDb.prepare("DELETE FROM entity_overlay_deleted WHERE id = ?").run(id);
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: String(e?.message ?? e) };
+    }
+  });
+
+  ipcMain.handle("master:deleteEntity", (_event, payload) => {
+    try {
+      const id = String(payload?.id ?? "").trim();
+      if (!id) throw new Error("id is required");
+      const leagueId = payload?.leagueId ? String(payload.leagueId).trim() : null;
+      masterOverlayDb.prepare("DELETE FROM entity_overlay WHERE id = ?").run(id);
+      masterOverlayDb.prepare(`
+        INSERT INTO entity_overlay_deleted (id, league_id, deleted_at)
+        VALUES (?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET
+          league_id=excluded.league_id,
+          deleted_at=excluded.deleted_at
+      `).run(id, leagueId, new Date().toISOString());
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: String(e?.message ?? e) };
+    }
+  });
   ipcMain.handle("tuning:load", async () => {
     if (!isDev) return { ok: false, error: "unauthorized" };
     try {

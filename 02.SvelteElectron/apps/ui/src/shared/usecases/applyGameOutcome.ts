@@ -4,6 +4,7 @@ import { masterStore } from "../stores/master";
 import { seasonStore } from "../stores/season";
 import { checkAchievements, computeMetrics } from "../utils/achievementEngine";
 import { calcGameGrowth } from "../utils/growthEngine";
+import { simulateGame } from "../utils/gameSimulator";
 import type { MatchResult, PitcherGameLine, UnifiedGameOutcome } from "../types/season";
 
 function buildTeamMatchResult(
@@ -22,6 +23,52 @@ function buildTeamMatchResult(
     playerLines: [],
     events: [],
   };
+}
+
+async function syncHighschoolNpcForProtagonistGame(scheduleId: string, leagueId: string): Promise<void> {
+  if (leagueId !== "LEAGUE_HIGHSCHOOL") return;
+
+  const s = get(seasonStore);
+  const pivot = s.schedule.find((e) => e.id === scheduleId);
+  if (!pivot) return;
+
+  const npcLeagueId = "LEAGUE_HIGHSCHOOL_NPC";
+  const npcSchedule = s.leagueSchedules[npcLeagueId] ?? [];
+  const pending = npcSchedule.filter((e) => !e.result && e.week === pivot.week && e.gameDate <= pivot.gameDate);
+  if (pending.length === 0) return;
+
+  let entities = get(masterStore).entities;
+  if (entities.length === 0) {
+    await masterStore.loadEntities("");
+    entities = get(masterStore).entities;
+  }
+
+  for (const game of pending.sort((a, b) => a.gameDate.localeCompare(b.gameDate))) {
+    if (entities.length === 0) break;
+    const latest = get(seasonStore);
+    const npcState = (latest.leagueState ?? {})[npcLeagueId];
+    const homeRotIdx = npcState?.teamRotationIndex?.[game.homeTeamId] ?? 0;
+    const awayRotIdx = npcState?.teamRotationIndex?.[game.awayTeamId] ?? 0;
+    const conditions = npcState?.playerConditions ?? {};
+
+    const sim = await simulateGame(game.homeTeamId, game.awayTeamId, entities, {
+      conditions,
+      homeRotIdx,
+      awayRotIdx,
+      week: game.week,
+    });
+
+    seasonStore.applyBackgroundLeagueResult(
+      npcLeagueId,
+      game.id,
+      game.homeTeamId,
+      game.awayTeamId,
+      sim.result,
+      sim.nextHomeRotIdx,
+      sim.nextAwayRotIdx,
+      sim.pitcherConditions,
+    );
+  }
 }
 
 export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<void> {
@@ -53,13 +100,30 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
     decision: won ? "W" : isDraw ? "ND" : "L",
     pitchCount: outcome.pitchCount > 0 ? outcome.pitchCount : undefined,
   };
+  let playerLines = Array.isArray(outcome.playerLines) && outcome.playerLines.length > 0
+    ? outcome.playerLines
+    : [pitcherLine, ...(outcome.batterLines ?? [])];
+  if (!(Array.isArray(outcome.playerLines) && outcome.playerLines.length > 0)) {
+    const entities = get(masterStore).entities;
+    if (entities.length > 0) {
+      try {
+        const sim = await simulateGame(outcome.homeTeamId, outcome.awayTeamId, entities, { week: outcome.week });
+        const merged = sim.result.playerLines.filter((l) => l.playerId !== protagonist.id);
+        playerLines = [pitcherLine, ...merged];
+      } catch {
+        // keep fallback lines when simulation enrichment fails
+      }
+    }
+  }
+
   const matchResult: MatchResult = {
     ...teamResult,
-    playerLines: [pitcherLine, ...(outcome.batterLines ?? [])],
+    playerLines,
   };
 
   seasonStore.applyMatchResult(outcome.scheduleId, matchResult);
   seasonStore.syncProtagonistLeagueResult(protagonist.leagueId, matchResult, outcome.homeTeamId);
+  await syncHighschoolNpcForProtagonistGame(outcome.scheduleId, protagonist.leagueId);
   seasonStore.resolvePendingAction("game", outcome.scheduleId);
 
   const myScore = outcome.homeTeamId === myTeamId ? outcome.homeScore : outcome.awayScore;
@@ -124,4 +188,3 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
   await gameStore.save();
   await seasonStore.save();
 }
-

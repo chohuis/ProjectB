@@ -179,8 +179,10 @@
     }
     const teamId   = modalEntity?.teamId ?? "";
     const leagueId = (modalEntity as any)?.leagueId ?? (modalEntity as any)?.originLeagueId ?? "";
+    const isHighschoolLeague = leagueId === "LEAGUE_HIGHSCHOOL";
     const entries = [
       ...($seasonStore.leagueSchedules[leagueId] ?? []),
+      ...(isHighschoolLeague ? ($seasonStore.leagueSchedules["LEAGUE_HIGHSCHOOL_NPC"] ?? []) : []),
       ...$seasonStore.schedule.filter((e) => e.leagueId === leagueId),
     ];
     const seen = new Set<string>();

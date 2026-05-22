@@ -150,6 +150,7 @@ export interface InteractiveMatchResult {
   pitchCount: number;
   summary: string;
   batterLines?: BatterGameLine[];
+  playerLines?: PlayerGameLine[];
 }
 
 export interface UnifiedGameOutcome {
@@ -169,6 +170,7 @@ export interface UnifiedGameOutcome {
   pitchCount: number;
   summary: string;
   batterLines?: BatterGameLine[];
+  playerLines?: PlayerGameLine[];
 }
 
 // ── 포스트시즌 시리즈 ──────────────────────────────────────────

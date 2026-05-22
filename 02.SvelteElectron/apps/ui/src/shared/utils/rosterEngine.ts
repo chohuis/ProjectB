@@ -76,11 +76,14 @@ const POSITION_PRIORITY = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH", 
 
 export function getTeamLineup(teamId: string, entities: EntityRow[]): string[] {
   const players = getTeamPlayers(teamId, entities);
-  const batters = players.filter(
+  let batters = players.filter(
     (e) =>
       playerDetails(e).playerType === "batter" ||
       playerDetails(e).playerType === "twoWay",
   );
+  // If a league/team has no batter-typed players, fall back to all active players
+  // so simulations can still emit player lines instead of empty stat sheets.
+  if (batters.length === 0) batters = players;
 
   // 포지션별 1명씩 최고 OVR 선택
   const used = new Set<string>();
