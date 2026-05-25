@@ -19,10 +19,10 @@ import {
   ALL_TEAMS_BY_LEAGUE,
   DEFAULT_LEAGUE_CONFIGS,
   generateAllLeagueSchedules,
-  generateLeagueSchedule,
   makeStandings,
   shuffleHsGroups,
 } from "../utils/leagueScheduler";
+import { generateSchedule } from "../utils/scheduleGen";
 import { simulateGame } from "../utils/gameSimulator";
 import type { SimWorkerRequest, SimWorkerResponse, SimWorkerResultItem } from "../workers/simWorker";
 
@@ -315,10 +315,11 @@ function createSeasonStore() {
       const protagonistGroup = hsGroupA.includes(protagonistTeamId) ? hsGroupA : hsGroupB;
       const npcGroup         = hsGroupA.includes(protagonistTeamId) ? hsGroupB : hsGroupA;
 
-      const [npcHsSchedule, otherSchedules] = await Promise.all([
-        generateLeagueSchedule("LEAGUE_HIGHSCHOOL_NPC", npcGroup, 5, 42, 2, ""),
+      const [rawNpcHsSchedule, otherSchedules] = await Promise.all([
+        generateSchedule(npcGroup, "", 52),
         generateAllLeagueSchedules(DEFAULT_LEAGUE_CONFIGS.map((c) => ({ ...c })), protagonistTeamId),
       ]);
+      const npcHsSchedule = rawNpcHsSchedule.map((e) => ({ ...e, leagueId: "LEAGUE_HIGHSCHOOL_NPC" }));
 
       const leagueSchedules: Record<string, ScheduleEntry[]> = {
         LEAGUE_HIGHSCHOOL_NPC: npcHsSchedule,
@@ -326,7 +327,8 @@ function createSeasonStore() {
       };
 
       const leagueState: Record<string, LeagueSeasonState> = {
-        LEAGUE_HIGHSCHOOL_NPC: { standings: makeStandings(npcGroup), stats: {}, playerConditions: {}, teamRotationIndex: {} },
+        LEAGUE_HIGHSCHOOL:     { standings: makeStandings(protagonistGroup), stats: {}, playerConditions: {}, teamRotationIndex: {} },
+        LEAGUE_HIGHSCHOOL_NPC: { standings: makeStandings(npcGroup),         stats: {}, playerConditions: {}, teamRotationIndex: {} },
       };
       for (const [lid, teams] of Object.entries(ALL_TEAMS_BY_LEAGUE)) {
         if (lid === "LEAGUE_HIGHSCHOOL") continue;
@@ -352,17 +354,22 @@ function createSeasonStore() {
       const npcGroup         = groupA.includes(protagonistTeamId) ? groupB : groupA;
 
       const otherCfgs = DEFAULT_LEAGUE_CONFIGS;
-      const [npcHsSchedule, protagonistSchedule, ...otherScheduleList] = await Promise.all([
-        generateLeagueSchedule("LEAGUE_HIGHSCHOOL_NPC", npcGroup, 5, 42, 2, ""),
-        generateLeagueSchedule("LEAGUE_HIGHSCHOOL", protagonistGroup, 5, 42, 2, protagonistTeamId),
-        ...otherCfgs.map((cfg) => generateLeagueSchedule(cfg.leagueId, cfg.teams, cfg.startWeek, cfg.endWeek, cfg.cycles, protagonistTeamId)),
+      const [rawNpcHsSchedule, rawProtagonistSchedule, otherSchedules] = await Promise.all([
+        generateSchedule(npcGroup, "", 52),
+        generateSchedule(protagonistGroup, protagonistTeamId, 52),
+        generateAllLeagueSchedules(otherCfgs.map((c) => ({ ...c })), protagonistTeamId),
       ]);
+      const npcHsSchedule = rawNpcHsSchedule.map((e) => ({ ...e, leagueId: "LEAGUE_HIGHSCHOOL_NPC" }));
+      const protagonistSchedule = rawProtagonistSchedule.map((e) => ({ ...e, leagueId: "LEAGUE_HIGHSCHOOL" }));
 
-      const leagueSchedules: Record<string, ScheduleEntry[]> = { LEAGUE_HIGHSCHOOL_NPC: npcHsSchedule };
-      otherCfgs.forEach((cfg, i) => { leagueSchedules[cfg.leagueId] = otherScheduleList[i]; });
+      const leagueSchedules: Record<string, ScheduleEntry[]> = {
+        LEAGUE_HIGHSCHOOL_NPC: npcHsSchedule,
+        ...otherSchedules,
+      };
 
       const leagueState: Record<string, LeagueSeasonState> = {
-        LEAGUE_HIGHSCHOOL_NPC: { standings: makeStandings(npcGroup), stats: {}, playerConditions: {}, teamRotationIndex: {} },
+        LEAGUE_HIGHSCHOOL:     { standings: makeStandings(protagonistGroup), stats: {}, playerConditions: {}, teamRotationIndex: {} },
+        LEAGUE_HIGHSCHOOL_NPC: { standings: makeStandings(npcGroup),         stats: {}, playerConditions: {}, teamRotationIndex: {} },
       };
       for (const [lid, teams] of Object.entries(ALL_TEAMS_BY_LEAGUE)) {
         if (lid === "LEAGUE_HIGHSCHOOL") continue;

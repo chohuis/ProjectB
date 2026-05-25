@@ -3,8 +3,8 @@
   import { masterStore } from "../../shared/stores/master";
   import { gameStore } from "../../shared/stores/game";
   import { seasonStore } from "../../shared/stores/season";
-  import { generateSchedule } from "../../shared/utils/scheduleGen";
   import { HS_SELECTABLE_TEAMS, shuffleHsGroups } from "../../shared/utils/leagueScheduler";
+  import { generateSchedule } from "../../shared/utils/scheduleGen";
   import { assignHighschoolPosition } from "../../shared/utils/pitcherRoleEngine";
   import type { Handedness, PitchEntry, PitchingForm, ProtagonistSave } from "../../shared/types/save";
 
@@ -169,7 +169,8 @@
     gameStore.initNew(protagonist);
     // protagonist 조(8팀) 기준으로 시즌·스케줄 초기화
     seasonStore.initSeason("LEAGUE_HIGHSCHOOL", 2026, 52, protagonistGroup);
-    const schedule = await generateSchedule(protagonistGroup, selectedTeamId, 52);
+    const rawSchedule = await generateSchedule(protagonistGroup, selectedTeamId, 52);
+    const schedule = rawSchedule.map((e) => ({ ...e, leagueId: "LEAGUE_HIGHSCHOOL" }));
     seasonStore.setSchedule(schedule);
     await seasonStore.initAllLeagues(2026, selectedTeamId, groupA, groupB);
 

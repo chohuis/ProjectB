@@ -34,7 +34,7 @@ async function syncHighschoolNpcForProtagonistGame(scheduleId: string, leagueId:
 
   const npcLeagueId = "LEAGUE_HIGHSCHOOL_NPC";
   const npcSchedule = s.leagueSchedules[npcLeagueId] ?? [];
-  const pending = npcSchedule.filter((e) => !e.result && e.week === pivot.week && e.gameDate <= pivot.gameDate);
+  const pending = npcSchedule.filter((e) => !e.result && e.week <= pivot.week);
   if (pending.length === 0) return;
 
   let entities = get(masterStore).entities;

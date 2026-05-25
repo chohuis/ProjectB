@@ -80,14 +80,14 @@ async function simulateNpcGame(homeTeamId: string, awayTeamId: string): Promise<
   return { homeScore: fb.homeScore, awayScore: fb.awayScore, winnerId: fb.winnerId, loserId: fb.loserId, playerLines: [], events: [] };
 }
 
-async function syncHighschoolNpcByGameDate(targetDate: string, targetWeek: number): Promise<void> {
+async function syncHighschoolNpcByGameDate(_targetDate: string, targetWeek: number): Promise<void> {
   const g = get(gameStore);
   if (g.protagonist.careerStage !== "highschool") return;
 
   const s = get(seasonStore);
   const npcLeagueId = "LEAGUE_HIGHSCHOOL_NPC";
   const npcSchedule = s.leagueSchedules[npcLeagueId] ?? [];
-  const pending = npcSchedule.filter((e) => !e.result && e.week === targetWeek && e.gameDate <= targetDate);
+  const pending = npcSchedule.filter((e) => !e.result && e.week <= targetWeek);
   if (pending.length === 0) return;
 
   let entities = get(masterStore).entities;
