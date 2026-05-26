@@ -59,6 +59,15 @@
 
   $: selected = selectedId ? msgs.find((m) => m.id === selectedId) ?? null : null;
 
+  // 미결 message pendingAction이 있으면 해당 메시지를 자동으로 열기
+  $: {
+    const pendingMsg = $seasonStore.pendingActions.find((a) => a.type === "message");
+    if (pendingMsg && pendingMsg.type === "message" && selectedId !== pendingMsg.messageId) {
+      const target = msgs.find((m) => m.id === pendingMsg.messageId);
+      if (target) open(target);
+    }
+  }
+
   function open(msg: MessageItem) {
     selectedId = msg.id;
     if (msg.readAt === null && !(msg.decision && msg.decision.selectedOptionId === null)) {
@@ -472,7 +481,7 @@
 
   /* ── 모달 백드롭 ─────────────────────────────────────────────── */
   .backdrop {
-    position: absolute;
+    position: fixed;
     inset: 0;
     background: rgba(4, 8, 20, 0.75);
     z-index: 5;
@@ -480,16 +489,18 @@
 
   /* ── 모달 ────────────────────────────────────────────────────── */
   .modal {
-    position: absolute;
+    position: fixed;
     z-index: 6;
-    inset: 4% 6%;
+    top: 4vh;
+    left: 6vw;
+    right: 6vw;
+    bottom: 4vh;
     background: #0d1b34;
     border: 1px solid #304d7a;
     border-radius: 14px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    max-height: 92%;
   }
 
   .modal-head {
