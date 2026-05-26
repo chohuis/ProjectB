@@ -130,43 +130,52 @@
   }
 
   function queueDetail(action: PendingAction): string {
-    const p = $gameStore.protagonist;
+    const p  = $gameStore.protagonist;
     const ss = $gameStore.schoolState;
-    const weekInYear = (($seasonStore.currentWeek - 1 + 52) % 52) + 1;
     switch (action.type) {
-      case "message":
-        return `messageId: ${action.messageId}`;
+      case "message": {
+        const msg = $gameStore.mailbox.find((m) => m.id === action.messageId);
+        return msg ? `${msg.sender} — ${msg.subject}` : "";
+      }
       case "event":
         return action.title;
-      case "messengerScript":
-        return `${action.contactId} / ${action.arcId}`;
-      case "game":
-        return `scheduleId: ${action.scheduleId}`;
+      case "messengerScript": {
+        const contact = $gameStore.contacts.find((c) => c.id === action.contactId);
+        return contact ? contact.name : "";
+      }
+      case "game": {
+        const entry =
+          $seasonStore.schedule.find((e) => e.id === action.scheduleId) ??
+          Object.values($seasonStore.leagueSchedules).flat().find((e) => e.id === action.scheduleId);
+        if (!entry) return "";
+        const isHome = entry.homeTeamId === p.teamId;
+        return `${isHome ? "홈" : "원정"} vs ${tName(isHome ? entry.awayTeamId : entry.homeTeamId)}`;
+      }
       case "careerChoiceHub":
-        return `hub week ${weekInYear}`;
+        return "진로 방향을 결정하세요";
       case "careerChoice":
         if (ss.fallbackSelectionPending) {
-          const passCount =
+          const n =
             ss.fallbackUniversityPassed.length +
             ss.fallbackIndependentPassed.length +
             (ss.fallbackSportsMilitaryPassed ? 1 : 0);
-          return `fallback selection / passed ${passCount}`;
+          return `합격 ${n}곳 — 최종 선택 필요`;
         }
-        return `career choice week ${weekInYear}`;
+        return "진로를 선택하세요";
       case "draft":
-        return `scout ${p.scoutScore} / ovr ${p.pitching.ovr}`;
+        return `스카우트 ${p.scoutScore}점 · OVR ${p.pitching.ovr}`;
       case "salaryNegotiation":
-        return `${action.teamId} / offered ${action.offeredSalary.toLocaleString()}`;
+        return `${tName(action.teamId)} · 제시 ${action.offeredSalary.toLocaleString()}만원`;
       case "optionClause":
-        return `${action.optionType} option`;
+        return action.optionType === "team" ? "팀 옵션" : "선수 옵션";
       case "trade":
-        return `${action.fromTeamId} -> ${action.toTeamId}`;
+        return `${tName(action.fromTeamId)} → ${tName(action.toTeamId)}`;
       case "faMarket":
-        return `FA round ${p.faNegotiationRound ?? 0} / unsigned ${p.faUnsignedWeeks ?? 0}w`;
+        return `FA ${p.faNegotiationRound ?? 0}라운드`;
       case "militaryEnlist":
-        return `age ${p.age} / stage ${p.careerStage}`;
+        return `만 ${p.age}세`;
       case "hsGroupDraw":
-        return `season ${$seasonStore.seasonYear} draw`;
+        return `${$seasonStore.seasonYear}시즌 조 편성`;
       default:
         return "";
     }
