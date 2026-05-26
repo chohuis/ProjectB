@@ -25,51 +25,6 @@ function buildTeamMatchResult(
   };
 }
 
-async function syncHighschoolNpcForProtagonistGame(scheduleId: string, leagueId: string): Promise<void> {
-  if (leagueId !== "LEAGUE_HIGHSCHOOL") return;
-
-  const s = get(seasonStore);
-  const pivot = s.schedule.find((e) => e.id === scheduleId);
-  if (!pivot) return;
-
-  const npcLeagueId = "LEAGUE_HIGHSCHOOL_NPC";
-  const npcSchedule = s.leagueSchedules[npcLeagueId] ?? [];
-  const pending = npcSchedule.filter((e) => !e.result && e.week <= pivot.week);
-  if (pending.length === 0) return;
-
-  let entities = get(masterStore).entities;
-  if (entities.length === 0) {
-    await masterStore.loadEntities("");
-    entities = get(masterStore).entities;
-  }
-
-  for (const game of pending.sort((a, b) => a.gameDate.localeCompare(b.gameDate))) {
-    if (entities.length === 0) break;
-    const latest = get(seasonStore);
-    const npcState = (latest.leagueState ?? {})[npcLeagueId];
-    const homeRotIdx = npcState?.teamRotationIndex?.[game.homeTeamId] ?? 0;
-    const awayRotIdx = npcState?.teamRotationIndex?.[game.awayTeamId] ?? 0;
-    const conditions = npcState?.playerConditions ?? {};
-
-    const sim = await simulateGame(game.homeTeamId, game.awayTeamId, entities, {
-      conditions,
-      homeRotIdx,
-      awayRotIdx,
-      week: game.week,
-    });
-
-    seasonStore.applyBackgroundLeagueResult(
-      npcLeagueId,
-      game.id,
-      game.homeTeamId,
-      game.awayTeamId,
-      sim.result,
-      sim.nextHomeRotIdx,
-      sim.nextAwayRotIdx,
-      sim.pitcherConditions,
-    );
-  }
-}
 
 export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<void> {
   const sBefore = get(seasonStore);
@@ -123,7 +78,6 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
 
   seasonStore.applyMatchResult(outcome.scheduleId, matchResult);
   seasonStore.syncProtagonistLeagueResult(protagonist.leagueId, matchResult, outcome.homeTeamId);
-  await syncHighschoolNpcForProtagonistGame(outcome.scheduleId, protagonist.leagueId);
   seasonStore.resolvePendingAction("game", outcome.scheduleId);
 
   const myScore = outcome.homeTeamId === myTeamId ? outcome.homeScore : outcome.awayScore;

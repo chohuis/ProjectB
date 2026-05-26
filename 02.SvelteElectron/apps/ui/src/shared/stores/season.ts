@@ -265,6 +265,42 @@ function createSeasonStore() {
       });
     },
 
+    // 주인공 조 NPC 경기 결과 반영 — applyMatchResult + 투구 로테이션/컨디션 갱신
+    applyProtagonistGroupNpcResult(
+      scheduleId: string,
+      result: MatchResult,
+      leagueId: string,
+      homeTeamId: string,
+      awayTeamId: string,
+      nextHomeRotIdx: number,
+      nextAwayRotIdx: number,
+      pitcherConditions: Record<string, PlayerCondition>,
+    ) {
+      update((s) => {
+        const htId    = s.schedule.find((e) => e.id === scheduleId)?.homeTeamId ?? homeTeamId;
+        const schedule = s.schedule.map((e) => (e.id === scheduleId ? { ...e, result } : e));
+        const standings = updateStandings(s.standings, result, htId);
+        const stats     = accumulateStats(s.stats, result.playerLines);
+
+        const cur = migrateLeagueState(s.leagueState[leagueId] ?? {});
+        const leagueState = {
+          ...s.leagueState,
+          [leagueId]: {
+            ...cur,
+            standings: updateStandings(cur.standings, result, htId),
+            stats:     accumulateStats(cur.stats, result.playerLines),
+            playerConditions:  { ...cur.playerConditions, ...pitcherConditions },
+            teamRotationIndex: {
+              ...cur.teamRotationIndex,
+              [homeTeamId]: nextHomeRotIdx,
+              [awayTeamId]: nextAwayRotIdx,
+            },
+          },
+        };
+        return { ...s, schedule, standings, stats, leagueState };
+      });
+    },
+
     // 정지 조건 추가
     pushPendingAction(action: PendingAction) {
       update((s) => ({ ...s, pendingActions: [...s.pendingActions, action] }));
@@ -310,25 +346,23 @@ function createSeasonStore() {
     },
 
     // ── L1: 멀티리그 초기화 ────────────────────────────────────
-    // hsGroupA/hsGroupB: NewGamePage에서 미리 셔플한 조 배정 (매 시즌 전달)
+    // A/B 두 그룹 스케줄을 모두 s.schedule에 통합. LEAGUE_HIGHSCHOOL_NPC 없음.
     async initAllLeagues(seasonYear: number, protagonistTeamId: string, hsGroupA: string[], hsGroupB: string[]) {
       const protagonistGroup = hsGroupA.includes(protagonistTeamId) ? hsGroupA : hsGroupB;
       const npcGroup         = hsGroupA.includes(protagonistTeamId) ? hsGroupB : hsGroupA;
 
-      const [rawNpcHsSchedule, otherSchedules] = await Promise.all([
+      const [rawProtagSchedule, rawNpcSchedule, otherSchedules] = await Promise.all([
+        generateSchedule(protagonistGroup, protagonistTeamId, 52),
         generateSchedule(npcGroup, "", 52),
         generateAllLeagueSchedules(DEFAULT_LEAGUE_CONFIGS.map((c) => ({ ...c })), protagonistTeamId),
       ]);
-      const npcHsSchedule = rawNpcHsSchedule.map((e) => ({ ...e, leagueId: "LEAGUE_HIGHSCHOOL_NPC" }));
-
-      const leagueSchedules: Record<string, ScheduleEntry[]> = {
-        LEAGUE_HIGHSCHOOL_NPC: npcHsSchedule,
-        ...otherSchedules,
-      };
+      const allHsSchedule = [
+        ...rawProtagSchedule.map((e) => ({ ...e, leagueId: "LEAGUE_HIGHSCHOOL" })),
+        ...rawNpcSchedule.map((e)   => ({ ...e, leagueId: "LEAGUE_HIGHSCHOOL", id: `OPP_${e.id}` })),
+      ].sort((a, b) => a.gameDate.localeCompare(b.gameDate));
 
       const leagueState: Record<string, LeagueSeasonState> = {
-        LEAGUE_HIGHSCHOOL:     { standings: makeStandings(protagonistGroup), stats: {}, playerConditions: {}, teamRotationIndex: {} },
-        LEAGUE_HIGHSCHOOL_NPC: { standings: makeStandings(npcGroup),         stats: {}, playerConditions: {}, teamRotationIndex: {} },
+        LEAGUE_HIGHSCHOOL: { standings: makeStandings([...hsGroupA, ...hsGroupB]), stats: {}, playerConditions: {}, teamRotationIndex: {} },
       };
       for (const [lid, teams] of Object.entries(ALL_TEAMS_BY_LEAGUE)) {
         if (lid === "LEAGUE_HIGHSCHOOL") continue;
@@ -338,38 +372,34 @@ function createSeasonStore() {
       update((s) => ({
         ...s,
         seasonYear,
-        leagueSchedules,
+        schedule: allHsSchedule,
+        leagueSchedules: otherSchedules,
         leagueState,
         hsGroupA,
         hsGroupB,
-        standings: makeStandings(protagonistGroup),
+        standings: makeStandings([...hsGroupA, ...hsGroupB]),
       }));
     },
 
     // HS 연간 그룹 재편 (고교 2·3학년 시즌 시작 시 호출)
-    // protagonist 조 schedule[]을 반환 → 호출자가 setSchedule()에 넘겨야 함
-    async reinitHighschoolSeason(protagonistTeamId: string, allHsTeams: string[]): Promise<ScheduleEntry[]> {
+    // A/B 두 그룹 스케줄을 s.schedule에 직접 설정. 반환값 없음.
+    async reinitHighschoolSeason(protagonistTeamId: string, allHsTeams: string[]): Promise<void> {
       const { groupA, groupB } = await shuffleHsGroups(allHsTeams);
       const protagonistGroup = groupA.includes(protagonistTeamId) ? groupA : groupB;
       const npcGroup         = groupA.includes(protagonistTeamId) ? groupB : groupA;
 
-      const otherCfgs = DEFAULT_LEAGUE_CONFIGS;
-      const [rawNpcHsSchedule, rawProtagonistSchedule, otherSchedules] = await Promise.all([
-        generateSchedule(npcGroup, "", 52),
+      const [rawProtagSchedule, rawNpcSchedule, otherSchedules] = await Promise.all([
         generateSchedule(protagonistGroup, protagonistTeamId, 52),
-        generateAllLeagueSchedules(otherCfgs.map((c) => ({ ...c })), protagonistTeamId),
+        generateSchedule(npcGroup, "", 52),
+        generateAllLeagueSchedules(DEFAULT_LEAGUE_CONFIGS.map((c) => ({ ...c })), protagonistTeamId),
       ]);
-      const npcHsSchedule = rawNpcHsSchedule.map((e) => ({ ...e, leagueId: "LEAGUE_HIGHSCHOOL_NPC" }));
-      const protagonistSchedule = rawProtagonistSchedule.map((e) => ({ ...e, leagueId: "LEAGUE_HIGHSCHOOL" }));
-
-      const leagueSchedules: Record<string, ScheduleEntry[]> = {
-        LEAGUE_HIGHSCHOOL_NPC: npcHsSchedule,
-        ...otherSchedules,
-      };
+      const allHsSchedule = [
+        ...rawProtagSchedule.map((e) => ({ ...e, leagueId: "LEAGUE_HIGHSCHOOL" })),
+        ...rawNpcSchedule.map((e)   => ({ ...e, leagueId: "LEAGUE_HIGHSCHOOL", id: `OPP_${e.id}` })),
+      ].sort((a, b) => a.gameDate.localeCompare(b.gameDate));
 
       const leagueState: Record<string, LeagueSeasonState> = {
-        LEAGUE_HIGHSCHOOL:     { standings: makeStandings(protagonistGroup), stats: {}, playerConditions: {}, teamRotationIndex: {} },
-        LEAGUE_HIGHSCHOOL_NPC: { standings: makeStandings(npcGroup),         stats: {}, playerConditions: {}, teamRotationIndex: {} },
+        LEAGUE_HIGHSCHOOL: { standings: makeStandings([...groupA, ...groupB]), stats: {}, playerConditions: {}, teamRotationIndex: {} },
       };
       for (const [lid, teams] of Object.entries(ALL_TEAMS_BY_LEAGUE)) {
         if (lid === "LEAGUE_HIGHSCHOOL") continue;
@@ -378,14 +408,13 @@ function createSeasonStore() {
 
       update((s) => ({
         ...s,
-        standings: makeStandings(protagonistGroup),
-        leagueSchedules,
+        schedule: allHsSchedule,
+        standings: makeStandings([...groupA, ...groupB]),
+        leagueSchedules: otherSchedules,
         leagueState,
         hsGroupA: groupA,
         hsGroupB: groupB,
       }));
-
-      return protagonistSchedule;
     },
 
     // L1: 해당 주차 모든 NPC 리그 경기 시뮬레이션 (protagonist 리그 제외) — 동기 버전

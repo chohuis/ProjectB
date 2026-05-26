@@ -9,7 +9,7 @@ import { applyWeeklyStudy, calcExamResult, getUniversityEffBonus, getUniversityE
 import { checkAchievements, computeMetrics } from "../utils/achievementEngine";
 import { calcOfferedSalaryForProtagonist, calcSeasonRating } from "../utils/salaryEngine";
 import { isFaEligible } from "../utils/faEngine";
-import type { MatchResult, PendingAction, ScheduleEntry, WeekAdvanceResult } from "../types/season";
+import type { LeagueSeasonState, MatchResult, PendingAction, PlayerCondition, ScheduleEntry, WeekAdvanceResult } from "../types/season";
 import type { EventContext } from "../types/event";
 import type { MessageItem } from "../types/main";
 import type { ProtagonistSave } from "../types/save";
@@ -23,21 +23,118 @@ import {
 
 // ── 리그 표시명 ───────────────────────────────────────────────
 const LEAGUE_NAMES: Record<string, string> = {
-  LEAGUE_HIGHSCHOOL:     "고교 리그",
-  LEAGUE_HIGHSCHOOL_NPC: "고교 리그 (타조)",
-  LEAGUE_KBL:            "KBL",
-  LEAGUE_ABL:            "ABL",
-  LEAGUE_UNIVERSITY:     "대학 리그",
-  LEAGUE_INDEPENDENT:    "독립 리그",
+  LEAGUE_HIGHSCHOOL:  "고교 리그",
+  LEAGUE_KBL:         "KBL",
+  LEAGUE_ABL:         "ABL",
+  LEAGUE_UNIVERSITY:  "대학 리그",
+  LEAGUE_INDEPENDENT: "독립 리그",
 };
 
 // 월간 순위표를 보낼 리그 목록 (주인공 소속 리그는 별도 처리)
 const MONTHLY_STANDINGS_LEAGUES = new Set([
   "LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL", "LEAGUE_UNIVERSITY",
-  "LEAGUE_INDEPENDENT", "LEAGUE_HIGHSCHOOL_NPC",
+  "LEAGUE_INDEPENDENT",
 ]);
 
 const EXAM_EVENT_IDS = new Set(["EVT_HS_MIDTERM", "EVT_HS_FINAL"]);
+
+// ── 고교 분기 Digest 상수 ─────────────────────────────────────
+const HS_DIGEST_LEAGUES = [
+  "LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL", "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT",
+] as const;
+const HS_DIGEST_WEEKS = new Set([12, 24, 36]);
+const HS_DIGEST_LEAGUE_NAMES: Record<string, string> = {
+  LEAGUE_KBL:         "KBL",
+  LEAGUE_ABL:         "ABL",
+  LEAGUE_JBL:         "JBL",
+  LEAGUE_UNIVERSITY:  "대학",
+  LEAGUE_INDEPENDENT: "독립",
+};
+
+// 순위·승률 기반 한 줄 코멘트
+function teamComment(rank: number, total: number, winPct: number): string {
+  if (rank === 1)     return winPct >= 0.65 ? "압도적 선두 — 드래프트 투자 여력 충분" : "선두 경쟁 중 — 전력 보강에 적극적";
+  if (rank === total) return winPct <  0.35 ? "재건 모드 — 젊은 자원 선호"           : "최하위권 고전 — 마운드 보강 시급";
+  if (winPct >= 0.55) return "상위권 경쟁 — 포스트시즌 진출 의지";
+  if (winPct <= 0.40) return "하위권 — 내년 재건 준비 중";
+  return "중위권 경쟁 중";
+}
+
+// 고교 2~3학년 분기 Digest 메시지 생성
+function buildHsLeagueDigest(
+  weekNum: number,
+  weekInYear: number,
+  hsGrade: number,
+  leagueState: Record<string, LeagueSeasonState>,
+  teamById: Map<string, string>,
+  scoutScore: number,
+): import("../types/main").MessageItem | null {
+  const quarterLabel = weekInYear <= 12 ? "3~5월" : weekInYear <= 24 ? "6~8월" : "9~11월";
+  const withComment  = hsGrade >= 3;
+  const pctStr = (v: number) => `.${String(Math.round(v * 1000)).padStart(3, "0")}`;
+  const parts: string[] = [];
+
+  for (const lid of HS_DIGEST_LEAGUES) {
+    const ls = leagueState[lid];
+    if (!ls || ls.standings.length === 0) continue;
+    const sorted = [...ls.standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
+    if (!sorted.some((s) => s.wins + s.losses > 0)) continue;
+
+    const lName    = HS_DIGEST_LEAGUE_NAMES[lid] ?? lid;
+    const top      = sorted[0];
+    const last     = sorted[sorted.length - 1];
+    const total    = sorted.length;
+    const topName  = teamById.get(top.teamId)  ?? top.teamId;
+    const lastName = teamById.get(last.teamId) ?? last.teamId;
+
+    if (withComment) {
+      parts.push(
+        `■ ${lName}\n` +
+        `  ${topName}  1위 (${pctStr(top.winPct)})  "${teamComment(1, total, top.winPct)}"\n` +
+        `  ${lastName}  ${total}위 (${pctStr(last.winPct)})  "${teamComment(total, total, last.winPct)}"`,
+      );
+    } else {
+      parts.push(`■ ${lName}    ${topName} 선두 / ${lastName} 최하위`);
+    }
+  }
+
+  if (parts.length === 0) return null;
+
+  // 스카우트 관심 구단 — KBL 상위팀, scoutScore 기반 노출 수
+  const kblSorted = [...(leagueState["LEAGUE_KBL"]?.standings ?? [])]
+    .sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
+  const hasKblData   = kblSorted.some((s) => s.wins + s.losses > 0);
+  const scoutCount   = scoutScore >= 80 ? 4 : scoutScore >= 60 ? 3 : scoutScore >= 40 ? 2 : 1;
+  const scoutTeams   = hasKblData ? kblSorted.slice(0, scoutCount) : [];
+
+  let scoutSection = "";
+  if (scoutTeams.length > 0) {
+    const scoutLines = scoutTeams.map((st) => {
+      const name    = teamById.get(st.teamId) ?? st.teamId;
+      const rank    = kblSorted.findIndex((s) => s.teamId === st.teamId) + 1;
+      const comment = withComment ? `  "${teamComment(rank, kblSorted.length, st.winPct)}"` : "";
+      return `  ${name}${comment}`;
+    });
+    scoutSection = `\n\n▶ 스카우트 관심 구단\n${scoutLines.join("\n")}`;
+  }
+
+  const standingsHint = withComment
+    ? "\n\n→ 세부 순위는 [기록] 탭에서 확인"
+    : "\n\n→ 세부 순위는 [기록] 탭에서 확인 (3학년 진급 후 열람 가능)";
+
+  const body = `[야구계 소식 — ${quarterLabel}]\n\n${parts.join("\n\n")}${scoutSection}${standingsHint}`;
+
+  return {
+    id:        `msg-hs-digest-w${weekNum}-${Date.now()}`,
+    category:  "system",
+    sender:    "리그 사무국",
+    subject:   `야구계 소식 — ${quarterLabel}`,
+    preview:   parts[0]?.split("\n")[0] ?? "",
+    body,
+    createdAt: `W${weekNum}`,
+    readAt:    null,
+  };
+}
 
 function makeTrainingMessage(week: number, logs: string[]): MessageItem {
   return {
@@ -80,63 +177,6 @@ async function simulateNpcGame(homeTeamId: string, awayTeamId: string): Promise<
   return { homeScore: fb.homeScore, awayScore: fb.awayScore, winnerId: fb.winnerId, loserId: fb.loserId, playerLines: [], events: [] };
 }
 
-async function syncHighschoolNpcByGameDate(_targetDate: string, targetWeek: number): Promise<void> {
-  const g = get(gameStore);
-  if (g.protagonist.careerStage !== "highschool") return;
-
-  const s = get(seasonStore);
-  const npcLeagueId = "LEAGUE_HIGHSCHOOL_NPC";
-  const npcSchedule = s.leagueSchedules[npcLeagueId] ?? [];
-  const pending = npcSchedule.filter((e) => !e.result && e.week <= targetWeek);
-  if (pending.length === 0) return;
-
-  let entities = get(masterStore).entities;
-  if (entities.length === 0) {
-    await masterStore.loadEntities("");
-    entities = get(masterStore).entities;
-  }
-
-  for (const game of pending.sort((a, b) => a.gameDate.localeCompare(b.gameDate))) {
-    if (entities.length === 0) {
-      const result = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
-      seasonStore.applyBackgroundLeagueResult(
-        npcLeagueId,
-        game.id,
-        game.homeTeamId,
-        game.awayTeamId,
-        result,
-        0,
-        0,
-        {},
-      );
-      continue;
-    }
-
-    const latest = get(seasonStore);
-    const npcState = (latest.leagueState ?? {})[npcLeagueId];
-    const homeRotIdx = npcState?.teamRotationIndex?.[game.homeTeamId] ?? 0;
-    const awayRotIdx = npcState?.teamRotationIndex?.[game.awayTeamId] ?? 0;
-    const conditions = npcState?.playerConditions ?? {};
-
-    const sim = await simulateGame(game.homeTeamId, game.awayTeamId, entities, {
-      conditions,
-      homeRotIdx,
-      awayRotIdx,
-      week: game.week,
-    });
-
-    seasonStore.applyBackgroundLeagueResult(
-      npcLeagueId,
-      game.id,
-      game.homeTeamId,
-      game.awayTeamId,
-      sim.result,
-      sim.nextHomeRotIdx,
-      sim.nextAwayRotIdx,
-      sim.pitcherConditions,
-    );
-  }
-}
 
 export async function simulateProtagonistGame(homeTeamId: string, awayTeamId: string): Promise<MatchResult> {
   return simulateNpcGame(homeTeamId, awayTeamId);
@@ -493,10 +533,13 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       const myGroupLabel  = protagonistIsA ? "A조" : "B조";
       const npcGroupLabel = protagonistIsA ? "B조" : "A조";
 
-      const myGames  = sAfterSim.schedule.filter((e) => e.week === weekNum && !e.isProtagonistGame && !!e.result);
-      const npcGames = (sAfterSim.leagueSchedules["LEAGUE_HIGHSCHOOL_NPC"] ?? []).filter(
-        (e) => e.week === weekNum && !!e.result,
+      const weekHsGames = sAfterSim.schedule.filter(
+        (e) => e.week === weekNum && e.leagueId === "LEAGUE_HIGHSCHOOL" && !e.isProtagonistGame && !!e.result,
       );
+      const myGroupTeams  = protagonistIsA ? (sAfterSim.hsGroupA ?? []) : (sAfterSim.hsGroupB ?? []);
+      const npcGroupTeams = protagonistIsA ? (sAfterSim.hsGroupB ?? []) : (sAfterSim.hsGroupA ?? []);
+      const myGames  = weekHsGames.filter((e) => myGroupTeams.includes(e.homeTeamId));
+      const npcGames = weekHsGames.filter((e) => npcGroupTeams.includes(e.homeTeamId));
 
       if (myGames.length > 0 || npcGames.length > 0) {
         const toLine = (e: { homeTeamId: string; awayTeamId: string; result?: import("../types/season").MatchResult }) => {
@@ -546,44 +589,58 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     }
   }
 
-  // ── 타 리그 월간 순위표 메시지 (4주마다) ──────────────────────
-  if (weekInYear % 4 === 0) {
-    const sAfterSim = get(seasonStore);
-    const myLeagueId = gFinal.protagonist.leagueId;
-    const teamById = new Map(mFinal.teams.map((t) => [t.id, t.name]));
-    const protagonistIsA = sAfterSim.hsGroupA.includes(gFinal.protagonist.teamId);
-    const monthLabel = weekToMonthLabel(weekNum);
+  // ── 타 리그 순위 메시지 ─────────────────────────────────────
+  const hsGradeForMsg = gFinal.protagonist.careerStage === "highschool"
+    ? (gFinal.protagonist.grade ?? 1)
+    : null;
 
-    for (const [lid, ls] of Object.entries(sAfterSim.leagueState)) {
-      if (lid === myLeagueId) continue;
-      if (!MONTHLY_STANDINGS_LEAGUES.has(lid)) continue;
-      if (lid === "LEAGUE_HIGHSCHOOL_NPC" && gFinal.protagonist.careerStage !== "highschool") continue;
-      const sorted = [...ls.standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
-      if (sorted.length === 0) continue;
-      if (!sorted.some((s) => s.wins + s.losses + s.draws > 0)) continue;
-      const lgSchedule = sAfterSim.leagueSchedules[lid] ?? [];
-      const lastGameWeek = lgSchedule.reduce((mx, e) => Math.max(mx, e.week), 0);
-      if (lastGameWeek > 0 && weekInYear > lastGameWeek) continue;
+  if (hsGradeForMsg !== null) {
+    // 고교: 1학년 = 없음 / 2~3학년 = 분기 Digest (W12·W24·W36)
+    if (hsGradeForMsg >= 2 && HS_DIGEST_WEEKS.has(weekInYear)) {
+      const sAfterSim = get(seasonStore);
+      const teamById  = new Map(mFinal.teams.map((t) => [t.id, t.name]));
+      const digest    = buildHsLeagueDigest(
+        weekNum, weekInYear, hsGradeForMsg,
+        sAfterSim.leagueState, teamById,
+        gFinal.protagonist.scoutScore ?? 0,
+      );
+      if (digest) gameStore.addMessage(digest);
+    }
+  } else {
+    // 비고교: 기존 월간 순위표 (4주마다)
+    if (weekInYear % 4 === 0) {
+      const sAfterSim = get(seasonStore);
+      const myLeagueId = gFinal.protagonist.leagueId;
+      const teamById = new Map(mFinal.teams.map((t) => [t.id, t.name]));
+      const monthLabel = weekToMonthLabel(weekNum);
 
-      const leagueName = lid === "LEAGUE_HIGHSCHOOL_NPC"
-        ? (protagonistIsA ? "B조" : "A조")
-        : (LEAGUE_NAMES[lid] ?? lid);
+      for (const [lid, ls] of Object.entries(sAfterSim.leagueState)) {
+        if (lid === myLeagueId) continue;
+        if (!MONTHLY_STANDINGS_LEAGUES.has(lid)) continue;
+        const sorted = [...ls.standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
+        if (sorted.length === 0) continue;
+        if (!sorted.some((s) => s.wins + s.losses + s.draws > 0)) continue;
+        const lgSchedule = sAfterSim.leagueSchedules[lid] ?? [];
+        const lastGameWeek = lgSchedule.reduce((mx, e) => Math.max(mx, e.week), 0);
+        if (lastGameWeek > 0 && weekInYear > lastGameWeek) continue;
 
-      const lines = sorted.map((st, i) => {
-        const name = teamById.get(st.teamId) ?? st.teamId;
-        const pct = String(Math.round(st.winPct * 1000)).padStart(3, "0");
-        return `${i + 1}위  ${name}  ${st.wins}승 ${st.losses}패  .${pct}  ${st.streak}`;
-      });
-      gameStore.addMessage({
-        id: `msg-standings-${lid}-w${weekNum}-${Date.now()}`,
-        category: "system",
-        sender: "리그 사무국",
-        subject: `[${leagueName}] ${monthLabel} 순위표`,
-        preview: lines[0] ?? "",
-        body: `── ${leagueName} 순위 (${monthLabel}) ──\n${lines.join("\n")}`,
-        createdAt: `W${weekNum}`,
-        readAt: null,
-      });
+        const leagueName = LEAGUE_NAMES[lid] ?? lid;
+        const lines = sorted.map((st, i) => {
+          const name = teamById.get(st.teamId) ?? st.teamId;
+          const pct = String(Math.round(st.winPct * 1000)).padStart(3, "0");
+          return `${i + 1}위  ${name}  ${st.wins}승 ${st.losses}패  .${pct}  ${st.streak}`;
+        });
+        gameStore.addMessage({
+          id: `msg-standings-${lid}-w${weekNum}-${Date.now()}`,
+          category: "system",
+          sender: "리그 사무국",
+          subject: `[${leagueName}] ${monthLabel} 순위표`,
+          preview: lines[0] ?? "",
+          body: `── ${leagueName} 순위 (${monthLabel}) ──\n${lines.join("\n")}`,
+          createdAt: `W${weekNum}`,
+          readAt: null,
+        });
+      }
     }
   }
 
@@ -667,10 +724,15 @@ async function injectHsPostseason(nextWeek: number): Promise<void> {
   const hasPostseason = sPS.schedule.some((e) => e.phase === "postseason");
 
   if (!hasPostseason && nextWeek > lastSeasonWeek && lastSeasonWeek > 0) {
-    const sortedStandings = [...sPS.standings].sort(
-      (a, b) => b.winPct - a.winPct || (b.wins - b.losses) - (a.wins - a.losses)
-    );
-    const top4 = sortedStandings.slice(0, 4).map((st) => st.teamId);
+    // A조·B조 각각 상위 2팀 추출 → [A1, A2, B1, B2] 순으로 넘기면
+    // Rust에서 Semi1: A1 vs B2 / Semi2: A2 vs B1 (교차 대진)
+    const sortBy = (a: { winPct: number; wins: number; losses: number }, b: { winPct: number; wins: number; losses: number }) =>
+      b.winPct - a.winPct || (b.wins - b.losses) - (a.wins - a.losses);
+    const groupA = sPS.hsGroupA ?? [];
+    const groupB = sPS.hsGroupB ?? [];
+    const topA = [...sPS.standings].filter((st) => groupA.includes(st.teamId)).sort(sortBy).slice(0, 2);
+    const topB = [...sPS.standings].filter((st) => groupB.includes(st.teamId)).sort(sortBy).slice(0, 2);
+    const top4 = [...topA, ...topB].map((st) => st.teamId);
     if (top4.length >= 4) {
       const semis = await generateHsPostseasonSemis(top4, g.protagonist.teamId, nextWeek, sPS.seasonYear);
       seasonStore.injectPostseasonEntries(semis);
@@ -1001,7 +1063,6 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         const result = await simulateNpcGame(nextGame.homeTeamId, nextGame.awayTeamId);
         seasonStore.applyMatchResult(nextGame.id, result, g.protagonist.leagueId);
         await applyPostseasonResult(nextGame.id, result);
-        await syncHighschoolNpcByGameDate(nextGame.gameDate, nextGame.week);
         accResults.push(result);
         accLogs.push("학사 경고로 인해 경기 출전 불가");
       } else {
@@ -1011,13 +1072,44 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         return { processedWeek: get(seasonStore).currentWeek, logs: accLogs, newMessages: [], matchResults: accResults, stoppedBy: action };
       }
     } else {
-      // NPC 경기 자동 처리
-      const result = await simulateNpcGame(nextGame.homeTeamId, nextGame.awayTeamId);
-      seasonStore.applyMatchResult(nextGame.id, result, g.protagonist.leagueId);
-      applyPostseasonResult(nextGame.id, result);
-      await syncHighschoolNpcByGameDate(nextGame.gameDate, nextGame.week);
-      accResults.push(result);
-      accLogs.push(`${nextGame.homeTeamId} ${result.homeScore}:${result.awayScore} ${nextGame.awayTeamId}`);
+      // NPC 경기 자동 처리 — simulateGame 우선 (playerLines·로테이션·컨디션 확보)
+      let entities = get(masterStore).entities;
+      if (entities.length === 0) {
+        await masterStore.loadEntities("");
+        entities = get(masterStore).entities;
+      }
+
+      const leagueId    = g.protagonist.leagueId;
+      const lStateSnap  = get(seasonStore).leagueState[leagueId];
+      const homeRotIdx  = lStateSnap?.teamRotationIndex?.[nextGame.homeTeamId] ?? 0;
+      const awayRotIdx  = lStateSnap?.teamRotationIndex?.[nextGame.awayTeamId] ?? 0;
+      const conditions  = lStateSnap?.playerConditions ?? {};
+
+      let npcResult: MatchResult;
+      let nextHomeRotIdx = homeRotIdx;
+      let nextAwayRotIdx = awayRotIdx;
+      let pitcherConds: Record<string, PlayerCondition> = {};
+
+      if (entities.length > 0) {
+        const sim = await simulateGame(nextGame.homeTeamId, nextGame.awayTeamId, entities, {
+          conditions, homeRotIdx, awayRotIdx, week: nextGame.week,
+        });
+        npcResult      = sim.result;
+        nextHomeRotIdx = sim.nextHomeRotIdx;
+        nextAwayRotIdx = sim.nextAwayRotIdx;
+        pitcherConds   = sim.pitcherConditions;
+      } else {
+        npcResult = await simulateNpcGame(nextGame.homeTeamId, nextGame.awayTeamId);
+      }
+
+      seasonStore.applyProtagonistGroupNpcResult(
+        nextGame.id, npcResult, leagueId,
+        nextGame.homeTeamId, nextGame.awayTeamId,
+        nextHomeRotIdx, nextAwayRotIdx, pitcherConds,
+      );
+      applyPostseasonResult(nextGame.id, npcResult);
+      accResults.push(npcResult);
+      accLogs.push(`${nextGame.homeTeamId} ${npcResult.homeScore}:${npcResult.awayScore} ${nextGame.awayTeamId}`);
     }
   }
 }

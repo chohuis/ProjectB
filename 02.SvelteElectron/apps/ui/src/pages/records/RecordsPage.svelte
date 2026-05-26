@@ -19,8 +19,25 @@
   $: myTeamId   = $gameStore.protagonist.teamId;
   $: myLeagueId = $gameStore.protagonist.leagueId;
 
-  // 초기 리그 선택
+  // ── 고교 학년별 리그 잠금 ─────────────────────────────────────
+  const PRO_LEAGUES = new Set([
+    "LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL",
+    "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT",
+  ]);
+
+  // 고교 1~2학년이면 PRO_LEAGUES 잠금, 아니면 전체 공개
+  $: lockedLeagueSet = (
+    $gameStore.protagonist.careerStage === "highschool" &&
+    ($gameStore.protagonist.grade ?? 1) <= 2
+  ) ? PRO_LEAGUES : new Set<string>();
+
+  function isLocked(lid: string): boolean {
+    return lockedLeagueSet.has(lid);
+  }
+
+  // 초기 리그 선택 (잠긴 리그로 초기화되지 않도록 보장)
   $: if (!selectedLeagueId && myLeagueId) selectedLeagueId = myLeagueId;
+  $: if (selectedLeagueId && isLocked(selectedLeagueId)) selectedLeagueId = myLeagueId;
 
   function tName(id: string): string {
     return $teamMap.get(id)?.name ?? id;
@@ -28,23 +45,13 @@
 
   function leagueName(lid: string): string {
     const map: Record<string, string> = {
-      LEAGUE_HIGHSCHOOL:     "고교",
-      LEAGUE_UNIVERSITY:     "대학",
-      LEAGUE_INDEPENDENT:    "독립",
-      LEAGUE_KBL:            "KBL",
-      LEAGUE_ABL:            "ABL",
-      LEAGUE_JBL:            "JBL",
+      LEAGUE_HIGHSCHOOL:  "고교 리그",
+      LEAGUE_UNIVERSITY:  "대학",
+      LEAGUE_INDEPENDENT: "독립",
+      LEAGUE_KBL:         "KBL",
+      LEAGUE_ABL:         "ABL",
+      LEAGUE_JBL:         "JBL",
     };
-    if (lid === "LEAGUE_HIGHSCHOOL") {
-      const hsGroupA = $seasonStore.hsGroupA ?? [];
-      const isGroupA = hsGroupA.includes($gameStore.protagonist.teamId);
-      return isGroupA ? "고등학교 A리그" : "고등학교 B리그";
-    }
-    if (lid === "LEAGUE_HIGHSCHOOL_NPC") {
-      const hsGroupA = $seasonStore.hsGroupA ?? [];
-      const isGroupA = hsGroupA.includes($gameStore.protagonist.teamId);
-      return isGroupA ? "고등학교 B리그" : "고등학교 A리그";
-    }
     return map[lid] ?? lid;
   }
 
@@ -89,16 +96,39 @@
   $: runsScored    = visibleGames.reduce((s, g) => s + g.myScore, 0);
   $: runsAllow     = visibleGames.reduce((s, g) => s + g.opScore, 0);
 
-  // ── 소속팀 순위 (protagonist 리그) ─────────────────────────────
-  $: sortedStandings = [...$seasonStore.standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
-  $: myStanding      = $seasonStore.standings.find((s) => s.teamId === myTeamId);
-  $: myRank          = sortedStandings.findIndex((s) => s.teamId === myTeamId) + 1;
+  // ── 소속팀 순위 (protagonist 그룹만) ──────────────────────────
+  $: protagonistGroupIds = (() => {
+    if (myLeagueId !== "LEAGUE_HIGHSCHOOL") return null;
+    const gA = $seasonStore.hsGroupA ?? [];
+    return gA.includes(myTeamId) ? gA : ($seasonStore.hsGroupB ?? []);
+  })();
+  $: sortedStandings = [...$seasonStore.standings]
+    .filter((s) => !protagonistGroupIds || protagonistGroupIds.includes(s.teamId))
+    .sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
+  $: myStanding = $seasonStore.standings.find((s) => s.teamId === myTeamId);
+  $: myRank     = sortedStandings.findIndex((s) => s.teamId === myTeamId) + 1;
+
+  // ── HS 리그 순위표 A/B 분리 ────────────────────────────────────
+  $: hsGroupAStandings = [...$seasonStore.standings]
+    .filter((s) => ($seasonStore.hsGroupA ?? []).includes(s.teamId))
+    .sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
+  $: hsGroupBStandings = [...$seasonStore.standings]
+    .filter((s) => ($seasonStore.hsGroupB ?? []).includes(s.teamId))
+    .sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
 
   // ── 멀티리그 순위표 ────────────────────────────────────────────
-  $: allLeagueIds = [
-    myLeagueId,
-    ...Object.keys($seasonStore.leagueState).filter((lid) => lid !== myLeagueId),
-  ].filter(Boolean);
+  // 잠긴 리그는 nav 하단에 표시 (선택 불가)
+  $: allLeagueIds = (() => {
+    const all = [
+      myLeagueId,
+      ...Object.keys($seasonStore.leagueState).filter((lid) => lid !== myLeagueId),
+    ].filter(Boolean);
+    if (lockedLeagueSet.size === 0) return all;
+    return [
+      ...all.filter((lid) => !lockedLeagueSet.has(lid)),
+      ...all.filter((lid) =>  lockedLeagueSet.has(lid)),
+    ];
+  })();
 
   function getLeagueStandings(lid: string) {
     if (lid === myLeagueId) {
@@ -112,36 +142,25 @@
   $: selectedStandings = getLeagueStandings(selectedLeagueId || myLeagueId);
 
   // ── 스탯 리더보드 ─────────────────────────────────────────────
-  // 리더보드 리그 목록 (LEAGUE_HIGHSCHOOL_NPC는 고교리그로 합산)
+  // 리더보드 리그 목록 (잠긴 리그 제외)
   $: lbLeagueIds = (() => {
-    const effectiveMyLeague = myLeagueId === "LEAGUE_HIGHSCHOOL_NPC" ? "LEAGUE_HIGHSCHOOL" : myLeagueId;
     const others = Object.keys($seasonStore.leagueState)
-      .filter((lid) => lid !== myLeagueId && lid !== "LEAGUE_HIGHSCHOOL_NPC" && lid !== effectiveMyLeague);
-    return [effectiveMyLeague, ...others].filter(Boolean);
+      .filter((lid) => lid !== myLeagueId && !lockedLeagueSet.has(lid));
+    return [myLeagueId, ...others].filter(Boolean);
   })();
 
   $: if (!lbLeagueId && lbLeagueIds.length > 0) lbLeagueId = lbLeagueIds[0];
 
   $: {
-    if (lbLeagueId) {
-      masterStore.loadEntities(lbLeagueId);
-      if (lbLeagueId === "LEAGUE_HIGHSCHOOL") masterStore.loadEntities("LEAGUE_HIGHSCHOOL_NPC");
-    }
+    if (lbLeagueId) masterStore.loadEntities(lbLeagueId);
   }
 
-  // 선택 리그 stats (고교는 두 조 합산 + 주인공 스탯 포함)
+  // 선택 리그 stats (주인공 스탯 포함)
   $: lbStats = (() => {
     if (!lbLeagueId) return {} as Record<string, PlayerSeasonStats>;
-    const ls1 = $seasonStore.leagueState[lbLeagueId];
-    const base: Record<string, PlayerSeasonStats> = ls1?.stats ? { ...ls1.stats } : {};
-    if (lbLeagueId === "LEAGUE_HIGHSCHOOL") {
-      const ls2 = $seasonStore.leagueState["LEAGUE_HIGHSCHOOL_NPC"];
-      if (ls2?.stats) Object.assign(base, ls2.stats);
-    }
-    const heroLeague = $gameStore.protagonist.leagueId;
-    const heroMatchesHs = lbLeagueId === "LEAGUE_HIGHSCHOOL" &&
-      (heroLeague === "LEAGUE_HIGHSCHOOL" || heroLeague === "LEAGUE_HIGHSCHOOL_NPC");
-    if (heroLeague === lbLeagueId || heroMatchesHs) {
+    const ls = $seasonStore.leagueState[lbLeagueId];
+    const base: Record<string, PlayerSeasonStats> = ls?.stats ? { ...ls.stats } : {};
+    if ($gameStore.protagonist.leagueId === lbLeagueId) {
       const hero = $seasonStore.stats[$gameStore.protagonist.id];
       if (hero) base[$gameStore.protagonist.id] = hero;
     }
@@ -324,9 +343,17 @@
         <!-- 리그 선택 사이드바 -->
         <nav class="league-nav">
           {#each allLeagueIds as lid}
-            <button class:active={selectedLeagueId === lid} on:click={() => (selectedLeagueId = lid)}>
+            {@const locked = isLocked(lid)}
+            <button
+              class:active={!locked && selectedLeagueId === lid}
+              class:locked={locked}
+              on:click={() => { if (!locked) selectedLeagueId = lid; }}
+              title={locked ? "3학년 진급 후 열람 가능" : undefined}
+            >
+              {#if locked}<span class="lock-icon">🔒</span>{/if}
               {leagueName(lid)}
-              {#if lid === myLeagueId}<span class="my-badge">내 리그</span>{/if}
+              {#if !locked && lid === myLeagueId}<span class="my-badge">내 리그</span>{/if}
+              {#if locked}<span class="lock-hint">3학년↑</span>{/if}
             </button>
           {/each}
         </nav>
@@ -334,36 +361,77 @@
         <!-- 선택된 리그 순위표 -->
         <div class="panel standings-panel">
           <h3>{leagueName(selectedLeagueId || myLeagueId)} 순위표</h3>
-          {#if selectedStandings.length === 0}
-            <p class="empty">아직 경기 데이터가 없습니다.</p>
-          {:else}
-            <table class="stbl full">
-              <thead>
-                <tr>
-                  <th>#</th><th>팀</th><th>승</th><th>패</th><th>무</th>
-                  <th>승률</th><th>득점</th><th>실점</th><th>연속</th><th>최근10</th>
-                </tr>
-              </thead>
-              <tbody>
-                {#each selectedStandings as s, i}
-                  <tr class:my-row={s.teamId === myTeamId}>
-                    <td>{i + 1}</td>
-                    <td class="t-name">{tName(s.teamId)}</td>
-                    <td class="w">{s.wins}</td>
-                    <td class="l">{s.losses}</td>
-                    <td>{s.draws}</td>
-                    <td>{s.winPct.toFixed(2)}</td>
-                    <td>{s.runsFor}</td>
-                    <td>{s.runsAgainst}</td>
-                    <td class:streak-w={s.streak.startsWith("W")} class:streak-l={s.streak.startsWith("L")}>
-                      {s.streak || "-"}
-                    </td>
-                    <td>{s.last10 || "-"}</td>
-                  </tr>
-                {/each}
-              </tbody>
-            </table>
-          {/if}
+          <div class="standings-body">
+            {#if (selectedLeagueId || myLeagueId) === "LEAGUE_HIGHSCHOOL"}
+              <!-- 고교 리그: A조 / B조 분리 -->
+              {#each [{ label: "A조", rows: hsGroupAStandings }, { label: "B조", rows: hsGroupBStandings }] as group}
+                <h4 class="group-label">{group.label}</h4>
+                {#if group.rows.length === 0}
+                  <p class="empty">아직 경기 데이터가 없습니다.</p>
+                {:else}
+                  <div class="tbl-wrap">
+                    <table class="stbl full">
+                      <thead>
+                        <tr>
+                          <th>#</th><th>팀</th><th>승</th><th>패</th><th>무</th>
+                          <th>승률</th><th>득점</th><th>실점</th><th>연속</th><th>최근10</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {#each group.rows as s, i}
+                          <tr class:my-row={s.teamId === myTeamId}>
+                            <td>{i + 1}</td>
+                            <td class="t-name">{tName(s.teamId)}</td>
+                            <td class="w">{s.wins}</td>
+                            <td class="l">{s.losses}</td>
+                            <td>{s.draws}</td>
+                            <td>{s.winPct.toFixed(2)}</td>
+                            <td>{s.runsFor}</td>
+                            <td>{s.runsAgainst}</td>
+                            <td class:streak-w={s.streak.startsWith("W")} class:streak-l={s.streak.startsWith("L")}>
+                              {s.streak || "-"}
+                            </td>
+                            <td>{s.last10 || "-"}</td>
+                          </tr>
+                        {/each}
+                      </tbody>
+                    </table>
+                  </div>
+                {/if}
+              {/each}
+            {:else if selectedStandings.length === 0}
+              <p class="empty">아직 경기 데이터가 없습니다.</p>
+            {:else}
+              <div class="tbl-wrap">
+                <table class="stbl full">
+                  <thead>
+                    <tr>
+                      <th>#</th><th>팀</th><th>승</th><th>패</th><th>무</th>
+                      <th>승률</th><th>득점</th><th>실점</th><th>연속</th><th>최근10</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {#each selectedStandings as s, i}
+                      <tr class:my-row={s.teamId === myTeamId}>
+                        <td>{i + 1}</td>
+                        <td class="t-name">{tName(s.teamId)}</td>
+                        <td class="w">{s.wins}</td>
+                        <td class="l">{s.losses}</td>
+                        <td>{s.draws}</td>
+                        <td>{s.winPct.toFixed(2)}</td>
+                        <td>{s.runsFor}</td>
+                        <td>{s.runsAgainst}</td>
+                        <td class:streak-w={s.streak.startsWith("W")} class:streak-l={s.streak.startsWith("L")}>
+                          {s.streak || "-"}
+                        </td>
+                        <td>{s.last10 || "-"}</td>
+                      </tr>
+                    {/each}
+                  </tbody>
+                </table>
+              </div>
+            {/if}
+          </div>
         </div>
       </section>
 
@@ -373,10 +441,9 @@
         <!-- 리그 선택 사이드바 -->
         <nav class="league-nav">
           {#each lbLeagueIds as lid}
-            {@const isMyLeague = lid === myLeagueId || (lid === "LEAGUE_HIGHSCHOOL" && (myLeagueId === "LEAGUE_HIGHSCHOOL" || myLeagueId === "LEAGUE_HIGHSCHOOL_NPC"))}
             <button class:active={lbLeagueId === lid} on:click={() => (lbLeagueId = lid)}>
               {lbLeagueName(lid)}
-              {#if isMyLeague}<span class="my-badge">내 리그</span>{/if}
+              {#if lid === myLeagueId}<span class="my-badge">내 리그</span>{/if}
             </button>
           {/each}
         </nav>
@@ -638,6 +705,18 @@
     gap: 2px;
   }
   .league-nav button.active { background: #2a4a80; border-color: #5c8fd8; color: #e8f0ff; }
+  .league-nav button.locked {
+    opacity: 0.38;
+    cursor: not-allowed;
+    border-color: #1e2e46;
+    color: #506882;
+  }
+  .lock-icon { font-size: 10px; line-height: 1; }
+  .lock-hint {
+    font-size: 9px;
+    color: #4a6278;
+    letter-spacing: 0.3px;
+  }
 
   .my-badge {
     font-size: 10px;
@@ -653,6 +732,25 @@
     grid-template-rows: auto minmax(0, 1fr);
     gap: 8px;
     overflow: hidden;
+  }
+
+  .standings-body {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 0;
+  }
+
+  .group-label {
+    margin: 6px 0 2px;
+    font-size: 12px;
+    color: #9eb6de;
+  }
+  .group-label:first-child { margin-top: 0; }
+
+  .tbl-wrap {
+    overflow-x: auto;
   }
 
   /* 스탯 순위 레이아웃 */

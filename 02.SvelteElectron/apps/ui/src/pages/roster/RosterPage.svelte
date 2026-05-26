@@ -179,10 +179,8 @@
     }
     const teamId   = modalEntity?.teamId ?? "";
     const leagueId = (modalEntity as any)?.leagueId ?? (modalEntity as any)?.originLeagueId ?? "";
-    const isHighschoolLeague = leagueId === "LEAGUE_HIGHSCHOOL";
     const entries = [
       ...($seasonStore.leagueSchedules[leagueId] ?? []),
-      ...(isHighschoolLeague ? ($seasonStore.leagueSchedules["LEAGUE_HIGHSCHOOL_NPC"] ?? []) : []),
       ...$seasonStore.schedule.filter((e) => e.leagueId === leagueId),
     ];
     const seen = new Set<string>();
@@ -240,7 +238,7 @@
   };
 
   const LEAGUE_DISPLAY: Record<string, string> = {
-    LEAGUE_HIGHSCHOOL: "고교 리그", LEAGUE_HIGHSCHOOL_NPC: "고교 리그",
+    LEAGUE_HIGHSCHOOL: "고교 리그",
     LEAGUE_UNIVERSITY: "대학 리그", LEAGUE_KBL: "KBL",
     LEAGUE_ABL: "ABL", LEAGUE_JBL: "JBL", LEAGUE_IND: "독립 리그",
   };

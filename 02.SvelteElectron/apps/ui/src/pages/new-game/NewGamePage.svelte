@@ -4,7 +4,6 @@
   import { gameStore } from "../../shared/stores/game";
   import { seasonStore } from "../../shared/stores/season";
   import { HS_SELECTABLE_TEAMS, shuffleHsGroups } from "../../shared/utils/leagueScheduler";
-  import { generateSchedule } from "../../shared/utils/scheduleGen";
   import { assignHighschoolPosition } from "../../shared/utils/pitcherRoleEngine";
   import type { Handedness, PitchEntry, PitchingForm, ProtagonistSave } from "../../shared/types/save";
 
@@ -163,15 +162,9 @@
     // 16개 팀을 A/B조로 랜덤 분배
     const allHsIds = hsAllTeams.map((t) => t.id);
     const { groupA, groupB } = await shuffleHsGroups(allHsIds);
-    // protagonist 조 결정
-    const protagonistGroup = groupA.includes(selectedTeamId) ? groupA : groupB;
-
     gameStore.initNew(protagonist);
-    // protagonist 조(8팀) 기준으로 시즌·스케줄 초기화
-    seasonStore.initSeason("LEAGUE_HIGHSCHOOL", 2026, 52, protagonistGroup);
-    const rawSchedule = await generateSchedule(protagonistGroup, selectedTeamId, 52);
-    const schedule = rawSchedule.map((e) => ({ ...e, leagueId: "LEAGUE_HIGHSCHOOL" }));
-    seasonStore.setSchedule(schedule);
+    // 16팀 기준으로 시즌 초기화. A/B 두 그룹 스케줄은 initAllLeagues 내부에서 설정.
+    seasonStore.initSeason("LEAGUE_HIGHSCHOOL", 2026, 52, [...groupA, ...groupB]);
     await seasonStore.initAllLeagues(2026, selectedTeamId, groupA, groupB);
 
     onComplete();
