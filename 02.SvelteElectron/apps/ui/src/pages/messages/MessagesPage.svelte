@@ -80,6 +80,11 @@
         }
       }
     }
+    if (selected.id.startsWith("msg-hs-group-draw-")) {
+      if (optionId === "join_draw") {
+        seasonStore.pushPendingAction({ type: "hsGroupDraw" });
+      }
+    }
     gameStore.resolveDecision(selected.id, optionId);
     seasonStore.resolvePendingAction("message", selected.id);
     await gameStore.save();

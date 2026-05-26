@@ -109,7 +109,8 @@ export type PendingAction =
       optionType: "team" | "player";
       exercised: boolean;
       nextSalary: number;
-    };
+    }
+  | { type: "hsGroupDraw" };
 
 // ── 주 진행 결과 (advanceWeek 반환값) ──────────────────────────
 export interface WeekAdvanceResult {

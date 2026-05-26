@@ -37,6 +37,7 @@
   import OptionClauseModal from "../../features/contract/ui/OptionClauseModal.svelte";
   import TradeModal from "../../features/contract/ui/TradeModal.svelte";
   import FaMarketModal from "../../features/contract/ui/FaMarketModal.svelte";
+  import HsGroupDrawModal from "../../features/hs-group-draw/ui/HsGroupDrawModal.svelte";
   import MilitaryEnlistModal from "../../features/military/ui/MilitaryEnlistModal.svelte";
   import MilitaryStatusPanel from "../../features/military/ui/MilitaryStatusPanel.svelte";
   import MessengerScriptModal from "../../features/messenger/ui/MessengerScriptModal.svelte";
@@ -105,6 +106,8 @@
         return "messages";
       case "messengerScript":
         return "messenger";
+      case "hsGroupDraw":
+        return "messages";
     }
   }
 
@@ -122,6 +125,7 @@
       case "trade": return "트레이드";
       case "faMarket": return "FA 시장";
       case "militaryEnlist": return "군입대 결정";
+      case "hsGroupDraw": return "A/B조 편성 추첨식";
     }
   }
 
@@ -161,6 +165,8 @@
         return `FA round ${p.faNegotiationRound ?? 0} / unsigned ${p.faUnsignedWeeks ?? 0}w`;
       case "militaryEnlist":
         return `age ${p.age} / stage ${p.careerStage}`;
+      case "hsGroupDraw":
+        return `season ${$seasonStore.seasonYear} draw`;
       default:
         return "";
     }
@@ -180,6 +186,7 @@
       case "messengerScript": return "MESSENGER";
       case "event": return "EVENT";
       case "message": return "MESSAGE";
+      case "hsGroupDraw": return "DRAW";
     }
   }
 
@@ -197,6 +204,7 @@
       case "messengerScript": return 60;
       case "event": return 50;
       case "message": return 40;
+      case "hsGroupDraw": return 85;
     }
   }
 
@@ -245,6 +253,7 @@
   $: pendingTrade = $nextPendingAction?.type === "trade" ? $nextPendingAction : null;
   $: pendingFaMarket = $nextPendingAction?.type === "faMarket";
   $: pendingMilitaryEnlist = $nextPendingAction?.type === "militaryEnlist";
+  $: pendingHsGroupDraw   = $nextPendingAction?.type === "hsGroupDraw";
 
   // 메신저 스크립트 pendingAction
   $: pendingScript = $nextPendingAction?.type === "messengerScript" ? $nextPendingAction : null;
@@ -666,6 +675,10 @@
 
 {#if pendingMilitaryEnlist && currentTab === "messages" && pendingReady}
   <MilitaryEnlistModal />
+{/if}
+
+{#if pendingHsGroupDraw}
+  <HsGroupDrawModal />
 {/if}
 
 {#if pendingEvent && currentTab === "messages" && pendingReady}

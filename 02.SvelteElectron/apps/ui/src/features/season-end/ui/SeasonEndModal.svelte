@@ -154,6 +154,9 @@
         .filter((t) => t.leagueId === "LEAGUE_HIGHSCHOOL")
         .map((t) => t.id);
       await seasonStore.reinitHighschoolSeason(p.teamId, allHsIds);
+
+      // 새 시즌 W3에 받을 추첨식 메시지를 위해 플래그 없이 processWeekBoundary가 처리하지만,
+      // SeasonEndModal 직후 W1~W2를 거칠 때 W3 경계에서 자동 발송되므로 별도 처리 불필요.
     }
 
     await gameStore.save();

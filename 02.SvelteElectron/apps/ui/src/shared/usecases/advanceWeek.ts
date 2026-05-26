@@ -247,6 +247,40 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   const isUniversity = g.protagonist.careerStage === "university";
   const weekInYear   = ((weekNum - 1) % 52) + 1;
 
+  // W3: 고교 리그 A/B조 편성 추첨식 참가 안내 메시지
+  if (g.protagonist.careerStage === "highschool" && weekInYear === 3) {
+    const drawMsgId = `msg-hs-group-draw-${s.seasonYear}`;
+    if (!g.mailbox.some((m) => m.id === drawMsgId)) {
+      gameStore.addMessage({
+        id: drawMsgId,
+        category: "system",
+        sender: "고교야구연맹",
+        subject: `${s.seasonYear} 고교리그 A/B조 편성 추첨식`,
+        preview: "조 편성 추첨식이 개최됩니다. 참가 여부를 결정해 주세요.",
+        body: [
+          `${s.seasonYear}년도 고교 주말리그 A/B조 편성 추첨식을 개최합니다.`,
+          "",
+          "16개 팀이 무작위로 A조와 B조에 배정되며,",
+          "같은 조 팀들과 정규 시즌을 치르게 됩니다.",
+          "",
+          "추첨식에 직접 참가하여 조 편성 결과를 확인하실 수 있습니다.",
+        ].join("\n"),
+        createdAt: `W${weekNum}`,
+        readAt: null,
+        decision: {
+          prompt: "추첨식에 참가하시겠습니까?",
+          options: [
+            { id: "join_draw", label: "참가하기", effectHint: "추첨 연출 진행" },
+            { id: "skip_draw", label: "참가 안함", effectHint: "자동 배정으로 확정" },
+          ],
+          selectedOptionId: null,
+        },
+      });
+      seasonStore.pushPendingAction({ type: "message", messageId: drawMsgId });
+      logs.push("[추첨식] A/B조 편성 추첨식 참가 안내 도착");
+    }
+  }
+
   if (isUniversity) gameStore.incrementUniversityWeek();
 
   const examGainMult  = isUniversity ? getUniversityExamGainMult(g.schoolState.universityMajor) : 1.0;
