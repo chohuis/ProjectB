@@ -326,6 +326,7 @@ function createSeasonStore() {
           if (a.type === "militaryEnlist"  && type === "militaryEnlist")  return false;
           if (a.type === "optionClause"    && type === "optionClause")    return false;
           if (a.type === "trade"           && type === "trade")           return false;
+          if (a.type === "hsGroupDraw"     && type === "hsGroupDraw")     return false;
           return true;
         }),
       }));

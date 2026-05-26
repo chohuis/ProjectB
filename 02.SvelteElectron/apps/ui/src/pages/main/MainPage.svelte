@@ -77,15 +77,6 @@
     academics: "page.academics"
   };
 
-  type QueueItem = {
-    action: PendingAction;
-    index: number;
-    tab: MainTabId;
-    tag: string;
-    priority: number;
-    title: string;
-    detail: string;
-  };
 
   let committedMatchScheduleIds = new Set<string>();
   let lastSeasonYear = 0;
@@ -111,129 +102,7 @@
     }
   }
 
-  function queueLabel(action: PendingAction): string {
-    switch (action.type) {
-      case "message": return "메시지 확인";
-      case "event": return "이벤트 처리";
-      case "messengerScript": return "메신저 아크";
-      case "game": return "경기 진행";
-      case "careerChoiceHub": return "진로 선택 허브";
-      case "careerChoice": return "진로 선택";
-      case "draft": return "드래프트";
-      case "salaryNegotiation": return "연봉 협상";
-      case "optionClause": return "옵션 조항";
-      case "trade": return "트레이드";
-      case "faMarket": return "FA 시장";
-      case "militaryEnlist": return "군입대 결정";
-      case "hsGroupDraw": return "A/B조 편성 추첨식";
-    }
-  }
 
-  function queueDetail(action: PendingAction): string {
-    const p  = $gameStore.protagonist;
-    const ss = $gameStore.schoolState;
-    switch (action.type) {
-      case "message": {
-        const msg = $gameStore.mailbox.find((m) => m.id === action.messageId);
-        return msg ? `${msg.sender} — ${msg.subject}` : "";
-      }
-      case "event":
-        return action.title;
-      case "messengerScript": {
-        const contact = $gameStore.contacts.find((c) => c.id === action.contactId);
-        return contact ? contact.name : "";
-      }
-      case "game": {
-        const entry =
-          $seasonStore.schedule.find((e) => e.id === action.scheduleId) ??
-          Object.values($seasonStore.leagueSchedules).flat().find((e) => e.id === action.scheduleId);
-        if (!entry) return "";
-        const isHome = entry.homeTeamId === p.teamId;
-        return `${isHome ? "홈" : "원정"} vs ${tName(isHome ? entry.awayTeamId : entry.homeTeamId)}`;
-      }
-      case "careerChoiceHub":
-        return "진로 방향을 결정하세요";
-      case "careerChoice":
-        if (ss.fallbackSelectionPending) {
-          const n =
-            ss.fallbackUniversityPassed.length +
-            ss.fallbackIndependentPassed.length +
-            (ss.fallbackSportsMilitaryPassed ? 1 : 0);
-          return `합격 ${n}곳 — 최종 선택 필요`;
-        }
-        return "진로를 선택하세요";
-      case "draft":
-        return `스카우트 ${p.scoutScore}점 · OVR ${p.pitching.ovr}`;
-      case "salaryNegotiation":
-        return `${tName(action.teamId)} · 제시 ${action.offeredSalary.toLocaleString()}만원`;
-      case "optionClause":
-        return action.optionType === "team" ? "팀 옵션" : "선수 옵션";
-      case "trade":
-        return `${tName(action.fromTeamId)} → ${tName(action.toTeamId)}`;
-      case "faMarket":
-        return `FA ${p.faNegotiationRound ?? 0}라운드`;
-      case "militaryEnlist":
-        return `만 ${p.age}세`;
-      case "hsGroupDraw":
-        return `${$seasonStore.seasonYear}시즌 조 편성`;
-      default:
-        return "";
-    }
-  }
-
-  function queueTag(action: PendingAction): string {
-    switch (action.type) {
-      case "game": return "MATCH";
-      case "draft":
-      case "careerChoiceHub":
-      case "careerChoice": return "CAREER";
-      case "salaryNegotiation":
-      case "optionClause":
-      case "faMarket":
-      case "trade": return "CONTRACT";
-      case "militaryEnlist": return "MILITARY";
-      case "messengerScript": return "MESSENGER";
-      case "event": return "EVENT";
-      case "message": return "MESSAGE";
-      case "hsGroupDraw": return "DRAW";
-    }
-  }
-
-  function queuePriority(action: PendingAction): number {
-    switch (action.type) {
-      case "game": return 100;
-      case "careerChoiceHub":
-      case "careerChoice":
-      case "draft": return 90;
-      case "salaryNegotiation":
-      case "optionClause":
-      case "faMarket":
-      case "trade": return 80;
-      case "militaryEnlist": return 70;
-      case "messengerScript": return 60;
-      case "event": return 50;
-      case "message": return 40;
-      case "hsGroupDraw": return 85;
-    }
-  }
-
-  function pendingKey(action: PendingAction | null): string {
-    if (!action) return "";
-    switch (action.type) {
-      case "message": return `message:${action.messageId}`;
-      case "event": return `event:${action.eventId}`;
-      case "messengerScript": return `script:${action.contactId}:${action.arcId}`;
-      case "game": return `game:${action.scheduleId}`;
-      case "salaryNegotiation": return `salary:${action.teamId}:${action.offeredSalary}`;
-      case "optionClause": return `option:${action.optionType}:${action.nextSalary}`;
-      case "trade": return `trade:${action.fromTeamId}:${action.toTeamId}`;
-      case "faMarket": return "faMarket";
-      case "draft": return "draft";
-      case "careerChoiceHub": return "careerChoiceHub";
-      case "careerChoice": return "careerChoice";
-      case "militaryEnlist": return "militaryEnlist";
-    }
-  }
 
   $: if (!$showAcademicsTab && currentTab === "academics") {
     currentTab = "home";
@@ -263,6 +132,9 @@
   $: pendingFaMarket = $nextPendingAction?.type === "faMarket";
   $: pendingMilitaryEnlist = $nextPendingAction?.type === "militaryEnlist";
   $: pendingHsGroupDraw   = $nextPendingAction?.type === "hsGroupDraw";
+  $: hsDrawMsgDecided = !!$gameStore.mailbox
+    .find((m) => m.id === `msg-hs-group-draw-${$seasonStore.seasonYear}`)
+    ?.decision?.selectedOptionId;
 
   // 메신저 스크립트 pendingAction
   $: pendingScript = $nextPendingAction?.type === "messengerScript" ? $nextPendingAction : null;
@@ -272,23 +144,16 @@
   $: pendingGameEntry = pendingGame
     ? $seasonStore.schedule.find((e) => e.id === pendingGame!.scheduleId) ?? null
     : null;
-  let armedPendingKey = "";
-  $: currentPendingKey = pendingKey($nextPendingAction);
-  $: if (armedPendingKey && armedPendingKey !== currentPendingKey) {
-    armedPendingKey = "";
-  }
-  $: pendingReady = armedPendingKey !== "" && armedPendingKey === currentPendingKey;
-
   type GameSimState = "idle" | "loading" | "no_entry" | "ready";
   let gameSimState: GameSimState = "idle";
   let gameEntryInfo: { inning: number; half: string; homeScore: number; awayScore: number } | null = null;
   let gameNoEntryInfo: { homeScore: number; awayScore: number; playerLines?: import('../../shared/types/season').PlayerGameLine[] } | null = null;
   let autoSimRunning = false;
 
-  $: if (pendingReady && pendingGameEntry && gameSimState === "idle") {
+  $: if (pendingGameEntry && currentTab === "messages" && gameSimState === "idle") {
     startEntrySimulation();
   }
-  $: if (!pendingReady) {
+  $: if (!pendingGameEntry || currentTab !== "messages") {
     gameSimState = "idle";
     gameEntryInfo = null;
     gameNoEntryInfo = null;
@@ -390,40 +255,20 @@
     $gameStore.protagonist.careerStage !== "military" &&
     !$seasonStore.pendingActions.some((a) => a.type === "militaryEnlist");
 
-  $: pendingQueue = $seasonStore.pendingActions.map((action, index) => ({
-    action,
-    index,
-    tab: tabForPending(action),
-    tag: queueTag(action),
-    priority: queuePriority(action),
-    title: queueLabel(action),
-    detail: queueDetail(action),
-  }))
-    .sort((a, b) => b.priority - a.priority || a.index - b.index) as QueueItem[];
-
-  $: pendingByTab = pendingQueue.reduce((acc, item) => {
-    acc[item.tab] = (acc[item.tab] ?? 0) + 1;
+  $: pendingByTab = $seasonStore.pendingActions.reduce((acc, action) => {
+    const tab = tabForPending(action);
+    acc[tab] = (acc[tab] ?? 0) + 1;
     return acc;
   }, {} as Partial<Record<MainTabId, number>>);
-
-  $: currentTabQueue = pendingQueue.filter((item) => item.tab === currentTab);
   $: if ($seasonStore.seasonYear !== lastSeasonYear) {
     committedMatchScheduleIds = new Set<string>();
     lastSeasonYear = $seasonStore.seasonYear;
-  }
-
-  function goToQueueItem(item: QueueItem) {
-    currentTab = item.tab;
-    if (item.index === 0) {
-      armedPendingKey = pendingKey(item.action);
-    }
   }
 
   function openPendingFromNext() {
     const pa = $nextPendingAction;
     if (!pa) return;
     currentTab = tabForPending(pa);
-    armedPendingKey = "";
   }
 
   function triggerVoluntaryEnlist() {
@@ -538,33 +383,6 @@
 
       <main>
         <div class="tab-content">
-          {#if currentTabQueue.length > 0}
-            <section class="pending-queue-panel">
-              <header>
-                <strong>처리 대기 {currentTabQueue.length}건</strong>
-              </header>
-              <div class="pending-queue-list">
-                {#each currentTabQueue as item}
-                  <article class="pending-queue-card">
-                    <div class="pending-queue-text">
-                      <p class="pending-tag">{item.tag}</p>
-                      <p class="pending-title">{item.title}</p>
-                      {#if item.detail}
-                        <p class="pending-detail">{item.detail}</p>
-                      {/if}
-                    </div>
-                    <div class="pending-queue-actions">
-                      {#if item.index === 0}
-                        <button class="pending-action-btn" on:click={() => goToQueueItem(item)}>처리하기</button>
-                      {:else}
-                        <span class="pending-order">선행 {item.index}건</span>
-                      {/if}
-                    </div>
-                  </article>
-                {/each}
-              </div>
-            </section>
-          {/if}
           {#if canVoluntaryEnlist}
             <div class="voluntary-enlist-banner">
               <span>군복무를 지금 시작할 수 있습니다.</span>
@@ -650,15 +468,15 @@
   <SeasonEndModal onExit={onSeasonEnd} />
 {/if}
 
-{#if pendingCareerChoiceHub && currentTab === "messages" && pendingReady}
+{#if pendingCareerChoiceHub && currentTab === "messages"}
   <CareerChoiceHubModal />
 {/if}
 
-{#if pendingCareerChoice && currentTab === "messages" && pendingReady}
+{#if pendingCareerChoice && currentTab === "messages"}
   <CareerResultModal />
 {/if}
 
-{#if pendingDraft && currentTab === "messages" && pendingReady}
+{#if pendingDraft && currentTab === "messages"}
   {#if $gameStore.protagonist.careerStage === "highschool"}
     <DraftBoardModal />
   {:else}
@@ -666,39 +484,39 @@
   {/if}
 {/if}
 
-{#if pendingSalaryNegotiation && currentTab === "messages" && pendingReady}
+{#if pendingSalaryNegotiation && currentTab === "messages"}
   <ContractNegotiationModal action={pendingSalaryNegotiation} />
 {/if}
 
-{#if pendingOptionClause && currentTab === "messages" && pendingReady}
+{#if pendingOptionClause && currentTab === "messages"}
   <OptionClauseModal action={pendingOptionClause} />
 {/if}
 
-{#if pendingTrade && currentTab === "messages" && pendingReady}
+{#if pendingTrade && currentTab === "messages"}
   <TradeModal action={pendingTrade} />
 {/if}
 
-{#if pendingFaMarket && currentTab === "messages" && pendingReady}
+{#if pendingFaMarket && currentTab === "messages"}
   <FaMarketModal />
 {/if}
 
-{#if pendingMilitaryEnlist && currentTab === "messages" && pendingReady}
+{#if pendingMilitaryEnlist && currentTab === "messages"}
   <MilitaryEnlistModal />
 {/if}
 
-{#if pendingHsGroupDraw}
+{#if pendingHsGroupDraw && currentTab === "messages" && hsDrawMsgDecided}
   <HsGroupDrawModal />
 {/if}
 
-{#if pendingEvent && currentTab === "messages" && pendingReady}
+{#if pendingEvent && currentTab === "messages"}
   <InGameEventModal action={pendingEvent} />
 {/if}
 
-{#if pendingScript && currentTab === "messenger" && pendingReady}
+{#if pendingScript && currentTab === "messenger"}
   <MessengerScriptModal contactId={pendingScript.contactId} arcId={pendingScript.arcId} />
 {/if}
 
-{#if !activeMatchContext && pendingGameEntry && currentTab === "messages" && pendingReady}
+{#if !activeMatchContext && pendingGameEntry && currentTab === "messages"}
   <div class="game-overlay">
     <div class="game-modal">
       <p class="week-badge">W{pendingGameEntry.week} 경기</p>
@@ -774,73 +592,6 @@
 
   .tab-content > :global(*) {
     min-height: 0;
-  }
-
-  .pending-queue-panel {
-    margin-bottom: 10px;
-    border: 1px solid #5a2d35;
-    border-radius: 10px;
-    background: #2a1820;
-    padding: 10px;
-  }
-
-  .pending-queue-panel header {
-    margin-bottom: 8px;
-    color: #ffd8dd;
-    font-size: 13px;
-  }
-
-  .pending-queue-list {
-    display: grid;
-    gap: 8px;
-  }
-
-  .pending-queue-card {
-    border: 1px solid #6a3942;
-    border-radius: 8px;
-    background: #341f28;
-    padding: 8px 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-  }
-
-  .pending-title {
-    margin: 0;
-    color: #ffeef0;
-    font-size: 13px;
-    font-weight: 700;
-  }
-
-  .pending-tag {
-    margin: 0 0 2px;
-    color: #ffd0d8;
-    font-size: 10px;
-    letter-spacing: 0.7px;
-    text-transform: uppercase;
-  }
-
-  .pending-detail {
-    margin: 2px 0 0;
-    color: #d6a9b2;
-    font-size: 12px;
-  }
-
-  .pending-action-btn {
-    border: 1px solid #f06a74;
-    background: #8a2430;
-    color: #fff6f7;
-    border-radius: 8px;
-    padding: 6px 10px;
-    font-size: 12px;
-    cursor: pointer;
-  }
-
-  .pending-order {
-    color: #ffc6ce;
-    font-size: 12px;
-    white-space: nowrap;
   }
 
   .voluntary-enlist-banner {

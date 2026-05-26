@@ -9,6 +9,7 @@
   let phase: DrawPhase = "idle";
   let drawIndex = 0;
   let lastAssigned: { name: string; group: "A" | "B" } | null = null;
+  let shuffledSeq: Array<{ teamId: string; group: "A" | "B" }> = [];
 
   // 팀 이름 조회
   function teamName(id: string): string {
@@ -19,39 +20,71 @@
   $: groupA = $seasonStore.hsGroupA ?? [];
   $: groupB = $seasonStore.hsGroupB ?? [];
 
-  // A/B 교차 배열: A1,B1,A2,B2,...
-  $: drawSequence = (() => {
-    const seq: Array<{ teamId: string; group: "A" | "B" }> = [];
-    const len = Math.max(groupA.length, groupB.length);
-    for (let i = 0; i < len; i++) {
-      if (i < groupA.length) seq.push({ teamId: groupA[i], group: "A" });
-      if (i < groupB.length) seq.push({ teamId: groupB[i], group: "B" });
+  // idle 상태 pool 표시용 — 전체 팀을 랜덤 순서로
+  $: idlePool = (() => {
+    const all = [
+      ...groupA.map((id) => id),
+      ...groupB.map((id) => id),
+    ];
+    for (let i = all.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [all[i], all[j]] = [all[j], all[i]];
     }
-    return seq;
+    return all;
   })();
 
   // 현재까지 공개된 팀
-  $: revealedA = drawSequence.slice(0, drawIndex).filter((e) => e.group === "A").map((e) => e.teamId);
-  $: revealedB = drawSequence.slice(0, drawIndex).filter((e) => e.group === "B").map((e) => e.teamId);
-  $: poolTeams = drawSequence.slice(drawIndex).map((e) => e.teamId);
+  $: revealedA = shuffledSeq.slice(0, drawIndex).filter((e) => e.group === "A").map((e) => e.teamId);
+  $: revealedB = shuffledSeq.slice(0, drawIndex).filter((e) => e.group === "B").map((e) => e.teamId);
+  $: poolTeams = shuffledSeq.slice(drawIndex).map((e) => e.teamId);
 
   function startDraw() {
+    const seq: Array<{ teamId: string; group: "A" | "B" }> = [
+      ...groupA.map((id) => ({ teamId: id, group: "A" as const })),
+      ...groupB.map((id) => ({ teamId: id, group: "B" as const })),
+    ];
+    for (let i = seq.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [seq[i], seq[j]] = [seq[j], seq[i]];
+    }
+    shuffledSeq = seq;
     phase = "drawing";
     drawIndex = 0;
     lastAssigned = null;
   }
 
   function next() {
-    if (drawIndex >= drawSequence.length) return;
-    const entry = drawSequence[drawIndex];
+    if (drawIndex >= shuffledSeq.length) return;
+    const entry = shuffledSeq[drawIndex];
     lastAssigned = { name: teamName(entry.teamId), group: entry.group };
     drawIndex++;
-    if (drawIndex >= drawSequence.length) {
+    if (drawIndex >= shuffledSeq.length) {
       phase = "complete";
     }
   }
 
   async function confirm() {
+    const year = get(seasonStore).seasonYear;
+    const aTeams = groupA.map(teamName).join(", ");
+    const bTeams = groupB.map(teamName).join(", ");
+    gameStore.addMessage({
+      id: `msg-hs-group-draw-result-${year}`,
+      category: "system",
+      sender: "고교야구연맹",
+      subject: `${year} 고교리그 A/B조 편성 완료`,
+      preview: `${teamName(myTeamId)}은(는) ${myGroupLabel}에 배정되었습니다.`,
+      body: [
+        `${year}년 고교 주말리그 A/B조 편성이 완료되었습니다.`,
+        "",
+        `[A조] ${aTeams}`,
+        "",
+        `[B조] ${bTeams}`,
+        "",
+        `귀 팀(${teamName(myTeamId)})은 ${myGroupLabel}에 배정되었습니다.`,
+      ].join("\n"),
+      createdAt: "W3",
+      readAt: null,
+    });
     seasonStore.resolvePendingAction("hsGroupDraw");
     await gameStore.save();
     await seasonStore.save();
@@ -112,8 +145,8 @@
         <p class="pool-label">대기 ({poolTeams.length}팀)</p>
         <div class="pool-chips">
           {#if phase === "idle"}
-            {#each drawSequence as e}
-              <span class="pool-chip" class:pool-my={e.teamId === myTeamId}>{teamName(e.teamId)}</span>
+            {#each idlePool as tid}
+              <span class="pool-chip" class:pool-my={tid === myTeamId}>{teamName(tid)}</span>
             {/each}
           {:else}
             {#each poolTeams as tid}
@@ -142,7 +175,7 @@
       {#if phase === "idle"}
         <button class="btn btn-start" on:click={startDraw}>추첨 시작</button>
       {:else if phase === "drawing"}
-        <div class="progress-info">{drawIndex} / {drawSequence.length}</div>
+        <div class="progress-info">{drawIndex} / {shuffledSeq.length}</div>
         <button class="btn btn-next" on:click={next}>다음 ▶</button>
       {:else}
         <button class="btn btn-confirm" on:click={confirm}>확인</button>
