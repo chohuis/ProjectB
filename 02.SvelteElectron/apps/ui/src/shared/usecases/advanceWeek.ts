@@ -375,7 +375,6 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     eventCtx, sForEvent.seasonYear, careerStageYear,
     eventRands,
   );
-  for (const action of evResult.pendingActions) seasonStore.pushPendingAction(action);
   for (const msg of evResult.newMessages) gameStore.addMessage(msg);
   seasonStore.recordTriggeredEvents(evResult.updatedTriggers);
 
@@ -407,6 +406,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         if (t.affinityGte     !== undefined && (contact?.affinity ?? 0) < t.affinityGte) continue;
         if (t.flagSet         !== undefined && !flags.includes(t.flagSet))           continue;
         if (t.flagNotSet      !== undefined &&  flags.includes(t.flagNotSet))        continue;
+        gameStore.unlockOrRegisterContact(def);
         seasonStore.pushPendingAction({ type: "messengerScript", contactId: def.id, arcId: arc.id });
         break;
       }

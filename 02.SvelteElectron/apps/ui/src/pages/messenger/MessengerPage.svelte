@@ -5,7 +5,7 @@
   import { masterStore } from "../../shared/stores/master";
   import { matchChatLine, isSpecialChat } from "../../shared/types/messenger";
   import type { ChatContact } from "../../shared/types/save";
-  import type { SpecialChatLine, ChatOption } from "../../shared/types/messenger";
+  import type { SpecialChatLine, ChatOption, ScriptStep, ScriptOption } from "../../shared/types/messenger";
 
   type FilterKey = "전체" | "team" | "school" | "personal";
   type ActionKey = "greet" | "advice" | "plan";
@@ -26,6 +26,17 @@
   // 특별 대화 진행 중 상태
   let pendingSpecial: { line: SpecialChatLine; contactId: string } | null = null;
 
+  // 아크 인라인 진행 상태
+  type ArcMsg = { from: "contact" | "me"; text: string };
+  type ArcState = {
+    contactId: string;
+    arcId: string;
+    currentStep: ScriptStep | null;
+    displayMessages: ArcMsg[];
+    totalAffinityDelta: number;
+  };
+  let arcState: ArcState | null = null;
+
   $: currentWeek = $seasonStore.currentWeek;
   $: unlockedContacts = $gameStore.contacts.filter((c) => c.unlocked);
   $: filteredContacts =
@@ -39,8 +50,92 @@
 
   $: selectedContact = filteredContacts.find((c) => c.id === selectedContactId) ?? null;
 
+  // 미처리 아크 목록
+  $: pendingArcActions = ($seasonStore.pendingActions as Array<{ type: string; contactId?: string; arcId?: string }>)
+    .filter((a) => a.type === "messengerScript") as Array<{ type: "messengerScript"; contactId: string; arcId: string }>;
+
+  function hasPendingArc(contactId: string): boolean {
+    return pendingArcActions.some((a) => a.contactId === contactId);
+  }
+
+  // 선택된 연락처에 미처리 아크가 있으면 자동 시작
+  $: if (selectedContact) {
+    const pending = pendingArcActions.find((a) => a.contactId === selectedContact!.id);
+    if (pending && (!arcState || arcState.arcId !== pending.arcId)) {
+      startArc(pending.contactId, pending.arcId);
+    } else if (!pending && arcState?.contactId === selectedContact.id) {
+      arcState = null;
+    }
+  }
+
+  function startArc(contactId: string, arcId: string) {
+    const def = $masterStore.contactDefs.find((d) => d.id === contactId);
+    const arc = def?.arcs.find((a) => a.id === arcId);
+    if (!arc) return;
+    const firstStep = arc.script.steps.find((s) => s.id === arc.script.startStepId) ?? null;
+    arcState = {
+      contactId,
+      arcId,
+      currentStep: firstStep,
+      displayMessages: firstStep?.from === "contact" ? [{ from: "contact", text: firstStep.text }] : [],
+      totalAffinityDelta: 0,
+    };
+    tick().then(() => chatEl?.scrollTo({ top: chatEl.scrollHeight, behavior: "smooth" }));
+  }
+
+  function arcAdvance(nextId: string | null) {
+    if (!arcState) return;
+    if (!nextId) { arcComplete(); return; }
+    const def = $masterStore.contactDefs.find((d) => d.id === arcState!.contactId);
+    const arc = def?.arcs.find((a) => a.id === arcState!.arcId);
+    if (!arc) return;
+    const step = arc.script.steps.find((s) => s.id === nextId) ?? null;
+    if (!step) { arcComplete(); return; }
+    arcState = { ...arcState, currentStep: step };
+    if (step.from === "contact") {
+      arcState = { ...arcState, displayMessages: [...arcState.displayMessages, { from: "contact", text: step.text }] };
+      tick().then(() => chatEl?.scrollTo({ top: chatEl.scrollHeight, behavior: "smooth" }));
+    }
+  }
+
+  function arcContinue() {
+    if (!arcState?.currentStep || arcState.currentStep.from !== "contact") return;
+    arcAdvance(arcState.currentStep.next);
+  }
+
+  function arcChoose(opt: ScriptOption) {
+    if (!arcState) return;
+    arcState = {
+      ...arcState,
+      displayMessages: [...arcState.displayMessages, { from: "me", text: opt.text }],
+      totalAffinityDelta: arcState.totalAffinityDelta + (opt.affinityDelta ?? 0),
+      currentStep: null,
+    };
+    tick().then(() => chatEl?.scrollTo({ top: chatEl.scrollHeight, behavior: "smooth" }));
+    setTimeout(() => arcAdvance(opt.next), 350);
+  }
+
+  async function arcComplete() {
+    if (!arcState) return;
+    const { contactId, arcId, displayMessages, totalAffinityDelta } = arcState;
+    arcState = null;
+    const def = $masterStore.contactDefs.find((d) => d.id === contactId);
+    const arc = def?.arcs.find((a) => a.id === arcId);
+    if (!arc || !def) return;
+    const week = $seasonStore.currentWeek;
+    gameStore.unlockOrRegisterContact(def);
+    gameStore.setContactFlag(contactId, arc.flag);
+    for (const m of displayMessages) {
+      gameStore.addChatMessage(contactId, { from: m.from, text: m.text, week });
+    }
+    if (totalAffinityDelta !== 0) gameStore.updateAffinity(contactId, totalAffinityDelta);
+    seasonStore.resolvePendingAction("messengerScript", arcId);
+    await gameStore.save();
+    await seasonStore.save();
+  }
+
   function canAct(contact: ChatContact): boolean {
-    return currentWeek > contact.lastActionWeek && !pendingSpecial;
+    return currentWeek > contact.lastActionWeek && !pendingSpecial && !hasPendingArc(contact.id);
   }
 
   function cooldownLabel(contact: ChatContact): string {
@@ -63,18 +158,14 @@
     return "냉담";
   }
 
-  // per-NPC 채팅 카탈로그 → 없으면 generic fallback
   function getReply(contact: ChatContact, actionKey: ActionKey): string {
     const def = $masterStore.contactDefs.find((d) => d.id === contact.id);
     const catalog = def?.chat?.[actionKey] ?? [];
     const matched = matchChatLine(catalog, contact.affinity, contact.flags);
-
     if (matched && !isSpecialChat(matched)) {
       const pool = matched.lines;
       return pool[Math.floor(Math.random() * pool.length)] ?? "알겠어.";
     }
-
-    // generic fallback (contact_replies.json)
     const pool = $masterStore.contactReplies?.[actionKey]?.[contact.category] ?? [];
     return pool.length ? pool[Math.floor(Math.random() * pool.length)] : "알겠어.";
   }
@@ -82,7 +173,6 @@
   async function handleAction(actionKey: ActionKey, defaultAffinityDelta: number) {
     if (!selectedContact || !canAct(selectedContact) || sending) return;
     sending = true;
-
     const contact = selectedContact;
     const def = $masterStore.contactDefs.find((d) => d.id === contact.id);
     const catalog = def?.chat?.[actionKey] ?? [];
@@ -92,11 +182,8 @@
       gameStore.recordSocialFirstKakao();
     }
 
-    // 특별 대화
     if (matched && isSpecialChat(matched)) {
-      gameStore.addChatMessage(contact.id, {
-        from: "contact", text: matched.prompt, week: currentWeek,
-      });
+      gameStore.addChatMessage(contact.id, { from: "contact", text: matched.prompt, week: currentWeek });
       await tick();
       chatEl?.scrollTo({ top: chatEl.scrollHeight, behavior: "smooth" });
       pendingSpecial = { line: matched, contactId: contact.id };
@@ -104,7 +191,6 @@
       return;
     }
 
-    // 일반 대화
     const myText = actionKey === "greet" ? "안녕하세요! 잘 지내셨나요?"
       : actionKey === "advice" ? "조언을 구해도 될까요?"
       : "시간 되실 때 한번 만날 수 있을까요?";
@@ -112,7 +198,6 @@
     gameStore.addChatMessage(contact.id, { from: "me", text: myText, week: currentWeek, affinityDelta: defaultAffinityDelta });
     gameStore.setLastActionWeek(contact.id, currentWeek);
     gameStore.updateAffinity(contact.id, defaultAffinityDelta);
-
     await tick();
     chatEl?.scrollTo({ top: chatEl.scrollHeight, behavior: "smooth" });
 
@@ -131,16 +216,13 @@
     const { line, contactId } = pendingSpecial;
     pendingSpecial = null;
     sending = true;
-
     gameStore.addChatMessage(contactId, { from: "me", text: opt.text, week: currentWeek });
     gameStore.setLastActionWeek(contactId, currentWeek);
     if (opt.affinityDelta) gameStore.updateAffinity(contactId, opt.affinityDelta);
     if (opt.effects) gameStore.applyContactEffect(opt.effects);
     gameStore.setContactFlag(contactId, line.flag);
-
     await tick();
     chatEl?.scrollTo({ top: chatEl.scrollHeight, behavior: "smooth" });
-
     setTimeout(async () => {
       gameStore.addChatMessage(contactId, { from: "contact", text: opt.reply, week: currentWeek });
       gameStore.save();
@@ -176,13 +258,22 @@
           <button
             class="contact-item"
             class:selected={selectedContact?.id === contact.id}
+            class:has-arc={hasPendingArc(contact.id)}
             on:click={() => { selectedContactId = contact.id; pendingSpecial = null; }}
           >
             <div class="contact-avatar" data-tier={affinityTier(contact.affinity)}>
               {contact.name[0]}
+              {#if hasPendingArc(contact.id)}
+                <span class="arc-dot"></span>
+              {/if}
             </div>
             <div class="contact-info">
-              <p class="contact-name">{contact.name}</p>
+              <p class="contact-name">
+                {contact.name}
+                {#if hasPendingArc(contact.id)}
+                  <span class="arc-badge">새 메시지</span>
+                {/if}
+              </p>
               <p class="contact-meta">{contact.relation}</p>
               {#if contact.chatHistory.length > 0}
                 {@const last = contact.chatHistory[contact.chatHistory.length - 1]}
@@ -223,7 +314,7 @@
         </div>
 
         <div class="messages" bind:this={chatEl}>
-          {#if selectedContact.chatHistory.length === 0}
+          {#if selectedContact.chatHistory.length === 0 && !(arcState?.contactId === selectedContact.id)}
             <div class="no-messages">아직 대화가 없습니다.</div>
           {:else}
             {#each selectedContact.chatHistory as msg}
@@ -235,13 +326,36 @@
                 </small>
               </div>
             {/each}
+            {#if arcState?.contactId === selectedContact.id}
+              {#each arcState.displayMessages as msg}
+                <div class="bubble {msg.from} arc-msg">
+                  <p>{msg.text}</p>
+                </div>
+              {/each}
+            {/if}
           {/if}
         </div>
 
         <!-- 액션 영역 -->
         <div class="actions">
-          {#if pendingSpecial && pendingSpecial.contactId === selectedContact.id}
-            <!-- 특별 대화 선택지 -->
+          {#if arcState?.contactId === selectedContact.id}
+            {#if arcState.currentStep?.from === "player"}
+              <div class="special-options">
+                {#each arcState.currentStep.options as opt}
+                  <button class="special-opt" on:click={() => arcChoose(opt)}>
+                    <span>{opt.text}</span>
+                    {#if opt.affinityDelta && opt.affinityDelta > 0}
+                      <span class="opt-delta">+친밀</span>
+                    {/if}
+                  </button>
+                {/each}
+              </div>
+            {:else if arcState.currentStep?.from === "contact"}
+              <button class="arc-continue-btn" on:click={arcContinue}>계속</button>
+            {:else}
+              <p class="arc-waiting">...</p>
+            {/if}
+          {:else if pendingSpecial && pendingSpecial.contactId === selectedContact.id}
             <div class="special-options">
               {#each pendingSpecial.line.options as opt}
                 <button class="special-opt" on:click={() => resolveSpecial(opt)}>
@@ -328,8 +442,10 @@
     cursor: pointer; text-align: left; width: 100%; transition: background 0.12s;
   }
   .contact-item.selected { background: #1a3060; border-color: #3a6ab0; }
+  .contact-item.has-arc { border-color: #2a5a8a; }
 
   .contact-avatar {
+    position: relative;
     width: 36px; height: 36px; border-radius: 50%; background: #1c2f4e;
     border: 2px solid #253650; display: flex; align-items: center; justify-content: center;
     font-size: 14px; font-weight: 700; color: #7aa0d8; flex-shrink: 0;
@@ -339,12 +455,27 @@
   .contact-avatar[data-tier="mid"]  { border-color: #2a5a98; color: #70a8f0; }
   .contact-avatar[data-tier="low"]  { border-color: #3a3a50; color: #8888a8; }
 
+  .arc-dot {
+    position: absolute; top: -2px; right: -2px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #3a9ef8; border: 2px solid #0d1928;
+  }
+
   .contact-info { flex: 1; min-width: 0; }
-  .contact-name { margin: 0; font-size: 13px; font-weight: 600; color: #d8e8ff; }
+  .contact-name {
+    margin: 0; font-size: 13px; font-weight: 600; color: #d8e8ff;
+    display: flex; align-items: center; gap: 6px;
+  }
   .contact-meta { margin: 2px 0 0; font-size: 11px; color: #5a7a9a; }
   .contact-preview {
     margin: 3px 0 0; font-size: 11px; color: #7a94b8;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .arc-badge {
+    font-size: 10px; padding: 1px 6px; border-radius: 4px;
+    background: #0e2a4a; border: 1px solid #3a7ac8; color: #7abcf8;
+    font-weight: 600; flex-shrink: 0;
   }
 
   .contact-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
@@ -397,6 +528,10 @@
   .bubble.me { background: #1a3a6a; border: 1px solid #2a5098; align-self: flex-end; }
   .bubble.me small { text-align: right; }
 
+  /* 아크 메시지 — 히스토리와 구분되는 미묘한 강조 */
+  .bubble.arc-msg.contact { border-color: #2a4a72; }
+  .bubble.arc-msg.me { border-color: #3a60a8; }
+
   /* ── 액션 영역 ── */
   .actions {
     padding: 10px 14px; border-top: 1px solid #1e3050;
@@ -414,7 +549,7 @@
   .action-btn.disabled { opacity: 0.35; cursor: not-allowed; }
   .action-delta { font-size: 10px; color: #60d890; font-weight: 700; }
 
-  /* ── 특별 대화 선택지 ── */
+  /* ── 특별 대화 / 아크 선택지 ── */
   .special-options { display: grid; gap: 6px; width: 100%; }
 
   .special-opt {
@@ -431,6 +566,17 @@
     font-size: 10px; color: #f0c040; font-weight: 700; flex-shrink: 0;
     background: #2a2010; border: 1px solid #806020; border-radius: 4px; padding: 1px 5px;
   }
+
+  /* 아크 계속 버튼 */
+  .arc-continue-btn {
+    width: 100%; padding: 10px;
+    background: #1a3050; border: 1px solid #3a5a8a; border-radius: 9px;
+    color: #b8d8f8; font-size: 14px; font-weight: 600; cursor: pointer;
+    transition: background 0.12s;
+  }
+  .arc-continue-btn:hover { background: #24406a; }
+
+  .arc-waiting { margin: 0; color: #3a5878; font-size: 13px; letter-spacing: 2px; }
 
   /* ── 빈 상태 ── */
   .no-contact-selected {

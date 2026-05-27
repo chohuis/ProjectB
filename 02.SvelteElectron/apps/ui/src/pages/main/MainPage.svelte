@@ -28,7 +28,6 @@
   import MessengerPage from "../messenger/MessengerPage.svelte";
   import TeamPage from "../team/TeamPage.svelte";
   import EventManagerModal from "../../features/events/ui/EventManagerModal.svelte";
-  import InGameEventModal from "../../features/events/ui/InGameEventModal.svelte";
   import CareerChoiceHubModal from "../../features/career/ui/CareerChoiceHubModal.svelte";
   import CareerResultModal from "../../features/career/ui/CareerResultModal.svelte";
   import DraftBoardModal from "../../features/career/ui/DraftBoardModal.svelte";
@@ -37,10 +36,8 @@
   import OptionClauseModal from "../../features/contract/ui/OptionClauseModal.svelte";
   import TradeModal from "../../features/contract/ui/TradeModal.svelte";
   import FaMarketModal from "../../features/contract/ui/FaMarketModal.svelte";
-  import HsGroupDrawModal from "../../features/hs-group-draw/ui/HsGroupDrawModal.svelte";
   import MilitaryEnlistModal from "../../features/military/ui/MilitaryEnlistModal.svelte";
   import MilitaryStatusPanel from "../../features/military/ui/MilitaryStatusPanel.svelte";
-  import MessengerScriptModal from "../../features/messenger/ui/MessengerScriptModal.svelte";
   import MessengerManagerModal from "../../features/messenger-manager/ui/MessengerManagerModal.svelte";
   import DevToolsHubModal from "../../features/devtools/ui/DevToolsHubModal.svelte";
   import MatchEngineLabModal from "../../features/match-engine-lab/ui/MatchEngineLabModal.svelte";
@@ -119,9 +116,6 @@
     if (!pa || pa.type !== "message") handledMessageId = null;
   }
 
-  // 이벤트 pendingAction
-  $: pendingEvent = $nextPendingAction?.type === "event" ? $nextPendingAction : null;
-
   // 진로 선택 pendingAction
   $: pendingCareerChoiceHub = $nextPendingAction?.type === "careerChoiceHub";
   $: pendingCareerChoice = $nextPendingAction?.type === "careerChoice";
@@ -131,14 +125,6 @@
   $: pendingTrade = $nextPendingAction?.type === "trade" ? $nextPendingAction : null;
   $: pendingFaMarket = $nextPendingAction?.type === "faMarket";
   $: pendingMilitaryEnlist = $nextPendingAction?.type === "militaryEnlist";
-  $: pendingHsGroupDraw   = $nextPendingAction?.type === "hsGroupDraw";
-  $: hsDrawMsgDecided = !!$gameStore.mailbox
-    .find((m) => m.id === `msg-hs-group-draw-${$seasonStore.seasonYear}`)
-    ?.decision?.selectedOptionId;
-
-  // 메신저 스크립트 pendingAction
-  $: pendingScript = $nextPendingAction?.type === "messengerScript" ? $nextPendingAction : null;
-
   // 경기 pendingAction 과 해당 일정 찾기
   $: pendingGame = $nextPendingAction?.type === "game" ? $nextPendingAction : null;
   $: pendingGameEntry = pendingGame
@@ -504,17 +490,8 @@
   <MilitaryEnlistModal />
 {/if}
 
-{#if pendingHsGroupDraw && currentTab === "messages" && hsDrawMsgDecided}
-  <HsGroupDrawModal />
-{/if}
 
-{#if pendingEvent && currentTab === "messages"}
-  <InGameEventModal action={pendingEvent} />
-{/if}
 
-{#if pendingScript && currentTab === "messenger"}
-  <MessengerScriptModal contactId={pendingScript.contactId} arcId={pendingScript.arcId} />
-{/if}
 
 {#if !activeMatchContext && pendingGameEntry && currentTab === "messages"}
   <div class="game-overlay">

@@ -2,6 +2,8 @@
   import type { MessageCategory, MessageItem } from "../../shared/types/main";
   import { gameStore } from "../../shared/stores/game";
   import { seasonStore } from "../../shared/stores/season";
+  import { masterStore } from "../../shared/stores/master";
+  import HsGroupDrawModal from "../../features/hs-group-draw/ui/HsGroupDrawModal.svelte";
 
   type FilterId = "all" | "unread" | MessageCategory;
 
@@ -26,6 +28,10 @@
   let activeFilter: FilterId = "all";
   let selectedId: string | null = null;
   let sortAsc = false;
+  let showHsDraw = false;
+
+  $: pendingHsGroupDraw = $seasonStore.pendingActions.some((a) => a.type === "hsGroupDraw");
+  $: if (!pendingHsGroupDraw) showHsDraw = false;
   let counts: Record<FilterId, number> = {
     all: 0,
     unread: 0,
@@ -59,15 +65,6 @@
 
   $: selected = selectedId ? msgs.find((m) => m.id === selectedId) ?? null : null;
 
-  // 미결 message pendingAction이 있으면 해당 메시지를 자동으로 열기
-  $: {
-    const pendingMsg = $seasonStore.pendingActions.find((a) => a.type === "message");
-    if (pendingMsg && pendingMsg.type === "message" && selectedId !== pendingMsg.messageId) {
-      const target = msgs.find((m) => m.id === pendingMsg.messageId);
-      if (target) open(target);
-    }
-  }
-
   function open(msg: MessageItem) {
     selectedId = msg.id;
     if (msg.readAt === null && !(msg.decision && msg.decision.selectedOptionId === null)) {
@@ -92,6 +89,32 @@
     if (selected.id.startsWith("msg-hs-group-draw-")) {
       if (optionId === "join_draw") {
         seasonStore.pushPendingAction({ type: "hsGroupDraw" });
+        showHsDraw = true;
+      } else if (optionId === "skip_draw") {
+        const groupA = $seasonStore.hsGroupA ?? [];
+        const groupB = $seasonStore.hsGroupB ?? [];
+        const myTeamId = $gameStore.protagonist.teamId;
+        const tn = (id: string) => $masterStore.teams.find((t) => t.id === id)?.name ?? id;
+        const myGroup = groupA.includes(myTeamId) ? "A" : "B";
+        const myGroupLabel = myGroup === "A" ? "A조" : "B조";
+        gameStore.addMessage({
+          id: `msg-hs-group-draw-result-${$seasonStore.seasonYear}`,
+          category: "system",
+          sender: "고교야구연맹",
+          subject: `${$seasonStore.seasonYear} 고교리그 A/B조 편성 완료`,
+          preview: `${tn(myTeamId)}은(는) ${myGroupLabel}에 자동 배정되었습니다.`,
+          body: [
+            `${$seasonStore.seasonYear}년 고교 주말리그 A/B조 편성이 완료되었습니다.`,
+            "",
+            `[A조] ${groupA.map(tn).join(", ")}`,
+            "",
+            `[B조] ${groupB.map(tn).join(", ")}`,
+            "",
+            `귀 팀(${tn(myTeamId)})은 ${myGroupLabel}에 배정되었습니다.`,
+          ].join("\n"),
+          createdAt: `W${$seasonStore.currentWeek}`,
+          readAt: null,
+        });
       }
     }
     gameStore.resolveDecision(selected.id, optionId);
@@ -241,11 +264,20 @@
                 <span class="result-hint">{chosen.effectHint}</span>
               {/if}
             </div>
+            {#if selected.id.startsWith("msg-hs-group-draw-") && dec.selectedOptionId === "join_draw" && pendingHsGroupDraw}
+              <button class="btn-start-draw" type="button" on:click={() => showHsDraw = true}>
+                추첨 진행하기
+              </button>
+            {/if}
           {/if}
         </section>
       {/if}
 
     </article>
+  {/if}
+
+  {#if showHsDraw}
+    <HsGroupDrawModal />
   {/if}
 </section>
 
@@ -660,4 +692,19 @@
     color: #70a890;
     margin-left: auto;
   }
+
+  .btn-start-draw {
+    width: 100%;
+    padding: 10px;
+    background: #1a3a5e;
+    border: 1px solid #3a6898;
+    border-radius: 8px;
+    color: #80c8f8;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.12s;
+    letter-spacing: 1px;
+  }
+  .btn-start-draw:hover { background: #244e7a; border-color: #5a90c8; }
 </style>

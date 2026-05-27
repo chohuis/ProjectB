@@ -1,5 +1,4 @@
 import type { EventRule, EventPool, MessageTemplate, DecisionTemplate, EventContext } from "../types/event";
-import type { PendingAction, EventChoice } from "../types/season";
 import type { MessageItem } from "../types/main";
 import { evaluateConditions } from "./conditionEvaluator";
 
@@ -33,32 +32,15 @@ function checkOncePolicy(
   }
 }
 
-// ── 이벤트 → PendingAction 또는 MessageItem 변환 ─────────────
+// ── 이벤트 → MessageItem 변환 ────────────────────────────────
 function ruleToOutput(
   rule: EventRule,
   msgTmpl: MessageTemplate | undefined,
   decTmpl: DecisionTemplate | undefined,
   week: number,
-): { action?: PendingAction; message?: MessageItem } {
+): { message: MessageItem } {
   const title = msgTmpl?.subject ?? rule.title;
   const body  = msgTmpl?.body   ?? "";
-
-  if (decTmpl) {
-    const choices: EventChoice[] = decTmpl.options.map((o) => ({
-      id:         o.id,
-      label:      o.label,
-      effectHint: o.effectHint,
-      effects:    o.effects,
-    }));
-    const action: PendingAction = {
-      type:        "event",
-      eventId:     rule.id,
-      title,
-      description: body,
-      choices,
-    };
-    return { action };
-  }
 
   const message: MessageItem = {
     id:        `evt-${rule.id}-w${week}-${Date.now()}`,
@@ -69,6 +51,16 @@ function ruleToOutput(
     body,
     createdAt: `W${week}`,
     readAt:    null,
+    decision: decTmpl ? {
+      prompt: decTmpl.prompt ?? title,
+      options: decTmpl.options.map((o) => ({
+        id:         o.id,
+        label:      o.label,
+        effectHint: o.effectHint ?? "",
+        effects:    o.effects,
+      })),
+      selectedOptionId: null,
+    } : undefined,
   };
   return { message };
 }
@@ -87,7 +79,6 @@ function weightedPick<T extends { weight?: number }>(items: T[], rand01: number)
 
 // ── 이벤트 엔진 메인 ──────────────────────────────────────────
 export interface EventEngineResult {
-  pendingActions: PendingAction[];
   newMessages: MessageItem[];
   updatedTriggers: Record<string, number>; // 이번 주에 발생한 eventId → week
 }
@@ -102,7 +93,6 @@ export function runEventEngine(
   careerStageYear: number,
   randoms: number[],
 ): EventEngineResult {
-  const pendingActions: PendingAction[] = [];
   const newMessages: MessageItem[] = [];
   const updatedTriggers: Record<string, number> = {};
   const week = ctx.currentWeek;
@@ -113,9 +103,8 @@ export function runEventEngine(
     if (!checkOncePolicy(rule, ctx, seasonYear, careerStageYear)) return;
     const msgTmpl = rule.messageTemplateId ? msgTmplMap.get(rule.messageTemplateId) : undefined;
     const decTmpl = rule.decisionTemplateId ? decTmplMap.get(rule.decisionTemplateId) : undefined;
-    const { action, message } = ruleToOutput(rule, msgTmpl, decTmpl, week);
-    if (action)  pendingActions.push(action);
-    if (message) newMessages.push(message);
+    const { message } = ruleToOutput(rule, msgTmpl, decTmpl, week);
+    newMessages.push(message);
     updatedTriggers[rule.id] = week;
   }
 
@@ -171,5 +160,5 @@ export function runEventEngine(
     void picksThisWeek;
   }
 
-  return { pendingActions, newMessages, updatedTriggers };
+  return { newMessages, updatedTriggers };
 }
