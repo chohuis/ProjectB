@@ -22,7 +22,7 @@
   import TrainingPage from "../training/TrainingPage.svelte";
   import FinancePage from "../finance/FinancePage.svelte";
   import TestMatchPage from "../test/TestMatchPage.svelte";
-  import RecordsPage from "../records/RecordsPage.svelte";
+  import LeaguePage from "../league/LeaguePage.svelte";
   import AchievementsPage from "../achievements/AchievementsPage.svelte";
   import MessagesPage from "../messages/MessagesPage.svelte";
   import MessengerPage from "../messenger/MessengerPage.svelte";
@@ -69,7 +69,7 @@
     training: "page.training",
     finance: "page.finance",
     test: "page.matchEngine",
-    records: "page.records",
+    league: "page.league",
     achievements: "page.achievements",
     academics: "page.academics"
   };
@@ -392,8 +392,8 @@
             <TrainingPage />
           {:else if currentTab === "finance"}
             <FinancePage />
-          {:else if currentTab === "records"}
-            <RecordsPage />
+          {:else if currentTab === "league"}
+            <LeaguePage />
           {:else if currentTab === "achievements"}
             <AchievementsPage />
           {:else if currentTab === "messages"}

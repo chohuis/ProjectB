@@ -4,8 +4,9 @@
   import { teamMap } from "../../shared/stores/master";
   import { t } from "../../shared/i18n";
   import type { PitcherGameLine } from "../../shared/types/season";
+  import type { CareerSeasonRecord } from "../../shared/types/save";
 
-  type StatusTab = "stats" | "record";
+  type StatusTab = "stats" | "record" | "career";
   let activeTab: StatusTab = "stats";
 
   type StatGroup = {
@@ -100,6 +101,34 @@
   const GRADE_LABEL: Record<number, string> = {
     1: "습득중", 2: "기초", 3: "보통", 4: "능숙", 5: "마스터",
   };
+
+  $: careerRecords = ($gameStore.protagonist.careerRecords ?? []).slice().reverse();
+
+  function leagueShortName(lid: string): string {
+    const map: Record<string, string> = {
+      LEAGUE_HIGHSCHOOL: "고교", LEAGUE_UNIVERSITY: "대학",
+      LEAGUE_INDEPENDENT: "독립", LEAGUE_KBL: "KBL",
+      LEAGUE_ABL: "ABL", LEAGUE_JBL: "JBL",
+    };
+    return map[lid] ?? lid;
+  }
+
+  function psLabel(r: CareerSeasonRecord["psResult"]): string {
+    if (!r || r === "notQualified") return "";
+    if (r === "champion") return "우승";
+    if (r === "runnerUp") return "준우승";
+    return "4강";
+  }
+
+  $: timelineEntries = (() => {
+    const records = ($gameStore.protagonist.careerRecords ?? []).slice().reverse();
+    return records.map((rec, i) => {
+      const prev = records[i + 1];
+      const teamChanged  = prev && prev.teamId   !== rec.teamId;
+      const leagueChanged = prev && prev.leagueId !== rec.leagueId;
+      return { rec, teamChanged, leagueChanged };
+    });
+  })();
 </script>
 
 <section class="page">
@@ -140,8 +169,9 @@
   </article>
 
   <nav class="tab-bar">
-    <button class:tab-active={activeTab === "stats"} on:click={() => (activeTab = "stats")}>능력치</button>
+    <button class:tab-active={activeTab === "stats"}  on:click={() => (activeTab = "stats")}>능력치</button>
     <button class:tab-active={activeTab === "record"} on:click={() => (activeTab = "record")}>성적</button>
+    <button class:tab-active={activeTab === "career"} on:click={() => (activeTab = "career")}>기록</button>
   </nav>
 
   <div class="tab-content">
@@ -271,6 +301,89 @@
               </table>
             </div>
           {/if}
+        </article>
+      {/if}
+
+    {:else if activeTab === "career"}
+      {#if careerRecords.length === 0}
+        <article class="card record-card">
+          <p class="pending">시즌을 마치면 기록이 쌓입니다.</p>
+        </article>
+      {:else}
+        <!-- 시즌별 성적 -->
+        <article class="card career-card">
+          <h3>시즌별 성적</h3>
+          <div class="career-table-wrap">
+            <table class="career-table">
+              <thead>
+                <tr>
+                  <th>연도</th><th>리그</th><th>팀</th><th>성적</th>
+                  <th>순위</th><th>OVR</th><th>포스트시즌</th>
+                </tr>
+              </thead>
+              <tbody>
+                {#each careerRecords as rec}
+                  <tr>
+                    <td class="year-cell">{rec.year}</td>
+                    <td>{leagueShortName(rec.leagueId)}</td>
+                    <td class="team-cell">{$teamMap.get(rec.teamId)?.name ?? rec.teamId}</td>
+                    <td class="stat-cell">{rec.statLine || "-"}</td>
+                    <td>{rec.rank != null ? `${rec.rank}/${rec.totalTeams}위` : "-"}</td>
+                    <td class="ovr-cell">{rec.ovr}</td>
+                    <td class="ps-cell">{psLabel(rec.psResult)}</td>
+                  </tr>
+                {/each}
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <!-- 수상 내역 -->
+        {#if careerRecords.some((r) => r.awards.length > 0)}
+          <article class="card career-card">
+            <h3>수상 내역</h3>
+            <div class="awards-list">
+              {#each careerRecords as rec}
+                {#each rec.awards as award}
+                  <div class="award-chip">
+                    <span class="award-year">{rec.year}</span>
+                    <span class="award-label">{award.label}</span>
+                    {#if award.value}<span class="award-val">{award.value}</span>{/if}
+                  </div>
+                {/each}
+              {/each}
+            </div>
+          </article>
+        {/if}
+
+        <!-- 커리어 타임라인 -->
+        <article class="card career-card">
+          <h3>커리어 타임라인</h3>
+          <div class="timeline">
+            {#each timelineEntries as entry}
+              <div class="tl-item" class:tl-change={entry.teamChanged || entry.leagueChanged}>
+                <div class="tl-dot"></div>
+                <div class="tl-body">
+                  <div class="tl-header">
+                    <span class="tl-year">{entry.rec.year}</span>
+                    <span class="tl-league">{leagueShortName(entry.rec.leagueId)}</span>
+                    <span class="tl-team">{$teamMap.get(entry.rec.teamId)?.name ?? entry.rec.teamId}</span>
+                    {#if entry.leagueChanged}<span class="tl-badge tl-badge-league">리그 이동</span>{:else if entry.teamChanged}<span class="tl-badge tl-badge-team">팀 이적</span>{/if}
+                  </div>
+                  {#if entry.rec.statLine}
+                    <p class="tl-stat">{entry.rec.statLine}</p>
+                  {/if}
+                  {#if entry.rec.awards.length > 0}
+                    <div class="tl-awards">
+                      {#each entry.rec.awards as a}
+                        <span class="tl-award">{a.label}{a.value ? ` ${a.value}` : ""}</span>
+                      {/each}
+                    </div>
+                  {/if}
+                </div>
+              </div>
+            {/each}
+          </div>
         </article>
       {/if}
     {/if}
@@ -457,6 +570,110 @@
   .decision-SV  { background: rgba( 80, 180, 255, 0.12); color: #60c8ff; border: 1px solid #1a4a6a; }
   .decision-HD  { background: rgba(160, 120, 255, 0.12); color: #b88fff; border: 1px solid #3a2a6a; }
   .decision-ND  { background: rgba(160, 180, 210, 0.10); color: #90a8c8; border: 1px solid #2a3a50; }
+
+  /* 커리어 탭 */
+  .career-card h3 { font-size: 16px; margin-bottom: 12px; color: #ebf2ff; }
+
+  .career-table-wrap { overflow-x: auto; }
+
+  .career-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    color: #c8d8f0;
+  }
+
+  .career-table th {
+    padding: 6px 10px;
+    text-align: center;
+    color: #7a9ac8;
+    font-weight: 600;
+    font-size: 11px;
+    border-bottom: 1px solid #253451;
+    white-space: nowrap;
+  }
+
+  .career-table td {
+    padding: 7px 10px;
+    text-align: center;
+    border-bottom: 1px solid #1a2640;
+    white-space: nowrap;
+  }
+
+  .career-table tbody tr:hover { background: #0f1d35; }
+
+  .year-cell  { font-weight: 700; color: #a8c4f0; }
+  .team-cell  { text-align: left; color: #d5e2fd; }
+  .stat-cell  { text-align: left; color: #e0e8ff; font-size: 11px; }
+  .ovr-cell   { font-weight: 700; color: #68de92; }
+  .ps-cell    { color: #f0c860; font-weight: 700; }
+
+  /* 수상 내역 */
+  .awards-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .award-chip {
+    display: flex; align-items: center; gap: 6px;
+    background: #1e2c4a; border: 1px solid #4a6898;
+    border-radius: 20px; padding: 5px 12px;
+  }
+  .award-year  { font-size: 11px; color: #7a9ac8; }
+  .award-label { font-size: 12px; font-weight: 700; color: #f0c060; }
+  .award-val   { font-size: 12px; color: #80d8ff; }
+
+  /* 타임라인 */
+  .timeline {
+    display: flex; flex-direction: column; gap: 0;
+    padding-left: 8px;
+    border-left: 2px solid #2a3f62;
+  }
+
+  .tl-item {
+    display: flex; gap: 14px;
+    padding: 10px 0 10px 0;
+    position: relative;
+  }
+
+  .tl-dot {
+    position: absolute;
+    left: -9px; top: 16px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #2a4a80;
+    border: 2px solid #5c8fd8;
+    flex-shrink: 0;
+  }
+
+  .tl-item.tl-change .tl-dot {
+    background: #805020;
+    border-color: #f0a040;
+  }
+
+  .tl-body { flex: 1; padding-left: 6px; }
+
+  .tl-header {
+    display: flex; align-items: center; gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .tl-year  { font-size: 13px; font-weight: 700; color: #a8c4f0; }
+  .tl-league { font-size: 11px; color: #6a8ab8; }
+  .tl-team  { font-size: 13px; color: #d5e2fd; font-weight: 600; }
+
+  .tl-badge {
+    font-size: 10px; font-weight: 700; border-radius: 4px;
+    padding: 2px 6px;
+  }
+  .tl-badge-league { background: rgba(240,160,64,0.15); color: #f0a040; border: 1px solid #805020; }
+  .tl-badge-team   { background: rgba(90,160,255,0.10); color: #70b0ff; border: 1px solid #2a4a80; }
+
+  .tl-stat { margin: 4px 0 0; font-size: 12px; color: #9eb6de; }
+
+  .tl-awards { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 5px; }
+  .tl-award {
+    font-size: 11px; color: #f0c060; font-weight: 700;
+    background: rgba(240,192,64,0.1);
+    border: 1px solid rgba(240,192,64,0.3);
+    border-radius: 4px; padding: 2px 7px;
+  }
 
   @media (max-width: 960px) {
     .profile-card { grid-template-columns: 1fr; }

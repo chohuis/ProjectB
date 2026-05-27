@@ -155,6 +155,7 @@ export interface ProtagonistSave {
     recoveryWeeksLeft: number;
   };
   currentRole?: PitcherRole;  // 현재 시즌 역할 (시즌 시작 시 배정)
+  careerRecords?: CareerSeasonRecord[];  // 시즌별 기록 히스토리
 }
 
 // ── 시즌 스탯 (선수 1명분) ─────────────────────────────────────
@@ -412,7 +413,28 @@ export interface NpcSaveState {
   achievements: string[];  // ["2025 신인상", "2027 MVP"]
 }
 
-// 커리어 기록
+// ── 커리어 기록 ───────────────────────────────────────────────
+export interface CareerAward {
+  id: string;
+  label: string;
+  value?: string;
+}
+
+export interface CareerSeasonRecord {
+  year: number;
+  leagueId: string;
+  teamId: string;
+  rank?: number;
+  totalTeams?: number;
+  wins?: number;
+  losses?: number;
+  draws?: number;
+  statLine: string;
+  ovr: number;
+  awards: CareerAward[];
+  psResult?: "champion" | "runnerUp" | "semiFinal" | "notQualified";
+}
+
 export interface SaveGame {
   version: number;  // 저장 포맷 버전 (마이그레이션용)
   savedAt: string;          // ISO 8601 timestamp

@@ -5,27 +5,22 @@
   import { masterStore, teamMap } from "../../shared/stores/master";
   import type { PitcherSeasonStats, BatterSeasonStats, PlayerSeasonStats } from "../../shared/types/save";
 
-  type RecordTab = "personal" | "team" | "standings" | "leaderboard";
-  type Period    = "season" | "last10" | "last5";
+  type LeagueTab = "standings" | "leaderboard";
   type LbTab     = "pitcher" | "batter";
 
-  let tab:    RecordTab = "personal";
-  let period: Period    = "season";
-  let lbTab:  LbTab     = "pitcher";
-  let selectedWeek: number | null = null;
+  let tab:      LeagueTab = "standings";
+  let lbTab:    LbTab     = "pitcher";
   let selectedLeagueId: string = "";
   let lbLeagueId: string = "";
 
   $: myTeamId   = $gameStore.protagonist.teamId;
   $: myLeagueId = $gameStore.protagonist.leagueId;
 
-  // ── 고교 학년별 리그 잠금 ─────────────────────────────────────
   const PRO_LEAGUES = new Set([
     "LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL",
     "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT",
   ]);
 
-  // 고교 1~2학년이면 PRO_LEAGUES 잠금, 아니면 전체 공개
   $: lockedLeagueSet = (
     $gameStore.protagonist.careerStage === "highschool" &&
     ($gameStore.protagonist.grade ?? 1) <= 2
@@ -35,7 +30,6 @@
     return lockedLeagueSet.has(lid);
   }
 
-  // 초기 리그 선택 (잠긴 리그로 초기화되지 않도록 보장)
   $: if (!selectedLeagueId && myLeagueId) selectedLeagueId = myLeagueId;
   $: if (selectedLeagueId && isLocked(selectedLeagueId)) selectedLeagueId = myLeagueId;
 
@@ -67,47 +61,6 @@
     return map[lid] ?? lid;
   }
 
-  // ── 개인 경기 기록 ─────────────────────────────────────────────
-  $: allGames = $seasonStore.schedule
-    .filter((e) => e.isProtagonistGame && !!e.result)
-    .slice()
-    .sort((a, b) => b.week - a.week)
-    .map((e) => {
-      const isHome  = e.homeTeamId === myTeamId;
-      const myScore = isHome ? e.result!.homeScore : e.result!.awayScore;
-      const opScore = isHome ? e.result!.awayScore : e.result!.homeScore;
-      const won     = e.result!.winnerId === myTeamId;
-      return { week: e.week, isHome, oppId: isHome ? e.awayTeamId : e.homeTeamId, myScore, opScore, won };
-    });
-
-  function pickByPeriod<T>(rows: T[]): T[] {
-    if (period === "last10") return rows.slice(0, 10);
-    if (period === "last5")  return rows.slice(0, 5);
-    return rows;
-  }
-
-  $: visibleGames  = pickByPeriod(allGames);
-  $: selectedGame  = selectedWeek !== null
-    ? visibleGames.find((g) => g.week === selectedWeek) ?? visibleGames[0] ?? null
-    : visibleGames[0] ?? null;
-  $: wins          = visibleGames.filter((g) => g.won).length;
-  $: losses        = visibleGames.length - wins;
-  $: winPct        = visibleGames.length > 0 ? (wins / visibleGames.length).toFixed(2) : "-";
-  $: runsScored    = visibleGames.reduce((s, g) => s + g.myScore, 0);
-  $: runsAllow     = visibleGames.reduce((s, g) => s + g.opScore, 0);
-
-  // ── 소속팀 순위 (protagonist 그룹만) ──────────────────────────
-  $: protagonistGroupIds = (() => {
-    if (myLeagueId !== "LEAGUE_HIGHSCHOOL") return null;
-    const gA = $seasonStore.hsGroupA ?? [];
-    return gA.includes(myTeamId) ? gA : ($seasonStore.hsGroupB ?? []);
-  })();
-  $: sortedStandings = [...$seasonStore.standings]
-    .filter((s) => !protagonistGroupIds || protagonistGroupIds.includes(s.teamId))
-    .sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
-  $: myStanding = $seasonStore.standings.find((s) => s.teamId === myTeamId);
-  $: myRank     = sortedStandings.findIndex((s) => s.teamId === myTeamId) + 1;
-
   // ── HS 리그 순위표 A/B 분리 ────────────────────────────────────
   $: hsGroupAStandings = [...$seasonStore.standings]
     .filter((s) => ($seasonStore.hsGroupA ?? []).includes(s.teamId))
@@ -117,7 +70,6 @@
     .sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
 
   // ── 멀티리그 순위표 ────────────────────────────────────────────
-  // 잠긴 리그는 nav 하단에 표시 (선택 불가)
   $: allLeagueIds = (() => {
     const all = [
       myLeagueId,
@@ -142,7 +94,6 @@
   $: selectedStandings = getLeagueStandings(selectedLeagueId || myLeagueId);
 
   // ── 스탯 리더보드 ─────────────────────────────────────────────
-  // 리더보드 리그 목록 (잠긴 리그 제외)
   $: lbLeagueIds = (() => {
     const others = Object.keys($seasonStore.leagueState)
       .filter((lid) => lid !== myLeagueId && !lockedLeagueSet.has(lid));
@@ -155,7 +106,6 @@
     if (lbLeagueId) masterStore.loadEntities(lbLeagueId);
   }
 
-  // 선택 리그 stats (주인공 스탯 포함)
   $: lbStats = (() => {
     if (!lbLeagueId) return {} as Record<string, PlayerSeasonStats>;
     const ls = $seasonStore.leagueState[lbLeagueId];
@@ -204,143 +154,22 @@
     })
     .sort((a, b) => b.avg - a.avg)
     .slice(0, 20) as BatterRow[];
-
-  function periodLabel(value: Period): string {
-    if (value === "last10") return "최근 10경기";
-    if (value === "last5")  return "최근 5경기";
-    return "시즌 전체";
-  }
 </script>
 
 <section class="page">
-  <h2>{$t("page.records")}</h2>
+  <h2>{$t("page.league")}</h2>
 
   <article class="card board">
     <header class="top-row">
       <div class="tabs">
-        <button class:active={tab === "personal"}   on:click={() => (tab = "personal")}>개인 기록</button>
-        <button class:active={tab === "team"}       on:click={() => (tab = "team")}>소속팀</button>
-        <button class:active={tab === "standings"}  on:click={() => (tab = "standings")}>리그 순위</button>
+        <button class:active={tab === "standings"}   on:click={() => (tab = "standings")}>리그 순위</button>
         <button class:active={tab === "leaderboard"} on:click={() => (tab = "leaderboard")}>스탯 순위</button>
       </div>
-      {#if tab === "personal" || tab === "team"}
-        <div class="period-box">
-          <span>기간</span>
-          <select bind:value={period}>
-            <option value="season">시즌 전체</option>
-            <option value="last10">최근 10경기</option>
-            <option value="last5">최근 5경기</option>
-          </select>
-        </div>
-      {/if}
     </header>
 
-    <!-- ── 개인 기록 ── -->
-    {#if tab === "personal"}
-      <section class="content-grid">
-        <section class="panel list-panel">
-          <div class="list-head" style="grid-template-columns:0.4fr 0.5fr 1fr 0.35fr 0.35fr 0.35fr">
-            <span>주차</span><span>홈/원정</span><span>상대</span><span>득점</span><span>실점</span><span>결과</span>
-          </div>
-          <div class="rows">
-            {#if visibleGames.length === 0}
-              <p class="empty">경기 기록이 없습니다.</p>
-            {:else}
-              {#each visibleGames as game}
-                <button
-                  class:selected={selectedGame?.week === game.week}
-                  style="grid-template-columns:0.4fr 0.5fr 1fr 0.35fr 0.35fr 0.35fr"
-                  on:click={() => (selectedWeek = game.week)}
-                >
-                  <span>W{game.week}</span>
-                  <span>{game.isHome ? "홈" : "원정"}</span>
-                  <strong>{tName(game.oppId)}</strong>
-                  <span>{game.myScore}</span>
-                  <span>{game.opScore}</span>
-                  <span class={game.won ? "win" : "lose"}>{game.won ? "W" : "L"}</span>
-                </button>
-              {/each}
-            {/if}
-          </div>
-        </section>
-        <aside class="panel detail-panel">
-          <h3>개인 경기 요약</h3>
-          <p>{periodLabel(period)} 기준</p>
-          <div class="kpi-grid">
-            <div><span>경기수</span><strong>{visibleGames.length}</strong></div>
-            <div><span>승</span><strong class="win-val">{wins}</strong></div>
-            <div><span>패</span><strong class="lose-val">{losses}</strong></div>
-            <div><span>승률</span><strong>{winPct}</strong></div>
-            <div><span>팀 득점</span><strong>{runsScored}</strong></div>
-            <div><span>팀 실점</span><strong>{runsAllow}</strong></div>
-          </div>
-          {#if selectedGame}
-            <section class="game-note">
-              <h4>W{selectedGame.week} vs {tName(selectedGame.oppId)}</h4>
-              <p>{selectedGame.isHome ? "홈" : "원정"} · {selectedGame.myScore} : {selectedGame.opScore}</p>
-              <p class="note">{selectedGame.won ? "승리" : "패배"}</p>
-            </section>
-          {/if}
-        </aside>
-      </section>
-
-    <!-- ── 소속팀 기록 ── -->
-    {:else if tab === "team"}
-      <section class="content-grid">
-        <section class="panel list-panel">
-          <div class="list-head" style="grid-template-columns:0.4fr 1fr 0.5fr 0.35fr">
-            <span>주차</span><span>상대</span><span>스코어</span><span>결과</span>
-          </div>
-          <div class="rows">
-            {#if visibleGames.length === 0}
-              <p class="empty">경기 기록이 없습니다.</p>
-            {:else}
-              {#each visibleGames as game}
-                <button
-                  class:selected={selectedGame?.week === game.week}
-                  style="grid-template-columns:0.4fr 1fr 0.5fr 0.35fr"
-                  on:click={() => (selectedWeek = game.week)}
-                >
-                  <span>W{game.week}</span>
-                  <strong>{tName(game.oppId)}</strong>
-                  <span>{game.myScore}-{game.opScore}</span>
-                  <span class={game.won ? "win" : "lose"}>{game.won ? "W" : "L"}</span>
-                </button>
-              {/each}
-            {/if}
-          </div>
-        </section>
-        <aside class="panel detail-panel">
-          <h3>{tName(myTeamId)}</h3>
-          <div class="kpi-grid">
-            <div><span>순위</span><strong>{myRank > 0 ? `${myRank}위` : "-"}</strong></div>
-            <div><span>승-패-무</span><strong>{myStanding?.wins ?? 0}-{myStanding?.losses ?? 0}-{myStanding?.draws ?? 0}</strong></div>
-            <div><span>승률</span><strong>{myStanding ? myStanding.winPct.toFixed(2) : "-"}</strong></div>
-            <div><span>득점</span><strong>{myStanding?.runsFor ?? 0}</strong></div>
-            <div><span>실점</span><strong>{myStanding?.runsAgainst ?? 0}</strong></div>
-            <div><span>연속</span><strong>{myStanding?.streak || "-"}</strong></div>
-            <div><span>최근10</span><strong>{myStanding?.last10 || "-"}</strong></div>
-          </div>
-          <h4 style="margin-top:8px">리그 순위표</h4>
-          <table class="stbl">
-            <thead><tr><th>#</th><th>팀</th><th>승</th><th>패</th><th>승률</th><th>득실</th></tr></thead>
-            <tbody>
-              {#each sortedStandings as s, i}
-                <tr class:my-row={s.teamId === myTeamId}>
-                  <td>{i + 1}</td><td class="t-name">{tName(s.teamId)}</td>
-                  <td>{s.wins}</td><td>{s.losses}</td>
-                  <td>{s.winPct.toFixed(2)}</td><td>{s.runsFor}-{s.runsAgainst}</td>
-                </tr>
-              {/each}
-            </tbody>
-          </table>
-        </aside>
-      </section>
-
     <!-- ── 리그 순위 ── -->
-    {:else if tab === "standings"}
+    {#if tab === "standings"}
       <section class="standings-layout">
-        <!-- 리그 선택 사이드바 -->
         <nav class="league-nav">
           {#each allLeagueIds as lid}
             {@const locked = isLocked(lid)}
@@ -358,12 +187,10 @@
           {/each}
         </nav>
 
-        <!-- 선택된 리그 순위표 -->
         <div class="panel standings-panel">
           <h3>{leagueName(selectedLeagueId || myLeagueId)} 순위표</h3>
           <div class="standings-body">
             {#if (selectedLeagueId || myLeagueId) === "LEAGUE_HIGHSCHOOL"}
-              <!-- 고교 리그: A조 / B조 분리 -->
               {#each [{ label: "A조", rows: hsGroupAStandings }, { label: "B조", rows: hsGroupBStandings }] as group}
                 <h4 class="group-label">{group.label}</h4>
                 {#if group.rows.length === 0}
@@ -438,7 +265,6 @@
     <!-- ── 스탯 순위 ── -->
     {:else if tab === "leaderboard"}
       <section class="lb-layout">
-        <!-- 리그 선택 사이드바 -->
         <nav class="league-nav">
           {#each lbLeagueIds as lid}
             <button class:active={lbLeagueId === lid} on:click={() => (lbLeagueId = lid)}>
@@ -448,7 +274,6 @@
           {/each}
         </nav>
 
-        <!-- 선택 리그 스탯 테이블 -->
         <div class="lb-content panel">
           <div class="lb-tabs">
             <button class:active={lbTab === "pitcher"} on:click={() => (lbTab = "pitcher")}>투수</button>
@@ -575,26 +400,6 @@
   }
   .tabs button.active { background: #3262b0; border-color: #6da1f7; }
 
-  .period-box { display: flex; gap: 6px; align-items: center; }
-  .period-box span { color: #aac0e4; font-size: 12px; }
-  .period-box select {
-    border: 1px solid #355182;
-    background: #1f2f4f;
-    color: #dbe8ff;
-    border-radius: 8px;
-    padding: 4px 8px;
-    font-size: 12px;
-  }
-
-  /* 개인/소속팀 레이아웃 */
-  .content-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.45fr) minmax(240px, 1fr);
-    gap: 10px;
-    min-height: 0;
-    overflow: hidden;
-  }
-
   .panel {
     border: 1px solid #2f486f;
     border-radius: 10px;
@@ -604,76 +409,6 @@
     overflow: hidden;
   }
 
-  .list-panel {
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
-    gap: 6px;
-  }
-
-  .list-head {
-    display: grid;
-    color: #9fb4d8;
-    padding: 0 6px;
-    font-size: 11px;
-    gap: 6px;
-  }
-
-  .rows {
-    min-height: 0;
-    overflow-y: auto;
-    display: grid;
-    align-content: start;
-    gap: 4px;
-  }
-
-  .rows button {
-    display: grid;
-    border: 1px solid #284269;
-    background: #162a4a;
-    border-radius: 8px;
-    padding: 6px;
-    color: #e4edff;
-    text-align: left;
-    cursor: pointer;
-    font-size: 12px;
-    gap: 6px;
-    align-items: center;
-  }
-  .rows button.selected { border-color: #79abf6; background: #1d3760; }
-  .rows button strong { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-  .win  { color: #79e0a2; font-weight: 700; }
-  .lose { color: #ffb68a; font-weight: 700; }
-  .win-val  { color: #79e0a2; }
-  .lose-val { color: #ffb68a; }
-
-  .detail-panel {
-    display: grid;
-    align-content: start;
-    gap: 8px;
-    overflow-y: auto;
-  }
-  .detail-panel > p { color: #b4c8ea; font-size: 13px; }
-
-  .kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 6px;
-  }
-  .kpi-grid div {
-    border: 1px solid #2e486f;
-    border-radius: 8px;
-    background: #152b4f;
-    padding: 7px;
-    display: grid;
-    gap: 2px;
-  }
-  .kpi-grid span { color: #9eb6de; font-size: 11px; }
-  .kpi-grid strong { color: #eff5ff; font-size: 14px; }
-
-  .game-note { border-top: 1px solid #2b4467; padding-top: 8px; display: grid; gap: 4px; }
-  .game-note h4 { color: #e6f0ff; font-size: 14px; }
-  .note { color: #cfe0ff; font-size: 13px; }
   .empty { color: #9db2d8; font-size: 12px; padding: 4px; }
 
   /* 리그 순위 레이아웃 */
@@ -825,8 +560,6 @@
   .streak-l { color: #ffb68a; font-weight: 700; }
 
   @media (max-width: 1180px) {
-    .content-grid { grid-template-columns: 1fr; }
-    .detail-panel { display: none; }
     .standings-layout { grid-template-columns: 80px 1fr; }
     .lb-layout { grid-template-columns: 80px 1fr; }
   }

@@ -6,6 +6,7 @@ import type {
   CareerChoiceMode,
   CareerDraftPickLogEntry,
   CareerFinalChoice,
+  CareerSeasonRecord,
   ChatContact,
   ChatMessage,
   NpcCareerEntry,
@@ -359,6 +360,7 @@ function migrateProtagonist(p: ProtagonistSave & { learnedPitchIds?: string[] })
     pitches,
     consecutiveLowMoraleWeeks:  p.consecutiveLowMoraleWeeks  ?? 0,
     consecutiveHighFatigueWeeks: p.consecutiveHighFatigueWeeks ?? 0,
+    careerRecords: p.careerRecords ?? [],
   };
 }
 
@@ -1577,6 +1579,16 @@ function createGameStore() {
         });
         return { ...s, npcs };
       });
+    },
+
+    appendCareerRecord(record: CareerSeasonRecord) {
+      update((s) => ({
+        ...s,
+        protagonist: {
+          ...s.protagonist,
+          careerRecords: [...(s.protagonist.careerRecords ?? []), record],
+        },
+      }));
     },
 
     // 드래프트 시뮬레이션 실행 → NPC 반영 + 주인공 결과 반환

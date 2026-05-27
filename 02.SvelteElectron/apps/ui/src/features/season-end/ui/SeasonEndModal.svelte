@@ -4,7 +4,7 @@
   import { masterStore, teamMap } from "../../../shared/stores/master";
   import { HS_ALL_TEAMS } from "../../../shared/utils/leagueScheduler";
   import type { EntityRow } from "../../../shared/stores/master";
-  import type { HighSchoolMaster, NamedNpcMeta, PitcherSeasonStats, BatterSeasonStats, SchoolScenario } from "../../../shared/types/save";
+  import type { HighSchoolMaster, NamedNpcMeta, PitcherSeasonStats, BatterSeasonStats, SchoolScenario, CareerAward } from "../../../shared/types/save";
 
   export let onExit: () => void;
 
@@ -49,23 +49,23 @@
 
   $: seasonAwards = (() => {
     const stats = $seasonStore.stats;
-    let eraKing:  { name: string; era: number } | null = null;
-    let winKing:  { name: string; w: number }   | null = null;
-    let avgKing:  { name: string; avg: number } | null = null;
-    let hrKing:   { name: string; hr: number }  | null = null;
+    let eraKing:  { id: string; name: string; era: number } | null = null;
+    let winKing:  { id: string; name: string; w: number }   | null = null;
+    let avgKing:  { id: string; name: string; avg: number } | null = null;
+    let hrKing:   { id: string; name: string; hr: number }  | null = null;
 
     for (const [id, s] of Object.entries(stats)) {
       if (s.type === "pitcher") {
         const ps = s as PitcherSeasonStats;
         if (ps.ip >= 20) {
-          if (!eraKing || ps.era < eraKing.era) eraKing = { name: entityName(id), era: ps.era };
-          if (!winKing || ps.w > winKing.w)     winKing = { name: entityName(id), w: ps.w };
+          if (!eraKing || ps.era < eraKing.era) eraKing = { id, name: entityName(id), era: ps.era };
+          if (!winKing || ps.w > winKing.w)     winKing = { id, name: entityName(id), w: ps.w };
         }
       } else {
         const bs = s as BatterSeasonStats;
         if (bs.ab >= 50) {
-          if (!avgKing || bs.avg > avgKing.avg) avgKing = { name: entityName(id), avg: bs.avg };
-          if (!hrKing  || bs.hr  > hrKing.hr)  hrKing  = { name: entityName(id), hr: bs.hr };
+          if (!avgKing || bs.avg > avgKing.avg) avgKing = { id, name: entityName(id), avg: bs.avg };
+          if (!hrKing  || bs.hr  > hrKing.hr)  hrKing  = { id, name: entityName(id), hr: bs.hr };
         }
       }
     }
@@ -106,6 +106,38 @@
 
   async function handleNewSeason() {
     const now = $seasonStore.seasonYear;
+
+    // 시즌 기록 저장
+    const pid = p.id;
+    const mySeasonStats = $seasonStore.stats[pid];
+    const protagonistAwards: CareerAward[] = [];
+    if (seasonAwards.eraKing?.id === pid) protagonistAwards.push({ id: "era_king", label: "ERA왕", value: seasonAwards.eraKing.era.toFixed(2) });
+    if (seasonAwards.winKing?.id === pid) protagonistAwards.push({ id: "win_king", label: "다승왕", value: `${seasonAwards.winKing.w}승` });
+    if (seasonAwards.avgKing?.id === pid) protagonistAwards.push({ id: "avg_king", label: "타격왕", value: seasonAwards.avgKing.avg.toFixed(3).replace(/^0\./, ".") });
+    if (seasonAwards.hrKing?.id === pid)  protagonistAwards.push({ id: "hr_king",  label: "홈런왕", value: `${seasonAwards.hrKing.hr}홈런` });
+    let statLine = "";
+    if (mySeasonStats?.type === "pitcher") {
+      const ps = mySeasonStats as PitcherSeasonStats;
+      statLine = `${ps.w}승 ${ps.l}패 ERA ${ps.era.toFixed(2)} ${ps.ip.toFixed(1)}이닝 ${ps.k}K`;
+    } else if (mySeasonStats?.type === "batter") {
+      const bs = mySeasonStats as BatterSeasonStats;
+      statLine = `타율 ${bs.avg.toFixed(3).replace(/^0\./, ".")} ${bs.hr}홈런 ${bs.rbi}타점`;
+    }
+    gameStore.appendCareerRecord({
+      year: now,
+      leagueId: p.leagueId,
+      teamId: p.teamId,
+      rank: myRank > 0 ? myRank : undefined,
+      totalTeams: totalTeams > 0 ? totalTeams : undefined,
+      wins: myStanding?.wins,
+      losses: myStanding?.losses,
+      draws: myStanding?.draws,
+      statLine,
+      ovr: p.pitching.ovr,
+      awards: protagonistAwards,
+      psResult: postseasonResult?.myResult,
+    });
+
     let progressedByHighschoolSync = false;
 
     if (p.careerStage === "highschool" && p.schoolId) {

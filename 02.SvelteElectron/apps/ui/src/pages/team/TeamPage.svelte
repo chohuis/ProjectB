@@ -4,6 +4,7 @@
   import { t } from "../../shared/i18n";
   import { masterStore } from "../../shared/stores/master";
   import { gameStore } from "../../shared/stores/game";
+  import TeamDetailModal from "../../features/team/ui/TeamDetailModal.svelte";
 
   const dispatch = createEventDispatcher<{ gotoRoster: { teamId: string } }>();
 
@@ -19,6 +20,8 @@
 
   let leagueTab: LeagueTab = "all";
   let selectedTeamId = "";
+  let detailTeamId = "";
+  let detailOpen = false;
 
   function leagueLabel(tab: LeagueTab): string {
     const labels: Record<LeagueTab, string> = {
@@ -113,8 +116,8 @@
               <button
                 class:selected={selectedTeamId === team.id}
                 on:click={() => (selectedTeamId = team.id)}
-                on:dblclick={() => dispatch("gotoRoster", { teamId: team.id })}
-                title="더블클릭: 로스터 페이지로 이동"
+                on:dblclick={() => { detailTeamId = team.id; detailOpen = true; }}
+                title="더블클릭: 팀 상세 정보"
               >
                 <strong>{team.name}</strong>
                 <span>{teamLeagueLabel(team.leagueId)}</span>
@@ -158,6 +161,12 @@
 
   </article>
 </section>
+
+<TeamDetailModal
+  teamId={detailTeamId}
+  open={detailOpen}
+  on:close={() => (detailOpen = false)}
+/>
 
 <style>
   .page { display:grid; grid-template-rows:auto minmax(0,1fr); gap:12px; height:100%; min-height:0; overflow:hidden; }

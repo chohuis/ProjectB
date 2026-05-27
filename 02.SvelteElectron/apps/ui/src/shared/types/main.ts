@@ -9,7 +9,7 @@ export type MainTabId =
   | "training"
   | "finance"
   | "test"
-  | "records"
+  | "league"
   | "achievements"
   | "academics";
 

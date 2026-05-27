@@ -21,7 +21,7 @@
     { id: "schedule", labelKey: "nav.schedule" },
     { id: "training", labelKey: "nav.training" },
     { id: "finance", labelKey: "nav.finance" },
-    { id: "records", labelKey: "nav.records" },
+    { id: "league", labelKey: "nav.league" },
     { id: "achievements", labelKey: "nav.achievements" },
     { id: "academics", labelKey: "nav.academics" }
   ];
