@@ -258,6 +258,8 @@ pub struct BatterLine {
 }
 
 // ── 등판 조건 ─────────────────────────────────────────────────────────────────
+fn default_score_diff_cap() -> i32 { 6 }
+fn default_min_lead_diff()   -> i32 { 1 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "type")]
@@ -265,11 +267,16 @@ pub enum EntryTrigger {
     #[serde(rename = "inning_start")]
     InningStart { inning: u8 },
     #[serde(rename = "mid_inning")]
-    MidInning { inning: u8, #[serde(rename = "maxOuts")] max_outs: u8 },
+    MidInning {
+        inning: u8,
+        #[serde(rename = "maxOuts")] max_outs: u8,
+        #[serde(rename = "scoreDiffCap", default = "default_score_diff_cap")] score_diff_cap: i32,
+    },
     #[serde(rename = "close_game")]
     CloseGame {
         #[serde(rename = "inningThreshold")] inning_threshold: u8,
         #[serde(rename = "maxLeadDiff")]     max_lead_diff: i32,
+        #[serde(rename = "minLeadDiff", default = "default_min_lead_diff")] min_lead_diff: i32,
     },
     #[serde(rename = "manual")]
     Manual { inning: u8, half: HalfInning, outs: u8, runners: MatchRunners },
@@ -522,4 +529,5 @@ pub struct FinishMatchResult {
     pub next_state: MatchState,
     pub summary: String,
     pub batter_lines: Vec<BatterLine>,
+    pub protagonist_entered: bool,
 }

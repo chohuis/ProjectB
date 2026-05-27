@@ -41,10 +41,11 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
   const isDraw = teamResult.loserId === null;
   const won = !isDraw && teamResult.winnerId === myTeamId;
 
+  const didEnter = outcome.protagonistEntered !== false;
   const runsAllowed = outcome.homeTeamId === myTeamId ? outcome.awayScore : outcome.homeScore;
   const safeOuts = (typeof outcome.outsRecorded === "number" && !isNaN(outcome.outsRecorded)) ? outcome.outsRecorded : 0;
   const inningsPitched = Number((Math.max(0, safeOuts) / 3).toFixed(1));
-  const pitcherLine: PitcherGameLine = {
+  const pitcherLine: PitcherGameLine | null = didEnter ? {
     role: "pitcher",
     playerId: protagonist.id,
     ip: inningsPitched,
@@ -54,17 +55,17 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
     bb: Math.max(0, outcome.walksAllowed),
     decision: won ? "W" : isDraw ? "ND" : "L",
     pitchCount: outcome.pitchCount > 0 ? outcome.pitchCount : undefined,
-  };
+  } : null;
   let playerLines = Array.isArray(outcome.playerLines) && outcome.playerLines.length > 0
     ? outcome.playerLines
-    : [pitcherLine, ...(outcome.batterLines ?? [])];
+    : [...(pitcherLine ? [pitcherLine] : []), ...(outcome.batterLines ?? [])];
   if (!(Array.isArray(outcome.playerLines) && outcome.playerLines.length > 0)) {
     const entities = get(masterStore).entities;
     if (entities.length > 0) {
       try {
         const sim = await simulateGame(outcome.homeTeamId, outcome.awayTeamId, entities, { week: outcome.week });
         const merged = sim.result.playerLines.filter((l) => l.playerId !== protagonist.id);
-        playerLines = [pitcherLine, ...merged];
+        playerLines = [...(pitcherLine ? [pitcherLine] : []), ...merged];
       } catch {
         // keep fallback lines when simulation enrichment fails
       }

@@ -170,6 +170,7 @@ export interface UnifiedGameOutcome {
   errors: number;
   pitchCount: number;
   summary: string;
+  protagonistEntered?: boolean;
   batterLines?: BatterGameLine[];
   playerLines?: PlayerGameLine[];
 }

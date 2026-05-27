@@ -328,6 +328,7 @@
     awayScore: number; homeScore: number;
     pitchCount: number; strikeouts: number; errors: number;
     won: boolean; summary: string;
+    protagonistEntered?: boolean;
     batterLines?: import('../../shared/types/season').BatterGameLine[];
     playerLines?: import('../../shared/types/season').PlayerGameLine[];
   }
@@ -682,6 +683,16 @@
       const ctx = matchContext;
       const myNpcStarterStats = (ctx?.role !== 'SP' && myTeamId) ? buildPitcherStatsForTeam(myTeamId) : undefined;
       const isHome = !ctx || ctx.protagonistTeamId === ctx.homeTeamId;
+      const myManagerEntity = get(masterStore).entities.find(
+        (e) => e.role === "manager" && e.teamId === myTeamId
+      );
+      const myManagerStats = myManagerEntity ? {
+        bullpenRead:    myManagerEntity.details.manager.riskTolerance,
+        clutchDecision: myManagerEntity.details.manager.stats.handlePressure,
+        tacticalIQ:     myManagerEntity.details.manager.stats.strategy,
+        motivator:      myManagerEntity.details.manager.stats.motivation,
+        offenseMind:    myManagerEntity.details.manager.stats.strategy,
+      } : undefined;
       const response = await window.projectB.matchStart({
         initialStamina: player.condition,
         initialMental: 74,
@@ -696,6 +707,7 @@
         ...(fielders.length >= 9 ? { fielders } : {}),
         ...(opponentPitcherStats ? { opponentPitcher: opponentPitcherStats } : {}),
         ...(myNpcStarterStats ? { npcStarterPitcher: myNpcStarterStats } : {}),
+        ...(myManagerStats ? { myManager: myManagerStats } : {}),
       });
       engineAvailable = true;
       engineStarted = true;
@@ -1271,10 +1283,12 @@
     let summary = '';
     let batterLines: import('../../shared/types/season').BatterGameLine[] | undefined;
     let playerLines: import('../../shared/types/season').PlayerGameLine[] | undefined;
+    let protagonistEntered: boolean | undefined;
     if (window.projectB?.matchFinish) {
       try {
         const result = await window.projectB.matchFinish();
         summary = result.summary;
+        protagonistEntered = result.protagonistEntered ?? true;
         if (result.snapshot) applySnapshot(result.snapshot);
         if (Array.isArray(result.batterLines)) {
           batterLines = result.batterLines.map((bl: { playerId: string; pa: number; ab: number; h: number; hr: number; rbi: number; bb: number; k: number }) => ({
@@ -1298,7 +1312,7 @@
       pitchCount: engineAvailable ? snapshotPitchCountSinceEntry : localEngineState.pitchCount,
       strikeouts: totalStrikeouts,
       errors: matchDefenseStat.errors,
-      won, summary, batterLines, playerLines,
+      won, summary, protagonistEntered, batterLines, playerLines,
     };
 
     const staminaUsed = Math.max(0, 82 - pitcherState.stamina);
@@ -1356,6 +1370,7 @@
         errors: gameResult.errors,
         pitchCount: gameResult.pitchCount,
         summary: gameResult.summary,
+        protagonistEntered: gameResult.protagonistEntered,
         batterLines: gameResult.batterLines,
         playerLines: gameResult.playerLines,
       });
@@ -1717,11 +1732,18 @@
         <div class="gameover-result" class:won={gameResult.won} class:lost={!gameResult.won && gameResult.awayScore !== gameResult.homeScore}>
           {gameResult.won ? '승리' : gameResult.awayScore === gameResult.homeScore ? '무승부' : '패배'}
         </div>
-        <ul class="gameover-stats">
-          <li><span>투구 수</span><strong>{gameResult.pitchCount}</strong></li>
-          <li><span>탈삼진</span><strong>{gameResult.strikeouts} K</strong></li>
-          <li><span>실책</span><strong>{gameResult.errors} E</strong></li>
-        </ul>
+        {#if gameResult.protagonistEntered === false}
+          <p class="gameover-no-entry">이번 경기 등판 없음</p>
+          <ul class="gameover-stats">
+            <li><span>실책</span><strong>{gameResult.errors} E</strong></li>
+          </ul>
+        {:else}
+          <ul class="gameover-stats">
+            <li><span>투구 수</span><strong>{gameResult.pitchCount}</strong></li>
+            <li><span>탈삼진</span><strong>{gameResult.strikeouts} K</strong></li>
+            <li><span>실책</span><strong>{gameResult.errors} E</strong></li>
+          </ul>
+        {/if}
         {#if gameResult.summary}
           <p class="gameover-summary">{gameResult.summary}</p>
         {/if}
@@ -2660,6 +2682,15 @@
     text-align: center;
     max-width: 280px;
     line-height: 1.5;
+  }
+
+  .gameover-no-entry {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: #8890a8;
+    text-align: center;
+    padding: 4px 0;
   }
 
   .gameover-exit-btn {

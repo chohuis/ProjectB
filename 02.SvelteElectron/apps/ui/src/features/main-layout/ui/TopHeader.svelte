@@ -32,8 +32,17 @@
       advancing = false;
     }
   }
+
+  function handleKeydown(e: KeyboardEvent) {
+    if (e.code !== "Space") return;
+    const tag = (e.target as HTMLElement)?.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || tag === "BUTTON") return;
+    e.preventDefault();
+    handleAdvance();
+  }
 </script>
 
+<svelte:window on:keydown={handleKeydown} />
 <header class="header">
   <div>
     <h1>ProjectB</h1>

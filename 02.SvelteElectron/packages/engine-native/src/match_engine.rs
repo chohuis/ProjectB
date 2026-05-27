@@ -120,8 +120,20 @@ fn create_default_fielders(rng: &mut impl Rng, mean: f64) -> Vec<FielderStats> {
 pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) -> MatchState {
     let protagonist_side = opts.protagonist_side.clone().unwrap_or_else(|| "home".to_string());
     let role = opts.role.unwrap_or(PitcherRole::SP);
+    let bullpen_read    = opts.my_manager.as_ref().and_then(|m| m.bullpen_read).unwrap_or(50.0);
+    let clutch_decision = opts.my_manager.as_ref().and_then(|m| m.clutch_decision).unwrap_or(50.0);
     let entry_trigger = opts.entry_trigger.clone()
-        .unwrap_or(EntryTrigger::InningStart { inning: 1 });
+        .unwrap_or_else(|| match role {
+            PitcherRole::SP => EntryTrigger::InningStart { inning: 1 },
+            PitcherRole::RP => {
+                let min_inning = if bullpen_read >= 70.0 { 5 } else if bullpen_read >= 40.0 { 6 } else { 7 };
+                EntryTrigger::MidInning { inning: min_inning, max_outs: 3, score_diff_cap: 6 }
+            }
+            PitcherRole::CP => {
+                let inning_threshold = if clutch_decision >= 70.0 { 8 } else { 9 };
+                EntryTrigger::CloseGame { inning_threshold, max_lead_diff: 3, min_lead_diff: 1 }
+            }
+        });
 
     let pp_opts = opts.protagonist_pitcher.as_ref()
         .or(opts.pitcher.as_ref())
@@ -864,6 +876,9 @@ fn build_pitch_log(state: &MatchState, decision: &PitchDecision, landing: XY, co
 }
 
 fn build_summary(state: &MatchState) -> String {
+    if !state.protagonist_has_entered {
+        return format!("{}:{} 종료 (등판 없음)", state.score.away, state.score.home);
+    }
     format!("{}:{} 종료 (투구수 {}, 체력 {:.1}, 멘탈 {:.1})",
         state.score.away, state.score.home,
         state.pitch_count_since_entry,
@@ -1033,20 +1048,23 @@ fn should_protagonist_enter(state: &MatchState) -> bool {
             && state.outs == 0
             && state.count.balls == 0 && state.count.strikes == 0
         }
-        EntryTrigger::MidInning { inning, .. } => {
+        EntryTrigger::MidInning { inning, score_diff_cap, .. } => {
             if state.inning < *inning { return false; }
+            let my_score  = if state.protagonist_side == "home" { state.score.home } else { state.score.away };
+            let opp_score = if state.protagonist_side == "home" { state.score.away } else { state.score.home };
+            if opp_score - my_score > *score_diff_cap { return false; }
             let iq_factor = 1.0 - (state.my_manager.tactical_iq - 50.0) * 0.004;
             let stamina_threshold = T::NPC_STARTER_STAMINA_LIMIT * iq_factor;
             let pitch_threshold   = T::NPC_STARTER_PITCH_COUNT_SOFT - (state.my_manager.tactical_iq - 50.0) * 0.5;
             state.npc_pitcher_stamina.my <= stamina_threshold
             || state.npc_pitcher_pitch_count.my >= pitch_threshold
         }
-        EntryTrigger::CloseGame { inning_threshold, max_lead_diff } => {
+        EntryTrigger::CloseGame { inning_threshold, max_lead_diff, min_lead_diff } => {
             if state.inning < *inning_threshold { return false; }
             let my_score  = if state.protagonist_side == "home" { state.score.home } else { state.score.away };
             let opp_score = if state.protagonist_side == "home" { state.score.away } else { state.score.home };
             let lead = my_score - opp_score;
-            lead > 0 && lead <= *max_lead_diff
+            lead >= *min_lead_diff && lead <= *max_lead_diff
         }
         EntryTrigger::Manual { inning, half, outs, .. } => {
             state.inning == *inning && &state.half == half && state.outs == *outs
@@ -1466,13 +1484,18 @@ pub fn finish_match(state: &MatchState) -> FinishMatchResult {
     }).collect();
 
     if state.is_finished {
-        return FinishMatchResult { next_state: state.clone(), summary: build_summary(state), batter_lines };
+        return FinishMatchResult {
+            next_state: state.clone(),
+            summary: build_summary(state),
+            batter_lines,
+            protagonist_entered: state.protagonist_has_entered,
+        };
     }
     let mut next = state.clone();
     next.is_finished = true;
     next.logs.push("경기 종료".to_string());
     let summary = build_summary(&next);
-    FinishMatchResult { next_state: next, summary, batter_lines }
+    FinishMatchResult { next_state: next, summary, batter_lines, protagonist_entered: state.protagonist_has_entered }
 }
 
 pub fn advance_game_phase(state: &MatchState, rng: &mut impl Rng) -> GamePhaseResult {
