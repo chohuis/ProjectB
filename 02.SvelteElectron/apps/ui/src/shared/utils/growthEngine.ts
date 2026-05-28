@@ -13,6 +13,7 @@ export async function calcTrainingGrowth(
 ): Promise<GrowthResult> {
   const params = {
     protagonist: {
+      age:              protagonist.age,
       condition:        protagonist.condition,
       fatigue:          protagonist.fatigue,
       developmentRate:  protagonist.developmentRate,
@@ -57,6 +58,7 @@ export async function calcGameGrowth(
 ): Promise<GrowthResult> {
   const params = {
     protagonist: {
+      age:             protagonist.age,
       condition:       protagonist.condition,
       fatigue:         protagonist.fatigue,
       developmentRate: protagonist.developmentRate,
@@ -82,4 +84,26 @@ export async function calcGameGrowth(
   delete (patch as any).trainingPitchState;
 
   return { protagonistPatch: patch, logs: raw.logs, fameDelta: raw.fameDelta };
+}
+
+export interface AgingResult {
+  pitching: ProtagonistSave["pitching"];
+  batting:  ProtagonistSave["batting"];
+  logs:     string[];
+}
+
+export async function calcProtagonistAging(
+  protagonist: ProtagonistSave,
+): Promise<AgingResult> {
+  const params = {
+    age:        protagonist.age,
+    condition:  protagonist.condition,
+    fatigue:    protagonist.fatigue,
+    pitching:   protagonist.pitching,
+    batting:    protagonist.batting,
+    playerType: protagonist.playerType,
+  };
+  return JSON.parse(
+    await window.projectB!.growthCalcProtagonistAging(JSON.stringify(params))
+  ) as AgingResult;
 }

@@ -55,6 +55,8 @@ export declare function advanceProtagonistGradeNative(paramsJson: string): strin
 export declare function calcTrainingGrowthNative(paramsJson: string): string
 /** 경기 성장 계산 */
 export declare function calcGameGrowthNative(paramsJson: string): string
+/** 주인공 에이징 (시즌 종료 1회 호출) */
+export declare function calcProtagonistAgingNative(paramsJson: string): string
 /** 진로 선택 → 다음 스텝 */
 export declare function resolveCareerChoiceNative(paramsJson: string): string
 /** 고교 투수 포지션 배정 (SP / RP) */

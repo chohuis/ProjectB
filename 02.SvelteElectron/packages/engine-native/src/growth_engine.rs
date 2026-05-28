@@ -66,6 +66,7 @@ pub struct GrowthInput {
     pub fatigue: f64,
     pub development_rate: f64,
     pub diligence: Option<f64>,
+    pub age: Option<u32>,
     pub pitching: PitchingAttributes,
     pub batting: BattingAttributes,
     #[serde(default)]
@@ -176,7 +177,17 @@ fn get_program(id: &str) -> Option<ProgramConfig> {
 
 fn clamp(v: f64, lo: f64, hi: f64) -> f64 { v.max(lo).min(hi) }
 
-fn xp_threshold(v: f64) -> f64 { 8.0 + v * 0.4 }
+fn xp_threshold(v: f64) -> f64 { 7.5 + v * 0.35 }
+
+fn age_train_factor(age: u32) -> f64 {
+    match age {
+        0..=29  => 1.00,
+        30..=32 => 0.85,
+        33..=35 => 0.70,
+        36..=38 => 0.55,
+        _       => 0.45,
+    }
+}
 
 fn week_xp(base: f64, condition: f64, fatigue: f64, dev_rate: f64, diligence: f64) -> f64 {
     let cond_factor = condition / 100.0;
@@ -265,13 +276,31 @@ fn set_batting_stat(b: &mut BattingAttributes, stat: &str, val: f64) {
 }
 
 fn calc_pitching_ovr(p: &PitchingAttributes) -> f64 {
-    let s = [p.velocity, p.command, p.control, p.movement, p.mentality, p.stamina, p.recovery, p.clutch, p.hold_runners];
-    (s.iter().sum::<f64>() / s.len() as f64).round()
+    let weighted = p.velocity     * 2.5
+                 + p.command      * 2.5
+                 + p.control      * 2.0
+                 + p.movement     * 1.5
+                 + p.stamina      * 1.5
+                 + p.mentality    * 1.0
+                 + p.recovery     * 0.5
+                 + p.clutch       * 0.3
+                 + p.hold_runners * 0.2;
+    (weighted / 12.0).round()
 }
 
 fn calc_batting_ovr(b: &BattingAttributes) -> f64 {
-    let s = [b.contact, b.power, b.eye, b.discipline, b.speed, b.fielding, b.arm, b.batting_clutch];
-    (s.iter().sum::<f64>() / s.len() as f64).round()
+    let weighted = b.contact       * 2.0
+                 + b.power         * 1.8
+                 + b.eye           * 1.5
+                 + b.discipline    * 1.2
+                 + b.speed         * 1.3
+                 + b.base_instinct * 0.7
+                 + b.bunting       * 0.3
+                 + b.platoon       * 0.3
+                 + b.fielding      * 1.3
+                 + b.arm           * 0.8
+                 + b.batting_clutch * 0.6;
+    (weighted / 11.8).round()
 }
 
 const PITCHING_LABELS: &[(&str, &str)] = &[
@@ -354,7 +383,8 @@ fn apply_batting_xp(
 
 pub fn calc_training_growth(params: TrainingGrowthParams) -> GrowthResult {
     let p = &params.protagonist;
-    let eff = params.efficiency_mod.unwrap_or(1.0);
+    let age_factor = age_train_factor(p.age.unwrap_or(25));
+    let eff = params.efficiency_mod.unwrap_or(1.0) * age_factor;
     let diligence = p.diligence.unwrap_or(50.0);
 
     let mut pitching_gains: HashMap<String, f64> = HashMap::new();
@@ -474,7 +504,8 @@ pub fn calc_game_growth(params: GameGrowthParams) -> GrowthResult {
     let mut pitching_gains: HashMap<String, f64> = HashMap::new();
     let mut batting_gains: HashMap<String, f64> = HashMap::new();
 
-    let game_xp = week_xp(3.5 * 0.35, p.condition, p.fatigue, p.development_rate, diligence);
+    let age_factor = age_train_factor(p.age.unwrap_or(25));
+    let game_xp = week_xp(3.5 * 0.35, p.condition, p.fatigue, p.development_rate, diligence) * age_factor;
 
     if is_pitcher {
         for stat in &["velocity", "command", "control"] {
@@ -539,4 +570,96 @@ pub fn calc_game_growth(params: GameGrowthParams) -> GrowthResult {
         logs: all_logs,
         fame_delta,
     }
+}
+
+// ── 주인공 에이징 ─────────────────────────────────────────────
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ProtagonistAgingParams {
+    pub age: u32,
+    pub condition: f64,
+    pub fatigue: f64,
+    pub pitching: PitchingAttributes,
+    pub batting: BattingAttributes,
+    pub player_type: Option<String>,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ProtagonistAgingResult {
+    pub pitching: PitchingAttributes,
+    pub batting: BattingAttributes,
+    pub logs: Vec<String>,
+}
+
+pub fn calc_protagonist_aging(params: ProtagonistAgingParams) -> ProtagonistAgingResult {
+    let age = params.age;
+
+    // 자기관리 배율: 시즌 종료 시점 컨디션·피로도로 추정
+    let self_mgmt = if params.condition >= 80.0 && params.fatigue <= 25.0 {
+        0.35  // 철저한 자기관리
+    } else if params.condition >= 70.0 && params.fatigue <= 40.0 {
+        0.60
+    } else if params.condition >= 60.0 && params.fatigue <= 60.0 {
+        1.00  // 기준
+    } else {
+        1.50  // 자기관리 소홀
+    };
+
+    // 나이대별 기준 감퇴율 (시즌 1회 적용)
+    // (vel, sta, mov, rec, cmd, ctrl, men)
+    let (vel_b, sta_b, mov_b, rec_b, cmd_b, ctrl_b, men_b): (f64, f64, f64, f64, f64, f64, f64) = match age {
+        0..=25  => (0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00),
+        26..=29 => (0.05, 0.05, 0.00, 0.00, 0.00, 0.00, 0.00), // 피크 — 미세 신체 피로
+        30..=32 => (1.00, 0.80, 0.30, 0.20, 0.30, 0.30, 0.00), // 전환기
+        33..=35 => (2.50, 2.00, 0.80, 0.50, 3.20, 3.00, 0.50), // 감퇴 시작
+        _       => (4.00, 3.50, 1.50, 0.80, 5.00, 4.50, 1.00), // 36+ 가속
+    };
+
+    let mut pitching = params.pitching.clone();
+    let mut logs = Vec::new();
+
+    let player_type = params.player_type.as_deref().unwrap_or("pitcher");
+    if player_type == "pitcher" || player_type == "twoWay" {
+        let vel_loss  = vel_b  * self_mgmt;
+        let sta_loss  = sta_b  * self_mgmt;
+        let mov_loss  = mov_b  * self_mgmt;
+        let rec_loss  = rec_b  * self_mgmt;
+        let cmd_loss  = cmd_b  * self_mgmt;
+        let ctrl_loss = ctrl_b * self_mgmt;
+        let men_loss  = men_b  * self_mgmt;
+
+        pitching.velocity  = clamp(pitching.velocity  - vel_loss,  20.0, 99.0);
+        pitching.stamina   = clamp(pitching.stamina   - sta_loss,  20.0, 99.0);
+        pitching.movement  = clamp(pitching.movement  - mov_loss,  20.0, 99.0);
+        pitching.recovery  = clamp(pitching.recovery  - rec_loss,  20.0, 99.0);
+        pitching.command   = clamp(pitching.command   - cmd_loss,  20.0, 99.0);
+        pitching.control   = clamp(pitching.control   - ctrl_loss, 20.0, 99.0);
+        pitching.mentality = clamp(pitching.mentality - men_loss,  20.0, 99.0);
+        pitching.ovr = calc_pitching_ovr(&pitching);
+
+        if vel_loss >= 0.3 || sta_loss >= 0.3 {
+            let mgmt_label = if self_mgmt <= 0.40 { "자기관리 우수" }
+                             else if self_mgmt <= 0.70 { "관리 양호" }
+                             else if self_mgmt <= 1.00 { "보통" }
+                             else { "자기관리 소홀" };
+            logs.push(format!(
+                "[에이징] {}세 시즌 — {} (구속 -{:.1} / 스태미나 -{:.1})",
+                age, mgmt_label, vel_loss, sta_loss
+            ));
+        }
+    }
+
+    // 타자 에이징 (주인공이 타자/투타겸업인 경우)
+    let mut batting = params.batting.clone();
+    if player_type == "batter" || player_type == "twoWay" {
+        let spd_b: f64 = match age { 0..=29 => 0.05, 30..=32 => 0.8, 33..=35 => 2.0, _ => 3.5 };
+        let pow_b: f64 = match age { 0..=29 => 0.0,  30..=32 => 0.5, 33..=35 => 1.5, _ => 2.8 };
+        batting.speed  = clamp(batting.speed  - spd_b * self_mgmt, 20.0, 99.0);
+        batting.power  = clamp(batting.power  - pow_b * self_mgmt, 20.0, 99.0);
+        batting.ovr    = calc_batting_ovr(&batting);
+    }
+
+    ProtagonistAgingResult { pitching, batting, logs }
 }

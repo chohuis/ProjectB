@@ -118,8 +118,9 @@ declare global {
       npcFlushSeasonStats:          (p: string) => Promise<string>;
       npcGetCareerStats:            (p: string) => Promise<string>;
       // ── 성장 엔진 ───────────────────────────────────────────
-      growthCalcTraining: (p: string) => Promise<string>;
-      growthCalcGame:     (p: string) => Promise<string>;
+      growthCalcTraining:          (p: string) => Promise<string>;
+      growthCalcGame:              (p: string) => Promise<string>;
+      growthCalcProtagonistAging:  (p: string) => Promise<string>;
       // ── 플레이어 엔진 ──────────────────────────────────────
       careerResolveChoice:                   (p: string) => Promise<string>;
       pitcherAssignHighschoolPosition:       (p: string) => Promise<string>;

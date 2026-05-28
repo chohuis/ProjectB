@@ -55,6 +55,7 @@ contextBridge.exposeInMainWorld("projectB", {
   // ── 성장 엔진 (Phase 4) ──────────────────────────────────────────────────
   growthCalcTraining:                    (p) => ipcRenderer.invoke("growth:calcTraining",                         p),
   growthCalcGame:                        (p) => ipcRenderer.invoke("growth:calcGame",                             p),
+  growthCalcProtagonistAging:            (p) => ipcRenderer.invoke("growth:calcProtagonistAging",                 p),
 
   // ── 플레이어 엔진 (Phase 4) ──────────────────────────────────────────────
   careerResolveChoice:                   (p) => ipcRenderer.invoke("career:resolveChoice",                        p),

@@ -2205,6 +2205,10 @@ app.whenReady().then(() => {
     try { return engineNative.calcGameGrowthNative(paramsJson); }
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
+  ipcMain.handle("growth:calcProtagonistAging", (_event, paramsJson) => {
+    try { return engineNative.calcProtagonistAgingNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
 
   // ── 플레이어 엔진 (Phase 4) ──────────────────────────────────────────────────
   ipcMain.handle("career:resolveChoice", (_event, paramsJson) => {

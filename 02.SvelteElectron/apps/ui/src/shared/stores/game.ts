@@ -117,8 +117,8 @@ const DEFAULT_PROTAGONIST: ProtagonistSave = {
   condition: 80,
   fatigue: 20,
   morale: 65,
-  pitching: { ovr: 54, stamina: 58, velocity: 52, command: 60, control: 55, movement: 50, mentality: 57, recovery: 55, clutch: 50, holdRunners: 50 },
-  batting:  { ovr: 30, contact: 35, power: 28, eye: 32, discipline: 30, speed: 50, baseInstinct: 50, bunting: 45, platoon: 50, fielding: 45, arm: 55, battingClutch: 30 },
+  pitching: { ovr: 55, stamina: 58, velocity: 52, command: 60, control: 55, movement: 50, mentality: 57, recovery: 55, clutch: 50, holdRunners: 50 },
+  batting:  { ovr: 38, contact: 35, power: 28, eye: 32, discipline: 30, speed: 50, baseInstinct: 50, bunting: 45, platoon: 50, fielding: 45, arm: 55, battingClutch: 30 },
   primaryPosition: "SP",
   positionRatings: { SP: 54 },
   diligence: 60,
@@ -354,10 +354,17 @@ function migrateProtagonist(p: ProtagonistSave & { learnedPitchIds?: string[] })
     clutch:      p.pitching.clutch      ?? def.pitching.clutch,
     holdRunners: p.pitching.holdRunners ?? def.pitching.holdRunners,
   };
-  const statsArr = [pitchingMerged.velocity, pitchingMerged.command, pitchingMerged.control,
-    pitchingMerged.movement, pitchingMerged.mentality, pitchingMerged.stamina,
-    pitchingMerged.recovery, pitchingMerged.clutch, pitchingMerged.holdRunners];
-  pitchingMerged.ovr = Math.round(statsArr.reduce((a, b) => a + b, 0) / statsArr.length);
+  const weighted =
+    pitchingMerged.velocity    * 2.5 +
+    pitchingMerged.command     * 2.5 +
+    pitchingMerged.control     * 2.0 +
+    pitchingMerged.movement    * 1.5 +
+    pitchingMerged.stamina     * 1.5 +
+    pitchingMerged.mentality   * 1.0 +
+    pitchingMerged.recovery    * 0.5 +
+    pitchingMerged.clutch      * 0.3 +
+    pitchingMerged.holdRunners * 0.2;
+  pitchingMerged.ovr = Math.round(weighted / 12.0);
 
   return {
     ...p,
@@ -1493,6 +1500,35 @@ function createGameStore() {
           ? trimMailbox([result.mailboxEntry, ...st.mailbox])
           : st.mailbox,
       }));
+    },
+
+    // 시즌 종료 후 주인공 에이징 감퇴 적용 (advanceSeasonYear 이후 호출)
+    async applyAgingDecay() {
+      const s = get({ subscribe });
+      const p = s.protagonist;
+      const raw = JSON.parse(
+        await window.projectB!.growthCalcProtagonistAging(JSON.stringify({
+          age:        p.age,
+          condition:  p.condition,
+          fatigue:    p.fatigue,
+          pitching:   p.pitching,
+          batting:    p.batting,
+          playerType: p.playerType,
+        }))
+      );
+      if (raw.error) {
+        console.warn("[gameStore] applyAgingDecay failed", raw.error);
+        return;
+      }
+      update((st) => {
+        const updated: ProtagonistSave = { ...st.protagonist, pitching: raw.pitching, batting: raw.batting };
+        return {
+          ...st,
+          protagonist: updated,
+          player: toPlayerCompat(updated),
+          logs: [...raw.logs, ...st.logs].slice(0, 30),
+        };
+      });
     },
 
     toCoreState(): CoreGameState {

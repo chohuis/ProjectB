@@ -319,6 +319,17 @@ pub fn calc_game_growth_native(params_json: String) -> String {
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcGameGrowthNative/serialize", e))
 }
 
+/// 주인공 에이징 (시즌 종료 1회 호출)
+#[napi]
+pub fn calc_protagonist_aging_native(params_json: String) -> String {
+    let params: growth_engine::ProtagonistAgingParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("calcProtagonistAgingNative", e),
+    };
+    let result = growth_engine::calc_protagonist_aging(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcProtagonistAgingNative/serialize", e))
+}
+
 // ── 플레이어 엔진 (Phase 4) ───────────────────────────────────────────────────
 
 /// 진로 선택 → 다음 스텝
