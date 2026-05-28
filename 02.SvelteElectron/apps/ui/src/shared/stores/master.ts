@@ -55,8 +55,14 @@ export interface TeamProfile {
   desc: string;
   tags: string[];
   strengths: string[];
-  funding?: "풍부" | "보통" | "부족";
+  funding?: "최상" | "상" | "중" | "하" | "최하";
   difficulty?: "최상" | "상" | "중" | "하" | "최하";
+  prestige?: "S" | "A" | "B" | "C" | "D";
+  fanBase?: "소규모" | "지역" | "광역" | "전국" | "메가";
+  facilityLevel?: 1 | 2 | 3 | 4 | 5;
+  atmosphere?: "엄격" | "체계적" | "균형" | "자유로운" | "가족적";
+  mediaPressure?: "낮음" | "보통" | "높음" | "극심";
+  promoChance?: "높음" | "보통" | "낮음";
 }
 
 export interface TeamRecord {
@@ -73,6 +79,8 @@ export interface TeamHistory {
   nationalTitles: number;
   recentRecords: TeamRecord[];
   rival?: string;
+  titleYears?: number[];
+  peakEra?: string;
 }
 
 export interface TeamRef {
@@ -83,6 +91,10 @@ export interface TeamRef {
   clubId?: string;
   schoolId?: string;
   tier?: string;
+  stadium?: string;
+  city?: string;
+  colors?: [string, string];
+  capacity?: number;
   profile?: TeamProfile;
   history?: TeamHistory;
 }
@@ -383,22 +395,22 @@ const TEAM_NAME_MAP: Record<string, string> = {
   TEAM_HS_SUNCHEON_BAY: "순천 베이",
 };
 
-const TEAM_PROFILE_MAP: Record<string, { style: string; desc: string; strengths: string[]; funding: "풍부" | "보통" | "부족"; difficulty: "상" | "중" | "하" }> = {
-  TEAM_UNIV_KNSU: { style: "투수 중심", desc: "기초 체력과 투수 운용이 강한 전통의 대학팀.", strengths: ["투수력", "체력"], funding: "보통", difficulty: "중" },
-  TEAM_UNIV_KNU: { style: "수비 안정", desc: "실책 억제와 수비 전술을 중시하는 운영형 팀.", strengths: ["수비", "작전"], funding: "보통", difficulty: "중" },
-  TEAM_UNIV_YONSEI: { style: "공격 지향", desc: "타선 집중력이 높고 공격 템포가 빠른 팀.", strengths: ["타격", "주루"], funding: "풍부", difficulty: "상" },
-  TEAM_UNIV_KOREA: { style: "균형형", desc: "공수 밸런스가 안정적인 전천후 팀 컬러.", strengths: ["밸런스", "집중력"], funding: "풍부", difficulty: "상" },
-  TEAM_UNIV_HANYANG: { style: "피지컬", desc: "강한 피지컬과 장타를 앞세운 파워형 팀.", strengths: ["장타력", "피지컬"], funding: "보통", difficulty: "중" },
-  TEAM_UNIV_CHUNGBUK: { style: "육성형", desc: "유망주 성장과 장기 육성에 강점을 가진 팀.", strengths: ["육성", "멘탈"], funding: "보통", difficulty: "하" },
-  TEAM_UNIV_DONGGUK: { style: "기동형", desc: "기동력과 번트/작전 수행이 뛰어난 팀.", strengths: ["주루", "작전"], funding: "보통", difficulty: "중" },
-  TEAM_IND_SEOUL_PIONEERS: { style: "베테랑 중심", desc: "경험 많은 투수 운용이 강점인 독립팀.", strengths: ["경험", "불펜"], funding: "보통", difficulty: "상" },
-  TEAM_IND_BUSAN_TEMPEST: { style: "공격 지향", desc: "강한 중심타선으로 승부를 거는 공격형 팀.", strengths: ["타격", "클러치"], funding: "보통", difficulty: "중" },
-  TEAM_IND_DAEGU_FALCONS: { style: "수비 중심", desc: "탄탄한 내야 수비와 안정적인 경기 운영.", strengths: ["수비", "집중력"], funding: "부족", difficulty: "중" },
-  TEAM_IND_GWANGJU_STORM: { style: "기동형", desc: "빠른 주루와 번트 플레이를 적극 활용.", strengths: ["주루", "작전"], funding: "부족", difficulty: "하" },
-  TEAM_IND_DAEJEON_HUNTERS: { style: "투수 중심", desc: "선발진 완성도가 높은 로테이션형 팀.", strengths: ["선발", "제구"], funding: "보통", difficulty: "중" },
-  TEAM_IND_INCHEON_ORCAS: { style: "균형형", desc: "특정 약점이 적고 기복이 작은 밸런스 팀.", strengths: ["밸런스", "수비"], funding: "보통", difficulty: "중" },
-  TEAM_IND_SUWON_BLAZE: { style: "파워형", desc: "장타 생산력과 공격 폭발력이 뛰어난 팀.", strengths: ["장타력", "타격"], funding: "풍부", difficulty: "상" },
-  TEAM_IND_ULSAN_PHOENIX: { style: "육성형", desc: "신인·저평가 자원의 성장 폭이 큰 팀.", strengths: ["육성", "적응력"], funding: "부족", difficulty: "하" },
+const TEAM_PROFILE_MAP: Record<string, { style: string; desc: string; strengths: string[]; funding: "최상" | "상" | "중" | "하" | "최하"; difficulty: "최상" | "상" | "중" | "하" | "최하" }> = {
+  TEAM_UNIV_KNSU: { style: "투수 중심", desc: "기초 체력과 투수 운용이 강한 전통의 대학팀.", strengths: ["투수력", "체력"], funding: "중", difficulty: "중" },
+  TEAM_UNIV_KNU: { style: "수비 안정", desc: "실책 억제와 수비 전술을 중시하는 운영형 팀.", strengths: ["수비", "작전"], funding: "중", difficulty: "중" },
+  TEAM_UNIV_YONSEI: { style: "공격 지향", desc: "타선 집중력이 높고 공격 템포가 빠른 팀.", strengths: ["타격", "주루"], funding: "상", difficulty: "상" },
+  TEAM_UNIV_KOREA: { style: "균형형", desc: "공수 밸런스가 안정적인 전천후 팀 컬러.", strengths: ["밸런스", "집중력"], funding: "상", difficulty: "상" },
+  TEAM_UNIV_HANYANG: { style: "피지컬", desc: "강한 피지컬과 장타를 앞세운 파워형 팀.", strengths: ["장타력", "피지컬"], funding: "중", difficulty: "중" },
+  TEAM_UNIV_CHUNGBUK: { style: "육성형", desc: "유망주 성장과 장기 육성에 강점을 가진 팀.", strengths: ["육성", "멘탈"], funding: "중", difficulty: "하" },
+  TEAM_UNIV_DONGGUK: { style: "기동형", desc: "기동력과 번트/작전 수행이 뛰어난 팀.", strengths: ["주루", "작전"], funding: "중", difficulty: "중" },
+  TEAM_IND_SEOUL_PIONEERS: { style: "베테랑 중심", desc: "경험 많은 투수 운용이 강점인 독립팀.", strengths: ["경험", "불펜"], funding: "중", difficulty: "상" },
+  TEAM_IND_BUSAN_TEMPEST: { style: "공격 지향", desc: "강한 중심타선으로 승부를 거는 공격형 팀.", strengths: ["타격", "클러치"], funding: "중", difficulty: "중" },
+  TEAM_IND_DAEGU_FALCONS: { style: "수비 중심", desc: "탄탄한 내야 수비와 안정적인 경기 운영.", strengths: ["수비", "집중력"], funding: "하", difficulty: "중" },
+  TEAM_IND_GWANGJU_STORM: { style: "기동형", desc: "빠른 주루와 번트 플레이를 적극 활용.", strengths: ["주루", "작전"], funding: "하", difficulty: "하" },
+  TEAM_IND_DAEJEON_HUNTERS: { style: "투수 중심", desc: "선발진 완성도가 높은 로테이션형 팀.", strengths: ["선발", "제구"], funding: "중", difficulty: "중" },
+  TEAM_IND_INCHEON_ORCAS: { style: "균형형", desc: "특정 약점이 적고 기복이 작은 밸런스 팀.", strengths: ["밸런스", "수비"], funding: "중", difficulty: "중" },
+  TEAM_IND_SUWON_BLAZE: { style: "파워형", desc: "장타 생산력과 공격 폭발력이 뛰어난 팀.", strengths: ["장타력", "타격"], funding: "상", difficulty: "상" },
+  TEAM_IND_ULSAN_PHOENIX: { style: "육성형", desc: "신인·저평가 자원의 성장 폭이 큰 팀.", strengths: ["육성", "적응력"], funding: "하", difficulty: "하" },
 };
 
 function teamNameFromId(teamId: string): string {

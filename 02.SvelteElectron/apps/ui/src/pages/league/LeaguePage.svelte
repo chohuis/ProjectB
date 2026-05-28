@@ -5,11 +5,13 @@
   import { masterStore, teamMap } from "../../shared/stores/master";
   import type { PitcherSeasonStats, BatterSeasonStats, PlayerSeasonStats } from "../../shared/types/save";
 
-  type LeagueTab = "standings" | "leaderboard";
-  type LbTab     = "pitcher" | "batter";
+  type LeagueTab  = "standings" | "leaderboard";
+  type LbTab      = "pitcher" | "batter";
+  type HsLbGroup  = "all" | "A" | "B";
 
-  let tab:      LeagueTab = "standings";
-  let lbTab:    LbTab     = "pitcher";
+  let tab:        LeagueTab  = "standings";
+  let lbTab:      LbTab      = "pitcher";
+  let hsLbGroup:  HsLbGroup  = "all";
   let selectedLeagueId: string = "";
   let lbLeagueId: string = "";
 
@@ -117,6 +119,22 @@
     return base;
   })();
 
+  $: hsGroupASet = new Set($seasonStore.hsGroupA ?? []);
+  $: hsGroupBSet = new Set($seasonStore.hsGroupB ?? []);
+
+  $: filteredLbStats = (() => {
+    if (lbLeagueId !== "LEAGUE_HIGHSCHOOL" || hsLbGroup === "all") return lbStats;
+    const groupSet = hsLbGroup === "A" ? hsGroupASet : hsGroupBSet;
+    return Object.fromEntries(
+      Object.entries(lbStats).filter(([id]) => {
+        const teamId = id === $gameStore.protagonist.id
+          ? $gameStore.protagonist.teamId
+          : ($masterStore.entities.find((e) => e.id === id)?.teamId ?? "");
+        return groupSet.has(teamId);
+      })
+    ) as Record<string, PlayerSeasonStats>;
+  })();
+
   interface PitcherRow {
     id: string; name: string; team: string;
     w: number; l: number; era: number; whip: number; ip: number; k: number; bb: number;
@@ -137,7 +155,7 @@
     return e ? tName(e.teamId) : "-";
   }
 
-  $: pitcherRows = Object.entries(lbStats)
+  $: pitcherRows = Object.entries(filteredLbStats)
     .filter(([, s]) => s.type === "pitcher" && (s as PitcherSeasonStats).ip >= 10)
     .map(([id, s]) => {
       const p = s as PitcherSeasonStats;
@@ -146,7 +164,7 @@
     .sort((a, b) => a.era - b.era)
     .slice(0, 20) as PitcherRow[];
 
-  $: batterRows = Object.entries(lbStats)
+  $: batterRows = Object.entries(filteredLbStats)
     .filter(([, s]) => s.type === "batter" && (s as BatterSeasonStats).ab >= 20)
     .map(([id, s]) => {
       const b = s as BatterSeasonStats;
@@ -191,41 +209,54 @@
           <h3>{leagueName(selectedLeagueId || myLeagueId)} 순위표</h3>
           <div class="standings-body">
             {#if (selectedLeagueId || myLeagueId) === "LEAGUE_HIGHSCHOOL"}
-              {#each [{ label: "A조", rows: hsGroupAStandings }, { label: "B조", rows: hsGroupBStandings }] as group}
-                <h4 class="group-label">{group.label}</h4>
-                {#if group.rows.length === 0}
-                  <p class="empty">아직 경기 데이터가 없습니다.</p>
-                {:else}
-                  <div class="tbl-wrap">
-                    <table class="stbl full">
-                      <thead>
-                        <tr>
-                          <th>#</th><th>팀</th><th>승</th><th>패</th><th>무</th>
-                          <th>승률</th><th>득점</th><th>실점</th><th>연속</th><th>최근10</th>
+              <div class="tbl-wrap">
+                <table class="stbl full hs-fixed">
+                  <colgroup>
+                    <col style="width:28px"><col style="width:110px">
+                    <col style="width:32px"><col style="width:32px"><col style="width:28px">
+                    <col style="width:44px"><col style="width:40px"><col style="width:40px">
+                    <col style="width:46px"><col style="width:56px">
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th>#</th><th class="t-name">팀</th><th>승</th><th>패</th><th>무</th>
+                      <th>승률</th><th>득점</th><th>실점</th><th>연속</th><th>최근10</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="group-row"><td colspan="10">A조</td></tr>
+                    {#if hsGroupAStandings.length === 0}
+                      <tr><td colspan="10" class="empty-cell">아직 경기 데이터가 없습니다.</td></tr>
+                    {:else}
+                      {#each hsGroupAStandings as s, i}
+                        <tr class:my-row={s.teamId === myTeamId}>
+                          <td>{i + 1}</td>
+                          <td class="t-name">{tName(s.teamId)}</td>
+                          <td class="w">{s.wins}</td><td class="l">{s.losses}</td><td>{s.draws}</td>
+                          <td>{s.winPct.toFixed(2)}</td><td>{s.runsFor}</td><td>{s.runsAgainst}</td>
+                          <td class:streak-w={s.streak.startsWith("W")} class:streak-l={s.streak.startsWith("L")}>{s.streak || "-"}</td>
+                          <td>{s.last10 || "-"}</td>
                         </tr>
-                      </thead>
-                      <tbody>
-                        {#each group.rows as s, i}
-                          <tr class:my-row={s.teamId === myTeamId}>
-                            <td>{i + 1}</td>
-                            <td class="t-name">{tName(s.teamId)}</td>
-                            <td class="w">{s.wins}</td>
-                            <td class="l">{s.losses}</td>
-                            <td>{s.draws}</td>
-                            <td>{s.winPct.toFixed(2)}</td>
-                            <td>{s.runsFor}</td>
-                            <td>{s.runsAgainst}</td>
-                            <td class:streak-w={s.streak.startsWith("W")} class:streak-l={s.streak.startsWith("L")}>
-                              {s.streak || "-"}
-                            </td>
-                            <td>{s.last10 || "-"}</td>
-                          </tr>
-                        {/each}
-                      </tbody>
-                    </table>
-                  </div>
-                {/if}
-              {/each}
+                      {/each}
+                    {/if}
+                    <tr class="group-row"><td colspan="10">B조</td></tr>
+                    {#if hsGroupBStandings.length === 0}
+                      <tr><td colspan="10" class="empty-cell">아직 경기 데이터가 없습니다.</td></tr>
+                    {:else}
+                      {#each hsGroupBStandings as s, i}
+                        <tr class:my-row={s.teamId === myTeamId}>
+                          <td>{i + 1}</td>
+                          <td class="t-name">{tName(s.teamId)}</td>
+                          <td class="w">{s.wins}</td><td class="l">{s.losses}</td><td>{s.draws}</td>
+                          <td>{s.winPct.toFixed(2)}</td><td>{s.runsFor}</td><td>{s.runsAgainst}</td>
+                          <td class:streak-w={s.streak.startsWith("W")} class:streak-l={s.streak.startsWith("L")}>{s.streak || "-"}</td>
+                          <td>{s.last10 || "-"}</td>
+                        </tr>
+                      {/each}
+                    {/if}
+                  </tbody>
+                </table>
+              </div>
             {:else if selectedStandings.length === 0}
               <p class="empty">아직 경기 데이터가 없습니다.</p>
             {:else}
@@ -275,9 +306,18 @@
         </nav>
 
         <div class="lb-content panel">
-          <div class="lb-tabs">
-            <button class:active={lbTab === "pitcher"} on:click={() => (lbTab = "pitcher")}>투수</button>
-            <button class:active={lbTab === "batter"}  on:click={() => (lbTab = "batter")}>타자</button>
+          <div class="lb-top-row">
+            <div class="lb-tabs">
+              <button class:active={lbTab === "pitcher"} on:click={() => (lbTab = "pitcher")}>투수</button>
+              <button class:active={lbTab === "batter"}  on:click={() => (lbTab = "batter")}>타자</button>
+            </div>
+            {#if lbLeagueId === "LEAGUE_HIGHSCHOOL"}
+              <div class="hs-group-tabs">
+                <button class:active={hsLbGroup === "all"} on:click={() => (hsLbGroup = "all")}>통합</button>
+                <button class:active={hsLbGroup === "A"}   on:click={() => (hsLbGroup = "A")}>A조</button>
+                <button class:active={hsLbGroup === "B"}   on:click={() => (hsLbGroup = "B")}>B조</button>
+              </div>
+            {/if}
           </div>
 
           {#if lbTab === "pitcher"}
@@ -471,22 +511,10 @@
 
   .standings-body {
     overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
     min-height: 0;
   }
 
-  .group-label {
-    margin: 6px 0 2px;
-    font-size: 12px;
-    color: #9eb6de;
-  }
-  .group-label:first-child { margin-top: 0; }
-
-  .tbl-wrap {
-    overflow-x: auto;
-  }
+  .tbl-wrap { overflow-x: auto; }
 
   /* 스탯 순위 레이아웃 */
   .lb-layout {
@@ -504,6 +532,20 @@
     overflow: hidden;
   }
 
+  .stbl.hs-fixed { table-layout: fixed; }
+  .stbl .group-row td {
+    background: #0e1d35;
+    color: #7a9ac8;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 6px;
+    text-align: left;
+    letter-spacing: 0.5px;
+  }
+  .stbl .empty-cell { color: #9db2d8; font-size: 11px; text-align: center; padding: 8px; }
+
+  .lb-top-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
   .lb-tabs { display: flex; gap: 6px; }
   .lb-tabs button {
     border: 1px solid #2d4870;
@@ -515,6 +557,18 @@
     cursor: pointer;
   }
   .lb-tabs button.active { background: #2a4a80; border-color: #5c8fd8; color: #e8f0ff; }
+
+  .hs-group-tabs { display: flex; gap: 4px; margin-left: auto; }
+  .hs-group-tabs button {
+    border: 1px solid #2d4870;
+    background: #172540;
+    color: #b0c8ee;
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 11px;
+    cursor: pointer;
+  }
+  .hs-group-tabs button.active { background: #1e4a30; border-color: #3a9a60; color: #80e8a8; }
 
   .lb-table-wrap {
     min-height: 0;

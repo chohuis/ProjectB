@@ -45,7 +45,13 @@
     return team.leagueId === LEAGUE_MAP[leagueTab as Exclude<LeagueTab, "all">];
   });
 
-  $: sortedTeams = [...filteredTeams].sort((a, b) => a.name.localeCompare(b.name, "ko"));
+  const TIER_ORDER: Record<string, number> = { "1군": 0, "메이저": 0, "2군": 1, "마이너": 1, "육성": 2, AAA: 3, AA: 4, A: 5 };
+  function tierOrd(t?: string) { return t != null ? (TIER_ORDER[t] ?? 6) : 0; }
+
+  $: sortedTeams = [...filteredTeams].sort((a, b) => {
+    const td = tierOrd(a.tier) - tierOrd(b.tier);
+    return td !== 0 ? td : a.name.localeCompare(b.name, "ko");
+  });
   $: if (!selectedTeamId || !sortedTeams.some((t) => t.id === selectedTeamId)) {
     selectedTeamId = sortedTeams[0]?.id ?? "";
   }
@@ -112,7 +118,10 @@
           {#if sortedTeams.length === 0}
             <p class="empty">표시할 팀이 없습니다.</p>
           {:else}
-            {#each sortedTeams as team}
+            {#each sortedTeams as team, i}
+              {#if leagueTab !== "all" && i > 0 && team.tier && sortedTeams[i - 1].tier !== team.tier}
+                <div class="tier-sep">{team.tier}</div>
+              {/if}
               <button
                 class:selected={selectedTeamId === team.id}
                 on:click={() => (selectedTeamId = team.id)}
@@ -130,7 +139,7 @@
       <aside class="panel detail">
         {#if selectedTeam}
           <h3>{selectedTeam.name}</h3>
-          <p class="meta">{teamLeagueLabel(selectedTeam.leagueId)} · {selectedTeam.id}</p>
+          <p class="meta">{teamLeagueLabel(selectedTeam.leagueId)}{#if selectedTeam.city} · {selectedTeam.city}{/if}</p>
 
           <div class="metrics">
             <div><span>선수</span><strong>{playerCount}</strong></div>
@@ -148,7 +157,7 @@
                 {@const p = (row.details as any)?.player}
                 <div class="roster-row">
                   <strong>{row.name}</strong>
-                  <span>{row.role === "player" ? (p?.position ?? "-") : row.role}</span>
+                  <span>{row.role === "player" ? (p?.position ?? "-") : row.role === "manager" ? "감독" : row.role === "coach" ? "코치" : row.role === "owner" ? "구단주" : row.role}</span>
                 </div>
               {/each}
             {/if}
@@ -185,7 +194,10 @@
   .rows button { border:1px solid #284269; background:#162a4a; border-radius:8px; padding:7px 6px; color:#e4edff; text-align:left; cursor:pointer; }
   .rows button.selected { border-color:#79abf6; background:#1d3760; }
   .rows button strong { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .detail { display:grid; grid-template-rows:auto auto auto minmax(0,1fr); gap:8px; }
+  .tier-sep { color:#5a7aaa; font-size:11px; padding:4px 6px 2px; display:flex; align-items:center; gap:6px; }
+  .tier-sep::before, .tier-sep::after { content:""; flex:1; height:1px; background:#2a3f62; }
+  .tier-sep::before { flex:0 0 6px; }
+  .detail { display:grid; grid-template-rows:auto auto auto auto minmax(0,1fr); gap:8px; }
   .meta { margin:0; color:#93add6; font-size:12px; }
   .metrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; }
   .metrics div { border:1px solid #2e486f; border-radius:8px; background:#152b4f; padding:7px; display:grid; gap:2px; }
@@ -193,8 +205,9 @@
   .metrics strong { color:#eff5ff; font-size:14px; }
   .roster-head { color:#cfe3ff; font-size:13px; font-weight:700; }
   .roster-rows { min-height:0; overflow:auto; display:grid; gap:4px; }
-  .roster-row { border:1px solid #2b4268; background:#142743; border-radius:8px; padding:6px 8px; display:flex; justify-content:space-between; gap:8px; font-size:12px; }
-  .roster-row span { color:#a8bfdc; }
+  .roster-row { border:1px solid #2b4268; background:#142743; border-radius:8px; padding:6px 8px; display:grid; grid-template-columns:1fr auto; gap:8px; align-items:center; font-size:12px; }
+  .roster-row strong { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .roster-row span { color:#a8bfdc; white-space:nowrap; }
   .empty { color:#9db2d8; font-size:13px; }
   @media (max-width:1180px){ .layout { grid-template-columns:1fr; } }
 </style>

@@ -186,22 +186,14 @@
   };
 
   // ── Step 2 헬퍼 ────────────────────────────────────────────────
-  function difficultyStars(d: string): string {
-    const map: Record<string, string> = { "최상": "★★★★★", "상": "★★★★☆", "중": "★★★☆☆", "하": "★★☆☆☆", "최하": "★☆☆☆☆" };
-    return map[d] ?? d;
-  }
-
   function recordTone(result: string): "gold" | "silver" | "bronze" | "normal" | "dim" {
     if (result === "우승") return "gold";
     if (result === "준우승") return "silver";
-    if (result === "4강") return "bronze";
+    if (result === "플레이오프") return "bronze";
     if (result === "예선 탈락") return "dim";
     return "normal";
   }
 
-  function rivalName(teamId: string): string {
-    return hsTeams.find((t) => t.id === teamId)?.name ?? teamId;
-  }
 </script>
 
 <div class="page">
@@ -287,17 +279,6 @@
                 >
                   <div class="tli-main">
                     <strong>{team.name}</strong>
-                    {#if team.history?.rival}
-                      <span class="tli-rival">라이벌전</span>
-                    {/if}
-                  </div>
-                  <div class="tli-meta">
-                    {#if team.profile?.difficulty}
-                      <span class="tli-stars">{difficultyStars(team.profile.difficulty)}</span>
-                    {/if}
-                    {#if team.profile?.funding}
-                      <span class="tli-funding tli-funding-{team.profile.funding}">{team.profile.funding}</span>
-                    {/if}
                   </div>
                 </button>
               {/each}
@@ -317,12 +298,6 @@
                   <div class="ti-header">
                     <div class="ti-badge-row">
                       <span class="style-badge">{selectedTeam.profile.style}</span>
-                      {#if selectedTeam.profile.funding}
-                        <span class="funding-badge funding-{selectedTeam.profile.funding}">재원 {selectedTeam.profile.funding}</span>
-                      {/if}
-                      {#if selectedTeam.profile.difficulty}
-                        <span class="diff-badge">{difficultyStars(selectedTeam.profile.difficulty)}</span>
-                      {/if}
                     </div>
                     <p class="team-desc">{selectedTeam.profile.desc}</p>
                     <div class="tag-row">
@@ -350,11 +325,6 @@
                     <div class="hs-item">
                       <span>프로 배출</span><strong>{h.proPlayers}명</strong>
                     </div>
-                    {#if h.rival}
-                      <div class="hs-item hs-rival">
-                        <span>라이벌</span><strong>{rivalName(h.rival)}</strong>
-                      </div>
-                    {/if}
                   </div>
 
                   <div class="record-section">
@@ -793,36 +763,11 @@
     font-size: 13px;
   }
 
-  .tli-rival {
-    font-size: 10px;
-    background: #2a1a3a;
-    border: 1px solid #6040a0;
-    color: #b090e8;
-    border-radius: 4px;
-    padding: 1px 5px;
-  }
-
   .tli-meta {
     display: flex;
     align-items: center;
     gap: 5px;
   }
-
-  .tli-stars {
-    font-size: 10px;
-    color: #c8a040;
-    letter-spacing: -1px;
-  }
-
-  .tli-funding {
-    font-size: 10px;
-    border-radius: 4px;
-    padding: 1px 5px;
-  }
-
-  .tli-funding-풍부 { background: #0e2e18; border: 1px solid #2a6040; color: #60c880; }
-  .tli-funding-보통 { background: #1a1e2e; border: 1px solid #3a4060; color: #8090b8; }
-  .tli-funding-부족 { background: #2e1818; border: 1px solid #6a3030; color: #c87060; }
 
   .loading-msg {
     color: #5a7aa8;
@@ -866,26 +811,6 @@
 
   .ti-badge-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 
-  .funding-badge {
-    font-size: 11px;
-    border-radius: 5px;
-    padding: 3px 8px;
-    font-weight: 600;
-  }
-  .funding-풍부 { background: #0e2e18; border: 1px solid #2a6040; color: #60c880; }
-  .funding-보통 { background: #1a1e2e; border: 1px solid #3a4060; color: #8090b8; }
-  .funding-부족 { background: #2e1818; border: 1px solid #6a3030; color: #c87060; }
-
-  .diff-badge {
-    font-size: 12px;
-    color: #c8a040;
-    letter-spacing: -1px;
-    background: #1a1608;
-    border: 1px solid #4a3810;
-    border-radius: 5px;
-    padding: 2px 8px;
-  }
-
   /* ── 역사 통계 ── */
   .history-stats {
     display: grid;
@@ -907,9 +832,6 @@
 
   .hs-item span { font-size: 10px; color: #4a6888; }
   .hs-item strong { font-size: 13px; color: #d8e8ff; font-weight: 700; }
-
-  .hs-rival { grid-column: span 2; }
-  .hs-rival strong { font-size: 12px; }
 
   /* ── 최근 성적 테이블 ── */
   .record-section { display: flex; flex-direction: column; gap: 6px; }

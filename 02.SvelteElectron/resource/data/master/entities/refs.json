@@ -318,8 +318,14 @@
           "수비",
           "코칭"
         ],
-        "funding": "풍부",
-        "difficulty": "최상"
+        "funding": "상",
+        "difficulty": "최상",
+        "prestige": "S",
+        "fanBase": "전국",
+        "facilityLevel": 5,
+        "atmosphere": "체계적",
+        "mediaPressure": "높음",
+        "promoChance": "높음"
       },
       "history": {
         "founded": 1971,
@@ -353,13 +359,41 @@
           },
           {
             "year": 2025,
-            "national": "4강",
+            "national": "플레이오프",
             "regional": "1위",
             "note": "세대교체 과도기, 내년 반등 예고"
           }
         ],
-        "rival": "TEAM_HS_ULSAN_CHARGE"
-      }
+        "rival": "TEAM_HS_ULSAN_CHARGE",
+        "titleYears": [
+          1975,
+          1979,
+          1983,
+          1986,
+          1989,
+          1992,
+          1995,
+          1998,
+          2001,
+          2004,
+          2007,
+          2010,
+          2013,
+          2015,
+          2017,
+          2021,
+          2023,
+          2024
+        ],
+        "peakEra": "2010년대 황금세대 — 7년간 6회 우승"
+      },
+      "city": "서울",
+      "stadium": "서울 이노베이션 고교 야구장",
+      "colors": [
+        "#1565c0",
+        "#ffffff"
+      ],
+      "capacity": 8000
     },
     {
       "id": "TEAM_HS_ULSAN_CHARGE",
@@ -381,8 +415,14 @@
           "장타력",
           "불펜"
         ],
-        "funding": "풍부",
-        "difficulty": "상"
+        "funding": "상",
+        "difficulty": "상",
+        "prestige": "A",
+        "fanBase": "광역",
+        "facilityLevel": 4,
+        "atmosphere": "엄격",
+        "mediaPressure": "보통",
+        "promoChance": "높음"
       },
       "history": {
         "founded": 1998,
@@ -392,7 +432,7 @@
         "recentRecords": [
           {
             "year": 2021,
-            "national": "4강",
+            "national": "플레이오프",
             "regional": "1위",
             "note": "창단 이래 첫 4강 진출"
           },
@@ -404,7 +444,7 @@
           },
           {
             "year": 2023,
-            "national": "4강",
+            "national": "플레이오프",
             "regional": "1위",
             "note": "우승 멤버 졸업 후 재정비"
           },
@@ -421,8 +461,24 @@
             "note": "강력한 에이스 라인업으로 2년 만에 재제패"
           }
         ],
-        "rival": "TEAM_HS_SEOUL_INNOVATION"
-      }
+        "rival": "TEAM_HS_SEOUL_INNOVATION",
+        "titleYears": [
+          1988,
+          1994,
+          2000,
+          2007,
+          2014,
+          2022
+        ],
+        "peakEra": "2000년대 울산의 반란 — 서울과 맞먹는 투수왕국"
+      },
+      "city": "울산",
+      "stadium": "울산 차지 고교 야구장",
+      "colors": [
+        "#e65100",
+        "#ffffff"
+      ],
+      "capacity": 5000
     },
     {
       "id": "TEAM_HS_BUSAN_WAVE",
@@ -443,8 +499,14 @@
           "타격",
           "지역 경험"
         ],
-        "funding": "풍부",
-        "difficulty": "중"
+        "funding": "상",
+        "difficulty": "중",
+        "prestige": "A",
+        "fanBase": "광역",
+        "facilityLevel": 4,
+        "atmosphere": "균형",
+        "mediaPressure": "보통",
+        "promoChance": "높음"
       },
       "history": {
         "founded": 1982,
@@ -460,31 +522,50 @@
           },
           {
             "year": 2022,
-            "national": "8강",
+            "national": "조별 리그",
             "regional": "1위",
             "note": "주전 타선 전원 졸업, 전력 급하락"
           },
           {
             "year": 2023,
-            "national": "8강",
+            "national": "조별 리그",
             "regional": "1위",
             "note": "지역 강자 지위는 유지 중"
           },
           {
             "year": 2024,
-            "national": "16강",
+            "national": "조별 리그",
             "regional": "1위",
             "note": "전국 무대에서 힘 못 쓰는 모습"
           },
           {
             "year": 2025,
-            "national": "8강",
+            "national": "조별 리그",
             "regional": "1위",
             "note": "재정 투입으로 부분 회복세"
           }
         ],
-        "rival": null
-      }
+        "rival": null,
+        "titleYears": [
+          1978,
+          1982,
+          1986,
+          1991,
+          1996,
+          2003,
+          2009,
+          2016,
+          2020
+        ],
+        "peakEra": "90년대 부산 야구 황금기 — 3회 연속 결승 진출"
+      },
+      "city": "부산",
+      "stadium": "부산 웨이브 고교 야구장",
+      "colors": [
+        "#00838f",
+        "#ffffff"
+      ],
+      "capacity": 6000
     },
     {
       "id": "TEAM_HS_DAEGU_HEAT",
@@ -505,8 +586,14 @@
           "선발 투수",
           "제구력"
         ],
-        "funding": "보통",
-        "difficulty": "중"
+        "funding": "중",
+        "difficulty": "중",
+        "prestige": "B",
+        "fanBase": "지역",
+        "facilityLevel": 3,
+        "atmosphere": "엄격",
+        "mediaPressure": "낮음",
+        "promoChance": "보통"
       },
       "history": {
         "founded": 1990,
@@ -516,37 +603,49 @@
         "recentRecords": [
           {
             "year": 2021,
-            "national": "8강",
+            "national": "조별 리그",
             "regional": "2위",
             "note": ""
           },
           {
             "year": 2022,
-            "national": "4강",
+            "national": "플레이오프",
             "regional": "1위",
             "note": "팀 최고 성적, 준결승서 서울에 석패"
           },
           {
             "year": 2023,
-            "national": "8강",
+            "national": "조별 리그",
             "regional": "2위",
             "note": ""
           },
           {
             "year": 2024,
-            "national": "8강",
+            "national": "조별 리그",
             "regional": "2위",
             "note": ""
           },
           {
             "year": 2025,
-            "national": "8강",
+            "national": "조별 리그",
             "regional": "1위",
             "note": ""
           }
         ],
-        "rival": null
-      }
+        "rival": null,
+        "titleYears": [
+          2004,
+          2018
+        ],
+        "peakEra": "2010년대 이후 꾸준한 4강권 유지"
+      },
+      "city": "대구",
+      "stadium": "대구 히트 고교 야구장",
+      "colors": [
+        "#b71c1c",
+        "#ffffff"
+      ],
+      "capacity": 4500
     },
     {
       "id": "TEAM_HS_GWANGJU_VISION",
@@ -567,8 +666,14 @@
           "팀 결속",
           "투지"
         ],
-        "funding": "부족",
-        "difficulty": "최하"
+        "funding": "하",
+        "difficulty": "최하",
+        "prestige": "C",
+        "fanBase": "지역",
+        "facilityLevel": 3,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "promoChance": "보통"
       },
       "history": {
         "founded": 1988,
@@ -578,7 +683,7 @@
         "recentRecords": [
           {
             "year": 2021,
-            "national": "16강",
+            "national": "조별 리그",
             "regional": "3위",
             "note": "예산 삭감 위기 속에서도 전국 진출"
           },
@@ -590,7 +695,7 @@
           },
           {
             "year": 2023,
-            "national": "16강",
+            "national": "조별 리그",
             "regional": "3위",
             "note": "투지로 다시 전국 무대 복귀"
           },
@@ -602,13 +707,22 @@
           },
           {
             "year": 2025,
-            "national": "16강",
+            "national": "조별 리그",
             "regional": "3위",
             "note": "열정으로 다시 전국 무대"
           }
         ],
-        "rival": null
-      }
+        "rival": null,
+        "titleYears": [],
+        "peakEra": "도전과 실패의 반복 속에서 단단해지는 팀"
+      },
+      "city": "광주",
+      "stadium": "광주 비전 고교 야구장",
+      "colors": [
+        "#1b5e20",
+        "#ffd600"
+      ],
+      "capacity": 4000
     },
     {
       "id": "TEAM_HS_DAEJEON_RISE",
@@ -629,8 +743,14 @@
           "구속",
           "체력"
         ],
-        "funding": "풍부",
-        "difficulty": "중"
+        "funding": "상",
+        "difficulty": "중",
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 2,
+        "atmosphere": "자유로운",
+        "mediaPressure": "낮음",
+        "promoChance": "낮음"
       },
       "history": {
         "founded": 2023,
@@ -646,19 +766,28 @@
           },
           {
             "year": 2024,
-            "national": "16강",
+            "national": "조별 리그",
             "regional": "2위",
             "note": "창단 2년차, 급성장 신호"
           },
           {
             "year": 2025,
-            "national": "8강",
+            "national": "조별 리그",
             "regional": "2위",
             "note": "창단 3년차, 전국 무대 존재감 각인"
           }
         ],
-        "rival": null
-      }
+        "rival": null,
+        "titleYears": [],
+        "peakEra": "언더독 정신으로 매 시즌 반란을 노리는 팀"
+      },
+      "city": "대전",
+      "stadium": "대전 라이즈 고교 야구장",
+      "colors": [
+        "#4a148c",
+        "#ffffff"
+      ],
+      "capacity": 3500
     },
     {
       "id": "TEAM_HS_INCHEON_HARBOR",
@@ -679,8 +808,14 @@
           "선수층",
           "계투진"
         ],
-        "funding": "보통",
-        "difficulty": "하"
+        "funding": "중",
+        "difficulty": "하",
+        "prestige": "B",
+        "fanBase": "광역",
+        "facilityLevel": 4,
+        "atmosphere": "체계적",
+        "mediaPressure": "보통",
+        "promoChance": "높음"
       },
       "history": {
         "founded": 1994,
@@ -690,37 +825,48 @@
         "recentRecords": [
           {
             "year": 2021,
-            "national": "8강",
+            "national": "조별 리그",
             "regional": "1위",
             "note": "수원 엣지 꺾고 지역 1위"
           },
           {
             "year": 2022,
-            "national": "16강",
+            "national": "조별 리그",
             "regional": "2위",
             "note": "라이벌전 패배, 지역 2위"
           },
           {
             "year": 2023,
-            "national": "8강",
+            "national": "조별 리그",
             "regional": "1위",
             "note": "설욕 성공, 지역 1위 탈환"
           },
           {
             "year": 2024,
-            "national": "16강",
+            "national": "조별 리그",
             "regional": "2위",
             "note": "라이벌전 다시 패배"
           },
           {
             "year": 2025,
-            "national": "8강",
+            "national": "조별 리그",
             "regional": "1위",
             "note": "3번째 설욕, 지역 1위 탈환"
           }
         ],
-        "rival": "TEAM_HS_SUWON_EDGE"
-      }
+        "rival": "TEAM_HS_SUWON_EDGE",
+        "titleYears": [
+          2019
+        ],
+        "peakEra": "2018~2021 인천 재건기 — 창단 최고 성적 4강 연속"
+      },
+      "city": "인천",
+      "stadium": "인천 하버 고교 야구장",
+      "colors": [
+        "#01579b",
+        "#f57f17"
+      ],
+      "capacity": 5500
     },
     {
       "id": "TEAM_HS_SUWON_EDGE",
@@ -741,8 +887,14 @@
           "무브먼트",
           "구종 다양성"
         ],
-        "funding": "보통",
-        "difficulty": "하"
+        "funding": "중",
+        "difficulty": "하",
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 2,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "promoChance": "낮음"
       },
       "history": {
         "founded": 1997,
@@ -752,37 +904,48 @@
         "recentRecords": [
           {
             "year": 2021,
-            "national": "16강",
+            "national": "조별 리그",
             "regional": "2위",
             "note": "라이벌전 패배"
           },
           {
             "year": 2022,
-            "national": "8강",
+            "national": "조별 리그",
             "regional": "1위",
             "note": "라이벌전 설욕, 첫 8강"
           },
           {
             "year": 2023,
-            "national": "8강",
+            "national": "조별 리그",
             "regional": "2위",
             "note": "라이벌전 패배했지만 전국 8강 유지"
           },
           {
             "year": 2024,
-            "national": "8강",
+            "national": "조별 리그",
             "regional": "1위",
             "note": "라이벌전 설욕, 지역 1위"
           },
           {
             "year": 2025,
-            "national": "16강",
+            "national": "조별 리그",
             "regional": "2위",
             "note": "라이벌전 패배, 지역 2위"
           }
         ],
-        "rival": "TEAM_HS_INCHEON_HARBOR"
-      }
+        "rival": "TEAM_HS_INCHEON_HARBOR",
+        "titleYears": [
+          2012
+        ],
+        "peakEra": "2012년 창단 첫 우승 — 피네스 야구의 기적"
+      },
+      "city": "수원",
+      "stadium": "수원 엣지 고교 야구장",
+      "colors": [
+        "#37474f",
+        "#cfd8dc"
+      ],
+      "capacity": 3000
     },
     {
       "id": "TEAM_KBL_TWINWOLVES_1",
@@ -790,7 +953,69 @@
       "nameEn": "Seoul TwinWolves",
       "leagueId": "LEAGUE_KBL",
       "clubId": "CLUB_KBL_TWINWOLVES",
-      "tier": "1군"
+      "tier": "1군",
+      "city": "서울",
+      "stadium": "서울 울프 아레나",
+      "colors": [
+        "#1a2d5a",
+        "#c8a822"
+      ],
+      "capacity": 22000,
+      "profile": {
+        "prestige": "S",
+        "fanBase": "메가",
+        "facilityLevel": 5,
+        "atmosphere": "엄격",
+        "mediaPressure": "극심",
+        "funding": "최상",
+        "difficulty": "최상",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1985,
+        "rival": "TEAM_KBL_BEARGUARDIANS_1",
+        "titleYears": [
+          1989,
+          1993,
+          1997,
+          2001,
+          2005,
+          2010,
+          2015,
+          2018,
+          2022
+        ],
+        "peakEra": "1990년대 황금기: 박준혁 감독 체제에서 4연패를 달성한 전설적 시기",
+        "summary": "KBL 최다 우승팀. 수도 서울을 대표하는 명문 구단으로 전국구 팬덤을 보유.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "정규시즌 1위",
+            "national": "우승"
+          },
+          {
+            "year": 2022,
+            "regional": "정규시즌 2위",
+            "national": "준우승"
+          },
+          {
+            "year": 2023,
+            "regional": "정규시즌 1위",
+            "national": "우승"
+          },
+          {
+            "year": 2024,
+            "regional": "정규시즌 3위",
+            "national": "4강"
+          },
+          {
+            "year": 2025,
+            "regional": "정규시즌 1위",
+            "national": "우승"
+          }
+        ],
+        "nationalTitles": 9
+      }
     },
     {
       "id": "TEAM_KBL_TWINWOLVES_2",
@@ -798,7 +1023,59 @@
       "nameEn": "Seoul TwinWolves (2nd)",
       "leagueId": "LEAGUE_KBL",
       "clubId": "CLUB_KBL_TWINWOLVES",
-      "tier": "2군"
+      "tier": "2군",
+      "city": "서울",
+      "stadium": "서울 울프 아레나 2군 훈련장",
+      "colors": [
+        "#1a2d5a",
+        "#c8a822"
+      ],
+      "capacity": 3000,
+      "profile": {
+        "prestige": "B",
+        "fanBase": "소규모",
+        "facilityLevel": 4,
+        "atmosphere": "엄격",
+        "mediaPressure": "낮음",
+        "funding": "상",
+        "difficulty": "상",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1990,
+        "rival": "TEAM_KBL_BEARGUARDIANS_2",
+        "titleYears": [],
+        "peakEra": "2군 최고 육성팀으로 여러 KBL 스타 배출",
+        "summary": "트윈울브즈 산하 2군팀. 체계적인 선수 육성 시스템으로 KBL 최고 수준 평가.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "2군리그 2위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "2군리그 1위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "2군리그 1위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "2군리그 2위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "2군리그 1위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_KBL_BEARGUARDIANS_1",
@@ -806,7 +1083,67 @@
       "nameEn": "Seoul BearGuardians",
       "leagueId": "LEAGUE_KBL",
       "clubId": "CLUB_KBL_BEARGUARDIANS",
-      "tier": "1군"
+      "tier": "1군",
+      "city": "서울",
+      "stadium": "장충 베어 돔",
+      "colors": [
+        "#8b0000",
+        "#d4af37"
+      ],
+      "capacity": 20000,
+      "profile": {
+        "prestige": "S",
+        "fanBase": "전국",
+        "facilityLevel": 5,
+        "atmosphere": "체계적",
+        "mediaPressure": "극심",
+        "funding": "최상",
+        "difficulty": "최상",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1987,
+        "rival": "TEAM_KBL_TWINWOLVES_1",
+        "titleYears": [
+          1991,
+          1995,
+          1999,
+          2003,
+          2008,
+          2013,
+          2020
+        ],
+        "peakEra": "2000년대 초 리빌딩 성공: 외국인 에이스 조던 파크와 함께 3연패",
+        "summary": "서울 양대 라이벌 중 하나. 트윈울브즈와의 더비는 KBL 최대 흥행카드.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "정규시즌 2위",
+            "national": "준우승"
+          },
+          {
+            "year": 2022,
+            "regional": "정규시즌 1위",
+            "national": "우승"
+          },
+          {
+            "year": 2023,
+            "regional": "정규시즌 4위",
+            "national": "8강"
+          },
+          {
+            "year": 2024,
+            "regional": "정규시즌 2위",
+            "national": "준우승"
+          },
+          {
+            "year": 2025,
+            "regional": "정규시즌 2위",
+            "national": "준우승"
+          }
+        ],
+        "nationalTitles": 7
+      }
     },
     {
       "id": "TEAM_KBL_BEARGUARDIANS_2",
@@ -814,7 +1151,59 @@
       "nameEn": "Seoul BearGuardians (2nd)",
       "leagueId": "LEAGUE_KBL",
       "clubId": "CLUB_KBL_BEARGUARDIANS",
-      "tier": "2군"
+      "tier": "2군",
+      "city": "서울",
+      "stadium": "장충 베어 돔 보조구장",
+      "colors": [
+        "#8b0000",
+        "#d4af37"
+      ],
+      "capacity": 2500,
+      "profile": {
+        "prestige": "B",
+        "fanBase": "소규모",
+        "facilityLevel": 4,
+        "atmosphere": "체계적",
+        "mediaPressure": "낮음",
+        "funding": "상",
+        "difficulty": "상",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1992,
+        "rival": "TEAM_KBL_TWINWOLVES_2",
+        "titleYears": [],
+        "peakEra": "여러 KBL 올스타 선수들의 등용문",
+        "summary": "베어가디언스 산하 팜팀. 체계적 코칭 스태프로 타격 유망주 발굴에 강점.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "2군리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "2군리그 1위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "2군리그 2위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_KBL_SKYGULLS_1",
@@ -822,7 +1211,63 @@
       "nameEn": "Incheon SkyGulls",
       "leagueId": "LEAGUE_KBL",
       "clubId": "CLUB_KBL_SKYGULLS",
-      "tier": "1군"
+      "tier": "1군",
+      "city": "인천",
+      "stadium": "인천 스카이 스타디움",
+      "colors": [
+        "#005b99",
+        "#ffffff"
+      ],
+      "capacity": 18500,
+      "profile": {
+        "prestige": "A",
+        "fanBase": "광역",
+        "facilityLevel": 4,
+        "atmosphere": "체계적",
+        "mediaPressure": "높음",
+        "funding": "상",
+        "difficulty": "상",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1993,
+        "rival": "TEAM_KBL_GIANTWHALES_1",
+        "titleYears": [
+          2004,
+          2011,
+          2017
+        ],
+        "peakEra": "2010년대 인천의 봄: 홈 어드밴티지를 극대화한 수비 야구로 전국 제패",
+        "summary": "인천 연고의 전통 강호. 탄탄한 수비 야구와 투수 육성으로 정평이 나 있음.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "정규시즌 4위",
+            "national": "8강"
+          },
+          {
+            "year": 2022,
+            "regional": "정규시즌 5위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "정규시즌 3위",
+            "national": "4강"
+          },
+          {
+            "year": 2024,
+            "regional": "정규시즌 3위",
+            "national": "4강"
+          },
+          {
+            "year": 2025,
+            "regional": "정규시즌 4위",
+            "national": "8강"
+          }
+        ],
+        "nationalTitles": 3
+      }
     },
     {
       "id": "TEAM_KBL_SKYGULLS_2",
@@ -830,7 +1275,59 @@
       "nameEn": "Incheon SkyGulls (2nd)",
       "leagueId": "LEAGUE_KBL",
       "clubId": "CLUB_KBL_SKYGULLS",
-      "tier": "2군"
+      "tier": "2군",
+      "city": "인천",
+      "stadium": "인천 스카이 스타디움 보조구장",
+      "colors": [
+        "#005b99",
+        "#ffffff"
+      ],
+      "capacity": 2000,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 3,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1998,
+        "rival": "TEAM_KBL_GIANTWHALES_2",
+        "titleYears": [],
+        "peakEra": "투수 자원 공급 팀으로 명성",
+        "summary": "스카이걸스 2군. 수비 야구 철학을 2군부터 이식해 탄탄한 선수 육성.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "2군리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "2군리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "2군리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "2군리그 4위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_KBL_SOARINGEAGLES_1",
@@ -838,7 +1335,62 @@
       "nameEn": "Daejeon SoaringEagles",
       "leagueId": "LEAGUE_KBL",
       "clubId": "CLUB_KBL_SOARINGEAGLES",
-      "tier": "1군"
+      "tier": "1군",
+      "city": "대전",
+      "stadium": "대전 이글 파크",
+      "colors": [
+        "#2e6b2e",
+        "#f5c518"
+      ],
+      "capacity": 17000,
+      "profile": {
+        "prestige": "A",
+        "fanBase": "지역",
+        "facilityLevel": 4,
+        "atmosphere": "균형",
+        "mediaPressure": "보통",
+        "funding": "상",
+        "difficulty": "상",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1991,
+        "rival": "TEAM_KBL_ROYALLIONS_1",
+        "titleYears": [
+          2007,
+          2016
+        ],
+        "peakEra": "2016년 신화: 언더독으로 시즌 진입 후 포스트시즌 업셋 연속으로 우승",
+        "summary": "충청 지역 유일의 KBL 팀. 안정적 중위권 유지와 간헐적 다크호스 플레이.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "정규시즌 6위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "정규시즌 4위",
+            "national": "8강"
+          },
+          {
+            "year": 2023,
+            "regional": "정규시즌 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "정규시즌 6위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "정규시즌 5위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 2
+      }
     },
     {
       "id": "TEAM_KBL_SOARINGEAGLES_2",
@@ -846,7 +1398,59 @@
       "nameEn": "Daejeon SoaringEagles (2nd)",
       "leagueId": "LEAGUE_KBL",
       "clubId": "CLUB_KBL_SOARINGEAGLES",
-      "tier": "2군"
+      "tier": "2군",
+      "city": "대전",
+      "stadium": "대전 이글 파크 2군 구장",
+      "colors": [
+        "#2e6b2e",
+        "#f5c518"
+      ],
+      "capacity": 2000,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 3,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1995,
+        "rival": "TEAM_KBL_ROYALLIONS_2",
+        "titleYears": [],
+        "peakEra": "중부권 유망주 발굴의 요람",
+        "summary": "소어링이글스 산하 2군. 다크호스 1군의 저력이 되는 유망주 풀.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "2군리그 7위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "2군리그 6위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "2군리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "2군리그 5위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_KBL_ROYALLIONS_1",
@@ -854,7 +1458,64 @@
       "nameEn": "Daegu RoyalLions",
       "leagueId": "LEAGUE_KBL",
       "clubId": "CLUB_KBL_ROYALLIONS",
-      "tier": "1군"
+      "tier": "1군",
+      "city": "대구",
+      "stadium": "대구 라이온 볼파크",
+      "colors": [
+        "#8b1a1a",
+        "#f0e030"
+      ],
+      "capacity": 19000,
+      "profile": {
+        "prestige": "A",
+        "fanBase": "광역",
+        "facilityLevel": 4,
+        "atmosphere": "엄격",
+        "mediaPressure": "높음",
+        "funding": "상",
+        "difficulty": "상",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1989,
+        "rival": "TEAM_KBL_SOARINGEAGLES_1",
+        "titleYears": [
+          1996,
+          2002,
+          2009,
+          2019
+        ],
+        "peakEra": "2000년대 대구 왕조: 강력한 타선과 지역 팬덤의 성원으로 황금기 구축",
+        "summary": "TK 권역을 대표하는 전통 강팀. 열정적인 홈팬 문화로 유명.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "정규시즌 5위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "정규시즌 3위",
+            "national": "4강"
+          },
+          {
+            "year": 2023,
+            "regional": "정규시즌 2위",
+            "national": "준우승"
+          },
+          {
+            "year": 2024,
+            "regional": "정규시즌 4위",
+            "national": "8강"
+          },
+          {
+            "year": 2025,
+            "regional": "정규시즌 3위",
+            "national": "4강"
+          }
+        ],
+        "nationalTitles": 4
+      }
     },
     {
       "id": "TEAM_KBL_ROYALLIONS_2",
@@ -862,7 +1523,59 @@
       "nameEn": "Daegu RoyalLions (2nd)",
       "leagueId": "LEAGUE_KBL",
       "clubId": "CLUB_KBL_ROYALLIONS",
-      "tier": "2군"
+      "tier": "2군",
+      "city": "대구",
+      "stadium": "대구 라이온 볼파크 2군 구장",
+      "colors": [
+        "#8b1a1a",
+        "#f0e030"
+      ],
+      "capacity": 2500,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 3,
+        "atmosphere": "엄격",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1993,
+        "rival": "TEAM_KBL_SOARINGEAGLES_2",
+        "titleYears": [],
+        "peakEra": "TK 지역 특유의 강한 훈련 문화로 체력 좋은 선수 배출",
+        "summary": "로얄라이온스 2군. 강훈련 전통으로 체력 탄탄한 선수를 꾸준히 공급.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "2군리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "2군리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "2군리그 2위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "2군리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "2군리그 3위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_KBL_EMBERTIGERS_1",
@@ -870,7 +1583,61 @@
       "nameEn": "Gwangju EmberTigers",
       "leagueId": "LEAGUE_KBL",
       "clubId": "CLUB_KBL_EMBERTIGERS",
-      "tier": "1군"
+      "tier": "1군",
+      "city": "광주",
+      "stadium": "광주 타이거 구장",
+      "colors": [
+        "#e87722",
+        "#000000"
+      ],
+      "capacity": 16500,
+      "profile": {
+        "prestige": "B",
+        "fanBase": "지역",
+        "facilityLevel": 3,
+        "atmosphere": "자유로운",
+        "mediaPressure": "보통",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1994,
+        "rival": "TEAM_KBL_STEELDINOS_1",
+        "titleYears": [
+          2014
+        ],
+        "peakEra": "2014년 기적: 선발 로테이션 붕괴 위기를 불펜 집중 운용으로 극복하며 첫 우승",
+        "summary": "호남 대표팀. 재정은 중소 규모이지만 특색 있는 팀 문화와 지역 밀착 운영.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "정규시즌 7위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "정규시즌 6위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "정규시즌 7위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "정규시즌 5위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "정규시즌 6위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 1
+      }
     },
     {
       "id": "TEAM_KBL_EMBERTIGERS_2",
@@ -878,7 +1645,59 @@
       "nameEn": "Gwangju EmberTigers (2nd)",
       "leagueId": "LEAGUE_KBL",
       "clubId": "CLUB_KBL_EMBERTIGERS",
-      "tier": "2군"
+      "tier": "2군",
+      "city": "광주",
+      "stadium": "광주 타이거 구장 팜 구장",
+      "colors": [
+        "#e87722",
+        "#000000"
+      ],
+      "capacity": 1500,
+      "profile": {
+        "prestige": "D",
+        "fanBase": "소규모",
+        "facilityLevel": 2,
+        "atmosphere": "자유로운",
+        "mediaPressure": "낮음",
+        "funding": "하",
+        "difficulty": "하",
+        "promoChance": "보통"
+      },
+      "history": {
+        "founded": 1999,
+        "rival": "TEAM_KBL_STEELDINOS_2",
+        "titleYears": [],
+        "peakEra": "제한된 예산 속 자체 발굴 유망주로 팀 구성",
+        "summary": "엠버타이거스 2군. 재정 제약에도 호남 지역 특유의 끈끈함으로 팀 결속.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "2군리그 8위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "2군리그 8위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "2군리그 8위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "2군리그 7위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "2군리그 7위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_KBL_STEELDINOS_1",
@@ -886,7 +1705,61 @@
       "nameEn": "Changwon SteelDinos",
       "leagueId": "LEAGUE_KBL",
       "clubId": "CLUB_KBL_STEELDINOS",
-      "tier": "1군"
+      "tier": "1군",
+      "city": "창원",
+      "stadium": "창원 스틸 스타디움",
+      "colors": [
+        "#2f5f8f",
+        "#c0c0c0"
+      ],
+      "capacity": 17500,
+      "profile": {
+        "prestige": "B",
+        "fanBase": "지역",
+        "facilityLevel": 4,
+        "atmosphere": "체계적",
+        "mediaPressure": "보통",
+        "funding": "상",
+        "difficulty": "중",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1996,
+        "rival": "TEAM_KBL_EMBERTIGERS_1",
+        "titleYears": [
+          2012
+        ],
+        "peakEra": "2012년 스틸 돌풍: 탄탄한 수비진과 속공 야구로 KBL 최초 창원 우승",
+        "summary": "경남 권역 대표. 꾸준한 중위권 전력을 유지하며 2군 양성에도 적극적.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "정규시즌 3위",
+            "national": "4강"
+          },
+          {
+            "year": 2022,
+            "regional": "정규시즌 7위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "정규시즌 6위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "정규시즌 7위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "정규시즌 7위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 1
+      }
     },
     {
       "id": "TEAM_KBL_STEELDINOS_2",
@@ -894,7 +1767,59 @@
       "nameEn": "Changwon SteelDinos (2nd)",
       "leagueId": "LEAGUE_KBL",
       "clubId": "CLUB_KBL_STEELDINOS",
-      "tier": "2군"
+      "tier": "2군",
+      "city": "창원",
+      "stadium": "창원 스틸 스타디움 2군 구장",
+      "colors": [
+        "#2f5f8f",
+        "#c0c0c0"
+      ],
+      "capacity": 2000,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 3,
+        "atmosphere": "체계적",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 2000,
+        "rival": "TEAM_KBL_EMBERTIGERS_2",
+        "titleYears": [],
+        "peakEra": "2군 수비 체계 정립으로 1군 보강 기여",
+        "summary": "스틸디노스 2군. 수비형 선수 중심 육성으로 1군의 든든한 보급처.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "2군리그 6위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "2군리그 7위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "2군리그 7위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "2군리그 8위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "2군리그 6위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_KBL_GIANTWHALES_1",
@@ -902,7 +1827,65 @@
       "nameEn": "Busan GiantWhales",
       "leagueId": "LEAGUE_KBL",
       "clubId": "CLUB_KBL_GIANTWHALES",
-      "tier": "1군"
+      "tier": "1군",
+      "city": "부산",
+      "stadium": "부산 웨일 파크",
+      "colors": [
+        "#003087",
+        "#e8c14a"
+      ],
+      "capacity": 21000,
+      "profile": {
+        "prestige": "A",
+        "fanBase": "광역",
+        "facilityLevel": 5,
+        "atmosphere": "균형",
+        "mediaPressure": "높음",
+        "funding": "상",
+        "difficulty": "상",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1990,
+        "rival": "TEAM_KBL_SKYGULLS_1",
+        "titleYears": [
+          1994,
+          1998,
+          2006,
+          2013,
+          2021
+        ],
+        "peakEra": "1990년대 해양 왕조: 부산 특유의 파워 야구로 황금기 구축",
+        "summary": "제2의 도시 부산을 대표하는 명문. 공격적 운영과 대형 FA 영입으로 유명.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "정규시즌 2위",
+            "national": "우승"
+          },
+          {
+            "year": 2022,
+            "regional": "정규시즌 8위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "정규시즌 8위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "정규시즌 8위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "정규시즌 8위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 5
+      }
     },
     {
       "id": "TEAM_KBL_GIANTWHALES_2",
@@ -910,7 +1893,59 @@
       "nameEn": "Busan GiantWhales (2nd)",
       "leagueId": "LEAGUE_KBL",
       "clubId": "CLUB_KBL_GIANTWHALES",
-      "tier": "2군"
+      "tier": "2군",
+      "city": "부산",
+      "stadium": "부산 웨일 파크 2군 구장",
+      "colors": [
+        "#003087",
+        "#e8c14a"
+      ],
+      "capacity": 2500,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 3,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "상",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1994,
+        "rival": "TEAM_KBL_SKYGULLS_2",
+        "titleYears": [],
+        "peakEra": "공격형 타자 발굴로 1군 타선 강화에 기여",
+        "summary": "자이언트웨일스 2군. 1군의 공격 철학을 그대로 계승해 파워 타자 육성 집중.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "2군리그 1위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "2군리그 2위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "2군리그 6위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "2군리그 6위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "2군리그 8위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_ABL_EMPIRE_1",
@@ -918,7 +1953,71 @@
       "nameEn": "New York Empire",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_EMPIRE",
-      "tier": "메이저"
+      "tier": "메이저",
+      "city": "뉴욕",
+      "stadium": "엠파이어 스타디움",
+      "colors": [
+        "#003087",
+        "#e8312a"
+      ],
+      "capacity": 52000,
+      "profile": {
+        "prestige": "S",
+        "fanBase": "메가",
+        "facilityLevel": 5,
+        "atmosphere": "체계적",
+        "mediaPressure": "극심",
+        "funding": "최상",
+        "difficulty": "최상",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1925,
+        "rival": "TEAM_ABL_HARBORHAWKS_1",
+        "titleYears": [
+          1927,
+          1936,
+          1939,
+          1956,
+          1961,
+          1977,
+          1996,
+          1998,
+          1999,
+          2000,
+          2009
+        ],
+        "peakEra": "1990년대 왕조: 5년간 4회 우승, ABL 역사상 최강 전력으로 평가",
+        "summary": "ABL 최다 우승 구단. 뉴욕의 상징이자 전 세계 야구 팬들이 주목하는 명문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "정규시즌 1위",
+            "national": "우승"
+          },
+          {
+            "year": 2022,
+            "regional": "정규시즌 2위",
+            "national": "준우승"
+          },
+          {
+            "year": 2023,
+            "regional": "정규시즌 1위",
+            "national": "우승"
+          },
+          {
+            "year": 2024,
+            "regional": "정규시즌 3위",
+            "national": "4강"
+          },
+          {
+            "year": 2025,
+            "regional": "정규시즌 1위",
+            "national": "우승"
+          }
+        ],
+        "nationalTitles": 27
+      }
     },
     {
       "id": "TEAM_ABL_EMPIRE_2",
@@ -926,7 +2025,59 @@
       "nameEn": "New York Empire (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_EMPIRE",
-      "tier": "마이너"
+      "tier": "마이너",
+      "city": "뉴욕",
+      "stadium": "엠파이어 팜 파크",
+      "colors": [
+        "#003087",
+        "#e8312a"
+      ],
+      "capacity": 4000,
+      "profile": {
+        "prestige": "B",
+        "fanBase": "소규모",
+        "facilityLevel": 4,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1930,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "뉴욕 엠파이어 팜 유망주 육성팀",
+        "summary": "뉴욕 엠파이어 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "마이너리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "마이너리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "마이너리그 3위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_ABL_HARBORHAWKS_1",
@@ -934,7 +2085,69 @@
       "nameEn": "Boston HarborHawks",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_HARBORHAWKS",
-      "tier": "메이저"
+      "tier": "메이저",
+      "city": "보스턴",
+      "stadium": "하버 볼파크",
+      "colors": [
+        "#bd3039",
+        "#0d2b56"
+      ],
+      "capacity": 37755,
+      "profile": {
+        "prestige": "S",
+        "fanBase": "전국",
+        "facilityLevel": 5,
+        "atmosphere": "체계적",
+        "mediaPressure": "극심",
+        "funding": "최상",
+        "difficulty": "최상",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1901,
+        "rival": "TEAM_ABL_EMPIRE_1",
+        "titleYears": [
+          1903,
+          1912,
+          1915,
+          1916,
+          1918,
+          2004,
+          2007,
+          2013,
+          2018
+        ],
+        "peakEra": "2004년 저주 종식: 86년 무관의 한을 풀고 두 번의 우승으로 왕조 재건",
+        "summary": "전통의 명가. 열광적인 팬 문화와 보수적 구단 운영이 공존하는 ABL의 상징.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "정규시즌 3위",
+            "national": "4강"
+          },
+          {
+            "year": 2022,
+            "regional": "정규시즌 1위",
+            "national": "준우승"
+          },
+          {
+            "year": 2023,
+            "regional": "정규시즌 4위",
+            "national": "8강"
+          },
+          {
+            "year": 2024,
+            "regional": "정규시즌 2위",
+            "national": "우승"
+          },
+          {
+            "year": 2025,
+            "regional": "정규시즌 2위",
+            "national": "준우승"
+          }
+        ],
+        "nationalTitles": 9
+      }
     },
     {
       "id": "TEAM_ABL_HARBORHAWKS_2",
@@ -942,7 +2155,59 @@
       "nameEn": "Boston HarborHawks (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_HARBORHAWKS",
-      "tier": "마이너"
+      "tier": "마이너",
+      "city": "보스턴",
+      "stadium": "하버 팜 필드",
+      "colors": [
+        "#bd3039",
+        "#0d2b56"
+      ],
+      "capacity": 3500,
+      "profile": {
+        "prestige": "B",
+        "fanBase": "소규모",
+        "facilityLevel": 4,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1906,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "보스턴 하버호크스 팜 유망주 육성팀",
+        "summary": "보스턴 하버호크스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "마이너리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "마이너리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "마이너리그 3위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_ABL_LAKESPIRITS_1",
@@ -950,7 +2215,62 @@
       "nameEn": "Cleveland LakeSpirits",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_LAKESPIRITS",
-      "tier": "메이저"
+      "tier": "메이저",
+      "city": "클리블랜드",
+      "stadium": "레이크 필드",
+      "colors": [
+        "#003366",
+        "#cc0000"
+      ],
+      "capacity": 34788,
+      "profile": {
+        "prestige": "B",
+        "fanBase": "지역",
+        "facilityLevel": 3,
+        "atmosphere": "체계적",
+        "mediaPressure": "보통",
+        "funding": "상",
+        "difficulty": "중",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1915,
+        "rival": "TEAM_ABL_MOTORWOLVES_1",
+        "titleYears": [
+          1948,
+          1954
+        ],
+        "peakEra": "1948년 감격: 전후 최강 전력을 앞세워 ABL 제패",
+        "summary": "오대호 연안의 전통팀. 오랜 가뭄 끝에 팬들의 사랑을 받으며 리빌딩 중.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "정규시즌 8위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "정규시즌 9위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "정규시즌 7위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "정규시즌 6위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "정규시즌 7위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 2
+      }
     },
     {
       "id": "TEAM_ABL_LAKESPIRITS_2",
@@ -958,7 +2278,59 @@
       "nameEn": "Cleveland LakeSpirits (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_LAKESPIRITS",
-      "tier": "마이너"
+      "tier": "마이너",
+      "city": "클리블랜드",
+      "stadium": "레이크 팜 구장",
+      "colors": [
+        "#003366",
+        "#cc0000"
+      ],
+      "capacity": 3000,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 2,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1920,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "클리블랜드 레이크스피리츠 팜 유망주 육성팀",
+        "summary": "클리블랜드 레이크스피리츠 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "마이너리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "마이너리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "마이너리그 3위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_ABL_LONESTARS_1",
@@ -966,7 +2338,65 @@
       "nameEn": "Dallas LoneStars",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_LONESTARS",
-      "tier": "메이저"
+      "tier": "메이저",
+      "city": "댈러스",
+      "stadium": "론스타 볼파크",
+      "colors": [
+        "#003087",
+        "#c0111f"
+      ],
+      "capacity": 49115,
+      "profile": {
+        "prestige": "A",
+        "fanBase": "광역",
+        "facilityLevel": 5,
+        "atmosphere": "체계적",
+        "mediaPressure": "높음",
+        "funding": "상",
+        "difficulty": "상",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1972,
+        "rival": "TEAM_ABL_SPACECOMETS_1",
+        "titleYears": [
+          2010,
+          2011,
+          2023,
+          2024,
+          2025
+        ],
+        "peakEra": "2010년대 초 연패와 2020년대 왕조 구축으로 최근 ABL 최강 전력",
+        "summary": "텍사스 최대 도시의 대형 구단. 빅마켓 공격 운영으로 FA 시장 큰손.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "정규시즌 2위",
+            "national": "준우승"
+          },
+          {
+            "year": 2022,
+            "regional": "정규시즌 4위",
+            "national": "8강"
+          },
+          {
+            "year": 2023,
+            "regional": "정규시즌 1위",
+            "national": "우승"
+          },
+          {
+            "year": 2024,
+            "regional": "정규시즌 1위",
+            "national": "우승"
+          },
+          {
+            "year": 2025,
+            "regional": "정규시즌 1위",
+            "national": "우승"
+          }
+        ],
+        "nationalTitles": 5
+      }
     },
     {
       "id": "TEAM_ABL_LONESTARS_2",
@@ -974,7 +2404,59 @@
       "nameEn": "Dallas LoneStars (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_LONESTARS",
-      "tier": "마이너"
+      "tier": "마이너",
+      "city": "댈러스",
+      "stadium": "론스타 팜 필드",
+      "colors": [
+        "#003087",
+        "#c0111f"
+      ],
+      "capacity": 4500,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 4,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1977,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "댈러스 론스타스 팜 유망주 육성팀",
+        "summary": "댈러스 론스타스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "마이너리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "마이너리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "마이너리그 3위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_ABL_MOTORWOLVES_1",
@@ -982,7 +2464,64 @@
       "nameEn": "Detroit MotorWolves",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_MOTORWOLVES",
-      "tier": "메이저"
+      "tier": "메이저",
+      "city": "디트로이트",
+      "stadium": "모터시티 파크",
+      "colors": [
+        "#0c2340",
+        "#fa4616"
+      ],
+      "capacity": 41083,
+      "profile": {
+        "prestige": "B",
+        "fanBase": "지역",
+        "facilityLevel": 3,
+        "atmosphere": "체계적",
+        "mediaPressure": "보통",
+        "funding": "상",
+        "difficulty": "중",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1901,
+        "rival": "TEAM_ABL_LAKESPIRITS_1",
+        "titleYears": [
+          1935,
+          1945,
+          1968,
+          1984
+        ],
+        "peakEra": "1968년 격동의 우승: 도시 혼란 속 팀의 단결로 일군 감동의 챔피언십",
+        "summary": "자동차 도시 디트로이트의 자존심. 산업 쇠퇴와 함께 팀도 재건 중.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "정규시즌 12위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "정규시즌 11위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "정규시즌 10위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "정규시즌 9위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "정규시즌 10위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 4
+      }
     },
     {
       "id": "TEAM_ABL_MOTORWOLVES_2",
@@ -990,7 +2529,59 @@
       "nameEn": "Detroit MotorWolves (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_MOTORWOLVES",
-      "tier": "마이너"
+      "tier": "마이너",
+      "city": "디트로이트",
+      "stadium": "모터울브즈 팜 구장",
+      "colors": [
+        "#0c2340",
+        "#fa4616"
+      ],
+      "capacity": 3500,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 2,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1906,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "디트로이트 모터울브즈 팜 유망주 육성팀",
+        "summary": "디트로이트 모터울브즈 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "마이너리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "마이너리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "마이너리그 3위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_ABL_WAVERIDERS_1",
@@ -998,7 +2589,62 @@
       "nameEn": "Miami WaveRiders",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_WAVERIDERS",
-      "tier": "메이저"
+      "tier": "메이저",
+      "city": "마이애미",
+      "stadium": "오션뷰 파크",
+      "colors": [
+        "#00a3e0",
+        "#ef3340"
+      ],
+      "capacity": 36742,
+      "profile": {
+        "prestige": "B",
+        "fanBase": "지역",
+        "facilityLevel": 4,
+        "atmosphere": "체계적",
+        "mediaPressure": "보통",
+        "funding": "상",
+        "difficulty": "중",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1993,
+        "rival": "TEAM_ABL_PEACHTREEFALCONS_1",
+        "titleYears": [
+          1997,
+          2003
+        ],
+        "peakEra": "1997년 신생팀 기적: 창단 5년차 FL 최단기 우승으로 야구계 충격",
+        "summary": "플로리다 최남단의 신흥 구단. 기복은 있지만 간헐적 다크호스 성격.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "정규시즌 9위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "정규시즌 7위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "정규시즌 11위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "정규시즌 10위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "정규시즌 11위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 2
+      }
     },
     {
       "id": "TEAM_ABL_WAVERIDERS_2",
@@ -1006,7 +2652,59 @@
       "nameEn": "Miami WaveRiders (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_WAVERIDERS",
-      "tier": "마이너"
+      "tier": "마이너",
+      "city": "마이애미",
+      "stadium": "웨이브라이더스 팜 필드",
+      "colors": [
+        "#00a3e0",
+        "#ef3340"
+      ],
+      "capacity": 3000,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 3,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1998,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "마이애미 웨이브라이더스 팜 유망주 육성팀",
+        "summary": "마이애미 웨이브라이더스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "마이너리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "마이너리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "마이너리그 3위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_ABL_RAINARROWS_1",
@@ -1014,7 +2712,61 @@
       "nameEn": "Seattle RainArrows",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_RAINARROWS",
-      "tier": "메이저"
+      "tier": "메이저",
+      "city": "시애틀",
+      "stadium": "레인포레스트 파크",
+      "colors": [
+        "#0c2c56",
+        "#005c5c"
+      ],
+      "capacity": 47929,
+      "profile": {
+        "prestige": "A",
+        "fanBase": "광역",
+        "facilityLevel": 4,
+        "atmosphere": "체계적",
+        "mediaPressure": "높음",
+        "funding": "상",
+        "difficulty": "상",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1977,
+        "rival": "TEAM_ABL_BAYSEALS_1",
+        "titleYears": [
+          2001
+        ],
+        "peakEra": "2001년 서부 패권: 정규시즌 116승 역대 최다승 기록 후 챔피언십 제패",
+        "summary": "북서부 해안 대표팀. 꾸준한 강팀 이미지와 넓은 홈구장이 특징.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "정규시즌 5위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "정규시즌 5위",
+            "national": "8강"
+          },
+          {
+            "year": 2023,
+            "regional": "정규시즌 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "정규시즌 4위",
+            "national": "4강"
+          },
+          {
+            "year": 2025,
+            "regional": "정규시즌 5위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 1
+      }
     },
     {
       "id": "TEAM_ABL_RAINARROWS_2",
@@ -1022,7 +2774,59 @@
       "nameEn": "Seattle RainArrows (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_RAINARROWS",
-      "tier": "마이너"
+      "tier": "마이너",
+      "city": "시애틀",
+      "stadium": "레인애로우스 팜 구장",
+      "colors": [
+        "#0c2c56",
+        "#005c5c"
+      ],
+      "capacity": 4000,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 3,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1982,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "시애틀 레인애로우스 팜 유망주 육성팀",
+        "summary": "시애틀 레인애로우스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "마이너리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "마이너리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "마이너리그 3위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_ABL_WINDBEARS_1",
@@ -1030,7 +2834,66 @@
       "nameEn": "Chicago WindBears",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_WINDBEARS",
-      "tier": "메이저"
+      "tier": "메이저",
+      "city": "시카고",
+      "stadium": "레이크사이드 필드",
+      "colors": [
+        "#002244",
+        "#cc0000"
+      ],
+      "capacity": 41268,
+      "profile": {
+        "prestige": "A",
+        "fanBase": "전국",
+        "facilityLevel": 4,
+        "atmosphere": "체계적",
+        "mediaPressure": "높음",
+        "funding": "상",
+        "difficulty": "상",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1900,
+        "rival": "TEAM_ABL_RIVERCARDINALS_1",
+        "titleYears": [
+          1906,
+          1907,
+          1908,
+          1916,
+          1945,
+          2016
+        ],
+        "peakEra": "1900년대 초 3연패와 2016년 108년 만의 우승 — ABL 최장 가뭄 종식",
+        "summary": "제2의 도시 시카고의 자존심. 오랜 역사와 열광적 팬 문화의 명문 구단.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "정규시즌 6위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "정규시즌 6위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "정규시즌 6위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "정규시즌 5위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "정규시즌 4위",
+            "national": "8강"
+          }
+        ],
+        "nationalTitles": 6
+      }
     },
     {
       "id": "TEAM_ABL_WINDBEARS_2",
@@ -1038,7 +2901,59 @@
       "nameEn": "Chicago WindBears (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_WINDBEARS",
-      "tier": "마이너"
+      "tier": "마이너",
+      "city": "시카고",
+      "stadium": "윈드베어스 팜 파크",
+      "colors": [
+        "#002244",
+        "#cc0000"
+      ],
+      "capacity": 4000,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 3,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1905,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "시카고 윈드베어스 팜 유망주 육성팀",
+        "summary": "시카고 윈드베어스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "마이너리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "마이너리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "마이너리그 3위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_ABL_MOUNTAINPEAKS_1",
@@ -1046,7 +2961,61 @@
       "nameEn": "Denver MountainPeaks",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_MOUNTAINPEAKS",
-      "tier": "메이저"
+      "tier": "메이저",
+      "city": "덴버",
+      "stadium": "마운틴 에어 파크",
+      "colors": [
+        "#33006f",
+        "#c4ced4"
+      ],
+      "capacity": 46897,
+      "profile": {
+        "prestige": "A",
+        "fanBase": "지역",
+        "facilityLevel": 4,
+        "atmosphere": "체계적",
+        "mediaPressure": "높음",
+        "funding": "상",
+        "difficulty": "상",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1993,
+        "rival": "TEAM_ABL_DESERTSERPENTS_1",
+        "titleYears": [
+          2007
+        ],
+        "peakEra": "2007년 고원의 기적: 고지대 홈 어드밴티지를 극대화한 전략 우승",
+        "summary": "로키산맥 고지대 홈이 강점. 서부 중부 지역을 대표하는 강팀.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "정규시즌 7위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "정규시즌 8위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "정규시즌 9위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "정규시즌 7위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "정규시즌 8위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 1
+      }
     },
     {
       "id": "TEAM_ABL_MOUNTAINPEAKS_2",
@@ -1054,7 +3023,59 @@
       "nameEn": "Denver MountainPeaks (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_MOUNTAINPEAKS",
-      "tier": "마이너"
+      "tier": "마이너",
+      "city": "덴버",
+      "stadium": "마운틴픽스 팜 필드",
+      "colors": [
+        "#33006f",
+        "#c4ced4"
+      ],
+      "capacity": 3500,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 3,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1998,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "덴버 마운틴픽스 팜 유망주 육성팀",
+        "summary": "덴버 마운틴픽스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "마이너리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "마이너리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "마이너리그 3위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_ABL_SPACECOMETS_1",
@@ -1062,7 +3083,63 @@
       "nameEn": "Houston SpaceComets",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_SPACECOMETS",
-      "tier": "메이저"
+      "tier": "메이저",
+      "city": "휴스턴",
+      "stadium": "스페이스 스타디움",
+      "colors": [
+        "#eb6e1f",
+        "#002d62"
+      ],
+      "capacity": 41168,
+      "profile": {
+        "prestige": "A",
+        "fanBase": "광역",
+        "facilityLevel": 5,
+        "atmosphere": "체계적",
+        "mediaPressure": "높음",
+        "funding": "상",
+        "difficulty": "상",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1962,
+        "rival": "TEAM_ABL_LONESTARS_1",
+        "titleYears": [
+          2017,
+          2019,
+          2022
+        ],
+        "peakEra": "2017년 허리케인 이후 감동 우승: 도시 재건과 함께한 역사적 챔피언십",
+        "summary": "우주도시 휴스턴 대표. 데이터 야구와 투수 육성의 선도 구단.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "정규시즌 4위",
+            "national": "8강"
+          },
+          {
+            "year": 2022,
+            "regional": "정규시즌 2위",
+            "national": "우승"
+          },
+          {
+            "year": 2023,
+            "regional": "정규시즌 3위",
+            "national": "4강"
+          },
+          {
+            "year": 2024,
+            "regional": "정규시즌 3위",
+            "national": "4강"
+          },
+          {
+            "year": 2025,
+            "regional": "정규시즌 3위",
+            "national": "4강"
+          }
+        ],
+        "nationalTitles": 3
+      }
     },
     {
       "id": "TEAM_ABL_SPACECOMETS_2",
@@ -1070,7 +3147,59 @@
       "nameEn": "Houston SpaceComets (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_SPACECOMETS",
-      "tier": "마이너"
+      "tier": "마이너",
+      "city": "휴스턴",
+      "stadium": "스페이스코밋츠 팜 구장",
+      "colors": [
+        "#eb6e1f",
+        "#002d62"
+      ],
+      "capacity": 4000,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 4,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1967,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "휴스턴 스페이스코밋츠 팜 유망주 육성팀",
+        "summary": "휴스턴 스페이스코밋츠 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "마이너리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "마이너리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "마이너리그 3위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_ABL_SUNDRAGONS_1",
@@ -1078,7 +3207,67 @@
       "nameEn": "Los Angeles SunDragons",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_SUNDRAGONS",
-      "tier": "메이저"
+      "tier": "메이저",
+      "city": "로스앤젤레스",
+      "stadium": "선라이즈 스타디움",
+      "colors": [
+        "#003da5",
+        "#ef3e42"
+      ],
+      "capacity": 56000,
+      "profile": {
+        "prestige": "S",
+        "fanBase": "메가",
+        "facilityLevel": 5,
+        "atmosphere": "체계적",
+        "mediaPressure": "극심",
+        "funding": "최상",
+        "difficulty": "최상",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1958,
+        "rival": "TEAM_ABL_BAYSEALS_1",
+        "titleYears": [
+          1959,
+          1963,
+          1965,
+          1988,
+          2020,
+          2021,
+          2024
+        ],
+        "peakEra": "1960년대 투수 왕조: 에이스 삼각편대로 서부 지배, 2020년대 재건 성공",
+        "summary": "LA의 상징적 구단. 엔터테인먼트 수도답게 스타 선수 영입과 흥행에 강점.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "정규시즌 2위",
+            "national": "우승"
+          },
+          {
+            "year": 2022,
+            "regional": "정규시즌 3위",
+            "national": "4강"
+          },
+          {
+            "year": 2023,
+            "regional": "정규시즌 2위",
+            "national": "준우승"
+          },
+          {
+            "year": 2024,
+            "regional": "정규시즌 2위",
+            "national": "우승"
+          },
+          {
+            "year": 2025,
+            "regional": "정규시즌 2위",
+            "national": "준우승"
+          }
+        ],
+        "nationalTitles": 7
+      }
     },
     {
       "id": "TEAM_ABL_SUNDRAGONS_2",
@@ -1086,7 +3275,59 @@
       "nameEn": "Los Angeles SunDragons (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_SUNDRAGONS",
-      "tier": "마이너"
+      "tier": "마이너",
+      "city": "로스앤젤레스",
+      "stadium": "선드래곤스 팜 구장",
+      "colors": [
+        "#003da5",
+        "#ef3e42"
+      ],
+      "capacity": 5000,
+      "profile": {
+        "prestige": "B",
+        "fanBase": "소규모",
+        "facilityLevel": 4,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1963,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "로스앤젤레스 선드래곤스 팜 유망주 육성팀",
+        "summary": "LA 선드래곤스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "마이너리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "마이너리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "마이너리그 3위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_ABL_DESERTSERPENTS_1",
@@ -1094,7 +3335,61 @@
       "nameEn": "Phoenix DesertSerpents",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_DESERTSERPENTS",
-      "tier": "메이저"
+      "tier": "메이저",
+      "city": "피닉스",
+      "stadium": "데저트 파크",
+      "colors": [
+        "#a71930",
+        "#e3d4ad"
+      ],
+      "capacity": 48519,
+      "profile": {
+        "prestige": "B",
+        "fanBase": "광역",
+        "facilityLevel": 4,
+        "atmosphere": "체계적",
+        "mediaPressure": "보통",
+        "funding": "상",
+        "difficulty": "중",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1998,
+        "rival": "TEAM_ABL_MOUNTAINPEAKS_1",
+        "titleYears": [
+          2001
+        ],
+        "peakEra": "2001년 창단 4년 만의 우승: 풀스쿼드 야구의 승리로 ABL 최단기 신기록",
+        "summary": "사막 기후의 홈을 활용한 공격 야구. 꾸준한 포스트시즌 경쟁팀.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "정규시즌 10위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "정규시즌 10위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "정규시즌 8위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "정규시즌 8위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "정규시즌 9위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 1
+      }
     },
     {
       "id": "TEAM_ABL_DESERTSERPENTS_2",
@@ -1102,7 +3397,59 @@
       "nameEn": "Phoenix DesertSerpents (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_DESERTSERPENTS",
-      "tier": "마이너"
+      "tier": "마이너",
+      "city": "피닉스",
+      "stadium": "데저트서펀츠 팜 필드",
+      "colors": [
+        "#a71930",
+        "#e3d4ad"
+      ],
+      "capacity": 4000,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 3,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 2003,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "피닉스 데저트서펀츠 팜 유망주 육성팀",
+        "summary": "피닉스 데저트서펀츠 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "마이너리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "마이너리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "마이너리그 3위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_ABL_COASTALRAYS_1",
@@ -1110,7 +3457,59 @@
       "nameEn": "San Diego CoastalRays",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_COASTALRAYS",
-      "tier": "메이저"
+      "tier": "메이저",
+      "city": "샌디에이고",
+      "stadium": "코스털 파크",
+      "colors": [
+        "#002d62",
+        "#ffc425"
+      ],
+      "capacity": 40162,
+      "profile": {
+        "prestige": "B",
+        "fanBase": "지역",
+        "facilityLevel": 3,
+        "atmosphere": "체계적",
+        "mediaPressure": "보통",
+        "funding": "상",
+        "difficulty": "중",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1969,
+        "rival": "TEAM_ABL_SUNDRAGONS_1",
+        "titleYears": [],
+        "peakEra": "2002년 포스트시즌 최고 진출: 준우승으로 첫 우승 문턱까지",
+        "summary": "서부 해안의 중견 구단. 아직 우승 없지만 꾸준한 중위권 경쟁력 보유.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "정규시즌 11위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "정규시즌 12위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "정규시즌 12위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "정규시즌 12위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "정규시즌 12위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_ABL_COASTALRAYS_2",
@@ -1118,7 +3517,59 @@
       "nameEn": "San Diego CoastalRays (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_COASTALRAYS",
-      "tier": "마이너"
+      "tier": "마이너",
+      "city": "샌디에이고",
+      "stadium": "코스털레이스 팜 구장",
+      "colors": [
+        "#002d62",
+        "#ffc425"
+      ],
+      "capacity": 3500,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 2,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1974,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "샌디에이고 코스털레이스 팜 유망주 육성팀",
+        "summary": "샌디에이고 코스털레이스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "마이너리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "마이너리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "마이너리그 3위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_ABL_BAYSEALS_1",
@@ -1126,7 +3577,65 @@
       "nameEn": "San Francisco BaySeals",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_BAYSEALS",
-      "tier": "메이저"
+      "tier": "메이저",
+      "city": "샌프란시스코",
+      "stadium": "베이뷰 파크",
+      "colors": [
+        "#fd5a1e",
+        "#27251f"
+      ],
+      "capacity": 41915,
+      "profile": {
+        "prestige": "A",
+        "fanBase": "광역",
+        "facilityLevel": 4,
+        "atmosphere": "체계적",
+        "mediaPressure": "높음",
+        "funding": "상",
+        "difficulty": "상",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1958,
+        "rival": "TEAM_ABL_SUNDRAGONS_1",
+        "titleYears": [
+          2010,
+          2012,
+          2014,
+          2019,
+          2020
+        ],
+        "peakEra": "2010년대 홀수해 왕조: 5년간 3회 우승의 독특한 격년 우승 패턴",
+        "summary": "베이 에어리어 대표팀. 투수 중심 야구와 수비 우선 전략의 명가.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "정규시즌 5위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "정규시즌 4위",
+            "national": "8강"
+          },
+          {
+            "year": 2023,
+            "regional": "정규시즌 4위",
+            "national": "4강"
+          },
+          {
+            "year": 2024,
+            "regional": "정규시즌 5위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "정규시즌 6위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 5
+      }
     },
     {
       "id": "TEAM_ABL_BAYSEALS_2",
@@ -1134,7 +3643,59 @@
       "nameEn": "San Francisco BaySeals (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_BAYSEALS",
-      "tier": "마이너"
+      "tier": "마이너",
+      "city": "샌프란시스코",
+      "stadium": "베이씰스 팜 필드",
+      "colors": [
+        "#fd5a1e",
+        "#27251f"
+      ],
+      "capacity": 4000,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 3,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1963,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "샌프란시스코 베이씰스 팜 유망주 육성팀",
+        "summary": "샌프란시스코 베이씰스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "마이너리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "마이너리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "마이너리그 3위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_ABL_RIVERCARDINALS_1",
@@ -1142,7 +3703,71 @@
       "nameEn": "St. Louis RiverCardinals",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_RIVERCARDINALS",
-      "tier": "메이저"
+      "tier": "메이저",
+      "city": "세인트루이스",
+      "stadium": "리버프론트 파크",
+      "colors": [
+        "#c41e3a",
+        "#0c2340"
+      ],
+      "capacity": 45494,
+      "profile": {
+        "prestige": "A",
+        "fanBase": "전국",
+        "facilityLevel": 4,
+        "atmosphere": "체계적",
+        "mediaPressure": "높음",
+        "funding": "상",
+        "difficulty": "상",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1900,
+        "rival": "TEAM_ABL_WINDBEARS_1",
+        "titleYears": [
+          1926,
+          1931,
+          1934,
+          1942,
+          1944,
+          1946,
+          1964,
+          1967,
+          1982,
+          2006,
+          2011
+        ],
+        "peakEra": "내셔널 리그 최다 우승 구단: 100년 역사의 전통과 팬 사랑이 공존",
+        "summary": "중부 야구의 성지. 야구 문화가 일상에 녹아있는 진정한 야구 도시 팀.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "정규시즌 6위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "정규시즌 5위",
+            "national": "8강"
+          },
+          {
+            "year": 2023,
+            "regional": "정규시즌 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "정규시즌 6위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "정규시즌 5위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 11
+      }
     },
     {
       "id": "TEAM_ABL_RIVERCARDINALS_2",
@@ -1150,7 +3775,59 @@
       "nameEn": "St. Louis RiverCardinals (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_RIVERCARDINALS",
-      "tier": "마이너"
+      "tier": "마이너",
+      "city": "세인트루이스",
+      "stadium": "리버카디널스 팜 구장",
+      "colors": [
+        "#c41e3a",
+        "#0c2340"
+      ],
+      "capacity": 4000,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 3,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1905,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "세인트루이스 리버카디널스 팜 유망주 육성팀",
+        "summary": "세인트루이스 리버카디널스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "마이너리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "마이너리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "마이너리그 3위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_ABL_PEACHTREEFALCONS_1",
@@ -1158,7 +3835,62 @@
       "nameEn": "Atlanta PeachtreeFalcons",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_PEACHTREEFALCONS",
-      "tier": "메이저"
+      "tier": "메이저",
+      "city": "애틀랜타",
+      "stadium": "피치트리 스타디움",
+      "colors": [
+        "#ce1141",
+        "#002d62"
+      ],
+      "capacity": 41084,
+      "profile": {
+        "prestige": "A",
+        "fanBase": "광역",
+        "facilityLevel": 4,
+        "atmosphere": "체계적",
+        "mediaPressure": "높음",
+        "funding": "상",
+        "difficulty": "상",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1966,
+        "rival": "TEAM_ABL_WAVERIDERS_1",
+        "titleYears": [
+          1995,
+          2021
+        ],
+        "peakEra": "1990년대 왕조 기반: 14년 연속 지구 우승이라는 전무후무한 기록",
+        "summary": "미국 남동부 대표팀. 90년대 전성기 후 2021년 우승으로 왕조 재건 선언.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "정규시즌 4위",
+            "national": "우승"
+          },
+          {
+            "year": 2022,
+            "regional": "정규시즌 3위",
+            "national": "4강"
+          },
+          {
+            "year": 2023,
+            "regional": "정규시즌 3위",
+            "national": "4강"
+          },
+          {
+            "year": 2024,
+            "regional": "정규시즌 4위",
+            "national": "8강"
+          },
+          {
+            "year": 2025,
+            "regional": "정규시즌 3위",
+            "national": "4강"
+          }
+        ],
+        "nationalTitles": 2
+      }
     },
     {
       "id": "TEAM_ABL_PEACHTREEFALCONS_2",
@@ -1166,7 +3898,59 @@
       "nameEn": "Atlanta PeachtreeFalcons (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_PEACHTREEFALCONS",
-      "tier": "마이너"
+      "tier": "마이너",
+      "city": "애틀랜타",
+      "stadium": "피치트리팰컨스 팜 필드",
+      "colors": [
+        "#ce1141",
+        "#002d62"
+      ],
+      "capacity": 3500,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 3,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1971,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "애틀랜타 피치트리팰컨스 팜 유망주 육성팀",
+        "summary": "애틀랜타 피치트리팰컨스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "마이너리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "마이너리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "마이너리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "마이너리그 3위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_JBL_CL_NEONCRANES_1",
@@ -1174,7 +3958,82 @@
       "nameEn": "Tokyo Neon Cranes (1st)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_NEONCRANES",
-      "tier": "1군"
+      "tier": "1군",
+      "city": "도쿄",
+      "stadium": "도쿄 네온 돔",
+      "colors": [
+        "#003087",
+        "#c8a822"
+      ],
+      "capacity": 55000,
+      "profile": {
+        "prestige": "S",
+        "fanBase": "메가",
+        "facilityLevel": 5,
+        "atmosphere": "체계적",
+        "mediaPressure": "극심",
+        "funding": "최상",
+        "difficulty": "최상",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1934,
+        "rival": "TEAM_JBL_CL_TEMPOSTINGS_1",
+        "titleYears": [
+          1936,
+          1943,
+          1947,
+          1950,
+          1952,
+          1953,
+          1955,
+          1956,
+          1961,
+          1965,
+          1966,
+          1967,
+          1968,
+          1972,
+          1981,
+          1990,
+          1994,
+          2000,
+          2002,
+          2004,
+          2012,
+          2020
+        ],
+        "peakEra": "1960년대 V9 왕조: 9년 연속 리그 우승으로 JBL 역사상 가장 위대한 팀 기록",
+        "summary": "JBL 최다 우승 구단이자 일본 야구의 상징. 도쿄 연고로 전국구 팬덤과 막강한 재력 보유.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "센트럴리그 1위",
+            "national": "우승"
+          },
+          {
+            "year": 2022,
+            "regional": "센트럴리그 2위",
+            "national": "준우승"
+          },
+          {
+            "year": 2023,
+            "regional": "센트럴리그 1위",
+            "national": "우승"
+          },
+          {
+            "year": 2024,
+            "regional": "센트럴리그 1위",
+            "national": "4강"
+          },
+          {
+            "year": 2025,
+            "regional": "센트럴리그 1위",
+            "national": "우승"
+          }
+        ],
+        "nationalTitles": 22
+      }
     },
     {
       "id": "TEAM_JBL_CL_NEONCRANES_2",
@@ -1182,7 +4041,59 @@
       "nameEn": "Tokyo Neon Cranes (2nd)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_NEONCRANES",
-      "tier": "2군"
+      "tier": "2군",
+      "city": "도쿄",
+      "stadium": "크레인즈 팜 필드",
+      "colors": [
+        "#003087",
+        "#c8a822"
+      ],
+      "capacity": 4500,
+      "profile": {
+        "prestige": "B",
+        "fanBase": "소규모",
+        "facilityLevel": 4,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1939,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "도쿄 2군 유망주 육성 팜팀",
+        "summary": "도쿄 네온 크레인즈 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "2군리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "2군리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "2군리그 4위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_JBL_CL_TEMPOSTINGS_1",
@@ -1190,7 +4101,66 @@
       "nameEn": "Osaka Tempo Stings (1st)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
-      "tier": "1군"
+      "tier": "1군",
+      "city": "오사카",
+      "stadium": "오사카 템포 돔",
+      "colors": [
+        "#002b5c",
+        "#d00000"
+      ],
+      "capacity": 48000,
+      "profile": {
+        "prestige": "S",
+        "fanBase": "메가",
+        "facilityLevel": 5,
+        "atmosphere": "체계적",
+        "mediaPressure": "극심",
+        "funding": "최상",
+        "difficulty": "최상",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1936,
+        "rival": "TEAM_JBL_CL_NEONCRANES_1",
+        "titleYears": [
+          1964,
+          1985,
+          2005,
+          2023,
+          2024,
+          2025
+        ],
+        "peakEra": "1985년의 광기: 오사카 전체가 들끓은 첫 우승, 2020년대 왕조 재건",
+        "summary": "오사카를 본거지로 하는 열정적 구단. 크레인즈와의 라이벌전은 JBL 최대 흥행.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "센트럴리그 3위",
+            "national": "4강"
+          },
+          {
+            "year": 2022,
+            "regional": "센트럴리그 1위",
+            "national": "우승"
+          },
+          {
+            "year": 2023,
+            "regional": "센트럴리그 2위",
+            "national": "우승"
+          },
+          {
+            "year": 2024,
+            "regional": "센트럴리그 2위",
+            "national": "우승"
+          },
+          {
+            "year": 2025,
+            "regional": "센트럴리그 2위",
+            "national": "우승"
+          }
+        ],
+        "nationalTitles": 6
+      }
     },
     {
       "id": "TEAM_JBL_CL_TEMPOSTINGS_2",
@@ -1198,7 +4168,59 @@
       "nameEn": "Osaka Tempo Stings (2nd)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
-      "tier": "2군"
+      "tier": "2군",
+      "city": "오사카",
+      "stadium": "스팅스 팜 구장",
+      "colors": [
+        "#002b5c",
+        "#d00000"
+      ],
+      "capacity": 4000,
+      "profile": {
+        "prestige": "B",
+        "fanBase": "소규모",
+        "facilityLevel": 4,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1941,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "오사카 2군 유망주 육성 팜팀",
+        "summary": "오사카 템포 스팅스 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "2군리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "2군리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "2군리그 4위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_JBL_CL_IRONDRAKES_1",
@@ -1206,7 +4228,62 @@
       "nameEn": "Nagoya Iron Drakes (1st)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_IRONDRAKES",
-      "tier": "1군"
+      "tier": "1군",
+      "city": "나고야",
+      "stadium": "나고야 아이언 돔",
+      "colors": [
+        "#003da5",
+        "#d40000"
+      ],
+      "capacity": 40500,
+      "profile": {
+        "prestige": "A",
+        "fanBase": "광역",
+        "facilityLevel": 4,
+        "atmosphere": "체계적",
+        "mediaPressure": "높음",
+        "funding": "상",
+        "difficulty": "상",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1936,
+        "rival": "TEAM_JBL_CL_TIDERAVES_1",
+        "titleYears": [
+          1954,
+          2007
+        ],
+        "peakEra": "2007년 52년 만의 우승: 인내의 역사를 끝낸 나고야의 축제",
+        "summary": "도카이 지역 대표팀. 안정적 운영과 꾸준한 중상위권 전력 유지.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "센트럴리그 2위",
+            "national": "준우승"
+          },
+          {
+            "year": 2022,
+            "regional": "센트럴리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "센트럴리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "센트럴리그 3위",
+            "national": "4강"
+          },
+          {
+            "year": 2025,
+            "regional": "센트럴리그 3위",
+            "national": "4강"
+          }
+        ],
+        "nationalTitles": 2
+      }
     },
     {
       "id": "TEAM_JBL_CL_IRONDRAKES_2",
@@ -1214,7 +4291,59 @@
       "nameEn": "Nagoya Iron Drakes (2nd)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_IRONDRAKES",
-      "tier": "2군"
+      "tier": "2군",
+      "city": "나고야",
+      "stadium": "드레이크스 팜 파크",
+      "colors": [
+        "#003da5",
+        "#d40000"
+      ],
+      "capacity": 3500,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 3,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1941,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "나고야 2군 유망주 육성 팜팀",
+        "summary": "나고야 아이언 드레이크스 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "2군리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "2군리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "2군리그 4위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_JBL_CL_TIDERAVES_1",
@@ -1222,7 +4351,63 @@
       "nameEn": "Yokohama Tide Raves (1st)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_TIDERAVES",
-      "tier": "1군"
+      "tier": "1군",
+      "city": "요코하마",
+      "stadium": "요코하마 마리나 스타디움",
+      "colors": [
+        "#003087",
+        "#d70000"
+      ],
+      "capacity": 34046,
+      "profile": {
+        "prestige": "B",
+        "fanBase": "광역",
+        "facilityLevel": 3,
+        "atmosphere": "체계적",
+        "mediaPressure": "보통",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1950,
+        "rival": "TEAM_JBL_CL_IRONDRAKES_1",
+        "titleYears": [
+          1960,
+          1998,
+          2017
+        ],
+        "peakEra": "1998년 우승: 강력한 외국인 타선과 에이스로 오랜 설움 털어내기",
+        "summary": "항구 도시 요코하마 대표팀. 도쿄 인근 연고로 팬덤 경쟁이 치열.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "센트럴리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "센트럴리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "센트럴리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "센트럴리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "센트럴리그 4위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 3
+      }
     },
     {
       "id": "TEAM_JBL_CL_TIDERAVES_2",
@@ -1230,7 +4415,59 @@
       "nameEn": "Yokohama Tide Raves (2nd)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_TIDERAVES",
-      "tier": "2군"
+      "tier": "2군",
+      "city": "요코하마",
+      "stadium": "레이브스 팜 구장",
+      "colors": [
+        "#003087",
+        "#d70000"
+      ],
+      "capacity": 3000,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 2,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1955,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "요코하마 2군 유망주 육성 팜팀",
+        "summary": "요코하마 타이드 레이브스 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "2군리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "2군리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "2군리그 4위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_JBL_CL_SILVERWOLVES_1",
@@ -1238,7 +4475,61 @@
       "nameEn": "Kobe Silver Wolves (1st)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_SILVERWOLVES",
-      "tier": "1군"
+      "tier": "1군",
+      "city": "고베",
+      "stadium": "고베 실버 볼파크",
+      "colors": [
+        "#005bac",
+        "#c8a400"
+      ],
+      "capacity": 35000,
+      "profile": {
+        "prestige": "B",
+        "fanBase": "지역",
+        "facilityLevel": 3,
+        "atmosphere": "체계적",
+        "mediaPressure": "보통",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1936,
+        "rival": "TEAM_JBL_CL_TEMPOSTINGS_1",
+        "titleYears": [
+          1992
+        ],
+        "peakEra": "1992년 황금기: 고베 대지진 이전 마지막 황금 시대",
+        "summary": "한신 지역의 오랜 전통팀. 재건을 거쳐 중위권 경쟁력 회복 중.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "센트럴리그 6위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "센트럴리그 6위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "센트럴리그 6위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "센트럴리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "센트럴리그 5위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 1
+      }
     },
     {
       "id": "TEAM_JBL_CL_SILVERWOLVES_2",
@@ -1246,7 +4537,59 @@
       "nameEn": "Kobe Silver Wolves (2nd)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_SILVERWOLVES",
-      "tier": "2군"
+      "tier": "2군",
+      "city": "고베",
+      "stadium": "울브스 팜 필드",
+      "colors": [
+        "#005bac",
+        "#c8a400"
+      ],
+      "capacity": 3000,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 2,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1941,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "고베 2군 유망주 육성 팜팀",
+        "summary": "고베 실버 울브스 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "2군리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "2군리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "2군리그 4위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_JBL_CL_IRONSTORMS_1",
@@ -1254,7 +4597,63 @@
       "nameEn": "Hiroshima Iron Storms (1st)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_IRONSTORMS",
-      "tier": "1군"
+      "tier": "1군",
+      "city": "히로시마",
+      "stadium": "히로시마 마츠다 스타디움",
+      "colors": [
+        "#bf0000",
+        "#000000"
+      ],
+      "capacity": 33000,
+      "profile": {
+        "prestige": "B",
+        "fanBase": "지역",
+        "facilityLevel": 3,
+        "atmosphere": "체계적",
+        "mediaPressure": "보통",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1950,
+        "rival": "TEAM_JBL_CL_SILVERWOLVES_1",
+        "titleYears": [
+          1975,
+          1979,
+          2016
+        ],
+        "peakEra": "2016년 25년 만의 부활: 자체 육성 선수 중심의 리빌딩 성공 모델",
+        "summary": "히로시마의 열정적 연고팀. 자체 선수 육성 전통으로 유명한 서민적 구단.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "센트럴리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "센트럴리그 3위",
+            "national": "4강"
+          },
+          {
+            "year": 2023,
+            "regional": "센트럴리그 3위",
+            "national": "4강"
+          },
+          {
+            "year": 2024,
+            "regional": "센트럴리그 6위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "센트럴리그 6위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 3
+      }
     },
     {
       "id": "TEAM_JBL_CL_IRONSTORMS_2",
@@ -1262,7 +4661,59 @@
       "nameEn": "Hiroshima Iron Storms (2nd)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_IRONSTORMS",
-      "tier": "2군"
+      "tier": "2군",
+      "city": "히로시마",
+      "stadium": "스톰즈 팜 구장",
+      "colors": [
+        "#bf0000",
+        "#000000"
+      ],
+      "capacity": 2800,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 2,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1955,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "히로시마 2군 유망주 육성 팜팀",
+        "summary": "히로시마 아이언 스톰즈 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "2군리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "2군리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "2군리그 4위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_JBL_PL_THUNDERFALCONS_1",
@@ -1270,7 +4721,68 @@
       "nameEn": "Fukuoka Thunder Falcons (1st)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
-      "tier": "1군"
+      "tier": "1군",
+      "city": "후쿠오카",
+      "stadium": "후쿠오카 페이페이 돔",
+      "colors": [
+        "#002d62",
+        "#fdbb30"
+      ],
+      "capacity": 38000,
+      "profile": {
+        "prestige": "S",
+        "fanBase": "전국",
+        "facilityLevel": 5,
+        "atmosphere": "체계적",
+        "mediaPressure": "극심",
+        "funding": "최상",
+        "difficulty": "최상",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1938,
+        "rival": "TEAM_JBL_PL_POLARBEARS_1",
+        "titleYears": [
+          2003,
+          2011,
+          2014,
+          2015,
+          2017,
+          2018,
+          2019,
+          2020
+        ],
+        "peakEra": "2010년대 퍼시픽 지배: 7년간 5회 우승의 현대판 왕조",
+        "summary": "JBL 퍼시픽리그 최강 구단. 체계적 육성과 FA 운영의 롤모델.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "퍼시픽리그 2위",
+            "national": "준우승"
+          },
+          {
+            "year": 2022,
+            "regional": "퍼시픽리그 1위",
+            "national": "준우승"
+          },
+          {
+            "year": 2023,
+            "regional": "퍼시픽리그 1위",
+            "national": "4강"
+          },
+          {
+            "year": 2024,
+            "regional": "퍼시픽리그 2위",
+            "national": "준우승"
+          },
+          {
+            "year": 2025,
+            "regional": "퍼시픽리그 2위",
+            "national": "4강"
+          }
+        ],
+        "nationalTitles": 8
+      }
     },
     {
       "id": "TEAM_JBL_PL_THUNDERFALCONS_2",
@@ -1278,7 +4790,59 @@
       "nameEn": "Fukuoka Thunder Falcons (2nd)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
-      "tier": "2군"
+      "tier": "2군",
+      "city": "후쿠오카",
+      "stadium": "팰컨즈 팜 파크",
+      "colors": [
+        "#002d62",
+        "#fdbb30"
+      ],
+      "capacity": 3500,
+      "profile": {
+        "prestige": "B",
+        "fanBase": "소규모",
+        "facilityLevel": 4,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1943,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "후쿠오카 2군 유망주 육성 팜팀",
+        "summary": "후쿠오카 썬더 팰컨즈 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "2군리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "2군리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "2군리그 4위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_JBL_PL_POLARBEARS_1",
@@ -1286,7 +4850,62 @@
       "nameEn": "Sapporo Polar Bears (1st)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_POLARBEARS",
-      "tier": "1군"
+      "tier": "1군",
+      "city": "삿포로",
+      "stadium": "삿포로 돔",
+      "colors": [
+        "#002060",
+        "#c8102e"
+      ],
+      "capacity": 41484,
+      "profile": {
+        "prestige": "A",
+        "fanBase": "광역",
+        "facilityLevel": 4,
+        "atmosphere": "체계적",
+        "mediaPressure": "높음",
+        "funding": "상",
+        "difficulty": "상",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 2004,
+        "rival": "TEAM_JBL_PL_THUNDERFALCONS_1",
+        "titleYears": [
+          2016,
+          2022
+        ],
+        "peakEra": "2016년 창단 12년 만의 첫 우승: 홋카이도 전체가 하나로 뭉친 역사",
+        "summary": "홋카이도 첫 프로팀. 지역 밀착 운영의 성공 사례, 꾸준한 강팀 이미지.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "퍼시픽리그 1위",
+            "national": "4강"
+          },
+          {
+            "year": 2022,
+            "regional": "퍼시픽리그 2위",
+            "national": "우승"
+          },
+          {
+            "year": 2023,
+            "regional": "퍼시픽리그 2위",
+            "national": "준우승"
+          },
+          {
+            "year": 2024,
+            "regional": "퍼시픽리그 1위",
+            "national": "4강"
+          },
+          {
+            "year": 2025,
+            "regional": "퍼시픽리그 1위",
+            "national": "준우승"
+          }
+        ],
+        "nationalTitles": 2
+      }
     },
     {
       "id": "TEAM_JBL_PL_POLARBEARS_2",
@@ -1294,7 +4913,59 @@
       "nameEn": "Sapporo Polar Bears (2nd)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_POLARBEARS",
-      "tier": "2군"
+      "tier": "2군",
+      "city": "삿포로",
+      "stadium": "폴라베어스 팜 필드",
+      "colors": [
+        "#002060",
+        "#c8102e"
+      ],
+      "capacity": 4000,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 3,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 2009,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "삿포로 2군 유망주 육성 팜팀",
+        "summary": "삿포로 폴라 베어스 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "2군리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "2군리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "2군리그 4위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
@@ -1302,7 +4973,61 @@
       "nameEn": "Sendai Spirit Buffalos (1st)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
-      "tier": "1군"
+      "tier": "1군",
+      "city": "센다이",
+      "stadium": "센다이 미야기 스타디움",
+      "colors": [
+        "#003da5",
+        "#e8002d"
+      ],
+      "capacity": 30508,
+      "profile": {
+        "prestige": "B",
+        "fanBase": "지역",
+        "facilityLevel": 3,
+        "atmosphere": "체계적",
+        "mediaPressure": "보통",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 2005,
+        "rival": "TEAM_JBL_PL_SEAGULLS_1",
+        "titleYears": [
+          2011
+        ],
+        "peakEra": "2011년 동일본 대지진 속 우승: 도호쿠 지역에 희망을 전한 역사적 우승",
+        "summary": "도호쿠 지역의 희망. 대지진 이후 우승으로 지역 부흥의 상징이 된 팀.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "퍼시픽리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "퍼시픽리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "퍼시픽리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "퍼시픽리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "퍼시픽리그 3위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 1
+      }
     },
     {
       "id": "TEAM_JBL_PL_SPIRITBUFFALOS_2",
@@ -1310,7 +5035,59 @@
       "nameEn": "Sendai Spirit Buffalos (2nd)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
-      "tier": "2군"
+      "tier": "2군",
+      "city": "센다이",
+      "stadium": "버팔로스 팜 구장",
+      "colors": [
+        "#003da5",
+        "#e8002d"
+      ],
+      "capacity": 2800,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 2,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 2010,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "센다이 2군 유망주 육성 팜팀",
+        "summary": "센다이 스피릿 버팔로스 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "2군리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "2군리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "2군리그 4위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_JBL_PL_MARINESOLDIERS_1",
@@ -1318,7 +5095,62 @@
       "nameEn": "Nagasaki Marine Soldiers (1st)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
-      "tier": "1군"
+      "tier": "1군",
+      "city": "나가사키",
+      "stadium": "나가사키 마린 스타디움",
+      "colors": [
+        "#00205b",
+        "#cf152d"
+      ],
+      "capacity": 30000,
+      "profile": {
+        "prestige": "B",
+        "fanBase": "지역",
+        "facilityLevel": 3,
+        "atmosphere": "체계적",
+        "mediaPressure": "보통",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1950,
+        "rival": "TEAM_JBL_PL_THUNDERFALCONS_1",
+        "titleYears": [
+          2005,
+          2010
+        ],
+        "peakEra": "2010년대 초 규슈 더비 연패: 후쿠오카와의 라이벌전을 압도한 전성기",
+        "summary": "규슈 남서부 연고팀. 전통 있는 투수 운영과 수비 야구의 대명사.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "퍼시픽리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "퍼시픽리그 3위",
+            "national": "4강"
+          },
+          {
+            "year": 2023,
+            "regional": "퍼시픽리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "퍼시픽리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "퍼시픽리그 4위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 2
+      }
     },
     {
       "id": "TEAM_JBL_PL_MARINESOLDIERS_2",
@@ -1326,7 +5158,59 @@
       "nameEn": "Nagasaki Marine Soldiers (2nd)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
-      "tier": "2군"
+      "tier": "2군",
+      "city": "나가사키",
+      "stadium": "솔저스 팜 필드",
+      "colors": [
+        "#00205b",
+        "#cf152d"
+      ],
+      "capacity": 2500,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 2,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1955,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "나가사키 2군 유망주 육성 팜팀",
+        "summary": "나가사키 마린 솔저스 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "2군리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "2군리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "2군리그 4위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_JBL_PL_SEAGULLS_1",
@@ -1334,7 +5218,59 @@
       "nameEn": "Niigata Seagulls (1st)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_SEAGULLS",
-      "tier": "1군"
+      "tier": "1군",
+      "city": "니가타",
+      "stadium": "니가타 씨걸 스타디움",
+      "colors": [
+        "#005aab",
+        "#ffffff"
+      ],
+      "capacity": 25000,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "지역",
+        "facilityLevel": 2,
+        "atmosphere": "체계적",
+        "mediaPressure": "보통",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 2009,
+        "rival": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
+        "titleYears": [],
+        "peakEra": "2018년 첫 CS 진출: 창단 이래 가장 높은 곳까지 올라간 기록",
+        "summary": "일본해 연안의 소도시팀. 재정 제약에도 지역 팬 지지를 바탕으로 분투.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "퍼시픽리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "퍼시픽리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "퍼시픽리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "퍼시픽리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "퍼시픽리그 5위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_JBL_PL_SEAGULLS_2",
@@ -1342,7 +5278,59 @@
       "nameEn": "Niigata Seagulls (2nd)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_SEAGULLS",
-      "tier": "2군"
+      "tier": "2군",
+      "city": "니가타",
+      "stadium": "씨걸스 팜 파크",
+      "colors": [
+        "#005aab",
+        "#ffffff"
+      ],
+      "capacity": 2200,
+      "profile": {
+        "prestige": "D",
+        "fanBase": "소규모",
+        "facilityLevel": 1,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 2014,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "니가타 2군 유망주 육성 팜팀",
+        "summary": "니가타 씨걸스 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "2군리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "2군리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "2군리그 4위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_JBL_PL_SUNS_1",
@@ -1350,7 +5338,59 @@
       "nameEn": "Okinawa Suns (1st)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_SUNS",
-      "tier": "1군"
+      "tier": "1군",
+      "city": "오키나와",
+      "stadium": "오키나와 셀룰러 스타디움",
+      "colors": [
+        "#0077b6",
+        "#f4a300"
+      ],
+      "capacity": 30000,
+      "profile": {
+        "prestige": "C",
+        "fanBase": "지역",
+        "facilityLevel": 2,
+        "atmosphere": "체계적",
+        "mediaPressure": "보통",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 2011,
+        "rival": "TEAM_JBL_PL_MARINESOLDIERS_1",
+        "titleYears": [],
+        "peakEra": "2019년 첫 퍼시픽리그 3위: 신생팀으로서의 빠른 성장세",
+        "summary": "오키나와 첫 프로팀. 봄 훈련 명소로서의 위상과 함께 팀도 성장 중.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "퍼시픽리그 6위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "퍼시픽리그 6위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "퍼시픽리그 6위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "퍼시픽리그 6위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "퍼시픽리그 6위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
     },
     {
       "id": "TEAM_JBL_PL_SUNS_2",
@@ -1358,7 +5398,1884 @@
       "nameEn": "Okinawa Suns (2nd)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_SUNS",
-      "tier": "2군"
+      "tier": "2군",
+      "city": "오키나와",
+      "stadium": "선즈 팜 구장",
+      "colors": [
+        "#0077b6",
+        "#f4a300"
+      ],
+      "capacity": 2500,
+      "profile": {
+        "prestige": "D",
+        "fanBase": "소규모",
+        "facilityLevel": 1,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "funding": "중",
+        "difficulty": "중",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 2016,
+        "rival": "",
+        "titleYears": [],
+        "peakEra": "오키나와 2군 유망주 육성 팜팀",
+        "summary": "오키나와 선즈 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문.",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2022,
+            "regional": "2군리그 4위",
+            "national": ""
+          },
+          {
+            "year": 2023,
+            "regional": "2군리그 5위",
+            "national": ""
+          },
+          {
+            "year": 2024,
+            "regional": "2군리그 3위",
+            "national": ""
+          },
+          {
+            "year": 2025,
+            "regional": "2군리그 4위",
+            "national": ""
+          }
+        ],
+        "nationalTitles": 0
+      }
+    },
+    {
+      "id": "TEAM_HS_YEOSU_SHORE",
+      "name": "여수 쇼어",
+      "nameEn": "Yeosu Shore",
+      "leagueId": "LEAGUE_HIGHSCHOOL",
+      "clubId": "TEAM_HS_YEOSU_SHORE",
+      "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+      "city": "여수",
+      "stadium": "여수 쇼어 고교 야구장",
+      "colors": [
+        "#006064",
+        "#ffffff"
+      ],
+      "capacity": 2500,
+      "profile": {
+        "style": "수비형",
+        "desc": "남해를 배경으로 자란 끈질긴 수비야구의 고장. 해안 자연 환경 속에서 단련된 체력과 집중력을 바탕으로 매 시즌 중위권을 유지하며, 이따금 강팀을 꺾는 이변을 만들어낸다.",
+        "tags": [
+          "수비의 벽",
+          "끈질긴 야구",
+          "이변 제조기"
+        ],
+        "strengths": [
+          "수비",
+          "집중력"
+        ],
+        "funding": "중",
+        "difficulty": "중",
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 2,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1995,
+        "summary": "호남 해안가의 숨은 강호, 수비 야구로 상위권 도전",
+        "proPlayers": 8,
+        "nationalTitles": 0,
+        "titleYears": [],
+        "recentRecords": [
+          {
+            "year": 2021,
+            "national": "조별 리그",
+            "regional": "3위",
+            "note": "부산에 아깝게 패해 4강 좌절"
+          },
+          {
+            "year": 2022,
+            "national": "조별 리그",
+            "regional": "4위",
+            "note": "에이스 부상으로 조기 탈락"
+          },
+          {
+            "year": 2023,
+            "national": "조별 리그",
+            "regional": "2위",
+            "note": "지역 예선 돌풍, 전국 8강 진출"
+          },
+          {
+            "year": 2024,
+            "national": "조별 리그",
+            "regional": "3위",
+            "note": "세대교체 중"
+          },
+          {
+            "year": 2025,
+            "national": "조별 리그",
+            "regional": "2위",
+            "note": "신예 투수 2명 두각"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEAM_HS_CHUNCHEON_HIGHLAND",
+      "name": "춘천 하이랜드",
+      "nameEn": "Chuncheon Highland",
+      "leagueId": "LEAGUE_HIGHSCHOOL",
+      "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+      "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+      "city": "춘천",
+      "stadium": "춘천 하이랜드 고교 야구장",
+      "colors": [
+        "#33691e",
+        "#ffffff"
+      ],
+      "capacity": 2000,
+      "profile": {
+        "style": "지구력형",
+        "desc": "강원도 산악 지형에서 단련된 체력과 끈기가 강점. 험한 훈련 환경이 오히려 정신력 강한 선수를 배출해왔다.",
+        "tags": [
+          "체력야구",
+          "산악훈련",
+          "끈기"
+        ],
+        "strengths": [
+          "체력",
+          "수비"
+        ],
+        "funding": "하",
+        "difficulty": "하",
+        "prestige": "D",
+        "fanBase": "소규모",
+        "facilityLevel": 1,
+        "atmosphere": "가족적",
+        "mediaPressure": "낮음",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 2001,
+        "summary": "강원도 대표팀, 체력과 끈기로 매 시즌 출전",
+        "proPlayers": 3,
+        "nationalTitles": 0,
+        "titleYears": [],
+        "recentRecords": [
+          {
+            "year": 2021,
+            "national": "예선 탈락",
+            "regional": "7위",
+            "note": "전력 부족 시즌"
+          },
+          {
+            "year": 2022,
+            "national": "조별 리그",
+            "regional": "5위",
+            "note": "창단 첫 전국 16강 진출"
+          },
+          {
+            "year": 2023,
+            "national": "예선 탈락",
+            "regional": "6위",
+            "note": ""
+          },
+          {
+            "year": 2024,
+            "national": "조별 리그",
+            "regional": "5위",
+            "note": "투수 자원 발굴"
+          },
+          {
+            "year": 2025,
+            "national": "조별 리그",
+            "regional": "4위",
+            "note": "2년 연속 전국 진출"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEAM_HS_JEJU_WIND",
+      "name": "제주 윈드",
+      "nameEn": "Jeju Wind",
+      "leagueId": "LEAGUE_HIGHSCHOOL",
+      "clubId": "TEAM_HS_JEJU_WIND",
+      "schoolId": "SCHOOL_HS_JEJU_WIND",
+      "city": "제주",
+      "stadium": "제주 윈드 고교 야구장",
+      "colors": [
+        "#0277bd",
+        "#76ff03"
+      ],
+      "capacity": 2000,
+      "profile": {
+        "style": "파워형",
+        "desc": "제주도 특유의 강한 바람을 맞으며 성장한 투지의 팀. 외딴 섬 환경이 오히려 집중적인 훈련 여건을 만들어줬다.",
+        "tags": [
+          "투지야구",
+          "섬의 강자",
+          "바람의 팀"
+        ],
+        "strengths": [
+          "투수력",
+          "투지"
+        ],
+        "funding": "하",
+        "difficulty": "하",
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 2,
+        "atmosphere": "자유로운",
+        "mediaPressure": "낮음",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1998,
+        "summary": "도서 지역 핸디캡을 극복한 제주 야구의 자존심",
+        "proPlayers": 5,
+        "nationalTitles": 0,
+        "titleYears": [],
+        "recentRecords": [
+          {
+            "year": 2021,
+            "national": "조별 리그",
+            "regional": "4위",
+            "note": "3년 연속 전국 본선"
+          },
+          {
+            "year": 2022,
+            "national": "조별 리그",
+            "regional": "2위",
+            "note": "창단 최고 성적 경신"
+          },
+          {
+            "year": 2023,
+            "national": "조별 리그",
+            "regional": "3위",
+            "note": "에이스 졸업 후 재건"
+          },
+          {
+            "year": 2024,
+            "national": "조별 리그",
+            "regional": "3위",
+            "note": ""
+          },
+          {
+            "year": 2025,
+            "national": "조별 리그",
+            "regional": "2위",
+            "note": "신예 파워 타선 구축"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEAM_HS_GANGWON_PEAK",
+      "name": "강원 피크",
+      "nameEn": "Gangwon Peak",
+      "leagueId": "LEAGUE_HIGHSCHOOL",
+      "clubId": "TEAM_HS_GANGWON_PEAK",
+      "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+      "city": "강원",
+      "stadium": "강원 피크 고교 야구장",
+      "colors": [
+        "#4e342e",
+        "#ffffff"
+      ],
+      "capacity": 1500,
+      "profile": {
+        "style": "수비형",
+        "desc": "산간 오지에서 조용히 성장한 팀. 화려함보다 묵묵함을 선택한 소도시 야구의 정직한 표본이다.",
+        "tags": [
+          "소도시야구",
+          "묵묵한 성장",
+          "산악체력"
+        ],
+        "strengths": [
+          "수비",
+          "체력"
+        ],
+        "funding": "하",
+        "difficulty": "최하",
+        "prestige": "D",
+        "fanBase": "소규모",
+        "facilityLevel": 1,
+        "atmosphere": "가족적",
+        "mediaPressure": "낮음",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 2005,
+        "summary": "강원 오지의 신생팀, 꾸준한 성장세 중",
+        "proPlayers": 1,
+        "nationalTitles": 0,
+        "titleYears": [],
+        "recentRecords": [
+          {
+            "year": 2021,
+            "national": "예선 탈락",
+            "regional": "8위",
+            "note": ""
+          },
+          {
+            "year": 2022,
+            "national": "예선 탈락",
+            "regional": "7위",
+            "note": ""
+          },
+          {
+            "year": 2023,
+            "national": "예선 탈락",
+            "regional": "6위",
+            "note": ""
+          },
+          {
+            "year": 2024,
+            "national": "조별 리그",
+            "regional": "5위",
+            "note": "창단 첫 전국 본선 진출"
+          },
+          {
+            "year": 2025,
+            "national": "조별 리그",
+            "regional": "5위",
+            "note": "2년 연속 전국 진출 성공"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEAM_HS_MASAN_HARBOR",
+      "name": "마산 하버",
+      "nameEn": "Masan Harbor",
+      "leagueId": "LEAGUE_HIGHSCHOOL",
+      "clubId": "TEAM_HS_MASAN_HARBOR",
+      "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+      "city": "마산",
+      "stadium": "마산 하버 고교 야구장",
+      "colors": [
+        "#1a237e",
+        "#ffab00"
+      ],
+      "capacity": 3500,
+      "profile": {
+        "style": "공격형",
+        "desc": "항만 도시 마산의 거친 기질을 야구에 담았다. 장거리 타격과 과감한 주루가 특기인 공격적 팀으로, 지역 팬들의 뜨거운 응원이 힘이 된다.",
+        "tags": [
+          "항만파워",
+          "거친야구",
+          "공격일변도"
+        ],
+        "strengths": [
+          "타격",
+          "주루"
+        ],
+        "funding": "중",
+        "difficulty": "중",
+        "prestige": "C",
+        "fanBase": "지역",
+        "facilityLevel": 3,
+        "atmosphere": "엄격",
+        "mediaPressure": "낮음",
+        "promoChance": "보통"
+      },
+      "history": {
+        "founded": 1983,
+        "summary": "경남 서부권 맹주를 꿈꾸는 공격형 팀",
+        "proPlayers": 14,
+        "nationalTitles": 1,
+        "titleYears": [
+          2005
+        ],
+        "recentRecords": [
+          {
+            "year": 2021,
+            "national": "조별 리그",
+            "regional": "2위",
+            "note": "홈런 타선 부활"
+          },
+          {
+            "year": 2022,
+            "national": "플레이오프",
+            "regional": "1위",
+            "note": "지역 1위로 전국 4강 진출"
+          },
+          {
+            "year": 2023,
+            "national": "조별 리그",
+            "regional": "2위",
+            "note": "에이스 졸업 여파"
+          },
+          {
+            "year": 2024,
+            "national": "조별 리그",
+            "regional": "2위",
+            "note": "강타선 다시 구축"
+          },
+          {
+            "year": 2025,
+            "national": "플레이오프",
+            "regional": "1위",
+            "note": "2022년에 이어 다시 4강"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEAM_HS_JECHEON_RIDGE",
+      "name": "제천 릿지",
+      "nameEn": "Jecheon Ridge",
+      "leagueId": "LEAGUE_HIGHSCHOOL",
+      "clubId": "TEAM_HS_JECHEON_RIDGE",
+      "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+      "city": "제천",
+      "stadium": "제천 릿지 고교 야구장",
+      "colors": [
+        "#263238",
+        "#eceff1"
+      ],
+      "capacity": 1500,
+      "profile": {
+        "style": "균형형",
+        "desc": "충북 내륙 소도시의 조용한 강호. 화려하지 않지만 해마다 안정적인 성적을 내며 꾸준함으로 승부한다.",
+        "tags": [
+          "중부내륙",
+          "안정야구",
+          "꾸준함"
+        ],
+        "strengths": [
+          "투수력",
+          "수비"
+        ],
+        "funding": "하",
+        "difficulty": "하",
+        "prestige": "D",
+        "fanBase": "소규모",
+        "facilityLevel": 1,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1999,
+        "summary": "충북 내륙의 조용한 야구팀, 꾸준함으로 생존",
+        "proPlayers": 4,
+        "nationalTitles": 0,
+        "titleYears": [],
+        "recentRecords": [
+          {
+            "year": 2021,
+            "national": "예선 탈락",
+            "regional": "7위",
+            "note": ""
+          },
+          {
+            "year": 2022,
+            "national": "조별 리그",
+            "regional": "5위",
+            "note": ""
+          },
+          {
+            "year": 2023,
+            "national": "예선 탈락",
+            "regional": "6위",
+            "note": ""
+          },
+          {
+            "year": 2024,
+            "national": "조별 리그",
+            "regional": "5위",
+            "note": ""
+          },
+          {
+            "year": 2025,
+            "national": "예선 탈락",
+            "regional": "6위",
+            "note": "전력 재편 중"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEAM_HS_GOYANG_ARROW",
+      "name": "고양 애로우",
+      "nameEn": "Goyang Arrow",
+      "leagueId": "LEAGUE_HIGHSCHOOL",
+      "clubId": "TEAM_HS_GOYANG_ARROW",
+      "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+      "city": "고양",
+      "stadium": "고양 애로우 고교 야구장",
+      "colors": [
+        "#880e4f",
+        "#ffffff"
+      ],
+      "capacity": 3000,
+      "profile": {
+        "style": "스피드형",
+        "desc": "수도권 외곽 고양의 빠른 야구. 발 빠른 주루와 번트 전략을 앞세운 스몰볼이 특기이며, 서울 스카우터들의 주목을 받는 인재 풀이다.",
+        "tags": [
+          "수도권인재",
+          "스피드야구",
+          "스몰볼"
+        ],
+        "strengths": [
+          "주루",
+          "작전"
+        ],
+        "funding": "중",
+        "difficulty": "중",
+        "prestige": "C",
+        "fanBase": "지역",
+        "facilityLevel": 2,
+        "atmosphere": "체계적",
+        "mediaPressure": "낮음",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1994,
+        "summary": "수도권 외곽의 스피드야구 명가, 꾸준한 드래프트 배출",
+        "proPlayers": 11,
+        "nationalTitles": 0,
+        "titleYears": [],
+        "recentRecords": [
+          {
+            "year": 2021,
+            "national": "조별 리그",
+            "regional": "4위",
+            "note": ""
+          },
+          {
+            "year": 2022,
+            "national": "조별 리그",
+            "regional": "3위",
+            "note": "스피드 야구로 강팀 격파"
+          },
+          {
+            "year": 2023,
+            "national": "조별 리그",
+            "regional": "4위",
+            "note": ""
+          },
+          {
+            "year": 2024,
+            "national": "조별 리그",
+            "regional": "3위",
+            "note": "번트·도루 전략 완성도 상승"
+          },
+          {
+            "year": 2025,
+            "national": "조별 리그",
+            "regional": "4위",
+            "note": "2학년 중심 팀 재편"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEAM_HS_SUNCHEON_BAY",
+      "name": "순천 베이",
+      "nameEn": "Suncheon Bay",
+      "leagueId": "LEAGUE_HIGHSCHOOL",
+      "clubId": "TEAM_HS_SUNCHEON_BAY",
+      "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+      "city": "순천",
+      "stadium": "순천 베이 고교 야구장",
+      "colors": [
+        "#004d40",
+        "#a5d6a7"
+      ],
+      "capacity": 2500,
+      "profile": {
+        "style": "투수형",
+        "desc": "순천만 습지처럼 조용히 스며드는 투수야구의 팀. 제구력 좋은 투수들을 꾸준히 배출하며 호남 지역 숨은 강호로 평가받는다.",
+        "tags": [
+          "제구야구",
+          "투수명가",
+          "호남강호"
+        ],
+        "strengths": [
+          "투수력",
+          "제구"
+        ],
+        "funding": "중",
+        "difficulty": "중",
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 2,
+        "atmosphere": "가족적",
+        "mediaPressure": "낮음",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1990,
+        "summary": "제구 좋은 투수를 꾸준히 배출하는 호남의 숨은 강호",
+        "proPlayers": 9,
+        "nationalTitles": 0,
+        "titleYears": [],
+        "recentRecords": [
+          {
+            "year": 2021,
+            "national": "조별 리그",
+            "regional": "3위",
+            "note": "투수 삼형제 전국 돌풍"
+          },
+          {
+            "year": 2022,
+            "national": "조별 리그",
+            "regional": "4위",
+            "note": "3학년 졸업 후 전력 하락"
+          },
+          {
+            "year": 2023,
+            "national": "조별 리그",
+            "regional": "2위",
+            "note": "신예 에이스 데뷔"
+          },
+          {
+            "year": 2024,
+            "national": "조별 리그",
+            "regional": "2위",
+            "note": "2년 연속 8강"
+          },
+          {
+            "year": 2025,
+            "national": "플레이오프",
+            "regional": "1위",
+            "note": "창단 첫 4강 진출"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEAM_UNIV_KOREA",
+      "name": "남강대학교",
+      "nameEn": "Korea University",
+      "leagueId": "LEAGUE_UNIVERSITY",
+      "clubId": "TEAM_UNIV_KOREA",
+      "schoolId": "SCHOOL_UNIV_KOREA",
+      "city": "서울",
+      "stadium": "고려대 야구장",
+      "colors": [
+        "#8b0000",
+        "#ffffff"
+      ],
+      "capacity": 6000,
+      "profile": {
+        "style": "균형형",
+        "desc": "한국 대학야구의 절대 명가. 풍부한 역사와 최고 수준의 코칭 스태프가 매 시즌 KBL 드래프트 다수 배출을 가능케 한다. 스카우터들이 가장 먼저 찾는 학교다.",
+        "tags": [
+          "야구 명문",
+          "드래프트 산실",
+          "연고전"
+        ],
+        "strengths": [
+          "투수력",
+          "수비",
+          "코칭"
+        ],
+        "funding": "상",
+        "difficulty": "최상",
+        "prestige": "S",
+        "fanBase": "전국",
+        "facilityLevel": 5,
+        "atmosphere": "체계적",
+        "mediaPressure": "높음",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1947,
+        "summary": "한국 대학야구 역사 그 자체. 최다 우승과 최다 프로 배출의 절대 강자",
+        "proPlayers": 198,
+        "nationalTitles": 22,
+        "titleYears": [
+          1952,
+          1957,
+          1963,
+          1968,
+          1972,
+          1975,
+          1978,
+          1981,
+          1984,
+          1987,
+          1989,
+          1992,
+          1994,
+          1997,
+          2000,
+          2003,
+          2006,
+          2009,
+          2012,
+          2016,
+          2020,
+          2024
+        ],
+        "rival": "TEAM_UNIV_YONSEI",
+        "peakEra": "1970~80년대 황금기 — 10년간 8회 우승",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "national": "준우승",
+            "regional": "1위",
+            "note": "연세와 결승 접전 끝 준우승"
+          },
+          {
+            "year": 2022,
+            "national": "우승",
+            "regional": "1위",
+            "note": "드래프트 1순위 에이스 배출 시즌"
+          },
+          {
+            "year": 2023,
+            "national": "4강",
+            "regional": "1위",
+            "note": "주전 4명 프로 입단 후 재건"
+          },
+          {
+            "year": 2024,
+            "national": "우승",
+            "regional": "1위",
+            "note": "2년 만에 우승 탈환, 22번째 타이틀"
+          },
+          {
+            "year": 2025,
+            "national": "준우승",
+            "regional": "1위",
+            "note": "연세와 또다시 결승 격돌"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEAM_UNIV_YONSEI",
+      "name": "서해국제대학교",
+      "nameEn": "Yonsei University",
+      "leagueId": "LEAGUE_UNIVERSITY",
+      "clubId": "TEAM_UNIV_YONSEI",
+      "schoolId": "SCHOOL_UNIV_YONSEI",
+      "city": "서울",
+      "stadium": "연세대 야구장",
+      "colors": [
+        "#003087",
+        "#ffffff"
+      ],
+      "capacity": 6000,
+      "profile": {
+        "style": "공격형",
+        "desc": "고려대의 영원한 라이벌. 매 시즌 강력한 타선을 구축하며 연고전에서 리그 판도를 뒤흔든다. 공격적인 스카우팅과 적극적인 선수 육성이 장점이다.",
+        "tags": [
+          "연고전",
+          "공격 야구",
+          "명문 라이벌"
+        ],
+        "strengths": [
+          "타격",
+          "주루",
+          "공격"
+        ],
+        "funding": "상",
+        "difficulty": "최상",
+        "prestige": "S",
+        "fanBase": "전국",
+        "facilityLevel": 5,
+        "atmosphere": "체계적",
+        "mediaPressure": "높음",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1948,
+        "summary": "고려대와 반세기 넘게 맞선 한국 대학야구 2강 체제의 한 축",
+        "proPlayers": 182,
+        "nationalTitles": 18,
+        "titleYears": [
+          1954,
+          1960,
+          1966,
+          1970,
+          1973,
+          1977,
+          1980,
+          1983,
+          1986,
+          1990,
+          1993,
+          1996,
+          1999,
+          2002,
+          2007,
+          2011,
+          2018,
+          2021
+        ],
+        "rival": "TEAM_UNIV_KOREA",
+        "peakEra": "1990년대 연세 전성기 — 5년간 4회 우승",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "national": "우승",
+            "regional": "1위",
+            "note": "고려대 꺾고 3년 만에 우승"
+          },
+          {
+            "year": 2022,
+            "national": "준우승",
+            "regional": "1위",
+            "note": "고려대에 결승서 설욕당함"
+          },
+          {
+            "year": 2023,
+            "national": "우승",
+            "regional": "1위",
+            "note": "2년 만에 탈환, 타선 폭발"
+          },
+          {
+            "year": 2024,
+            "national": "준우승",
+            "regional": "1위",
+            "note": "고려대와 8년째 결승 격돌"
+          },
+          {
+            "year": 2025,
+            "national": "우승",
+            "regional": "1위",
+            "note": "끝내기 홈런으로 연고전 설욕"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEAM_UNIV_KNSU",
+      "name": "한빛체육대학교",
+      "nameEn": "Korea National Sport University",
+      "leagueId": "LEAGUE_UNIVERSITY",
+      "clubId": "TEAM_UNIV_KNSU",
+      "schoolId": "SCHOOL_UNIV_KNSU",
+      "city": "서울",
+      "stadium": "한국체육대 야구장",
+      "colors": [
+        "#003087",
+        "#e8b800"
+      ],
+      "capacity": 3500,
+      "profile": {
+        "style": "스피드형",
+        "desc": "체육 특화 대학의 압도적인 신체 능력. 최상급 훈련 시설과 스포츠 과학 접목으로 선수 육성률이 전국 최고 수준이다. 체력과 스피드를 앞세운 야구가 특기.",
+        "tags": [
+          "체육 특화",
+          "스포츠 과학",
+          "신체 능력"
+        ],
+        "strengths": [
+          "체력",
+          "주루",
+          "수비"
+        ],
+        "funding": "상",
+        "difficulty": "상",
+        "prestige": "A",
+        "fanBase": "전국",
+        "facilityLevel": 5,
+        "atmosphere": "체계적",
+        "mediaPressure": "보통",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1961,
+        "summary": "스포츠 과학과 야구의 결합, 신체 능력 최상급 선수 배출 특화",
+        "proPlayers": 143,
+        "nationalTitles": 11,
+        "titleYears": [
+          1969,
+          1976,
+          1982,
+          1988,
+          1995,
+          2001,
+          2005,
+          2010,
+          2014,
+          2019,
+          2023
+        ],
+        "rival": "TEAM_UNIV_HANYANG",
+        "peakEra": "2000년대 체력 야구 전성기 — 6년간 4회 우승",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "national": "4강",
+            "regional": "2위",
+            "note": ""
+          },
+          {
+            "year": 2022,
+            "national": "8강",
+            "regional": "3위",
+            "note": "주전 투수 부상 시즌"
+          },
+          {
+            "year": 2023,
+            "national": "우승",
+            "regional": "1위",
+            "note": "스포츠 과학 훈련 결실"
+          },
+          {
+            "year": 2024,
+            "national": "4강",
+            "regional": "2위",
+            "note": ""
+          },
+          {
+            "year": 2025,
+            "national": "8강",
+            "regional": "3위",
+            "note": "세대교체 과도기"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEAM_UNIV_HANYANG",
+      "name": "청운공과대학교",
+      "nameEn": "Hanyang University",
+      "leagueId": "LEAGUE_UNIVERSITY",
+      "clubId": "TEAM_UNIV_HANYANG",
+      "schoolId": "SCHOOL_UNIV_HANYANG",
+      "city": "서울",
+      "stadium": "한양대 야구장",
+      "colors": [
+        "#c00000",
+        "#000000"
+      ],
+      "capacity": 4000,
+      "profile": {
+        "style": "투수형",
+        "desc": "에이스 한 명이 팀을 이끄는 투수 중심 야구의 명가. 공학 마인드의 철저한 분석 야구로 매 시즌 상위권을 유지하며, 완성형 투수 배출로 유명하다.",
+        "tags": [
+          "투수 명가",
+          "분석 야구",
+          "에이스 중심"
+        ],
+        "strengths": [
+          "투수력",
+          "제구",
+          "분석"
+        ],
+        "funding": "상",
+        "difficulty": "상",
+        "prestige": "A",
+        "fanBase": "광역",
+        "facilityLevel": 4,
+        "atmosphere": "엄격",
+        "mediaPressure": "보통",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 1958,
+        "summary": "완성형 투수를 꾸준히 배출해온 투수 야구의 명가",
+        "proPlayers": 97,
+        "nationalTitles": 8,
+        "titleYears": [
+          1967,
+          1974,
+          1985,
+          1991,
+          1998,
+          2004,
+          2013,
+          2017
+        ],
+        "rival": "TEAM_UNIV_KNSU",
+        "peakEra": "1990년대 에이스 듀오 시대 — 3년 연속 결승 진출",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "national": "8강",
+            "regional": "3위",
+            "note": ""
+          },
+          {
+            "year": 2022,
+            "national": "4강",
+            "regional": "2위",
+            "note": "에이스 2명 드래프트 1라운드 지명"
+          },
+          {
+            "year": 2023,
+            "national": "8강",
+            "regional": "3위",
+            "note": ""
+          },
+          {
+            "year": 2024,
+            "national": "4강",
+            "regional": "2위",
+            "note": "투수진 재건 성공"
+          },
+          {
+            "year": 2025,
+            "national": "준우승",
+            "regional": "1위",
+            "note": "창단 후 최장 결승 진출 연속"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEAM_UNIV_DONGGUK",
+      "name": "가온문화대학교",
+      "nameEn": "Dongguk University",
+      "leagueId": "LEAGUE_UNIVERSITY",
+      "clubId": "TEAM_UNIV_DONGGUK",
+      "schoolId": "SCHOOL_UNIV_DONGGUK",
+      "city": "서울",
+      "stadium": "동국대 야구장",
+      "colors": [
+        "#8b4513",
+        "#ffffff"
+      ],
+      "capacity": 3000,
+      "profile": {
+        "style": "균형형",
+        "desc": "화려함보다 균형을 추구하는 팀. 매 시즌 꾸준히 중상위권을 유지하며 조용히 프로 선수를 배출해왔다. 팀 케미스트리가 강점이다.",
+        "tags": [
+          "균형 야구",
+          "팀 케미",
+          "꾸준함"
+        ],
+        "strengths": [
+          "수비",
+          "팀워크"
+        ],
+        "funding": "중",
+        "difficulty": "중",
+        "prestige": "B",
+        "fanBase": "지역",
+        "facilityLevel": 3,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "promoChance": "보통"
+      },
+      "history": {
+        "founded": 1968,
+        "summary": "조용한 강자, 균형 잡힌 야구로 꾸준한 상위권 유지",
+        "proPlayers": 61,
+        "nationalTitles": 4,
+        "titleYears": [
+          1979,
+          1994,
+          2008,
+          2015
+        ],
+        "peakEra": "2000년대 중반 이후 안정적 4강권 유지",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "national": "8강",
+            "regional": "4위",
+            "note": ""
+          },
+          {
+            "year": 2022,
+            "national": "8강",
+            "regional": "3위",
+            "note": ""
+          },
+          {
+            "year": 2023,
+            "national": "4강",
+            "regional": "2위",
+            "note": "팀 케미 최상 시즌"
+          },
+          {
+            "year": 2024,
+            "national": "8강",
+            "regional": "3위",
+            "note": ""
+          },
+          {
+            "year": 2025,
+            "national": "8강",
+            "regional": "4위",
+            "note": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEAM_UNIV_KNU",
+      "name": "동명과학대학교",
+      "nameEn": "Kyungpook National University",
+      "leagueId": "LEAGUE_UNIVERSITY",
+      "clubId": "TEAM_UNIV_KNU",
+      "schoolId": "SCHOOL_UNIV_KNU",
+      "city": "대구",
+      "stadium": "경북대 야구장",
+      "colors": [
+        "#003087",
+        "#e8b800"
+      ],
+      "capacity": 3500,
+      "profile": {
+        "style": "투지형",
+        "desc": "영남권 대학야구를 대표하는 팀. 지역 고교 유망주를 흡수하며 탄탄한 팀을 구성하고, 수도권 명문들에 도전장을 내미는 지방의 자존심이다.",
+        "tags": [
+          "영남 대표",
+          "지역 자존심",
+          "투지"
+        ],
+        "strengths": [
+          "투지",
+          "수비"
+        ],
+        "funding": "중",
+        "difficulty": "중",
+        "prestige": "B",
+        "fanBase": "지역",
+        "facilityLevel": 3,
+        "atmosphere": "엄격",
+        "mediaPressure": "낮음",
+        "promoChance": "보통"
+      },
+      "history": {
+        "founded": 1972,
+        "summary": "영남권 대학야구 맹주, 수도권 벽에 도전하는 지방의 기수",
+        "proPlayers": 44,
+        "nationalTitles": 3,
+        "titleYears": [
+          1989,
+          2006,
+          2017
+        ],
+        "peakEra": "2000년대 영남권 돌풍 — 지방 대학 최다 전국 8강 기록",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "national": "8강",
+            "regional": "1위",
+            "note": "지역 1위, 전국 8강"
+          },
+          {
+            "year": 2022,
+            "national": "16강",
+            "regional": "2위",
+            "note": ""
+          },
+          {
+            "year": 2023,
+            "national": "8강",
+            "regional": "1위",
+            "note": "지역 에이스 2명 두각"
+          },
+          {
+            "year": 2024,
+            "national": "8강",
+            "regional": "1위",
+            "note": "3년 연속 전국 8강"
+          },
+          {
+            "year": 2025,
+            "national": "4강",
+            "regional": "1위",
+            "note": "창단 후 첫 4강, 지방 돌풍"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEAM_UNIV_CHUNGBUK",
+      "name": "미래창성대학교",
+      "nameEn": "Chungbuk National University",
+      "leagueId": "LEAGUE_UNIVERSITY",
+      "clubId": "TEAM_UNIV_CHUNGBUK",
+      "schoolId": "SCHOOL_UNIV_CHUNGBUK",
+      "city": "청주",
+      "stadium": "충북대 야구장",
+      "colors": [
+        "#004080",
+        "#ffffff"
+      ],
+      "capacity": 2500,
+      "profile": {
+        "style": "균형형",
+        "desc": "중부권의 조용한 야구부. 풍부한 지원은 없지만 선수들의 자발적인 열정으로 매 시즌 출전권을 유지한다. 저비용 고효율의 팀 운영이 특기.",
+        "tags": [
+          "중부권",
+          "열정야구",
+          "저비용 고효율"
+        ],
+        "strengths": [
+          "투지",
+          "작전"
+        ],
+        "funding": "하",
+        "difficulty": "하",
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 2,
+        "atmosphere": "가족적",
+        "mediaPressure": "낮음",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 1985,
+        "summary": "충북 지역 유일의 4년제 국립대 야구부, 열정으로 버티는 팀",
+        "proPlayers": 12,
+        "nationalTitles": 1,
+        "titleYears": [
+          2011
+        ],
+        "peakEra": "2011년 창단 최대 이변 — 무명 팀의 전국 제패",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "national": "16강",
+            "regional": "3위",
+            "note": ""
+          },
+          {
+            "year": 2022,
+            "national": "예선탈락",
+            "regional": "4위",
+            "note": ""
+          },
+          {
+            "year": 2023,
+            "national": "16강",
+            "regional": "3위",
+            "note": ""
+          },
+          {
+            "year": 2024,
+            "national": "16강",
+            "regional": "3위",
+            "note": ""
+          },
+          {
+            "year": 2025,
+            "national": "예선탈락",
+            "regional": "4위",
+            "note": "주전 졸업 공백 시즌"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEAM_IND_SEOUL_PIONEERS",
+      "name": "서울 파이오니어스",
+      "nameEn": "Seoul Pioneers",
+      "leagueId": "LEAGUE_INDEPENDENT",
+      "clubId": "TEAM_IND_SEOUL_PIONEERS",
+      "city": "서울",
+      "stadium": "서울 독립야구장",
+      "colors": [
+        "#0d47a1",
+        "#ffffff"
+      ],
+      "capacity": 3000,
+      "profile": {
+        "style": "균형형",
+        "desc": "독립리그 최고 명문. 체계적인 운영과 풍부한 네트워크로 KBL 복귀를 꿈꾸는 선수들이 가장 선호하는 팀이다. 매 시즌 가장 많은 KBL 입단 성사를 이뤄낸다.",
+        "tags": [
+          "독립리그 명문",
+          "복귀 루트",
+          "체계적 운영"
+        ],
+        "strengths": [
+          "코칭",
+          "데이터 분석",
+          "기회 창출"
+        ],
+        "funding": "중",
+        "difficulty": "상",
+        "prestige": "B",
+        "fanBase": "지역",
+        "facilityLevel": 3,
+        "atmosphere": "체계적",
+        "mediaPressure": "보통",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 2008,
+        "summary": "독립리그 최강, KBL 재입단 성공률 1위 팀",
+        "proPlayers": 31,
+        "nationalTitles": 3,
+        "titleYears": [
+          2012,
+          2017,
+          2022
+        ],
+        "peakEra": "2020년대 독립리그 2연패 + KBL 복귀 6명 배출",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "national": "우승",
+            "regional": "1위",
+            "note": "KBL 복귀 4명 배출"
+          },
+          {
+            "year": 2022,
+            "national": "우승",
+            "regional": "1위",
+            "note": "2년 연속 우승"
+          },
+          {
+            "year": 2023,
+            "national": "준우승",
+            "regional": "1위",
+            "note": "부산에 결승 패배"
+          },
+          {
+            "year": 2024,
+            "national": "4강",
+            "regional": "2위",
+            "note": "주전 에이스 KBL 입단"
+          },
+          {
+            "year": 2025,
+            "national": "준우승",
+            "regional": "1위",
+            "note": "다시 결승 진출"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEAM_IND_BUSAN_TEMPEST",
+      "name": "부산 템페스트",
+      "nameEn": "Busan Tempest",
+      "leagueId": "LEAGUE_INDEPENDENT",
+      "clubId": "TEAM_IND_BUSAN_TEMPEST",
+      "city": "부산",
+      "stadium": "부산 독립야구장",
+      "colors": [
+        "#006064",
+        "#ff6f00"
+      ],
+      "capacity": 2500,
+      "profile": {
+        "style": "공격형",
+        "desc": "부산 특유의 거친 기질과 뜨거운 열정이 그대로 담긴 팀. 독립리그 최고의 공격력을 자랑하며 서울 파이오니어스의 최대 라이벌로 자리매김했다.",
+        "tags": [
+          "공격 야구",
+          "항구의 불꽃",
+          "라이벌"
+        ],
+        "strengths": [
+          "타격",
+          "파워",
+          "투지"
+        ],
+        "funding": "중",
+        "difficulty": "상",
+        "prestige": "B",
+        "fanBase": "지역",
+        "facilityLevel": 3,
+        "atmosphere": "엄격",
+        "mediaPressure": "낮음",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 2010,
+        "summary": "서울 파이오니어스와 쌍벽을 이루는 독립리그 남부 강호",
+        "proPlayers": 18,
+        "nationalTitles": 2,
+        "titleYears": [
+          2015,
+          2023
+        ],
+        "rival": "TEAM_IND_SEOUL_PIONEERS",
+        "peakEra": "2023년 서울 꺾고 첫 우승, 부산 독립야구 역사적 쾌거",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "national": "4강",
+            "regional": "1위",
+            "note": ""
+          },
+          {
+            "year": 2022,
+            "national": "준우승",
+            "regional": "1위",
+            "note": "서울과 결승 접전"
+          },
+          {
+            "year": 2023,
+            "national": "우승",
+            "regional": "1위",
+            "note": "창단 첫 우승, 파이오니어스 격파"
+          },
+          {
+            "year": 2024,
+            "national": "4강",
+            "regional": "2위",
+            "note": "에이스 KBL 입단 공백"
+          },
+          {
+            "year": 2025,
+            "national": "준우승",
+            "regional": "1위",
+            "note": "다시 결승 진출"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEAM_IND_INCHEON_ORCAS",
+      "name": "인천 오르카스",
+      "nameEn": "Incheon Orcas",
+      "leagueId": "LEAGUE_INDEPENDENT",
+      "clubId": "TEAM_IND_INCHEON_ORCAS",
+      "city": "인천",
+      "stadium": "인천 독립야구장",
+      "colors": [
+        "#006064",
+        "#ffffff"
+      ],
+      "capacity": 2000,
+      "profile": {
+        "style": "수비형",
+        "desc": "끈질긴 수비와 침착한 경기 운영이 특기. 항만 도시 인천의 끈기를 닮은 팀으로, 독립리그에서 가장 실점이 적은 팀으로 꾸준히 상위권을 유지한다.",
+        "tags": [
+          "수비 철학",
+          "침착한 운영",
+          "실점 최소"
+        ],
+        "strengths": [
+          "수비",
+          "투수력",
+          "집중력"
+        ],
+        "funding": "중",
+        "difficulty": "중",
+        "prestige": "B",
+        "fanBase": "지역",
+        "facilityLevel": 3,
+        "atmosphere": "체계적",
+        "mediaPressure": "낮음",
+        "promoChance": "높음"
+      },
+      "history": {
+        "founded": 2011,
+        "summary": "독립리그 최소 실점팀, 수비 야구로 꾸준히 플레이오프 진출",
+        "proPlayers": 14,
+        "nationalTitles": 1,
+        "titleYears": [
+          2019
+        ],
+        "peakEra": "2019년 수비 야구 완성, 창단 첫 우승",
+        "recentRecords": [
+          {
+            "year": 2021,
+            "national": "4강",
+            "regional": "2위",
+            "note": ""
+          },
+          {
+            "year": 2022,
+            "national": "4강",
+            "regional": "2위",
+            "note": "2년 연속 4강"
+          },
+          {
+            "year": 2023,
+            "national": "8강",
+            "regional": "3위",
+            "note": "수비 핵심 선수 이탈"
+          },
+          {
+            "year": 2024,
+            "national": "4강",
+            "regional": "2위",
+            "note": "투수 재건 성공"
+          },
+          {
+            "year": 2025,
+            "national": "준우승",
+            "regional": "1위",
+            "note": "창단 후 두 번째 결승"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEAM_IND_DAEGU_FALCONS",
+      "name": "대구 팰컨스",
+      "nameEn": "Daegu Falcons",
+      "leagueId": "LEAGUE_INDEPENDENT",
+      "clubId": "TEAM_IND_DAEGU_FALCONS",
+      "city": "대구",
+      "stadium": "대구 독립야구장",
+      "colors": [
+        "#880e4f",
+        "#ffffff"
+      ],
+      "capacity": 1800,
+      "profile": {
+        "style": "투수형",
+        "desc": "영남권 독립리그 대표팀. 우수한 투수 자원을 발굴하는 데 특화되어 있으며, 대구·경북 지역 고교 출신 선수들이 KBL 문을 두드리는 등용문 역할을 한다.",
+        "tags": [
+          "영남 독립리그",
+          "투수 발굴",
+          "등용문"
+        ],
+        "strengths": [
+          "투수력",
+          "제구"
+        ],
+        "funding": "하",
+        "difficulty": "중",
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 2,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "promoChance": "보통"
+      },
+      "history": {
+        "founded": 2012,
+        "summary": "영남권 독립리그 팀, 투수 발굴에 특화된 지역 기반 팀",
+        "proPlayers": 9,
+        "nationalTitles": 0,
+        "titleYears": [],
+        "recentRecords": [
+          {
+            "year": 2021,
+            "national": "8강",
+            "regional": "3위",
+            "note": ""
+          },
+          {
+            "year": 2022,
+            "national": "8강",
+            "regional": "3위",
+            "note": ""
+          },
+          {
+            "year": 2023,
+            "national": "4강",
+            "regional": "2위",
+            "note": "투수 2명 KBL 지명"
+          },
+          {
+            "year": 2024,
+            "national": "8강",
+            "regional": "3위",
+            "note": "주전 공백 후 재건"
+          },
+          {
+            "year": 2025,
+            "national": "8강",
+            "regional": "3위",
+            "note": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEAM_IND_GWANGJU_STORM",
+      "name": "광주 스톰",
+      "nameEn": "Gwangju Storm",
+      "leagueId": "LEAGUE_INDEPENDENT",
+      "clubId": "TEAM_IND_GWANGJU_STORM",
+      "city": "광주",
+      "stadium": "광주 독립야구장",
+      "colors": [
+        "#1b5e20",
+        "#ffeb3b"
+      ],
+      "capacity": 1800,
+      "profile": {
+        "style": "투지형",
+        "desc": "호남의 투지를 담은 팀. 재정 여건은 빠듯하지만 선수들의 열정만큼은 독립리그 최고다. 약자가 강자를 꺾는 이변이 잦은, 상대 팀이 가장 경계하는 복병이다.",
+        "tags": [
+          "호남 투지",
+          "복병",
+          "열정야구"
+        ],
+        "strengths": [
+          "투지",
+          "집중력"
+        ],
+        "funding": "하",
+        "difficulty": "하",
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 2,
+        "atmosphere": "균형",
+        "mediaPressure": "낮음",
+        "promoChance": "보통"
+      },
+      "history": {
+        "founded": 2013,
+        "summary": "호남권 독립리그 팀, 열정과 투지로 이변을 만들어내는 팀",
+        "proPlayers": 6,
+        "nationalTitles": 0,
+        "titleYears": [],
+        "recentRecords": [
+          {
+            "year": 2021,
+            "national": "8강",
+            "regional": "4위",
+            "note": "서울 잡는 이변"
+          },
+          {
+            "year": 2022,
+            "national": "8강",
+            "regional": "3위",
+            "note": ""
+          },
+          {
+            "year": 2023,
+            "national": "8강",
+            "regional": "4위",
+            "note": ""
+          },
+          {
+            "year": 2024,
+            "national": "8강",
+            "regional": "3위",
+            "note": "투지야구 완성도 상승"
+          },
+          {
+            "year": 2025,
+            "national": "4강",
+            "regional": "2위",
+            "note": "창단 첫 4강 진출"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEAM_IND_DAEJEON_HUNTERS",
+      "name": "대전 헌터스",
+      "nameEn": "Daejeon Hunters",
+      "leagueId": "LEAGUE_INDEPENDENT",
+      "clubId": "TEAM_IND_DAEJEON_HUNTERS",
+      "city": "대전",
+      "stadium": "대전 독립야구장",
+      "colors": [
+        "#4a148c",
+        "#ffcc02"
+      ],
+      "capacity": 1800,
+      "profile": {
+        "style": "균형형",
+        "desc": "충청권 독립리그 유일 팀. 중부권 선수들의 활동 무대이며 꾸준히 리그 중위권을 유지한다. 재정적으로 빠듯하지만 지역 팬들의 응원이 원동력이다.",
+        "tags": [
+          "충청권",
+          "지역 밀착",
+          "균형 야구"
+        ],
+        "strengths": [
+          "수비",
+          "작전"
+        ],
+        "funding": "하",
+        "difficulty": "하",
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 2,
+        "atmosphere": "가족적",
+        "mediaPressure": "낮음",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 2012,
+        "summary": "충청권 독립리그 유일 대표팀, 지역 밀착 운영",
+        "proPlayers": 5,
+        "nationalTitles": 0,
+        "titleYears": [],
+        "recentRecords": [
+          {
+            "year": 2021,
+            "national": "8강",
+            "regional": "4위",
+            "note": ""
+          },
+          {
+            "year": 2022,
+            "national": "8강",
+            "regional": "4위",
+            "note": ""
+          },
+          {
+            "year": 2023,
+            "national": "8강",
+            "regional": "4위",
+            "note": ""
+          },
+          {
+            "year": 2024,
+            "national": "8강",
+            "regional": "3위",
+            "note": "리그 최초 3위 성적"
+          },
+          {
+            "year": 2025,
+            "national": "8강",
+            "regional": "4위",
+            "note": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEAM_IND_SUWON_BLAZE",
+      "name": "수원 블레이즈",
+      "nameEn": "Suwon Blaze",
+      "leagueId": "LEAGUE_INDEPENDENT",
+      "clubId": "TEAM_IND_SUWON_BLAZE",
+      "city": "수원",
+      "stadium": "수원 독립야구장",
+      "colors": [
+        "#bf360c",
+        "#ffffff"
+      ],
+      "capacity": 2000,
+      "profile": {
+        "style": "공격형",
+        "desc": "수도권 외곽 수원의 공격적인 야구팀. 드래프트 미지명 강타자들이 모여 파워야구를 구현하며, 홈런과 장거리 타격으로 관중을 열광시키는 스타일이다.",
+        "tags": [
+          "파워 타선",
+          "수도권",
+          "홈런야구"
+        ],
+        "strengths": [
+          "타격",
+          "파워"
+        ],
+        "funding": "중",
+        "difficulty": "중",
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 2,
+        "atmosphere": "자유로운",
+        "mediaPressure": "낮음",
+        "promoChance": "낮음"
+      },
+      "history": {
+        "founded": 2010,
+        "summary": "파워 타선으로 승부하는 수도권 독립리그 팀",
+        "proPlayers": 7,
+        "nationalTitles": 0,
+        "titleYears": [],
+        "recentRecords": [
+          {
+            "year": 2021,
+            "national": "8강",
+            "regional": "4위",
+            "note": ""
+          },
+          {
+            "year": 2022,
+            "national": "8강",
+            "regional": "3위",
+            "note": "홈런 타선 부활"
+          },
+          {
+            "year": 2023,
+            "national": "8강",
+            "regional": "4위",
+            "note": ""
+          },
+          {
+            "year": 2024,
+            "national": "8강",
+            "regional": "3위",
+            "note": ""
+          },
+          {
+            "year": 2025,
+            "national": "4강",
+            "regional": "2위",
+            "note": "창단 첫 4강 진출"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEAM_IND_ULSAN_PHOENIX",
+      "name": "울산 피닉스",
+      "nameEn": "Ulsan Phoenix",
+      "leagueId": "LEAGUE_INDEPENDENT",
+      "clubId": "TEAM_IND_ULSAN_PHOENIX",
+      "city": "울산",
+      "stadium": "울산 독립야구장",
+      "colors": [
+        "#e65100",
+        "#ffd600"
+      ],
+      "capacity": 2000,
+      "profile": {
+        "style": "균형형",
+        "desc": "부상에서 돌아온 선수들의 재기 무대로 알려진 팀. 피닉스라는 이름처럼 다시 날아오르길 꿈꾸는 선수들로 구성되며, 강한 정신력이 팀의 상징이다.",
+        "tags": [
+          "재기의 무대",
+          "불사조 정신",
+          "정신력"
+        ],
+        "strengths": [
+          "투지",
+          "정신력",
+          "집중력"
+        ],
+        "funding": "하",
+        "difficulty": "하",
+        "prestige": "C",
+        "fanBase": "소규모",
+        "facilityLevel": 2,
+        "atmosphere": "가족적",
+        "mediaPressure": "낮음",
+        "promoChance": "보통"
+      },
+      "history": {
+        "founded": 2014,
+        "summary": "부상 선수들의 재기와 꿈을 응원하는 팀, 피닉스의 정신으로",
+        "proPlayers": 8,
+        "nationalTitles": 0,
+        "titleYears": [],
+        "recentRecords": [
+          {
+            "year": 2021,
+            "national": "8강",
+            "regional": "4위",
+            "note": ""
+          },
+          {
+            "year": 2022,
+            "national": "8강",
+            "regional": "4위",
+            "note": ""
+          },
+          {
+            "year": 2023,
+            "national": "8강",
+            "regional": "3위",
+            "note": "재활 선수 3명 KBL 복귀 성공"
+          },
+          {
+            "year": 2024,
+            "national": "8강",
+            "regional": "3위",
+            "note": ""
+          },
+          {
+            "year": 2025,
+            "national": "8강",
+            "regional": "4위",
+            "note": ""
+          }
+        ]
+      }
     }
   ]
 }
