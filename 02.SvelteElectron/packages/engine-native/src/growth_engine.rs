@@ -54,6 +54,8 @@ pub struct TrainingPitchState {
 pub struct TrainingPlanState {
     pub primary_program_id: Option<String>,
     pub secondary_program_id: Option<String>,
+    pub secondary2_program_id: Option<String>,
+    #[allow(dead_code)]
     pub recovery_program_id: Option<String>,
 }
 
@@ -362,9 +364,9 @@ pub fn calc_training_growth(params: TrainingGrowthParams) -> GrowthResult {
     let mut pitch_dev_gain = 0.0f64;
 
     let programs: &[(Option<&str>, f64)] = &[
-        (params.plan.primary_program_id.as_deref(),   1.0),
-        (params.plan.secondary_program_id.as_deref(), 0.5),
-        (params.plan.recovery_program_id.as_deref(),  1.0),
+        (params.plan.primary_program_id.as_deref(),    1.0),
+        (params.plan.secondary_program_id.as_deref(),  0.5),
+        (params.plan.secondary2_program_id.as_deref(), 0.5),
     ];
 
     for (prog_id_opt, mult) in programs {

@@ -117,10 +117,10 @@ const DEFAULT_PROTAGONIST: ProtagonistSave = {
   condition: 80,
   fatigue: 20,
   morale: 65,
-  pitching: { ovr: 62, stamina: 58, velocity: 52, command: 60, control: 55, movement: 50, mentality: 57, recovery: 55, clutch: 50, holdRunners: 50 },
+  pitching: { ovr: 54, stamina: 58, velocity: 52, command: 60, control: 55, movement: 50, mentality: 57, recovery: 55, clutch: 50, holdRunners: 50 },
   batting:  { ovr: 30, contact: 35, power: 28, eye: 32, discipline: 30, speed: 50, baseInstinct: 50, bunting: 45, platoon: 50, fielding: 45, arm: 55, battingClutch: 30 },
   primaryPosition: "SP",
-  positionRatings: { SP: 62 },
+  positionRatings: { SP: 54 },
   diligence: 60,
   popularity: 10,
   developmentRate: 62,
@@ -349,13 +349,19 @@ function migrateProtagonist(p: ProtagonistSave & { learnedPitchIds?: string[] })
     pitches = def.pitches;
   }
 
+  const pitchingMerged = {
+    ...p.pitching,
+    clutch:      p.pitching.clutch      ?? def.pitching.clutch,
+    holdRunners: p.pitching.holdRunners ?? def.pitching.holdRunners,
+  };
+  const statsArr = [pitchingMerged.velocity, pitchingMerged.command, pitchingMerged.control,
+    pitchingMerged.movement, pitchingMerged.mentality, pitchingMerged.stamina,
+    pitchingMerged.recovery, pitchingMerged.clutch, pitchingMerged.holdRunners];
+  pitchingMerged.ovr = Math.round(statsArr.reduce((a, b) => a + b, 0) / statsArr.length);
+
   return {
     ...p,
-    pitching: {
-      ...p.pitching,
-      clutch:      p.pitching.clutch      ?? def.pitching.clutch,
-      holdRunners: p.pitching.holdRunners ?? def.pitching.holdRunners,
-    },
+    pitching: pitchingMerged,
     batting: {
       ...p.batting,
       baseInstinct: p.batting.baseInstinct ?? def.batting.baseInstinct,
