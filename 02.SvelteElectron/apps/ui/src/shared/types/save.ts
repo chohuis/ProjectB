@@ -199,7 +199,16 @@ export type PlayerSeasonStats = PitcherSeasonStats | BatterSeasonStats;
 export interface TrainingPlanState {
   primaryProgramId: string | null;
   secondaryProgramId: string | null;
-  recoveryProgramId: string | null;
+  secondary2ProgramId: string | null;
+  recoveryProgramId: string | null;  // deprecated, kept for migration
+}
+
+export interface TrainingPreset {
+  id: string;
+  name: string;
+  primaryProgramId: string;
+  secondary1ProgramId: string;
+  secondary2ProgramId: string;
 }
 
 // ── 학교 생활 상태 ─────────────────────────────────────────────
@@ -441,6 +450,7 @@ export interface SaveGame {
   protagonist: ProtagonistSave;
   mailbox: MessageItem[];
   trainingPlan: TrainingPlanState;
+  trainingPresets?: TrainingPreset[];
   schoolState: SchoolState;
   achievements: AchievementRuntime[];
   achievementMetrics: AchievementMetrics;
@@ -463,6 +473,7 @@ export function makeSaveGame(
   recentUpcoming: string[],
   contacts: ChatContact[],
   npcs: NpcSaveState[] = [],
+  trainingPresets: TrainingPreset[] = [],
 ): SaveGame {
   return {
     version: SAVE_GAME_VERSION,
@@ -470,6 +481,7 @@ export function makeSaveGame(
     protagonist,
     mailbox,
     trainingPlan,
+    trainingPresets,
     schoolState,
     achievements,
     achievementMetrics,
@@ -480,11 +492,40 @@ export function makeSaveGame(
   };
 }
 
+const TRAINING_ID_MIGRATION: Record<string, string> = {
+  "TRN_CMD_BASE":  "TRN_CTRL_CMD",
+  "TRN_CTRL_MECH": "TRN_CTRL_CMD",
+  "TRN_MVT_PITCH": "TRN_MOVEMENT",
+  "TRN_MNT_FOCUS": "TRN_MENTAL_P",
+  "TRN_STA_COND":  "TRN_STAMINA",
+  "TRN_CLUTCH":    "TRN_MENTAL_P",
+  "TRN_HOLD":      "TRN_MENTAL_P",
+  "TRN_VEL_POWER": "TRN_VEL",
+  "TRN_CONTACT":   "TRN_BATTING",
+  "TRN_POWER":     "TRN_BATTING",
+  "TRN_EYE":       "TRN_PLATE_EYE",
+  "TRN_SPEED":     "TRN_BASERUN",
+  "TRN_FIELDING":  "TRN_DEFENSE",
+  "TRN_BUNTING":   "TRN_PLATE_EYE",
+  "TRN_BCLUTCH":   "TRN_MENTAL_B",
+};
+
 export function migrateSaveGame(raw: Record<string, unknown>): SaveGame {
   const v = (raw.version as number) ?? 0;
   if (v < 2) {
     raw.npcs = [];
     raw.version = 2;
+  }
+  if (raw.trainingPlan && typeof raw.trainingPlan === "object") {
+    const plan = raw.trainingPlan as Record<string, unknown>;
+    if (typeof plan.primaryProgramId === "string")
+      plan.primaryProgramId = TRAINING_ID_MIGRATION[plan.primaryProgramId] ?? plan.primaryProgramId;
+    if (typeof plan.secondaryProgramId === "string")
+      plan.secondaryProgramId = TRAINING_ID_MIGRATION[plan.secondaryProgramId] ?? plan.secondaryProgramId;
+    // migrate old recoveryProgramId → secondary2ProgramId
+    if (!plan.secondary2ProgramId) {
+      plan.secondary2ProgramId = plan.recoveryProgramId ?? "TRN_RECOVERY";
+    }
   }
   return raw as unknown as SaveGame;
 }

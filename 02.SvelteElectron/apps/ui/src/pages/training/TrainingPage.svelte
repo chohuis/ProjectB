@@ -2,6 +2,7 @@
   import { t } from "../../shared/i18n";
   import { gameStore } from "../../shared/stores/game";
   import { masterStore, pitchUnlockRuleMap } from "../../shared/stores/master";
+  import type { TrainingPreset } from "../../shared/types/save";
 
   type TrainingTab = "plan" | "pitch" | "risk";
   type PitchStatus = "grading" | "learned" | "training" | "discovered" | "locked";
@@ -24,51 +25,70 @@
     requirements: Array<{ label: string; required: number; current: number }>;
   };
 
+  type CoachAdviceSuggestion = { text: string; primary: string; sub1: string; sub2: string };
+
   let tab: TrainingTab = "plan";
 
-  const PITCH_NAMES: Record<string, string> = {
-    PITCH_FASTBALL: "패스트볼", PITCH_SINKER: "싱커", PITCH_CUTTER: "커터",
-    PITCH_SLIDER: "슬라이더", PITCH_CURVE: "커브", PITCH_CHANGEUP: "체인지업",
-    PITCH_SPLITTER: "스플리터", PITCH_FORKBALL: "포크볼",
-    PITCH_SCREWBALL: "스크루볼", PITCH_KNUCKLEBALL: "너클볼",
-  };
+  // Preset management local state
+  let showPresetEditor = false;
+  let editingPresetId: string | null = null;
+  let editingName = "";
+  let addingPreset = false;
+  let newPresetName = "";
+  let coachAdviceDismissed = false;
 
   const GRADE_LABEL: Record<number, string> = {
     1: "습득중", 2: "기초", 3: "보통", 4: "능숙", 5: "마스터",
   };
 
-  // growthEngine TRAINING_MAP과 동일한 ID 사용
   const pitcherPrograms: ProgramCard[] = [
-    { id: "TRN_CMD_BASE",  title: "커맨드 기초",    focus: "커맨드/릴리스",         gains: "커맨드, 제구",      fatigue: 8,  risk: 2 },
-    { id: "TRN_VEL_POWER", title: "구위 파워",       focus: "구속/하체 드라이브",    gains: "구위, 스태미나",    fatigue: 14, risk: 6 },
-    { id: "TRN_CTRL_MECH", title: "제구 메커니즘",   focus: "제구/릴리스 일관성",    gains: "제구, 커맨드",      fatigue: 8,  risk: 2 },
-    { id: "TRN_MVT_PITCH", title: "변화구 연습",     focus: "무브먼트/구종",         gains: "무브먼트, 제구",    fatigue: 9,  risk: 3 },
-    { id: "TRN_MNT_FOCUS", title: "멘탈 집중 훈련", focus: "압박 대응/집중",        gains: "멘탈",              fatigue: 5,  risk: 0 },
-    { id: "TRN_STA_COND",  title: "체력 강화",       focus: "스태미나/지구력",       gains: "스태미나, 회복력",  fatigue: 12, risk: 4 },
-    { id: "TRN_CLUTCH",    title: "위기집중 훈련",   focus: "집중력/압박 상황",      gains: "위기집중력, 멘탈",  fatigue: 6,  risk: 0 },
-    { id: "TRN_HOLD",      title: "견제 훈련",       focus: "주자 관리/견제",        gains: "견제력, 제구",      fatigue: 7,  risk: 1 },
-    { id: "TRN_PITCH_DEV", title: "구종 개발",       focus: "구종 숙련도/신규 습득", gains: "진행중 구종 +20%",  fatigue: 10, risk: 0 },
+    { id: "TRN_VEL",       title: "구속 훈련",        focus: "구속/하체 드라이브",       gains: "구속, 스태미나",           fatigue: 14, risk: 6 },
+    { id: "TRN_CTRL_CMD",  title: "제구/커맨드 훈련", focus: "제구·커맨드 정밀도",       gains: "제구, 커맨드 (균등)",       fatigue: 8,  risk: 2 },
+    { id: "TRN_MOVEMENT",  title: "변화구 훈련",      focus: "무브먼트/구종 궤적",       gains: "무브먼트, 제구",            fatigue: 9,  risk: 3 },
+    { id: "TRN_MENTAL_P",  title: "정신 훈련",        focus: "압박 대응/집중/견제",      gains: "멘탈, 위기집중력, 견제력",  fatigue: 6,  risk: 0 },
+    { id: "TRN_STAMINA",   title: "체력 훈련",        focus: "스태미나/지구력",          gains: "스태미나, 회복력",          fatigue: 12, risk: 4 },
+    { id: "TRN_PITCH_DEV", title: "구종 개발",        focus: "구종 숙련도/신규 습득",    gains: "진행중 구종 +17%",          fatigue: 10, risk: 0 },
   ];
 
   const batterPrograms: ProgramCard[] = [
-    { id: "TRN_CONTACT",  title: "컨택 훈련",    focus: "타격 밀착/배트 컨트롤",  gains: "컨택, 선구안",    fatigue: 8,  risk: 2 },
-    { id: "TRN_POWER",    title: "파워 훈련",    focus: "하체 드라이브/장타",      gains: "장타력, 컨택",    fatigue: 12, risk: 4 },
-    { id: "TRN_EYE",      title: "선구안 훈련",  focus: "볼/스트라이크 판단",      gains: "선구안, 극기",    fatigue: 6,  risk: 0 },
-    { id: "TRN_SPEED",    title: "주루 훈련",    focus: "스피드/베이스러닝",       gains: "주력, 주루판단",  fatigue: 10, risk: 3 },
-    { id: "TRN_FIELDING", title: "수비 훈련",    focus: "글러브 워크/포지셔닝",    gains: "수비, 어깨",      fatigue: 9,  risk: 2 },
-    { id: "TRN_BUNTING",  title: "번트 훈련",    focus: "상황 번트/정밀 타격",     gains: "번트, 컨택",      fatigue: 5,  risk: 0 },
-    { id: "TRN_MNT_FOCUS",title: "멘탈 집중",   focus: "압박 대응/집중",          gains: "멘탈",            fatigue: 5,  risk: 0 },
-    { id: "TRN_STA_COND", title: "체력 강화",   focus: "스태미나/지구력",         gains: "스태미나, 회복력",fatigue: 12, risk: 4 },
-    { id: "TRN_BCLUTCH",  title: "클러치 훈련", focus: "득점권/결정적 상황 타격", gains: "클러치, 극기",    fatigue: 6,  risk: 0 },
+    { id: "TRN_BATTING",   title: "타격 훈련",        focus: "컨택/파워 드라이브",       gains: "컨택, 장타력",              fatigue: 10, risk: 3 },
+    { id: "TRN_PLATE_EYE", title: "출루 훈련",        focus: "볼-스트라이크 판단/번트",  gains: "선구안, 극기, 번트",        fatigue: 6,  risk: 0 },
+    { id: "TRN_BASERUN",   title: "주루 훈련",        focus: "스피드/베이스러닝",        gains: "주력, 주루판단",            fatigue: 10, risk: 3 },
+    { id: "TRN_DEFENSE",   title: "수비 훈련",        focus: "글러브 워크/어깨",         gains: "수비, 어깨",                fatigue: 9,  risk: 2 },
+    { id: "TRN_MENTAL_B",  title: "정신/클러치 훈련", focus: "압박 대응/득점권 집중",    gains: "멘탈, 클러치",              fatigue: 6,  risk: 0 },
+    { id: "TRN_STAMINA",   title: "체력 훈련",        focus: "스태미나/지구력",          gains: "스태미나, 회복력",          fatigue: 12, risk: 4 },
   ];
 
   const recoveryPrograms: ProgramCard[] = [
     { id: "TRN_RECOVERY", title: "컨디셔닝 회복", focus: "회복/유연성", gains: "피로 ↓, 컨디션 ↑", fatigue: -8, risk: 0 },
   ];
 
-  $: selectedMain     = $gameStore.trainingPlan.primaryProgramId   ?? "TRN_CMD_BASE";
-  $: selectedSub      = $gameStore.trainingPlan.secondaryProgramId ?? "TRN_CTRL_MECH";
-  $: selectedRecovery = $gameStore.trainingPlan.recoveryProgramId  ?? "TRN_RECOVERY";
+  const GAIN_CHIPS: Record<string, Array<{ label: string; type: "up" | "down" }>> = {
+    TRN_VEL:       [{ label: "구속",    type: "up" }, { label: "스태미나", type: "up" }],
+    TRN_CTRL_CMD:  [{ label: "제구",    type: "up" }, { label: "커맨드",   type: "up" }],
+    TRN_MOVEMENT:  [{ label: "무브먼트",type: "up" }, { label: "제구",     type: "up" }],
+    TRN_MENTAL_P:  [{ label: "멘탈",   type: "up" }, { label: "집중력",   type: "up" }],
+    TRN_STAMINA:   [{ label: "스태미나",type: "up" }, { label: "회복력",   type: "up" }],
+    TRN_PITCH_DEV: [{ label: "구종 진행", type: "up" }],
+    TRN_BATTING:   [{ label: "컨택",    type: "up" }, { label: "장타력",   type: "up" }],
+    TRN_PLATE_EYE: [{ label: "선구안",  type: "up" }, { label: "극기",     type: "up" }],
+    TRN_BASERUN:   [{ label: "주력",    type: "up" }, { label: "주루",     type: "up" }],
+    TRN_DEFENSE:   [{ label: "수비",    type: "up" }, { label: "어깨",     type: "up" }],
+    TRN_MENTAL_B:  [{ label: "멘탈",   type: "up" }, { label: "클러치",   type: "up" }],
+    TRN_RECOVERY:  [{ label: "피로",    type: "down"}, { label: "컨디션",  type: "up" }],
+  };
+
+  $: selectedMain = $gameStore.trainingPlan.primaryProgramId   ?? "TRN_CTRL_CMD";
+  $: selectedSub1 = $gameStore.trainingPlan.secondaryProgramId ?? "TRN_VEL";
+  $: selectedSub2 = $gameStore.trainingPlan.secondary2ProgramId ?? "TRN_RECOVERY";
+
+  $: savedPresets = $gameStore.trainingPresets ?? [];
+
+  $: activePresetId = savedPresets.find((p) =>
+    p.primaryProgramId === selectedMain &&
+    p.secondary1ProgramId === selectedSub1 &&
+    p.secondary2ProgramId === selectedSub2
+  )?.id ?? null;
 
   $: protagonist    = $gameStore.protagonist;
   $: realCondition  = protagonist.condition;
@@ -79,17 +99,15 @@
   $: mainPrograms = isBatter ? batterPrograms : pitcherPrograms;
   $: allPrograms  = [...mainPrograms, ...recoveryPrograms];
 
-  // 코치 스탯 기반 동적 coachMod
   $: pitchCoach = $masterStore.entities.find(
     (e) => e.role === "coach" && e.teamId === protagonist.teamId &&
            (e.details as import("../../shared/stores/master").EntityDetails)?.coach?.specialty === "pitching"
   );
   $: coachTeaching = (pitchCoach?.details as import("../../shared/stores/master").EntityDetails)?.coach?.stats?.teaching ?? 50;
-  $: coachFatMod  = Math.max(0.88, 1.0 - coachTeaching * 0.0024);   // 50→0.88, 75→0.82 → clamp 0.88
-  $: coachRiskMod = Math.max(0.85, 1.0 - coachTeaching * 0.003);    // 50→0.85, 75→0.775 → clamp 0.85
+  $: coachFatMod  = Math.max(0.88, 1.0 - coachTeaching * 0.0024);
+  $: coachRiskMod = Math.max(0.85, 1.0 - coachTeaching * 0.003);
   $: coachMod     = { fatigue: coachFatMod, risk: coachRiskMod };
 
-  // 시설 레벨 기반 동적 facilityMod
   $: teamRef = $masterStore.teams.find((t) => t.id === protagonist.teamId);
   $: facilityFatMod = (() => {
     switch (protagonist.careerStage) {
@@ -111,23 +129,19 @@
   })();
   $: facilityMod = { fatigue: facilityFatMod, risk: facilityRiskMod };
 
-  // 사기 슬럼프 상태
   $: lowMoraleWeeks = protagonist.consecutiveLowMoraleWeeks ?? 0;
   $: isSlump        = lowMoraleWeeks >= 3;
 
-  // 부상 상태
-  $: injury        = protagonist.injury;
-  $: isInjured     = !!injury;
-  $: highFatWeeks  = protagonist.consecutiveHighFatigueWeeks ?? 0;
+  $: injury       = protagonist.injury;
+  $: isInjured    = !!injury;
+  $: highFatWeeks = protagonist.consecutiveHighFatigueWeeks ?? 0;
 
-  // 훈련 히스토리: logs에서 [훈련] 항목 추출
   $: trainingHistoryLogs = $gameStore.logs.filter((l) => l.startsWith("[훈련]")).slice(0, 6);
 
-  // ── 구종 시스템 ──────────────────────────────────────────────
   const STAT_LABEL: Record<string, string> = {
     command:   "커맨드",
     control:   "제구",
-    velocity:  "구위",
+    velocity:  "구속",
     movement:  "무브먼트",
     stamina:   "스태미나",
     mentality: "멘탈",
@@ -163,14 +177,13 @@
     return false;
   }
 
-  $: learnedIds      = new Set((protagonist.pitches ?? []).map((e) => e.id));
   $: trainingPitchSt = protagonist.trainingPitchState ?? null;
 
   $: pitchCandidates = $masterStore.pitchCatalog.map((pitch) => {
-    const pitchEntry   = (protagonist.pitches ?? []).find((e) => e.id === pitch.id);
-    const learned      = !!pitchEntry;
-    const inTraining   = trainingPitchSt?.id === pitch.id;
-    const eligible     = isPitchEligible(pitch, protagonist);
+    const pitchEntry = (protagonist.pitches ?? []).find((e) => e.id === pitch.id);
+    const learned    = !!pitchEntry;
+    const inTraining = trainingPitchSt?.id === pitch.id;
+    const eligible   = isPitchEligible(pitch, protagonist);
 
     const rule = $pitchUnlockRuleMap.get(pitch.unlockRuleId);
     let requirements: Array<{ label: string; required: number; current: number }> = [];
@@ -178,9 +191,7 @@
       requirements = [{ label: STAT_LABEL[rule.params.stat] ?? rule.params.stat, required: rule.params.value, current: getStatValue(rule.params.stat, protagonist) }];
     } else if (rule?.type === "multi_stat" && rule.params.conditions) {
       requirements = rule.params.conditions.map((c: { stat: string; value: number }) => ({
-        label:    STAT_LABEL[c.stat] ?? c.stat,
-        required: c.value,
-        current:  getStatValue(c.stat, protagonist),
+        label: STAT_LABEL[c.stat] ?? c.stat, required: c.value, current: getStatValue(c.stat, protagonist),
       }));
     }
 
@@ -192,30 +203,28 @@
     else                        status = "locked";
 
     return {
-      id:       pitch.id,
-      name:     pitch.nameKo ?? pitch.name,
-      status,
-      grade:    pitchEntry?.grade ?? 0,
+      id: pitch.id, name: pitch.nameKo ?? pitch.name, status,
+      grade: pitchEntry?.grade ?? 0,
       progress: inTraining ? trainingPitchSt!.progress : 0,
       requirements,
     } as PitchCandidate;
   });
 
-  $: learnedPitches     = pitchCandidates.filter((p) => p.status === "learned" || p.status === "grading");
-  $: trainingPitch      = pitchCandidates.find((p) => p.status === "training" || p.status === "grading") ?? null;
-  $: eligiblePitches    = pitchCandidates.filter((p) => p.status === "discovered");
-  $: lockedPitches      = pitchCandidates.filter((p) => p.status === "locked");
+  $: learnedPitches  = pitchCandidates.filter((p) => p.status === "learned" || p.status === "grading");
+  $: trainingPitch   = pitchCandidates.find((p) => p.status === "training" || p.status === "grading") ?? null;
+  $: eligiblePitches = pitchCandidates.filter((p) => p.status === "discovered");
+  $: lockedPitches   = pitchCandidates.filter((p) => p.status === "locked");
 
-  $: mainCard     = allPrograms.find((p) => p.id === selectedMain);
-  $: subCard      = allPrograms.find((p) => p.id === selectedSub);
-  $: recoveryCard = allPrograms.find((p) => p.id === selectedRecovery);
-  $: selectedCards = [mainCard, subCard, recoveryCard].filter(Boolean) as ProgramCard[];
+  $: mainCard = allPrograms.find((p) => p.id === selectedMain);
+  $: sub1Card = allPrograms.find((p) => p.id === selectedSub1);
+  $: sub2Card = allPrograms.find((p) => p.id === selectedSub2);
+  $: selectedCards = [mainCard, sub1Card, sub2Card].filter(Boolean) as ProgramCard[];
 
   $: rawFatigueDelta = selectedCards.reduce((sum, c) => sum + c.fatigue, 0);
   $: rawRiskDelta    = selectedCards.reduce((sum, c) => sum + c.risk,    0);
 
-  $: finalFatigueDelta   = Math.round(rawFatigueDelta * coachMod.fatigue * facilityMod.fatigue) - 5;
-  $: finalRiskDelta      = Math.round(rawRiskDelta    * coachMod.risk    * facilityMod.risk);
+  $: finalFatigueDelta = Math.round(rawFatigueDelta * coachMod.fatigue * facilityMod.fatigue) - 5;
+  $: finalRiskDelta    = Math.round(rawRiskDelta    * coachMod.risk    * facilityMod.risk);
 
   $: projectedFatigue   = Math.max(0, Math.min(100, realFatigue   + finalFatigueDelta));
   $: projectedCondition = Math.max(0, Math.min(100, realCondition - Math.max(0, finalFatigueDelta) * 0.4 + 3));
@@ -223,7 +232,45 @@
 
   $: recentLogs = $gameStore.logs.slice(0, 5);
 
-  $: pitchDevSelected = selectedMain === "TRN_PITCH_DEV" || selectedSub === "TRN_PITCH_DEV";
+  $: pitchDevSelected = selectedMain === "TRN_PITCH_DEV" || selectedSub1 === "TRN_PITCH_DEV" || selectedSub2 === "TRN_PITCH_DEV";
+
+  $: pitchDevWeeksLeft = trainingPitch ? Math.ceil((100 - trainingPitch.progress) / 17) : 0;
+
+  $: fatigueGaugePct = Math.min(100, Math.abs(finalFatigueDelta) / 35 * 100);
+  $: fatigueGaugeDir = finalFatigueDelta >= 0 ? "up" : "down";
+
+  $: gainChips = (() => {
+    const seen = new Set<string>();
+    const result: Array<{ label: string; type: "up" | "down" }> = [];
+    for (const card of selectedCards) {
+      for (const chip of (GAIN_CHIPS[card.id] ?? [])) {
+        if (!seen.has(chip.label)) {
+          seen.add(chip.label);
+          result.push(chip);
+        }
+      }
+    }
+    return result;
+  })();
+
+  $: coachFeedback = (() => {
+    if (!pitchCoach) return "담당 코치가 없어 훈련 효율이 낮습니다.";
+    if (isInjured) return "부상 중에는 무리한 훈련을 피해야 합니다.";
+    if (realCondition < 40) return "컨디션이 좋지 않습니다. 무리하지 마세요.";
+    if (realFatigue > 70) return "피로 누적으로 훈련 효율이 떨어지고 있습니다.";
+    if (isSlump) return "슬럼프 중입니다. 멘탈 관리가 중요합니다.";
+    return "훈련에 집중할 수 있는 좋은 상태입니다.";
+  })();
+
+  $: coachAdvice = ((): CoachAdviceSuggestion | null => {
+    if (isInjured) return { text: "부상 중입니다. 무리하지 말고 회복에 전념하세요.", primary: "TRN_RECOVERY", sub1: "TRN_MENTAL_P", sub2: "TRN_RECOVERY" };
+    if (realCondition < 35) return { text: "컨디션이 매우 낮습니다. 이번 주는 회복을 최우선으로 하세요.", primary: "TRN_RECOVERY", sub1: "TRN_MENTAL_P", sub2: "TRN_STAMINA" };
+    if (realFatigue > 75) return { text: "피로가 많이 쌓였습니다. 고강도 훈련을 줄이는 것을 권장합니다.", primary: "TRN_RECOVERY", sub1: "TRN_STAMINA", sub2: "TRN_MENTAL_P" };
+    if (isSlump) return { text: "슬럼프 상태입니다. 정신 훈련으로 돌파구를 마련해 보세요.", primary: "TRN_MENTAL_P", sub1: "TRN_RECOVERY", sub2: "TRN_STAMINA" };
+    if (!isBatter && protagonist.pitching.velocity < 55) return { text: "구속이 낮습니다. 구속 훈련에 집중해보세요.", primary: "TRN_VEL", sub1: "TRN_CTRL_CMD", sub2: "TRN_STAMINA" };
+    if (!isBatter && protagonist.pitching.control < 55) return { text: "제구력이 부족합니다. 제구 훈련을 우선시하세요.", primary: "TRN_CTRL_CMD", sub1: "TRN_MOVEMENT", sub2: "TRN_MENTAL_P" };
+    return null;
+  })();
 
   function riskTone(value: number): "safe" | "warn" | "danger" {
     if (value >= 20) return "danger";
@@ -255,6 +302,57 @@
     if (grade >= 3) return "g3";
     return "g1";
   }
+
+  function applyPreset(p: TrainingPreset) {
+    gameStore.setTrainingPlan({
+      primaryProgramId:    p.primaryProgramId,
+      secondaryProgramId:  p.secondary1ProgramId,
+      secondary2ProgramId: p.secondary2ProgramId,
+    });
+    gameStore.save();
+  }
+
+  function saveNewPreset() {
+    if (!newPresetName.trim()) return;
+    gameStore.addTrainingPreset({
+      id: `preset-${Date.now()}`,
+      name: newPresetName.trim(),
+      primaryProgramId:    selectedMain,
+      secondary1ProgramId: selectedSub1,
+      secondary2ProgramId: selectedSub2,
+    });
+    gameStore.save();
+    newPresetName = "";
+    addingPreset = false;
+  }
+
+  function startRenamePreset(id: string, currentName: string) {
+    editingPresetId = id;
+    editingName = currentName;
+  }
+
+  function confirmRenamePreset(id: string) {
+    if (!editingName.trim()) return;
+    gameStore.renameTrainingPreset(id, editingName.trim());
+    gameStore.save();
+    editingPresetId = null;
+    editingName = "";
+  }
+
+  function deletePreset(id: string) {
+    gameStore.removeTrainingPreset(id);
+    gameStore.save();
+  }
+
+  function applyCoachAdvice(advice: CoachAdviceSuggestion) {
+    gameStore.setTrainingPlan({
+      primaryProgramId:    advice.primary,
+      secondaryProgramId:  advice.sub1,
+      secondary2ProgramId: advice.sub2,
+    });
+    gameStore.save();
+    coachAdviceDismissed = true;
+  }
 </script>
 
 <section class="page">
@@ -276,7 +374,82 @@
     </header>
 
     {#if tab === "plan"}
+    <div class="plan-wrapper">
+      <!-- ── 프리셋 관리 ──────────────────────────────────────── -->
+      <div class="preset-area">
+        <div class="preset-header-row">
+          <select
+            class="preset-select"
+            value={activePresetId ?? "__custom__"}
+            on:change={(e) => {
+              const found = savedPresets.find((p) => p.id === e.currentTarget.value);
+              if (found) applyPreset(found);
+            }}
+          >
+            {#if !activePresetId}
+              <option value="__custom__" disabled>— 현재 설정 —</option>
+            {/if}
+            {#each savedPresets as p}
+              <option value={p.id}>{p.name}</option>
+            {/each}
+            {#if savedPresets.length === 0}
+              <option value="__empty__" disabled>저장된 프리셋 없음</option>
+            {/if}
+          </select>
+          <button
+            class="mgmt-btn"
+            class:active={showPresetEditor}
+            on:click={() => { showPresetEditor = !showPresetEditor; }}
+          >{showPresetEditor ? "닫기" : "관리"}</button>
+          <button
+            class="mgmt-btn add"
+            class:active={addingPreset}
+            on:click={() => { addingPreset = !addingPreset; newPresetName = ""; }}
+          >+ 새 프리셋</button>
+        </div>
+
+        {#if addingPreset}
+          <div class="add-preset-row">
+            <input
+              bind:value={newPresetName}
+              placeholder="프리셋 이름 입력"
+              class="preset-name-input"
+              on:keydown={(e) => e.key === "Enter" && saveNewPreset()}
+            />
+            <button class="mgmt-btn" disabled={!newPresetName.trim()} on:click={saveNewPreset}>저장</button>
+            <button class="mgmt-btn" on:click={() => { addingPreset = false; newPresetName = ""; }}>취소</button>
+          </div>
+        {/if}
+
+        {#if showPresetEditor}
+          <div class="preset-editor">
+            {#if savedPresets.length === 0}
+              <p class="empty-text">저장된 프리셋이 없습니다.</p>
+            {:else}
+              {#each savedPresets as p (p.id)}
+                <div class="preset-edit-row" class:is-active={activePresetId === p.id}>
+                  {#if editingPresetId === p.id}
+                    <input
+                      bind:value={editingName}
+                      class="preset-name-input"
+                      on:keydown={(e) => e.key === "Enter" && confirmRenamePreset(p.id)}
+                    />
+                    <button class="mgmt-btn" on:click={() => confirmRenamePreset(p.id)}>확인</button>
+                    <button class="mgmt-btn" on:click={() => { editingPresetId = null; }}>취소</button>
+                  {:else}
+                    <span class="preset-edit-name">{p.name}</span>
+                    <button class="mgmt-btn" on:click={() => startRenamePreset(p.id, p.name)}>이름변경</button>
+                    <button class="mgmt-btn del" on:click={() => deletePreset(p.id)}>삭제</button>
+                  {/if}
+                </div>
+              {/each}
+            {/if}
+          </div>
+        {/if}
+      </div>
+
       <div class="content-grid">
+        <!-- ── 왼쪽: 훈련 슬롯 ──────────────────────────────── -->
         <section class="panel daily-plan">
           {#if isInjured && injury}
             <div class="injury-banner">
@@ -292,103 +465,135 @@
             </div>
           {/if}
 
-          <h3>훈련 슬롯 (3슬롯)</h3>
+          <h3>훈련 슬롯</h3>
 
-          <label>
-            <span>주훈련</span>
+          <label class="slot-label-wrap">
+            <span class="slot-label">주훈련 <span class="slot-mult">×1.0</span></span>
             <select
               value={selectedMain}
-              on:change={(e) => gameStore.setTrainingPlan({ primaryProgramId: e.currentTarget.value })}
+              on:change={(e) => { gameStore.setTrainingPlan({ primaryProgramId: e.currentTarget.value }); gameStore.save(); }}
             >
-              {#each mainPrograms as p}
+              {#each allPrograms as p}
                 <option value={p.id}>{p.title}</option>
               {/each}
             </select>
           </label>
 
-          <label>
-            <span>보조훈련</span>
+          <label class="slot-label-wrap">
+            <span class="slot-label">보조훈련 1 <span class="slot-mult">×0.5</span></span>
             <select
-              value={selectedSub}
-              on:change={(e) => gameStore.setTrainingPlan({ secondaryProgramId: e.currentTarget.value })}
+              value={selectedSub1}
+              on:change={(e) => { gameStore.setTrainingPlan({ secondaryProgramId: e.currentTarget.value }); gameStore.save(); }}
             >
-              {#each mainPrograms as p}
+              {#each allPrograms as p}
                 <option value={p.id}>{p.title}</option>
               {/each}
             </select>
           </label>
 
-          <label>
-            <span>회복/멘탈</span>
+          <label class="slot-label-wrap">
+            <span class="slot-label">보조훈련 2 <span class="slot-mult">×0.5</span></span>
             <select
-              value={selectedRecovery}
-              on:change={(e) => gameStore.setTrainingPlan({ recoveryProgramId: e.currentTarget.value })}
+              value={selectedSub2}
+              on:change={(e) => { gameStore.setTrainingPlan({ secondary2ProgramId: e.currentTarget.value }); gameStore.save(); }}
             >
-              {#each recoveryPrograms as p}
+              {#each allPrograms as p}
                 <option value={p.id}>{p.title}</option>
               {/each}
             </select>
           </label>
 
           {#if pitchDevSelected}
-            <div class="pitch-dev-notice">
-              {#if trainingPitch}
-                <span class="notice-label">구종 개발 대상</span>
-                <strong>{trainingPitch.name}</strong>
-                <span class="progress-text">{trainingPitch.progress.toFixed(0)}% 진행</span>
-              {:else}
+            {#if trainingPitch}
+              <div class="pitch-dev-widget">
+                <div class="pdw-header">
+                  <span class="pdw-label">구종 개발</span>
+                  <span class="pdw-name">{trainingPitch.name}</span>
+                </div>
+                <div class="progress-row">
+                  <span class="progress-label">진행도</span>
+                  <span class="progress-val">{trainingPitch.progress.toFixed(0)}%</span>
+                </div>
+                <div class="progress-wrap">
+                  <div class="progress-bar pdw-bar" style="width:{trainingPitch.progress}%"></div>
+                </div>
+                <p class="pdw-eta">예상 완료: 약 {pitchDevWeeksLeft}주 후</p>
+              </div>
+            {:else}
+              <div class="pitch-dev-notice">
                 <span class="notice-warn">⚠ 구종 개발 탭에서 훈련할 구종을 먼저 선택하세요.</span>
-              {/if}
+              </div>
+            {/if}
+          {/if}
+        </section>
+
+        <!-- ── 오른쪽: 코치 + 예상 결과 ─────────────────────── -->
+        <aside class="panel">
+          <!-- 코치 피드백 -->
+          <div class="coach-card">
+            <div class="coach-name">
+              {isBatter ? "타격 코치" : "투수 코치"}{pitchCoach ? ` ${pitchCoach.name}` : " (미배정)"}
+            </div>
+            <p class="coach-feedback">"{coachFeedback}"</p>
+          </div>
+
+          <!-- 코치 조언 -->
+          {#if coachAdvice && !coachAdviceDismissed}
+            <div class="advice-card">
+              <p class="advice-text">{coachAdvice.text}</p>
+              <div class="advice-btns">
+                <button class="advice-apply-btn" on:click={() => applyCoachAdvice(coachAdvice!)}>제안 적용</button>
+                <button class="advice-dismiss-btn" on:click={() => { coachAdviceDismissed = true; }}>무시</button>
+              </div>
             </div>
           {/if}
 
-          <div class="slot-cards">
-            {#each selectedCards as card}
-              <article>
-                <strong>{card.title}</strong>
-                <p>{card.focus}</p>
-                <p class="gain">효과: {card.gains}</p>
-                <p>피로 {card.fatigue >= 0 ? "+" : ""}{card.fatigue} · 위험 {card.risk >= 0 ? "+" : ""}{card.risk}</p>
-              </article>
-            {/each}
-          </div>
-        </section>
+          <!-- 예상 결과 -->
+          <div class="result-section">
+            <h3>예상 결과</h3>
 
-        <aside class="panel">
-          <h3>적용 보정</h3>
-          <ul>
-            <li>
-              <span>투수 코치{pitchCoach ? ` (${pitchCoach.name})` : ""}</span>
-              <strong>지도 {coachTeaching}</strong>
-            </li>
-            <li><span>코치 피로 보정</span><strong>x{coachMod.fatigue.toFixed(2)}</strong></li>
-            <li><span>시설 피로 보정</span><strong>x{facilityMod.fatigue.toFixed(2)}</strong></li>
-            <li><span>시설 리스크 보정</span><strong>x{facilityMod.risk.toFixed(2)}</strong></li>
-          </ul>
+            {#if gainChips.length > 0}
+              <div class="gain-chips">
+                {#each gainChips as chip}
+                  <span class="gain-chip {chip.type}">
+                    {chip.label}{chip.type === "up" ? " ↑" : " ↓"}
+                  </span>
+                {/each}
+              </div>
+            {/if}
+
+            <div class="fatigue-gauge-row">
+              <span class="gauge-label">피로</span>
+              <div class="gauge-track">
+                <div
+                  class="gauge-fill {fatigueGaugeDir === 'up' ? 'fatigue-up' : 'fatigue-down'}"
+                  style="width:{fatigueGaugePct}%"
+                ></div>
+              </div>
+              <span class="gauge-arrow {fatigueGaugeDir === 'up' ? 'up-text' : 'down-text'}">
+                {fatigueGaugeDir === "up" ? "↑" : "↓"}
+              </span>
+            </div>
+
+            <p class={`risk-note ${riskTone(projectedRisk)}`}>
+              {#if projectedRisk >= 20}
+                과부하 구간입니다. 회복 슬롯 강화를 권장합니다.
+              {:else if projectedRisk >= 13}
+                주의 구간입니다. 다음 주 고강도 훈련은 피하세요.
+              {:else}
+                안정 구간입니다. 현재 루틴 유지 가능.
+              {/if}
+            </p>
+          </div>
+
           {#if isSlump}
             <p class="risk-note danger">슬럼프 진행중 ({lowMoraleWeeks}주) — 훈련 효율 -30%</p>
           {:else if lowMoraleWeeks > 0}
             <p class="risk-note warn">사기 저하 {lowMoraleWeeks}주차 — 3주 연속 시 슬럼프 진입</p>
           {/if}
-
-          <h3>예상 결과</h3>
-          <ul>
-            <li><span>피로 변화</span><strong>{finalFatigueDelta >= 0 ? "+" : ""}{finalFatigueDelta}</strong></li>
-            <li><span>부상 위험 변화</span><strong>{finalRiskDelta >= 0 ? "+" : ""}{finalRiskDelta}%p</strong></li>
-            <li><span>훈련 가능 슬롯</span><strong>3 / 3</strong></li>
-          </ul>
-
-          <p class={`risk-note ${riskTone(projectedRisk)}`}>
-            {#if projectedRisk >= 20}
-              과부하 구간입니다. 회복 슬롯 강화를 권장합니다.
-            {:else if projectedRisk >= 13}
-              주의 구간입니다. 다음날 고강도 훈련은 피하세요.
-            {:else}
-              안정 구간입니다. 현재 루틴 유지 가능.
-            {/if}
-          </p>
         </aside>
       </div>
+    </div>
 
     {:else if tab === "pitch"}
       <div class="pitch-grid">
@@ -404,7 +609,7 @@
                 <article class="learned-card grade-{gradeTone(pitch.grade)}">
                   <div class="learned-head">
                     <strong>{pitch.name}</strong>
-                    <span class="grade-badge grade-{gradeTone(pitch.grade)}">{GRADE_LABEL[pitch.grade] ?? pitch.grade}</span>
+                    <span class="grade-badge grade-{gradeTone(pitch.grade)}">{(({ 1: "습득중", 2: "기초", 3: "보통", 4: "능숙", 5: "마스터" } as Record<number, string>)[pitch.grade] ?? pitch.grade)}</span>
                   </div>
                   {#if pitch.status === "grading"}
                     <div class="progress-row">
@@ -438,13 +643,12 @@
                 <span class="progress-val">{trainingPitch.progress.toFixed(0)}%</span>
               </div>
               <div class="progress-wrap"><div class="progress-bar" style="width:{trainingPitch.progress}%"></div></div>
-              <p class="hint">TRN_PITCH_DEV 슬롯 선택 시 매주 +20% 진행</p>
+              <p class="hint">구종 개발 슬롯 선택 시 매주 +17% 진행</p>
             </article>
           {:else}
             <p class="empty-text">진행중인 신규 습득 훈련이 없습니다.</p>
           {/if}
 
-          <!-- 해금 가능 구종 -->
           <h3 style="margin-top:12px">해금 가능 <span class="count">{eligiblePitches.length}</span></h3>
           {#if eligiblePitches.length === 0}
             <p class="empty-text">조건을 충족한 신규 구종이 없습니다.</p>
@@ -585,6 +789,14 @@
     gap: 10px;
   }
 
+  .plan-wrapper {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 8px;
+    min-height: 0;
+    overflow: hidden;
+  }
+
   .top-row {
     display: flex;
     justify-content: space-between;
@@ -625,11 +837,99 @@
   .kpis strong.warn   { color: #ffd78a; }
   .kpis strong.danger { color: #ff9b8a; }
 
+  /* ── 프리셋 관리 ─────────────────────────────────────── */
+  .preset-area {
+    display: grid;
+    gap: 6px;
+  }
+
+  .preset-header-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .preset-select {
+    flex: 1;
+    min-width: 120px;
+    max-width: 200px;
+  }
+
+  .mgmt-btn {
+    border: 1px solid #2e486f;
+    background: #1a2f50;
+    color: #b0c8ef;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.12s, border-color 0.12s;
+  }
+
+  .mgmt-btn:hover     { background: #1e3a6a; border-color: #4a78c0; }
+  .mgmt-btn.active    { background: #1e3f7a; border-color: #6da1f7; color: #e8f3ff; }
+  .mgmt-btn.add       { border-color: #3a6a3a; color: #8ee4a0; }
+  .mgmt-btn.add:hover { background: #1e3a2a; }
+  .mgmt-btn.del       { border-color: #6a3a3a; color: #e49090; }
+  .mgmt-btn.del:hover { background: #3a1e1e; }
+  .mgmt-btn:disabled  { opacity: 0.45; cursor: not-allowed; }
+
+  .add-preset-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .preset-name-input {
+    flex: 1;
+    border: 1px solid #355182;
+    background: #1a2f50;
+    color: #dbe8ff;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 12px;
+    outline: none;
+    min-width: 80px;
+  }
+
+  .preset-name-input:focus { border-color: #6da1f7; }
+
+  .preset-editor {
+    border: 1px solid #2a3f60;
+    border-radius: 8px;
+    background: #111c32;
+    padding: 8px;
+    display: grid;
+    gap: 4px;
+  }
+
+  .preset-edit-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 6px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+  }
+
+  .preset-edit-row.is-active {
+    border-color: #3a5a8f;
+    background: #162040;
+  }
+
+  .preset-edit-name {
+    flex: 1;
+    color: #c0d8ff;
+    font-size: 12px;
+  }
+
   /* ── 훈련 계획 탭 ─────────────────── */
   .content-grid {
     min-height: 0;
     display: grid;
-    grid-template-columns: minmax(0, 1.35fr) minmax(260px, 1fr);
+    grid-template-columns: minmax(0, 1.2fr) minmax(240px, 1fr);
     gap: 10px;
     overflow: hidden;
   }
@@ -646,41 +946,67 @@
     gap: 8px;
   }
 
-  .daily-plan label {
+  .slot-label-wrap {
     display: grid;
     gap: 4px;
   }
 
-  .daily-plan label span {
+  .slot-label {
     color: #aac0e4;
     font-size: 12px;
-  }
-
-  .pitch-dev-notice {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
+  }
+
+  .slot-mult {
+    font-size: 11px;
+    color: #6a8fbf;
+    border: 1px solid #2e486f;
+    border-radius: 4px;
+    padding: 1px 5px;
+  }
+
+  /* ── 구종 개발 위젯 ─────────────────── */
+  .pitch-dev-widget {
     border: 1px solid #2f6f58;
     border-radius: 8px;
     background: #0f2a22;
-    padding: 8px 10px;
+    padding: 10px;
+    display: grid;
+    gap: 6px;
+  }
+
+  .pdw-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pdw-label {
+    font-size: 11px;
+    color: #7ecfb8;
+  }
+
+  .pdw-name {
     font-size: 13px;
-    flex-wrap: wrap;
-  }
-
-  .notice-label {
-    color: #7ecfb8;
-    font-size: 12px;
-  }
-
-  .pitch-dev-notice strong {
     color: #c0f0e0;
+    font-weight: 600;
   }
 
-  .progress-text {
+  .pdw-bar { background: #4abf98; }
+
+  .pdw-eta {
+    font-size: 11px;
     color: #7ecfb8;
-    font-size: 12px;
-    margin-left: auto;
+  }
+
+  .pitch-dev-notice {
+    border: 1px solid #6f6f2f;
+    border-radius: 8px;
+    background: #2a2a0f;
+    padding: 8px 10px;
   }
 
   .notice-warn {
@@ -688,20 +1014,137 @@
     font-size: 12px;
   }
 
-  .slot-cards { display: grid; gap: 6px; margin-top: 4px; }
-
-  .slot-cards article, .training-card {
-    border: 1px solid #2d4a76;
+  /* ── 코치 패널 ─────────────────────── */
+  .coach-card {
+    border: 1px solid #2a4060;
     border-radius: 8px;
-    background: #152b4f;
-    padding: 8px;
+    background: #0e1e38;
+    padding: 10px 12px;
     display: grid;
-    gap: 4px;
+    gap: 6px;
   }
 
-  .slot-cards strong, .training-card strong { color: #eef5ff; font-size: 13px; }
-  .slot-cards p, .training-card p { color: #bfd2f3; font-size: 12px; }
-  .slot-cards .gain { color: #83e6ad; }
+  .coach-name {
+    font-size: 12px;
+    color: #7a9fcc;
+    font-weight: 600;
+  }
+
+  .coach-feedback {
+    font-size: 13px;
+    color: #c8deff;
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  .advice-card {
+    border: 1px solid #4a703a;
+    border-radius: 8px;
+    background: #152512;
+    padding: 10px 12px;
+    display: grid;
+    gap: 8px;
+  }
+
+  .advice-text {
+    font-size: 12px;
+    color: #a8d890;
+    line-height: 1.5;
+  }
+
+  .advice-btns {
+    display: flex;
+    gap: 6px;
+  }
+
+  .advice-apply-btn {
+    border: 1px solid #4a703a;
+    background: #1e3a18;
+    color: #90e878;
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.12s;
+  }
+
+  .advice-apply-btn:hover { background: #284a20; }
+
+  .advice-dismiss-btn {
+    border: 1px solid #3a3a4a;
+    background: #1a1a2a;
+    color: #8090b0;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.12s;
+  }
+
+  .advice-dismiss-btn:hover { background: #22223a; }
+
+  /* ── 예상 결과 ─────────────────────── */
+  .result-section {
+    display: grid;
+    gap: 8px;
+  }
+
+  .gain-chips {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+
+  .gain-chip {
+    border-radius: 999px;
+    padding: 3px 9px;
+    font-size: 11px;
+    border: 1px solid;
+  }
+
+  .gain-chip.up   { border-color: #3a6a5a; background: #0f2a22; color: #7adfc0; }
+  .gain-chip.down { border-color: #6a5a3a; background: #2a1e0f; color: #dfbc7a; }
+
+  .fatigue-gauge-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .gauge-label {
+    font-size: 12px;
+    color: #8090b0;
+    width: 28px;
+    flex-shrink: 0;
+  }
+
+  .gauge-track {
+    flex: 1;
+    height: 8px;
+    background: #1e3054;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .gauge-fill {
+    height: 100%;
+    border-radius: inherit;
+    transition: width 0.3s;
+  }
+
+  .gauge-fill.fatigue-up   { background: #c05040; }
+  .gauge-fill.fatigue-down { background: #40a060; }
+
+  .gauge-arrow {
+    font-size: 14px;
+    font-weight: bold;
+    width: 16px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .gauge-arrow.up-text   { color: #e07060; }
+  .gauge-arrow.down-text { color: #60c080; }
 
   ul, ol {
     margin: 0; padding: 0;
@@ -763,7 +1206,6 @@
     gap: 6px;
   }
 
-  /* 보유 구종 카드 */
   .learned-card {
     border: 1px solid #2e486f;
     border-radius: 8px;
@@ -786,7 +1228,6 @@
 
   .learned-head strong { color: #eef5ff; font-size: 13px; }
 
-  /* grade 뱃지 */
   .grade-badge {
     font-size: 11px;
     border-radius: 999px;
@@ -815,7 +1256,6 @@
     padding: 4px 0;
   }
 
-  /* progress 바 공용 */
   .progress-row {
     display: flex;
     justify-content: space-between;
@@ -839,7 +1279,6 @@
     transition: width 0.3s;
   }
 
-  /* 해금 가능 */
   .candidate-list article {
     border: 1px solid #2d4a76;
     border-radius: 8px;
@@ -860,7 +1299,6 @@
   .candidate-list button { padding: 4px 10px; }
   .candidate-list button:disabled { opacity: 0.45; cursor: not-allowed; }
 
-  /* 조건 미충족 */
   .locked-card {
     border: 1px solid #2d3a58;
     border-radius: 8px;
@@ -903,10 +1341,20 @@
   .req-val.ok { color: #7be4a6; }
   .req-val.no { color: #ff9b8a; }
 
+  .training-card {
+    border: 1px solid #2d4a76;
+    border-radius: 8px;
+    background: #152b4f;
+    padding: 8px;
+    display: grid;
+    gap: 4px;
+  }
+
+  .training-card strong { color: #eef5ff; font-size: 13px; }
+
   .empty-text { color: #6a85b0; font-size: 12px; }
   .hint       { color: #9fb5db; font-size: 12px; }
 
-  /* 부상 배너 */
   .injury-banner {
     display: flex;
     align-items: center;

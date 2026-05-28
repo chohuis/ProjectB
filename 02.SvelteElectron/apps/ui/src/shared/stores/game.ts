@@ -18,6 +18,7 @@ import type {
   SaveGame,
   SchoolState,
   TrainingPlanState,
+  TrainingPreset,
 } from "../types/save";
 import { makeSaveGame, migrateSaveGame } from "../types/save";
 import {
@@ -59,6 +60,7 @@ export interface GameStoreState {
   protagonist: ProtagonistSave;
   mailbox: MessageItem[];
   trainingPlan: TrainingPlanState;
+  trainingPresets: TrainingPreset[];
   schoolState: SchoolState;
   achievements: AchievementRuntime[];
   achievementMetrics: AchievementMetrics;
@@ -143,10 +145,17 @@ const DEFAULT_PROTAGONIST: ProtagonistSave = {
 };
 
 const DEFAULT_TRAINING_PLAN: TrainingPlanState = {
-  primaryProgramId:   "TRN_CMD_BASE",
-  secondaryProgramId: "TRN_CTRL_MECH",
-  recoveryProgramId:  "TRN_RECOVERY",
+  primaryProgramId:    "TRN_CTRL_CMD",
+  secondaryProgramId:  "TRN_VEL",
+  secondary2ProgramId: "TRN_RECOVERY",
+  recoveryProgramId:   "TRN_RECOVERY",
 };
+
+const DEFAULT_TRAINING_PRESETS: TrainingPreset[] = [
+  { id: "preset-default-1", name: "구속 집중",   primaryProgramId: "TRN_VEL",      secondary1ProgramId: "TRN_CTRL_CMD",  secondary2ProgramId: "TRN_STAMINA"  },
+  { id: "preset-default-2", name: "컨트롤 집중", primaryProgramId: "TRN_CTRL_CMD", secondary1ProgramId: "TRN_MOVEMENT",  secondary2ProgramId: "TRN_MENTAL_P" },
+  { id: "preset-default-3", name: "회복 루틴",   primaryProgramId: "TRN_RECOVERY", secondary1ProgramId: "TRN_MENTAL_P",  secondary2ProgramId: "TRN_STAMINA"  },
+];
 
 const DEFAULT_SCHOOL: SchoolState = {
   attendsUniversity: false,
@@ -310,6 +319,7 @@ function buildInitialState(): GameStoreState {
     protagonist:  p,
     mailbox:      DEFAULT_MAILBOX,
     trainingPlan: DEFAULT_TRAINING_PLAN,
+    trainingPresets: DEFAULT_TRAINING_PRESETS,
     schoolState:  DEFAULT_SCHOOL,
     achievements: DEFAULT_ACHIEVEMENTS,
     achievementMetrics: DEFAULT_ACHIEVEMENT_METRICS,
@@ -374,6 +384,7 @@ function fromSaveGame(saved: SaveGame): GameStoreState {
     protagonist:  p,
     mailbox:      saved.mailbox,
     trainingPlan: saved.trainingPlan,
+    trainingPresets: saved.trainingPresets ?? DEFAULT_TRAINING_PRESETS,
     schoolState:  { ...DEFAULT_SCHOOL, ...saved.schoolState },
     achievements,
     achievementMetrics: metrics,
@@ -490,7 +501,7 @@ function createGameStore() {
       return makeSaveGame(
         s.protagonist, s.mailbox, s.trainingPlan,
         s.schoolState, s.achievements, s.achievementMetrics, s.logs, s.upcoming,
-        s.contacts, s.npcs,
+        s.contacts, s.npcs, s.trainingPresets,
       );
     },
 
@@ -505,7 +516,7 @@ function createGameStore() {
       const gameData = makeSaveGame(
         s.protagonist, s.mailbox, s.trainingPlan,
         s.schoolState, s.achievements, s.achievementMetrics, s.logs, s.upcoming,
-        s.contacts, s.npcs,
+        s.contacts, s.npcs, s.trainingPresets,
       );
       try {
         if (s.currentSlotId && _getSeasonData) {
@@ -810,6 +821,21 @@ function createGameStore() {
 
     setTrainingPlan(plan: Partial<TrainingPlanState>) {
       update((s) => ({ ...s, trainingPlan: { ...s.trainingPlan, ...plan } }));
+    },
+
+    addTrainingPreset(preset: TrainingPreset) {
+      update((s) => ({ ...s, trainingPresets: [...s.trainingPresets, preset] }));
+    },
+
+    removeTrainingPreset(id: string) {
+      update((s) => ({ ...s, trainingPresets: s.trainingPresets.filter((p) => p.id !== id) }));
+    },
+
+    renameTrainingPreset(id: string, name: string) {
+      update((s) => ({
+        ...s,
+        trainingPresets: s.trainingPresets.map((p) => p.id === id ? { ...p, name } : p),
+      }));
     },
 
     // 주간 학업 선택 모드 저장
@@ -1482,6 +1508,7 @@ function createGameStore() {
         protagonist,
         mailbox: [],
         trainingPlan: DEFAULT_TRAINING_PLAN,
+        trainingPresets: DEFAULT_TRAINING_PRESETS,
         schoolState: DEFAULT_SCHOOL,
         achievements: DEFAULT_ACHIEVEMENTS,
         achievementMetrics: DEFAULT_ACHIEVEMENT_METRICS,
