@@ -186,12 +186,83 @@
   };
 
   // ── Step 2 헬퍼 ────────────────────────────────────────────────
+  function hexToRgba(hex: string, alpha: number): string {
+    const h = hex.replace("#", "");
+    const r = parseInt(h.slice(0, 2), 16);
+    const g = parseInt(h.slice(2, 4), 16);
+    const b = parseInt(h.slice(4, 6), 16);
+    return `rgba(${r},${g},${b},${alpha})`;
+  }
+
+  function teamListStyle(team: typeof hsTeams[number], selected: boolean): string {
+    const c = team.colors?.[0];
+    if (!c) return "";
+    if (selected) return `border-color:${c};background:linear-gradient(90deg,${hexToRgba(c,0.18)} 0%,${hexToRgba(c,0.06)} 60%,transparent 100%);`;
+    return `border-left-color:${c};`;
+  }
+
+  function detailPanelStyle(team: typeof selectedTeam): string {
+    const c = team?.colors?.[0];
+    if (!c) return "";
+    return `border-color:${hexToRgba(c, 0.35)};`;
+  }
+
+  function colorBarStyle(team: typeof selectedTeam): string {
+    const c0 = team?.colors?.[0], c1 = team?.colors?.[1];
+    if (!c0) return "background:#2b5aaa;";
+    return `background:linear-gradient(90deg,${c0} 0%,${c1 ?? c0} 100%);`;
+  }
+
+  function styleBadgeStyle(team: typeof selectedTeam): string {
+    const c = team?.colors?.[0];
+    if (!c) return "";
+    return `background:${hexToRgba(c,0.18)};border-color:${hexToRgba(c,0.5)};color:${c};`;
+  }
+
   function recordTone(result: string): "gold" | "silver" | "bronze" | "normal" | "dim" {
     if (result === "우승") return "gold";
     if (result === "준우승") return "silver";
     if (result === "플레이오프") return "bronze";
     if (result === "예선 탈락") return "dim";
     return "normal";
+  }
+
+  // ── Step 3 레이더 헬퍼 ────────────────────────────────────────────
+  const PRESET_COLORS: Record<PresetKey, string> = {
+    balanced: "#4a80f0", power: "#f05050", control: "#50c080", stamina: "#f0c040",
+  };
+
+  const RADAR_LABELS = ["구위", "커맨드", "제구", "무브먼트", "멘탈", "스태미나"];
+  const RADAR_MAX = 70;
+  const RADAR_R   = 46;
+  const RADAR_CX  = 70;
+  const RADAR_CY  = 70;
+
+  const RADAR_AXES = Array.from({ length: 6 }, (_, i) => {
+    const a = (Math.PI / 180) * (-90 + i * 60);
+    return { x: +(RADAR_CX + RADAR_R * Math.cos(a)).toFixed(1), y: +(RADAR_CY + RADAR_R * Math.sin(a)).toFixed(1) };
+  });
+
+  const RADAR_LPOS = Array.from({ length: 6 }, (_, i) => {
+    const a = (Math.PI / 180) * (-90 + i * 60);
+    const r = RADAR_R + 14;
+    return { x: +(RADAR_CX + r * Math.cos(a)).toFixed(1), y: +(RADAR_CY + r * Math.sin(a)).toFixed(1) };
+  });
+
+  function gridPts(ratio: number): string {
+    return Array.from({ length: 6 }, (_, i) => {
+      const a = (Math.PI / 180) * (-90 + i * 60);
+      return `${(RADAR_CX + RADAR_R * ratio * Math.cos(a)).toFixed(1)},${(RADAR_CY + RADAR_R * ratio * Math.sin(a)).toFixed(1)}`;
+    }).join(" ");
+  }
+
+  function radarPts(p: typeof PRESETS[PresetKey]["pitching"]): string {
+    const vals = [p.velocity, p.command, p.control, p.movement, p.mentality, p.stamina];
+    return vals.map((v, i) => {
+      const a = (Math.PI / 180) * (-90 + i * 60);
+      const ratio = Math.min(v / RADAR_MAX, 1);
+      return `${(RADAR_CX + RADAR_R * ratio * Math.cos(a)).toFixed(1)},${(RADAR_CY + RADAR_R * ratio * Math.sin(a)).toFixed(1)}`;
+    }).join(" ");
   }
 
 </script>
@@ -275,9 +346,16 @@
                 <button
                   class="team-list-item"
                   class:selected={selectedTeamId === team.id}
+                  style={teamListStyle(team, selectedTeamId === team.id)}
                   on:click={() => (selectedTeamId = team.id)}
                 >
                   <div class="tli-main">
+                    {#if team.colors}
+                      <span class="color-dots">
+                        <span class="cdot" style="background:{team.colors[0]};"></span>
+                        <span class="cdot" style="background:{team.colors[1]};"></span>
+                      </span>
+                    {/if}
                     <strong>{team.name}</strong>
                   </div>
                 </button>
@@ -293,11 +371,12 @@
           {#if selectedTeam}
             <div class="detail-inner">
               <!-- 팀 정보 + 역사 -->
-              <div class="team-info-col">
+              <div class="team-info-col" style={detailPanelStyle(selectedTeam)}>
+                <div class="team-color-bar" style={colorBarStyle(selectedTeam)}></div>
                 {#if selectedTeam.profile}
                   <div class="ti-header">
                     <div class="ti-badge-row">
-                      <span class="style-badge">{selectedTeam.profile.style}</span>
+                      <span class="style-badge" style={styleBadgeStyle(selectedTeam)}>{selectedTeam.profile.style}</span>
                     </div>
                     <p class="team-desc">{selectedTeam.profile.desc}</p>
                     <div class="tag-row">
@@ -347,7 +426,8 @@
               </div>
 
               <!-- 로스터 -->
-              <div class="roster-col">
+              <div class="roster-col" style={detailPanelStyle(selectedTeam)}>
+                <div class="team-color-bar" style={colorBarStyle(selectedTeam)}></div>
                 {#if teamManager}
                   <div class="section-label">감독</div>
                   <div class="entity-card manager-card">
@@ -404,18 +484,21 @@
 
     <!-- Step 3 -->
     {:else if step === 3}
-      <section class="step-body">
-        <h2>능력치 프리셋</h2>
-        <p class="sub">초기 능력치 유형을 선택하세요. 성장하면서 바뀔 수 있습니다.</p>
+      <section class="step3-layout">
+        <div class="step3-top">
+          <h2>능력치 프리셋</h2>
+          <p class="sub">초기 능력치 유형을 선택하세요. 성장하면서 바뀔 수 있습니다.</p>
+        </div>
 
         <div class="preset-grid">
           {#each Object.entries(PRESETS) as [key, preset]}
+            {@const accent = PRESET_COLORS[key as PresetKey]}
             <button
               class="preset-card"
               class:selected={selectedPreset === key}
               on:click={() => (selectedPreset = key as PresetKey)}
             >
-              <strong>{preset.label}</strong>
+              <strong style="color:{accent}">{preset.label}</strong>
               <p>{preset.desc}</p>
               <ul class="stat-mini">
                 <li><span>구위</span><span>{preset.pitching.velocity}</span></li>
@@ -425,12 +508,40 @@
                 <li><span>멘탈</span><span>{preset.pitching.mentality}</span></li>
                 <li><span>스태미나</span><span>{preset.pitching.stamina}</span></li>
               </ul>
+              <div class="preset-pitches">
+                {#each preset.pitches as pitch}
+                  <span class="preset-pitch"
+                    style="color:{accent};border-color:{hexToRgba(accent,0.45)};background:{hexToRgba(accent,0.1)};"
+                    class:lv2={pitch.grade >= 2}
+                  >{PITCH_NAMES[pitch.id]} Lv.{pitch.grade}</span>
+                {/each}
+              </div>
+              <div class="radar-wrap">
+              <svg viewBox="0 0 140 140" class="radar-svg">
+                {#each [0.33, 0.66, 1] as ratio}
+                  <polygon points={gridPts(ratio)} fill="none" stroke="#253a5a" stroke-width="0.8"/>
+                {/each}
+                {#each RADAR_AXES as ax, i}
+                  <line x1={RADAR_CX} y1={RADAR_CY} x2={ax.x} y2={ax.y} stroke="#253a5a" stroke-width="0.8"/>
+                  <text x={RADAR_LPOS[i].x} y={RADAR_LPOS[i].y}
+                        text-anchor="middle" dominant-baseline="middle"
+                        font-size="7" fill="#5a7898">{RADAR_LABELS[i]}</text>
+                {/each}
+                <polygon
+                  points={radarPts(preset.pitching)}
+                  fill={hexToRgba(accent, 0.22)}
+                  stroke={accent}
+                  stroke-width="1.5"
+                />
+              </svg>
+              </div>
             </button>
           {/each}
         </div>
       </section>
 
     <!-- Step 4 -->
+
     {:else if step === 4}
       <section class="step-body">
         <h2>확인</h2>
@@ -740,12 +851,17 @@
     gap: 4px;
     padding: 10px 12px;
     border: 1px solid #2d4470;
+    border-left-width: 3px;
     border-radius: 8px;
     background: #111d34;
     color: #e4edff;
     cursor: pointer;
     text-align: left;
-    transition: all 0.15s;
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .team-list-item:hover:not(.selected) {
+    background: #162240;
   }
 
   .team-list-item.selected {
@@ -761,6 +877,30 @@
 
   .tli-main strong {
     font-size: 13px;
+  }
+
+  .color-dots {
+    display: flex;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+
+  .cdot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.12);
+    display: inline-block;
+  }
+
+  .team-color-bar {
+    height: 4px;
+    margin: -16px -16px 10px;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .roster-col .team-color-bar {
+    margin: -14px -14px 8px;
   }
 
   .tli-meta {
@@ -1023,6 +1163,7 @@
   }
 
   .entity-sub {
+    flex-basis: 100%;
     font-size: 11px;
     color: #5a7a9a;
   }
@@ -1063,22 +1204,40 @@
     font-weight: 700;
   }
 
+  /* ── Step 3 전용 레이아웃 ── */
+  .step3-layout {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    height: 100%;
+    padding: 8px 0 16px;
+    box-sizing: border-box;
+    gap: 10px;
+  }
+
+  .step3-top h2  { margin: 0 0 2px; font-size: 24px; color: #ebf3ff; }
+  .step3-top .sub { margin: 0; }
+
   /* ── 프리셋 그리드 ── */
   .preset-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 12px;
+    min-height: 0;
   }
 
   .preset-card {
     text-align: left;
-    padding: 16px;
+    padding: 14px;
     border: 1px solid #2d4470;
     border-radius: 10px;
     background: #111d34;
     color: #e4edff;
     cursor: pointer;
     transition: all 0.15s;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow-y: auto;
   }
 
   .preset-card.selected {
@@ -1088,24 +1247,25 @@
 
   .preset-card strong {
     display: block;
-    font-size: 16px;
-    margin-bottom: 6px;
+    font-size: 18px;
+    margin-bottom: 8px;
   }
 
   .preset-card p {
     margin: 0 0 12px;
-    font-size: 12px;
+    font-size: 13px;
     color: #8aabcf;
-    line-height: 1.5;
+    line-height: 1.6;
   }
 
   .stat-mini {
     list-style: none;
     margin: 0;
     padding: 0;
+    width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 4px 12px;
+    column-gap: 16px;
   }
 
   .stat-mini li {
@@ -1114,7 +1274,42 @@
     font-size: 12px;
     color: #9db6d8;
     border-bottom: 1px solid #1e3050;
-    padding: 3px 0;
+    padding: 7px 0;
+  }
+
+  .preset-pitches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .preset-pitch {
+    border: 1px solid transparent;
+    border-radius: 5px;
+    padding: 4px 11px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .preset-pitch.lv2 {
+    filter: brightness(1.25);
+  }
+
+  .radar-wrap {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 10px;
+  }
+
+  .radar-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
   }
 
   /* ── 요약 카드 ── */
