@@ -83,8 +83,28 @@
   }
 
   // ── 선발라인업 ────────────────────────────────────────────────
-  $: pitchers = allMembers.filter((e) => e.role === "player" && playerType(e) !== "batter")
-    .sort((a, b) => playerOvr(b) - playerOvr(a));
+  interface RotationEntry { player: EntityRow; isTemp: boolean; }
+
+  function buildRotation(members: EntityRow[]): { rotation: RotationEntry[]; bullpenCount: number } {
+    const all = members
+      .filter((e) => e.role === "player" && playerType(e) !== "batter")
+      .sort((a, b) => playerOvr(b) - playerOvr(a));
+
+    const sps  = all.filter((e) => playerPos(e) === "SP");
+    const rest = all.filter((e) => playerPos(e) !== "SP");
+
+    const rotation: RotationEntry[] = [];
+    sps.slice(0, 5).forEach((p) => rotation.push({ player: p, isTemp: false }));
+    if (rotation.length < 5) {
+      rest.slice(0, 5 - rotation.length).forEach((p) => rotation.push({ player: p, isTemp: true }));
+    }
+
+    const usedIds = new Set(rotation.map((r) => r.player.id));
+    const bullpenCount = all.filter((e) => !usedIds.has(e.id)).length;
+    return { rotation, bullpenCount };
+  }
+
+  $: ({ rotation: spRotation, bullpenCount } = buildRotation(allMembers));
 
   const SP_LABELS = ["1선발", "2선발", "3선발", "4선발", "5선발"];
   const LINEUP_POSITIONS = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH"] as const;
@@ -426,23 +446,23 @@
           <div class="lineup-grid">
             <section class="lineup-section">
               <h4>선발 로테이션</h4>
-              {#if pitchers.length === 0}
+              {#if spRotation.length === 0}
                 <p class="empty">투수 데이터 없음</p>
               {:else}
                 <div class="lineup-rows">
-                  {#each pitchers.slice(0, 5) as row, i}
-                    <div class="lineup-row" class:hero={row.id === $gameStore.protagonist.id}>
+                  {#each spRotation as entry, i}
+                    <div class="lineup-row" class:hero={entry.player.id === $gameStore.protagonist.id}>
                       <span class="slot-label">{SP_LABELS[i] ?? `${i + 1}선발`}</span>
                       <span class="player-name">
-                        {row.name}
-                        {#if row.id === $gameStore.protagonist.id}<span class="hero-tag">나</span>{/if}
+                        {entry.player.name}
+                        {#if entry.player.id === $gameStore.protagonist.id}<span class="hero-tag">나</span>{/if}
                       </span>
-                      <span class="pos-tag">{playerPos(row)}</span>
-                      <span class="ovr-tag">{playerOvr(row)}</span>
+                      <span class="pos-tag" class:pos-temp={entry.isTemp}>{playerPos(entry.player)}{entry.isTemp ? "*" : ""}</span>
+                      <span class="ovr-tag">{playerOvr(entry.player)}</span>
                     </div>
                   {/each}
-                  {#if pitchers.length > 5}
-                    <div class="lineup-more">불펜 {pitchers.length - 5}명</div>
+                  {#if bullpenCount > 0}
+                    <div class="lineup-more">불펜 {bullpenCount}명</div>
                   {/if}
                 </div>
               {/if}
