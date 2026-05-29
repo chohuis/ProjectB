@@ -71,6 +71,105 @@ export interface PitchEntry {
   grade: PitchGrade;
 }
 
+// ── 부상 시스템 ────────────────────────────────────────────────
+
+// 경상
+export type InjuryTypeLight =
+  | "BLISTER"           // 손가락 물집
+  | "ARM_FATIGUE"       // 팔 피로감
+  | "MUSCLE_TIGHTNESS"  // 근육 긴장
+  | "BACK_STIFFNESS"    // 허리 뻐근함
+  | "ANKLE_SPRAIN_L";   // 발목 염좌 (경)
+
+// 중상
+export type InjuryTypeModerate =
+  | "ELBOW_INFLAM"    // 팔꿈치 염증
+  | "SHOULDER_INFLAM" // 어깨 염증
+  | "OBLIQUE_STRAIN"  // 복사근 부상
+  | "HAMSTRING"       // 햄스트링
+  | "CONCUSSION"      // 뇌진탕
+  | "ANKLE_SPRAIN_M"; // 발목 염좌 (중)
+
+// 중증
+export type InjuryTypeSevere =
+  | "UCL_PARTIAL"      // UCL 부분 파열
+  | "ROTATOR_STRAIN"   // 회전근개 파열 (부분)
+  | "BACK_HERNIATION"  // 허리 디스크
+  | "YIPS";            // 입스
+
+// 수술
+export type InjuryTypeSurgery =
+  | "UCL_FULL"          // UCL 완전 파열 (토미존 수술)
+  | "ROTATOR_FULL"      // 회전근개 완전 파열
+  | "SHOULDER_SURGERY"; // 어깨 관절경 수술
+
+export type InjuryType = InjuryTypeLight | InjuryTypeModerate | InjuryTypeSevere | InjuryTypeSurgery;
+
+export type InjurySeverity = "light" | "moderate" | "severe" | "surgery";
+
+export type InjuryTreatment =
+  | "rest"          // 자연 휴식 (경상 자동)
+  | "conservative"  // 보존 치료 (물리치료)
+  | "steroid"       // 스테로이드 주사
+  | "prp"           // PRP 주사 + 재활
+  | "surgery"       // 수술 전환
+  | "counseling"    // 심리 상담 (입스)
+  | "self";         // 자가 극복 (입스)
+
+export type InjurySource = "fatigue" | "training" | "game" | "age" | "psychological";
+
+export interface InjuryState {
+  type: InjuryType;
+  severity: InjurySeverity;
+  treatmentChoice?: InjuryTreatment;
+  recoveryWeeksLeft: number;
+  totalRecoveryWeeks: number;        // 전체 기간 (UI 진행률 표시용)
+  rehabPhase?: 1 | 2 | 3 | 4;       // surgery 타입 전용 단계
+  permanentPenaltyApplied: boolean;  // 복귀 시 영구 감소 적용 여부
+  source: InjurySource;
+}
+
+export interface InjuryHistoryEntry {
+  type: InjuryType;
+  severity: InjurySeverity;
+  year: number;
+  week: number;
+  treatmentChoice: InjuryTreatment;
+  permanentLoss?: Partial<Record<PitchingStatKey | BattingStatKey, number>>;
+}
+
+// 부상명 한국어 표시
+export const INJURY_LABEL: Record<InjuryType, string> = {
+  BLISTER:          "손가락 물집",
+  ARM_FATIGUE:      "팔 피로감",
+  MUSCLE_TIGHTNESS: "근육 긴장",
+  BACK_STIFFNESS:   "허리 뻐근함",
+  ANKLE_SPRAIN_L:   "발목 염좌 (경)",
+  ELBOW_INFLAM:     "팔꿈치 염증",
+  SHOULDER_INFLAM:  "어깨 염증",
+  OBLIQUE_STRAIN:   "복사근 부상",
+  HAMSTRING:        "햄스트링",
+  CONCUSSION:       "뇌진탕",
+  ANKLE_SPRAIN_M:   "발목 염좌 (중)",
+  UCL_PARTIAL:      "UCL 부분 파열",
+  ROTATOR_STRAIN:   "회전근개 파열",
+  BACK_HERNIATION:  "허리 디스크",
+  YIPS:             "입스",
+  UCL_FULL:         "UCL 완전 파열",
+  ROTATOR_FULL:     "회전근개 완전 파열",
+  SHOULDER_SURGERY: "어깨 관절경 수술",
+};
+
+// 부상 severity 판정 헬퍼
+export const INJURY_SEVERITY: Record<InjuryType, InjurySeverity> = {
+  BLISTER: "light", ARM_FATIGUE: "light", MUSCLE_TIGHTNESS: "light",
+  BACK_STIFFNESS: "light", ANKLE_SPRAIN_L: "light",
+  ELBOW_INFLAM: "moderate", SHOULDER_INFLAM: "moderate", OBLIQUE_STRAIN: "moderate",
+  HAMSTRING: "moderate", CONCUSSION: "moderate", ANKLE_SPRAIN_M: "moderate",
+  UCL_PARTIAL: "severe", ROTATOR_STRAIN: "severe", BACK_HERNIATION: "severe", YIPS: "severe",
+  UCL_FULL: "surgery", ROTATOR_FULL: "surgery", SHOULDER_SURGERY: "surgery",
+};
+
 // ── 주인공 저장 데이터 ─────────────────────────────────────────
 export type CareerStage  = "highschool" | "university" | "pro" | "independent" | "military" | "pro_kbl" | "pro_abl";
 export type PlayerType   = "pitcher" | "batter" | "twoWay";
@@ -150,10 +249,8 @@ export interface ProtagonistSave {
   contract?: ProContract;
   consecutiveLowMoraleWeeks: number;
   consecutiveHighFatigueWeeks: number;
-  injury?: {
-    type: "light" | "moderate" | "severe";
-    recoveryWeeksLeft: number;
-  };
+  injury?: InjuryState;
+  injuryHistory?: InjuryHistoryEntry[];
   seasonHealth?: {
     lowConditionWeeks: number;  // 시즌 중 condition < 60이었던 주 수
     highFatigueWeeks:  number;  // 시즌 중 fatigue > 70이었던 주 수
@@ -424,6 +521,10 @@ export interface NpcSaveState {
   batting?: BattingAttributes;
   developmentRate: number;
   proServiceYears?: number;  // 프로 입단 후 연수 (KBL/ABL FA 자격 기준: 9년)
+  injuryStatus?: {
+    severity: InjurySeverity;
+    recoveryWeeksLeft: number;
+  };
   careerHistory: NpcCareerEntry[];
   achievements: string[];  // ["2025 신인상", "2027 MVP"]
 }

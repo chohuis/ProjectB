@@ -9,6 +9,7 @@ import type {
   CareerSeasonRecord,
   ChatContact,
   ChatMessage,
+  InjuryState,
   NpcCareerEntry,
   NpcSaveState,
   PitchEntry,
@@ -386,6 +387,24 @@ function migrateProtagonist(p: ProtagonistSave & { learnedPitchIds?: string[] })
     battingMerged.battingClutch * 0.6;
   battingMerged.ovr = Math.round(battingWeighted / 11.8);
 
+  // 구버전 injury 형식 ({ type: "light"|"moderate"|"severe" }) → InjuryState 변환
+  const rawInjury = p.injury as unknown as { type?: string; severity?: string; recoveryWeeksLeft?: number } | undefined;
+  let migratedInjury: InjuryState | undefined = p.injury as InjuryState | undefined;
+  if (rawInjury && rawInjury.type && !rawInjury.severity) {
+    const oldType = rawInjury.type as "light" | "moderate" | "severe";
+    const injType =
+      oldType === "severe" ? "UCL_PARTIAL" :
+      oldType === "moderate" ? "ELBOW_INFLAM" : "ARM_FATIGUE";
+    migratedInjury = {
+      type: injType,
+      severity: oldType === "severe" ? "severe" : oldType,
+      recoveryWeeksLeft: rawInjury.recoveryWeeksLeft ?? 1,
+      totalRecoveryWeeks: rawInjury.recoveryWeeksLeft ?? 1,
+      permanentPenaltyApplied: false,
+      source: "fatigue",
+    };
+  }
+
   return {
     ...p,
     pitching: pitchingMerged,
@@ -396,6 +415,7 @@ function migrateProtagonist(p: ProtagonistSave & { learnedPitchIds?: string[] })
     popularity: p.popularity ?? def.popularity,
     battingXP:  p.battingXP  ?? {},
     pitches,
+    injury: migratedInjury,
     consecutiveLowMoraleWeeks:  p.consecutiveLowMoraleWeeks  ?? 0,
     consecutiveHighFatigueWeeks: p.consecutiveHighFatigueWeeks ?? 0,
     careerRecords: p.careerRecords ?? [],

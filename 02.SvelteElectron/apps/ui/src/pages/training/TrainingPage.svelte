@@ -455,7 +455,7 @@
             <div class="injury-banner">
               <span class="injury-icon">🩹</span>
               <span>
-                <strong>{injury.type === "moderate" ? "중상" : injury.type === "severe" ? "중증" : "경상"}</strong>
+                <strong>{injury.severity === "moderate" ? "중상" : injury.severity === "severe" ? "중증" : injury.severity === "surgery" ? "수술" : "경상"}</strong>
                 회복 중 — 잔여 <strong>{injury.recoveryWeeksLeft}주</strong> · 훈련 효율 -80%
               </span>
             </div>
@@ -716,7 +716,7 @@
 
           {#if isInjured && injury}
             <p class="risk-note danger">
-              부상 중 ({injury.type === "moderate" ? "중상" : injury.type === "severe" ? "중증" : "경상"}) — {injury.recoveryWeeksLeft}주 회복 필요
+              부상 중 ({injury.severity === "moderate" ? "중상" : injury.severity === "severe" ? "중증" : injury.severity === "surgery" ? "수술" : "경상"}) — {injury.recoveryWeeksLeft}주 회복 필요
             </p>
           {:else if highFatWeeks >= 2}
             <p class="risk-note warn">피로 위험 {highFatWeeks}주 연속 — 부상 발생 가능</p>

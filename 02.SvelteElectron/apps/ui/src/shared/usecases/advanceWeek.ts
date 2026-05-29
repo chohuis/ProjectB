@@ -12,7 +12,8 @@ import { isFaEligible } from "../utils/faEngine";
 import type { LeagueSeasonState, MatchResult, PendingAction, PlayerCondition, ScheduleEntry, WeekAdvanceResult } from "../types/season";
 import type { EventContext } from "../types/event";
 import type { MessageItem } from "../types/main";
-import type { ProtagonistSave } from "../types/save";
+import type { InjuryState, ProtagonistSave } from "../types/save";
+import { INJURY_LABEL } from "../types/save";
 import { toGameDate, generateHsPostseasonSemis, generateHsPostseasonFinal } from "../utils/scheduleGen";
 import { assignProtagonistRole, assignHighschoolPosition, ROLE_DESCRIPTION, isReliefsRole, relieverWouldPitch } from "../utils/pitcherRoleEngine";
 import {
@@ -310,12 +311,30 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     fatigue: g.protagonist.fatigue,
     consecutiveHighFatigueWeeks: g.protagonist.consecutiveHighFatigueWeeks ?? 0,
     hasInjury: alreadyInjured,
-    injuryType: g.protagonist.injury?.type ?? null,
+    injuryType: g.protagonist.injury?.severity ?? null,
     recoveryWeeksLeft: g.protagonist.injury?.recoveryWeeksLeft ?? null,
   }))) as { injuryUpdate: { type: string; recoveryWeeksLeft: number } | null; justOccurred: boolean; justHealed: boolean; effMod: number; newConsecutiveHighFatigueWeeks: number };
-  const injuryUpdate = injuryCalc.injuryUpdate as ProtagonistSave["injury"] | undefined;
   const injuryJustOccurred = injuryCalc.justOccurred;
   const injuryJustHealed   = injuryCalc.justHealed;
+
+  // Rust 출력 { type: "light"|"moderate", recoveryWeeksLeft } → InjuryState 브릿지
+  let injuryState: InjuryState | undefined;
+  if (!injuryJustHealed && injuryCalc.injuryUpdate) {
+    if (injuryJustOccurred) {
+      const rustSeverity = injuryCalc.injuryUpdate.type as "light" | "moderate";
+      const injType = rustSeverity === "moderate" ? "ELBOW_INFLAM" : "ARM_FATIGUE";
+      injuryState = {
+        type: injType,
+        severity: rustSeverity,
+        recoveryWeeksLeft: injuryCalc.injuryUpdate.recoveryWeeksLeft,
+        totalRecoveryWeeks: injuryCalc.injuryUpdate.recoveryWeeksLeft,
+        permanentPenaltyApplied: false,
+        source: "fatigue",
+      };
+    } else if (alreadyInjured && g.protagonist.injury) {
+      injuryState = { ...g.protagonist.injury, recoveryWeeksLeft: injuryCalc.injuryUpdate.recoveryWeeksLeft };
+    }
+  }
 
   const finalEffMod = studyResult.efficiencyMod * (1 + majorEffBonus + coachEffBonus)
     * facilityEffMod * slumpPenalty * injuryCalc.effMod;
@@ -324,11 +343,11 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
 
   if (newLowMoraleWeeks >= 3) growth.logs.push(`[슬럼프] 사기 저하 ${newLowMoraleWeeks}주 연속 — 훈련 효율 -30%`);
   if (coachEffBonus > 0.01) growth.logs.push(`[코치] 투수 코치 지도 보너스 +${Math.round(coachEffBonus * 100)}%`);
-  if (injuryJustOccurred && injuryUpdate) {
-    const label = injuryUpdate.type === "moderate" ? "중상" : "경상";
-    growth.logs.push(`[부상] ${label} 발생 — ${injuryUpdate.recoveryWeeksLeft}주 회복 필요`);
-  } else if (alreadyInjured && !injuryJustHealed && injuryUpdate) {
-    growth.logs.push(`[부상] 회복 중 (${injuryUpdate.recoveryWeeksLeft}주 남음) — 훈련 효율 -80%`);
+  if (injuryJustOccurred && injuryState) {
+    const label = INJURY_LABEL[injuryState.type];
+    growth.logs.push(`[부상] ${label} 발생 — ${injuryState.recoveryWeeksLeft}주 회복 필요`);
+  } else if (alreadyInjured && !injuryJustHealed && injuryState) {
+    growth.logs.push(`[부상] 회복 중 (${injuryState.recoveryWeeksLeft}주 남음) — 훈련 효율 -80%`);
   } else if (injuryJustHealed) {
     growth.logs.push(`[부상] 회복 완료 — 정상 훈련 재개`);
   }
@@ -338,7 +357,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
 
   growth.protagonistPatch.consecutiveLowMoraleWeeks  = newLowMoraleWeeks;
   growth.protagonistPatch.consecutiveHighFatigueWeeks = injuryCalc.newConsecutiveHighFatigueWeeks;
-  growth.protagonistPatch.injury                      = injuryUpdate;
+  growth.protagonistPatch.injury                      = injuryState;
 
   const shPrev = g.protagonist.seasonHealth ?? { lowConditionWeeks: 0, highFatigueWeeks: 0, injuryCount: 0, totalWeeks: 0 };
   growth.protagonistPatch.seasonHealth = {
