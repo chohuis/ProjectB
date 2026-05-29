@@ -17,7 +17,6 @@
   import RightPanel from "../../features/main-layout/ui/RightPanel.svelte";
   import StatusPage from "../status/StatusPage.svelte";
   import AcademicsPage from "../academics/AcademicsPage.svelte";
-  import RosterPage from "../roster/RosterPage.svelte";
   import SchedulePage from "../schedule/SchedulePage.svelte";
   import TrainingPage from "../training/TrainingPage.svelte";
   import FinancePage from "../finance/FinancePage.svelte";
@@ -51,7 +50,6 @@
   export let onSeasonEnd: () => void = () => {};
 
   let currentTab: MainTabId = "home";
-  let rosterTeamId = "";
   let devToolsHubOpen = false;
   let eventManagerOpen = false;
   let entityManagerOpen = false;
@@ -65,7 +63,6 @@
     messenger: "page.messenger",
     status: "page.status",
     team: "page.team",
-    roster: "page.roster",
     schedule: "page.schedule",
     training: "page.training",
     finance: "page.finance",
@@ -386,8 +383,6 @@
             <StatusPage />
           {:else if currentTab === "academics"}
             <AcademicsPage />
-          {:else if currentTab === "roster"}
-            <RosterPage filterTeamId={rosterTeamId} />
           {:else if currentTab === "schedule"}
             <SchedulePage />
           {:else if currentTab === "training"}
@@ -403,7 +398,7 @@
           {:else if currentTab === "messenger"}
             <MessengerPage />
           {:else if currentTab === "team"}
-            <TeamPage on:gotoRoster={(e) => { rosterTeamId = e.detail.teamId; currentTab = "roster"; }} />
+            <TeamPage />
           {:else}
             <section class="placeholder">
               {$t("main.placeholderPreparing", { tab: $t(tabPageKey[currentTab]) })}

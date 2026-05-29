@@ -4,11 +4,13 @@
   import { seasonStore } from "../../../shared/stores/season";
   import { gameStore } from "../../../shared/stores/game";
   import type { EntityRow, EntityPlayerDetails, EntityManagerDetails } from "../../../shared/stores/master";
+  import PlayerDetailModal from "../../player/ui/PlayerDetailModal.svelte";
 
   export let teamId: string = "";
   export let open: boolean = false;
 
   const dispatch = createEventDispatcher<{ close: void }>();
+  let playerModalId = "";
 
   type DetailTab = "info" | "roster" | "lineup";
   let activeTab: DetailTab = "info";
@@ -410,7 +412,12 @@
                 <tbody>
                   {#each allMembers.filter(e => e.role !== "owner") as row}
                     {@const d = (row.details as any)?.player as EntityPlayerDetails | undefined}
-                    <tr class:hero={row.id === $gameStore.protagonist.id}>
+                    <tr
+                      class:hero={row.id === $gameStore.protagonist.id}
+                      class:clickable={row.role === "player"}
+                      on:dblclick={() => { if (row.role === "player") playerModalId = row.id; }}
+                      title={row.role === "player" ? "더블클릭: 선수 상세 보기" : undefined}
+                    >
                       <td class="num">{d?.jerseyNumber ?? "-"}</td>
                       <td class="name-cell">
                         {row.name}
@@ -451,7 +458,13 @@
               {:else}
                 <div class="lineup-rows">
                   {#each spRotation as entry, i}
-                    <div class="lineup-row" class:hero={entry.player.id === $gameStore.protagonist.id}>
+                    <div
+                      class="lineup-row"
+                      class:hero={entry.player.id === $gameStore.protagonist.id}
+                      on:dblclick={() => { playerModalId = entry.player.id; }}
+                      title="더블클릭: 선수 상세 보기"
+                      style="cursor:pointer"
+                    >
                       <span class="slot-label">{SP_LABELS[i] ?? `${i + 1}선발`}</span>
                       <span class="player-name">
                         {entry.player.name}
@@ -475,7 +488,13 @@
               {:else}
                 <div class="lineup-rows">
                   {#each lineupEntries as entry}
-                    <div class="lineup-row" class:hero={entry.player.id === $gameStore.protagonist.id}>
+                    <div
+                      class="lineup-row"
+                      class:hero={entry.player.id === $gameStore.protagonist.id}
+                      on:dblclick={() => { playerModalId = entry.player.id; }}
+                      title="더블클릭: 선수 상세 보기"
+                      style="cursor:pointer"
+                    >
                       <span class="slot-label">{entry.slot}번</span>
                       <span class="player-name">
                         {entry.player.name}
@@ -495,6 +514,8 @@
     </div>
   </div>
 {/if}
+
+<PlayerDetailModal entityId={playerModalId} on:close={() => (playerModalId = "")} />
 
 <style>
   .overlay {
@@ -697,6 +718,8 @@
 
   /* 로스터 */
   .roster-wrap { overflow-x: auto; }
+  .roster-table tr.clickable { cursor: pointer; }
+  .roster-table tr.clickable:hover td { background: rgba(80,120,200,0.08); }
   .roster-table td.num { color: #6080a0; width: 32px; }
   .roster-table td.name-cell { text-align: left; color: #d5e2fd; }
   .roster-table td.ovr-cell { font-weight: 700; color: #68de92; }

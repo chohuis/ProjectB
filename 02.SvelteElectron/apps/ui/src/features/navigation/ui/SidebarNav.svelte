@@ -17,7 +17,6 @@
     { id: "messenger", labelKey: "nav.messenger" },
     { id: "status", labelKey: "nav.status" },
     { id: "team", labelKey: "nav.team" },
-    { id: "roster", labelKey: "nav.roster" },
     { id: "schedule", labelKey: "nav.schedule" },
     { id: "training", labelKey: "nav.training" },
     { id: "finance", labelKey: "nav.finance" },

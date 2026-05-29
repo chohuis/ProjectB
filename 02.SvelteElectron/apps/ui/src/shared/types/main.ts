@@ -4,7 +4,6 @@ export type MainTabId =
   | "messenger"
   | "status"
   | "team"
-  | "roster"
   | "schedule"
   | "training"
   | "finance"

@@ -123,70 +123,70 @@
       "id": "MSG_HS_LIFE_LINEUP_COMPETE_01",
       "category": "coach",
       "subject": "선발 경쟁 주간 안내",
-      "body": "이번 주는 선발 경쟁 평가가 진행됩니다.\\n\\n코치진은 최근 컨디션과 투구 완성도를 함께 봅니다. 무리한 강행보다 안정적인 루틴 유지가 중요합니다.",
+      "body": "이번 주는 선발 경쟁 평가가 진행됩니다.\n\n코치진은 최근 컨디션과 투구 완성도를 함께 봅니다. 무리한 강행보다 안정적인 루틴 유지가 중요합니다.",
       "decisionTemplateId": null
     },
     {
       "id": "MSG_HS_LIFE_LINEUP_COMPETE_02",
       "category": "coach",
       "subject": "다음 경기 선발 후보 통보",
-      "body": "다음 경기 선발 후보로 이름이 올라왔습니다.\\n\\n이번 주 준비 방식에 따라 최종 결정이 달라질 수 있습니다.",
+      "body": "다음 경기 선발 후보로 이름이 올라왔습니다.\n\n이번 주 준비 방식에 따라 최종 결정이 달라질 수 있습니다.",
       "decisionTemplateId": null
     },
     {
       "id": "MSG_HS_LIFE_COACH_FEEDBACK_01",
       "category": "coach",
       "subject": "코치 피드백: 투구 폼 교정",
-      "body": "코치가 릴리스 타이밍 교정을 제안했습니다.\\n\\n짧은 기간에는 어색할 수 있지만, 제구 안정에 도움이 된다는 평가입니다.",
+      "body": "코치가 릴리스 타이밍 교정을 제안했습니다.\n\n짧은 기간에는 어색할 수 있지만, 제구 안정에 도움이 된다는 평가입니다.",
       "decisionTemplateId": null
     },
     {
       "id": "MSG_HS_LIFE_MINOR_PAIN_01",
       "category": "coach",
       "subject": "몸 상태 체크 필요",
-      "body": "어깨 주변 피로가 누적된 상태로 보입니다.\\n\\n이번 주는 회복 중심으로 갈지, 훈련 강도를 유지할지 판단이 필요합니다.",
+      "body": "어깨 주변 피로가 누적된 상태로 보입니다.\n\n이번 주는 회복 중심으로 갈지, 훈련 강도를 유지할지 판단이 필요합니다.",
       "decisionTemplateId": null
     },
     {
       "id": "MSG_HS_LIFE_RECOVERY_DAY_01",
       "category": "system",
       "subject": "회복일 운영 선택",
-      "body": "회복일을 어떻게 사용할지 선택할 수 있습니다.\\n\\n컨디션 회복과 기술 복습 중 어디에 비중을 둘지 정하세요.",
+      "body": "회복일을 어떻게 사용할지 선택할 수 있습니다.\n\n컨디션 회복과 기술 복습 중 어디에 비중을 둘지 정하세요.",
       "decisionTemplateId": null
     },
     {
       "id": "MSG_HS_LIFE_ACADEMIC_CONFLICT_01",
       "category": "system",
       "subject": "시험 준비와 훈련 일정 충돌",
-      "body": "시험 준비 시간과 야간 훈련 일정이 겹쳤습니다.\\n\\n이번 선택은 학업 성과와 주간 훈련 효율에 모두 영향을 줄 수 있습니다.",
+      "body": "시험 준비 시간과 야간 훈련 일정이 겹쳤습니다.\n\n이번 선택은 학업 성과와 주간 훈련 효율에 모두 영향을 줄 수 있습니다.",
       "decisionTemplateId": null
     },
     {
       "id": "MSG_HS_LIFE_SCOUT_PRESSURE_01",
       "category": "news",
       "subject": "스카우트 참관 소식",
-      "body": "다음 경기장에 스카우트가 방문한다는 소식이 전해졌습니다.\\n\\n평소 루틴을 유지할지, 임팩트를 노릴지 선택의 순간입니다.",
+      "body": "다음 경기장에 스카우트가 방문한다는 소식이 전해졌습니다.\n\n평소 루틴을 유지할지, 임팩트를 노릴지 선택의 순간입니다.",
       "decisionTemplateId": null
     },
     {
       "id": "MSG_HS_LIFE_RIVAL_MATCH_01",
       "category": "system",
       "subject": "라이벌전 전야",
-      "body": "라이벌전이 하루 앞으로 다가왔습니다.\\n\\n긴장감이 큰 경기인 만큼 멘탈 관리와 컨디션 조절이 중요합니다.",
+      "body": "라이벌전이 하루 앞으로 다가왔습니다.\n\n긴장감이 큰 경기인 만큼 멘탈 관리와 컨디션 조절이 중요합니다.",
       "decisionTemplateId": null
     },
     {
       "id": "MSG_HS_LIFE_WEATHER_01",
       "category": "system",
       "subject": "우천으로 일정 변경",
-      "body": "비 예보로 오늘 일정이 조정되었습니다.\\n\\n실내 훈련으로 전환할지, 회복일로 활용할지 판단해 주세요.",
+      "body": "비 예보로 오늘 일정이 조정되었습니다.\n\n실내 훈련으로 전환할지, 회복일로 활용할지 판단해 주세요.",
       "decisionTemplateId": null
     },
     {
       "id": "MSG_HS_LIFE_CLASSMATE_01",
       "category": "social",
       "subject": "동기와 관계 조정",
-      "body": "동기와의 분위기가 어색해졌습니다.\\n\\n먼저 대화를 시도할지, 당분간 거리를 둘지 선택할 수 있습니다.",
+      "body": "동기와의 분위기가 어색해졌습니다.\n\n먼저 대화를 시도할지, 당분간 거리를 둘지 선택할 수 있습니다.",
       "decisionTemplateId": null
     },
     {
@@ -263,140 +263,140 @@
       "id": "MSG_UNIV_LIFE_SLUMP_CHECK",
       "category": "coach",
       "subject": "대학 시즌 슬럼프 경고",
-      "body": "최근 등판에서 페이스 유지가 흔들리고 있습니다.\\n\\n훈련 양을 줄이거나 회복 루틴을 보강하여 다음 등판에 대비하세요.",
+      "body": "최근 등판에서 페이스 유지가 흔들리고 있습니다.\n\n훈련 양을 줄이거나 회복 루틴을 보강하여 다음 등판에 대비하세요.",
       "decisionTemplateId": "DEC_COND_SLUMP"
     },
     {
       "id": "MSG_UNIV_LIFE_PEAK_FORM",
       "category": "coach",
       "subject": "대학 시즌 피크 폼 알림",
-      "body": "컨디션과 구위 지표가 모두 상승한 상태입니다.\\n\\n집중 훈련으로 시즌 후반 경쟁력을 확대할 수 있습니다.",
+      "body": "컨디션과 구위 지표가 모두 상승한 상태입니다.\n\n집중 훈련으로 시즌 후반 경쟁력을 확대할 수 있습니다.",
       "decisionTemplateId": "DEC_COND_PEAK_FORM"
     },
     {
       "id": "MSG_UNIV_LIFE_LOCAL_INTERVIEW",
       "category": "news",
       "subject": "대학 리그 특집 인터뷰 요청",
-      "body": "대학 리그 특집 코너에서 인터뷰 요청이 들어왔습니다.\\n\\n미디어 대응은 심리적 부하와 홍보 효과를 함께 가져옵니다.",
+      "body": "대학 리그 특집 코너에서 인터뷰 요청이 들어왔습니다.\n\n미디어 대응은 심리적 부하와 홍보 효과를 함께 가져옵니다.",
       "decisionTemplateId": "DEC_RAND_LOCAL_INTERVIEW"
     },
     {
       "id": "MSG_UNIV_LIFE_MEDIA_MICRO_01",
       "category": "news",
       "subject": "대학 매체에서 투구 분석기사 게재",
-      "body": "최근 투구 패턴이 분석 기사로 게재되었습니다.\\n\\n등판 루틴을 유지하면서 안정적인 결과를 이어가세요.",
+      "body": "최근 투구 패턴이 분석 기사로 게재되었습니다.\n\n등판 루틴을 유지하면서 안정적인 결과를 이어가세요.",
       "decisionTemplateId": null
     },
     {
       "id": "MSG_UNIV_LIFE_SOCIAL_MENTION",
       "category": "news",
       "subject": "교내 SNS에서 이름이 오르내렸습니다",
-      "body": "교내 SNS에서 훈련 장면과 경기 하이라이트가 공유되고 있습니다.\\n\\n직접적인 보상은 작지만 여론 흐름을 만들 수 있습니다.",
+      "body": "교내 SNS에서 훈련 장면과 경기 하이라이트가 공유되고 있습니다.\n\n직접적인 보상은 작지만 여론 흐름을 만들 수 있습니다.",
       "decisionTemplateId": null
     },
     {
       "id": "MSG_UNIV_LIFE_RECOVERY_DAY_01",
       "category": "system",
       "subject": "방학기 회복일 선택",
-      "body": "훈련 스케줄에서 회복일을 어떻게 쓸지 결정하세요.\\n\\n짧은 회복이지만 다음 등판 컨디션에 큰 영향을 줄 수 있습니다.",
+      "body": "훈련 스케줄에서 회복일을 어떻게 쓸지 결정하세요.\n\n짧은 회복이지만 다음 등판 컨디션에 큰 영향을 줄 수 있습니다.",
       "decisionTemplateId": null
     },
     {
       "id": "MSG_HS_MEDIA_BULLPEN_MIC",
       "category": "news",
       "subject": "고교 불펜 특집 인터뷰",
-      "body": "지역 스포츠 채널에서 불펜 훈련 루틴을 조명했습니다.\\n\\n짧은 분량이지만 집중력과 준비성을 높게 평가했습니다.",
+      "body": "지역 스포츠 채널에서 불펜 훈련 루틴을 조명했습니다.\n\n짧은 분량이지만 집중력과 준비성을 높게 평가했습니다.",
       "decisionTemplateId": "DEC_RAND_LOCAL_INTERVIEW"
     },
     {
       "id": "MSG_HS_MEDIA_PRACTICE_CAM",
       "category": "news",
       "subject": "훈련장 카메라 하이라이트",
-      "body": "훈련 장면이 지역 뉴스에 소개되었습니다.\\n\\n루틴을 안정적으로 유지하는 선수라는 평가가 붙었습니다.",
+      "body": "훈련 장면이 지역 뉴스에 소개되었습니다.\n\n루틴을 안정적으로 유지하는 선수라는 평가가 붙었습니다.",
       "decisionTemplateId": null
     },
     {
       "id": "MSG_HS_MEDIA_RIVAL_HEADLINE",
       "category": "news",
       "subject": "라이벌전 전망 헤드라인",
-      "body": "주말 라이벌전 전망 기사에서 당신의 이름이 전면에 등장했습니다.\\n\\n압박을 흐름으로 바꿀 수 있는지가 관건입니다.",
+      "body": "주말 라이벌전 전망 기사에서 당신의 이름이 전면에 등장했습니다.\n\n압박을 흐름으로 바꿀 수 있는지가 관건입니다.",
       "decisionTemplateId": "DEC_RAND_LOCAL_INTERVIEW"
     },
     {
       "id": "MSG_HS_MEDIA_PITCH_BREAKDOWN",
       "category": "news",
       "subject": "구종 분석 기사 게재",
-      "body": "지역 매체가 당신의 구종 배합과 제구 패턴을 분석했습니다.\\n\\n스카우트 관심도가 조금씩 올라가고 있습니다.",
+      "body": "지역 매체가 당신의 구종 배합과 제구 패턴을 분석했습니다.\n\n스카우트 관심도가 조금씩 올라가고 있습니다.",
       "decisionTemplateId": null
     },
     {
       "id": "MSG_HS_MEDIA_DEFENSE_FEATURE",
       "category": "news",
       "subject": "배터리 호흡 특집",
-      "body": "배터리 호흡과 수비 연계가 좋다는 특집기사가 나왔습니다.\\n\\n팀 완성도가 높아졌다는 평가입니다.",
+      "body": "배터리 호흡과 수비 연계가 좋다는 특집기사가 나왔습니다.\n\n팀 완성도가 높아졌다는 평가입니다.",
       "decisionTemplateId": null
     },
     {
       "id": "MSG_HS_MEDIA_COMEBACK_NOTE",
       "category": "news",
       "subject": "반등세 조명 기사",
-      "body": "최근 기록 흐름이 회복되며 반등세 기사가 게재되었습니다.\\n\\n리듬을 유지하면 다음 등판에서도 좋은 결과가 기대됩니다.",
+      "body": "최근 기록 흐름이 회복되며 반등세 기사가 게재되었습니다.\n\n리듬을 유지하면 다음 등판에서도 좋은 결과가 기대됩니다.",
       "decisionTemplateId": null
     },
     {
       "id": "MSG_HS_MEDIA_STRIKEOUT_CLIP",
       "category": "news",
       "subject": "탈삼진 클립 확산",
-      "body": "탈삼진 하이라이트 클립이 SNS에서 확산되고 있습니다.\\n\\n강한 구위와 리듬이 주목받고 있습니다.",
+      "body": "탈삼진 하이라이트 클립이 SNS에서 확산되고 있습니다.\n\n강한 구위와 리듬이 주목받고 있습니다.",
       "decisionTemplateId": null
     },
     {
       "id": "MSG_HS_MEDIA_COMMAND_PRAISE",
       "category": "news",
       "subject": "제구력 호평 기사",
-      "body": "기자단이 당신의 안정적인 제구를 강점으로 꼽았습니다.\\n\\n접전 상황에서도 맞춰 던질 수 있는 투수라는 평가입니다.",
+      "body": "기자단이 당신의 안정적인 제구를 강점으로 꼽았습니다.\n\n접전 상황에서도 맞춰 던질 수 있는 투수라는 평가입니다.",
       "decisionTemplateId": null
     },
     {
       "id": "MSG_HS_MEDIA_SCOUT_CAMERA_04",
       "category": "news",
       "subject": "스카우트 카메라 추가 방문",
-      "body": "주요 구단 스카우트가 다시 관전을 예고했습니다.\\n\\n평소 루틴을 유지하는 것이 압박을 이기는 가장 빠른 방법입니다.",
+      "body": "주요 구단 스카우트가 다시 관전을 예고했습니다.\n\n평소 루틴을 유지하는 것이 압박을 이기는 가장 빠른 방법입니다.",
       "decisionTemplateId": "DEC_RAND_LOCAL_INTERVIEW"
     },
     {
       "id": "MSG_HS_MEDIA_LOCAL_PODCAST",
       "category": "news",
       "subject": "지역 팟캐스트 출연 제안",
-      "body": "지역 스포츠 팟캐스트에서 출연 제안이 왔습니다.\\n\\n짧은 인터뷰지만 인지도를 올리는 계기가 될 수 있습니다.",
+      "body": "지역 스포츠 팟캐스트에서 출연 제안이 왔습니다.\n\n짧은 인터뷰지만 인지도를 올리는 계기가 될 수 있습니다.",
       "decisionTemplateId": "DEC_RAND_LOCAL_INTERVIEW"
     },
     {
       "id": "MSG_HS_MEDIA_RAIN_GAME_NOTE",
       "category": "news",
       "subject": "우천 경기 대응 평가",
-      "body": "비와 바람 속에서도 버티는 운영이 좋았다는 분석이 나왔습니다.\\n\\n환경 변수 대응력은 고교 무대에서 큰 강점입니다.",
+      "body": "비와 바람 속에서도 버티는 운영이 좋았다는 분석이 나왔습니다.\n\n환경 변수 대응력은 고교 무대에서 큰 강점입니다.",
       "decisionTemplateId": null
     },
     {
       "id": "MSG_HS_TOP10_Y1",
       "category": "news",
       "subject": "고1 유망주 TOP 10 리포트",
-      "body": "지역 매체가 고1 투수 유망주 TOP 10을 발표했습니다.\\n\\n당신은 ‘차세대 선발 후보’로 분류되어 이름을 올렸습니다.",
+      "body": "지역 매체가 고1 투수 유망주 TOP 10을 발표했습니다.\n\n당신은 ‘차세대 선발 후보’로 분류되어 이름을 올렸습니다.",
       "decisionTemplateId": null
     },
     {
       "id": "MSG_HS_TOP10_Y2",
       "category": "news",
       "subject": "고2 유망주 TOP 10 중간 결산",
-      "body": "시즌 중반 기준으로 고2 투수 TOP 10이 공개되었습니다.\\n\\n스카우트들은 안정적인 이닝 소화를 강점으로 평가했습니다.",
+      "body": "시즌 중반 기준으로 고2 투수 TOP 10이 공개되었습니다.\n\n스카우트들은 안정적인 이닝 소화를 강점으로 평가했습니다.",
       "decisionTemplateId": null
     },
     {
       "id": "MSG_HS_TOP10_Y3",
       "category": "news",
       "subject": "고3 드래프트 전 TOP 10 특집",
-      "body": "드래프트 전야 특집으로 고3 투수 TOP 10이 발표되었습니다.\\n\\n당신은 상위권 후보군으로 분류되며 본격 관심을 받고 있습니다.",
+      "body": "드래프트 전야 특집으로 고3 투수 TOP 10이 발표되었습니다.\n\n당신은 상위권 후보군으로 분류되며 본격 관심을 받고 있습니다.",
       "decisionTemplateId": null
     }
   ]

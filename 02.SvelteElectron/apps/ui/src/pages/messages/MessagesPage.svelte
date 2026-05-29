@@ -230,7 +230,7 @@
       <p class="modal-meta">{selected.sender} · {selected.createdAt}</p>
 
       <div class="modal-body">
-        {#each selected.body.split("\n") as line}
+        {#each selected.body.replace(/\\n/g, "\n").split("\n") as line}
           <p>{line || " "}</p>
         {/each}
       </div>
