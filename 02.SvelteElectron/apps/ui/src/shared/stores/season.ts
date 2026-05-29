@@ -329,6 +329,7 @@ function createSeasonStore() {
           if (a.type === "optionClause"    && type === "optionClause")    return false;
           if (a.type === "trade"           && type === "trade")           return false;
           if (a.type === "hsGroupDraw"     && type === "hsGroupDraw")     return false;
+          if (a.type === "injuryTreatment" && type === "injuryTreatment") return false;
           return true;
         }),
       }));
