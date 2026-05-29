@@ -95,13 +95,16 @@ export interface AgingResult {
 export async function calcProtagonistAging(
   protagonist: ProtagonistSave,
 ): Promise<AgingResult> {
+  const sh = protagonist.seasonHealth ?? { lowConditionWeeks: 0, highFatigueWeeks: 0, injuryCount: 0, totalWeeks: 0 };
   const params = {
-    age:        protagonist.age,
-    condition:  protagonist.condition,
-    fatigue:    protagonist.fatigue,
-    pitching:   protagonist.pitching,
-    batting:    protagonist.batting,
-    playerType: protagonist.playerType,
+    age:               protagonist.age,
+    lowConditionWeeks: sh.lowConditionWeeks,
+    highFatigueWeeks:  sh.highFatigueWeeks,
+    injuryCount:       sh.injuryCount,
+    totalWeeks:        sh.totalWeeks,
+    pitching:          protagonist.pitching,
+    batting:           protagonist.batting,
+    playerType:        protagonist.playerType,
   };
   return JSON.parse(
     await window.projectB!.growthCalcProtagonistAging(JSON.stringify(params))

@@ -175,6 +175,9 @@
     // L6: 전체 리그 NPC 오프시즌 처리 (에이징·감퇴·UNIV졸업·은퇴·로스터 정리)
     await gameStore.processAllLeaguesSeasonEnd(now);
 
+    // L7: 주인공 에이징 감퇴 — seasonHealth 기반, advanceSeasonYear(리셋) 이전에 실행
+    await gameStore.applyAgingDecay();
+
     if (!progressedByHighschoolSync) {
       gameStore.advanceSeasonYear($seasonStore.seasonYear);
     }

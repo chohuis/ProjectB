@@ -578,8 +578,11 @@ pub fn calc_game_growth(params: GameGrowthParams) -> GrowthResult {
 #[serde(rename_all = "camelCase")]
 pub struct ProtagonistAgingParams {
     pub age: u32,
-    pub condition: f64,
-    pub fatigue: f64,
+    // 시즌 통계 기반 자기관리 판정 (snapshot 대신 누적값 사용)
+    pub low_condition_weeks: u32,   // condition < 60이었던 주 수
+    pub high_fatigue_weeks:  u32,   // fatigue > 70이었던 주 수
+    pub injury_count:        u32,   // 시즌 중 부상 발생 횟수
+    pub total_weeks:         u32,   // 시즌 총 경과 주 수
     pub pitching: PitchingAttributes,
     pub batting: BattingAttributes,
     pub player_type: Option<String>,
@@ -596,15 +599,29 @@ pub struct ProtagonistAgingResult {
 pub fn calc_protagonist_aging(params: ProtagonistAgingParams) -> ProtagonistAgingResult {
     let age = params.age;
 
-    // 자기관리 배율: 시즌 종료 시점 컨디션·피로도로 추정
-    let self_mgmt = if params.condition >= 80.0 && params.fatigue <= 25.0 {
+    // 자기관리 배율: 시즌 통계 비율 기반
+    let total = params.total_weeks.max(1) as f64;
+    let low_cond_ratio  = params.low_condition_weeks as f64 / total;
+    let high_fat_ratio  = params.high_fatigue_weeks  as f64 / total;
+
+    // 비율 기준: 52주 중 5주 이하(≤0.10) 위기 → 우수, 10주 이하(≤0.20) → 양호, ...
+    let base_mgmt = if low_cond_ratio <= 0.10 && high_fat_ratio <= 0.15 {
         0.35  // 철저한 자기관리
-    } else if params.condition >= 70.0 && params.fatigue <= 40.0 {
-        0.60
-    } else if params.condition >= 60.0 && params.fatigue <= 60.0 {
-        1.00  // 기준
+    } else if low_cond_ratio <= 0.20 && high_fat_ratio <= 0.30 {
+        0.65  // 양호
+    } else if low_cond_ratio <= 0.35 && high_fat_ratio <= 0.45 {
+        1.00  // 보통
     } else {
         1.50  // 자기관리 소홀
+    };
+
+    // 부상 페널티: 1회 +0.15, 2회 이상 +0.40
+    let self_mgmt = if params.injury_count >= 2 {
+        (base_mgmt + 0.40_f64).min(1.50)
+    } else if params.injury_count == 1 {
+        (base_mgmt + 0.15_f64).min(1.50)
+    } else {
+        base_mgmt
     };
 
     // 나이대별 기준 감퇴율 (시즌 1회 적용)

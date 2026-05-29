@@ -154,6 +154,12 @@ export interface ProtagonistSave {
     type: "light" | "moderate" | "severe";
     recoveryWeeksLeft: number;
   };
+  seasonHealth?: {
+    lowConditionWeeks: number;  // 시즌 중 condition < 60이었던 주 수
+    highFatigueWeeks:  number;  // 시즌 중 fatigue > 70이었던 주 수
+    injuryCount:       number;  // 시즌 중 부상 발생 횟수
+    totalWeeks:        number;  // 시즌 총 경과 주 수
+  };
   currentRole?: PitcherRole;  // 현재 시즌 역할 (시즌 시작 시 배정)
   careerRecords?: CareerSeasonRecord[];  // 시즌별 기록 히스토리
 }

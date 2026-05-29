@@ -340,6 +340,14 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   growth.protagonistPatch.consecutiveHighFatigueWeeks = injuryCalc.newConsecutiveHighFatigueWeeks;
   growth.protagonistPatch.injury                      = injuryUpdate;
 
+  const shPrev = g.protagonist.seasonHealth ?? { lowConditionWeeks: 0, highFatigueWeeks: 0, injuryCount: 0, totalWeeks: 0 };
+  growth.protagonistPatch.seasonHealth = {
+    lowConditionWeeks: shPrev.lowConditionWeeks + (g.protagonist.condition < 60 ? 1 : 0),
+    highFatigueWeeks:  shPrev.highFatigueWeeks  + (g.protagonist.fatigue  > 70 ? 1 : 0),
+    injuryCount:       shPrev.injuryCount        + (injuryJustOccurred    ? 1 : 0),
+    totalWeeks:        shPrev.totalWeeks         + 1,
+  };
+
   const weeklyNet = JSON.parse(await window.projectB!.weekCalcWeeklyNet(
     JSON.stringify({ careerStage: g.protagonist.careerStage, salary: g.protagonist.contract?.salary ?? null })
   )) as number;

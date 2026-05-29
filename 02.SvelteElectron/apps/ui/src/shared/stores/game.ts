@@ -366,15 +366,30 @@ function migrateProtagonist(p: ProtagonistSave & { learnedPitchIds?: string[] })
     pitchingMerged.holdRunners * 0.2;
   pitchingMerged.ovr = Math.round(weighted / 12.0);
 
+  const battingMerged = {
+    ...p.batting,
+    baseInstinct: p.batting.baseInstinct ?? def.batting.baseInstinct,
+    bunting:      p.batting.bunting      ?? def.batting.bunting,
+    platoon:      p.batting.platoon      ?? def.batting.platoon,
+  };
+  const battingWeighted =
+    battingMerged.contact       * 2.0 +
+    battingMerged.power         * 1.8 +
+    battingMerged.eye           * 1.5 +
+    battingMerged.discipline    * 1.2 +
+    battingMerged.speed         * 1.3 +
+    battingMerged.baseInstinct  * 0.7 +
+    battingMerged.bunting       * 0.3 +
+    battingMerged.platoon       * 0.3 +
+    battingMerged.fielding      * 1.3 +
+    battingMerged.arm           * 0.8 +
+    battingMerged.battingClutch * 0.6;
+  battingMerged.ovr = Math.round(battingWeighted / 11.8);
+
   return {
     ...p,
     pitching: pitchingMerged,
-    batting: {
-      ...p.batting,
-      baseInstinct: p.batting.baseInstinct ?? def.batting.baseInstinct,
-      bunting:      p.batting.bunting      ?? def.batting.bunting,
-      platoon:      p.batting.platoon      ?? def.batting.platoon,
-    },
+    batting: battingMerged,
     primaryPosition: p.primaryPosition ?? def.primaryPosition,
     positionRatings: p.positionRatings  ?? def.positionRatings,
     diligence:  p.diligence  ?? def.diligence,
@@ -1471,6 +1486,7 @@ function createGameStore() {
           proServiceYears: isPro ? p.proServiceYears + 1 : p.proServiceYears,
           condition: Math.min(100, p.condition + 20),
           fatigue: Math.max(0, p.fatigue - 30),
+          seasonHealth: { lowConditionWeeks: 0, highFatigueWeeks: 0, injuryCount: 0, totalWeeks: 0 },
         };
         const schoolState = draftTriggeredReset
           ? { ...s.schoolState, draftTriggered: false }
@@ -1502,18 +1518,21 @@ function createGameStore() {
       }));
     },
 
-    // 시즌 종료 후 주인공 에이징 감퇴 적용 (advanceSeasonYear 이후 호출)
+    // 시즌 종료 후 주인공 에이징 감퇴 적용 (advanceSeasonYear 이전에 호출 — seasonHealth 기반)
     async applyAgingDecay() {
       const s = get({ subscribe });
       const p = s.protagonist;
+      const sh = p.seasonHealth ?? { lowConditionWeeks: 0, highFatigueWeeks: 0, injuryCount: 0, totalWeeks: 0 };
       const raw = JSON.parse(
         await window.projectB!.growthCalcProtagonistAging(JSON.stringify({
-          age:        p.age,
-          condition:  p.condition,
-          fatigue:    p.fatigue,
-          pitching:   p.pitching,
-          batting:    p.batting,
-          playerType: p.playerType,
+          age:               p.age,
+          lowConditionWeeks: sh.lowConditionWeeks,
+          highFatigueWeeks:  sh.highFatigueWeeks,
+          injuryCount:       sh.injuryCount,
+          totalWeeks:        sh.totalWeeks,
+          pitching:          p.pitching,
+          batting:           p.batting,
+          playerType:        p.playerType,
         }))
       );
       if (raw.error) {
