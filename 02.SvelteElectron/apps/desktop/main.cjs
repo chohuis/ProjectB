@@ -2360,6 +2360,10 @@ app.whenReady().then(() => {
     try { return engineNative.weekCalcNpcFallbackNative(p); }
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
+  ipcMain.handle("week:calcNpcInjuries", (_event, p) => {
+    try { return engineNative.weekCalcNpcInjuriesNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
   ipcMain.handle("week:rollRandomBatch", (_event, count) => {
     try {
       const safe = Math.min(Math.max(0, Number(count) || 0), 10000);

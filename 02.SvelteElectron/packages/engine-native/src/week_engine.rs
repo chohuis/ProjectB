@@ -54,15 +54,23 @@ pub struct InjuryPayload {
     pub fatigue: f64,
     pub consecutive_high_fatigue_weeks: u32,
     pub has_injury: bool,
-    pub injury_type: Option<String>,
+    pub current_injury_type: Option<String>,
+    pub current_severity: Option<String>,
     pub recovery_weeks_left: Option<u32>,
+    pub player_type: Option<String>,
+    pub age: u32,
+    pub condition: f64,
+    pub training_intensity: f64,
+    pub consecutive_low_morale_weeks: u32,
+    pub has_prior_injury_same_area: bool,
 }
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct InjuryUpdateOut {
     #[serde(rename = "type")]
-    pub injury_type: String,
+    pub injury_type: String,   // 구체적 InjuryType ID
+    pub severity: String,      // "light"|"moderate"|"severe"|"surgery"
     pub recovery_weeks_left: u32,
 }
 
@@ -74,41 +82,210 @@ pub struct InjuryResult {
     pub just_healed: bool,
     pub eff_mod: f64,
     pub new_consecutive_high_fatigue_weeks: u32,
+    pub source: Option<String>,
+}
+
+fn pick_light_type(is_pitcher: bool, rng: &mut impl rand::Rng) -> &'static str {
+    if is_pitcher {
+        let r: f64 = rng.gen();
+        if r < 0.40 { "ARM_FATIGUE" } else if r < 0.70 { "BLISTER" } else if r < 0.90 { "MUSCLE_TIGHTNESS" } else { "BACK_STIFFNESS" }
+    } else {
+        let r: f64 = rng.gen();
+        if r < 0.30 { "MUSCLE_TIGHTNESS" } else if r < 0.60 { "BACK_STIFFNESS" } else if r < 0.90 { "ANKLE_SPRAIN_L" } else { "BLISTER" }
+    }
+}
+
+fn pick_moderate_type(is_pitcher: bool, rng: &mut impl rand::Rng) -> &'static str {
+    if is_pitcher {
+        let r: f64 = rng.gen();
+        if r < 0.40 { "ELBOW_INFLAM" } else if r < 0.80 { "SHOULDER_INFLAM" } else { "OBLIQUE_STRAIN" }
+    } else {
+        let r: f64 = rng.gen();
+        if r < 0.40 { "HAMSTRING" } else if r < 0.70 { "ANKLE_SPRAIN_M" } else { "OBLIQUE_STRAIN" }
+    }
+}
+
+fn pick_severe_type(is_pitcher: bool, rng: &mut impl rand::Rng) -> &'static str {
+    if is_pitcher {
+        let r: f64 = rng.gen();
+        if r < 0.50 { "UCL_PARTIAL" } else if r < 0.90 { "ROTATOR_STRAIN" } else { "BACK_HERNIATION" }
+    } else {
+        let r: f64 = rng.gen();
+        if r < 0.50 { "BACK_HERNIATION" } else if r < 0.80 { "UCL_PARTIAL" } else { "ROTATOR_STRAIN" }
+    }
+}
+
+fn pick_surgery_type(rng: &mut impl rand::Rng) -> &'static str {
+    let r: f64 = rng.gen();
+    if r < 0.50 { "UCL_FULL" } else if r < 0.80 { "ROTATOR_FULL" } else { "SHOULDER_SURGERY" }
+}
+
+fn recovery_weeks_for(injury_type: &str, rng: &mut impl rand::Rng) -> u32 {
+    match injury_type {
+        "BLISTER"          => rng.gen_range(2..=3),
+        "ARM_FATIGUE"      => rng.gen_range(2..=3),
+        "MUSCLE_TIGHTNESS" => rng.gen_range(2..=3),
+        "BACK_STIFFNESS"   => rng.gen_range(2..=3),
+        "ANKLE_SPRAIN_L"   => rng.gen_range(2..=3),
+        "ELBOW_INFLAM"     => rng.gen_range(4..=8),
+        "SHOULDER_INFLAM"  => rng.gen_range(4..=8),
+        "OBLIQUE_STRAIN"   => rng.gen_range(4..=8),
+        "HAMSTRING"        => rng.gen_range(4..=8),
+        "CONCUSSION"       => rng.gen_range(4..=6),
+        "ANKLE_SPRAIN_M"   => rng.gen_range(4..=8),
+        "UCL_PARTIAL"      => rng.gen_range(12..=20),
+        "ROTATOR_STRAIN"   => rng.gen_range(12..=20),
+        "BACK_HERNIATION"  => rng.gen_range(12..=20),
+        "YIPS"             => rng.gen_range(10..=20),
+        "UCL_FULL"         => rng.gen_range(60..=78),
+        "ROTATOR_FULL"     => rng.gen_range(52..=65),
+        "SHOULDER_SURGERY" => rng.gen_range(30..=40),
+        _                  => 2,
+    }
+}
+
+fn severity_of(injury_type: &str) -> &'static str {
+    match injury_type {
+        "BLISTER" | "ARM_FATIGUE" | "MUSCLE_TIGHTNESS" | "BACK_STIFFNESS" | "ANKLE_SPRAIN_L"
+            => "light",
+        "ELBOW_INFLAM" | "SHOULDER_INFLAM" | "OBLIQUE_STRAIN" | "HAMSTRING" | "CONCUSSION" | "ANKLE_SPRAIN_M"
+            => "moderate",
+        "UCL_PARTIAL" | "ROTATOR_STRAIN" | "BACK_HERNIATION" | "YIPS"
+            => "severe",
+        "UCL_FULL" | "ROTATOR_FULL" | "SHOULDER_SURGERY"
+            => "surgery",
+        _ => "light",
+    }
+}
+
+fn eff_mod_for(severity: &str) -> f64 {
+    match severity {
+        "light"    => 0.70,
+        "moderate" => 0.25,
+        "severe"   => 0.10,
+        "surgery"  => 0.00,
+        _          => 1.0,
+    }
 }
 
 pub fn calc_injury(p: InjuryPayload) -> InjuryResult {
     let mut rng = rand::thread_rng();
+    let is_pitcher = p.player_type.as_deref().unwrap_or("pitcher") != "batter";
     let is_high_fatigue = p.fatigue >= 85.0;
     let new_high_fatigue_weeks = if is_high_fatigue { p.consecutive_high_fatigue_weeks + 1 } else { 0 };
 
     let mut injury_update: Option<InjuryUpdateOut> = None;
     let mut just_occurred = false;
-    let mut just_healed = false;
+    let mut just_healed   = false;
+    let mut source: Option<String> = None;
 
-    if !p.has_injury && new_high_fatigue_weeks >= 2 {
-        let chance = (0.30 + (new_high_fatigue_weeks as f64 - 2.0) * 0.25).min(0.65);
-        if rng.gen::<f64>() < chance {
-            let injury_type = if p.fatigue >= 92.0 { "moderate" } else { "light" };
-            let recovery_weeks: u32 = if injury_type == "moderate" { 3 } else { 2 };
+    if !p.has_injury {
+        // ── 심리 트리거 (YIPS) — 피로 트리거와 독립 ──────────────
+        let yips_chance: f64 = if p.consecutive_low_morale_weeks >= 8 { 0.12 }
+            else if p.consecutive_low_morale_weeks >= 5 { 0.03 }
+            else { 0.0 };
+
+        if yips_chance > 0.0 && is_pitcher && rng.gen::<f64>() < yips_chance {
+            let weeks = recovery_weeks_for("YIPS", &mut rng);
             injury_update = Some(InjuryUpdateOut {
-                injury_type: injury_type.to_string(),
-                recovery_weeks_left: recovery_weeks,
+                injury_type: "YIPS".to_string(),
+                severity:    "severe".to_string(),
+                recovery_weeks_left: weeks,
             });
             just_occurred = true;
+            source = Some("psychological".to_string());
         }
-    } else if p.has_injury {
+
+        // ── 피로 + 훈련 복합 트리거 ──────────────────────────────
+        if !just_occurred {
+            let mut trigger_chance: f64 = if p.fatigue >= 92.0 {
+                (0.35 + new_high_fatigue_weeks as f64 * 0.10).min(0.70)
+            } else if new_high_fatigue_weeks >= 2 {
+                (0.20 + (new_high_fatigue_weeks as f64 - 2.0) * 0.15).min(0.60)
+            } else {
+                0.0
+            };
+
+            let training_trigger = p.training_intensity >= 0.8 && p.condition < 65.0;
+            if training_trigger {
+                trigger_chance += 0.10;
+                if p.condition < 60.0 && p.fatigue > 70.0 { trigger_chance += 0.10; }
+            }
+
+            if p.has_prior_injury_same_area { trigger_chance *= 1.5; }
+
+            let age_mult: f64 = if p.age >= 35 { 1.5 } else if p.age >= 32 { 1.3 } else { 1.0 };
+            trigger_chance = (trigger_chance * age_mult).min(0.80);
+
+            if trigger_chance > 0.0 && rng.gen::<f64>() < trigger_chance {
+                let tier_roll: f64 = rng.gen();
+                let high_age = p.age >= 35;
+
+                let tier = if p.fatigue >= 92.0 {
+                    if high_age {
+                        if tier_roll < 0.10 { "surgery" } else if tier_roll < 0.35 { "severe" } else if tier_roll < 0.65 { "moderate" } else { "light" }
+                    } else {
+                        if tier_roll < 0.05 { "surgery" } else if tier_roll < 0.25 { "severe" } else if tier_roll < 0.60 { "moderate" } else { "light" }
+                    }
+                } else if p.fatigue >= 85.0 {
+                    if high_age {
+                        if tier_roll < 0.06 { "severe" } else if tier_roll < 0.40 { "moderate" } else { "light" }
+                    } else {
+                        if tier_roll < 0.03 { "severe" } else if tier_roll < 0.28 { "moderate" } else { "light" }
+                    }
+                } else {
+                    // 훈련 트리거만 발동 (피로는 85 미만)
+                    if tier_roll < 0.05 { "moderate" } else { "light" }
+                };
+
+                let injury_type = match tier {
+                    "surgery" => pick_surgery_type(&mut rng),
+                    "severe"  => pick_severe_type(is_pitcher, &mut rng),
+                    "moderate" => {
+                        if is_pitcher && p.age >= 32 {
+                            let r: f64 = rng.gen();
+                            if r < 0.50 { "SHOULDER_INFLAM" } else if r < 0.80 { "ELBOW_INFLAM" } else { "OBLIQUE_STRAIN" }
+                        } else {
+                            pick_moderate_type(is_pitcher, &mut rng)
+                        }
+                    }
+                    _ => pick_light_type(is_pitcher, &mut rng),
+                };
+
+                let injury_src = if training_trigger && p.fatigue < 85.0 { "training" } else { "fatigue" };
+                let severity   = severity_of(injury_type);
+                let weeks      = recovery_weeks_for(injury_type, &mut rng);
+                injury_update = Some(InjuryUpdateOut {
+                    injury_type: injury_type.to_string(),
+                    severity:    severity.to_string(),
+                    recovery_weeks_left: weeks,
+                });
+                just_occurred = true;
+                source = Some(injury_src.to_string());
+            }
+        }
+    } else {
+        // ── 회복 틱다운 ──────────────────────────────────────────
         let weeks_left = p.recovery_weeks_left.unwrap_or(1).saturating_sub(1);
         if weeks_left == 0 {
             just_healed = true;
         } else {
+            let cur_type = p.current_injury_type.as_deref().unwrap_or("ARM_FATIGUE");
+            let cur_sev  = p.current_severity.as_deref().unwrap_or_else(|| severity_of(cur_type));
             injury_update = Some(InjuryUpdateOut {
-                injury_type: p.injury_type.unwrap_or_default(),
+                injury_type: cur_type.to_string(),
+                severity:    cur_sev.to_string(),
                 recovery_weeks_left: weeks_left,
             });
         }
     }
 
-    let eff_mod = if p.has_injury && !just_healed { 0.20 } else { 1.0 };
+    let eff_mod = if p.has_injury && !just_healed {
+        let sev = injury_update.as_ref().map(|u| u.severity.as_str()).unwrap_or("light");
+        eff_mod_for(sev)
+    } else {
+        1.0
+    };
     let final_high_fatigue_weeks = if just_occurred { 0 } else { new_high_fatigue_weeks };
 
     InjuryResult {
@@ -117,7 +294,115 @@ pub fn calc_injury(p: InjuryPayload) -> InjuryResult {
         just_healed,
         eff_mod,
         new_consecutive_high_fatigue_weeks: final_high_fatigue_weeks,
+        source,
     }
+}
+
+// ── NPC Injury Batch Calculation ──────────────────────────────
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NpcPlayerEntry {
+    pub player_id: String,
+    pub role: String,                             // "SP"|"RP"|"CP"|"batter"
+    pub age: u32,
+    pub consecutive_app: u32,
+    pub has_prior_injury: bool,
+    pub is_playing_through: bool,
+    pub playing_through_severity: Option<String>, // "light"|"moderate"
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NpcInjuriesPayload {
+    pub players: Vec<NpcPlayerEntry>,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NpcInjuryOccurrence {
+    pub player_id: String,
+    pub severity: String,
+    pub recovery_weeks: u32,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NpcInjuriesResult {
+    pub occurred: Vec<NpcInjuryOccurrence>,
+}
+
+pub fn calc_npc_injuries(p: NpcInjuriesPayload) -> NpcInjuriesResult {
+    let mut rng = rand::thread_rng();
+    let mut occurred: Vec<NpcInjuryOccurrence> = Vec::new();
+
+    for player in &p.players {
+        let is_pitcher = player.role != "batter";
+
+        let base: f64 = match player.role.as_str() {
+            "SP"     => 0.03,
+            "RP"     => 0.02,
+            "CP"     => 0.025,
+            _        => 0.015, // batter
+        };
+
+        let consec_bonus: f64 = match player.role.as_str() {
+            "SP" => {
+                if player.consecutive_app >= 5 { 0.04 }
+                else if player.consecutive_app >= 3 { 0.02 }
+                else { 0.0 }
+            }
+            "RP" | "CP" => {
+                if player.consecutive_app >= 7 { 0.04 }
+                else if player.consecutive_app >= 4 { 0.02 }
+                else { 0.0 }
+            }
+            _ => {
+                if player.consecutive_app >= 10 { 0.03 }
+                else if player.consecutive_app >= 6 { 0.01 }
+                else { 0.0 }
+            }
+        };
+
+        let age_mult: f64 = if player.age >= 35 { 1.5 } else if player.age >= 32 { 1.3 } else { 1.0 };
+        let prior_bonus: f64 = if player.has_prior_injury { 0.02 } else { 0.0 };
+
+        let play_through_bonus: f64 = if player.is_playing_through {
+            match player.playing_through_severity.as_deref() {
+                Some("moderate") => 0.25,
+                Some("light")    => 0.12,
+                _                => 0.0,
+            }
+        } else {
+            0.0
+        };
+
+        let chance = ((base + consec_bonus + prior_bonus + play_through_bonus) * age_mult).min(0.80);
+
+        if rng.gen::<f64>() >= chance {
+            continue;
+        }
+
+        let tier_roll: f64 = rng.gen();
+        let tier = if tier_roll < 0.10 { "severe" } else if tier_roll < 0.40 { "moderate" } else { "light" };
+
+        let injury_type = match tier {
+            "severe"   => pick_severe_type(is_pitcher, &mut rng),
+            "moderate" => pick_moderate_type(is_pitcher, &mut rng),
+            _          => pick_light_type(is_pitcher, &mut rng),
+        };
+
+        let recovery_weeks = recovery_weeks_for(injury_type, &mut rng);
+        let severity = severity_of(injury_type).to_string();
+
+        occurred.push(NpcInjuryOccurrence {
+            player_id: player.player_id.clone(),
+            severity,
+            recovery_weeks,
+        });
+    }
+
+    NpcInjuriesResult { occurred }
 }
 
 // ── HS Admissions ─────────────────────────────────────────────

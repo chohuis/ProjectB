@@ -5,6 +5,7 @@
   import { t } from "../../shared/i18n";
   import type { PitcherGameLine } from "../../shared/types/season";
   import type { CareerSeasonRecord } from "../../shared/types/save";
+  import { INJURY_LABEL } from "../../shared/types/save";
 
   type StatusTab = "stats" | "record" | "career";
   let activeTab: StatusTab = "stats";
@@ -102,6 +103,17 @@
     1: "습득중", 2: "기초", 3: "보통", 4: "능숙", 5: "마스터",
   };
 
+  $: injury        = $gameStore.protagonist.injury;
+  $: injuryHistory = ($gameStore.protagonist.injuryHistory ?? []).slice().reverse();
+
+  const TREATMENT_LABEL: Record<string, string> = {
+    rest: "자연 휴식", conservative: "보존 치료", steroid: "스테로이드",
+    prp: "PRP 주사", surgery: "수술", counseling: "심리 상담", self: "자가 극복",
+  };
+  const SEV_LABEL: Record<string, string> = {
+    light: "경상", moderate: "중상", severe: "중증", surgery: "수술",
+  };
+
   $: careerRecords = ($gameStore.protagonist.careerRecords ?? []).slice().reverse();
 
   function leagueShortName(lid: string): string {
@@ -166,6 +178,52 @@
         <strong>{$gameStore.player.morale}</strong>
       </div>
     </div>
+  </article>
+
+  <article class="card body-card">
+    <div class="body-header">
+      <span class="body-title">신체 상태</span>
+      {#if injury}
+        <span class="sev-badge sev-{injury.severity}">{SEV_LABEL[injury.severity] ?? injury.severity}</span>
+        <span class="inj-name-text">{INJURY_LABEL[injury.type] ?? injury.type}</span>
+        {#if injury.treatmentChoice}
+          <span class="treat-tag">{TREATMENT_LABEL[injury.treatmentChoice] ?? injury.treatmentChoice}</span>
+        {/if}
+        {#if injury.rehabPhase}
+          <span class="rehab-tag">재활 {injury.rehabPhase}단계</span>
+        {/if}
+      {:else}
+        <span class="no-injury">이상 없음</span>
+      {/if}
+    </div>
+
+    {#if injury}
+      <div class="recovery-row">
+        <span class="rec-left-label">회복</span>
+        <div class="rec-bar-wrap">
+          <div class="rec-bar-fill" style="width:{Math.round((1 - injury.recoveryWeeksLeft / injury.totalRecoveryWeeks) * 100)}%"></div>
+        </div>
+        <span class="rec-weeks">{injury.recoveryWeeksLeft}주 남음</span>
+      </div>
+    {/if}
+
+    {#if injuryHistory.length > 0}
+      <div class="inj-history">
+        <span class="hist-title">부상 이력</span>
+        <div class="hist-list">
+          {#each injuryHistory as h}
+            <div class="hist-row">
+              <span class="hist-when">{h.year}년 {h.week}주</span>
+              <span class="hist-sev sev-{h.severity}">{SEV_LABEL[h.severity] ?? h.severity}</span>
+              <span class="hist-name">{INJURY_LABEL[h.type] ?? h.type}</span>
+              {#if h.permanentLoss && Object.keys(h.permanentLoss).length > 0}
+                <span class="hist-loss">{Object.entries(h.permanentLoss).map(([k, v]) => `${k} ${v}`).join(" / ")}</span>
+              {/if}
+            </div>
+          {/each}
+        </div>
+      </div>
+    {/if}
   </article>
 
   <nav class="tab-bar">
@@ -393,7 +451,7 @@
 <style>
   .page {
     display: grid;
-    grid-template-rows: auto auto auto minmax(0, 1fr);
+    grid-template-rows: auto auto auto auto minmax(0, 1fr);
     gap: 12px;
     height: 100%;
     min-height: 0;
@@ -674,6 +732,104 @@
     border: 1px solid rgba(240,192,64,0.3);
     border-radius: 4px; padding: 2px 7px;
   }
+
+  /* 신체 상태 카드 */
+  .body-card {
+    display: grid;
+    gap: 8px;
+  }
+
+  .body-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .body-title {
+    font-size: 13px;
+    color: #7a9ac8;
+    font-weight: 600;
+    margin-right: 4px;
+  }
+
+  .sev-badge {
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 6px;
+    padding: 2px 8px;
+  }
+  .sev-badge.sev-light    { background: rgba(100,180,255,0.10); color: #80c8ff; border: 1px solid #2a4a6a; }
+  .sev-badge.sev-moderate { background: rgba(255,160,50,0.15);  color: #ffa030; border: 1px solid #7a4010; }
+  .sev-badge.sev-severe   { background: rgba(220,60,60,0.15);   color: #e05050; border: 1px solid #7a2020; }
+  .sev-badge.sev-surgery  { background: rgba(180,80,255,0.15);  color: #d080ff; border: 1px solid #5a2080; }
+
+  .inj-name-text { font-size: 14px; font-weight: 600; color: #e8f0ff; }
+
+  .treat-tag {
+    font-size: 11px;
+    color: #9eb6de;
+    border: 1px solid #2d3956;
+    border-radius: 4px;
+    padding: 2px 7px;
+  }
+
+  .rehab-tag {
+    font-size: 11px;
+    color: #d080ff;
+    border: 1px solid #5a2080;
+    border-radius: 4px;
+    padding: 2px 7px;
+    background: rgba(180,80,255,0.08);
+  }
+
+  .no-injury { font-size: 13px; color: #68de92; }
+
+  .recovery-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .rec-left-label { font-size: 12px; color: #7a9ac8; width: 24px; flex-shrink: 0; }
+  .rec-bar-wrap {
+    flex: 1;
+    height: 6px;
+    background: #1e3054;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .rec-bar-fill {
+    height: 100%;
+    border-radius: inherit;
+    background: #68de92;
+    transition: width 0.3s;
+  }
+  .rec-weeks { font-size: 12px; color: #9eb6de; white-space: nowrap; }
+
+  .inj-history { display: grid; gap: 6px; }
+  .hist-title  { font-size: 12px; color: #6a8ab8; font-weight: 600; }
+
+  .hist-list { display: grid; gap: 4px; }
+
+  .hist-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    padding: 4px 8px;
+    background: #0f1830;
+    border: 1px solid #1e3050;
+    border-radius: 6px;
+  }
+  .hist-when { color: #6a8ab8; }
+  .hist-sev  { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 4px; }
+  .hist-sev.sev-light    { color: #80c8ff; }
+  .hist-sev.sev-moderate { color: #ffa030; }
+  .hist-sev.sev-severe   { color: #e05050; }
+  .hist-sev.sev-surgery  { color: #d080ff; }
+  .hist-name { color: #c8d8f0; }
+  .hist-loss { color: #ff9b8a; font-size: 11px; margin-left: auto; }
 
   @media (max-width: 960px) {
     .profile-card { grid-template-columns: 1fr; }

@@ -106,6 +106,7 @@ export interface EntityManagerStats {
   strategy: number;
   handlePressure: number;
   handlePersonnel: number;
+  injuryMgmt?: number;  // 부상 관리 (70+ 보수적, 40미만 무리형)
 }
 
 export interface EntityManagerDetails {

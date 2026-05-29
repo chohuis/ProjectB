@@ -161,6 +161,7 @@ declare global {
       weekCalcExamResult:   (p: string) => Promise<string>;
       weekCalcMilitary:     (p: string) => Promise<string>;
       weekCalcNpcFallback:  (p: string) => Promise<string>;
+      weekCalcNpcInjuries:  (p: string) => Promise<string>;
       weekRollRandomBatch:  (count: number) => Promise<string>;
       // ── 마스터 데이터 (Electron 패키징 환경용 fallback) ──────
       masterFetch: (relPath: string) => Promise<unknown>;

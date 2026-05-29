@@ -1,102 +1,107 @@
-{
-  "id": "MNG_00009",
-  "name": "황상민",
-  "nameEn": "Hwang Sangmin",
-  "role": "manager",
-  "age": 48,
-  "status": "active",
-  "originLeagueId": "LEAGUE_UNIVERSITY",
-  "leagueId": "LEAGUE_UNIVERSITY",
-  "clubId": "TEAM_UNIV_KNSU",
-  "teamId": "TEAM_UNIV_KNSU",
-  "schoolId": "SCHOOL_UNIV_KNSU",
-  "grade": null,
-  "notes": "",
-  "details": {
-    "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 0,
-      "pitching": {
-        "ovr": 50,
-        "stamina": 50,
-        "velocity": 50,
-        "command": 50,
-        "control": 50,
-        "movement": 50,
-        "mentality": 50,
-        "recovery": 50,
-        "clutch": 50,
-        "holdRunners": 50
-      },
-      "batting": {
-        "ovr": 50,
-        "contact": 50,
-        "power": 50,
-        "eye": 50,
-        "discipline": 50,
-        "speed": 50,
-        "fielding": 50,
-        "arm": 50,
-        "battingClutch": 50,
-        "baseInstinct": 50,
-        "bunting": 45,
-        "platoon": 50
-      },
-      "developmentRate": 50,
-      "potentialHidden": 70,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 50
-      }
-    },
-    "coach": {
-      "specialty": "-",
-      "experienceYears": 0,
-      "stats": {
-        "teaching": 50,
-        "analysis": 50,
-        "communication": 50,
-        "discipline": 50,
-        "leadership": 50
-      },
-      "trainingBuffs": ""
-    },
-    "manager": {
-      "style": "균형",
-      "experienceYears": 13,
-      "stats": {
-        "motivation": 86,
-        "development": 50,
-        "strategy": 57,
-        "handlePressure": 63,
-        "handlePersonnel": 80
-      },
-      "gamePlanBias": "",
-      "riskTolerance": 74
-    },
-    "owner": {
-      "ownershipStyle": "안정 운영",
-      "tenureYears": 0,
-      "stats": {
-        "budgetSupport": 50,
-        "patience": 50,
-        "prInfluence": 50,
-        "facilityInvestment": 50,
-        "staffTrust": 50
-      },
-      "budgetPolicy": "",
-      "hiringPolicy": ""
-    }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+﻿{
+    "id":  "MNG_00009",
+    "name":  "황상민",
+    "nameEn":  "Hwang Sangmin",
+    "role":  "manager",
+    "age":  48,
+    "status":  "active",
+    "originLeagueId":  "LEAGUE_UNIVERSITY",
+    "leagueId":  "LEAGUE_UNIVERSITY",
+    "clubId":  "TEAM_UNIV_KNSU",
+    "teamId":  "TEAM_UNIV_KNSU",
+    "schoolId":  "SCHOOL_UNIV_KNSU",
+    "grade":  null,
+    "notes":  "",
+    "details":  {
+                    "player":  {
+                                   "playerType":  "pitcher",
+                                   "handedness":  "R",
+                                   "position":  "SP",
+                                   "jerseyNumber":  0,
+                                   "pitching":  {
+                                                    "ovr":  50,
+                                                    "stamina":  50,
+                                                    "velocity":  50,
+                                                    "command":  50,
+                                                    "control":  50,
+                                                    "movement":  50,
+                                                    "mentality":  50,
+                                                    "recovery":  50,
+                                                    "clutch":  50,
+                                                    "holdRunners":  50
+                                                },
+                                   "batting":  {
+                                                   "ovr":  50,
+                                                   "contact":  50,
+                                                   "power":  50,
+                                                   "eye":  50,
+                                                   "discipline":  50,
+                                                   "speed":  50,
+                                                   "fielding":  50,
+                                                   "arm":  50,
+                                                   "battingClutch":  50,
+                                                   "baseInstinct":  50,
+                                                   "bunting":  45,
+                                                   "platoon":  50
+                                               },
+                                   "developmentRate":  50,
+                                   "potentialHidden":  70,
+                                   "primaryPosition":  "SP",
+                                   "positionRatings":  {
+                                                           "SP":  50
+                                                       }
+                               },
+                    "coach":  {
+                                  "specialty":  "-",
+                                  "experienceYears":  0,
+                                  "stats":  {
+                                                "teaching":  50,
+                                                "analysis":  50,
+                                                "communication":  50,
+                                                "discipline":  50,
+                                                "leadership":  50
+                                            },
+                                  "trainingBuffs":  ""
+                              },
+                    "manager":  {
+                                    "style":  "균형",
+                                    "experienceYears":  13,
+                                    "stats":  {
+                                                  "motivation":  86,
+                                                  "development":  50,
+                                                  "strategy":  57,
+                                                  "handlePressure":  63,
+                                                  "handlePersonnel":  80,
+                                                  "injuryMgmt":  26
+                                              },
+                                    "gamePlanBias":  "",
+                                    "riskTolerance":  74
+                                },
+                    "owner":  {
+                                  "ownershipStyle":  "안정 운영",
+                                  "tenureYears":  0,
+                                  "stats":  {
+                                                "budgetSupport":  50,
+                                                "patience":  50,
+                                                "prInfluence":  50,
+                                                "facilityInvestment":  50,
+                                                "staffTrust":  50
+                                            },
+                                  "budgetPolicy":  "",
+                                  "hiringPolicy":  ""
+                              }
+                },
+    "contact":  {
+                    "category":  "",
+                    "relation":  "",
+                    "initialAffinity":  0,
+                    "arcs":  [
+
+                             ],
+                    "chat":  {
+
+                             }
+                },
+    "diligence":  60,
+    "popularity":  30
 }

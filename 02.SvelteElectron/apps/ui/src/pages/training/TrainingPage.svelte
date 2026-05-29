@@ -2,6 +2,7 @@
   import { t } from "../../shared/i18n";
   import { gameStore } from "../../shared/stores/game";
   import { masterStore, pitchUnlockRuleMap } from "../../shared/stores/master";
+  import { INJURY_LABEL } from "../../shared/types/save";
   import type { TrainingPreset } from "../../shared/types/save";
 
   type TrainingTab = "plan" | "pitch" | "risk";
@@ -36,6 +37,14 @@
   let addingPreset = false;
   let newPresetName = "";
   let coachAdviceDismissed = false;
+
+  const TREATMENT_LABEL: Record<string, string> = {
+    rest: "자연 휴식", conservative: "보존 치료", steroid: "스테로이드",
+    prp: "PRP 주사", surgery: "수술", counseling: "심리 상담", self: "자가 극복",
+  };
+  const SEV_LABEL: Record<string, string> = {
+    light: "경상", moderate: "중상", severe: "중증", surgery: "수술",
+  };
 
   const GRADE_LABEL: Record<number, string> = {
     1: "습득중", 2: "기초", 3: "보통", 4: "능숙", 5: "마스터",
@@ -453,11 +462,20 @@
         <section class="panel daily-plan">
           {#if isInjured && injury}
             <div class="injury-banner">
-              <span class="injury-icon">🩹</span>
-              <span>
-                <strong>{injury.severity === "moderate" ? "중상" : injury.severity === "severe" ? "중증" : injury.severity === "surgery" ? "수술" : "경상"}</strong>
-                회복 중 — 잔여 <strong>{injury.recoveryWeeksLeft}주</strong> · 훈련 효율 -80%
-              </span>
+              <div class="inj-banner-top">
+                <span class="inj-sev-tag inj-sev-{injury.severity}">{SEV_LABEL[injury.severity] ?? injury.severity}</span>
+                <strong class="inj-type-name">{INJURY_LABEL[injury.type] ?? injury.type}</strong>
+                {#if injury.treatmentChoice}
+                  <span class="inj-treat-tag">{TREATMENT_LABEL[injury.treatmentChoice] ?? injury.treatmentChoice}</span>
+                {/if}
+                {#if injury.rehabPhase}
+                  <span class="inj-rehab-tag">재활 {injury.rehabPhase}단계</span>
+                {/if}
+                <span class="inj-weeks-text">잔여 {injury.recoveryWeeksLeft}주 · 훈련 효율 -80%</span>
+              </div>
+              <div class="inj-progress-wrap">
+                <div class="inj-progress-fill" style="width:{Math.round((1 - injury.recoveryWeeksLeft / injury.totalRecoveryWeeks) * 100)}%"></div>
+              </div>
             </div>
           {:else if highFatWeeks >= 2}
             <div class="injury-risk-banner">
@@ -716,7 +734,7 @@
 
           {#if isInjured && injury}
             <p class="risk-note danger">
-              부상 중 ({injury.severity === "moderate" ? "중상" : injury.severity === "severe" ? "중증" : injury.severity === "surgery" ? "수술" : "경상"}) — {injury.recoveryWeeksLeft}주 회복 필요
+              {SEV_LABEL[injury.severity] ?? injury.severity} ({INJURY_LABEL[injury.type] ?? injury.type}) — {injury.recoveryWeeksLeft}주 회복 필요{injury.treatmentChoice ? ` · ${TREATMENT_LABEL[injury.treatmentChoice]}` : ""}
             </p>
           {:else if highFatWeeks >= 2}
             <p class="risk-note warn">피로 위험 {highFatWeeks}주 연속 — 부상 발생 가능</p>
@@ -1356,18 +1374,51 @@
   .hint       { color: #9fb5db; font-size: 12px; }
 
   .injury-banner {
-    display: flex;
-    align-items: center;
-    gap: 8px;
     border: 1px solid #8d4a3f;
     border-radius: 8px;
     background: #3b1f1b;
     padding: 8px 10px;
-    font-size: 13px;
+    display: grid;
+    gap: 6px;
     color: #ffc0b6;
   }
 
-  .injury-icon { font-size: 16px; }
+  .inj-banner-top {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-wrap: wrap;
+    font-size: 13px;
+  }
+
+  .inj-sev-tag {
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 4px;
+    padding: 1px 7px;
+  }
+  .inj-sev-tag.inj-sev-light    { background: rgba(100,180,255,0.10); color: #80c8ff; border: 1px solid #2a4a6a; }
+  .inj-sev-tag.inj-sev-moderate { background: rgba(255,160,50,0.15);  color: #ffa030; border: 1px solid #7a4010; }
+  .inj-sev-tag.inj-sev-severe   { background: rgba(220,60,60,0.15);   color: #e05050; border: 1px solid #7a2020; }
+  .inj-sev-tag.inj-sev-surgery  { background: rgba(180,80,255,0.15);  color: #d080ff; border: 1px solid #5a2080; }
+
+  .inj-type-name { font-size: 13px; color: #ffd8c8; }
+  .inj-treat-tag { font-size: 11px; color: #c0a898; border: 1px solid #604040; border-radius: 4px; padding: 1px 6px; }
+  .inj-rehab-tag { font-size: 11px; color: #d080ff; border: 1px solid #5a2080; border-radius: 4px; padding: 1px 6px; background: rgba(180,80,255,0.08); }
+  .inj-weeks-text { font-size: 12px; color: #c09898; margin-left: auto; }
+
+  .inj-progress-wrap {
+    height: 4px;
+    background: #5a2a2a;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .inj-progress-fill {
+    height: 100%;
+    border-radius: inherit;
+    background: #e08060;
+    transition: width 0.3s;
+  }
 
   .injury-risk-banner {
     border: 1px solid #8a6f3a;

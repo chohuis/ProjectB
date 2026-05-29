@@ -1,4 +1,5 @@
 import type { EntityRow, EntityPlayerDetails } from "../stores/master";
+import type { NpcInjuryEntry } from "../types/save";
 
 export interface TeamRoster {
   rotation: string[];   // SP ID 순서 (최대 5명)
@@ -7,11 +8,33 @@ export interface TeamRoster {
   lineup: string[];     // 타자 출전 순서 (1번~9번)
 }
 
+const PLAY_THROUGH_OVR_MULT: Record<string, number> = { light: 0.88, moderate: 0.70 };
+
+// ── 부상 필터링 + OVR 패널티 적용 ─────────────────────────────
+function applyNpcInjuries(entities: EntityRow[], npcInjuries: Record<string, NpcInjuryEntry>): EntityRow[] {
+  return entities.flatMap((e) => {
+    const inj = npcInjuries[e.id];
+    if (!inj) return [e];
+    if (!inj.isPlayingThrough) return []; // benched
+    const mult = PLAY_THROUGH_OVR_MULT[inj.severity] ?? 1.0;
+    if (mult === 1.0) return [e];
+    const pd = e.details.player as EntityPlayerDetails | undefined;
+    if (!pd) return [e];
+    const patchedPlayer: EntityPlayerDetails = {
+      ...pd,
+      pitching: pd.pitching ? { ...pd.pitching, ovr: Math.round((pd.pitching.ovr ?? 50) * mult) } : pd.pitching,
+      batting:  pd.batting  ? { ...pd.batting,  ovr: Math.round((pd.batting.ovr  ?? 50) * mult) } : pd.batting,
+    };
+    return [{ ...e, details: { ...e.details, player: patchedPlayer } }];
+  });
+}
+
 // ── 팀 엔티티 분류 ────────────────────────────────────────────
-function getTeamPlayers(teamId: string, entities: EntityRow[]): EntityRow[] {
-  return entities.filter(
+function getTeamPlayers(teamId: string, entities: EntityRow[], npcInjuries?: Record<string, NpcInjuryEntry>): EntityRow[] {
+  const active = entities.filter(
     (e) => e.role === "player" && e.teamId === teamId && e.status === "active",
   );
+  return npcInjuries ? applyNpcInjuries(active, npcInjuries) : active;
 }
 
 function playerDetails(e: EntityRow): EntityPlayerDetails {
@@ -19,8 +42,8 @@ function playerDetails(e: EntityRow): EntityPlayerDetails {
 }
 
 // ── 선발 로테이션 자동 배정 ──────────────────────────────────
-export function getTeamRotation(teamId: string, entities: EntityRow[]): string[] {
-  const players = getTeamPlayers(teamId, entities);
+export function getTeamRotation(teamId: string, entities: EntityRow[], npcInjuries?: Record<string, NpcInjuryEntry>): string[] {
+  const players = getTeamPlayers(teamId, entities, npcInjuries);
   const pitchers = players.filter((e) => playerDetails(e).playerType === "pitcher");
 
   // SP 우선 (positionRatings.SP 또는 position === "SP")
@@ -51,8 +74,9 @@ export function getTeamBullpen(
   teamId: string,
   entities: EntityRow[],
   rotation: string[],
+  npcInjuries?: Record<string, NpcInjuryEntry>,
 ): { bullpen: string[]; closer: string } {
-  const players = getTeamPlayers(teamId, entities);
+  const players = getTeamPlayers(teamId, entities, npcInjuries);
   const rotSet = new Set(rotation);
   const reliefs = players
     .filter(
@@ -74,8 +98,8 @@ export function getTeamBullpen(
 // ── 라인업(타순) 자동 배정 ──────────────────────────────────
 const POSITION_PRIORITY = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH", "UT"];
 
-export function getTeamLineup(teamId: string, entities: EntityRow[]): string[] {
-  const players = getTeamPlayers(teamId, entities);
+export function getTeamLineup(teamId: string, entities: EntityRow[], npcInjuries?: Record<string, NpcInjuryEntry>): string[] {
+  const players = getTeamPlayers(teamId, entities, npcInjuries);
   let batters = players.filter(
     (e) =>
       playerDetails(e).playerType === "batter" ||
@@ -145,9 +169,9 @@ function sortBattingOrder(ids: string[], entities: EntityRow[]): string[] {
 }
 
 // ── 팀 전체 로스터 한 번에 생성 ─────────────────────────────
-export function buildTeamRoster(teamId: string, entities: EntityRow[]): TeamRoster {
-  const rotation = getTeamRotation(teamId, entities);
-  const { bullpen, closer } = getTeamBullpen(teamId, entities, rotation);
-  const lineup = getTeamLineup(teamId, entities);
+export function buildTeamRoster(teamId: string, entities: EntityRow[], npcInjuries?: Record<string, NpcInjuryEntry>): TeamRoster {
+  const rotation = getTeamRotation(teamId, entities, npcInjuries);
+  const { bullpen, closer } = getTeamBullpen(teamId, entities, rotation, npcInjuries);
+  const lineup = getTeamLineup(teamId, entities, npcInjuries);
   return { rotation, bullpen, closer, lineup };
 }

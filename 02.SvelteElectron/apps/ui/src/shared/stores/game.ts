@@ -599,6 +599,45 @@ function createGameStore() {
       });
     },
 
+    applyInjuryTreatment(choice: import("../types/save").InjuryTreatment) {
+      update((s) => {
+        const inj = s.protagonist.injury;
+        if (!inj) return s;
+
+        let updatedInj = { ...inj, treatmentChoice: choice };
+
+        if (choice === "steroid") {
+          // 2~3주 단축 (고정값 3주 적용)
+          const reduced = Math.max(1, updatedInj.recoveryWeeksLeft - 3);
+          updatedInj = { ...updatedInj, recoveryWeeksLeft: reduced, totalRecoveryWeeks: reduced };
+        } else if (choice === "prp") {
+          // 4~6주 단축 (고정값 5주 적용)
+          const reduced = Math.max(1, updatedInj.recoveryWeeksLeft - 5);
+          updatedInj = { ...updatedInj, recoveryWeeksLeft: reduced, totalRecoveryWeeks: reduced };
+        } else if (choice === "surgery") {
+          // 중증 → 수술 전환: UCL_PARTIAL→UCL_FULL, ROTATOR_STRAIN→ROTATOR_FULL
+          const surgeryType = inj.type === "UCL_PARTIAL" ? "UCL_FULL"
+            : inj.type === "ROTATOR_STRAIN" ? "ROTATOR_FULL"
+            : "UCL_FULL";
+          // 수술 회복 주수: UCL_FULL 기준 65주, ROTATOR_FULL 58주
+          const surgeryWeeks = surgeryType === "UCL_FULL" ? 65 : 58;
+          updatedInj = {
+            ...updatedInj,
+            type:               surgeryType as import("../types/save").InjuryType,
+            severity:           "surgery",
+            recoveryWeeksLeft:  surgeryWeeks,
+            totalRecoveryWeeks: surgeryWeeks,
+            rehabPhase:         1,
+          };
+        }
+
+        return {
+          ...s,
+          protagonist: { ...s.protagonist, injury: updatedInj },
+        };
+      });
+    },
+
     // 하위 호환: dayAdvance IPC 결과 적용 (TopHeader)
     applyDayResult(snapshot: CoreGameState, newLogs: string[]) {
       update((s) => {

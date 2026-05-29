@@ -44,6 +44,7 @@
   import EntityManagerModal from "../../features/entity-manager/ui/EntityManagerModal.svelte";
   import AchievementManagerModal from "../../features/achievements/ui/AchievementManagerModal.svelte";
   import SeasonEndModal from "../../features/season-end/ui/SeasonEndModal.svelte";
+  import InjuryTreatmentModal from "../../features/injury/ui/InjuryTreatmentModal.svelte";
   import MatchPage from "../match/MatchPage.svelte";
   import type { InteractiveMatchContext, InteractiveMatchResult, UnifiedGameOutcome } from "../../shared/types/season";
 
@@ -125,6 +126,7 @@
   $: pendingTrade = $nextPendingAction?.type === "trade" ? $nextPendingAction : null;
   $: pendingFaMarket = $nextPendingAction?.type === "faMarket";
   $: pendingMilitaryEnlist = $nextPendingAction?.type === "militaryEnlist";
+  $: pendingInjuryTreatment = $nextPendingAction?.type === "injuryTreatment" ? $nextPendingAction : null;
   // 경기 pendingAction 과 해당 일정 찾기
   $: pendingGame = $nextPendingAction?.type === "game" ? $nextPendingAction : null;
   $: pendingGameEntry = pendingGame
@@ -488,6 +490,10 @@
 
 {#if pendingMilitaryEnlist && currentTab === "messages"}
   <MilitaryEnlistModal />
+{/if}
+
+{#if pendingInjuryTreatment && currentTab === "messages"}
+  <InjuryTreatmentModal action={pendingInjuryTreatment} />
 {/if}
 
 

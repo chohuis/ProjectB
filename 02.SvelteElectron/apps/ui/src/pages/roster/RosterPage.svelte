@@ -242,6 +242,23 @@
     LEAGUE_UNIVERSITY: "대학 리그", LEAGUE_KBL: "KBL",
     LEAGUE_ABL: "ABL", LEAGUE_JBL: "JBL", LEAGUE_IND: "독립 리그",
   };
+
+  const SEV_BADGE: Record<string, string> = {
+    light: "경상", moderate: "부상", severe: "중상", surgery: "수술",
+  };
+
+  $: npcInjuries = $seasonStore.npcInjuries ?? {};
+
+  function getRowInjury(rowId: string): { severity: string; weeksLeft: number; playingThrough: boolean } | null {
+    if (rowId === $gameStore.protagonist.id) {
+      const inj = $gameStore.protagonist.injury;
+      if (!inj) return null;
+      return { severity: inj.severity, weeksLeft: inj.recoveryWeeksLeft, playingThrough: false };
+    }
+    const npcInj = npcInjuries[rowId];
+    if (!npcInj) return null;
+    return { severity: npcInj.severity, weeksLeft: npcInj.weeksLeft, playingThrough: npcInj.isPlayingThrough };
+  }
 </script>
 
 <section class="page">
@@ -269,6 +286,7 @@
           {:else}
             {#each sortedRows as row}
               {@const p = (row.details as any)?.player}
+              {@const rowInj = getRowInjury(row.id)}
               <button
                 class="data-row"
                 class:selected={selected?.id === row.id}
@@ -276,11 +294,18 @@
                 on:dblclick={() => (modalEntityId = row.id)}
                 title="더블클릭: 상세 보기"
               >
-                <strong>{row.name}</strong>
+                <strong class="row-name">
+                  {row.name}
+                  {#if rowInj}
+                    <span class="inj-badge inj-badge-{rowInj.severity}" title="{SEV_BADGE[rowInj.severity]} {rowInj.weeksLeft}주{rowInj.playingThrough ? ' (출전중)' : ''}">
+                      {SEV_BADGE[rowInj.severity] ?? rowInj.severity}
+                    </span>
+                  {/if}
+                </strong>
                 <span>{roleLabel(row.role as RoleTab)}</span>
                 <span>{row.role === "player" ? (p?.position ?? "-") : "-"}</span>
                 <span>{row.age}</span>
-                <span>{row.status}</span>
+                <span>{rowInj ? (rowInj.playingThrough ? "출전중" : "부상") : row.status}</span>
               </button>
             {/each}
           {/if}
@@ -998,4 +1023,17 @@
   }
   .fa-ok   { background:#152a18; color:#68de92; border:1px solid #2a5a30; }
   .fa-wait { background:#131f34; color:#9fb4d8; border:1px solid #253451; }
+
+  /* ── 부상 배지 (로스터 리스트) ── */
+  .row-name { display:flex; align-items:center; gap:5px; min-width:0; overflow:hidden; }
+  .inj-badge {
+    flex-shrink:0;
+    font-size:9px; font-weight:700;
+    padding:1px 5px; border-radius:6px;
+    white-space:nowrap;
+  }
+  .inj-badge-light    { background:#1c2a18; color:#80e880; border:1px solid #2a5a30; }
+  .inj-badge-moderate { background:#2a1f08; color:#ffc040; border:1px solid #5a3a10; }
+  .inj-badge-severe   { background:#2e1010; color:#ff8080; border:1px solid #6a2020; }
+  .inj-badge-surgery  { background:#200e2e; color:#d090ff; border:1px solid #5a2a7a; }
 </style>

@@ -12,7 +12,7 @@ import type {
   ScheduleEntry,
   Standing,
 } from "../types/season";
-import type { BatterSeasonStats, PlayerSeasonStats, PitcherSeasonStats } from "../types/save";
+import type { BatterSeasonStats, NpcInjuryEntry, PlayerSeasonStats, PitcherSeasonStats } from "../types/save";
 import type { EntityRow } from "../stores/master";
 import { calcAvg, calcEra, calcOps, calcWhip, makeEmptySeason, SAVE_SEASON_VERSION } from "../types/season";
 import {
@@ -79,6 +79,7 @@ function getSimWorker(): Worker | null {
 function runInWorker(
   games: SimWorkerRequest["games"],
   entities: EntityRow[],
+  npcInjuries?: Record<string, import("../types/save").NpcInjuryEntry>,
 ): Promise<SimWorkerResultItem[]> {
   const worker = getSimWorker();
   if (!worker) {
@@ -88,6 +89,7 @@ function runInWorker(
         homeRotIdx: g.homeRotIdx ?? 0,
         awayRotIdx: g.awayRotIdx ?? 0,
         week:       g.week ?? 0,
+        npcInjuries,
       });
       return {
         id:                g.id,
@@ -519,7 +521,7 @@ function createSeasonStore() {
       }
       if (batch.length === 0) return;
 
-      const simmed = await runInWorker(batch, simEntities);
+      const simmed = await runInWorker(batch, simEntities, s.npcInjuries);
       const simMap = new Map(simmed.map((r) => [r.id, r]));
 
       // 경기 기록 수집 (npc_game_log 적재용)
@@ -645,6 +647,35 @@ function createSeasonStore() {
     // ABL 컨퍼런스 배정 저장
     setAblConferences(east: string[], west: string[]) {
       update((s) => ({ ...s, ablEastTeams: east, ablWestTeams: west }));
+    },
+
+    // NPC 부상 설정 / 갱신
+    setNpcInjury(playerId: string, entry: NpcInjuryEntry) {
+      update((s) => ({
+        ...s,
+        npcInjuries: { ...s.npcInjuries, [playerId]: entry },
+      }));
+    },
+
+    // NPC 부상 제거 (회복 완료)
+    clearNpcInjury(playerId: string) {
+      update((s) => {
+        const next = { ...s.npcInjuries };
+        delete next[playerId];
+        return { ...s, npcInjuries: next };
+      });
+    },
+
+    // 주간 틱: 모든 NPC 부상 weeksLeft 감소, 0 이하는 제거
+    tickNpcInjuries() {
+      update((s) => {
+        const next: Record<string, NpcInjuryEntry> = {};
+        for (const [pid, entry] of Object.entries(s.npcInjuries)) {
+          const weeksLeft = entry.weeksLeft - 1;
+          if (weeksLeft > 0) next[pid] = { ...entry, weeksLeft };
+        }
+        return { ...s, npcInjuries: next };
+      });
     },
 
     // L1: 특정 리그 순위표 조회 헬퍼

@@ -1,84 +1,85 @@
-{
-  "id": "MNG_00095",
-  "name": "사이토 류",
-  "nameEn": "Saito Ryu",
-  "role": "manager",
-  "age": 53,
-  "status": "active",
-  "originLeagueId": "LEAGUE_JBL",
-  "leagueId": "LEAGUE_JBL",
-  "clubId": "CLUB_JBL_PL_POLARBEARS",
-  "teamId": "TEAM_JBL_PL_POLARBEARS_2",
-  "schoolId": "SCHOOL_NONE",
-  "grade": null,
-  "notes": "",
-  "details": {
-    "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 0,
-      "pitching": {
-        "ovr": 50,
-        "stamina": 50,
-        "velocity": 50,
-        "command": 50,
-        "control": 50,
-        "movement": 50,
-        "mentality": 50,
-        "recovery": 50
-      },
-      "batting": {
-        "ovr": 50,
-        "contact": 50,
-        "power": 50,
-        "eye": 50,
-        "discipline": 50,
-        "speed": 50,
-        "fielding": 50,
-        "arm": 50,
-        "battingClutch": 50
-      },
-      "developmentRate": 50,
-      "potentialHidden": 70
-    },
-    "coach": {
-      "specialty": "-",
-      "experienceYears": 0,
-      "stats": {
-        "teaching": 50,
-        "analysis": 50,
-        "communication": 50,
-        "discipline": 50,
-        "leadership": 50
-      },
-      "trainingBuffs": ""
-    },
-    "manager": {
-      "style": "공격적",
-      "experienceYears": 13,
-      "stats": {
-        "tactics": 63,
-        "decision": 73,
-        "rotationMgmt": 80,
-        "bullpenMgmt": 75,
-        "moraleMgmt": 86
-      },
-      "gamePlanBias": "",
-      "riskTolerance": 39
-    },
-    "owner": {
-      "ownershipStyle": "안정 운영",
-      "tenureYears": 0,
-      "stats": {
-        "budgetSupport": 50,
-        "patience": 50,
-        "prInfluence": 50,
-        "facilityInvestment": 50,
-        "staffTrust": 50
-      },
-      "budgetPolicy": "",
-      "hiringPolicy": ""
-    }
-  }
+﻿{
+    "id":  "MNG_00095",
+    "name":  "사이토 류",
+    "nameEn":  "Saito Ryu",
+    "role":  "manager",
+    "age":  53,
+    "status":  "active",
+    "originLeagueId":  "LEAGUE_JBL",
+    "leagueId":  "LEAGUE_JBL",
+    "clubId":  "CLUB_JBL_PL_POLARBEARS",
+    "teamId":  "TEAM_JBL_PL_POLARBEARS_2",
+    "schoolId":  "SCHOOL_NONE",
+    "grade":  null,
+    "notes":  "",
+    "details":  {
+                    "player":  {
+                                   "playerType":  "pitcher",
+                                   "handedness":  "R",
+                                   "position":  "SP",
+                                   "jerseyNumber":  0,
+                                   "pitching":  {
+                                                    "ovr":  50,
+                                                    "stamina":  50,
+                                                    "velocity":  50,
+                                                    "command":  50,
+                                                    "control":  50,
+                                                    "movement":  50,
+                                                    "mentality":  50,
+                                                    "recovery":  50
+                                                },
+                                   "batting":  {
+                                                   "ovr":  50,
+                                                   "contact":  50,
+                                                   "power":  50,
+                                                   "eye":  50,
+                                                   "discipline":  50,
+                                                   "speed":  50,
+                                                   "fielding":  50,
+                                                   "arm":  50,
+                                                   "battingClutch":  50
+                                               },
+                                   "developmentRate":  50,
+                                   "potentialHidden":  70
+                               },
+                    "coach":  {
+                                  "specialty":  "-",
+                                  "experienceYears":  0,
+                                  "stats":  {
+                                                "teaching":  50,
+                                                "analysis":  50,
+                                                "communication":  50,
+                                                "discipline":  50,
+                                                "leadership":  50
+                                            },
+                                  "trainingBuffs":  ""
+                              },
+                    "manager":  {
+                                    "style":  "공격적",
+                                    "experienceYears":  13,
+                                    "stats":  {
+                                                  "tactics":  63,
+                                                  "decision":  73,
+                                                  "rotationMgmt":  80,
+                                                  "bullpenMgmt":  75,
+                                                  "moraleMgmt":  86,
+                                                  "injuryMgmt":  61
+                                              },
+                                    "gamePlanBias":  "",
+                                    "riskTolerance":  39
+                                },
+                    "owner":  {
+                                  "ownershipStyle":  "안정 운영",
+                                  "tenureYears":  0,
+                                  "stats":  {
+                                                "budgetSupport":  50,
+                                                "patience":  50,
+                                                "prInfluence":  50,
+                                                "facilityInvestment":  50,
+                                                "staffTrust":  50
+                                            },
+                                  "budgetPolicy":  "",
+                                  "hiringPolicy":  ""
+                              }
+                }
 }

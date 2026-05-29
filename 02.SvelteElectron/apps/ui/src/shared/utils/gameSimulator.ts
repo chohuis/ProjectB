@@ -1,4 +1,5 @@
 import type { EntityRow, EntityPlayerDetails } from "../stores/master";
+import type { NpcInjuryEntry } from "../types/save";
 import type { MatchResult, PlayerCondition } from "../types/season";
 import { buildTeamRoster } from "./rosterEngine";
 
@@ -56,17 +57,18 @@ export async function simulateGame(
   awayTeamId: string,
   entities:   EntityRow[],
   options?: {
-    conditions?:  Record<string, PlayerCondition>;
-    homeRotIdx?:  number;
-    awayRotIdx?:  number;
-    week?:        number;
+    conditions?:   Record<string, PlayerCondition>;
+    homeRotIdx?:   number;
+    awayRotIdx?:   number;
+    week?:         number;
+    npcInjuries?:  Record<string, NpcInjuryEntry>;
   },
 ): Promise<SimGameResult> {
-  const { conditions = {}, homeRotIdx = 0, awayRotIdx = 0, week = 0 } = options ?? {};
+  const { conditions = {}, homeRotIdx = 0, awayRotIdx = 0, week = 0, npcInjuries } = options ?? {};
   const entityMap = new Map(entities.map((e) => [e.id, e]));
 
-  const homeRoster = buildTeamRoster(homeTeamId, entities);
-  const awayRoster = buildTeamRoster(awayTeamId, entities);
+  const homeRoster = buildTeamRoster(homeTeamId, entities, npcInjuries);
+  const awayRoster = buildTeamRoster(awayTeamId, entities, npcInjuries);
 
   const toSimPitchers = (ids: string[]) => ids.map(id => toSimPitcher(id, entityMap)).filter(Boolean) as SimPitcher[];
   const toSimBatters  = (ids: string[]) => ids.map(id => toSimBatter(id, entityMap)).filter(Boolean)  as SimBatter[];

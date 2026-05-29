@@ -110,7 +110,12 @@ export type PendingAction =
       exercised: boolean;
       nextSalary: number;
     }
-  | { type: "hsGroupDraw" };
+  | { type: "hsGroupDraw" }
+  | {
+      type: "injuryTreatment";
+      injuryType: string;
+      severity: "moderate" | "severe" | "surgery";
+    };
 
 // ── 주 진행 결과 (advanceWeek 반환값) ──────────────────────────
 export interface WeekAdvanceResult {
@@ -232,6 +237,8 @@ export interface SaveSeason {
   // ABL 컨퍼런스 배정 (시즌 시작 시 랜덤)
   ablEastTeams: string[];
   ablWestTeams: string[];
+  // NPC 부상 상태 (playerId → 부상 정보)
+  npcInjuries: Record<string, import("../types/save").NpcInjuryEntry>;
 }
 
 export const SAVE_SEASON_VERSION = 1;
@@ -272,6 +279,7 @@ export function makeEmptySeason(
     postseasonBrackets: {},
     ablEastTeams: [],
     ablWestTeams: [],
+    npcInjuries: {},
   };
 }
 

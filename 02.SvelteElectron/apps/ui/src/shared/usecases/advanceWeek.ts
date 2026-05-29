@@ -12,7 +12,7 @@ import { isFaEligible } from "../utils/faEngine";
 import type { LeagueSeasonState, MatchResult, PendingAction, PlayerCondition, ScheduleEntry, WeekAdvanceResult } from "../types/season";
 import type { EventContext } from "../types/event";
 import type { MessageItem } from "../types/main";
-import type { InjuryState, ProtagonistSave } from "../types/save";
+import type { InjurySeverity, InjuryHistoryEntry, InjuryState, InjuryType, PitchingAttributes, ProtagonistSave } from "../types/save";
 import { INJURY_LABEL } from "../types/save";
 import { toGameDate, generateHsPostseasonSemis, generateHsPostseasonFinal } from "../utils/scheduleGen";
 import { assignProtagonistRole, assignHighschoolPosition, ROLE_DESCRIPTION, isReliefsRole, relieverWouldPitch } from "../utils/pitcherRoleEngine";
@@ -196,6 +196,107 @@ function nextUnresolvedGame(schedule: ScheduleEntry[]): ScheduleEntry | null {
   return pending.reduce((min, e) => (e.gameDate < min.gameDate ? e : min), pending[0]);
 }
 
+function getPermanentPenalty(inj: InjuryState): Partial<Record<string, number>> {
+  if (inj.type === "YIPS") {
+    if (inj.treatmentChoice === "self")       return { control: -3, command: -3 };
+    if (inj.treatmentChoice === "counseling") return { control: -1, command: -1 };
+    return { control: -2, command: -2 };
+  }
+  type PenaltyMap = Partial<Record<InjuryType, Partial<Record<string, number>>>>;
+  const table: PenaltyMap = {
+    ELBOW_INFLAM:     { velocity: -1 },
+    SHOULDER_INFLAM:  inj.treatmentChoice === "steroid" ? { velocity: -1 } : {},
+    UCL_PARTIAL:      { velocity: -3, command: -2 },
+    ROTATOR_STRAIN:   { velocity: -4, movement: -2 },
+    BACK_HERNIATION:  { stamina: -3 },
+    UCL_FULL:         { velocity: -4, stamina: -3 },
+    ROTATOR_FULL:     { velocity: -6, movement: -5 },
+    SHOULDER_SURGERY: { velocity: -2, stamina: -2 },
+  };
+  return table[inj.type] ?? {};
+}
+
+async function processNpcInjuries(weekNum: number): Promise<void> {
+  seasonStore.tickNpcInjuries();
+
+  const s = get(seasonStore);
+  const g = get(gameStore);
+  const m = get(masterStore);
+
+  // Build player role and consecutive appearance from schedule data (protagonist's league)
+  const playerData = new Map<string, { role: "pitcher" | "batter"; weeks: Set<number> }>();
+  for (const entry of s.schedule) {
+    if (!entry.result || entry.week >= weekNum) continue;
+    for (const line of entry.result.playerLines) {
+      if (line.playerId === g.protagonist.id) continue;
+      const ex = playerData.get(line.playerId);
+      if (ex) { ex.weeks.add(entry.week); }
+      else     { playerData.set(line.playerId, { role: line.role, weeks: new Set([entry.week]) }); }
+    }
+  }
+  if (playerData.size === 0) return;
+
+  const entityMap = new Map(m.entities.map((e) => [e.id, e]));
+
+  const mgrInjuryMgmt = new Map<string, number>();
+  for (const e of m.entities) {
+    if (e.role === "manager") {
+      const val = ((e.details as { manager?: { stats?: { injuryMgmt?: number } } } | undefined)?.manager?.stats?.injuryMgmt) ?? 50;
+      mgrInjuryMgmt.set(e.teamId, val);
+    }
+  }
+
+  type NpcEntry = { playerId: string; role: string; age: number; consecutiveApp: number; hasPriorInjury: boolean; isPlayingThrough: boolean; playingThroughSeverity: string | null };
+  const players: NpcEntry[] = [];
+
+  for (const [playerId, data] of playerData) {
+    const entity = entityMap.get(playerId);
+    const age = ((entity?.details as { player?: { age?: number } } | undefined)?.player?.age) ?? 25;
+    const existing = s.npcInjuries[playerId];
+
+    const weeksSorted = [...data.weeks].sort((a, b) => b - a);
+    let consecutiveApp = 0;
+    let expected = weekNum - 1;
+    for (const w of weeksSorted) {
+      if (w === expected) { consecutiveApp++; expected--; }
+      else break;
+    }
+
+    let role = data.role === "batter" ? "batter" : "RP";
+    if (data.role === "pitcher" && entity) {
+      const pos = ((entity.details as { player?: { position?: string } } | undefined)?.player?.position);
+      if (pos === "SP" || pos === "RP" || pos === "CP") role = pos;
+    }
+
+    players.push({
+      playerId, role, age, consecutiveApp,
+      hasPriorInjury: existing !== undefined,
+      isPlayingThrough: existing?.isPlayingThrough ?? false,
+      playingThroughSeverity: existing?.isPlayingThrough ? (existing.severity as string) : null,
+    });
+  }
+  if (players.length === 0) return;
+
+  const result = JSON.parse(
+    await window.projectB!.weekCalcNpcInjuries(JSON.stringify({ players }))
+  ) as { occurred: { playerId: string; severity: string; recoveryWeeks: number }[] };
+
+  for (const occ of result.occurred) {
+    const entity = entityMap.get(occ.playerId);
+    const injuryMgmt = entity ? (mgrInjuryMgmt.get(entity.teamId) ?? 50) : 50;
+
+    let isPlayingThrough = false;
+    if (occ.severity === "light")    isPlayingThrough = injuryMgmt < 70;
+    if (occ.severity === "moderate") isPlayingThrough = injuryMgmt < 40;
+
+    seasonStore.setNpcInjury(occ.playerId, {
+      severity: occ.severity as InjurySeverity,
+      weeksLeft: occ.recoveryWeeks,
+      isPlayingThrough,
+    });
+  }
+}
+
 // ── 주간 처리 블록 ─────────────────────────────────────────────
 // week 경계를 넘을 때 호출: 훈련·이벤트·시험·메신저·진로·업적·배경리그
 // 반환: 새로 생긴 logs
@@ -307,37 +408,62 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   const slumpPenalty       = newLowMoraleWeeks >= 3 ? 0.70 : 1.0;
 
   const alreadyInjured = !!g.protagonist.injury;
+
+  // 훈련 강도 계산: TRN_RECOVERY / TRN_MENTAL_P / TRN_MENTAL_B 제외한 슬롯 비율
+  const LOW_INTENSITY_PROGRAMS = new Set(["TRN_RECOVERY", "TRN_MENTAL_P", "TRN_MENTAL_B"]);
+  const trnSlots = [g.trainingPlan.primaryProgramId, g.trainingPlan.secondaryProgramId, g.trainingPlan.secondary2ProgramId].filter((id): id is string => !!id);
+  const highCount = trnSlots.filter(id => !LOW_INTENSITY_PROGRAMS.has(id)).length;
+  const trainingIntensity = trnSlots.length > 0 ? highCount / trnSlots.length : 0;
+
+  // 동일 부위 이전 부상 이력 여부 (moderate 이상)
+  const hasPriorInjurySameArea = (g.protagonist.injuryHistory ?? []).some(h => h.severity !== "light");
+
   const injuryCalc = JSON.parse(await window.projectB!.weekCalcInjury(JSON.stringify({
     fatigue: g.protagonist.fatigue,
     consecutiveHighFatigueWeeks: g.protagonist.consecutiveHighFatigueWeeks ?? 0,
     hasInjury: alreadyInjured,
-    injuryType: g.protagonist.injury?.severity ?? null,
+    currentInjuryType: g.protagonist.injury?.type ?? null,
+    currentSeverity:   g.protagonist.injury?.severity ?? null,
     recoveryWeeksLeft: g.protagonist.injury?.recoveryWeeksLeft ?? null,
-  }))) as { injuryUpdate: { type: string; recoveryWeeksLeft: number } | null; justOccurred: boolean; justHealed: boolean; effMod: number; newConsecutiveHighFatigueWeeks: number };
+    playerType:        g.protagonist.playerType,
+    age:               g.protagonist.age,
+    condition:         g.protagonist.condition,
+    trainingIntensity,
+    consecutiveLowMoraleWeeks: g.protagonist.consecutiveLowMoraleWeeks ?? 0,
+    hasPriorInjurySameArea,
+  }))) as { injuryUpdate: { type: string; severity: string; recoveryWeeksLeft: number } | null; justOccurred: boolean; justHealed: boolean; effMod: number; newConsecutiveHighFatigueWeeks: number; source: string | null };
   const injuryJustOccurred = injuryCalc.justOccurred;
   const injuryJustHealed   = injuryCalc.justHealed;
 
-  // Rust 출력 { type: "light"|"moderate", recoveryWeeksLeft } → InjuryState 브릿지
+  // Rust 출력 → InjuryState 변환
   let injuryState: InjuryState | undefined;
   if (!injuryJustHealed && injuryCalc.injuryUpdate) {
     if (injuryJustOccurred) {
-      const rustSeverity = injuryCalc.injuryUpdate.type as "light" | "moderate";
-      const injType = rustSeverity === "moderate" ? "ELBOW_INFLAM" : "ARM_FATIGUE";
       injuryState = {
-        type: injType,
-        severity: rustSeverity,
-        recoveryWeeksLeft: injuryCalc.injuryUpdate.recoveryWeeksLeft,
+        type:               injuryCalc.injuryUpdate.type as InjuryType,
+        severity:           injuryCalc.injuryUpdate.severity as InjurySeverity,
+        recoveryWeeksLeft:  injuryCalc.injuryUpdate.recoveryWeeksLeft,
         totalRecoveryWeeks: injuryCalc.injuryUpdate.recoveryWeeksLeft,
         permanentPenaltyApplied: false,
-        source: "fatigue",
+        source:             (injuryCalc.source ?? "fatigue") as import("../types/save").InjurySource,
       };
     } else if (alreadyInjured && g.protagonist.injury) {
       injuryState = { ...g.protagonist.injury, recoveryWeeksLeft: injuryCalc.injuryUpdate.recoveryWeeksLeft };
     }
   }
 
+  const SURGERY_REHAB_EFF: Record<number, number> = { 1: 0.00, 2: 0.10, 3: 0.30, 4: 0.60 };
+  let effectiveInjuryEffMod = injuryCalc.effMod;
+  if (injuryState && injuryState.severity === "surgery") {
+    const elapsed = injuryState.totalRecoveryWeeks - injuryState.recoveryWeeksLeft;
+    const pct = injuryState.totalRecoveryWeeks > 0 ? elapsed / injuryState.totalRecoveryWeeks : 0;
+    const phase: 1 | 2 | 3 | 4 = pct < 0.25 ? 1 : pct < 0.50 ? 2 : pct < 0.75 ? 3 : 4;
+    injuryState = { ...injuryState, rehabPhase: phase };
+    effectiveInjuryEffMod = SURGERY_REHAB_EFF[phase];
+  }
+
   const finalEffMod = studyResult.efficiencyMod * (1 + majorEffBonus + coachEffBonus)
-    * facilityEffMod * slumpPenalty * injuryCalc.effMod;
+    * facilityEffMod * slumpPenalty * effectiveInjuryEffMod;
 
   const growth = await calcTrainingGrowth(g.protagonist, g.trainingPlan, finalEffMod);
 
@@ -346,6 +472,13 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   if (injuryJustOccurred && injuryState) {
     const label = INJURY_LABEL[injuryState.type];
     growth.logs.push(`[부상] ${label} 발생 — ${injuryState.recoveryWeeksLeft}주 회복 필요`);
+    if (injuryState.severity === "moderate" || injuryState.severity === "severe") {
+      seasonStore.pushPendingAction({
+        type: "injuryTreatment",
+        injuryType: injuryState.type,
+        severity: injuryState.severity,
+      });
+    }
   } else if (alreadyInjured && !injuryJustHealed && injuryState) {
     growth.logs.push(`[부상] 회복 중 (${injuryState.recoveryWeeksLeft}주 남음) — 훈련 효율 -80%`);
   } else if (injuryJustHealed) {
@@ -358,6 +491,36 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   growth.protagonistPatch.consecutiveLowMoraleWeeks  = newLowMoraleWeeks;
   growth.protagonistPatch.consecutiveHighFatigueWeeks = injuryCalc.newConsecutiveHighFatigueWeeks;
   growth.protagonistPatch.injury                      = injuryState;
+
+  if (injuryJustHealed && g.protagonist.injury && !g.protagonist.injury.permanentPenaltyApplied) {
+    const prevInj = g.protagonist.injury;
+    const penalty = getPermanentPenalty(prevInj);
+    const penaltyEntries = Object.entries(penalty) as [string, number][];
+    if (penaltyEntries.length > 0) {
+      const pitching: PitchingAttributes = { ...(growth.protagonistPatch.pitching ?? g.protagonist.pitching) };
+      for (const [stat, delta] of penaltyEntries) {
+        if (stat in pitching) {
+          (pitching as unknown as Record<string, number>)[stat] = Math.max(1, ((pitching as unknown as Record<string, number>)[stat] ?? 0) + delta);
+        }
+      }
+      pitching.ovr = Math.round(
+        (pitching.velocity * 2.5 + pitching.command * 2.5 + pitching.control * 2.0
+         + pitching.movement * 1.5 + pitching.stamina * 1.5 + pitching.mentality * 1.0
+         + pitching.recovery * 0.5 + pitching.clutch * 0.3 + pitching.holdRunners * 0.2) / 12.0
+      );
+      growth.protagonistPatch.pitching = pitching;
+      growth.logs.push(`[부상 후유증] ${INJURY_LABEL[prevInj.type]} 영구 손실 — ${penaltyEntries.map(([k, v]) => `${k} ${v}`).join(", ")}`);
+    }
+    const histEntry: InjuryHistoryEntry = {
+      type: prevInj.type,
+      severity: prevInj.severity,
+      year: s.seasonYear,
+      week: weekNum,
+      treatmentChoice: prevInj.treatmentChoice ?? "rest",
+      ...(penaltyEntries.length > 0 ? { permanentLoss: penalty as InjuryHistoryEntry["permanentLoss"] } : {}),
+    };
+    growth.protagonistPatch.injuryHistory = [...(g.protagonist.injuryHistory ?? []), histEntry];
+  }
 
   const shPrev = g.protagonist.seasonHealth ?? { lowConditionWeeks: 0, highFatigueWeeks: 0, injuryCount: 0, totalWeeks: 0 };
   growth.protagonistPatch.seasonHealth = {
@@ -573,6 +736,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
 
   // ── 배경 리그 시뮬레이션 (await — 월간 메시지 전 완료 보장) ────
   const bgEntities = get(masterStore).entities;
+  await processNpcInjuries(weekNum);
   seasonStore.applyWeeklyConditionRecovery(bgEntities);
   await seasonStore.simulateBackgroundLeaguesAsync(weekNum, gFinal.protagonist.leagueId, bgEntities);
 
@@ -1154,6 +1318,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       if (entities.length > 0) {
         const sim = await simulateGame(nextGame.homeTeamId, nextGame.awayTeamId, entities, {
           conditions, homeRotIdx, awayRotIdx, week: nextGame.week,
+          npcInjuries: get(seasonStore).npcInjuries,
         });
         npcResult      = sim.result;
         nextHomeRotIdx = sim.nextHomeRotIdx;

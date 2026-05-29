@@ -52,6 +52,14 @@ export interface ManagerAttributes {
   handlePersonnel: number; // 선수 기용/트레이드/방출 결정
   rotationMgmt?: number;   // 선발 로테이션 운용 능력 (50 기본)
   bullpenMgmt?: number;    // 불펜 운용 능력 (50 기본)
+  injuryMgmt?: number;     // 부상 관리 (높을수록 보수적 — 즉시 결장, 70+ 보수, 40미만 무리형)
+}
+
+// ── NPC 부상 상태 ──────────────────────────────────────────────
+export interface NpcInjuryEntry {
+  severity: InjurySeverity;
+  weeksLeft: number;
+  isPlayingThrough: boolean;  // 감독 스타일에 따라 부상 무릅쓰고 출전 중
 }
 
 // ── 코치 능력치 ────────────────────────────────────────────────
