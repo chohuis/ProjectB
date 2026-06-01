@@ -21,10 +21,10 @@
   import TrainingPage from "../training/TrainingPage.svelte";
   import FinancePage from "../finance/FinancePage.svelte";
   import TestMatchPage from "../test/TestMatchPage.svelte";
+  import MatchDemoPage from "../match-demo/MatchDemoPage.svelte";
   import LeaguePage from "../league/LeaguePage.svelte";
   import AchievementsPage from "../achievements/AchievementsPage.svelte";
   import MessagesPage from "../messages/MessagesPage.svelte";
-  import MessengerPage from "../messenger/MessengerPage.svelte";
   import TeamPage from "../team/TeamPage.svelte";
   import EventManagerModal from "../../features/events/ui/EventManagerModal.svelte";
   import CareerChoiceHubModal from "../../features/career/ui/CareerChoiceHubModal.svelte";
@@ -37,7 +37,6 @@
   import FaMarketModal from "../../features/contract/ui/FaMarketModal.svelte";
   import MilitaryEnlistModal from "../../features/military/ui/MilitaryEnlistModal.svelte";
   import MilitaryStatusPanel from "../../features/military/ui/MilitaryStatusPanel.svelte";
-  import MessengerManagerModal from "../../features/messenger-manager/ui/MessengerManagerModal.svelte";
   import DevToolsHubModal from "../../features/devtools/ui/DevToolsHubModal.svelte";
   import MatchEngineLabModal from "../../features/match-engine-lab/ui/MatchEngineLabModal.svelte";
   import EntityManagerModal from "../../features/entity-manager/ui/EntityManagerModal.svelte";
@@ -55,17 +54,16 @@
   let entityManagerOpen = false;
   let achievementManagerOpen = false;
   let matchLabOpen = false;
-  let messengerManagerOpen = false;
   let activeMatchContext: InteractiveMatchContext | null = null;
   const tabPageKey: Record<MainTabId, string> = {
     home: "page.home",
     messages: "page.messages",
-    messenger: "page.messenger",
     status: "page.status",
     team: "page.team",
     schedule: "page.schedule",
     training: "page.training",
     finance: "page.finance",
+    matchDemo: "page.matchDemo",
     test: "page.matchEngine",
     league: "page.league",
     achievements: "page.achievements",
@@ -90,8 +88,6 @@
       case "optionClause":
       case "faMarket":
         return "messages";
-      case "messengerScript":
-        return "messenger";
       case "hsGroupDraw":
         return "messages";
     }
@@ -319,14 +315,13 @@
     if (typing) return;
 
     event.preventDefault();
-    const anyOpen = devToolsHubOpen || eventManagerOpen || entityManagerOpen || achievementManagerOpen || matchLabOpen || messengerManagerOpen;
+    const anyOpen = devToolsHubOpen || eventManagerOpen || entityManagerOpen || achievementManagerOpen || matchLabOpen;
     if (anyOpen) {
       devToolsHubOpen = false;
       eventManagerOpen = false;
       entityManagerOpen = false;
       achievementManagerOpen = false;
       matchLabOpen = false;
-      messengerManagerOpen = false;
       return;
     }
     devToolsHubOpen = true;
@@ -340,6 +335,12 @@
     matchContext={activeMatchContext}
     onComplete={completeInteractiveMatch}
     onCancel={() => { activeMatchContext = null; }}
+  />
+{:else if currentTab === "matchDemo"}
+  <MatchDemoPage
+    matchContext={null}
+    onComplete={() => {}}
+    onCancel={closeMatchEngine}
   />
 {:else if currentTab === "test"}
   <TestMatchPage onExit={closeMatchEngine} />
@@ -389,14 +390,14 @@
             <TrainingPage />
           {:else if currentTab === "finance"}
             <FinancePage />
+          {:else if currentTab === "matchDemo"}
+            <MatchDemoPage />
           {:else if currentTab === "league"}
             <LeaguePage />
           {:else if currentTab === "achievements"}
             <AchievementsPage />
           {:else if currentTab === "messages"}
             <MessagesPage />
-          {:else if currentTab === "messenger"}
-            <MessengerPage />
           {:else if currentTab === "team"}
             <TeamPage />
           {:else}
@@ -431,10 +432,6 @@
     devToolsHubOpen = false;
     matchLabOpen = true;
   }}
-  on:openMessenger={() => {
-    devToolsHubOpen = false;
-    messengerManagerOpen = true;
-  }}
   on:openMatchEngine={() => {
     devToolsHubOpen = false;
     currentTab = "test";
@@ -445,7 +442,6 @@
 <EntityManagerModal open={entityManagerOpen} on:close={() => (entityManagerOpen = false)} />
 <AchievementManagerModal open={achievementManagerOpen} on:close={() => (achievementManagerOpen = false)} />
 <MatchEngineLabModal open={matchLabOpen} on:close={() => (matchLabOpen = false)} />
-<MessengerManagerModal open={messengerManagerOpen} on:close={() => (messengerManagerOpen = false)} />
 
 {#if $seasonEnded}
   <SeasonEndModal onExit={onSeasonEnd} />

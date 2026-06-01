@@ -27,7 +27,7 @@
     resolving = true;
     const offer: FaOffer = { ...selectedOffer, salary: requestedSalary };
     const contract = toContract(offer);
-    gameStore.signContract(contract, $masterStore.contactDefs);
+    gameStore.signContract(contract);
     gameStore.resetFaProgress();
 
     const proTeamIds = $masterStore.teams.filter((t) => t.leagueId === contract.leagueId).map((t) => t.id);

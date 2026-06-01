@@ -22,7 +22,7 @@
       description: `${fromTeamName} -> ${toTeamName} 이적이 확정되었습니다.`,
       choices: [{ id: "ok", label: "확인" }],
     });
-    gameStore.applyTradeTransfer(action.toTeamId, $masterStore.contactDefs);
+    gameStore.applyTradeTransfer(action.toTeamId);
     seasonStore.resolvePendingAction("trade");
     await gameStore.save();
     await seasonStore.save();

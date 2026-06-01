@@ -25,7 +25,6 @@ export function computeMetrics(
   return {
     strikeoutTotal:     achMetrics.strikeoutTotal,
     saveTotal:          achMetrics.saveTotal,
-    kakaoFirstContact:  achMetrics.kakaoFirstContact ? 1 : 0,
     trainingWeeksTotal: achMetrics.trainingWeeksTotal ?? 0,
     gamesWonTotal:      achMetrics.gamesWonTotal ?? 0,
     winsTotal:          teamRow?.wins ?? 0,

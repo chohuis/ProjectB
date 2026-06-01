@@ -46,7 +46,7 @@
       noTrade,
       status: "active",
     };
-    gameStore.signContract(contract, $masterStore.contactDefs);
+    gameStore.signContract(contract);
     const proTeamIds = $masterStore.teams
       .filter((t) => t.leagueId === action.leagueId)
       .map((t) => t.id);

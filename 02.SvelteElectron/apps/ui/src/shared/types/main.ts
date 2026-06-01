@@ -1,12 +1,12 @@
 export type MainTabId =
   | "home"
   | "messages"
-  | "messenger"
   | "status"
   | "team"
   | "schedule"
   | "training"
   | "finance"
+  | "matchDemo"
   | "test"
   | "league"
   | "achievements"

@@ -91,7 +91,6 @@ export type PendingAction =
   | { type: "event";           eventId: string; title: string; description: string; choices?: EventChoice[] }
   | { type: "careerChoiceHub" }
   | { type: "careerChoice" }
-  | { type: "messengerScript"; contactId: string; arcId: string }
   | { type: "draft" }
   | {
       type: "salaryNegotiation";

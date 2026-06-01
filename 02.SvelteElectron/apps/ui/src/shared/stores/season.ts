@@ -321,7 +321,6 @@ function createSeasonStore() {
           if (a.type === "careerChoiceHub" && type === "careerChoice") return false;
           if (a.type === "careerChoice"    && type === "careerChoice")    return false;
           if (a.type === "careerChoice"    && type === "careerChoiceHub") return false;
-          if (a.type === "messengerScript" && type === "messengerScript") return id !== undefined && a.arcId !== id;
           if (a.type === "draft"           && type === "draft")           return false;
           if (a.type === "salaryNegotiation" && type === "salaryNegotiation") return false;
           if (a.type === "faMarket"        && type === "faMarket")        return false;

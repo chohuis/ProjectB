@@ -14,12 +14,12 @@
   const tabs: { id: MainTabId; labelKey: string }[] = [
     { id: "home", labelKey: "nav.home" },
     { id: "messages", labelKey: "nav.messages" },
-    { id: "messenger", labelKey: "nav.messenger" },
     { id: "status", labelKey: "nav.status" },
     { id: "team", labelKey: "nav.team" },
     { id: "schedule", labelKey: "nav.schedule" },
     { id: "training", labelKey: "nav.training" },
     { id: "finance", labelKey: "nav.finance" },
+    { id: "matchDemo", labelKey: "nav.matchDemo" },
     { id: "league", labelKey: "nav.league" },
     { id: "achievements", labelKey: "nav.achievements" },
     { id: "academics", labelKey: "nav.academics" }
@@ -37,8 +37,7 @@
   }
 
   // 설정 버튼 토글 (이벤트 버블링 차단)
-  function toggleSettings(event: MouseEvent) {
-    event.stopPropagation();
+  function toggleSettings() {
     settingsOpen = !settingsOpen;
   }
 
@@ -71,8 +70,8 @@
     {/each}
   </div>
 
-  <div class="settings-wrap" on:click|stopPropagation>
-    <button class="icon-button" type="button" on:click={toggleSettings} aria-label={$t("header.language")}>
+  <div class="settings-wrap">
+    <button class="icon-button" type="button" on:click|stopPropagation={toggleSettings} aria-label={$t("header.language")}>
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path
           d="M19.43 12.98c.04-.32.07-.65.07-.98s-.03-.66-.08-.98l2.11-1.65a.5.5 0 0 0 .12-.63l-2-3.46a.5.5 0 0 0-.61-.22l-2.49 1a7.07 7.07 0 0 0-1.69-.98l-.38-2.65A.5.5 0 0 0 14 2h-4a.5.5 0 0 0-.49.42l-.38 2.65c-.61.24-1.17.56-1.69.98l-2.49-1a.5.5 0 0 0-.61.22l-2 3.46a.5.5 0 0 0 .12.63L4.57 11c-.05.32-.07.65-.07 1s.03.68.08 1l-2.11 1.65a.5.5 0 0 0-.12.63l2 3.46a.5.5 0 0 0 .61.22l2.49-1c.52.42 1.08.75 1.69.99l.38 2.64a.5.5 0 0 0 .49.42h4a.5.5 0 0 0 .49-.42l.38-2.64c.61-.24 1.17-.57 1.69-.99l2.49 1a.5.5 0 0 0 .61-.22l2-3.46a.5.5 0 0 0-.12-.63L19.43 13zM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5z"
@@ -80,7 +79,7 @@
       </svg>
     </button>
     {#if settingsOpen}
-      <section class="settings-popup" role="dialog" aria-label={$t("header.language")}>
+      <div class="settings-popup" role="presentation" on:mousedown|stopPropagation>
         <p>{$t("header.language")}</p>
         <div class="language-options">
           {#each languageOptions as option}
@@ -89,7 +88,7 @@
             </button>
           {/each}
         </div>
-      </section>
+      </div>
     {/if}
   </div>
 </nav>
