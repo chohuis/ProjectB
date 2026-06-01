@@ -64,9 +64,16 @@ export async function runOffseasonProcessing(
   pendingDraft: NpcSaveState[],
   seasonYear: number,
 ): Promise<OffseasonResult> {
+  const namedIds = new Set(npcs.map(n => n.npcId));
+  const emotionRoles = new Map(npcs.map(n => [n.npcId, n.emotionRole] as const));
   const paramsJson = JSON.stringify({ npcs, pendingDraft, seasonYear });
   const json = await api().npcRunOffseason(paramsJson);
   const raw = parseResult<{ npcs: NpcSaveState[]; pendingDraft: NpcSaveState[]; summary: SeasonEndSummary; logs: string[] }>(json);
+  const rehydrate = (n: NpcSaveState): NpcSaveState => ({
+    ...n,
+    isNamed:     n.isNamed ?? namedIds.has(n.npcId),
+    emotionRole: n.emotionRole ?? emotionRoles.get(n.npcId),
+  });
 
   const mailboxEntry: MessageItem | null = raw.logs.length > 0
     ? {
@@ -81,5 +88,11 @@ export async function runOffseasonProcessing(
       }
     : null;
 
-  return { ...raw, mailboxEntry };
+  return {
+    npcs:        raw.npcs.map(rehydrate),
+    pendingDraft: raw.pendingDraft.map(rehydrate),
+    summary:     raw.summary,
+    logs:        raw.logs,
+    mailboxEntry,
+  };
 }

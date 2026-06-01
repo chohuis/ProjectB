@@ -3,6 +3,7 @@ import type {
   BattingAttributes,
   HighSchoolMaster,
   NamedNpcMeta,
+  NpcEmotionRole,
   NpcSaveState,
   PitchingAttributes,
 } from "../types/save";
@@ -17,7 +18,12 @@ function parseResult<T>(json: string): T {
 }
 
 // ── 핵심 변환: EntityRow → NpcSaveState (TS 유지) ────────────
-export function entityToNpcState(entity: EntityRow, seasonYear: number): NpcSaveState {
+export function entityToNpcState(
+  entity: EntityRow,
+  seasonYear: number,
+  isNamed = false,
+  emotionRole?: NpcEmotionRole,
+): NpcSaveState {
   const pl   = entity.details.player as EntityPlayerDetails;
   const grade = entity.grade ?? 3;
   return {
@@ -30,6 +36,8 @@ export function entityToNpcState(entity: EntityRow, seasonYear: number): NpcSave
     age:          entity.age,
     schoolId:     entity.schoolId ?? "",
     graduationYear: seasonYear + (3 - grade),
+    isNamed,
+    emotionRole,
     careerStatus:  "active",
     currentLeague: entity.leagueId,
     currentTeam:   entity.teamId,
@@ -42,10 +50,15 @@ export function entityToNpcState(entity: EntityRow, seasonYear: number): NpcSave
   };
 }
 
-export function initHighSchoolNpcs(entities: EntityRow[], seasonYear: number): NpcSaveState[] {
+export function initHighSchoolNpcs(
+  entities: EntityRow[],
+  seasonYear: number,
+  namedIds: Set<string>,
+  emotionRoleMap: Map<string, NpcEmotionRole>,
+): NpcSaveState[] {
   return entities
-    .filter(e => e.role === "player" && e.leagueId === "LEAGUE_HIGHSCHOOL")
-    .map(e => entityToNpcState(e, seasonYear));
+    .filter(e => e.role === "player" && e.leagueId === "LEAGUE_HIGHSCHOOL" && namedIds.has(e.id))
+    .map(e => entityToNpcState(e, seasonYear, true, emotionRoleMap.get(e.id)));
 }
 
 // ── 학년 진급 결과 ────────────────────────────────────────────
@@ -59,8 +72,19 @@ export async function advanceHighSchoolGrades(
   npcs: NpcSaveState[],
   seasonYear: number,
 ): Promise<GradeAdvanceResult> {
+  const namedIds = new Set(npcs.filter(n => n.isNamed).map(n => n.npcId));
+  const emotionRoles = new Map(npcs.map(n => [n.npcId, n.emotionRole] as const));
   const json = await api().npcAdvanceGrades(JSON.stringify({ npcs, seasonYear }));
-  return parseResult<GradeAdvanceResult>(json);
+  const raw = parseResult<GradeAdvanceResult>(json);
+  const rehydrate = (n: NpcSaveState): NpcSaveState => ({
+    ...n,
+    isNamed:     n.isNamed ?? namedIds.has(n.npcId),
+    emotionRole: n.emotionRole ?? emotionRoles.get(n.npcId),
+  });
+  return {
+    updated:   raw.updated.map(rehydrate),
+    graduated: raw.graduated.map(rehydrate),
+  };
 }
 
 // ── 신입생 생성 (Rust DLL 위임) ──────────────────────────────
@@ -74,7 +98,7 @@ export async function generateFreshmenNpcs(
   const namedNpcs = namedGrade1
     .map(m => namedEntities.find(e => e.id === m.npcId))
     .filter(Boolean)
-    .map(e => entityToNpcState(e!, seasonYear));
+    .map(e => entityToNpcState(e!, seasonYear, true, "teammate"));
 
   const params = {
     schoolId:       school.id,
@@ -92,7 +116,13 @@ export async function generateFreshmenNpcs(
   };
 
   const json = await api().npcGenerateFreshmen(JSON.stringify(params));
-  return parseResult<NpcSaveState[]>(json);
+  const all = parseResult<NpcSaveState[]>(json);
+  const namedIdSet = new Set(namedGrade1.map(m => m.npcId));
+  return all.map(npc => ({
+    ...npc,
+    isNamed:     namedIdSet.has(npc.npcId),
+    emotionRole: namedIdSet.has(npc.npcId) ? ("teammate" as NpcEmotionRole) : undefined,
+  }));
 }
 
 // ── 주인공 학년 진급 (경량 — TS 유지) ───────────────────────

@@ -394,31 +394,8 @@ export interface AchievementRuntime {
 export interface AchievementMetrics {
   strikeoutTotal: number;
   saveTotal: number;
-  kakaoFirstContact: boolean;
   trainingWeeksTotal: number;
   gamesWonTotal: number;
-}
-
-// 학업 관리
-export type ContactCategory = "team" | "school" | "personal" | "rival";
-
-export interface ChatMessage {
-  from: "me" | "contact";
-  text: string;
-  week: number;
-  affinityDelta?: number;
-}
-
-export interface ChatContact {
-  id: string;
-  name: string;
-  category: ContactCategory;
-  relation: string;
-  unlocked: boolean;
-  affinity: number;  // 0–100
-  lastActionWeek: number;  // 쿨다운 계산용 (0 = 미사용)
-  chatHistory: ChatMessage[]; // max 60개
-  flags: string[];  // 완료한 아크·특별 대화 ID 목록
 }
 
 // ── 메신저 시스템 ──────────────────────────────────────────────
@@ -493,6 +470,16 @@ export interface ProtagonistDraftOutcome {
 // ── 드래프트 타입 ────────────────────────────────────────────
 export type MilitaryStatus = "미필" | "현역" | "군필" | "면제";
 export type NpcCareerStatus = "active" | "military" | "injured" | "retired";
+export type NpcEmotionRole = "manager" | "coach" | "rival" | "teammate";
+
+export interface AnonDraftEntry {
+  npcId:      string;
+  name:       string;
+  ovr:        number;
+  schoolId:   string;
+  position:   string;
+  playerType: PlayerType;
+}
 
 export interface NpcCareerEntry {
   year: number;
@@ -513,6 +500,10 @@ export interface NpcSaveState {
   grade?: 1 | 2 | 3;  // 고교/대학 재학 중일 때만 존재
   schoolId: string;
   graduationYear: number;
+
+  // Named NPC 여부 — false인 NPC는 저장파일에 포함되지 않음
+  isNamed: boolean;
+  emotionRole?: NpcEmotionRole;
 
   // 기본 정보
   careerStatus: NpcCareerStatus;
@@ -535,7 +526,53 @@ export interface NpcSaveState {
   };
   careerHistory: NpcCareerEntry[];
   achievements: string[];  // ["2025 신인상", "2027 MVP"]
+
+  // 감정 시스템 (Named NPC 전용, optional)
+  emotion?:        NpcEmotion;
+  memories?:       NpcMemory[];
+  emotionStatus?:  EmotionStatus;
+  lastActiveStage?: CareerStage;
 }
+
+// ── NPC 감정 시스템 ────────────────────────────────────────────
+
+export interface NpcEmotion {
+  // 인식 축 — 낮으면 나머지 수치가 의미 없음
+  recognition:  number;  // 0~100: 플레이어를 의식하는 정도
+
+  // 평가 축 — 셋이 독립적으로 공존 가능
+  admiration:   number;  // 실력 인정
+  jealousy:     number;  // 위협감 (자신이 밀린다는 감각)
+  contempt:     number;  // 경멸 (아직 상대 아니라는 감각)
+
+  // 관계 축
+  trust:        number;  // 인간적 신뢰
+  dependence:   number;  // NPC→플레이어 기대/의존 (코치·감독용)
+  resentment:   number;  // 누적 원한 — 한번 쌓이면 줄기 어려움
+
+  // 단기 상황 축 — 매주 자동 감쇠
+  pressure:     number;  // 지금 느끼는 압박감
+  excitement:   number;  // 지금 느끼는 기대감
+}
+
+export type NpcMemoryType =
+  | "humiliation"   // 공개적으로 당함 (맞대결 완봉패 등)
+  | "gratitude"     // 결정적 도움을 받음
+  | "betrayal"      // 뒤통수 (FA로 라이벌 팀 이적 등)
+  | "witness"       // 대단한 장면을 직접 목격
+  | "shared_ordeal"; // 함께 고생함 (강훈련, 강등 위기 등)
+
+export interface NpcMemory {
+  type:      NpcMemoryType;
+  week:      number;
+  intensity: 1 | 2 | 3;  // 메시지 무게와 감정 변화폭 결정
+  detail:    string;      // "2028 고교리그 결승전" 등 맥락 문자열
+}
+
+export type EmotionStatus =
+  | "active"    // 현재 같은 리그/팀 — 매주 업데이트
+  | "dormant"   // 다른 리그로 헤어짐 — 오프시즌에만 감쇠
+  | "archived"; // 은퇴/완전 종료 — 수치 제거, 기억만 보존
 
 // ── 커리어 기록 ───────────────────────────────────────────────
 export interface CareerAward {
@@ -569,7 +606,6 @@ export interface SaveGame {
   schoolState: SchoolState;
   achievements: AchievementRuntime[];
   achievementMetrics: AchievementMetrics;
-  contacts: ChatContact[];
   recentLogs: string[];  // 최근 30개 활동 로그
   recentUpcoming: string[];  // 다음 예정 이벤트 목록
   npcs: NpcSaveState[];  // NPC 런타임 상태 (Zone 0~3)
@@ -586,7 +622,6 @@ export function makeSaveGame(
   achievementMetrics: AchievementMetrics,
   recentLogs: string[],
   recentUpcoming: string[],
-  contacts: ChatContact[],
   npcs: NpcSaveState[] = [],
   trainingPresets: TrainingPreset[] = [],
 ): SaveGame {
@@ -600,7 +635,6 @@ export function makeSaveGame(
     schoolState,
     achievements,
     achievementMetrics,
-    contacts,
     recentLogs,
     recentUpcoming,
     npcs,

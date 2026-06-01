@@ -2,6 +2,14 @@ import { get } from "svelte/store";
 import { seasonStore } from "../stores/season";
 import { gameStore } from "../stores/game";
 import { masterStore } from "../stores/master";
+import {
+  updateNpcEmotion,
+  makeMemory,
+  reactivateNpc,
+  checkTeamMoodWarning,
+} from "../utils/emotionEngine";
+import { checkEmotionTriggers, makeReunionMessage } from "../utils/emotionMessageEngine";
+import type { WeeklyEmotionContext } from "../utils/emotionEngine";
 import { simulateGame } from "../utils/gameSimulator";
 import { calcTrainingGrowth } from "../utils/growthEngine";
 import { runEventEngine } from "../utils/eventEngine";
@@ -12,7 +20,7 @@ import { isFaEligible } from "../utils/faEngine";
 import type { LeagueSeasonState, MatchResult, PendingAction, PlayerCondition, ScheduleEntry, WeekAdvanceResult } from "../types/season";
 import type { EventContext } from "../types/event";
 import type { MessageItem } from "../types/main";
-import type { InjurySeverity, InjuryHistoryEntry, InjuryState, InjuryType, PitchingAttributes, ProtagonistSave } from "../types/save";
+import type { InjurySeverity, InjuryHistoryEntry, InjuryState, InjuryType, NpcMemory, PitchingAttributes, ProtagonistSave } from "../types/save";
 import { INJURY_LABEL } from "../types/save";
 import { toGameDate, generateHsPostseasonSemis, generateHsPostseasonFinal } from "../utils/scheduleGen";
 import { assignProtagonistRole, assignHighschoolPosition, ROLE_DESCRIPTION, isReliefsRole, relieverWouldPitch } from "../utils/pitcherRoleEngine";
@@ -579,30 +587,6 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     logs.push(`[시험] ${examRes.messageSubject}`);
   }
 
-  // 메신저 아크
-  {
-    const gCur = get(gameStore);
-    const contactMap = new Map(gCur.contacts.map((c) => [c.id, c]));
-    for (const def of m.contactDefs) {
-      for (const arc of def.arcs) {
-        const contact = contactMap.get(def.id);
-        const flags = contact?.flags ?? [];
-        if (flags.includes(arc.flag)) continue;
-        const t = arc.trigger;
-        if (t.weekInSeason    !== undefined && weekInYear !== t.weekInSeason)       continue;
-        if (t.weekInSeasonGte !== undefined && weekInYear < t.weekInSeasonGte)      continue;
-        if (t.careerStage     !== undefined && g.protagonist.careerStage !== t.careerStage) continue;
-        if (t.careerYear      !== undefined && careerStageYear !== t.careerYear)    continue;
-        if (t.affinityGte     !== undefined && (contact?.affinity ?? 0) < t.affinityGte) continue;
-        if (t.flagSet         !== undefined && !flags.includes(t.flagSet))           continue;
-        if (t.flagNotSet      !== undefined &&  flags.includes(t.flagNotSet))        continue;
-        gameStore.unlockOrRegisterContact(def);
-        seasonStore.pushPendingAction({ type: "messengerScript", contactId: def.id, arcId: arc.id });
-        break;
-      }
-    }
-  }
-
   // 고3 진로 선택 이벤트 (W50)
   const gLatest = get(gameStore);
   if (
@@ -732,6 +716,75 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   if (achResult.newlyUnlocked.length > 0 ||
       achResult.updatedRuntime.some((r, i) => r.progress !== gFinal.achievements[i]?.progress)) {
     gameStore.applyAchievementCheck(achResult);
+  }
+
+  // ── NPC 감정 업데이트 ─────────────────────────────────────────
+  {
+    const gEmo = get(gameStore);
+    const sEmo = get(seasonStore);
+    const isHs = gEmo.protagonist.careerStage === "highschool";
+    const namedNpcs = gEmo.npcs.filter(n => n.isNamed && n.emotionStatus !== "archived");
+
+    if (isHs && namedNpcs.length > 0) {
+      // 이번 주 주인공 경기 결과 (schedule에서 조회)
+      const myGame = sEmo.schedule.find(
+        e => e.week === weekNum && e.isProtagonistGame && e.result != null,
+      );
+      const myResult = myGame?.result;
+      const iWon = myResult != null && myResult.winnerId === gEmo.protagonist.teamId;
+
+      // 훈련 여부: 훈련 계획에 이번 주 항목 존재 여부로 추론
+      const hasTrainingPlan = (gEmo.trainingPlan?.slots?.length ?? 0) > 0;
+
+      const ctx: WeeklyEmotionContext = {
+        weekInSeason:    weekInYear,
+        careerStage:     gEmo.protagonist.careerStage,
+        protagonistOvr:  gEmo.protagonist.pitching?.ovr ?? gEmo.protagonist.batting?.ovr ?? 50,
+        gameResult:      myResult
+          ? { won: iWon, era: 0, strikeouts: 0 }
+          : undefined,
+        ovrDelta:        0,
+        trainingDone:    hasTrainingPlan,
+        trainingSkipped: !hasTrainingPlan,
+        consecutiveTrainingSkips: 0,
+      };
+
+      const updatedNpcs = namedNpcs.map(npc => {
+        // 재회 감지: dormant → active
+        const activated = npc.emotionStatus === "dormant"
+          && npc.currentLeague === gEmo.protagonist.leagueId
+          ? reactivateNpc(npc, gEmo.protagonist.careerStage)
+          : npc;
+
+        if (activated.emotionStatus === "active" && npc.emotionStatus === "dormant") {
+          const isSameTeam = activated.currentTeam === gEmo.protagonist.teamId;
+          const reunionMsg = makeReunionMessage(activated, isSameTeam, weekNum);
+          if (reunionMsg) gameStore.addMessage(reunionMsg);
+        }
+
+        // 맞대결 memory: 라이벌 NPC가 이번 주 상대팀에 있을 때
+        const newMems: NpcMemory[] = [];
+        if (myResult && npc.emotionRole === "rival" && npc.currentTeam === myGame?.awayTeamId) {
+          newMems.push(makeMemory(
+            iWon ? "humiliation" : "witness",
+            weekNum,
+            2,
+            `W${weekNum} 경기`,
+          ));
+        }
+
+        const { npc: updated, prevEmotion } = updateNpcEmotion(activated, ctx, newMems);
+        const msg = checkEmotionTriggers(updated, prevEmotion, weekNum);
+        if (msg) gameStore.addMessage(msg);
+
+        return updated;
+      });
+
+      const moodMsg = checkTeamMoodWarning(updatedNpcs, weekNum);
+      if (moodMsg) gameStore.addMessage(moodMsg);
+
+      gameStore.updateNamedNpcs(updatedNpcs);
+    }
   }
 
   // ── 배경 리그 시뮬레이션 (await — 월간 메시지 전 완료 보장) ────

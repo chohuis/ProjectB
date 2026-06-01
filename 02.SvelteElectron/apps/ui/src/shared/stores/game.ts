@@ -7,12 +7,11 @@ import type {
   CareerDraftPickLogEntry,
   CareerFinalChoice,
   CareerSeasonRecord,
-  ChatContact,
-  ChatMessage,
   InjuryState,
   NpcCareerEntry,
   NpcSaveState,
   PitchEntry,
+  NpcEmotionRole,
   PitchingStatKey,
   PlayerSeasonStats,
   ProtagonistSave,
@@ -40,7 +39,6 @@ import type {
   ProtagonistDraftOutcome,
   SchoolScenario,
 } from "../types/save";
-import type { ContactDef, ContactEffect } from "../types/messenger";
 import type { CoreGameState } from "../types/projectb.d";
 import type { ProContract } from "../types/save";
 import {
@@ -65,7 +63,6 @@ export interface GameStoreState {
   schoolState: SchoolState;
   achievements: AchievementRuntime[];
   achievementMetrics: AchievementMetrics;
-  contacts: ChatContact[];
   npcs: NpcSaveState[];
   pendingDraft: NpcSaveState[];       // 드래프트 대기 졸업생 (비저장, 시즌 종료 시 채워짐)
   pendingAchievements: string[];      // 미확인 신규 달성 (비저장)
@@ -204,7 +201,6 @@ const DEFAULT_SCHOOL: SchoolState = {
 const DEFAULT_ACHIEVEMENT_METRICS: AchievementMetrics = {
   strikeoutTotal: 0,
   saveTotal: 0,
-  kakaoFirstContact: false,
   trainingWeeksTotal: 0,
   gamesWonTotal: 0,
 };
@@ -324,7 +320,6 @@ function buildInitialState(): GameStoreState {
     schoolState:  DEFAULT_SCHOOL,
     achievements: DEFAULT_ACHIEVEMENTS,
     achievementMetrics: DEFAULT_ACHIEVEMENT_METRICS,
-    contacts:     [],
     npcs:         [],
     pendingDraft: [],
     pendingAchievements: [],
@@ -436,8 +431,7 @@ function fromSaveGame(saved: SaveGame): GameStoreState {
     schoolState:  { ...DEFAULT_SCHOOL, ...saved.schoolState },
     achievements,
     achievementMetrics: metrics,
-    contacts:     (saved.contacts ?? []).map((c) => ({ ...c, flags: c.flags ?? [] })),
-    npcs:         saved.npcs ?? [],
+    npcs:         (saved.npcs ?? []).map(n => ({ ...n, isNamed: n.isNamed ?? true })),
     pendingDraft: [],
     pendingAchievements: [],
     seasonEndSummary: null,
@@ -500,9 +494,7 @@ function updateAchievementProgress(
       return { ...item, progress, unlockedAt };
     }
     if (item.id === "ACH_SOCIAL_FIRST_KAKAO") {
-      const progress = Math.max(item.progress, metrics.kakaoFirstContact ? 1 : 0);
-      const unlockedAt = item.unlockedAt ?? (progress >= 1 ? now : null);
-      return { ...item, progress, unlockedAt };
+      return item;
     }
     return item;
   });
@@ -549,7 +541,7 @@ function createGameStore() {
       return makeSaveGame(
         s.protagonist, s.mailbox, s.trainingPlan,
         s.schoolState, s.achievements, s.achievementMetrics, s.logs, s.upcoming,
-        s.contacts, s.npcs, s.trainingPresets,
+        s.npcs.filter(n => n.isNamed), s.trainingPresets,
       );
     },
 
@@ -564,7 +556,7 @@ function createGameStore() {
       const gameData = makeSaveGame(
         s.protagonist, s.mailbox, s.trainingPlan,
         s.schoolState, s.achievements, s.achievementMetrics, s.logs, s.upcoming,
-        s.contacts, s.npcs, s.trainingPresets,
+        s.npcs.filter(n => n.isNamed), s.trainingPresets,
       );
       try {
         if (s.currentSlotId && _getSeasonData) {
@@ -692,7 +684,6 @@ function createGameStore() {
         const updated: ProtagonistSave = { ...p, condition, fatigue, morale, money, pitchingXP };
         const nextMetrics: AchievementMetrics = {
           ...s.achievementMetrics,
-          kakaoFirstContact: s.achievementMetrics.kakaoFirstContact || messageId.startsWith("chat-"),
         };
         const nextAchievements = updateAchievementProgress(s.achievements, nextMetrics);
         return {
@@ -736,18 +727,6 @@ function createGameStore() {
       });
     },
 
-    recordSocialFirstKakao() {
-      update((s) => {
-        if (s.achievementMetrics.kakaoFirstContact) return s;
-        const nextMetrics: AchievementMetrics = { ...s.achievementMetrics, kakaoFirstContact: true };
-        return {
-          ...s,
-          achievementMetrics: nextMetrics,
-          achievements: updateAchievementProgress(s.achievements, nextMetrics),
-        };
-      });
-    },
-
     claimAchievement(id: string) {
       update((s) => ({
         ...s,
@@ -772,69 +751,13 @@ function createGameStore() {
       update((s) => ({ ...s, pendingAchievements: [] }));
     },
 
-    // ── 메신저 액션 ──────────────────────────────────────────────
-
-    unlockContact(id: string) {
+    // 감정 업데이트된 Named NPC 목록을 npcs 배열에 반영
+    updateNamedNpcs(updatedNpcs: NpcSaveState[]) {
+      const updatedMap = new Map(updatedNpcs.map(n => [n.npcId, n]));
       update((s) => ({
         ...s,
-        contacts: s.contacts.map((c) => c.id === id ? { ...c, unlocked: true } : c),
+        npcs: s.npcs.map(n => updatedMap.get(n.npcId) ?? n),
       }));
-    },
-
-    unlockOrRegisterContact(def: ContactDef) {
-      update((s) => {
-        const exists = s.contacts.some((c) => c.id === def.id);
-        if (exists) {
-          return { ...s, contacts: s.contacts.map((c) => c.id === def.id ? { ...c, unlocked: true } : c) };
-        }
-        const newContact: ChatContact = {
-          id: def.id, name: def.name, category: def.category, relation: def.relation,
-          unlocked: true, affinity: def.initialAffinity,
-          lastActionWeek: 0, chatHistory: [], flags: [],
-        };
-        return { ...s, contacts: [...s.contacts, newContact] };
-      });
-    },
-
-    setContactFlag(contactId: string, flag: string) {
-      update((s) => ({
-        ...s,
-        contacts: s.contacts.map((c) =>
-          c.id !== contactId || c.flags.includes(flag) ? c : { ...c, flags: [...c.flags, flag] }
-        ),
-      }));
-    },
-
-    applyContactEffect(effect: ContactEffect) {
-      update((s) => {
-        const p = s.protagonist;
-        const clamp100 = (v: number) => Math.max(0, Math.min(100, v));
-        const clampStat = (v: number) => Math.max(1, Math.min(99, v));
-        const condition = clamp100(p.condition + (effect.conditionDelta ?? 0));
-        const fatigue   = clamp100(p.fatigue   + (effect.fatigueDelta   ?? 0));
-        const morale    = clamp100(p.morale    + (effect.moraleDelta    ?? 0));
-        const money     = Math.max(0, p.money + (effect.moneyDelta ?? 0));
-        const pitchingXP = { ...p.pitchingXP };
-        if (effect.xp) {
-          for (const [stat, amt] of Object.entries(effect.xp)) {
-            pitchingXP[stat as PitchingStatKey] = (pitchingXP[stat as PitchingStatKey] ?? 0) + amt;
-          }
-        }
-        const pitching = { ...p.pitching };
-        if (effect.statDelta) {
-          for (const [stat, amt] of Object.entries(effect.statDelta)) {
-            if (stat !== "ovr" && stat in pitching) {
-              (pitching as Record<string, number>)[stat] = clampStat((pitching as Record<string, number>)[stat] + amt);
-            }
-          }
-        }
-        let pitches = p.pitches;
-        if (effect.unlockPitchId && !pitches.some((e) => e.id === effect.unlockPitchId)) {
-          pitches = [...pitches, { id: effect.unlockPitchId, grade: 1 }];
-        }
-        const updated: ProtagonistSave = { ...p, condition, fatigue, morale, money, pitchingXP, pitching, pitches };
-        return { ...s, protagonist: updated, player: toPlayerCompat(updated) };
-      });
     },
 
     applyMoneyChange(delta: number) {
@@ -864,33 +787,6 @@ function createGameStore() {
           ...s.protagonist,
           scoutScore: Math.max(0, Math.min(100, s.protagonist.scoutScore + delta)),
         },
-      }));
-    },
-
-    addChatMessage(contactId: string, msg: ChatMessage) {
-      update((s) => ({
-        ...s,
-        contacts: s.contacts.map((c) => {
-          if (c.id !== contactId) return c;
-          const history = [...c.chatHistory, msg];
-          return { ...c, chatHistory: history.slice(-60) };
-        }),
-      }));
-    },
-
-    updateAffinity(contactId: string, delta: number) {
-      update((s) => ({
-        ...s,
-        contacts: s.contacts.map((c) =>
-          c.id !== contactId ? c : { ...c, affinity: Math.max(0, Math.min(100, c.affinity + delta)) }
-        ),
-      }));
-    },
-
-    setLastActionWeek(contactId: string, week: number) {
-      update((s) => ({
-        ...s,
-        contacts: s.contacts.map((c) => c.id !== contactId ? c : { ...c, lastActionWeek: week }),
       }));
     },
 
@@ -1255,7 +1151,7 @@ function createGameStore() {
       });
     },
 
-    signContract(contract: ProContract, contactDefs: ContactDef[]) {
+    signContract(contract: ProContract) {
       update((s) => {
         const leagueStage =
           contract.leagueId === "LEAGUE_ABL" ? "pro_abl" : "pro_kbl";
@@ -1270,23 +1166,16 @@ function createGameStore() {
           faUnsignedWeeks: 0,
           tradeAdaptationWeeks: 0,
         };
-        const unlockedIds = new Set(
-          contactDefs.filter((c) => c.category === "team").map((c) => c.id),
-        );
-        const contacts = s.contacts.map((c) =>
-          unlockedIds.has(c.id) ? { ...c, unlocked: true } : c,
-        );
         return {
           ...s,
           protagonist,
           player: toPlayerCompat(protagonist),
           school: toSchoolCompat(protagonist.careerStage, s.schoolState),
-          contacts,
         };
       });
     },
 
-    applyTradeTransfer(toTeamId: string, contactDefs: ContactDef[]) {
+    applyTradeTransfer(toTeamId: string) {
       update((s) => {
         const current = s.protagonist.contract;
         const protagonist: ProtagonistSave = {
@@ -1300,17 +1189,10 @@ function createGameStore() {
               }
             : current,
         };
-        const unlockedIds = new Set(
-          contactDefs.filter((c) => c.category === "team").map((c) => c.id),
-        );
-        const contacts = s.contacts.map((c) =>
-          unlockedIds.has(c.id) ? { ...c, unlocked: true } : c,
-        );
         return {
           ...s,
           protagonist,
           player: toPlayerCompat(protagonist),
-          contacts,
           logs: [`트레이드 이적: ${toTeamId}`, ...s.logs].slice(0, 30),
         };
       });
@@ -1565,9 +1447,20 @@ function createGameStore() {
     async processAllLeaguesSeasonEnd(seasonYear: number) {
       const s = get({ subscribe });
       const result = await runOffseasonProcessing(s.npcs, s.pendingDraft, seasonYear);
+      const { decayDormantEmotion, archiveNpc } = await import("../utils/emotionEngine");
+      const decayedNpcs = result.npcs.map(n => {
+        if (!n.isNamed) return n;
+        if (n.emotionStatus === "dormant" && n.emotion) {
+          return { ...n, emotion: decayDormantEmotion(n.emotion) };
+        }
+        if (n.careerStatus === "retired" && n.emotionStatus !== "archived") {
+          return archiveNpc(n);
+        }
+        return n;
+      });
       update((st) => ({
         ...st,
-        npcs: result.npcs,
+        npcs: decayedNpcs,
         pendingDraft: result.pendingDraft,
         seasonEndSummary: result.summary,
         logs: [...result.logs, ...st.logs].slice(0, 30),
@@ -1632,7 +1525,6 @@ function createGameStore() {
         schoolState: DEFAULT_SCHOOL,
         achievements: DEFAULT_ACHIEVEMENTS,
         achievementMetrics: DEFAULT_ACHIEVEMENT_METRICS,
-        contacts: [],
         npcs: [],
         pendingDraft: [],
         pendingAchievements: [],
@@ -1651,9 +1543,30 @@ function createGameStore() {
       scenario: SchoolScenario,
       seasonYear: number,
     ) {
+      const r = scenario.protagonistRoles;
+      const namedIds = new Set<string>([
+        ...r.seniorMentors,
+        r.seniorCaptain,
+        ...r.classmateRivals,
+        r.batteryPartner,
+        r.promisingJunior,
+        ...scenario.rivalAces,
+        ...scenario.initialZone0Npcs,
+      ].filter(Boolean));
+
+      const emotionRoleMap = new Map<string, NpcEmotionRole>([
+        ...r.seniorMentors.map((id): [string, NpcEmotionRole] => [id, "teammate"]),
+        [r.seniorCaptain, "teammate"],
+        ...r.classmateRivals.map((id): [string, NpcEmotionRole] => [id, "rival"]),
+        [r.batteryPartner, "teammate"],
+        [r.promisingJunior, "teammate"],
+        ...scenario.rivalAces.map((id): [string, NpcEmotionRole] => [id, "rival"]),
+        ...scenario.initialZone0Npcs.map((id): [string, NpcEmotionRole] => [id, "teammate"]),
+      ].filter(([id]) => Boolean(id)) as [string, NpcEmotionRole][]);
+
       update((s) => ({
         ...s,
-        npcs: initHighSchoolNpcs(entities, seasonYear),
+        npcs: initHighSchoolNpcs(entities, seasonYear, namedIds, emotionRoleMap),
       }));
     },
 
@@ -1691,7 +1604,7 @@ function createGameStore() {
 
       update((st) => ({
         ...st,
-        npcs: [...updated, ...freshmen],
+        npcs: [...updated, ...freshmen.filter(n => n.isNamed)],
         protagonist: updatedProto,
         pendingDraft: graduated,
       }));
