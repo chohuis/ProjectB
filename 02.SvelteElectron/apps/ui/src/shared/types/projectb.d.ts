@@ -230,7 +230,7 @@ export interface DayAdvanceResult {
 export type GameSaveData = Record<string, unknown>;
 
 export interface PitchDecision {
-  pitchType: "fastball" | "slider" | "curve" | "changeup";
+  pitchType: "fastball" | "sinker" | "cutter" | "slider" | "curve" | "changeup" | "splitter" | "forkball" | "screwball" | "knuckleball";
   location: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
   /** 연속 좌표 타겟. 스트라이크존 밖이면 의도적 볼 */
   target?: { x: number; y: number };

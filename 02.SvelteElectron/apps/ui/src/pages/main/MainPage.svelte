@@ -20,8 +20,7 @@
   import SchedulePage from "../schedule/SchedulePage.svelte";
   import TrainingPage from "../training/TrainingPage.svelte";
   import FinancePage from "../finance/FinancePage.svelte";
-  import TestMatchPage from "../test/TestMatchPage.svelte";
-  import MatchDemoPage from "../match-demo/MatchDemoPage.svelte";
+  import NewMatchPage from "../new-match/NewMatchPage.svelte";
   import LeaguePage from "../league/LeaguePage.svelte";
   import AchievementsPage from "../achievements/AchievementsPage.svelte";
   import MessagesPage from "../messages/MessagesPage.svelte";
@@ -337,13 +336,13 @@
     onCancel={() => { activeMatchContext = null; }}
   />
 {:else if currentTab === "matchDemo"}
-  <MatchDemoPage
+  <NewMatchPage
     matchContext={null}
     onComplete={() => {}}
     onCancel={closeMatchEngine}
   />
 {:else if currentTab === "test"}
-  <TestMatchPage onExit={closeMatchEngine} />
+  <NewMatchPage matchContext={null} onComplete={() => {}} onCancel={closeMatchEngine} />
 {:else}
   <div class="layout">
     <TopHeader
@@ -391,7 +390,7 @@
           {:else if currentTab === "finance"}
             <FinancePage />
           {:else if currentTab === "matchDemo"}
-            <MatchDemoPage />
+            <NewMatchPage />
           {:else if currentTab === "league"}
             <LeaguePage />
           {:else if currentTab === "achievements"}

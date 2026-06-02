@@ -2380,6 +2380,7 @@ app.whenReady().then(() => {
           "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
           "connect-src 'self' ws://localhost:5173 http://localhost:5173",
           "style-src 'self' 'unsafe-inline'",
+          "img-src 'self' data: blob:",
         ].join("; ")
       : [
           "default-src 'self'",
