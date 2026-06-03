@@ -6,7 +6,6 @@ export type MainTabId =
   | "schedule"
   | "training"
   | "finance"
-  | "matchDemo"
   | "test"
   | "league"
   | "achievements"

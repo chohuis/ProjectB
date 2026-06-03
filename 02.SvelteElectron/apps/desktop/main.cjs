@@ -16,6 +16,7 @@ function unpackedPath(...segments) {
 }
 
 let activeMatchState = null;
+let matchReadyState = null; // matchSimulateToEntry → matchStart 재사용용
 let coreModulePromise = null;
 const tuningRelPath = "balance/match_engine_tuning.json";
 const tuningSchemaRelPath = "balance/match_engine_tuning.schema.json";
@@ -1489,6 +1490,15 @@ app.whenReady().then(() => {
   ipcMain.handle("match:start", async (_event, request = {}) => {
     if (request === null || typeof request !== "object" || Array.isArray(request)) request = {};
     const core = await loadCoreModule();
+
+    // matchSimulateToEntry가 이미 등판 시점까지 시뮬한 state 재사용 (랜덤 불일치 방지)
+    if (matchReadyState && matchReadyState.protagonistHasEntered && !matchReadyState.isFinished) {
+      activeMatchState = matchReadyState;
+      matchReadyState = null;
+      return { snapshot: toSnapshotDto(activeMatchState, [], core) };
+    }
+    matchReadyState = null;
+
     let state = core.startMatch(request);
 
     // RP/CP: 등판 트리거 충족 시점까지 자동 시뮬
@@ -1646,6 +1656,7 @@ app.whenReady().then(() => {
       }
       activeMatchState = state;
       if (state.isFinished) {
+        matchReadyState = null;
         const final = core.finishMatch(state);
         activeMatchState = final.nextState;
         return JSON.stringify({
@@ -1656,6 +1667,7 @@ app.whenReady().then(() => {
           playerLines: final.playerLines ?? [],
         });
       }
+      matchReadyState = state; // matchStart에서 재사용
       return JSON.stringify({ entryReached: true, inning: state.inning, half: state.half, homeScore: state.score.home, awayScore: state.score.away });
     } catch (e) {
       return JSON.stringify({ error: String(e?.message ?? e) });

@@ -1,5 +1,9 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
+  import fieldDefenderPng from '../../../shared/assets/sprites/field_defender.png';
+  import fieldBatterRPng  from '../../../shared/assets/sprites/field_batter_r.png';
+  import fieldBatterLPng  from '../../../shared/assets/sprites/field_batter_l.png';
+  import fieldRunnerPng   from '../../../shared/assets/sprites/field_runner.png';
 
 
   interface Point {
@@ -45,43 +49,8 @@
 
   const dispatch = createEventDispatcher<{ selectPosition: { pos: string } }>();
 
-  const RETRO_SPRITE: string[] = [
-    '..CCCC..',
-    '.CCCCCC.',
-    '.CSCCSC.',
-    '.SSSSSS.',
-    'UUUUUUUU',
-    'UUUUUUUU',
-    '.PPPPPP.',
-    '..PP.PP.',
-  ];
-
-  function retroSpriteColor(key: string): string {
-    const home = fieldingTeam === 'home';
-    if (key === 'C') return home ? '#1a2878' : '#781a1a';
-    if (key === 'S') return '#d4a870';
-    if (key === 'U') return home ? '#3858d0' : '#d03838';
-    if (key === 'P') return '#1a1a28';
-    return 'transparent';
-  }
-
-  const RETRO_RUNNER: string[] = [
-    '..RR..',
-    '.RRRR.',
-    '..RR..',
-    'RRRRRR',
-    '.RR.R.',
-    '.RR.R.',
-  ];
-  function retroRunnerColor(): string { return runnerTeam === 'away' ? '#d83838' : '#2a7fff'; }
-
-  function retroBatterColor(key: string): string {
-    if (key === 'C') return '#781a1a';
-    if (key === 'S') return '#d4a870';
-    if (key === 'U') return '#d03030';
-    if (key === 'P') return '#1a1a28';
-    return 'transparent';
-  }
+  // PNG 스프라이트 16×18px → SVG 내 32×36 표시 (2x, pixelated)
+  // 오프셋: x-16 (중앙), y-28 (발이 y+8에 위치)
 
 
   const retroWall =
@@ -477,22 +446,17 @@
               class="retro-select-march" shape-rendering="crispEdges"/>
           {/if}
           <!-- 그림자 -->
-          <ellipse cx={player.x} cy={player.y + 16} rx="12" ry="4" fill="rgba(0,0,0,0.4)"/>
-          {#each RETRO_SPRITE as rowStr, ri}
-            {#each rowStr.split('') as cell, ci}
-              {#if cell !== '.'}
-                <rect x={player.x - 16 + ci * 4} y={player.y - 18 + ri * 4}
-                  width="4" height="4" fill={retroSpriteColor(cell)} shape-rendering="crispEdges"/>
-              {/if}
-            {/each}
-          {/each}
-          <text x={player.x} y={player.y + 28} text-anchor="middle"
+          <ellipse cx={player.x} cy={player.y + 8} rx="18" ry="5" fill="rgba(0,0,0,0.35)"/>
+          <image href={fieldDefenderPng}
+            x={player.x - 24} y={player.y - 44}
+            width="48" height="52"/>
+          <text x={player.x} y={player.y + 20} text-anchor="middle"
             font-size="10" font-weight="700" font-family="'Courier New',monospace"
             fill="#f0ecc8" stroke="#0a1018" stroke-width="3" paint-order="stroke">{player.pos}</text>
           {#if hoveredPos === player.pos}
-            <rect x={player.x - 36} y={player.y - 52} width="72" height="18"
+            <rect x={player.x - 36} y={player.y - 46} width="72" height="18"
               fill="#0a1018" stroke="#e8e8c8" stroke-width="1" shape-rendering="crispEdges"/>
-            <text x={player.x} y={player.y - 39} text-anchor="middle"
+            <text x={player.x} y={player.y - 33} text-anchor="middle"
               font-size="11" font-family="'Courier New',monospace" fill="#e8e8c8">{posLabel[player.pos] ?? player.pos}</text>
           {/if}
         </g>
@@ -501,37 +465,22 @@
       <!-- 타자 (빨간 유니폼, 좌/우타석) -->
       {#if batterAnimPos !== null}
         <g>
-          <ellipse cx={batterAnimPos.x} cy={batterAnimPos.y + 16} rx="12" ry="4" fill="rgba(0,0,0,0.4)"/>
-          {#each RETRO_SPRITE as rowStr, ri}
-            {#each rowStr.split('') as cell, ci}
-              {#if cell !== '.'}
-                {#if batter.handedness === 'L'}
-                  <!-- 좌타: 우타석, 스프라이트 좌우반전 -->
-                  <rect x={batterAnimPos.x + 12 - (ci + 1) * 4} y={batterAnimPos.y - 18 + ri * 4}
-                    width="4" height="4" fill={retroBatterColor(cell)} shape-rendering="crispEdges"/>
-                {:else}
-                  <!-- 우타: 좌타석, 정방향 -->
-                  <rect x={batterAnimPos.x - 16 + ci * 4} y={batterAnimPos.y - 18 + ri * 4}
-                    width="4" height="4" fill={retroBatterColor(cell)} shape-rendering="crispEdges"/>
-                {/if}
-              {/if}
-            {/each}
-          {/each}
+          <ellipse cx={batterAnimPos.x} cy={batterAnimPos.y + 8} rx="18" ry="5" fill="rgba(0,0,0,0.35)"/>
+          <image
+            href={batter.handedness === 'L' ? fieldBatterLPng : fieldBatterRPng}
+            x={batterAnimPos.x - 24} y={batterAnimPos.y - 44}
+            width="48" height="52"/>
         </g>
       {/if}
 
-      <!-- 주자 (픽셀 스프라이트 + GBC 깜빡임, 애니메이션 좌표 기반) -->
+      <!-- 주자 (타자와 동일 스프라이트·팀컬러) -->
       {#each runnerAnimPositions as rp}
         {#if rp !== null}
           <g class="retro-runner-blink">
-            {#each RETRO_RUNNER as rowStr, ri}
-              {#each rowStr.split('') as cell, ci}
-                {#if cell !== '.'}
-                  <rect x={rp.x - 12 + ci * 4} y={rp.y - 16 + ri * 4}
-                    width="4" height="4" fill={retroRunnerColor()} shape-rendering="crispEdges"/>
-                {/if}
-              {/each}
-            {/each}
+            <ellipse cx={rp.x} cy={rp.y + 8} rx="18" ry="5" fill="rgba(0,0,0,0.35)"/>
+            <image href={fieldRunnerPng}
+              x={rp.x - 24} y={rp.y - 44}
+              width="48" height="52"/>
           </g>
         {/if}
       {/each}

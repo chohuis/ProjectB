@@ -318,7 +318,7 @@
     } else {
       pitcherRoleBadge = "투수 정보";
       pitcherInfoRows = [
-        { label: "구속", value: String(Math.round(player?.pitcherStats?.velocity ?? 0)) },
+        { label: "구속", value: `${Math.round(100 + (player?.pitcherStats?.velocity ?? 0) * 0.65)} km/h` },
         { label: "제구", value: String(Math.round(player?.pitcherStats?.command ?? 0)) },
         { label: "체력", value: String(Math.round(player?.pitcherStats?.staminaCap ?? 0)) },
         { label: "멘탈", value: String(Math.round(player?.pitcherStats?.mentalResil ?? 0)) },
@@ -1102,7 +1102,7 @@
     <div class="sprite-layer" aria-hidden="true">
       <img class={`sprite pitcher-sprite pose-${pitcherPose}`} src={pitcherImgSrc} alt="" />
       <img class={`sprite catcher-sprite pose-${catcherPose}`} src={catcherImgSrc} alt="" />
-      <img class={`sprite batter-sprite  pose-${batterPose}`}  src={batterImgSrc}  alt="" />
+      <img class={`sprite batter-sprite hand-${batterHandedness} pose-${batterPose}`} src={batterImgSrc} alt="" />
       <img class={`sprite umpire-sprite  pose-${umpirePose}`}  src={umpireImgSrc}  alt="" />
     </div>
 
@@ -1327,19 +1327,20 @@
   .sprite { position: absolute; transition: transform 180ms ease, filter 180ms ease, opacity 180ms ease; opacity: 0.96; overflow: visible; }
   .sprite::after { content: ""; position: absolute; inset: auto 10% -8px; height: 10px; border-radius: 999px; background: rgba(0, 0, 0, 0.22); filter: blur(5px); z-index: -1; }
   /* 투수 — 마운드 중앙 */
-  .pitcher-sprite { left: 46%; bottom: 36%; width: 96px; height: 192px; transform-origin: 50% 90%; }
+  .pitcher-sprite { left: 33%; bottom: 15%; width: 96px; height: 192px; transform-origin: 50% 90%; }
   .pitcher-sprite.pose-windup  { transform: translateY(-8px) rotate(-8deg) scale(1.03); }
   .pitcher-sprite.pose-release { transform: translate(12px, -12px) rotate(7deg) scale(1.05); filter: brightness(1.1); }
   .pitcher-sprite.pose-follow  { transform: translate(14px, 2px) rotate(9deg); filter: brightness(1.04); }
   /* 포수 — 홈플레이트, 스퀘어 PNG(1254×1254) */
-  .catcher-sprite { left: 49%; bottom: 16%; width: 88px; height: 88px; transform: translateX(-50%); }
+  .catcher-sprite { left: 49%; bottom: 27%; width: 88px; height: 88px; transform: translateX(-50%); }
   .catcher-sprite.pose-receive { transform: translateX(-50%) translateY(-5px) scale(1.05); filter: brightness(1.08); }
   .catcher-sprite.pose-frame   { transform: translateX(-50%) scale(1.04); }
   /* 심판 — 포수 바로 뒤 (살짝 작게) */
-  .umpire-sprite { left: 52%; bottom: 20%; width: 54px; height: 96px; transform: translateX(-50%); }
+  .umpire-sprite { left: 52%; bottom: 31%; width: 54px; height: 96px; transform: translateX(-50%); }
   .umpire-sprite.pose-strike   { transform: translateX(-50%) translateY(-8px) scale(1.04); filter: brightness(1.14); }
-  /* 타자 — 홈플레이트 오른쪽 타자석, 측면 */
-  .batter-sprite { left: 58%; bottom: 19%; width: 84px; height: 144px; transform-origin: 50% 90%; }
+  /* 타자 — 우타: 홈플레이트 우측, 좌타: 홈플레이트 좌측 */
+  .batter-sprite { left: 57%; bottom: 26%; width: 84px; height: 144px; transform-origin: 50% 90%; }
+  .batter-sprite.hand-L { left: 39%; }
   .batter-sprite.pose-swing { transform: translate(-12px, -6px) rotate(-11deg) scale(1.04); filter: brightness(1.08) saturate(1.1); }
   .batter-sprite.pose-watch { transform: translateX(3px) scale(1.02); }
   .strike-zone { left: 51.3%; top: 53.7%; width: 108px; height: 130px; transform: translateX(-50%); border: 2px solid rgba(235, 243, 255, 0.55); box-shadow: 0 0 0 1px rgba(83, 123, 191, 0.3); background: none; }
@@ -1404,7 +1405,7 @@
   .result-banner { left: 50%; bottom: 26px; transform: translateX(-50%); padding: 12px 22px; border-radius: 999px; background: rgba(8, 13, 22, 0.74); border: 1px solid rgba(96, 160, 255, 0.26); box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28); backdrop-filter: blur(6px); color: #dbe9ff; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; }
   .result-banner[data-tone="good"] { border-color: rgba(92, 236, 145, 0.35); color: #d8ffe7; }
   .result-banner[data-tone="bad"] { border-color: rgba(255, 123, 123, 0.35); color: #ffd9d9; }
-  .status-gauges { left: 52%; bottom: 108px; transform: translateX(-50%); display: grid; gap: 10px; width: 224px; }
+  .status-gauges { right: 18px; bottom: 76px; display: grid; gap: 10px; width: 224px; }
   .gauge-card { padding: 10px 12px; border-radius: 14px; background: rgba(8, 15, 25, 0.58); border: 1px solid rgba(144, 174, 231, 0.18); box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22); backdrop-filter: blur(6px); }
   .gauge-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
   .gauge-head span { font-size: 12px; color: #c7d7f6; } .gauge-head strong { font-size: 13px; color: #f4f8ff; }
@@ -1481,7 +1482,7 @@
     .game-info-card { top: 150px; }
     .pitch-cluster { left: 18px; bottom: 162px; }
     .utility-buttons { right: 12px; }
-    .status-gauges { left: 50%; bottom: 104px; width: 216px; }
+    .status-gauges { right: 12px; bottom: 76px; width: 216px; }
     .pitcher-sprite { left: 44%; }
     .batter-sprite { left: 57%; }
     .topview-card { width: min(400px, calc(100vw - 32px)); }
@@ -1501,13 +1502,14 @@
     .pitch-name { font-size: 12px; }
     .throw-btn { padding: 11px; font-size: 13px; }
     .utility-buttons { left: 12px; right: auto; bottom: 20px; }
-    .status-gauges { left: 50%; right: auto; bottom: 92px; width: 188px; }
+    .status-gauges { left: 12px; right: auto; bottom: 68px; width: 188px; }
     .result-banner { bottom: 72px; font-size: 11px; }
     .engine-state { left: 12px; bottom: 62px; }
     .pitcher-sprite { left: 44%; bottom: 34%; width: 72px; height: 144px; }
-    .catcher-sprite { bottom: 14%; width: 66px; height: 66px; }
-    .umpire-sprite  { bottom: 16%; width: 40px; height: 72px; }
-    .batter-sprite  { left: 57%; bottom: 17%; width: 64px; height: 110px; }
+    .catcher-sprite { bottom: 20%; width: 66px; height: 66px; }
+    .umpire-sprite  { bottom: 24%; width: 40px; height: 72px; }
+    .batter-sprite  { left: 57%; bottom: 20%; width: 64px; height: 110px; }
+    .batter-sprite.hand-L { left: 38%; }
     .topview-field { height: 250px; }
     .play-transition { min-width: 190px; padding: 14px 16px; }
   }

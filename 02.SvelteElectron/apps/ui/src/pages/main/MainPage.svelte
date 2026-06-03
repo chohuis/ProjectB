@@ -62,7 +62,6 @@
     schedule: "page.schedule",
     training: "page.training",
     finance: "page.finance",
-    matchDemo: "page.matchDemo",
     test: "page.matchEngine",
     league: "page.league",
     achievements: "page.achievements",
@@ -262,12 +261,14 @@
 
   function startInteractiveMatch() {
     if (!pendingGameEntry) return;
+    const p = $gameStore.protagonist;
     activeMatchContext = {
       scheduleId: pendingGameEntry.id,
       week: pendingGameEntry.week,
       homeTeamId: pendingGameEntry.homeTeamId,
       awayTeamId: pendingGameEntry.awayTeamId,
-      protagonistTeamId: $gameStore.protagonist.teamId,
+      protagonistTeamId: p.teamId,
+      role: (p.position as "SP" | "RP" | "CP") ?? "SP",
     };
   }
 
@@ -335,12 +336,6 @@
     onComplete={completeInteractiveMatch}
     onCancel={() => { activeMatchContext = null; }}
   />
-{:else if currentTab === "matchDemo"}
-  <NewMatchPage
-    matchContext={null}
-    onComplete={() => {}}
-    onCancel={closeMatchEngine}
-  />
 {:else if currentTab === "test"}
   <NewMatchPage matchContext={null} onComplete={() => {}} onCancel={closeMatchEngine} />
 {:else}
@@ -389,8 +384,6 @@
             <TrainingPage />
           {:else if currentTab === "finance"}
             <FinancePage />
-          {:else if currentTab === "matchDemo"}
-            <NewMatchPage />
           {:else if currentTab === "league"}
             <LeaguePage />
           {:else if currentTab === "achievements"}

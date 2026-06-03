@@ -9,8 +9,7 @@
   import type { EntityRow } from "../../shared/stores/master";
   import type { InteractiveMatchContext, InteractiveMatchResult } from "../../shared/types/season";
 
-  let fieldStyle: FieldStyle = 'digital';
-  fieldStyleStore.subscribe(v => { fieldStyle = v; });
+  let fieldStyle: FieldStyle = 'retro';
   let settingsOpen = false;
 
   export let matchContext: InteractiveMatchContext | null = null;
@@ -154,8 +153,7 @@
   }
 
   let retroBatterPos: FieldPoint | null = getBatterPlatePos('R');
-  // [1루, 2루, 3루] 슬롯; 초기 주자 상태({ first:true })에 맞춰 설정
-  let retroRunnerPositions: (FieldPoint | null)[] = [runnerPoint('first'), null, null];
+  let retroRunnerPositions: (FieldPoint | null)[] = [null, null, null];
 
   function syncRetroPositions() {
     retroBatterPos = getBatterPlatePos(batter.handedness);
@@ -609,10 +607,16 @@
   let matchWeather: WeatherType = "sunny";
   let matchPark: ParkType = "neutral";
 
+  function statToKmh(stat: number, power: PitchPower = "normal"): number {
+    const base = Math.round(100 + stat * 0.65);
+    const bonus = power === "high" ? 5 : power === "low" ? -5 : 0;
+    return base + bonus;
+  }
+
   const _initPlayer = get(gameStore).player;
   let pitcherState = {
     name: _initPlayer.name,
-    speed: `${_initPlayer.pitcherStats.velocity} km/h`,
+    speed: `${statToKmh(_initPlayer.pitcherStats.velocity)} km/h`,
     stamina: _initPlayer.condition,
     mental: 74
   };
@@ -1171,6 +1175,7 @@
 
       resultCode = response.outcome.resultCode as PitchResultCode;
       line = `${inningHalfLabel} ${pitchTypes.find((p) => p.id === selectedPitchType)?.label} ${response.outcome.comment}`;
+      pitcherState = { ...pitcherState, speed: `${statToKmh(get(gameStore).player.pitcherStats.velocity, selectedPower)} km/h` };
       const prevOuts = count.out;
       applySnapshot(response.snapshot, line, resultCode);
       const outsGained = count.out >= prevOuts ? count.out - prevOuts : (3 - prevOuts) + count.out;
@@ -1429,7 +1434,7 @@
         {#each scoreRows as row, i}
           {@const isMyTeam = (i === 0 && protagonistSide === "away") || (i === 1 && protagonistSide === "home")}
           <tr class:my-team-row={isMyTeam}>
-            <th class="team-col">{row.team}{isMyTeam ? " ★" : ""}</th>
+            <th class="team-col">{row.team}</th>
             {#each row.inningScores as inningScore, i}
               <td class:current-inning={i + 1 === inning}>{inningScore}</td>
             {/each}
@@ -1452,7 +1457,6 @@
           {#if selectedDefPosition}
             <span class="pos-badge">선택: {selectedDefPosition}</span>
           {/if}
-          <button class="settings-btn" type="button" on:click={() => (settingsOpen = !settingsOpen)} title="환경 설정">⚙</button>
         </div>
 
         <div class="scene-layout">
