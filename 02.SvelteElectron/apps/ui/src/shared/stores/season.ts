@@ -158,6 +158,7 @@ function createSeasonStore() {
             postseasonBrackets: saved.postseasonBrackets  ?? {},
             ablEastTeams:       saved.ablEastTeams        ?? [],
             ablWestTeams:       saved.ablWestTeams        ?? [],
+            friendlyLog:        saved.friendlyLog         ?? [],
             // gameDate 없는 구버전 스케줄 엔트리 보정
             schedule: (saved.schedule ?? []).map((e) =>
               e.gameDate ? e : { ...e, gameDate: `${saved.seasonYear ?? 2026}-03-01` }
@@ -197,6 +198,7 @@ function createSeasonStore() {
         hsGroupA: season.hsGroupA ?? [], hsGroupB: season.hsGroupB ?? [],
         postseasonBrackets: season.postseasonBrackets ?? {},
         ablEastTeams: season.ablEastTeams ?? [], ablWestTeams: season.ablWestTeams ?? [],
+        friendlyLog: season.friendlyLog ?? [],
         schedule: (season.schedule ?? []).map((e) => e.gameDate ? e : { ...e, gameDate: `${season.seasonYear ?? 2026}-03-01` }),
       });
     },
@@ -301,6 +303,52 @@ function createSeasonStore() {
         };
         return { ...s, schedule, standings, stats, leagueState };
       });
+    },
+
+    // 친선경기: 스케줄 결과 마킹 + 로테이션 전진 + 성적 기록 (순위·스탯 미반영)
+    applyFriendlyResult(
+      scheduleId: string,
+      result: MatchResult,
+      leagueId: string,
+      homeTeamId: string,
+      awayTeamId: string,
+      nextHomeRotIdx: number,
+      nextAwayRotIdx: number,
+      log: import("../types/season").FriendlyPerformanceLog,
+    ) {
+      update((s) => {
+        const schedule = s.schedule.map((e) =>
+          e.id === scheduleId ? { ...e, result } : e,
+        );
+        const cur = s.leagueState[leagueId] ?? { standings: [], stats: {}, playerConditions: {}, teamRotationIndex: {} };
+        const leagueState = {
+          ...s.leagueState,
+          [leagueId]: {
+            ...cur,
+            teamRotationIndex: {
+              ...cur.teamRotationIndex,
+              [homeTeamId]: nextHomeRotIdx,
+              [awayTeamId]: nextAwayRotIdx,
+            },
+          },
+        };
+        return {
+          ...s,
+          schedule,
+          leagueState,
+          friendlyLog: [...(s.friendlyLog ?? []), log],
+        };
+      });
+    },
+
+    // 친선경기 일정 주입 (월간 플래너에서 호출)
+    injectFriendlySchedule(entries: import("../types/season").ScheduleEntry[]) {
+      update((s) => ({
+        ...s,
+        schedule: [...s.schedule, ...entries].sort((a, b) =>
+          a.gameDate.localeCompare(b.gameDate),
+        ),
+      }));
     },
 
     // 정지 조건 추가

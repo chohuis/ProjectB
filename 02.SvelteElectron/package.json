@@ -48,6 +48,7 @@
       "apps/desktop/**",
       "dist/ui/**",
       "packages/*/dist/**",
+      "packages/*/package.json",
       "packages/engine-native/index.js",
       "packages/engine-native/*.node",
       "resource/**",
@@ -59,6 +60,7 @@
     "asarUnpack": [
       "resource/**",
       "packages/*/dist/**",
+      "packages/*/package.json",
       "packages/engine-native/**"
     ],
     "win": {

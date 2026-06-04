@@ -61,6 +61,19 @@ export interface ScheduleEntry {
   isProtagonistGame: boolean;  // 주인공 팀 경기 여부
   phase: SeasonPhase;       // 해당 경기의 시즌 페이즈
   result?: MatchResult;     // 경기 완료 후 채워짐
+  isFriendly?: boolean;     // 친선경기 여부 (공식 기록 미집계)
+}
+
+// ── 친선경기 성적 로그 ─────────────────────────────────────────
+export interface FriendlyPerformanceLog {
+  scheduleId:     string;
+  week:           number;
+  opponentTeamId: string;
+  ip:             number;
+  er:             number;
+  k:              number;
+  bb:             number;
+  rating:         1 | 2 | 3 | 4 | 5;  // 코치 평가 별점
 }
 
 // ── 팀 순위표 항목 ─────────────────────────────────────────────
@@ -238,6 +251,8 @@ export interface SaveSeason {
   ablWestTeams: string[];
   // NPC 부상 상태 (playerId → 부상 정보)
   npcInjuries: Record<string, import("../types/save").NpcInjuryEntry>;
+  // 친선경기 성적 이력
+  friendlyLog: FriendlyPerformanceLog[];
 }
 
 export const SAVE_SEASON_VERSION = 1;
@@ -279,6 +294,7 @@ export function makeEmptySeason(
     ablEastTeams: [],
     ablWestTeams: [],
     npcInjuries: {},
+    friendlyLog: [],
   };
 }
 

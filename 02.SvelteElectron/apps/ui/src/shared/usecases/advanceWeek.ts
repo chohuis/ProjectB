@@ -15,6 +15,8 @@ import { calcTrainingGrowth } from "../utils/growthEngine";
 import { runEventEngine } from "../utils/eventEngine";
 import { applyWeeklyStudy, calcExamResult, getUniversityEffBonus, getUniversityExamGainMult } from "../utils/academicsEngine";
 import { checkAchievements, computeMetrics } from "../utils/achievementEngine";
+import { generateTop10, buildTop10Message, rankEffect } from "../utils/top10Engine";
+import { isMonthStart, planMonthlyFriendlies, buildMonthlyNoticeMessage } from "../utils/friendlyMatchEngine";
 import { calcOfferedSalaryForProtagonist, calcSeasonRating } from "../utils/salaryEngine";
 import { isFaEligible } from "../utils/faEngine";
 import type { LeagueSeasonState, MatchResult, PendingAction, PlayerCondition, ScheduleEntry, WeekAdvanceResult } from "../types/season";
@@ -575,6 +577,94 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   );
   for (const msg of evResult.newMessages) gameStore.addMessage(msg);
   seasonStore.recordTriggeredEvents(evResult.updatedTriggers);
+
+  // 고교 월간 유망주 TOP 10 (4주마다)
+  if (
+    g.protagonist.careerStage === "highschool" &&
+    weekInYear % 4 === 0 &&
+    weekInYear >= 4
+  ) {
+    const gTop10   = get(gameStore);
+    const sTop10   = get(seasonStore);
+    const heroStats = sTop10.stats[gTop10.protagonist.id] ?? null;
+    const last      = gTop10.protagonist.playerType === "pitcher"
+      ? gTop10.lastTop10Pitcher
+      : gTop10.lastTop10Batter;
+
+    const snap = generateTop10(
+      gTop10.protagonist,
+      heroStats as import("../types/save").PitcherSeasonStats | import("../types/save").BatterSeasonStats | null,
+      m.entities,
+      weekNum,
+      gTop10.protagonist.grade ?? 1,
+    );
+
+    const msg = buildTop10Message(
+      gTop10.protagonist,
+      heroStats as import("../types/save").PitcherSeasonStats | import("../types/save").BatterSeasonStats | null,
+      m.entities,
+      snap,
+      last,
+      weekNum,
+    );
+
+    gameStore.addMessage(msg);
+    gameStore.saveTop10Snapshot(snap);
+
+    const heroEntry = snap.entries.find((e) => e.id === "PLY_HERO");
+    if (heroEntry) {
+      const ef = rankEffect(heroEntry.rank);
+      if (ef.popularity > 0) gameStore.updatePopularity(ef.popularity);
+      if (ef.scoutScore > 0) gameStore.updateScoutScore(ef.scoutScore);
+      if (ef.morale > 0) gameStore.updateMorale(ef.morale);
+    }
+  }
+
+  // 친선경기 월간 플래너 (고교·대학·독립리그, 월 첫 주)
+  if (
+    isMonthStart(weekInYear) &&
+    (g.protagonist.careerStage === "highschool" ||
+     g.protagonist.careerStage === "university" ||
+     g.protagonist.careerStage === "independent")
+  ) {
+    const sFriendly  = get(seasonStore);
+    const mFriendly  = get(masterStore);
+    const proto      = g.protagonist;
+    const allTeamIds = [
+      ...sFriendly.hsGroupA,
+      ...sFriendly.hsGroupB,
+      ...(sFriendly.leagueState[proto.leagueId]?.standings.map((s) => s.teamId) ?? []),
+    ].filter((v, i, a) => a.indexOf(v) === i);  // 중복 제거
+
+    // 리그 시즌 종료 주차 추정 (고교 W48, 대학 W36, 독립리그 W40)
+    const seasonPhaseEnd =
+      proto.careerStage === "highschool"  ? 48 :
+      proto.careerStage === "university"  ? 36 : 40;
+
+    const plan = planMonthlyFriendlies(
+      weekInYear,
+      weekNum,
+      proto.teamId,
+      proto.leagueId,
+      sFriendly.seasonYear,
+      sFriendly.schedule,
+      allTeamIds,
+      seasonPhaseEnd,
+    );
+
+    if (plan.entries.length > 0) {
+      seasonStore.injectFriendlySchedule(plan.entries);
+      const teamMap = new Map(mFriendly.teams.map((t) => [t.id, t.name]));
+      const officialThisMonth = sFriendly.schedule.filter(
+        (e) => !e.isFriendly &&
+          e.week >= weekNum && e.week <= weekNum + 5 &&
+          (e.homeTeamId === proto.teamId || e.awayTeamId === proto.teamId),
+      );
+      const noticeMsg = buildMonthlyNoticeMessage(plan, officialThisMonth, weekNum, teamMap);
+      if (noticeMsg) gameStore.addMessage(noticeMsg);
+      logs.push(`[친선경기] ${plan.monthLabel} ${plan.entries.length}회 편성`);
+    }
+  }
 
   // 시험 이벤트
   const gAfterStudy = get(gameStore);

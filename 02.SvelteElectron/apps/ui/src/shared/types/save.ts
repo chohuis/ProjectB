@@ -269,6 +269,22 @@ export interface ProtagonistSave {
   careerRecords?: CareerSeasonRecord[];  // 시즌별 기록 히스토리
 }
 
+// ── 고교 월간 유망주 TOP 10 ───────────────────────────────────
+export interface Top10Entry {
+  id:       string;   // NPC: "PLY_XXXXX" / 주인공: "PLY_HERO"
+  name:     string;   // 선수 한국어 이름
+  teamName: string;   // 팀 한국어 이름
+  score:    number;   // prospect score (내부 계산값)
+  rank:     number;   // 1~10
+}
+
+export interface Top10Snapshot {
+  type:    "pitcher" | "batter";
+  grade:   number;   // 학년 1~3
+  week:    number;   // 절대 주차 (seasonWeek)
+  entries: Top10Entry[];
+}
+
 // ── 시즌 스탯 (선수 1명분) ─────────────────────────────────────
 export interface PitcherSeasonStats {
   type: "pitcher";

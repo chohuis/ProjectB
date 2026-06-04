@@ -6,6 +6,7 @@ import { checkAchievements, computeMetrics } from "../utils/achievementEngine";
 import { calcGameGrowth } from "../utils/growthEngine";
 import { simulateGame } from "../utils/gameSimulator";
 import type { MatchResult, PitcherGameLine, UnifiedGameOutcome } from "../types/season";
+import { buildFriendlyResultMessage, ratePerformance } from "../utils/friendlyMatchEngine";
 
 function buildTeamMatchResult(
   homeTeamId: string,
@@ -29,6 +30,55 @@ function buildTeamMatchResult(
 export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<void> {
   const sBefore = get(seasonStore);
   const gBefore = get(gameStore);
+
+  // ── 친선경기 분기 ─────────────────────────────────────────
+  const scheduleEntry = sBefore.schedule.find((e) => e.id === outcome.scheduleId);
+  if (scheduleEntry?.isFriendly) {
+    const teamResult = buildTeamMatchResult(
+      outcome.homeTeamId, outcome.awayTeamId, outcome.homeScore, outcome.awayScore,
+    );
+    const protagonist = gBefore.protagonist;
+    const safeOuts    = typeof outcome.outsRecorded === "number" ? outcome.outsRecorded : 0;
+    const ip          = Number((Math.max(0, safeOuts) / 3).toFixed(1));
+    const er          = Math.max(0, outcome.hitsAllowed > 0 ? Math.round(outcome.hitsAllowed * 0.35) : 0);
+    const rating      = ratePerformance(ip, ip > 0 ? (er / ip) * 9 : 99);
+    const log = {
+      scheduleId:     outcome.scheduleId,
+      week:           outcome.week,
+      opponentTeamId: outcome.homeTeamId === protagonist.teamId ? outcome.awayTeamId : outcome.homeTeamId,
+      ip, er,
+      k:  Math.max(0, outcome.strikeouts),
+      bb: Math.max(0, outcome.walksAllowed),
+      rating,
+    };
+    const leagueId = protagonist.leagueId;
+    const lState   = sBefore.leagueState[leagueId];
+    const homeRot  = lState?.teamRotationIndex?.[outcome.homeTeamId] ?? 0;
+    const awayRot  = lState?.teamRotationIndex?.[outcome.awayTeamId] ?? 0;
+    seasonStore.applyFriendlyResult(
+      outcome.scheduleId, teamResult, leagueId,
+      outcome.homeTeamId, outcome.awayTeamId,
+      homeRot + 1, awayRot + 1,
+      log,
+    );
+    seasonStore.resolvePendingAction("game", outcome.scheduleId);
+
+    const teamMap = new Map(get(masterStore).teams.map((t) => [t.id, t.name]));
+    const { message } = buildFriendlyResultMessage(
+      scheduleEntry,
+      outcome.homeScore, outcome.awayScore,
+      ip, er,
+      Math.max(0, outcome.strikeouts),
+      Math.max(0, outcome.walksAllowed),
+      Math.max(0, outcome.hitsAllowed),
+      teamMap,
+    );
+    gameStore.addMessage(message);
+    await gameStore.save();
+    await seasonStore.save();
+    return;
+  }
+  // ────────────────────────────────────────────────────────
   const protagonist = gBefore.protagonist;
   const myTeamId = outcome.protagonistTeamId;
 

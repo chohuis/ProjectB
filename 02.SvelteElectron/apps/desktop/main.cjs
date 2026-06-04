@@ -33,7 +33,9 @@ const SMOKE_THRESHOLDS = {
 function loadCoreModule() {
   if (!coreModulePromise) {
     const coreDistPath = unpackedPath("packages", "core", "dist", "index.js");
-    coreModulePromise = import(pathToFileURL(coreDistPath).href).then((core) => {
+    // require()를 사용: CJS 파일이므로 "type":"module" 영향 없이 항상 CJS로 로드
+    coreModulePromise = Promise.resolve().then(() => {
+      const core = require(coreDistPath);
       if (typeof core.setNativeEngine === "function") {
         core.setNativeEngine(engineNative);
       }
@@ -1489,48 +1491,52 @@ app.whenReady().then(() => {
 
   ipcMain.handle("match:start", async (_event, request = {}) => {
     if (request === null || typeof request !== "object" || Array.isArray(request)) request = {};
-    const core = await loadCoreModule();
+    try {
+      const core = await loadCoreModule();
 
-    // matchSimulateToEntry가 이미 등판 시점까지 시뮬한 state 재사용 (랜덤 불일치 방지)
-    if (matchReadyState && matchReadyState.protagonistHasEntered && !matchReadyState.isFinished) {
-      activeMatchState = matchReadyState;
-      matchReadyState = null;
-      return { snapshot: toSnapshotDto(activeMatchState, [], core) };
-    }
-    matchReadyState = null;
-
-    let state = core.startMatch(request);
-
-    // RP/CP: 등판 트리거 충족 시점까지 자동 시뮬
-    if (!state.protagonistHasEntered) {
-      state = core.autoSimulateUntilEntry(state);
-    }
-
-    // protagonist_pitch 시점까지 자동 진행 (SP AWAY 등 첫 이닝이 타격 half인 경우 처리)
-    let guard = 0;
-    while (!state.isFinished && guard++ < 50) {
-      const phase = core.advanceGamePhase(state);
-      if (phase.phase === "protagonist_pitch" || phase.phase === "game_over") break;
-      if (phase.phase === "auto_batting") {
-        state = phase.result.nextState;
-      } else if (phase.phase === "protagonist_entry") {
-        state = phase.state;
-      } else if (phase.phase === "pre_entry_sim") {
-        state = core.autoSimulateUntilEntry(state);
-      } else if (phase.phase === "protagonist_exit") {
-        state = phase.state;
-        state = core.autoSimulateToGameEnd(state);
-        break;
-      } else if (phase.phase === "post_exit_sim") {
-        state = core.autoSimulateToGameEnd(state);
-        break;
-      } else {
-        break;
+      // matchSimulateToEntry가 이미 등판 시점까지 시뮬한 state 재사용 (랜덤 불일치 방지)
+      if (matchReadyState && matchReadyState.protagonistHasEntered && !matchReadyState.isFinished) {
+        activeMatchState = matchReadyState;
+        matchReadyState = null;
+        return { snapshot: toSnapshotDto(activeMatchState, [], core) };
       }
-    }
+      matchReadyState = null;
 
-    activeMatchState = state;
-    return { snapshot: toSnapshotDto(activeMatchState, [], core) };
+      let state = core.startMatch(request);
+
+      // RP/CP: 등판 트리거 충족 시점까지 자동 시뮬
+      if (!state.protagonistHasEntered) {
+        state = core.autoSimulateUntilEntry(state);
+      }
+
+      // protagonist_pitch 시점까지 자동 진행 (SP AWAY 등 첫 이닝이 타격 half인 경우 처리)
+      let guard = 0;
+      while (!state.isFinished && guard++ < 50) {
+        const phase = core.advanceGamePhase(state);
+        if (phase.phase === "protagonist_pitch" || phase.phase === "game_over") break;
+        if (phase.phase === "auto_batting") {
+          state = phase.result.nextState;
+        } else if (phase.phase === "protagonist_entry") {
+          state = phase.state;
+        } else if (phase.phase === "pre_entry_sim") {
+          state = core.autoSimulateUntilEntry(state);
+        } else if (phase.phase === "protagonist_exit") {
+          state = phase.state;
+          state = core.autoSimulateToGameEnd(state);
+          break;
+        } else if (phase.phase === "post_exit_sim") {
+          state = core.autoSimulateToGameEnd(state);
+          break;
+        } else {
+          break;
+        }
+      }
+
+      activeMatchState = state;
+      return { snapshot: toSnapshotDto(activeMatchState, [], core) };
+    } catch (e) {
+      return { error: String(e?.message ?? e) };
+    }
   });
 
   ipcMain.handle("match:step", async (_event, decision) => {
@@ -1681,6 +1687,7 @@ app.whenReady().then(() => {
       let state = core.autoSimulateToGameEnd(activeMatchState);
       const result = core.finishMatch(state);
       activeMatchState = result.nextState;
+      matchReadyState = null;  // 이전 게임 상태 잔류 방지
       const ns = result.nextState;
       return JSON.stringify({
         homeScore: ns.score.home,

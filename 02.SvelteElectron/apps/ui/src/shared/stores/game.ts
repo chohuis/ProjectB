@@ -67,6 +67,8 @@ export interface GameStoreState {
   pendingDraft: NpcSaveState[];       // 드래프트 대기 졸업생 (비저장, 시즌 종료 시 채워짐)
   pendingAchievements: string[];      // 미확인 신규 달성 (비저장)
   seasonEndSummary: SeasonEndSummary | null;  // 직전 시즌 종료 처리 요약 (비저장)
+  lastTop10Pitcher: import("../types/save").Top10Snapshot | null;  // 직전 투수 TOP10 스냅샷
+  lastTop10Batter:  import("../types/save").Top10Snapshot | null;  // 직전 타자 TOP10 스냅샷
   dayLabel: string;
   logs: string[];
   upcoming: string[];
@@ -324,6 +326,8 @@ function buildInitialState(): GameStoreState {
     pendingDraft: [],
     pendingAchievements: [],
     seasonEndSummary: null,
+    lastTop10Pitcher: null,
+    lastTop10Batter:  null,
     dayLabel:     computeWeekLabel(1, BASE_SEASON_YEAR),
     logs:         ["훈련 루틴 설정 완료", "코치 면담으로 제구 +1", "팀 분위기 안정"],
     upcoming:     ["화요일 불펜 세션", "금요일 체력장", "토요일 주말 리그 1차전"],
@@ -767,6 +771,34 @@ function createGameStore() {
           ...s.protagonist,
           money: Math.max(0, s.protagonist.money + delta),
         },
+      }));
+    },
+
+    updatePopularity(delta: number) {
+      update((s) => ({
+        ...s,
+        protagonist: {
+          ...s.protagonist,
+          popularity: Math.max(0, Math.min(100, s.protagonist.popularity + delta)),
+        },
+      }));
+    },
+
+    updateMorale(delta: number) {
+      update((s) => ({
+        ...s,
+        protagonist: {
+          ...s.protagonist,
+          morale: Math.max(0, Math.min(100, s.protagonist.morale + delta)),
+        },
+      }));
+    },
+
+    saveTop10Snapshot(snapshot: import("../types/save").Top10Snapshot) {
+      update((s) => ({
+        ...s,
+        lastTop10Pitcher: snapshot.type === "pitcher" ? snapshot : s.lastTop10Pitcher,
+        lastTop10Batter:  snapshot.type === "batter"  ? snapshot : s.lastTop10Batter,
       }));
     },
 
