@@ -11,6 +11,7 @@ import {
 import { checkEmotionTriggers, makeReunionMessage } from "../utils/emotionMessageEngine";
 import type { WeeklyEmotionContext } from "../utils/emotionEngine";
 import { simulateGame } from "../utils/gameSimulator";
+import { rotationSizeForStage } from "../utils/rosterEngine";
 import { calcTrainingGrowth } from "../utils/growthEngine";
 import { runEventEngine } from "../utils/eventEngine";
 import { applyWeeklyStudy, calcExamResult, getUniversityEffBonus, getUniversityExamGainMult } from "../utils/academicsEngine";
@@ -441,6 +442,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     trainingIntensity,
     consecutiveLowMoraleWeeks: g.protagonist.consecutiveLowMoraleWeeks ?? 0,
     hasPriorInjurySameArea,
+    priorSteroidUsed: g.protagonist.injury?.steroidUsed ?? false,
   }))) as { injuryUpdate: { type: string; severity: string; recoveryWeeksLeft: number } | null; justOccurred: boolean; justHealed: boolean; effMod: number; newConsecutiveHighFatigueWeeks: number; source: string | null };
   const injuryJustOccurred = injuryCalc.justOccurred;
   const injuryJustHealed   = injuryCalc.justHealed;
@@ -491,6 +493,16 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     }
   } else if (alreadyInjured && !injuryJustHealed && injuryState) {
     growth.logs.push(`[부상] 회복 중 (${injuryState.recoveryWeeksLeft}주 남음) — 훈련 효율 -80%`);
+    // 주간 치료비 차감
+    const weeklyTreatmentCost: Record<string, number> = {
+      conservative: injuryState.severity === "moderate" ? 300_000 : 500_000,
+      counseling:   800_000,
+    };
+    const treatCost = weeklyTreatmentCost[injuryState.treatmentChoice ?? ""] ?? 0;
+    if (treatCost > 0) {
+      growth.protagonistPatch.money = Math.max(0, (g.protagonist.money ?? 0) - treatCost);
+      growth.logs.push(`[치료비] 주간 치료비 ${(treatCost / 10000).toFixed(0)}만원 차감`);
+    }
   } else if (injuryJustHealed) {
     growth.logs.push(`[부상] 회복 완료 — 정상 훈련 재개`);
   }
@@ -1462,6 +1474,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         const sim = await simulateGame(nextGame.homeTeamId, nextGame.awayTeamId, entities, {
           conditions, homeRotIdx, awayRotIdx, week: nextGame.week,
           npcInjuries: get(seasonStore).npcInjuries,
+          rotationSize: rotationSizeForStage(g.protagonist.careerStage),
         });
         npcResult      = sim.result;
         nextHomeRotIdx = sim.nextHomeRotIdx;

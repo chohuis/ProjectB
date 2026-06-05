@@ -420,9 +420,17 @@ pub struct PitchOutcome {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
+pub struct MidGameInjury {
+    pub injury_type: String,   // InjuryType ID
+    pub severity: String,      // "light" | "moderate" | "severe"
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct MatchStepResult {
     pub next_state: MatchState,
     pub outcome: PitchOutcome,
+    pub mid_game_injury: Option<MidGameInjury>,
 }
 
 // ── 반이닝 시뮬 결과 ──────────────────────────────────────────────────────────

@@ -314,7 +314,8 @@ function createSeasonStore() {
       awayTeamId: string,
       nextHomeRotIdx: number,
       nextAwayRotIdx: number,
-      log: import("../types/season").FriendlyPerformanceLog,
+      log: import("../types/season").FriendlyPerformanceLog | null,
+      pitcherConditions: Record<string, PlayerCondition> = {},
     ) {
       update((s) => {
         const schedule = s.schedule.map((e) =>
@@ -330,13 +331,14 @@ function createSeasonStore() {
               [homeTeamId]: nextHomeRotIdx,
               [awayTeamId]: nextAwayRotIdx,
             },
+            playerConditions: { ...cur.playerConditions, ...pitcherConditions },
           },
         };
         return {
           ...s,
           schedule,
           leagueState,
-          friendlyLog: [...(s.friendlyLog ?? []), log],
+          friendlyLog: log ? [...(s.friendlyLog ?? []), log] : (s.friendlyLog ?? []),
         };
       });
     },

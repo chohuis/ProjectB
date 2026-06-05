@@ -1185,6 +1185,7 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
                 ball_in_play: None, fielding_result: None, animation_cues: vec![],
                 landing_target: XY { x: 0.0, y: 0.0 },
             },
+            mid_game_injury: None,
         };
     }
 
@@ -1473,7 +1474,39 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         result_code, quality, comment: get_result_comment(result_code).to_string(),
         ball_in_play, fielding_result, animation_cues, landing_target: lr.landing,
     };
-    MatchStepResult { next_state, outcome }
+
+    // 경기 중 부상 체크 (주인공 등판 중, 투구 80구↑, 스태미나 저하 시)
+    let mid_game_injury = if is_protagonist && next_state.protagonist_has_entered && !next_state.protagonist_exited {
+        check_mid_game_injury(next_state.pitch_count_since_entry, next_state.protagonist_stamina, rng)
+    } else {
+        None
+    };
+
+    MatchStepResult { next_state, outcome, mid_game_injury }
+}
+
+fn check_mid_game_injury(pitch_count: u32, stamina: f64, rng: &mut impl Rng) -> Option<crate::types::MidGameInjury> {
+    if pitch_count < 80 || stamina >= 20.0 { return None; }
+
+    let per_pitch_chance = if stamina < 5.0 { 0.012 }
+        else if stamina < 10.0 { 0.006 }
+        else { 0.003 };
+
+    if rng.gen::<f64>() >= per_pitch_chance { return None; }
+
+    let tier_roll: f64 = rng.gen();
+    let (severity, injury_type) = if stamina < 5.0 && tier_roll < 0.05 {
+        ("severe", "UCL_PARTIAL")
+    } else if tier_roll < 0.35 {
+        ("moderate", if rng.gen::<f64>() < 0.6 { "ELBOW_INFLAM" } else { "SHOULDER_INFLAM" })
+    } else {
+        ("light", if rng.gen::<f64>() < 0.5 { "ARM_FATIGUE" } else { "MUSCLE_TIGHTNESS" })
+    };
+
+    Some(crate::types::MidGameInjury {
+        injury_type: injury_type.to_string(),
+        severity: severity.to_string(),
+    })
 }
 
 // ── 공개 오케스트레이션 함수 ─────────────────────────────────────────────────

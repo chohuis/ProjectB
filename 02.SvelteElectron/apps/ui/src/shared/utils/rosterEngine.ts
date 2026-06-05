@@ -2,10 +2,26 @@ import type { EntityRow, EntityPlayerDetails } from "../stores/master";
 import type { NpcInjuryEntry } from "../types/save";
 
 export interface TeamRoster {
-  rotation: string[];   // SP ID 순서 (최대 5명)
+  rotation: string[];   // SP ID 순서 (리그별 최대 2~5명)
   bullpen: string[];    // RP/CP ID 목록
   closer: string;       // CP ID
   lineup: string[];     // 타자 출전 순서 (1번~9번)
+}
+
+// 리그(careerStage)별 로테이션 크기
+export function rotationSizeForStage(careerStage: string): number {
+  if (careerStage === "highschool")  return 3;
+  if (careerStage === "university")  return 3;
+  if (careerStage === "independent") return 4;
+  return 5; // pro_kbl, pro_abl, pro_jbl
+}
+
+// 리그 ID 기반 로테이션 크기 (UI 표시용)
+export function rotationSizeForLeague(leagueId: string): number {
+  if (leagueId === "LEAGUE_HIGHSCHOOL")  return 3;
+  if (leagueId === "LEAGUE_UNIVERSITY")  return 3;
+  if (leagueId === "LEAGUE_INDEPENDENT") return 4;
+  return 5;
 }
 
 const PLAY_THROUGH_OVR_MULT: Record<string, number> = { light: 0.88, moderate: 0.70 };
@@ -42,26 +58,27 @@ function playerDetails(e: EntityRow): EntityPlayerDetails {
 }
 
 // ── 선발 로테이션 자동 배정 ──────────────────────────────────
-export function getTeamRotation(teamId: string, entities: EntityRow[], npcInjuries?: Record<string, NpcInjuryEntry>): string[] {
+export function getTeamRotation(
+  teamId: string,
+  entities: EntityRow[],
+  npcInjuries?: Record<string, NpcInjuryEntry>,
+  maxRotation = 5,
+): string[] {
   const players = getTeamPlayers(teamId, entities, npcInjuries);
   const pitchers = players.filter((e) => playerDetails(e).playerType === "pitcher");
 
-  // SP 우선 (positionRatings.SP 또는 position === "SP")
   const starters = pitchers
-    .filter((e) => {
-      const pos = playerDetails(e).position;
-      return pos === "SP";
-    })
+    .filter((e) => playerDetails(e).position === "SP")
     .sort((a, b) => (playerDetails(b).pitching?.ovr ?? 0) - (playerDetails(a).pitching?.ovr ?? 0))
-    .slice(0, 5)
+    .slice(0, maxRotation)
     .map((e) => e.id);
 
-  // SP 5명 미만이면 RP 중 OVR 높은 순으로 보충
-  if (starters.length < 5) {
+  // SP 부족 시 RP 중 OVR 높은 순으로 보충
+  if (starters.length < maxRotation) {
     const rpFill = pitchers
       .filter((e) => !starters.includes(e.id))
       .sort((a, b) => (playerDetails(b).pitching?.ovr ?? 0) - (playerDetails(a).pitching?.ovr ?? 0))
-      .slice(0, 5 - starters.length)
+      .slice(0, maxRotation - starters.length)
       .map((e) => e.id);
     starters.push(...rpFill);
   }
@@ -169,8 +186,13 @@ function sortBattingOrder(ids: string[], entities: EntityRow[]): string[] {
 }
 
 // ── 팀 전체 로스터 한 번에 생성 ─────────────────────────────
-export function buildTeamRoster(teamId: string, entities: EntityRow[], npcInjuries?: Record<string, NpcInjuryEntry>): TeamRoster {
-  const rotation = getTeamRotation(teamId, entities, npcInjuries);
+export function buildTeamRoster(
+  teamId: string,
+  entities: EntityRow[],
+  npcInjuries?: Record<string, NpcInjuryEntry>,
+  maxRotation = 5,
+): TeamRoster {
+  const rotation = getTeamRotation(teamId, entities, npcInjuries, maxRotation);
   const { bullpen, closer } = getTeamBullpen(teamId, entities, rotation, npcInjuries);
   const lineup = getTeamLineup(teamId, entities, npcInjuries);
   return { rotation, bullpen, closer, lineup };

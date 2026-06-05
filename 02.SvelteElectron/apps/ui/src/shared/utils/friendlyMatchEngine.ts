@@ -210,13 +210,68 @@ export function ratePerformance(ip: number, era: number): 1 | 2 | 3 | 4 | 5 {
   return 1;
 }
 
-const COACH_COMMENTS: Record<1 | 2 | 3 | 4 | 5, string> = {
-  5: "오늘 같은 구위면 다음 공식전 선발도 걱정 없다.",
-  4: "커맨드가 안정적이었다. 이 흐름을 유지하면 된다.",
-  3: "무난한 등판이었다. 핵심 구종 안정성을 더 높여야 한다.",
-  2: "오늘은 제구가 흔들렸다. 다음 경기 전에 점검이 필요하다.",
-  1: "구위와 제구 모두 부진했다. 다음 선발 순서를 재검토할 수 있다.",
-};
+function getCoachComment(ip: number, er: number, k: number, bb: number, rating: 1 | 2 | 3 | 4 | 5, won: boolean): string {
+  const ipStr = ip.toFixed(1);
+
+  // 1. 무실점 완투급
+  if (ip >= 6 && er === 0)
+    return "오늘은 완벽에 가까운 피칭이었다. 이 컨디션을 공식전까지 유지한다면 에이스 자리는 의심할 여지가 없다.";
+
+  // 2. 삼진 폭풍 (rating 5 + K 8+)
+  if (rating === 5 && k >= 8)
+    return `삼진 ${k}개. 구위가 절정이다. 오늘 같은 공이면 어떤 타선도 막을 수 있다. 다음 공식전이 기대된다.`;
+
+  // 3. 승리 선봉 (rating 5 + 팀 승리)
+  if (rating === 5 && won)
+    return "호투로 팀 승리를 이끌었다. 에이스란 이런 것이다. 이 투구 내용을 공식전에서도 보여줘라.";
+
+  // 4. 최고 등판 (rating 5 일반)
+  if (rating === 5)
+    return "오늘 같은 구위면 다음 공식전 선발도 걱정 없다. 이 흐름을 절대 끊지 마라.";
+
+  // 5. 이닝이터 (rating 4 + 5이닝 이상)
+  if (rating === 4 && ip >= 5)
+    return `${ipStr}이닝 소화. 긴 이닝을 버텨주는 투수가 팀에 얼마나 중요한지 잘 알 것이다. 좋은 등판이었다.`;
+
+  // 6. 정교한 제구 (rating 4 + 볼넷 1 이하)
+  if (rating === 4 && bb <= 1)
+    return "볼넷이 거의 없는 깔끔한 등판이었다. 제구가 이렇게 안정되면 타자들이 힘들어한다.";
+
+  // 7. 안정적 등판 (rating 4 일반)
+  if (rating === 4)
+    return "커맨드가 안정적이었다. 큰 실수 없이 경기를 소화했다. 이 흐름을 유지하면 된다.";
+
+  // 8. 구위는 좋지만 (rating 3 + 삼진 6+)
+  if (rating === 3 && k >= 6)
+    return `삼진 ${k}개로 구위는 살아있다. 하지만 실점 장면이 아쉬웠다. 위기 상황 집중력을 더 키워야 한다.`;
+
+  // 9. 제구 불안 (rating 3 + 볼넷 4+)
+  if (rating === 3 && bb >= 4)
+    return `볼넷 ${bb}개가 발목을 잡았다. 제구가 흔들리면 체력만 낭비된다. 다음 훈련에서 집중적으로 잡아야 한다.`;
+
+  // 10. 평범한 등판 (rating 3 일반)
+  if (rating === 3)
+    return "무난한 등판이었다. 이 정도로는 공식전 경쟁에서 앞서기 어렵다. 핵심 구종 완성도를 높여야 한다.";
+
+  // 11. 볼넷 자멸 (rating 2 + 볼넷 5+)
+  if (rating === 2 && bb >= 5)
+    return `볼넷 ${bb}개. 스스로 무너진 경기다. 제구가 이렇게 흔들리면 어떤 상대도 이기기 어렵다.`;
+
+  // 12. 조기 강판 (rating 2 + 3이닝 미만)
+  if (rating === 2 && ip < 3)
+    return `${ipStr}이닝. 초반부터 흔들렸다. 경기 시작 전 루틴과 멘탈 관리를 다시 점검해봐라.`;
+
+  // 13. 부진 (rating 2 일반)
+  if (rating === 2)
+    return "오늘은 기대에 미치지 못했다. 구위와 제구 모두 점검이 필요하다. 다음 경기 전에 반드시 원인을 찾아야 한다.";
+
+  // 14. 대량실점 (rating 1 + 자책 5+)
+  if (rating === 1 && er >= 5)
+    return `자책점 ${er}점. 오늘은 빨리 잊어라. 하지만 왜 이렇게 됐는지는 반드시 분석해야 한다. 공식전에서 이러면 안 된다.`;
+
+  // 15. 최악 (rating 1 fallback)
+  return "구위도 제구도 모두 실망스러웠다. 지금 당장 뭐가 문제인지 스스로 찾아야 한다. 이 상태로 공식전은 안 된다.";
+}
 
 export function buildFriendlyResultMessage(
   scheduleEntry: ScheduleEntry,
@@ -239,7 +294,7 @@ export function buildFriendlyResultMessage(
   const era       = ip > 0 ? Math.round((er / ip) * 9 * 100) / 100 : 99;
   const rating    = ratePerformance(ip, era);
   const stars     = "★".repeat(rating) + "☆".repeat(5 - rating);
-  const comment   = COACH_COMMENTS[rating];
+  const comment   = getCoachComment(ip, er, k, bb, rating, won);
 
   const body = [
     `친선경기  ${scheduleEntry.homeTeamId === scheduleEntry.awayTeamId ? "" : `vs ${oppName}`}`,

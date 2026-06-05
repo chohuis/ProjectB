@@ -135,6 +135,7 @@ export interface InjuryState {
   rehabPhase?: 1 | 2 | 3 | 4;       // surgery 타입 전용 단계
   permanentPenaltyApplied: boolean;  // 복귀 시 영구 감소 적용 여부
   source: InjurySource;
+  steroidUsed?: boolean;             // 스테로이드 사용 이력 (재부상 확률 +25%)
 }
 
 export interface InjuryHistoryEntry {

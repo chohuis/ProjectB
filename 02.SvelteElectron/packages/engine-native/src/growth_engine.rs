@@ -139,36 +139,36 @@ struct ProgramConfig {
 fn get_program(id: &str) -> Option<ProgramConfig> {
     match id {
         // ── 신규 투수 6종 ──────────────────────────────────────────
-        "TRN_VEL"       => Some(ProgramConfig { gains_pitching: &[("velocity", 1.0), ("stamina", 0.3)],                              gains_batting: &[], base_xp: 4.0, fatigue_cost: 14.0, condition_cost: 6.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
-        "TRN_CTRL_CMD"  => Some(ProgramConfig { gains_pitching: &[("control", 1.0), ("command", 1.0)],                               gains_batting: &[], base_xp: 3.0, fatigue_cost: 8.0,  condition_cost: 3.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
-        "TRN_MOVEMENT"  => Some(ProgramConfig { gains_pitching: &[("movement", 1.0), ("control", 0.3)],                              gains_batting: &[], base_xp: 3.2, fatigue_cost: 9.0,  condition_cost: 4.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
-        "TRN_MENTAL_P"  => Some(ProgramConfig { gains_pitching: &[("mentality", 1.0), ("clutch", 0.4), ("holdRunners", 0.2)],        gains_batting: &[], base_xp: 2.8, fatigue_cost: 6.0,  condition_cost: 2.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
-        "TRN_STAMINA"   => Some(ProgramConfig { gains_pitching: &[("stamina", 1.0), ("recovery", 0.3)],                              gains_batting: &[], base_xp: 3.8, fatigue_cost: 12.0, condition_cost: 5.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
+        "TRN_VEL"       => Some(ProgramConfig { gains_pitching: &[("velocity", 1.0), ("stamina", 0.3)],                              gains_batting: &[], base_xp: 4.0, fatigue_cost: 5.5, condition_cost: 6.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
+        "TRN_CTRL_CMD"  => Some(ProgramConfig { gains_pitching: &[("control", 1.0), ("command", 1.0)],                               gains_batting: &[], base_xp: 3.0, fatigue_cost: 3.0, condition_cost: 3.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
+        "TRN_MOVEMENT"  => Some(ProgramConfig { gains_pitching: &[("movement", 1.0), ("control", 0.3)],                              gains_batting: &[], base_xp: 3.2, fatigue_cost: 3.5, condition_cost: 4.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
+        "TRN_MENTAL_P"  => Some(ProgramConfig { gains_pitching: &[("mentality", 1.0), ("clutch", 0.4), ("holdRunners", 0.2)],        gains_batting: &[], base_xp: 2.8, fatigue_cost: 2.5, condition_cost: 2.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
+        "TRN_STAMINA"   => Some(ProgramConfig { gains_pitching: &[("stamina", 1.0), ("recovery", 0.3)],                              gains_batting: &[], base_xp: 3.8, fatigue_cost: 5.0, condition_cost: 5.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
         // ── 신규 타자 6종 ──────────────────────────────────────────
-        "TRN_BATTING"   => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[("contact", 1.0), ("power", 0.8)],                              base_xp: 3.5, fatigue_cost: 10.0, condition_cost: 4.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
-        "TRN_PLATE_EYE" => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[("eye", 1.0), ("discipline", 0.4), ("bunting", 0.25)],          base_xp: 2.8, fatigue_cost: 6.0,  condition_cost: 2.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
-        "TRN_BASERUN"   => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[("speed", 1.0), ("baseInstinct", 0.3)],                         base_xp: 3.2, fatigue_cost: 10.0, condition_cost: 4.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
-        "TRN_DEFENSE"   => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[("fielding", 1.0), ("arm", 0.3)],                               base_xp: 3.0, fatigue_cost: 9.0,  condition_cost: 3.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
-        "TRN_MENTAL_B"  => Some(ProgramConfig { gains_pitching: &[("mentality", 1.0)],  gains_batting: &[("battingClutch", 0.6)],                     base_xp: 2.8, fatigue_cost: 6.0,  condition_cost: 2.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
+        "TRN_BATTING"   => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[("contact", 1.0), ("power", 0.8)],                              base_xp: 3.5, fatigue_cost: 4.0, condition_cost: 4.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
+        "TRN_PLATE_EYE" => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[("eye", 1.0), ("discipline", 0.4), ("bunting", 0.25)],          base_xp: 2.8, fatigue_cost: 2.5, condition_cost: 2.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
+        "TRN_BASERUN"   => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[("speed", 1.0), ("baseInstinct", 0.3)],                         base_xp: 3.2, fatigue_cost: 4.0, condition_cost: 4.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
+        "TRN_DEFENSE"   => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[("fielding", 1.0), ("arm", 0.3)],                               base_xp: 3.0, fatigue_cost: 3.5, condition_cost: 3.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
+        "TRN_MENTAL_B"  => Some(ProgramConfig { gains_pitching: &[("mentality", 1.0)],  gains_batting: &[("battingClutch", 0.6)],                     base_xp: 2.8, fatigue_cost: 2.5, condition_cost: 2.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
         // ── 공용 ───────────────────────────────────────────────────
-        "TRN_PITCH_DEV" => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[], base_xp: 0.0, fatigue_cost: 10.0, condition_cost: 2.0,  is_recovery: false, is_pitch_dev: true,  progress_per_week: 17.0 }),
+        "TRN_PITCH_DEV" => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[], base_xp: 0.0, fatigue_cost: 4.0,  condition_cost: 2.0,  is_recovery: false, is_pitch_dev: true,  progress_per_week: 17.0 }),
         "TRN_RECOVERY"  => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[], base_xp: 0.0, fatigue_cost: -5.0, condition_cost: -6.0, is_recovery: true,  is_pitch_dev: false, progress_per_week: 0.0  }),
         // ── 구버전 호환 ────────────────────────────────────────────
-        "TRN_CMD_BASE"  => Some(ProgramConfig { gains_pitching: &[("command", 1.0), ("control", 0.3)],    gains_batting: &[], base_xp: 3.0, fatigue_cost: 8.0,  condition_cost: 3.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
-        "TRN_VEL_POWER" => Some(ProgramConfig { gains_pitching: &[("velocity", 1.0), ("stamina", 0.3)],   gains_batting: &[], base_xp: 4.0, fatigue_cost: 14.0, condition_cost: 6.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
-        "TRN_CTRL_MECH" => Some(ProgramConfig { gains_pitching: &[("control", 1.0), ("command", 0.3)],    gains_batting: &[], base_xp: 3.0, fatigue_cost: 8.0,  condition_cost: 3.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
-        "TRN_MVT_PITCH" => Some(ProgramConfig { gains_pitching: &[("movement", 1.0), ("control", 0.3)],   gains_batting: &[], base_xp: 3.2, fatigue_cost: 9.0,  condition_cost: 4.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
-        "TRN_MNT_FOCUS" => Some(ProgramConfig { gains_pitching: &[("mentality", 1.0)],                    gains_batting: &[], base_xp: 2.5, fatigue_cost: 5.0,  condition_cost: 2.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
-        "TRN_STA_COND"  => Some(ProgramConfig { gains_pitching: &[("stamina", 1.0), ("recovery", 0.3)],   gains_batting: &[], base_xp: 3.8, fatigue_cost: 12.0, condition_cost: 5.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
-        "TRN_CLUTCH"    => Some(ProgramConfig { gains_pitching: &[("clutch", 1.0), ("mentality", 0.3)],   gains_batting: &[], base_xp: 2.8, fatigue_cost: 6.0,  condition_cost: 2.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
-        "TRN_HOLD"      => Some(ProgramConfig { gains_pitching: &[("holdRunners", 1.0), ("control", 0.3)], gains_batting: &[], base_xp: 2.5, fatigue_cost: 7.0,  condition_cost: 3.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
-        "TRN_CONTACT"   => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[("contact", 1.0), ("eye", 0.3)],             base_xp: 3.0, fatigue_cost: 8.0,  condition_cost: 3.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
-        "TRN_POWER"     => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[("power", 1.0), ("contact", 0.3)],            base_xp: 3.8, fatigue_cost: 12.0, condition_cost: 5.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
-        "TRN_EYE"       => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[("eye", 1.0), ("discipline", 0.3)],           base_xp: 2.8, fatigue_cost: 6.0,  condition_cost: 2.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
-        "TRN_SPEED"     => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[("speed", 1.0), ("baseInstinct", 0.3)],       base_xp: 3.2, fatigue_cost: 10.0, condition_cost: 4.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
-        "TRN_FIELDING"  => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[("fielding", 1.0), ("arm", 0.3)],             base_xp: 3.0, fatigue_cost: 9.0,  condition_cost: 3.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
-        "TRN_BUNTING"   => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[("bunting", 1.0), ("contact", 0.3)],          base_xp: 2.0, fatigue_cost: 5.0,  condition_cost: 2.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
-        "TRN_BCLUTCH"   => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[("battingClutch", 1.0), ("discipline", 0.3)], base_xp: 2.5, fatigue_cost: 5.0,  condition_cost: 2.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
+        "TRN_CMD_BASE"  => Some(ProgramConfig { gains_pitching: &[("command", 1.0), ("control", 0.3)],    gains_batting: &[], base_xp: 3.0, fatigue_cost: 3.0, condition_cost: 3.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
+        "TRN_VEL_POWER" => Some(ProgramConfig { gains_pitching: &[("velocity", 1.0), ("stamina", 0.3)],   gains_batting: &[], base_xp: 4.0, fatigue_cost: 5.5, condition_cost: 6.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
+        "TRN_CTRL_MECH" => Some(ProgramConfig { gains_pitching: &[("control", 1.0), ("command", 0.3)],    gains_batting: &[], base_xp: 3.0, fatigue_cost: 3.0, condition_cost: 3.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
+        "TRN_MVT_PITCH" => Some(ProgramConfig { gains_pitching: &[("movement", 1.0), ("control", 0.3)],   gains_batting: &[], base_xp: 3.2, fatigue_cost: 3.5, condition_cost: 4.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
+        "TRN_MNT_FOCUS" => Some(ProgramConfig { gains_pitching: &[("mentality", 1.0)],                    gains_batting: &[], base_xp: 2.5, fatigue_cost: 2.0, condition_cost: 2.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
+        "TRN_STA_COND"  => Some(ProgramConfig { gains_pitching: &[("stamina", 1.0), ("recovery", 0.3)],   gains_batting: &[], base_xp: 3.8, fatigue_cost: 5.0, condition_cost: 5.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
+        "TRN_CLUTCH"    => Some(ProgramConfig { gains_pitching: &[("clutch", 1.0), ("mentality", 0.3)],   gains_batting: &[], base_xp: 2.8, fatigue_cost: 2.5, condition_cost: 2.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
+        "TRN_HOLD"      => Some(ProgramConfig { gains_pitching: &[("holdRunners", 1.0), ("control", 0.3)], gains_batting: &[], base_xp: 2.5, fatigue_cost: 3.0, condition_cost: 3.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
+        "TRN_CONTACT"   => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[("contact", 1.0), ("eye", 0.3)],             base_xp: 3.0, fatigue_cost: 3.0, condition_cost: 3.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
+        "TRN_POWER"     => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[("power", 1.0), ("contact", 0.3)],            base_xp: 3.8, fatigue_cost: 5.0, condition_cost: 5.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
+        "TRN_EYE"       => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[("eye", 1.0), ("discipline", 0.3)],           base_xp: 2.8, fatigue_cost: 2.5, condition_cost: 2.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
+        "TRN_SPEED"     => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[("speed", 1.0), ("baseInstinct", 0.3)],       base_xp: 3.2, fatigue_cost: 4.0, condition_cost: 4.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
+        "TRN_FIELDING"  => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[("fielding", 1.0), ("arm", 0.3)],             base_xp: 3.0, fatigue_cost: 3.5, condition_cost: 3.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
+        "TRN_BUNTING"   => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[("bunting", 1.0), ("contact", 0.3)],          base_xp: 2.0, fatigue_cost: 2.0, condition_cost: 2.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
+        "TRN_BCLUTCH"   => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[("battingClutch", 1.0), ("discipline", 0.3)], base_xp: 2.5, fatigue_cost: 2.0, condition_cost: 2.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
         _ => None,
     }
 }
@@ -399,11 +399,24 @@ pub fn calc_training_growth(params: TrainingGrowthParams) -> GrowthResult {
         (params.plan.secondary2_program_id.as_deref(), 0.5),
     ];
 
+    // 피로 구간 승수: 70/80/90 기준 볼록 곡선 (회복 훈련에는 미적용)
+    let fat_zone_mult = if p.fatigue >= 90.0 { 4.0 }
+        else if p.fatigue >= 80.0 { 2.5 }
+        else if p.fatigue >= 70.0 { 1.5 }
+        else { 1.0_f64 };
+
+    // 주간 자동 피로 회복 (-5): 매주 수동 처리 없이 기본 회복
+    fatigue_delta -= 5.0;
+
     for (prog_id_opt, mult) in programs {
         let prog_id = match prog_id_opt { Some(id) => id, None => continue };
         let cfg = match get_program(prog_id) { Some(c) => c, None => continue };
 
-        fatigue_delta   += cfg.fatigue_cost   * mult;
+        if cfg.fatigue_cost > 0.0 {
+            fatigue_delta += cfg.fatigue_cost * mult * fat_zone_mult;
+        } else {
+            fatigue_delta += cfg.fatigue_cost * mult; // 회복 훈련: 승수 미적용
+        }
         condition_delta -= cfg.condition_cost * mult;
         if cfg.is_recovery { continue; }
 
@@ -560,7 +573,7 @@ pub fn calc_game_growth(params: GameGrowthParams) -> GrowthResult {
             batting,
             pitching_xp,
             batting_xp,
-            fatigue:   clamp(p.fatigue   + 12.0, 0.0, 100.0),
+            fatigue:   clamp(p.fatigue + 4.0 * (if p.fatigue >= 90.0 { 4.0 } else if p.fatigue >= 80.0 { 2.5 } else if p.fatigue >= 70.0 { 1.5 } else { 1.0 }), 0.0, 100.0),
             condition: clamp(p.condition -  8.0, 0.0, 100.0),
             morale: new_morale,
             pitches: None,

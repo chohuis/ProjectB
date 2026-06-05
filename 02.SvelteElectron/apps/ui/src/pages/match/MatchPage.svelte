@@ -329,9 +329,11 @@
     protagonistEntered?: boolean;
     batterLines?: import('../../shared/types/season').BatterGameLine[];
     playerLines?: import('../../shared/types/season').PlayerGameLine[];
+    midGameInjury?: { injuryType: string; severity: string };
   }
   let isGameOver = false;
   let gameResult: GameResult = { awayScore: 0, homeScore: 0, pitchCount: 0, strikeouts: 0, errors: 0, won: false, summary: '' };
+  let midGameInjuryAlert: { injuryType: string; severity: string } | null = null;
 
   // 엔진 0~100 좌표와 SVG 수비 좌표 매핑용 lookup
   const FIELD_ENGINE_REF: Record<string, { x: number; y: number }> = {
@@ -1216,6 +1218,17 @@
         await tweenBall(activeMound, 180);
       }
 
+      // 경기 중 부상 처리
+      if ((response as any).midGameInjury) {
+        const inj = (response as any).midGameInjury as { injuryType: string; severity: string };
+        midGameInjuryAlert = inj;
+        pushLog(`⚠️ 경기 중 부상 — ${inj.injuryType} (${inj.severity === "light" ? "경상" : inj.severity === "moderate" ? "중상" : "중증"})`, "log-auto");
+        await handleGameOver(inj);
+        lastPitchPct = effectivePitchedAt;
+        isPitching = false;
+        return;
+      }
+
       if (response.snapshot.isFinished && !isGameOver) {
         await handleGameOver();
         lastPitchPct = effectivePitchedAt;
@@ -1281,7 +1294,7 @@
     isPitching = false;
   }
 
-  async function handleGameOver() {
+  async function handleGameOver(injuryInfo?: { injuryType: string; severity: string }) {
     if (isGameOver) return;
     isGameOver = true;
 
@@ -1318,6 +1331,7 @@
       strikeouts: totalStrikeouts,
       errors: matchDefenseStat.errors,
       won, summary, protagonistEntered, batterLines, playerLines,
+      midGameInjury: injuryInfo ? { injuryType: injuryInfo.injuryType, severity: injuryInfo.severity } : undefined,
     };
 
     const staminaUsed = Math.max(0, 82 - pitcherState.stamina);
@@ -1378,6 +1392,7 @@
         protagonistEntered: gameResult.protagonistEntered,
         batterLines: gameResult.batterLines,
         playerLines: gameResult.playerLines,
+        midGameInjury: gameResult.midGameInjury,
       });
     }
     isGameOver = false;

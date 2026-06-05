@@ -62,13 +62,14 @@ export async function simulateGame(
     awayRotIdx?:   number;
     week?:         number;
     npcInjuries?:  Record<string, NpcInjuryEntry>;
+    rotationSize?: number;
   },
 ): Promise<SimGameResult> {
-  const { conditions = {}, homeRotIdx = 0, awayRotIdx = 0, week = 0, npcInjuries } = options ?? {};
+  const { conditions = {}, homeRotIdx = 0, awayRotIdx = 0, week = 0, npcInjuries, rotationSize = 5 } = options ?? {};
   const entityMap = new Map(entities.map((e) => [e.id, e]));
 
-  const homeRoster = buildTeamRoster(homeTeamId, entities, npcInjuries);
-  const awayRoster = buildTeamRoster(awayTeamId, entities, npcInjuries);
+  const homeRoster = buildTeamRoster(homeTeamId, entities, npcInjuries, rotationSize);
+  const awayRoster = buildTeamRoster(awayTeamId, entities, npcInjuries, rotationSize);
 
   const toSimPitchers = (ids: string[]) => ids.map(id => toSimPitcher(id, entityMap)).filter(Boolean) as SimPitcher[];
   const toSimBatters  = (ids: string[]) => ids.map(id => toSimBatter(id, entityMap)).filter(Boolean)  as SimBatter[];

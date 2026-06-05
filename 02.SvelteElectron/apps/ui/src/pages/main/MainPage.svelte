@@ -44,6 +44,8 @@
   import InjuryTreatmentModal from "../../features/injury/ui/InjuryTreatmentModal.svelte";
   import MatchPage from "../match/MatchPage.svelte";
   import type { InteractiveMatchContext, InteractiveMatchResult, UnifiedGameOutcome } from "../../shared/types/season";
+  import { masterStore } from "../../shared/stores/master";
+  import { buildBatterLineup, buildStarterStats, buildFielders } from "../../shared/utils/matchLineupBuilder";
 
   export let onSeasonEnd: () => void = () => {};
 
@@ -160,9 +162,18 @@
     autoSimRunning = true;
     friendlyError  = "";
     try {
-      const p      = $gameStore.protagonist;
-      const isHome = pendingGameEntry.homeTeamId === p.teamId;
-      const req    = {
+      const p           = $gameStore.protagonist;
+      const isHome      = pendingGameEntry.homeTeamId === p.teamId;
+      const myTeamId    = p.teamId;
+      const oppTeamId   = isHome ? pendingGameEntry.awayTeamId : pendingGameEntry.homeTeamId;
+      const entities    = $masterStore.entities;
+
+      const oppLineup   = buildBatterLineup(oppTeamId, entities);
+      const myLineup    = buildBatterLineup(myTeamId, entities);
+      const oppPitcher  = buildStarterStats(oppTeamId, entities);
+      const oppFielders = buildFielders(oppTeamId, entities);
+
+      const req: Record<string, unknown> = {
         pitcher: {
           name:        p.name,
           command:     p.pitching.command,
@@ -170,9 +181,12 @@
           staminaCap:  p.pitching.stamina,
           mentalResil: p.pitching.mentality,
         },
-        batterMean:      55,
         role:            (p.position as "SP" | "RP" | "CP") ?? "SP",
         protagonistSide: isHome ? "home" : "away",
+        ...(oppLineup.length  >= 9 ? { opponentLineup: oppLineup }   : { batterMean: 55 }),
+        ...(myLineup.length   >= 9 ? { myTeamLineup:   myLineup }    : {}),
+        ...(oppPitcher        ? { opponentPitcher: oppPitcher }       : {}),
+        ...(oppFielders.length >= 9 ? { fielders: oppFielders }      : {}),
       };
 
       // 1단계: match:start
@@ -382,6 +396,7 @@
       summary: result.summary,
       batterLines: result.batterLines,
       playerLines: result.playerLines,
+      midGameInjury: result.midGameInjury,
     };
     await applyGameOutcome(outcome);
     activeMatchContext = null;

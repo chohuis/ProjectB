@@ -153,6 +153,11 @@ export interface InteractiveMatchContext {
     | { type: "close_game"; inningThreshold: number; maxLeadDiff: number };
 }
 
+export interface MatchInjury {
+  injuryType: string;
+  severity: string;
+}
+
 export interface InteractiveMatchResult {
   scheduleId: string;
   week: number;
@@ -169,6 +174,7 @@ export interface InteractiveMatchResult {
   summary: string;
   batterLines?: BatterGameLine[];
   playerLines?: PlayerGameLine[];
+  midGameInjury?: MatchInjury;
 }
 
 export interface UnifiedGameOutcome {
@@ -190,6 +196,7 @@ export interface UnifiedGameOutcome {
   protagonistEntered?: boolean;
   batterLines?: BatterGameLine[];
   playerLines?: PlayerGameLine[];
+  midGameInjury?: MatchInjury;
 }
 
 // ── 포스트시즌 시리즈 ──────────────────────────────────────────

@@ -5,6 +5,7 @@
   import { gameStore } from "../../../shared/stores/game";
   import type { EntityRow, EntityPlayerDetails, EntityManagerDetails } from "../../../shared/stores/master";
   import PlayerDetailModal from "../../player/ui/PlayerDetailModal.svelte";
+  import { rotationSizeForLeague } from "../../../shared/utils/rosterEngine";
 
   export let teamId: string = "";
   export let open: boolean = false;
@@ -87,7 +88,9 @@
   // ── 선발라인업 ────────────────────────────────────────────────
   interface RotationEntry { player: EntityRow; isTemp: boolean; }
 
-  function buildRotation(members: EntityRow[]): { rotation: RotationEntry[]; bullpenCount: number } {
+  $: maxRot = rotationSizeForLeague(team?.leagueId ?? "");
+
+  function buildRotation(members: EntityRow[], max: number): { rotation: RotationEntry[]; bullpenCount: number } {
     const all = members
       .filter((e) => e.role === "player" && playerType(e) !== "batter")
       .sort((a, b) => playerOvr(b) - playerOvr(a));
@@ -96,9 +99,9 @@
     const rest = all.filter((e) => playerPos(e) !== "SP");
 
     const rotation: RotationEntry[] = [];
-    sps.slice(0, 5).forEach((p) => rotation.push({ player: p, isTemp: false }));
-    if (rotation.length < 5) {
-      rest.slice(0, 5 - rotation.length).forEach((p) => rotation.push({ player: p, isTemp: true }));
+    sps.slice(0, max).forEach((p) => rotation.push({ player: p, isTemp: false }));
+    if (rotation.length < max) {
+      rest.slice(0, max - rotation.length).forEach((p) => rotation.push({ player: p, isTemp: true }));
     }
 
     const usedIds = new Set(rotation.map((r) => r.player.id));
@@ -106,7 +109,7 @@
     return { rotation, bullpenCount };
   }
 
-  $: ({ rotation: spRotation, bullpenCount } = buildRotation(allMembers));
+  $: ({ rotation: spRotation, bullpenCount } = buildRotation(allMembers, maxRot));
 
   const SP_LABELS = ["1선발", "2선발", "3선발", "4선발", "5선발"];
   const LINEUP_POSITIONS = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH"] as const;

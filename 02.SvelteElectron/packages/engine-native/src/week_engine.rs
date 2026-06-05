@@ -63,6 +63,7 @@ pub struct InjuryPayload {
     pub training_intensity: f64,
     pub consecutive_low_morale_weeks: u32,
     pub has_prior_injury_same_area: bool,
+    pub prior_steroid_used: Option<bool>,
 }
 
 #[derive(Serialize)]
@@ -171,7 +172,7 @@ fn eff_mod_for(severity: &str) -> f64 {
 pub fn calc_injury(p: InjuryPayload) -> InjuryResult {
     let mut rng = rand::thread_rng();
     let is_pitcher = p.player_type.as_deref().unwrap_or("pitcher") != "batter";
-    let is_high_fatigue = p.fatigue >= 85.0;
+    let is_high_fatigue = p.fatigue >= 80.0;
     let new_high_fatigue_weeks = if is_high_fatigue { p.consecutive_high_fatigue_weeks + 1 } else { 0 };
 
     let mut injury_update: Option<InjuryUpdateOut> = None;
@@ -198,13 +199,12 @@ pub fn calc_injury(p: InjuryPayload) -> InjuryResult {
 
         // ── 피로 + 훈련 복합 트리거 ──────────────────────────────
         if !just_occurred {
-            let mut trigger_chance: f64 = if p.fatigue >= 92.0 {
-                (0.35 + new_high_fatigue_weeks as f64 * 0.10).min(0.70)
-            } else if new_high_fatigue_weeks >= 2 {
-                (0.20 + (new_high_fatigue_weeks as f64 - 2.0) * 0.15).min(0.60)
-            } else {
-                0.0
-            };
+            // 볼록 곡선: 80미만=0%, 80~85=5%, 85~90=15%, 90~95=35%, 95+=60%
+            let mut trigger_chance: f64 = if p.fatigue >= 95.0 { 0.60 }
+                else if p.fatigue >= 90.0 { 0.35 }
+                else if p.fatigue >= 85.0 { 0.15 }
+                else if p.fatigue >= 80.0 { 0.05 }
+                else { 0.0 };
 
             let training_trigger = p.training_intensity >= 0.8 && p.condition < 65.0;
             if training_trigger {
@@ -213,6 +213,7 @@ pub fn calc_injury(p: InjuryPayload) -> InjuryResult {
             }
 
             if p.has_prior_injury_same_area { trigger_chance *= 1.5; }
+            if p.prior_steroid_used.unwrap_or(false) { trigger_chance *= 1.25; }
 
             let age_mult: f64 = if p.age >= 35 { 1.5 } else if p.age >= 32 { 1.3 } else { 1.0 };
             trigger_chance = (trigger_chance * age_mult).min(0.80);
@@ -221,7 +222,7 @@ pub fn calc_injury(p: InjuryPayload) -> InjuryResult {
                 let tier_roll: f64 = rng.gen();
                 let high_age = p.age >= 35;
 
-                let tier = if p.fatigue >= 92.0 {
+                let tier = if p.fatigue >= 90.0 {
                     if high_age {
                         if tier_roll < 0.10 { "surgery" } else if tier_roll < 0.35 { "severe" } else if tier_roll < 0.65 { "moderate" } else { "light" }
                     } else {
@@ -234,7 +235,7 @@ pub fn calc_injury(p: InjuryPayload) -> InjuryResult {
                         if tier_roll < 0.03 { "severe" } else if tier_roll < 0.28 { "moderate" } else { "light" }
                     }
                 } else {
-                    // 훈련 트리거만 발동 (피로는 85 미만)
+                    // 80~85 또는 훈련 트리거만 발동
                     if tier_roll < 0.05 { "moderate" } else { "light" }
                 };
 
@@ -252,7 +253,7 @@ pub fn calc_injury(p: InjuryPayload) -> InjuryResult {
                     _ => pick_light_type(is_pitcher, &mut rng),
                 };
 
-                let injury_src = if training_trigger && p.fatigue < 85.0 { "training" } else { "fatigue" };
+                let injury_src = if training_trigger && p.fatigue < 80.0 { "training" } else { "fatigue" };
                 let severity   = severity_of(injury_type);
                 let weeks      = recovery_weeks_for(injury_type, &mut rng);
                 injury_update = Some(InjuryUpdateOut {

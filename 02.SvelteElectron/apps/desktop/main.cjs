@@ -1550,16 +1550,22 @@ app.whenReady().then(() => {
     }
     const result = core.stepPitch(activeMatchState, decision);
     activeMatchState = result.nextState;
-    // 강판 조건이 충족됐으면 즉시 적용 (mid-inning 강판 시 state 일관성 유지)
-    const nextPhase = core.advanceGamePhase(activeMatchState);
-    if (nextPhase.phase === "protagonist_exit") {
-      activeMatchState = nextPhase.state;
+    const midGameInjury = result.midGameInjury ?? null;
+    // 경기 중 부상 발생 시 주인공 강제 강판
+    if (midGameInjury) {
+      activeMatchState = core.autoSimulateToGameEnd(activeMatchState);
+    } else {
+      // 강판 조건이 충족됐으면 즉시 적용 (mid-inning 강판 시 state 일관성 유지)
+      const nextPhase = core.advanceGamePhase(activeMatchState);
+      if (nextPhase.phase === "protagonist_exit") {
+        activeMatchState = nextPhase.state;
+      }
+      // 감독 자동 마운드 방문 체크
+      if (!activeMatchState.isFinished && !activeMatchState.protagonistExited) {
+        activeMatchState = core.autoMoundVisitIfNeeded(activeMatchState);
+      }
     }
-    // 감독 자동 마운드 방문 체크
-    if (!activeMatchState.isFinished && !activeMatchState.protagonistExited) {
-      activeMatchState = core.autoMoundVisitIfNeeded(activeMatchState);
-    }
-    return { snapshot: toSnapshotDto(activeMatchState, [], core), outcome: result.outcome };
+    return { snapshot: toSnapshotDto(activeMatchState, [], core), outcome: result.outcome, midGameInjury };
   });
 
   ipcMain.handle("match:next-inning", async () => {
@@ -1685,6 +1691,12 @@ app.whenReady().then(() => {
       const core = await loadCoreModule();
       if (!activeMatchState) return JSON.stringify({ error: "no active match state" });
       let state = core.autoSimulateToGameEnd(activeMatchState);
+      // finishMatch 전에 SinceEntry 카운터 캡처 (finishMatch가 초기화할 수 있음)
+      const strikeouts   = state.kSinceEntry    ?? 0;
+      const hitsAllowed  = state.hSinceEntry    ?? 0;
+      const walksAllowed = state.bbSinceEntry   ?? 0;
+      const outsRecorded = state.outsSinceEntry ?? 0;
+      const pitchCount   = state.pitchCountSinceEntry ?? 0;
       const result = core.finishMatch(state);
       activeMatchState = result.nextState;
       matchReadyState = null;  // 이전 게임 상태 잔류 방지
@@ -1693,11 +1705,7 @@ app.whenReady().then(() => {
         homeScore: ns.score.home,
         awayScore: ns.score.away,
         summary: result.summary ?? "",
-        strikeouts:    ns.kSinceEntry    ?? 0,
-        hitsAllowed:   ns.hSinceEntry    ?? 0,
-        walksAllowed:  ns.bbSinceEntry   ?? 0,
-        outsRecorded:  ns.outsSinceEntry ?? 0,
-        pitchCount:    ns.pitchCountSinceEntry ?? 0,
+        strikeouts, hitsAllowed, walksAllowed, outsRecorded, pitchCount,
         batterLines: result.batterLines ?? [],
         playerLines: result.playerLines ?? [],
       });

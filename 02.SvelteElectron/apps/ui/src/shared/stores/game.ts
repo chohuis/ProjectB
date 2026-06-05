@@ -602,14 +602,20 @@ function createGameStore() {
 
         let updatedInj = { ...inj, treatmentChoice: choice };
 
+        let moneyDelta = 0;
         if (choice === "steroid") {
-          // 2~3주 단축 (고정값 3주 적용)
           const reduced = Math.max(1, updatedInj.recoveryWeeksLeft - 3);
-          updatedInj = { ...updatedInj, recoveryWeeksLeft: reduced, totalRecoveryWeeks: reduced };
+          updatedInj = { ...updatedInj, recoveryWeeksLeft: reduced, totalRecoveryWeeks: reduced, steroidUsed: true };
+          moneyDelta = -2_000_000;
         } else if (choice === "prp") {
-          // 4~6주 단축 (고정값 5주 적용)
           const reduced = Math.max(1, updatedInj.recoveryWeeksLeft - 5);
           updatedInj = { ...updatedInj, recoveryWeeksLeft: reduced, totalRecoveryWeeks: reduced };
+          moneyDelta = -5_000_000;
+        } else if (choice === "counseling") {
+          // YIPS 심리 상담: 8~12주로 단축 (기존이 그보다 길면)
+          const reduced = Math.min(updatedInj.recoveryWeeksLeft, 10);
+          updatedInj = { ...updatedInj, recoveryWeeksLeft: reduced, totalRecoveryWeeks: reduced };
+          // 주당 비용은 advanceWeek에서 매주 차감
         } else if (choice === "surgery") {
           // 중증 → 수술 전환: UCL_PARTIAL→UCL_FULL, ROTATOR_STRAIN→ROTATOR_FULL
           const surgeryType = inj.type === "UCL_PARTIAL" ? "UCL_FULL"
@@ -627,9 +633,10 @@ function createGameStore() {
           };
         }
 
+        const newMoney = Math.max(0, (s.protagonist.money ?? 0) + moneyDelta);
         return {
           ...s,
-          protagonist: { ...s.protagonist, injury: updatedInj },
+          protagonist: { ...s.protagonist, injury: updatedInj, money: newMoney },
         };
       });
     },
