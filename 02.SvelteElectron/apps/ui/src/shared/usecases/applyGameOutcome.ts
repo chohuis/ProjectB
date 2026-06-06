@@ -6,7 +6,7 @@ import { checkAchievements, computeMetrics } from "../utils/achievementEngine";
 import { calcGameGrowth } from "../utils/growthEngine";
 import { simulateGame } from "../utils/gameSimulator";
 import type { MatchResult, PitcherGameLine, PlayerCondition, UnifiedGameOutcome } from "../types/season";
-import { buildFriendlyResultMessage, ratePerformance } from "../utils/friendlyMatchEngine";
+import { buildFriendlyResultMessage, buildOfficialResultMessage, ratePerformance, type PitcherRole } from "../utils/friendlyMatchEngine";
 import { getTeamRotation, rotationSizeForLeague } from "../utils/rosterEngine";
 
 function buildTeamMatchResult(
@@ -39,6 +39,7 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
       outcome.homeTeamId, outcome.awayTeamId, outcome.homeScore, outcome.awayScore,
     );
     const protagonist = gBefore.protagonist;
+    const role        = (protagonist.position as PitcherRole) ?? "SP";
     const safeOuts    = typeof outcome.outsRecorded === "number" ? outcome.outsRecorded : 0;
     const ip          = Number((Math.max(0, safeOuts) / 3).toFixed(1));
     const leagueId = protagonist.leagueId;
@@ -46,8 +47,9 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
     const homeRot  = lState?.teamRotationIndex?.[outcome.homeTeamId] ?? 0;
     const awayRot  = lState?.teamRotationIndex?.[outcome.awayTeamId] ?? 0;
 
-    // 투구 기록이 전혀 없으면 log/메시지 생략 (등판 없음)
-    const didNotPitch = safeOuts === 0
+    // protagonistEntered: true면 통계가 0이어도 등판한 것으로 간주
+    const didNotPitch = outcome.protagonistEntered !== true
+      && safeOuts === 0
       && Math.max(0, outcome.strikeouts) === 0
       && Math.max(0, outcome.walksAllowed) === 0
       && Math.max(0, outcome.hitsAllowed) === 0
@@ -65,8 +67,8 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
       return;
     }
 
-    const er     = Math.max(0, outcome.hitsAllowed > 0 ? Math.round(outcome.hitsAllowed * 0.35) : 0);
-    const rating = ratePerformance(ip, ip > 0 ? (er / ip) * 9 : 99);
+    const er     = Math.round(Math.max(0, outcome.hitsAllowed) * 0.35);
+    const rating = ratePerformance(ip, er, role);
     const log = {
       scheduleId:     outcome.scheduleId,
       week:           outcome.week,
@@ -122,6 +124,7 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
       Math.max(0, outcome.walksAllowed),
       Math.max(0, outcome.hitsAllowed),
       teamMap,
+      role,
     );
     gameStore.addMessage(message);
     await gameStore.save();
@@ -130,6 +133,7 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
   }
   // ────────────────────────────────────────────────────────
   const protagonist = gBefore.protagonist;
+  const role        = (protagonist.position as PitcherRole) ?? "SP";
   const myTeamId = outcome.protagonistTeamId;
 
   const teamResult = buildTeamMatchResult(
@@ -142,14 +146,14 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
   const won = !isDraw && teamResult.winnerId === myTeamId;
 
   const didEnter = outcome.protagonistEntered !== false;
-  const runsAllowed = outcome.homeTeamId === myTeamId ? outcome.awayScore : outcome.homeScore;
+  const er = Math.round(Math.max(0, outcome.hitsAllowed) * 0.35);
   const safeOuts = (typeof outcome.outsRecorded === "number" && !isNaN(outcome.outsRecorded)) ? outcome.outsRecorded : 0;
   const inningsPitched = Number((Math.max(0, safeOuts) / 3).toFixed(1));
   const pitcherLine: PitcherGameLine | null = didEnter ? {
     role: "pitcher",
     playerId: protagonist.id,
     ip: inningsPitched,
-    er: runsAllowed,
+    er,
     h: Math.max(0, outcome.hitsAllowed),
     k: Math.max(0, outcome.strikeouts),
     bb: Math.max(0, outcome.walksAllowed),
@@ -203,19 +207,27 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
     save: gotSave,
     won,
   });
-  gameStore.addMessage({
-    id: `msg-game-w${outcome.week}-${Date.now()}`,
-    category: "system",
-    sender: "Game System",
-    subject: `W${outcome.week} game result`,
-    preview: `${outcome.awayScore}:${outcome.homeScore} ${won ? "win" : isDraw ? "draw" : "loss"} / ${outcome.strikeouts}K / ${outcome.hitsAllowed}H / ${outcome.walksAllowed}BB`,
-    body:
-      outcome.summary ||
-      `W${outcome.week} ${awayTeamName} ${outcome.awayScore}:${outcome.homeScore} ${homeTeamName}\n` +
-        `Line: ${outcome.strikeouts}K / ${outcome.hitsAllowed}H / ${outcome.walksAllowed}BB / ${outcome.errors}E`,
-    createdAt: `W${outcome.week}`,
-    readAt: null,
-  });
+  if (didEnter) {
+    const scheduleEntry = sBefore.schedule.find((e) => e.id === outcome.scheduleId);
+    if (scheduleEntry) {
+      const officialMsg = buildOfficialResultMessage(
+        scheduleEntry,
+        outcome.homeScore,
+        outcome.awayScore,
+        inningsPitched,
+        er,
+        Math.max(0, outcome.strikeouts),
+        Math.max(0, outcome.walksAllowed),
+        Math.max(0, outcome.hitsAllowed),
+        outcome.pitchCount > 0 ? outcome.pitchCount : 0,
+        won,
+        isDraw,
+        teamById,
+        role,
+      );
+      gameStore.addMessage(officialMsg);
+    }
+  }
 
   const gAfter = get(gameStore);
   const sAfter = get(seasonStore);

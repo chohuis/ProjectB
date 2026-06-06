@@ -27,7 +27,7 @@
     "predeploy": "npm run build",
     "preview:ui": "vite preview --config vite.config.ts",
     "start": "electron apps/desktop/main.cjs",
-    "pack": "npm run build && electron-builder --dir",
+    "pack": "npm run build && cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --dir",
     "check:i18n:keys": "node scripts/check-i18n-keys.mjs",
     "check:mojibake": "node scripts/check-mojibake.mjs",
     "check:encoding": "npm run check:mojibake",

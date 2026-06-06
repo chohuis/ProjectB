@@ -325,6 +325,7 @@
   interface GameResult {
     awayScore: number; homeScore: number;
     pitchCount: number; strikeouts: number; errors: number;
+    hitsAllowed: number; walksAllowed: number; outsRecorded: number; runsAllowed: number;
     won: boolean; summary: string;
     protagonistEntered?: boolean;
     batterLines?: import('../../shared/types/season').BatterGameLine[];
@@ -332,7 +333,7 @@
     midGameInjury?: { injuryType: string; severity: string };
   }
   let isGameOver = false;
-  let gameResult: GameResult = { awayScore: 0, homeScore: 0, pitchCount: 0, strikeouts: 0, errors: 0, won: false, summary: '' };
+  let gameResult: GameResult = { awayScore: 0, homeScore: 0, pitchCount: 0, strikeouts: 0, errors: 0, hitsAllowed: 0, walksAllowed: 0, outsRecorded: 0, runsAllowed: 0, won: false, summary: '' };
   let midGameInjuryAlert: { injuryType: string; severity: string } | null = null;
 
   // 엔진 0~100 좌표와 SVG 수비 좌표 매핑용 lookup
@@ -1325,11 +1326,16 @@
     const homeScore = scoreRows[1].r;
     const won = protagonistSide === "home" ? homeScore > awayScore : awayScore > homeScore;
 
+    const runsAllowed = Math.round(totalHitsAllowed * 0.35);
     gameResult = {
       awayScore, homeScore,
       pitchCount: engineAvailable ? snapshotPitchCountSinceEntry : localEngineState.pitchCount,
       strikeouts: totalStrikeouts,
       errors: matchDefenseStat.errors,
+      hitsAllowed: totalHitsAllowed,
+      walksAllowed: totalWalksAllowed,
+      outsRecorded: totalOutsRecorded,
+      runsAllowed,
       won, summary, protagonistEntered, batterLines, playerLines,
       midGameInjury: injuryInfo ? { injuryType: injuryInfo.injuryType, severity: injuryInfo.severity } : undefined,
     };
@@ -1758,8 +1764,12 @@
           </ul>
         {:else}
           <ul class="gameover-stats">
+            <li><span>이닝</span><strong>{(Math.max(0, gameResult.outsRecorded) / 3).toFixed(1)} IP</strong></li>
             <li><span>투구 수</span><strong>{gameResult.pitchCount}</strong></li>
             <li><span>탈삼진</span><strong>{gameResult.strikeouts} K</strong></li>
+            <li><span>피안타</span><strong>{gameResult.hitsAllowed} H</strong></li>
+            <li><span>볼넷</span><strong>{gameResult.walksAllowed} BB</strong></li>
+            <li><span>자책(추정)</span><strong>{gameResult.runsAllowed} ER</strong></li>
             <li><span>실책</span><strong>{gameResult.errors} E</strong></li>
           </ul>
         {/if}
