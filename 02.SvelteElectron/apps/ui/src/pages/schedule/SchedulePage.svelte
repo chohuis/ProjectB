@@ -19,6 +19,7 @@
       result?: { won: boolean; score: string } | null;
       programs?: string[];
       body?: string;
+      friendly?: boolean;
     };
   };
 
@@ -182,23 +183,24 @@
   $: trainingTitleStr = trainingPrograms.length > 0 ? trainingPrograms.join(" · ") : "주간 훈련";
 
   // ── 스케줄 항목 생성 ─────────────────────────────────────────
-  // 1. 경기 항목
-  $: gameItems = seasonEntries.map((entry): ScheduleItem => {
-    const date = entry.gameDate ?? weekToDateKey(entry.week, seasonYear, 5);
+  // 1. 경기 항목 (주인공 경기만)
+  $: gameItems = seasonEntries.filter(e => e.isProtagonistGame).map((entry): ScheduleItem => {
+    const date = entry.gameDate ?? weekToDateKey(entry.week, seasonYear, entry.isFriendly ? 2 : 5);
     const isHome = entry.homeTeamId === protagonistTeamId;
     const opponent = teamLabel(isHome ? entry.awayTeamId : entry.homeTeamId);
     const status: ScheduleItem["status"] = entry.result
       ? "done"
       : entry.week >= currentWeek ? "important" : "planned";
-    const prefix = psLabel(entry.id);
+    const prefix = entry.isFriendly ? "[친선]" : psLabel(entry.id);
     const result = entry.result
       ? { won: entry.result.winnerId === protagonistTeamId, score: `${entry.result.homeScore}:${entry.result.awayScore}` }
       : null;
     return {
       id: entry.id, date, type: "game",
       title: `${prefix ? prefix + " " : ""}W${entry.week} vs ${opponent}`,
-      time: "13:00", location: isHome ? "홈" : "원정", status,
-      meta: { result },
+      time: entry.isFriendly ? "10:00" : "13:00",
+      location: isHome ? "홈" : "원정", status,
+      meta: { result, friendly: entry.isFriendly === true },
     };
   });
 
@@ -295,8 +297,25 @@
   function formatDate(date: Date): string { return `${date.getMonth() + 1}/${date.getDate()}`; }
 
   // ── 시즌 뷰 ──────────────────────────────────────────────────
-  $: gameByWeek = new Map(seasonEntries.filter(e => e.isProtagonistGame).map(e => [e.week, e]));
+  type WeekGames = { official: (typeof seasonEntries)[0] | null; friendly: (typeof seasonEntries)[0] | null };
+  $: gamesByWeek = (() => {
+    const m = new Map<number, WeekGames>();
+    for (const e of seasonEntries) {
+      if (!e.isProtagonistGame) continue;
+      const cur = m.get(e.week) ?? { official: null, friendly: null };
+      if (e.isFriendly) cur.friendly = e; else cur.official = e;
+      m.set(e.week, cur);
+    }
+    return m;
+  })();
   $: sortedStandings = [...$seasonStore.standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
+
+  // A/B조 분리
+  $: isHighschool = $gameStore.protagonist.careerStage === "highschool";
+  $: groupA = $seasonStore.hsGroupA ?? [];
+  $: groupB = $seasonStore.hsGroupB ?? [];
+  $: standingsA = sortedStandings.filter(s => groupA.includes(s.teamId));
+  $: standingsB = sortedStandings.filter(s => groupB.includes(s.teamId));
 
   // 주간 뷰 표시 상한 (이 수 초과 시 "+N 더" 표시)
   const WEEK_ITEM_LIMIT = 4;
@@ -344,69 +363,126 @@
           {#if $seasonStore.totalWeeks === 0}
             <p class="no-season">시즌 일정이 설정되지 않았습니다.</p>
           {:else}
-            <div class="season-layout">
+            <div class="season-layout" class:two-group={isHighschool && standingsA.length > 0 && standingsB.length > 0}>
               <div class="week-timeline" use:dragScroll>
                 {#each allWeeks as week}
-                  {@const phase = weekPhase(week)}
-                  {@const game  = gameByWeek.get(week) ?? null}
-                  {@const isCurrent = week === currentWeek}
-                  {@const isPast    = week < currentWeek}
-                  {@const isPostgame = game ? psLabel(game.id) !== "" : false}
+                  {@const phase    = weekPhase(week)}
+                  {@const wg       = gamesByWeek.get(week) ?? { official: null, friendly: null }}
+                  {@const official = wg.official}
+                  {@const friendly = wg.friendly}
+                  {@const isCurrent   = week === currentWeek}
+                  {@const isPast      = week < currentWeek}
+                  {@const isPostgame  = official ? psLabel(official.id) !== "" : false}
                   <div class="week-row"
                     class:current={isCurrent}
                     class:past={isPast}
                     class:postseason-game={isPostgame}
+                    class:has-friendly={!!friendly}
                     on:click={() => { view = "week"; cursor = new Date(seasonYear, 2, 1); cursor.setDate(cursor.getDate() + (week - 1) * 7); }}
                   >
-                    <span class="week-num">W{week}</span>
-                    <span class="phase-tag"
-                      class:pre={phase === "preseason"}  class:reg={phase === "season"}
-                      class:post={phase === "postseason"} class:off={phase === "offseason"}>
-                      {PHASE_LABEL[phase]}
-                    </span>
-                    {#if game}
-                      {@const isHome = game.homeTeamId === protagonistTeamId}
-                      {@const opp    = teamLabel(isHome ? game.awayTeamId : game.homeTeamId)}
-                      {@const done   = !!game.result}
-                      {@const psl    = psLabel(game.id)}
-                      <span class="game-loc">{isHome ? "홈" : "원정"}</span>
-                      <span class="opponent">{psl ? psl + " " : ""}vs {opp}</span>
-                      <span class="status"
-                        class:win ={done && game.result?.winnerId === protagonistTeamId}
-                        class:lose={done && game.result?.winnerId !== protagonistTeamId}>
-                        {gameStatusLabel(game)}
+                    <!-- 주차 + 페이즈 (항상 표시) -->
+                    <div class="week-left">
+                      <span class="week-num">W{week}</span>
+                      <span class="phase-tag"
+                        class:pre={phase === "preseason"}  class:reg={phase === "season"}
+                        class:post={phase === "postseason"} class:off={phase === "offseason"}>
+                        {PHASE_LABEL[phase]}
                       </span>
-                    {:else}
-                      <span class="no-game">{PHASE_TRAIN_LABEL[phase] ?? "–"}</span>
-                      <span></span><span></span>
-                    {/if}
+                    </div>
+
+                    <!-- 경기 정보 영역 -->
+                    <div class="week-games">
+                      {#if official}
+                        {@const isHome = official.homeTeamId === protagonistTeamId}
+                        {@const opp    = teamLabel(isHome ? official.awayTeamId : official.homeTeamId)}
+                        {@const done   = !!official.result}
+                        {@const psl    = psLabel(official.id)}
+                        <div class="game-row official">
+                          <span class="game-loc">{isHome ? "홈" : "원정"}</span>
+                          <span class="opponent">{psl ? psl + " " : ""}vs {opp}</span>
+                          <span class="status"
+                            class:win ={done && official.result?.winnerId === protagonistTeamId}
+                            class:lose={done && official.result?.winnerId !== protagonistTeamId}>
+                            {gameStatusLabel(official)}
+                          </span>
+                        </div>
+                      {:else if !friendly}
+                        <div class="game-row">
+                          <span class="no-game">{PHASE_TRAIN_LABEL[phase] ?? "–"}</span>
+                        </div>
+                      {/if}
+
+                      {#if friendly}
+                        {@const isHome = friendly.homeTeamId === protagonistTeamId}
+                        {@const opp    = teamLabel(isHome ? friendly.awayTeamId : friendly.homeTeamId)}
+                        {@const done   = !!friendly.result}
+                        <div class="game-row friendly">
+                          <span class="friendly-tag">친선</span>
+                          <span class="game-loc">{isHome ? "홈" : "원정"}</span>
+                          <span class="opponent">vs {opp}</span>
+                          <span class="status"
+                            class:win ={done && friendly.result?.winnerId === protagonistTeamId}
+                            class:lose={done && friendly.result?.winnerId !== protagonistTeamId}>
+                            {gameStatusLabel(friendly)}
+                          </span>
+                        </div>
+                      {/if}
+                    </div>
                   </div>
                 {/each}
               </div>
 
-              <div class="standings-panel">
-                <h4>팀 순위</h4>
-                {#if sortedStandings.length === 0}
-                  <p class="no-standings">순위 데이터 없음</p>
+              <div class="standings-panel" class:two-group={isHighschool && standingsA.length > 0 && standingsB.length > 0}>
+                {#if isHighschool && standingsA.length > 0 && standingsB.length > 0}
+                  <!-- A/B조 분리 표시 -->
+                  {#each [{ label: "A조", rows: standingsA, isMine: groupA.includes(protagonistTeamId) }, { label: "B조", rows: standingsB, isMine: groupB.includes(protagonistTeamId) }] as grp}
+                    <div class="group-block">
+                      <p class="group-label" class:my-group={grp.isMine}>{grp.label}{grp.isMine ? " ★" : ""}</p>
+                      <div class="standings-scroll">
+                        <table class="standings-table">
+                          <thead>
+                            <tr><th>#</th><th>팀</th><th>승</th><th>패</th><th>승률</th></tr>
+                          </thead>
+                          <tbody>
+                            {#each grp.rows as s, i}
+                              <tr class:my-team={s.teamId === protagonistTeamId}>
+                                <td>{i + 1}</td>
+                                <td class="team-name">{teamLabel(s.teamId)}</td>
+                                <td>{s.wins}</td>
+                                <td>{s.losses}</td>
+                                <td>{s.winPct.toFixed(2)}</td>
+                              </tr>
+                            {/each}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  {/each}
                 {:else}
-                  <div class="standings-scroll">
-                    <table class="standings-table">
-                      <thead>
-                        <tr><th>#</th><th>팀</th><th>승</th><th>패</th><th>승률</th></tr>
-                      </thead>
-                      <tbody>
-                        {#each sortedStandings as s, i}
-                          <tr class:my-team={s.teamId === protagonistTeamId}>
-                            <td>{i + 1}</td>
-                            <td class="team-name">{teamLabel(s.teamId)}</td>
-                            <td>{s.wins}</td>
-                            <td>{s.losses}</td>
-                            <td>{s.winPct.toFixed(2)}</td>
-                          </tr>
-                        {/each}
-                      </tbody>
-                    </table>
-                  </div>
+                  <!-- 단일 순위표 (비고교) -->
+                  <h4>팀 순위</h4>
+                  {#if sortedStandings.length === 0}
+                    <p class="no-standings">순위 데이터 없음</p>
+                  {:else}
+                    <div class="standings-scroll">
+                      <table class="standings-table">
+                        <thead>
+                          <tr><th>#</th><th>팀</th><th>승</th><th>패</th><th>승률</th></tr>
+                        </thead>
+                        <tbody>
+                          {#each sortedStandings as s, i}
+                            <tr class:my-team={s.teamId === protagonistTeamId}>
+                              <td>{i + 1}</td>
+                              <td class="team-name">{teamLabel(s.teamId)}</td>
+                              <td>{s.wins}</td>
+                              <td>{s.losses}</td>
+                              <td>{s.winPct.toFixed(2)}</td>
+                            </tr>
+                          {/each}
+                        </tbody>
+                      </table>
+                    </div>
+                  {/if}
                 {/if}
               </div>
             </div>
@@ -449,7 +525,7 @@
                 <span class="day-num">{cell.date.getDate()}</span>
                 <div class="day-items">
                   {#each dayItems.slice(0, 2) as item}
-                    <p class={item.type}>{item.title}</p>
+                    <p class="{item.type}{item.meta?.friendly ? ' friendly' : ''}">{item.title}</p>
                   {/each}
                   {#if dayItems.length > 2}
                     <p class="more">+{dayItems.length - 2}</p>
@@ -477,7 +553,7 @@
                   <li class="empty">없음</li>
                 {:else}
                   {#each dayItems.slice(0, WEEK_ITEM_LIMIT) as item}
-                    <li class={item.type}>
+                    <li class="{item.type}{item.meta?.friendly ? ' friendly' : ''}">
                       <p>{item.title}</p>
                     </li>
                   {/each}
@@ -504,7 +580,9 @@
         {:else}
           {#each selectedItems as item}
             <li class="detail-item">
-              <span class={`tag ${item.type}`}>{typeLabel[item.type]}</span>
+              <span class={`tag ${item.type}${item.meta?.friendly ? ' friendly' : ''}`}>
+                {item.type === "game" ? (item.meta?.friendly ? "친선" : "공식") : typeLabel[item.type]}
+              </span>
               <div class="detail-body">
                 <strong>{item.title}</strong>
                 {#if item.type === "game" && item.meta?.result}
@@ -694,11 +772,12 @@
     padding: 1px 3px;
     line-height: 1.4;
   }
-  .day-items .game     { background: #2f4d85; }
-  .day-items .training { background: #2b6672; }
-  .day-items .event    { background: #75603e; }
-  .day-items .rest     { background: #44506b; }
-  .day-items .more     { color: #8aa8cc; background: transparent; padding: 0; font-size: 9px; }
+  .day-items .game          { background: #2f4d85; }
+  .day-items .game.friendly { background: #1e5560; }
+  .day-items .training      { background: #2b6672; }
+  .day-items .event         { background: #75603e; }
+  .day-items .rest          { background: #44506b; }
+  .day-items .more          { color: #8aa8cc; background: transparent; padding: 0; font-size: 9px; }
 
   /* ── 주간 뷰 ── */
   .week-list {
@@ -753,11 +832,12 @@
     flex-shrink: 0;
   }
   .week-day li p { margin: 0; color: #e4edff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .week-day li.game     { border-color: #4f78be; background: #264277; }
-  .week-day li.training { border-color: #3e8b93; background: #1f525c; }
-  .week-day li.event    { border-color: #9b7a48; background: #5e4a30; }
-  .week-day li.rest     { border-color: #606d87; background: #3b4559; }
-  .week-day li.empty    { color: #5a7aa8; font-size: 11px; border: none; background: none; }
+  .week-day li.game          { border-color: #4f78be; background: #264277; }
+  .week-day li.game.friendly { border-color: #3d8890; background: #1a4e58; }
+  .week-day li.training      { border-color: #3e8b93; background: #1f525c; }
+  .week-day li.event         { border-color: #9b7a48; background: #5e4a30; }
+  .week-day li.rest          { border-color: #606d87; background: #3b4559; }
+  .week-day li.empty         { color: #5a7aa8; font-size: 11px; border: none; background: none; }
   .overflow-badge {
     color: #7a9cc8;
     font-size: 10px;
@@ -783,6 +863,9 @@
     height: 100%;
     min-height: 0;
   }
+  .season-layout.two-group {
+    grid-template-columns: minmax(0, 1fr) 320px;
+  }
   .week-timeline {
     display: flex;
     flex-direction: column;
@@ -795,8 +878,8 @@
   .week-timeline:active { cursor: grabbing; }
   .week-row {
     display: grid;
-    grid-template-columns: 40px 86px 40px minmax(0, 1fr) 68px;
-    align-items: center;
+    grid-template-columns: 126px minmax(0, 1fr);
+    align-items: start;
     gap: 6px;
     border: 1px solid #2a4068;
     border-radius: 6px;
@@ -812,18 +895,49 @@
   .week-row.past     { opacity: 0.5; }
   .week-row.postseason-game { border-color: #c9960f; background: #2a1e08; }
   .week-row.postseason-game.current { border-color: #f5d050; background: #3a2a0a; }
-  .week-num { color: #9fb6db; font-weight: 600; font-size: 10px; }
+  /* 시즌 뷰 - 좌측 (주차 + 페이즈) */
+  .week-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-top: 2px;
+    flex-shrink: 0;
+  }
+  .week-num { color: #9fb6db; font-weight: 600; font-size: 10px; white-space: nowrap; }
   .phase-tag {
     font-size: 9px;
     border-radius: 999px;
     padding: 1px 6px;
     text-align: center;
     border: 1px solid;
+    white-space: nowrap;
   }
   .phase-tag.pre  { border-color: #5b7ac8; color: #b8d0f7; background: #1e3560; }
   .phase-tag.reg  { border-color: #4c8c5e; color: #a8e8c0; background: #163828; }
   .phase-tag.post { border-color: #8a6530; color: #ffd8a0; background: #3a2810; }
   .phase-tag.off  { border-color: #5c6880; color: #c0ccdf; background: #2a3245; }
+
+  /* 시즌 뷰 - 우측 (경기 행들) */
+  .week-games {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+  .game-row {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr) 64px;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+  }
+  .game-row.friendly {
+    grid-template-columns: 30px 40px minmax(0, 1fr) 64px;
+    padding: 2px 4px;
+    border-radius: 4px;
+    background: rgba(30, 80, 90, 0.35);
+    border: 1px solid #2a5860;
+  }
   .game-loc {
     font-size: 9px;
     border: 1px solid #3d5f96;
@@ -832,6 +946,20 @@
     text-align: center;
     color: #b8d0f7;
   }
+  .game-row.friendly .game-loc {
+    border-color: #3d7880;
+    color: #a0d8d8;
+  }
+  .friendly-tag {
+    font-size: 9px;
+    border: 1px solid #3d8890;
+    border-radius: 999px;
+    padding: 1px 5px;
+    text-align: center;
+    color: #80d8d8;
+    background: #163840;
+    white-space: nowrap;
+  }
   .opponent {
     color: #e4edff;
     font-weight: 500;
@@ -839,8 +967,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .no-game { color: #607898; grid-column: span 3; font-size: 10px; }
-  .status { text-align: right; font-size: 11px; color: #a8bfdf; }
+  .game-row.friendly .opponent { color: #b0d8d8; font-weight: 400; }
+  .no-game { color: #607898; font-size: 10px; }
+  .status { text-align: right; font-size: 11px; color: #a8bfdf; white-space: nowrap; }
   .status.win  { color: #68de92; font-weight: 700; }
   .status.lose { color: #ff8a8a; font-weight: 700; }
 
@@ -856,6 +985,27 @@
     min-height: 0;
     overflow: hidden;
   }
+  .standings-panel.two-group {
+    grid-template-rows: unset;
+    grid-template-columns: 1fr 1fr;
+    align-content: start;
+    overflow-y: auto;
+  }
+  .group-block {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 4px;
+    min-height: 0;
+  }
+  .group-label {
+    margin: 0;
+    font-size: 10px;
+    font-weight: 700;
+    color: #506888;
+    letter-spacing: 0.5px;
+    padding: 0 2px;
+  }
+  .group-label.my-group { color: #80b0e0; }
   .standings-panel h4 { margin: 0; font-size: 12px; color: #c8d8f0; }
   .no-standings { color: #607898; font-size: 11px; }
   .standings-scroll { overflow-y: auto; height: 100%; }
@@ -934,10 +1084,11 @@
     font-size: 10px;
     border: 1px solid;
   }
-  .tag.game     { border-color: #628dd8; color: #cfe1ff; }
-  .tag.training { border-color: #5cb0ba; color: #d4f5fa; }
-  .tag.event    { border-color: #b9985f; color: #ffeccc; }
-  .tag.rest     { border-color: #8b98b4; color: #dde3f1; }
+  .tag.game          { border-color: #628dd8; color: #cfe1ff; }
+  .tag.game.friendly { border-color: #3d9090; color: #b0e8e8; }
+  .tag.training      { border-color: #5cb0ba; color: #d4f5fa; }
+  .tag.event         { border-color: #b9985f; color: #ffeccc; }
+  .tag.rest          { border-color: #8b98b4; color: #dde3f1; }
   .result-badge {
     display: inline-block;
     font-size: 11px;

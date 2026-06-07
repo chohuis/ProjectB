@@ -379,3 +379,107 @@ pub fn calc_draft_rank(params: CalcDraftRankParams) -> DraftRankResult {
         signing_bonus: calc_signing_bonus(round, scout),
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn assign_protagonist_role_cp() {
+        let r = assign_protagonist_role(AssignRoleParams {
+            position: Some("CP".into()),
+            ovr: 70.0,
+            team_sp_ovrs: vec![],
+        });
+        assert_eq!(r.role, "마무리");
+    }
+
+    #[test]
+    fn assign_protagonist_role_rp_tiers() {
+        let cases = [(78.0, "셋업맨"), (65.0, "중간계투"), (55.0, "롱릴리프"), (40.0, "패전처리")];
+        for (ovr, expected) in cases {
+            let r = assign_protagonist_role(AssignRoleParams {
+                position: Some("RP".into()),
+                ovr,
+                team_sp_ovrs: vec![],
+            });
+            assert_eq!(r.role, expected, "ovr={ovr}");
+        }
+    }
+
+    #[test]
+    fn assign_protagonist_role_sp_rank1() {
+        // 아무도 나보다 위 없음 → rank=1
+        let r = assign_protagonist_role(AssignRoleParams {
+            position: None,
+            ovr: 80.0,
+            team_sp_ovrs: vec![70.0, 65.0, 60.0],
+        });
+        assert_eq!(r.role, "1선발");
+    }
+
+    #[test]
+    fn assign_protagonist_role_swingman() {
+        // rank=6, ovr>=60 → 스윙맨
+        let r = assign_protagonist_role(AssignRoleParams {
+            position: None,
+            ovr: 62.0,
+            team_sp_ovrs: vec![90.0, 85.0, 80.0, 75.0, 70.0],
+        });
+        assert_eq!(r.role, "스윙맨");
+    }
+
+    #[test]
+    fn assign_highschool_position_sp_when_top3() {
+        // 2명만 위 → SP
+        let r = assign_highschool_position(AssignHighschoolPositionParams {
+            my_ovr: 60.0,
+            team_pitcher_ovrs: vec![80.0, 70.0, 50.0],
+        });
+        assert_eq!(r.position, "SP");
+    }
+
+    #[test]
+    fn assign_highschool_position_rp_when_crowded() {
+        // 3명 위 → RP
+        let r = assign_highschool_position(AssignHighschoolPositionParams {
+            my_ovr: 60.0,
+            team_pitcher_ovrs: vec![80.0, 70.0, 65.0],
+        });
+        assert_eq!(r.position, "RP");
+    }
+
+    #[test]
+    fn calc_market_salary_base() {
+        // ovr=50, fame=0 → 1800
+        let p = CalcMarketSalaryParams { ovr: 50.0, fame: 0.0, league_id: "KBL".to_string() };
+        assert_eq!(calc_market_salary(p), 1800);
+    }
+
+    #[test]
+    fn calc_market_salary_high_ovr() {
+        // 1800 + (80-50)*220 = 8400
+        let p = CalcMarketSalaryParams { ovr: 80.0, fame: 0.0, league_id: "KBL".to_string() };
+        assert_eq!(calc_market_salary(p), 8400);
+    }
+
+    #[test]
+    fn calc_market_salary_abl_multiplier() {
+        // 1800 * 3.5 = 6300
+        let p = CalcMarketSalaryParams { ovr: 50.0, fame: 0.0, league_id: "LEAGUE_ABL".to_string() };
+        assert_eq!(calc_market_salary(p), 6300);
+    }
+
+    #[test]
+    fn calc_offered_salary_floor() {
+        // 낮은 값 → 1500 floor
+        let p = CalcOfferedSalaryParams { current_salary: 100.0, rating: 50.0, market_salary: 100.0 };
+        assert_eq!(calc_offered_salary(p), 1500);
+    }
+
+    #[test]
+    fn calc_season_rating_no_stats() {
+        let p = CalcSeasonRatingParams { stats: None };
+        assert_eq!(calc_season_rating(p), 50);
+    }
+}

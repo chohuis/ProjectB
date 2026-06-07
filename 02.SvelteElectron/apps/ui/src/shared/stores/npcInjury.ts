@@ -1,0 +1,21 @@
+import type { NpcInjuryEntry } from "../types/save";
+import type { SeasonStoreState } from "./season";
+
+export function setNpcInjury(s: SeasonStoreState, playerId: string, entry: NpcInjuryEntry): SeasonStoreState {
+  return { ...s, npcInjuries: { ...s.npcInjuries, [playerId]: entry } };
+}
+
+export function clearNpcInjury(s: SeasonStoreState, playerId: string): SeasonStoreState {
+  const next = { ...s.npcInjuries };
+  delete next[playerId];
+  return { ...s, npcInjuries: next };
+}
+
+export function tickNpcInjuries(s: SeasonStoreState): SeasonStoreState {
+  const next: Record<string, NpcInjuryEntry> = {};
+  for (const [pid, entry] of Object.entries(s.npcInjuries)) {
+    const weeksLeft = entry.weeksLeft - 1;
+    if (weeksLeft > 0) next[pid] = { ...entry, weeksLeft };
+  }
+  return { ...s, npcInjuries: next };
+}

@@ -1330,168 +1330,152 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     }
   }
 
-  // ── 메인 루프: NPC 경기 자동 처리 → 주인공 경기에서 정지 ───────
-  while (true) {
+  // ── 1주 진행: 정확히 currentWeek+1 처리 후 반환 ─────────────
+  {
     const s = get(seasonStore);
-    const g = get(gameStore);
 
-    // 기존 pending actions 있으면 즉시 반환
     if (s.pendingActions.length > 0) {
       gameStore.save(); seasonStore.save();
       return { processedWeek: s.currentWeek, logs: accLogs, newMessages: [], matchResults: accResults, stoppedBy: s.pendingActions[0] };
     }
 
-    // 다음 미처리 경기 탐색
-    const nextGame = nextUnresolvedGame(s.schedule);
-
-    // 시즌 종료 판정: 더 이상 경기가 없거나 totalWeeks 초과
-    if (!nextGame || s.currentWeek >= s.totalWeeks) {
-      // totalWeeks에 아직 도달하지 않았고 경기도 없으면 주차 전진
-      if (!nextGame && s.currentWeek < s.totalWeeks) {
-        const nextWeekNum = s.currentWeek + 1;
-        seasonStore.advanceWeek();
-        seasonStore.setCurrentDate(toGameDate(s.seasonYear, nextWeekNum, 0));
-        const weekLogs = await processWeekBoundary(nextWeekNum);
-        accLogs.push(...weekLogs);
-        gameStore.save(); seasonStore.save();
-        const pending = get(seasonStore).pendingActions;
-        if (pending.length > 0) {
-          return { processedWeek: nextWeekNum, logs: accLogs, newMessages: [], matchResults: accResults, stoppedBy: pending[0] };
-        }
-        continue;
-      }
+    if (s.currentWeek >= s.totalWeeks) {
       const result = await handleSeasonEnd();
       gameStore.save(); seasonStore.save();
       return { ...result, logs: [...accLogs, ...result.logs], matchResults: [...accResults, ...result.matchResults] };
     }
 
-    // 주 경계 처리: nextGame.week까지 필요한 주차를 모두 전진
-    let currentWeekNum = s.currentWeek;
-    while (currentWeekNum < nextGame.week) {
-      const nextWeekNum = currentWeekNum + 1;
-      seasonStore.advanceWeek();
-      seasonStore.setCurrentDate(toGameDate(s.seasonYear, nextWeekNum, 0));
+    const nextWeekNum = s.currentWeek + 1;
+    seasonStore.advanceWeek();
+    seasonStore.setCurrentDate(toGameDate(s.seasonYear, nextWeekNum, 0));
 
-      // 전역 회복 / 이적 적응 처리
-      {
-        const gInner = get(gameStore);
-        if ((gInner.protagonist.militaryRecoveryWeeks ?? 0) > 0) {
-          gameStore.advanceMilitaryRecoveryWeek();
-          gameStore.applyWeekResult(
-            { condition: Math.min(100, gInner.protagonist.condition + 2), fatigue: Math.max(0, gInner.protagonist.fatigue - 3) },
-            ["전역 후 재활 진행"], [], nextWeekNum, s.seasonYear,
-          );
-        }
-        if ((gInner.protagonist.tradeAdaptationWeeks ?? 0) > 0) {
-          gameStore.advanceTradeAdaptationWeek();
-          gameStore.applyWeekResult(
-            { condition: Math.max(0, gInner.protagonist.condition - 2), morale: Math.max(0, gInner.protagonist.morale - 2) },
-            ["이적 적응 기간: 컨디션/사기 패널티 적용"], [], nextWeekNum, s.seasonYear,
-          );
-        }
-      }
-
-      const weekLogs = await processWeekBoundary(nextWeekNum);
-      accLogs.push(...weekLogs);
-      currentWeekNum = nextWeekNum;
-
-      const sAfterWeek = get(seasonStore);
-      if (sAfterWeek.pendingActions.length > 0) {
-        gameStore.save(); seasonStore.save();
-        return { processedWeek: currentWeekNum, logs: accLogs, newMessages: [], matchResults: accResults, stoppedBy: sAfterWeek.pendingActions[0] };
-      }
-    }
-
-    // 현재 날짜를 경기 날짜로 업데이트
-    seasonStore.setCurrentDate(nextGame.gameDate);
-
-    // 포스트시즌 주입 (리그별 분기)
-    if (g.protagonist.careerStage === "highschool") {
-      await injectHsPostseason(nextGame.week);
-    } else {
-      await injectLeaguePostseason(nextGame.week);
-    }
-
-    // injectLeaguePostseason이 새 경기를 주입했을 수 있으므로 re-fetch
+    // 전역 회복 / 이적 적응 처리
     {
-      const sAfterInject = get(seasonStore);
-      const injectedGame = sAfterInject.schedule.find(
-        (e) => !e.result && e.phase === "postseason" && e.gameDate >= nextGame.gameDate,
-      );
-      // 방금 주입된 경기가 아직 결과 없는 nextGame 바로 뒤라면 루프 계속
-      if (injectedGame && injectedGame.id !== nextGame.id && nextGame.result) continue;
+      const gInner = get(gameStore);
+      if ((gInner.protagonist.militaryRecoveryWeeks ?? 0) > 0) {
+        gameStore.advanceMilitaryRecoveryWeek();
+        gameStore.applyWeekResult(
+          { condition: Math.min(100, gInner.protagonist.condition + 2), fatigue: Math.max(0, gInner.protagonist.fatigue - 3) },
+          ["전역 후 재활 진행"], [], nextWeekNum, s.seasonYear,
+        );
+      }
+      if ((gInner.protagonist.tradeAdaptationWeeks ?? 0) > 0) {
+        gameStore.advanceTradeAdaptationWeek();
+        gameStore.applyWeekResult(
+          { condition: Math.max(0, gInner.protagonist.condition - 2), morale: Math.max(0, gInner.protagonist.morale - 2) },
+          ["이적 적응 기간: 컨디션/사기 패널티 적용"], [], nextWeekNum, s.seasonYear,
+        );
+      }
     }
 
-    // 불펜 등판 판정: 주인공 팀 NPC 경기에서 불펜 역할이면 확률적으로 등판
-    const currentRole = g.protagonist.currentRole;
-    const isTeamGame =
-      nextGame.homeTeamId === g.protagonist.teamId ||
-      nextGame.awayTeamId === g.protagonist.teamId;
-    const relieverPitching =
-      !nextGame.isProtagonistGame &&
-      isTeamGame &&
-      g.protagonist.playerType === "pitcher" &&
-      !!currentRole &&
-      isReliefsRole(currentRole) &&
-      await relieverWouldPitch(currentRole);
+    const weekLogs = await processWeekBoundary(nextWeekNum);
+    accLogs.push(...weekLogs);
 
-    // 경기 처리
-    if (nextGame.isProtagonistGame || relieverPitching) {
-      const eligibilityBlocked = g.schoolState.eligibilityBlocked;
-      if (eligibilityBlocked) {
-        gameStore.clearEligibilityBlock();
-        const result = await simulateNpcGame(nextGame.homeTeamId, nextGame.awayTeamId);
-        seasonStore.applyMatchResult(nextGame.id, result, g.protagonist.leagueId);
-        await applyPostseasonResult(nextGame.id, result);
-        accResults.push(result);
-        accLogs.push("학사 경고로 인해 경기 출전 불가");
-      } else {
-        const action: PendingAction = { type: "game", scheduleId: nextGame.id };
-        seasonStore.pushPendingAction(action);
-        gameStore.save(); seasonStore.save();
-        return { processedWeek: get(seasonStore).currentWeek, logs: accLogs, newMessages: [], matchResults: accResults, stoppedBy: action };
-      }
+    const sAfterBoundary = get(seasonStore);
+    if (sAfterBoundary.pendingActions.length > 0) {
+      gameStore.save(); seasonStore.save();
+      return { processedWeek: nextWeekNum, logs: accLogs, newMessages: [], matchResults: accResults, stoppedBy: sAfterBoundary.pendingActions[0] };
+    }
+
+    // 포스트시즌 주입
+    const gForPS = get(gameStore);
+    if (gForPS.protagonist.careerStage === "highschool") {
+      await injectHsPostseason(nextWeekNum);
     } else {
-      // NPC 경기 자동 처리 — simulateGame 우선 (playerLines·로테이션·컨디션 확보)
-      let entities = get(masterStore).entities;
-      if (entities.length === 0) {
-        await masterStore.loadEntities("");
-        entities = get(masterStore).entities;
-      }
-
-      const leagueId    = g.protagonist.leagueId;
-      const lStateSnap  = get(seasonStore).leagueState[leagueId];
-      const homeRotIdx  = lStateSnap?.teamRotationIndex?.[nextGame.homeTeamId] ?? 0;
-      const awayRotIdx  = lStateSnap?.teamRotationIndex?.[nextGame.awayTeamId] ?? 0;
-      const conditions  = lStateSnap?.playerConditions ?? {};
-
-      let npcResult: MatchResult;
-      let nextHomeRotIdx = homeRotIdx;
-      let nextAwayRotIdx = awayRotIdx;
-      let pitcherConds: Record<string, PlayerCondition> = {};
-
-      if (entities.length > 0) {
-        const sim = await simulateGame(nextGame.homeTeamId, nextGame.awayTeamId, entities, {
-          conditions, homeRotIdx, awayRotIdx, week: nextGame.week,
-          npcInjuries: get(seasonStore).npcInjuries,
-          rotationSize: rotationSizeForStage(g.protagonist.careerStage),
-        });
-        npcResult      = sim.result;
-        nextHomeRotIdx = sim.nextHomeRotIdx;
-        nextAwayRotIdx = sim.nextAwayRotIdx;
-        pitcherConds   = sim.pitcherConditions;
-      } else {
-        npcResult = await simulateNpcGame(nextGame.homeTeamId, nextGame.awayTeamId);
-      }
-
-      seasonStore.applyProtagonistGroupNpcResult(
-        nextGame.id, npcResult, leagueId,
-        nextGame.homeTeamId, nextGame.awayTeamId,
-        nextHomeRotIdx, nextAwayRotIdx, pitcherConds,
-      );
-      applyPostseasonResult(nextGame.id, npcResult);
-      accResults.push(npcResult);
-      accLogs.push(`${nextGame.homeTeamId} ${npcResult.homeScore}:${npcResult.awayScore} ${nextGame.awayTeamId}`);
+      await injectLeaguePostseason(nextWeekNum);
     }
+
+    // 이번 주 미결 경기를 gameDate 순으로 처리
+    const sForGames = get(seasonStore);
+    const thisWeekGames = sForGames.schedule
+      .filter((e) => e.week === nextWeekNum && !e.result)
+      .sort((a, b) => a.gameDate.localeCompare(b.gameDate));
+
+    for (const game of thisWeekGames) {
+      const sCurrent = get(seasonStore);
+      const freshGame = sCurrent.schedule.find((e) => e.id === game.id);
+      if (!freshGame || freshGame.result) continue;
+
+      const gCurrent = get(gameStore);
+      const currentRole = gCurrent.protagonist.currentRole;
+      const isTeamGame =
+        game.homeTeamId === gCurrent.protagonist.teamId ||
+        game.awayTeamId === gCurrent.protagonist.teamId;
+      const relieverPitching =
+        !game.isProtagonistGame &&
+        isTeamGame &&
+        gCurrent.protagonist.playerType === "pitcher" &&
+        !!currentRole &&
+        isReliefsRole(currentRole) &&
+        await relieverWouldPitch(currentRole);
+
+      if (game.isProtagonistGame || relieverPitching) {
+        const eligibilityBlocked = gCurrent.schoolState.eligibilityBlocked;
+        if (eligibilityBlocked) {
+          gameStore.clearEligibilityBlock();
+          const result = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
+          seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId);
+          await applyPostseasonResult(game.id, result);
+          accResults.push(result);
+          accLogs.push("학사 경고로 인해 경기 출전 불가");
+        } else {
+          seasonStore.setCurrentDate(game.gameDate);
+          const action: PendingAction = { type: "game", scheduleId: game.id };
+          seasonStore.pushPendingAction(action);
+          gameStore.save(); seasonStore.save();
+          return { processedWeek: nextWeekNum, logs: accLogs, newMessages: [], matchResults: accResults, stoppedBy: action };
+        }
+      } else {
+        let entities = get(masterStore).entities;
+        if (entities.length === 0) {
+          await masterStore.loadEntities("");
+          entities = get(masterStore).entities;
+        }
+
+        const leagueId   = gCurrent.protagonist.leagueId;
+        const lStateSnap = get(seasonStore).leagueState[leagueId];
+        const homeRotIdx = lStateSnap?.teamRotationIndex?.[game.homeTeamId] ?? 0;
+        const awayRotIdx = lStateSnap?.teamRotationIndex?.[game.awayTeamId] ?? 0;
+        const conditions = lStateSnap?.playerConditions ?? {};
+
+        let npcResult: MatchResult;
+        let nextHomeRotIdx = homeRotIdx;
+        let nextAwayRotIdx = awayRotIdx;
+        let pitcherConds: Record<string, PlayerCondition> = {};
+
+        if (entities.length > 0) {
+          const sim = await simulateGame(game.homeTeamId, game.awayTeamId, entities, {
+            conditions, homeRotIdx, awayRotIdx, week: game.week,
+            npcInjuries: get(seasonStore).npcInjuries,
+            rotationSize: rotationSizeForStage(gCurrent.protagonist.careerStage),
+          });
+          npcResult      = sim.result;
+          nextHomeRotIdx = sim.nextHomeRotIdx;
+          nextAwayRotIdx = sim.nextAwayRotIdx;
+          pitcherConds   = sim.pitcherConditions;
+        } else {
+          npcResult = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
+        }
+
+        seasonStore.applyProtagonistGroupNpcResult(
+          game.id, npcResult, leagueId,
+          game.homeTeamId, game.awayTeamId,
+          nextHomeRotIdx, nextAwayRotIdx, pitcherConds,
+        );
+        applyPostseasonResult(game.id, npcResult);
+        accResults.push(npcResult);
+        accLogs.push(`${game.homeTeamId} ${npcResult.homeScore}:${npcResult.awayScore} ${game.awayTeamId}`);
+      }
+    }
+
+    const sFinal = get(seasonStore);
+    if (sFinal.currentWeek >= sFinal.totalWeeks) {
+      const result = await handleSeasonEnd();
+      gameStore.save(); seasonStore.save();
+      return { ...result, logs: [...accLogs, ...result.logs], matchResults: [...accResults, ...result.matchResults] };
+    }
+
+    gameStore.save(); seasonStore.save();
+    return { processedWeek: nextWeekNum, logs: accLogs, newMessages: [], matchResults: accResults, stoppedBy: null };
   }
 }

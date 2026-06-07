@@ -693,3 +693,64 @@ pub fn calc_protagonist_aging(params: ProtagonistAgingParams) -> ProtagonistAgin
 
     ProtagonistAgingResult { pitching, batting, logs }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn age_train_factor_boundaries() {
+        assert_eq!(age_train_factor(20), 1.00);
+        assert_eq!(age_train_factor(29), 1.00);
+        assert_eq!(age_train_factor(30), 0.85);
+        assert_eq!(age_train_factor(32), 0.85);
+        assert_eq!(age_train_factor(33), 0.70);
+        assert_eq!(age_train_factor(35), 0.70);
+        assert_eq!(age_train_factor(36), 0.55);
+        assert_eq!(age_train_factor(38), 0.55);
+        assert_eq!(age_train_factor(39), 0.45);
+        assert_eq!(age_train_factor(45), 0.45);
+    }
+
+    #[test]
+    fn xp_threshold_is_linear() {
+        let eps = 1e-9_f64;
+        assert!((xp_threshold(0.0)   -  7.5).abs() < eps);
+        assert!((xp_threshold(50.0)  - 25.0).abs() < eps);
+        assert!((xp_threshold(100.0) - 42.5).abs() < eps);
+    }
+
+    #[test]
+    fn week_xp_normal_conditions() {
+        // condition=100, fatigue=0, dev=62, diligence=99
+        // fat_factor = (1.0 - 0/200).max(0.80) = 1.0
+        // dev_factor = 62/62 = 1.0
+        // diligence_factor = 0.6 + (99/99)*0.8 = 1.4
+        // result = 4.0 * 1.0 * 1.0 * 1.0 * 1.4 = 5.6
+        let xp = week_xp(4.0, 100.0, 0.0, 62.0, 99.0);
+        assert!((xp - 5.6).abs() < 0.001, "expected ~5.6, got {xp}");
+    }
+
+    #[test]
+    fn week_xp_high_fatigue_cut() {
+        // fatigue >= 85 → fat_factor = 0.35
+        // 4.0 * 1.0 * 0.35 * 1.0 * 1.4 = 1.96
+        let xp = week_xp(4.0, 100.0, 90.0, 62.0, 99.0);
+        assert!((xp - 1.96).abs() < 0.001, "expected ~1.96, got {xp}");
+    }
+
+    #[test]
+    fn week_xp_mid_fatigue_cut() {
+        // 70 <= fatigue < 85 → fat_factor = 0.65
+        // 4.0 * 1.0 * 0.65 * 1.0 * 1.4 = 3.64
+        let xp = week_xp(4.0, 100.0, 75.0, 62.0, 99.0);
+        assert!((xp - 3.64).abs() < 0.001, "expected ~3.64, got {xp}");
+    }
+
+    #[test]
+    fn clamp_works() {
+        assert_eq!(clamp(5.0, 0.0, 10.0), 5.0);
+        assert_eq!(clamp(-1.0, 0.0, 10.0), 0.0);
+        assert_eq!(clamp(15.0, 0.0, 10.0), 10.0);
+    }
+}

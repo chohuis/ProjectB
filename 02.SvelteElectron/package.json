@@ -35,6 +35,10 @@
     "deploy": "node scripts/deploy-staging.mjs",
     "migrate:entities": "node scripts/migrate-entities.mjs",
     "migrate:append:jbl": "node scripts/migrate-entities.mjs -- --append people_jbl.json",
+    "test": "vitest run --config vitest.config.ts",
+    "test:watch": "vitest --config vitest.config.ts",
+    "test:db": "electron scripts/db-perf.mjs",
+    "smoke": "node scripts/smoke-test.mjs",
     "audit": "npm audit --audit-level=high",
     "postinstall": "electron-rebuild -f -w better-sqlite3"
   },
@@ -85,6 +89,7 @@
     "electron": "^33.2.0",
     "electron-builder": "^25.1.8",
     "typescript": "^5.8.3",
-    "vite": "^6.2.2"
+    "vite": "^6.2.2",
+    "vitest": "^3.2.6"
   }
 }
