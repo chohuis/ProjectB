@@ -43,6 +43,8 @@
   import SeasonEndModal from "../../features/season-end/ui/SeasonEndModal.svelte";
   import InjuryTreatmentModal from "../../features/injury/ui/InjuryTreatmentModal.svelte";
   import PreGameBriefingModal from "../../features/pre-game-briefing/ui/PreGameBriefingModal.svelte";
+  import GameStatusModal from "../../features/game-status/ui/GameStatusModal.svelte";
+  import type { EntryInfo, NoEntryInfo } from "../../features/game-status/ui/GameStatusModal.svelte";
   import MatchPage from "../match/MatchPage.svelte";
   import type { InteractiveMatchContext, InteractiveMatchResult, UnifiedGameOutcome } from "../../shared/types/season";
   import { masterStore } from "../../shared/stores/master";
@@ -130,148 +132,74 @@
     ? $seasonStore.schedule.find((e) => e.id === pendingGame!.scheduleId) ?? null
     : null;
   $: isFriendlyGame = pendingGameEntry?.isFriendly === true;
-  // 친선경기 선택: null=선택 전, true=자동진행, false=직접플레이
-  let friendlyPlayChoice: boolean | null = null;
-  let friendlyAutoMode = false;  // 자동진행 모드 플래그
   type GameSimState = "idle" | "loading" | "no_entry" | "ready" | "error";
   let gameSimState: GameSimState = "idle";
   let gameSimErrorMsg = "";
-  let gameEntryInfo: { inning: number; half: string; homeScore: number; awayScore: number } | null = null;
-  let gameNoEntryInfo: { homeScore: number; awayScore: number; playerLines?: import('../../shared/types/season').PlayerGameLine[] } | null = null;
+  let gameEntryInfo:   EntryInfo   | null = null;
+  let gameNoEntryInfo: NoEntryInfo | null = null;
   let autoSimRunning = false;
 
-  // entry 시뮬 트리거 (일반 경기 또는 친선경기 직접플레이만)
+  // entry 시뮬 트리거 (공식·친선 모두 동일)
   $: if (pendingGameEntry && currentTab === "messages" && gameSimState === "idle") {
-    if (!isFriendlyGame || friendlyPlayChoice === false) {
-      startEntrySimulation();
-    }
-  }
-
-  // 친선경기 자동모드: 별도 결과 계산 (matchSimulateToEntry 우회)
-  $: if (friendlyAutoMode && gameSimState === "idle" && !autoSimRunning && pendingGameEntry) {
-    autoFinishFriendly();
+    startEntrySimulation();
   }
 
   $: if (!pendingGameEntry || currentTab !== "messages") {
-    gameSimState = "idle";
-    gameEntryInfo = null;
+    gameSimState    = "idle";
+    gameEntryInfo   = null;
     gameNoEntryInfo = null;
-    friendlyPlayChoice = null;
-    friendlyAutoMode = false;
   }
 
-  // 친선경기 자동진행: match:start → match:autoFinishFromEntry (Rust 시뮬)
-  let friendlyError = "";
-  async function autoFinishFriendly() {
-    if (!pendingGameEntry || autoSimRunning) return;
-    autoSimRunning = true;
-    friendlyError  = "";
-    try {
-      const p           = $gameStore.protagonist;
-      const isHome      = pendingGameEntry.homeTeamId === p.teamId;
-      const myTeamId    = p.teamId;
-      const oppTeamId   = isHome ? pendingGameEntry.awayTeamId : pendingGameEntry.homeTeamId;
-      const entities    = $masterStore.entities;
-
-      const oppLineup   = buildBatterLineup(oppTeamId, entities);
-      const myLineup    = buildBatterLineup(myTeamId, entities);
-      const oppPitcher  = buildStarterStats(oppTeamId, entities);
-      const oppFielders = buildFielders(oppTeamId, entities);
-
-      const req: Record<string, unknown> = {
-        pitcher: {
-          name:        p.name,
-          command:     p.pitching.command,
-          velocity:    p.pitching.velocity,
-          staminaCap:  p.pitching.stamina,
-          mentalResil: p.pitching.mentality,
-        },
-        role:            (p.position as "SP" | "RP" | "CP") ?? "SP",
-        protagonistSide: isHome ? "home" : "away",
-        ...(oppLineup.length  >= 9 ? { opponentLineup: oppLineup }   : { batterMean: 55 }),
-        ...(myLineup.length   >= 9 ? { myTeamLineup:   myLineup }    : {}),
-        ...(oppPitcher        ? { opponentPitcher: oppPitcher }       : {}),
-        ...(oppFielders.length >= 9 ? { fielders: oppFielders }      : {}),
-      };
-
-      // 1단계: match:start
-      const startResp = await window.projectB!.matchStart(req);
-      if (!startResp) throw new Error("matchStart: no response");
-      if ((startResp as any)?.error) throw new Error(`matchStart: ${(startResp as any).error}`);
-
-      // 2단계: 게임 끝까지 자동 시뮬
-      const raw    = await window.projectB!.matchAutoFinishFromEntry();
-      const result = JSON.parse(raw) as {
-        homeScore: number; awayScore: number; summary: string;
-        strikeouts?: number; hitsAllowed?: number; walksAllowed?: number;
-        outsRecorded?: number; pitchCount?: number;
-        playerLines?: import('../../shared/types/season').PlayerGameLine[];
-        error?: string;
-      };
-      if (result.error) throw new Error(`matchAutoFinish: ${result.error}`);
-
-      const outcome: UnifiedGameOutcome = {
-        source:             "auto",
-        scheduleId:         pendingGameEntry.id,
-        week:               pendingGameEntry.week,
-        homeTeamId:         pendingGameEntry.homeTeamId,
-        awayTeamId:         pendingGameEntry.awayTeamId,
-        protagonistTeamId:  p.teamId,
-        homeScore:          result.homeScore,
-        awayScore:          result.awayScore,
-        strikeouts:         result.strikeouts   ?? 0,
-        hitsAllowed:        result.hitsAllowed  ?? 0,
-        walksAllowed:       result.walksAllowed ?? 0,
-        outsRecorded:       result.outsRecorded ?? 0,
-        errors:             0,
-        pitchCount:         result.pitchCount   ?? 0,
-        summary:            result.summary      ?? "",
-        playerLines:        Array.isArray(result.playerLines) ? result.playerLines : undefined,
-        protagonistEntered: true,
-      };
-      await applyGameOutcome(outcome);
-      friendlyAutoMode   = false;
-      friendlyPlayChoice = null;
-    } catch (e: unknown) {
-      friendlyError = e instanceof Error ? e.message : String(e);
-      friendlyAutoMode = false;    // 무한 재시도 방지
-      friendlyPlayChoice = null;   // 에러 블록 표시
-    } finally {
-      autoSimRunning = false;
-    }
+  function extractMatchSummary(r: any): import("../../features/game-status/ui/GameStatusModal.svelte").MatchSummary {
+    return {
+      inningScores:         r.inningScores         ?? { home: [], away: [] },
+      batterAccum:          r.batterAccum           ?? {},
+      homeLineup:           r.homeLineup            ?? [],
+      awayLineup:           r.awayLineup            ?? [],
+      oppPitcherName:       r.oppPitcherName        ?? null,
+      oppPitcherPitchCount: r.oppPitcherPitchCount  ?? 0,
+      oppPitcherStamina:    r.oppPitcherStamina     ?? 100,
+      myPitcherName:        r.myPitcherName         ?? null,
+      myPitcherPitchCount:  r.myPitcherPitchCount   ?? 0,
+      myPitcherStamina:     r.myPitcherStamina      ?? 100,
+      preEntryLogs:         r.preEntryLogs          ?? [],
+      currentOuts:          r.currentOuts           ?? 0,
+      runners:              r.runners ?? { first: false, second: false, third: false },
+    };
   }
 
   async function startEntrySimulation() {
     if (!pendingGameEntry || gameSimState !== "idle") return;
     gameSimState = "loading";
     try {
-      const p = $gameStore.protagonist;
+      const p      = $gameStore.protagonist;
       const isHome = pendingGameEntry.homeTeamId === p.teamId;
-      const raw = await window.projectB!.matchSimulateToEntry({
-        pitcher: { name: p.name, command: p.pitching.command, velocity: p.pitching.velocity, staminaCap: p.pitching.stamina, mentalResil: p.pitching.mentality },
+      const raw    = await window.projectB!.matchSimulateToEntry({
+        pitcher: { name: p.name, command: p.pitching.command, velocity: p.pitching.velocity,
+                   staminaCap: p.pitching.stamina, mentalResil: p.pitching.mentality },
         batterMean: 55,
         role: (p.position as "SP" | "RP" | "CP") ?? "SP",
         protagonistSide: isHome ? "home" : "away",
       });
-      const result = JSON.parse(raw) as { entryReached: boolean; inning?: number; half?: string; homeScore: number; awayScore: number; playerLines?: import('../../shared/types/season').PlayerGameLine[]; error?: string };
+      const result = JSON.parse(raw) as any;
       if (result.error) {
-        gameSimState = "error";
+        gameSimState    = "error";
         gameSimErrorMsg = result.error;
         return;
       }
+      const summary = extractMatchSummary(result);
       if (result.entryReached) {
-        gameEntryInfo = { inning: result.inning!, half: result.half!, homeScore: result.homeScore, awayScore: result.awayScore };
-        gameSimState = "ready";
+        gameEntryInfo = { inning: result.inning, half: result.half,
+                          homeScore: result.homeScore, awayScore: result.awayScore, ...summary };
+        gameSimState  = "ready";
       } else {
-        gameNoEntryInfo = {
-          homeScore: result.homeScore,
-          awayScore: result.awayScore,
-          playerLines: Array.isArray(result.playerLines) ? result.playerLines : undefined,
-        };
+        gameNoEntryInfo = { homeScore: result.homeScore, awayScore: result.awayScore,
+                            playerLines: Array.isArray(result.playerLines) ? result.playerLines : undefined,
+                            ...summary };
         gameSimState = "no_entry";
       }
     } catch (e) {
-      gameSimState = "error";
+      gameSimState    = "error";
       gameSimErrorMsg = e instanceof Error ? e.message : String(e);
     }
   }
@@ -659,72 +587,23 @@
 {/if}
 
 {#if !activeMatchContext && pendingGameEntry && currentTab === "messages"}
-  <div class="game-overlay">
-    <div class="game-modal">
-      <p class="week-badge">
-        W{pendingGameEntry.week} 경기
-        {#if isFriendlyGame}<span class="friendly-badge">친선경기</span>{/if}
-      </p>
-      <div class="matchup">
-        <span class:my-team={pendingGameEntry.homeTeamId === $gameStore.protagonist.teamId}>
-          {tName(pendingGameEntry.homeTeamId)}
-        </span>
-        <span class="vs">vs</span>
-        <span class:my-team={pendingGameEntry.awayTeamId === $gameStore.protagonist.teamId}>
-          {tName(pendingGameEntry.awayTeamId)}
-        </span>
-      </div>
-
-      {#if isFriendlyGame && friendlyPlayChoice === null}
-        <!-- 친선경기 진행 방식 선택 -->
-        <p class="sim-status">공식 기록 미포함 · 로테이션 반영</p>
-        {#if friendlyError}
-          <p class="sim-status no-entry" style="font-size:11px;word-break:break-all;">{friendlyError}</p>
-        {/if}
-        <div class="game-actions">
-          <button class="btn-auto" on:click={() => { friendlyError=""; friendlyPlayChoice = true; friendlyAutoMode = true; }}
-            disabled={autoSimRunning}>
-            {autoSimRunning ? "시뮬 중…" : "자동 진행"}
-          </button>
-          <button class="btn-play" on:click={() => { friendlyPlayChoice = false; }}>
-            직접 플레이
-          </button>
-        </div>
-
-      {:else if gameSimState === "loading"}
-        <p class="sim-status">경기 상황 분석 중…</p>
-
-      {:else if gameSimState === "error"}
-        <p class="sim-status no-entry">경기 준비 오류</p>
-        <p class="sim-error-msg">{gameSimErrorMsg || "경기 엔진 연결에 실패했습니다."}</p>
-        <div class="game-actions single">
-          <button class="btn-auto" on:click={skipBrokenGame}>패배 처리 후 건너뛰기</button>
-        </div>
-
-      {:else if gameSimState === "no_entry" && gameNoEntryInfo}
-        <p class="sim-status no-entry">이번 경기 등판 기회 없음</p>
-        <p class="sim-final-score">{gameNoEntryInfo.homeScore} : {gameNoEntryInfo.awayScore}</p>
-        <div class="game-actions single">
-          <button class="btn-play" on:click={confirmNoEntry}>확인</button>
-        </div>
-
-      {:else if gameSimState === "ready" && gameEntryInfo}
-        <div class="entry-info">
-          <span class="entry-label">{gameEntryInfo.inning}회 {gameEntryInfo.half === "top" ? "초" : "말"} 등판</span>
-          <span class="entry-score">{gameEntryInfo.homeScore} : {gameEntryInfo.awayScore}</span>
-        </div>
-        <div class="game-actions">
-          <button class="btn-auto" on:click={autoFinishFromEntry} disabled={autoSimRunning}>
-            {autoSimRunning ? "시뮬 중…" : "자동 시뮬"}
-          </button>
-          <button class="btn-play" on:click={startInteractiveMatch} disabled={autoSimRunning}>직접 플레이</button>
-        </div>
-
-      {:else}
-        <p class="sim-status">경기 준비 중…</p>
-      {/if}
-    </div>
-  </div>
+  <GameStatusModal
+    homeTeamName={tName(pendingGameEntry.homeTeamId)}
+    awayTeamName={tName(pendingGameEntry.awayTeamId)}
+    week={pendingGameEntry.week}
+    isFriendly={isFriendlyGame}
+    protagonistTeamId={$gameStore.protagonist.teamId}
+    homeTeamId={pendingGameEntry.homeTeamId}
+    simState={gameSimState}
+    entryInfo={gameEntryInfo}
+    noEntryInfo={gameNoEntryInfo}
+    errorMsg={gameSimErrorMsg}
+    autoRunning={autoSimRunning}
+    onAutoSim={autoFinishFromEntry}
+    onDirectPlay={startInteractiveMatch}
+    onConfirm={confirmNoEntry}
+    onSkip={skipBrokenGame}
+  />
 {/if}
 
 <style>

@@ -215,6 +215,28 @@ function register(ipcMain, { loadCoreModule, engineNative }) {
     return { snapshot: toSnapshotDto(activeMatchState, [], core) };
   });
 
+  function buildMatchSummary(state) {
+    return {
+      inningScores:         state.inningScores         ?? { home: [], away: [] },
+      batterAccum:          state.batterAccum           ?? {},
+      homeLineup:           (state.homeLineup  ?? []).map(b => b.name ?? ""),
+      awayLineup:           (state.awayLineup  ?? []).map(b => b.name ?? ""),
+      oppPitcherName:       state.opponentNpcPitcher?.name  ?? null,
+      oppPitcherPitchCount: state.npcPitcherPitchCount?.opponent ?? 0,
+      oppPitcherStamina:    state.npcPitcherStamina?.opponent    ?? 100,
+      myPitcherName:        state.myNpcPitcher?.name        ?? null,
+      myPitcherPitchCount:  state.npcPitcherPitchCount?.my  ?? 0,
+      myPitcherStamina:     state.npcPitcherStamina?.my     ?? 100,
+      preEntryLogs:         (state.preEntryLogs ?? []).slice(-6),
+      currentOuts:          state.outs ?? 0,
+      runners: {
+        first:  !!(state.runners?.first),
+        second: !!(state.runners?.second),
+        third:  !!(state.runners?.third),
+      },
+    };
+  }
+
   ipcMain.handle("match:simulateToEntry", async (_event, request = {}) => {
     if (!request || typeof request !== "object" || Array.isArray(request)) request = {};
     try {
@@ -234,10 +256,16 @@ function register(ipcMain, { loadCoreModule, engineNative }) {
           awayScore: state.score.away,
           batterLines: final.batterLines ?? [],
           playerLines: final.playerLines ?? [],
+          ...buildMatchSummary(state),
         });
       }
       matchReadyState = state;
-      return JSON.stringify({ entryReached: true, inning: state.inning, half: state.half, homeScore: state.score.home, awayScore: state.score.away });
+      return JSON.stringify({
+        entryReached: true,
+        inning: state.inning, half: state.half,
+        homeScore: state.score.home, awayScore: state.score.away,
+        ...buildMatchSummary(state),
+      });
     } catch (e) {
       return JSON.stringify({ error: String(e?.message ?? e) });
     }
