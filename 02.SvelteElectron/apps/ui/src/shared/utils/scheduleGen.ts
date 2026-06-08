@@ -56,6 +56,18 @@ export async function generateAblSchedule(
   return JSON.parse(raw);
 }
 
+export async function generateHsSchedule(
+  groupA: string[],
+  groupB: string[],
+  protagonistTeamId: string,
+  seasonYear = 2026,
+): Promise<ScheduleEntry[]> {
+  const raw = await window.projectB!.scheduleHs(
+    JSON.stringify({ groupA, groupB, protagonistTeamId, seasonYear })
+  );
+  return JSON.parse(raw);
+}
+
 export async function generateHsPostseasonSemis(
   top4: string[],
   protagonistTeamId: string,

@@ -22,7 +22,7 @@ import {
   makeStandings,
   shuffleHsGroups,
 } from "../utils/leagueScheduler";
-import { generateSchedule } from "../utils/scheduleGen";
+import { generateHsSchedule } from "../utils/scheduleGen";
 import * as BackgroundLeague from "./backgroundLeague";
 import * as NpcInjury from "./npcInjury";
 import * as Postseason from "./postseason";
@@ -335,18 +335,18 @@ function createSeasonStore() {
     },
 
     async initAllLeagues(seasonYear: number, protagonistTeamId: string, hsGroupA: string[], hsGroupB: string[]) {
-      const protagonistGroup = hsGroupA.includes(protagonistTeamId) ? hsGroupA : hsGroupB;
-      const npcGroup         = hsGroupA.includes(protagonistTeamId) ? hsGroupB : hsGroupA;
+      const protagonistGroup = new Set(hsGroupA.includes(protagonistTeamId) ? hsGroupA : hsGroupB);
+      const npcGroup         = new Set(hsGroupA.includes(protagonistTeamId) ? hsGroupB : hsGroupA);
 
-      const [rawProtagSchedule, rawNpcSchedule, otherSchedules] = await Promise.all([
-        generateSchedule(protagonistGroup, protagonistTeamId, 52),
-        generateSchedule(npcGroup, "", 52),
+      const [allHsEntries, otherSchedules] = await Promise.all([
+        generateHsSchedule(hsGroupA, hsGroupB, protagonistTeamId, seasonYear),
         generateAllLeagueSchedules(DEFAULT_LEAGUE_CONFIGS.map((c) => ({ ...c })), protagonistTeamId),
       ]);
-      const allHsSchedule = [
-        ...rawProtagSchedule.map((e) => ({ ...e, leagueId: "LEAGUE_HIGHSCHOOL" })),
-        ...rawNpcSchedule.map((e)   => ({ ...e, leagueId: "LEAGUE_HIGHSCHOOL", id: `OPP_${e.id}` })),
-      ].sort((a, b) => a.gameDate.localeCompare(b.gameDate));
+
+      // A조·B조 분리 후 leagueId 부여 (ID 충돌 없음 — Rust가 HS_A_*/HS_B_* 접두사 사용)
+      const allHsSchedule = allHsEntries
+        .map((e) => ({ ...e, leagueId: "LEAGUE_HIGHSCHOOL" }))
+        .sort((a, b) => a.gameDate.localeCompare(b.gameDate));
 
       const leagueState: Record<string, LeagueSeasonState> = {
         LEAGUE_HIGHSCHOOL: { standings: makeStandings([...hsGroupA, ...hsGroupB]), stats: {}, playerConditions: {}, teamRotationIndex: {} },
@@ -370,18 +370,16 @@ function createSeasonStore() {
 
     async reinitHighschoolSeason(protagonistTeamId: string, allHsTeams: string[]): Promise<void> {
       const { groupA, groupB } = await shuffleHsGroups(allHsTeams);
-      const protagonistGroup = groupA.includes(protagonistTeamId) ? groupA : groupB;
-      const npcGroup         = groupA.includes(protagonistTeamId) ? groupB : groupA;
+      const seasonYear = get({ subscribe }).seasonYear;
 
-      const [rawProtagSchedule, rawNpcSchedule, otherSchedules] = await Promise.all([
-        generateSchedule(protagonistGroup, protagonistTeamId, 52),
-        generateSchedule(npcGroup, "", 52),
+      const [allHsEntries, otherSchedules] = await Promise.all([
+        generateHsSchedule(groupA, groupB, protagonistTeamId, seasonYear),
         generateAllLeagueSchedules(DEFAULT_LEAGUE_CONFIGS.map((c) => ({ ...c })), protagonistTeamId),
       ]);
-      const allHsSchedule = [
-        ...rawProtagSchedule.map((e) => ({ ...e, leagueId: "LEAGUE_HIGHSCHOOL" })),
-        ...rawNpcSchedule.map((e)   => ({ ...e, leagueId: "LEAGUE_HIGHSCHOOL", id: `OPP_${e.id}` })),
-      ].sort((a, b) => a.gameDate.localeCompare(b.gameDate));
+
+      const allHsSchedule = allHsEntries
+        .map((e) => ({ ...e, leagueId: "LEAGUE_HIGHSCHOOL" }))
+        .sort((a, b) => a.gameDate.localeCompare(b.gameDate));
 
       const leagueState: Record<string, LeagueSeasonState> = {
         LEAGUE_HIGHSCHOOL: { standings: makeStandings([...groupA, ...groupB]), stats: {}, playerConditions: {}, teamRotationIndex: {} },

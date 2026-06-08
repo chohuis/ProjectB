@@ -133,8 +133,9 @@
   // 친선경기 선택: null=선택 전, true=자동진행, false=직접플레이
   let friendlyPlayChoice: boolean | null = null;
   let friendlyAutoMode = false;  // 자동진행 모드 플래그
-  type GameSimState = "idle" | "loading" | "no_entry" | "ready";
+  type GameSimState = "idle" | "loading" | "no_entry" | "ready" | "error";
   let gameSimState: GameSimState = "idle";
+  let gameSimErrorMsg = "";
   let gameEntryInfo: { inning: number; half: string; homeScore: number; awayScore: number } | null = null;
   let gameNoEntryInfo: { homeScore: number; awayScore: number; playerLines?: import('../../shared/types/season').PlayerGameLine[] } | null = null;
   let autoSimRunning = false;
@@ -253,7 +254,11 @@
         protagonistSide: isHome ? "home" : "away",
       });
       const result = JSON.parse(raw) as { entryReached: boolean; inning?: number; half?: string; homeScore: number; awayScore: number; playerLines?: import('../../shared/types/season').PlayerGameLine[]; error?: string };
-      if (result.error) { gameSimState = "idle"; friendlyPlayChoice = null; return; }
+      if (result.error) {
+        gameSimState = "error";
+        gameSimErrorMsg = result.error;
+        return;
+      }
       if (result.entryReached) {
         gameEntryInfo = { inning: result.inning!, half: result.half!, homeScore: result.homeScore, awayScore: result.awayScore };
         gameSimState = "ready";
@@ -265,10 +270,33 @@
         };
         gameSimState = "no_entry";
       }
-    } catch {
-      gameSimState = "idle";
-      friendlyPlayChoice = null;
+    } catch (e) {
+      gameSimState = "error";
+      gameSimErrorMsg = e instanceof Error ? e.message : String(e);
     }
+  }
+
+  // 게임 시뮬 에러 시 자동 패배 처리로 건너뜀
+  async function skipBrokenGame() {
+    if (!pendingGameEntry) return;
+    const p = $gameStore.protagonist;
+    const isHome = pendingGameEntry.homeTeamId === p.teamId;
+    const outcome: UnifiedGameOutcome = {
+      source: "auto",
+      scheduleId:        pendingGameEntry.id,
+      week:              pendingGameEntry.week,
+      homeTeamId:        pendingGameEntry.homeTeamId,
+      awayTeamId:        pendingGameEntry.awayTeamId,
+      protagonistTeamId: p.teamId,
+      homeScore:  isHome ? 0 : 1,
+      awayScore:  isHome ? 1 : 0,
+      strikeouts: 0, hitsAllowed: 3, walksAllowed: 1,
+      outsRecorded: 0, errors: 0, pitchCount: 0,
+      summary: "경기 처리 오류로 자동 패배 처리",
+    };
+    await applyGameOutcome(outcome);
+    gameSimState  = "idle";
+    gameSimErrorMsg = "";
   }
 
   async function autoFinishFromEntry() {
@@ -666,6 +694,13 @@
       {:else if gameSimState === "loading"}
         <p class="sim-status">경기 상황 분석 중…</p>
 
+      {:else if gameSimState === "error"}
+        <p class="sim-status no-entry">경기 준비 오류</p>
+        <p class="sim-error-msg">{gameSimErrorMsg || "경기 엔진 연결에 실패했습니다."}</p>
+        <div class="game-actions single">
+          <button class="btn-auto" on:click={skipBrokenGame}>패배 처리 후 건너뛰기</button>
+        </div>
+
       {:else if gameSimState === "no_entry" && gameNoEntryInfo}
         <p class="sim-status no-entry">이번 경기 등판 기회 없음</p>
         <p class="sim-final-score">{gameNoEntryInfo.homeScore} : {gameNoEntryInfo.awayScore}</p>
@@ -885,6 +920,16 @@
     font-size: 13px;
     color: #8aafd6;
     text-align: center;
+  }
+
+  .sim-error-msg {
+    font-size: 11px;
+    color: #c07070;
+    text-align: center;
+    margin: 4px 0;
+    word-break: break-all;
+    max-height: 48px;
+    overflow: hidden;
   }
 
   .sim-status.no-entry {

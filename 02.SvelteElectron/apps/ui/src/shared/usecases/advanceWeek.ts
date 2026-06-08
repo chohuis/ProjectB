@@ -1478,22 +1478,31 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       return { ...result, logs: [...accLogs, ...result.logs], matchResults: [...accResults, ...result.matchResults] };
     }
 
-    // ── 주인공 경기 종료 후 같은 주차 남은 NPC 경기 처리 ─────────
-    // advanceWeek가 주인공 경기에서 멈춘 뒤 재호출될 때, 아직 처리
-    // 안 된 같은 주차 NPC 경기가 있으면 주차를 올리지 않고 먼저 완료.
+    // ── 같은 주차 미완료 경기 처리 (NPC + 고아 주인공 경기) ──────
+    // advanceWeek가 주인공 경기에서 멈춘 뒤 재호출될 때 실행.
+    // pending action이 없는데 주인공 경기 결과가 없으면 자동 시뮬(고아 경기).
     {
       const weekAlreadyStarted = s.schedule.some(
         (e) => e.week === s.currentWeek && !!e.result,
       );
-      const remainingNpcGames = s.schedule.filter(
-        (e) => e.week === s.currentWeek && !e.result && !e.isProtagonistGame,
+      const remainingGamesThisWeek = s.schedule.filter(
+        (e) => e.week === s.currentWeek && !e.result,
       );
-      const protagonistStillPending = s.schedule.some(
-        (e) => e.week === s.currentWeek && e.isProtagonistGame && !e.result,
-      );
+      const remainingNpcGames  = remainingGamesThisWeek.filter((e) => !e.isProtagonistGame);
+      const orphanProtag       = remainingGamesThisWeek.filter((e) => e.isProtagonistGame);
+      // pendingActions가 없는데 주인공 경기가 남아있으면 → 고아 경기 (진행 중 버그 케이스)
+      const hasOrphan = orphanProtag.length > 0 && s.pendingActions.length === 0;
 
-      if (weekAlreadyStarted && remainingNpcGames.length > 0 && !protagonistStillPending) {
-        const sorted = [...remainingNpcGames].sort((a, b) => a.gameDate.localeCompare(b.gameDate));
+      const gamesToAutoSim = hasOrphan
+        ? [...orphanProtag, ...remainingNpcGames]  // 고아 경기 + NPC 경기 모두 처리
+        : remainingNpcGames;                        // 정상: NPC 경기만
+
+      const shouldProcess = weekAlreadyStarted &&
+        gamesToAutoSim.length > 0 &&
+        (hasOrphan || remainingNpcGames.length > 0);
+
+      if (shouldProcess) {
+        const sorted = [...gamesToAutoSim].sort((a, b) => a.gameDate.localeCompare(b.gameDate));
         for (const game of sorted) {
           const gCurrent = get(gameStore);
           let entities = get(masterStore).entities;
