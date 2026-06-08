@@ -90,13 +90,31 @@ const FIELDER_XY: Record<string, { x: number; y: number }> = {
   LF: { x: 18, y: 28 }, CF: { x: 50, y: 16 }, RF: { x: 82, y: 28 },
 };
 
+// ── 경기 전 날씨·구장 결정 (scheduleId·homeTeamId 해시 기반, 저장 불필요) ──
+export type PreGameWeather = "sunny" | "cloudy" | "rainy" | "windy_in" | "windy_out";
+export type PreGamePark    = "neutral" | "pitcher_park" | "hitter_park" | "dome";
+
+function strHash(s: string): number {
+  return [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) & 0x7fffffff, 0);
+}
+
+export function derivePreGameWeather(scheduleId: string): PreGameWeather {
+  const pool: PreGameWeather[] = ["sunny", "sunny", "sunny", "cloudy", "cloudy", "rainy", "windy_in", "windy_out"];
+  return pool[strHash(scheduleId) % pool.length];
+}
+
+export function derivePreGamePark(homeTeamId: string): PreGamePark {
+  const pool: PreGamePark[] = ["neutral", "neutral", "neutral", "pitcher_park", "hitter_park", "dome"];
+  return pool[strHash(homeTeamId) % pool.length];
+}
+
 export function buildFielders(teamId: string, entities: EntityRow[]): MatchFielderStats[] {
   const pool = entities.filter((e) => e.teamId === teamId && e.role === "player");
   const byPos = (pos: string) => pool.find((e) => String(playerOf(e).position ?? "") === pos);
   const pitcher = byPos("SP") ?? byPos("RP") ?? byPos("CP") ?? pool[0];
   return FIELDER_POSITIONS.map((pos) => {
     const src = pos === "P" ? pitcher : byPos(pos);
-    const bat = playerOf(src).batting ?? {};
+    const bat = playerOf(src!).batting ?? {};
     return {
       position: pos as MatchFielderStats["position"],
       name: src?.name ?? pos,

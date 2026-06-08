@@ -287,12 +287,54 @@ pub struct GenerateHsScheduleParams {
     pub season_year: Option<u32>,
 }
 
+// ── 고교 조별 주 2경기 일정 생성 (월 offset=1, 금 offset=5) ──
+
+fn generate_hs_group_weekly(
+    teams: &[String],
+    protagonist_team_id: &str,
+    start_week: u32,
+    end_week: u32,
+    prefix: &str,
+    season_year: u32,
+) -> Vec<ScheduleEntry> {
+    if teams.len() < 2 { return vec![]; }
+
+    let base  = build_round_robin(teams);
+    let n_rnd = base.len();   // 7 rounds for 8 teams
+    let total_weeks = (end_week - start_week + 1) as usize;
+    let mut entries = Vec::new();
+
+    for w in 0..total_weeks {
+        let week = start_week + w as u32;
+
+        // 월요일(offset=1), 금요일(offset=5) 두 슬롯
+        for (slot, day_off) in [(0usize, 1u32), (1usize, 5u32)] {
+            let abs_idx = w * 2 + slot;
+            let round_idx = abs_idx % n_rnd;
+            let flip      = (abs_idx / n_rnd) % 2 == 1;
+
+            for (gi, (h, a)) in base[round_idx].iter().enumerate() {
+                let (home, away) = if flip { (a.clone(), h.clone()) } else { (h.clone(), a.clone()) };
+                entries.push(ScheduleEntry {
+                    id: format!("{}_W{:02}_S{}_G{}", prefix, week, slot + 1, gi + 1),
+                    week,
+                    game_date: to_game_date(season_year, week, day_off),
+                    league_id: Some("LEAGUE_HIGHSCHOOL".to_string()),
+                    home_team_id: home.clone(),
+                    away_team_id: away.clone(),
+                    is_protagonist_game: home == protagonist_team_id || away == protagonist_team_id,
+                    phase: "season".to_string(),
+                });
+            }
+        }
+    }
+    entries
+}
+
 pub fn generate_hs_schedule(p: GenerateHsScheduleParams) -> Vec<ScheduleEntry> {
     let sy = p.season_year.unwrap_or(2026);
-    let rounds_a = build_double_round_robin(&p.group_a);
-    let rounds_b = build_double_round_robin(&p.group_b);
-    let mut out = assign_rounds_to_weeks(&rounds_a, 10, 42, "LEAGUE_HIGHSCHOOL", "HS_A", &p.protagonist_team_id, sy);
-    out.extend(assign_rounds_to_weeks(&rounds_b, 10, 42, "LEAGUE_HIGHSCHOOL", "HS_B", &p.protagonist_team_id, sy));
+    let mut out = generate_hs_group_weekly(&p.group_a, &p.protagonist_team_id, 10, 42, "HS_A", sy);
+    out.extend(generate_hs_group_weekly(&p.group_b, &p.protagonist_team_id, 10, 42, "HS_B", sy));
     out
 }
 

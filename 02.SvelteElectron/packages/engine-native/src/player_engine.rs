@@ -150,6 +150,9 @@ fn reliever_appearance_chance(role: &str) -> f64 {
 #[serde(rename_all = "camelCase")]
 pub struct RelieverPitchParams {
     pub role: String,
+    pub pitch_outs_last: Option<i32>,   // 직전 경기 아웃 수 (None → 0)
+    pub last_pitched_week: Option<i32>, // 마지막 등판 주차 (None → 0)
+    pub current_week: Option<i32>,      // 현재 주차
 }
 
 #[derive(Debug, Serialize)]
@@ -159,8 +162,22 @@ pub struct RelieverPitchResult {
 }
 
 pub fn reliever_would_pitch(params: RelieverPitchParams) -> RelieverPitchResult {
-    let chance = reliever_appearance_chance(&params.role);
-    let would_pitch = chance > 0.0 && rand::thread_rng().gen::<f64>() < chance;
+    let base = reliever_appearance_chance(&params.role);
+    if base <= 0.0 { return RelieverPitchResult { would_pitch: false }; }
+
+    // 직전 경기 투구 피로 패널티
+    let outs_last = params.pitch_outs_last.unwrap_or(0);
+    let rest_penalty = if outs_last >= 18 { 0.30 }  // 6이닝+ → 거의 등판 불가
+                       else if outs_last >= 9 { 0.65 } // 3이닝+ → 확률 감소
+                       else { 1.00 };
+
+    // 당일 재등판 방지
+    let last_w  = params.last_pitched_week.unwrap_or(0);
+    let cur_w   = params.current_week.unwrap_or(0);
+    let same_week_penalty = if last_w > 0 && last_w == cur_w { 0.0 } else { 1.0 };
+
+    let chance = base * rest_penalty * same_week_penalty;
+    let would_pitch = rand::thread_rng().gen::<f64>() < chance;
     RelieverPitchResult { would_pitch }
 }
 

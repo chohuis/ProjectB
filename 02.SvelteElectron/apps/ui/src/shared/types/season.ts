@@ -127,7 +127,13 @@ export type PendingAction =
       type: "injuryTreatment";
       injuryType: string;
       severity: "moderate" | "severe" | "surgery";
-    };
+    }
+  | {
+      type: "conditionWarning";
+      scheduleId: string;
+      condition: number;
+    }
+  | { type: "preGameBriefing"; scheduleId: string };
 
 // ── 주 진행 결과 (advanceWeek 반환값) ──────────────────────────
 export interface WeekAdvanceResult {

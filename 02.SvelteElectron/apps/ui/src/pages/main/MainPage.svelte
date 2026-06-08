@@ -42,10 +42,11 @@
   import AchievementManagerModal from "../../features/achievements/ui/AchievementManagerModal.svelte";
   import SeasonEndModal from "../../features/season-end/ui/SeasonEndModal.svelte";
   import InjuryTreatmentModal from "../../features/injury/ui/InjuryTreatmentModal.svelte";
+  import PreGameBriefingModal from "../../features/pre-game-briefing/ui/PreGameBriefingModal.svelte";
   import MatchPage from "../match/MatchPage.svelte";
   import type { InteractiveMatchContext, InteractiveMatchResult, UnifiedGameOutcome } from "../../shared/types/season";
   import { masterStore } from "../../shared/stores/master";
-  import { buildBatterLineup, buildStarterStats, buildFielders } from "../../shared/utils/matchLineupBuilder";
+  import { buildBatterLineup, buildStarterStats, buildFielders, derivePreGameWeather, derivePreGamePark } from "../../shared/utils/matchLineupBuilder";
 
   export let onSeasonEnd: () => void = () => {};
 
@@ -89,6 +90,7 @@
       case "faMarket":
         return "messages";
       case "hsGroupDraw":
+      case "preGameBriefing":
         return "messages";
     }
   }
@@ -119,7 +121,9 @@
   $: pendingTrade = $nextPendingAction?.type === "trade" ? $nextPendingAction : null;
   $: pendingFaMarket = $nextPendingAction?.type === "faMarket";
   $: pendingMilitaryEnlist = $nextPendingAction?.type === "militaryEnlist";
-  $: pendingInjuryTreatment = $nextPendingAction?.type === "injuryTreatment" ? $nextPendingAction : null;
+  $: pendingInjuryTreatment  = $nextPendingAction?.type === "injuryTreatment"  ? $nextPendingAction : null;
+  $: pendingConditionWarning = $nextPendingAction?.type === "conditionWarning" ? $nextPendingAction : null;
+  $: pendingPreGameBriefing  = $nextPendingAction?.type === "preGameBriefing"  ? $nextPendingAction : null;
   // 경기 pendingAction 과 해당 일정 찾기
   $: pendingGame = $nextPendingAction?.type === "game" ? $nextPendingAction : null;
   $: pendingGameEntry = pendingGame
@@ -368,6 +372,8 @@
       awayTeamId: pendingGameEntry.awayTeamId,
       protagonistTeamId: p.teamId,
       role: (p.position as "SP" | "RP" | "CP") ?? "SP",
+      weather: derivePreGameWeather(pendingGameEntry.id),
+      park: derivePreGamePark(pendingGameEntry.homeTeamId),
     };
   }
 
@@ -579,8 +585,50 @@
   <InjuryTreatmentModal action={pendingInjuryTreatment} />
 {/if}
 
+{#if pendingPreGameBriefing && currentTab === "messages"}
+  <PreGameBriefingModal
+    scheduleId={pendingPreGameBriefing.scheduleId}
+    onConfirm={() => { currentTab = "messages"; }}
+  />
+{/if}
 
-
+{#if pendingConditionWarning && currentTab === "messages"}
+  <div class="modal-overlay cond-warn-overlay" role="dialog" aria-modal="true">
+    <div class="cond-warn-modal">
+      <h3 class="cond-warn-title">⚠ 컨디션 저조</h3>
+      <p class="cond-warn-body">
+        현재 컨디션이 <strong>{pendingConditionWarning.condition}</strong>으로 낮습니다.<br>
+        강행 등판 시 경기력이 크게 저하될 수 있습니다.
+      </p>
+      <div class="cond-warn-btns">
+        <button class="cond-btn push" on:click={async () => {
+          seasonStore.resolvePendingAction("conditionWarning", pendingConditionWarning!.scheduleId);
+          seasonStore.setCurrentDate((await (async () => {
+            const e = $seasonStore.schedule.find((e) => e.id === pendingConditionWarning!.scheduleId);
+            return e?.gameDate ?? "";
+          })()));
+          seasonStore.pushPendingAction({ type: "game", scheduleId: pendingConditionWarning!.scheduleId });
+        }}>강행 등판</button>
+        <button class="cond-btn skip" on:click={async () => {
+          seasonStore.resolvePendingAction("conditionWarning", pendingConditionWarning!.scheduleId);
+          const schedId = pendingConditionWarning!.scheduleId;
+          const entry = $seasonStore.schedule.find((e) => e.id === schedId);
+          if (entry) {
+            const result = JSON.parse(await window.projectB!.weekCalcNpcFallback(
+              JSON.stringify({ homeTeamId: entry.homeTeamId, awayTeamId: entry.awayTeamId })
+            )) as { homeScore: number; awayScore: number; winnerId: string; loserId: string };
+            seasonStore.applyMatchResult(schedId, {
+              homeScore: result.homeScore, awayScore: result.awayScore,
+              winnerId: result.winnerId, loserId: result.loserId,
+              playerLines: [], events: [],
+            }, $gameStore.protagonist.leagueId);
+          }
+          await gameStore.save(); await seasonStore.save();
+        }}>등판 회피</button>
+      </div>
+    </div>
+  </div>
+{/if}
 
 {#if !activeMatchContext && pendingGameEntry && currentTab === "messages"}
   <div class="game-overlay">
@@ -714,6 +762,34 @@
       grid-template-columns: 154px minmax(0, 1fr) 196px;
     }
   }
+
+  /* ── 컨디션 경고 모달 ── */
+  .cond-warn-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.65);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 110;
+  }
+  .cond-warn-modal {
+    background: #1a1508;
+    border: 1px solid #8a6010;
+    border-radius: 12px;
+    padding: 24px 28px;
+    width: 320px;
+    display: grid; gap: 16px;
+  }
+  .cond-warn-title { margin: 0; font-size: 18px; color: #f0c060; }
+  .cond-warn-body  { margin: 0; font-size: 14px; color: #d8c090; line-height: 1.6; }
+  .cond-warn-body strong { color: #ff9b50; }
+  .cond-warn-btns  { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .cond-btn {
+    padding: 10px; border-radius: 8px;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+  .cond-btn.push { background: #3a2810; border: 1px solid #8a5020; color: #f0a060; }
+  .cond-btn.push:hover { background: #4a3418; }
+  .cond-btn.skip { background: #0d1928; border: 1px solid #2a4060; color: #7aaed8; }
+  .cond-btn.skip:hover { background: #162540; }
 
   /* ── 경기 오버레이 ── */
   .game-overlay {

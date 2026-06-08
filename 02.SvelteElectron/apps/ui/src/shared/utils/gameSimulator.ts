@@ -80,8 +80,9 @@ export async function simulateGame(
   const { conditions = {}, homeRotIdx = 0, awayRotIdx = 0, week = 0, npcInjuries, rotationSize = 5, npcLiveStats } = options ?? {};
   const entityMap = new Map(entities.map((e) => [e.id, e]));
 
-  const homeRoster = buildTeamRoster(homeTeamId, entities, npcInjuries, rotationSize);
-  const awayRoster = buildTeamRoster(awayTeamId, entities, npcInjuries, rotationSize);
+  // conditions + currentWeek → effectiveOvr 기반 로스터 편성
+  const homeRoster = buildTeamRoster(homeTeamId, entities, npcInjuries, rotationSize, conditions, week);
+  const awayRoster = buildTeamRoster(awayTeamId, entities, npcInjuries, rotationSize, conditions, week);
 
   const toSimPitchers = (ids: string[]) => ids.map(id => toSimPitcher(id, entityMap, npcLiveStats)).filter(Boolean) as SimPitcher[];
   const toSimBatters  = (ids: string[]) => ids.map(id => toSimBatter(id, entityMap, npcLiveStats)).filter(Boolean)  as SimBatter[];

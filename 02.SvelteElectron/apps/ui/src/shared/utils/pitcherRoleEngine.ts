@@ -54,9 +54,16 @@ export async function assignProtagonistRole(
 
 // ── 불펜 등판 판정 ────────────────────────────────────────────
 
-export async function relieverWouldPitch(role: PitcherRole): Promise<boolean> {
+export async function relieverWouldPitch(
+  role: PitcherRole,
+  pitchOutsLast = 0,
+  lastPitchedWeek = 0,
+  currentWeek = 0,
+): Promise<boolean> {
   const result = JSON.parse(
-    await window.projectB!.pitcherRelieverWouldPitch(JSON.stringify({ role }))
+    await window.projectB!.pitcherRelieverWouldPitch(
+      JSON.stringify({ role, pitchOutsLast, lastPitchedWeek, currentWeek })
+    )
   );
   return result.wouldPitch as boolean;
 }

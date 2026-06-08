@@ -312,9 +312,11 @@ function createSeasonStore() {
         ...s,
         pendingActions: s.pendingActions.filter((a) => {
           if (a.type !== type) return true;
-          if (a.type === "game")    return a.scheduleId !== id;
-          if (a.type === "message") return a.messageId  !== id;
-          if (a.type === "event")   return a.eventId    !== id;
+          if (a.type === "game")              return a.scheduleId !== id;
+          if (a.type === "message")           return a.messageId  !== id;
+          if (a.type === "event")             return a.eventId    !== id;
+          if (a.type === "conditionWarning")  return a.scheduleId !== id;
+          if (a.type === "preGameBriefing")   return a.scheduleId !== id;
           return false;
         }),
       }));

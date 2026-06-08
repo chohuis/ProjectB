@@ -79,39 +79,32 @@ export function planMonthlyFriendlies(
 ): FriendlyPlan {
   const [rangeStart, rangeEnd] = monthWeekRange(weekInYear);
   const label = monthName(weekInYear);
+  const weeksInRange = rangeEnd - rangeStart + 1;
 
-  // 이미 이달에 편성된 친선경기 수 (격주 1경기 → 월 최대 2경기)
+  // 이달 안에 이미 편성된 친선경기 수 집계
   const alreadyFriendly = schedule.filter(
-    (e) => e.isFriendly && e.week >= absoluteWeek && e.week <= absoluteWeek + (rangeEnd - rangeStart),
+    (e) => e.isFriendly && e.week >= absoluteWeek && e.week < absoluteWeek + weeksInRange,
   ).length;
-  const needed = Math.max(0, 2 - alreadyFriendly);
+
+  // 주당 1경기 목표 → 이달 남은 주 수만큼 편성
+  const needed = Math.max(0, weeksInRange - alreadyFriendly);
   if (needed === 0) return { entries: [], monthLabel: label };
 
   const entries: ScheduleEntry[] = [];
-  const weeksInRange = rangeEnd - rangeStart + 1;
 
-  // 격주(2주 간격)로 편성
-  for (let offset = 0; offset < weeksInRange && entries.length < needed; offset += 2) {
+  // 매주 1경기 (수요일)
+  for (let offset = 0; offset < weeksInRange && entries.length < needed; offset += 1) {
     const weekNum = absoluteWeek + offset;
     if (weekNum > seasonPhaseEnd) break;
 
-    // 이미 친선경기가 있으면 건너뜀
-    const alreadyHasFriendly = schedule.some(
-      (e) => e.isFriendly && e.week === weekNum,
-    );
-    if (alreadyHasFriendly) continue;
+    // 이미 이 주에 친선경기가 있으면 건너뜀
+    if (schedule.some((e) => e.isFriendly && e.week === weekNum)) continue;
 
     const opponent = findFreeOpponent(weekNum, myTeamId, schedule, leagueTeamIds);
     if (!opponent) continue;
 
-    // 같은 주 공식경기 있으면 그 날짜 기준 3일 전, 없으면 수요일
-    const officialThisWeek = schedule.find(
-      (e) => !e.isFriendly && e.week === weekNum &&
-        (e.homeTeamId === myTeamId || e.awayTeamId === myTeamId),
-    );
-    const gameDate = officialThisWeek
-      ? friendlyDateFromOfficial(officialThisWeek.gameDate)
-      : friendlyDateForWeek(weekNum, seasonYear);
+    // 항상 수요일 (리그 월요일·금요일 경기 사이)
+    const gameDate = friendlyDateForWeek(weekNum, seasonYear);
 
     entries.push({
       id:                `FRIENDLY_W${weekNum}_${myTeamId}`,
@@ -167,12 +160,14 @@ export function buildMonthlyNoticeMessage(
     return `  ${date} (수)  친선경기  vs ${opp}`;
   });
 
+  const KO_DAYS = ["일", "월", "화", "수", "목", "금", "토"];
   const officialLines = officialEntries
     .filter((e) => !e.isFriendly)
     .map((e) => {
       const opp  = teamShort(e.awayTeamId === "PLY_HERO" ? e.homeTeamId : e.awayTeamId, teamMap);
       const date = e.gameDate.slice(5).replace("-", "/");
-      return `  ${date} (토)  공식경기  vs ${opp}`;
+      const dow  = KO_DAYS[new Date(e.gameDate + "T00:00:00").getDay()] ?? "";
+      return `  ${date} (${dow})  공식경기  vs ${opp}`;
     });
 
   const all = [...lines, ...officialLines].sort();

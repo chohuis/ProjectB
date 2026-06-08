@@ -1597,29 +1597,87 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       const isTeamGame =
         game.homeTeamId === gCurrent.protagonist.teamId ||
         game.awayTeamId === gCurrent.protagonist.teamId;
+      // 불펜 등판 판정: 컨디션(playerConditions) + 투구 이력 전달
+      const sForReliever   = get(seasonStore);
+      const leagueIdR      = gCurrent.protagonist.leagueId;
+      const lStateR        = sForReliever.leagueState[leagueIdR];
+      const myCondR        = lStateR?.playerConditions?.[gCurrent.protagonist.id];
       const relieverPitching =
         !game.isProtagonistGame &&
         isTeamGame &&
         gCurrent.protagonist.playerType === "pitcher" &&
         !!currentRole &&
         isReliefsRole(currentRole) &&
-        await relieverWouldPitch(currentRole);
+        await relieverWouldPitch(
+          currentRole,
+          myCondR?.pitchOutsLast ?? 0,
+          myCondR?.lastPitchedWeek ?? 0,
+          nextWeekNum,
+        );
 
       if (game.isProtagonistGame || relieverPitching) {
         const eligibilityBlocked = gCurrent.schoolState.eligibilityBlocked;
+        const isInjured          = !!gCurrent.protagonist.injury;
+        const cond               = gCurrent.protagonist.condition;
+
         if (eligibilityBlocked) {
+          // 학사 경고 → 자동 시뮬
           gameStore.clearEligibilityBlock();
           const result = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
           seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId);
           await applyPostseasonResult(game.id, result);
           accResults.push(result);
           accLogs.push("학사 경고로 인해 경기 출전 불가");
-        } else {
+        } else if (isInjured) {
+          // 부상 중 → 자동 시뮬 + 메시지
+          const result = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
+          seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId);
+          await applyPostseasonResult(game.id, result);
+          accResults.push(result);
+          accLogs.push("부상으로 인해 경기 출전 불가");
+          gameStore.addMessage({
+            id: `msg-inj-skip-w${nextWeekNum}-${Date.now()}`,
+            category: "system", sender: "코칭스태프",
+            subject: "부상으로 인한 등판 회피",
+            preview: "부상 회복 중으로 이번 경기에 출전하지 않습니다.",
+            body: `부상 회복 중(${gCurrent.protagonist.injury!.recoveryWeeksLeft}주 남음)으로 이번 경기 등판을 회피했습니다.`,
+            createdAt: `W${nextWeekNum}`, readAt: null,
+          });
+        } else if (cond < 35) {
+          // 컨디션 극히 낮음 → 자동 회피 + 메시지
+          const result = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
+          seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId);
+          await applyPostseasonResult(game.id, result);
+          accResults.push(result);
+          accLogs.push(`컨디션 불량(${cond})으로 등판 회피`);
+          gameStore.addMessage({
+            id: `msg-cond-skip-w${nextWeekNum}-${Date.now()}`,
+            category: "system", sender: "코칭스태프",
+            subject: "컨디션 불량으로 인한 등판 회피",
+            preview: `컨디션 ${cond} — 이번 경기 등판을 회피했습니다.`,
+            body: `현재 컨디션(${cond})이 너무 낮아 코칭스태프 판단으로 이번 경기 등판을 회피했습니다.`,
+            createdAt: `W${nextWeekNum}`, readAt: null,
+          });
+        } else if (cond < 55) {
+          // 컨디션 저조 → 사용자 선택 (강행/회피)
           seasonStore.setCurrentDate(game.gameDate);
-          const action: PendingAction = { type: "game", scheduleId: game.id };
+          const action: PendingAction = { type: "conditionWarning", scheduleId: game.id, condition: cond };
           seasonStore.pushPendingAction(action);
           gameStore.save(); seasonStore.save();
           return { processedWeek: nextWeekNum, logs: accLogs, newMessages: [], matchResults: accResults, stoppedBy: action };
+        } else {
+          // 정상 등판
+          seasonStore.setCurrentDate(game.gameDate);
+
+          // 공식 경기: 브리핑 → 게임 순으로 push / 친선경기: 바로 게임
+          const gameAction: PendingAction = { type: "game", scheduleId: game.id };
+          const briefAction: PendingAction = { type: "preGameBriefing", scheduleId: game.id };
+          const firstAction = game.isFriendly ? gameAction : briefAction;
+
+          if (!game.isFriendly) seasonStore.pushPendingAction(briefAction);
+          seasonStore.pushPendingAction(gameAction);
+          gameStore.save(); seasonStore.save();
+          return { processedWeek: nextWeekNum, logs: accLogs, newMessages: [], matchResults: accResults, stoppedBy: firstAction };
         }
       } else {
         let entities = get(masterStore).entities;
