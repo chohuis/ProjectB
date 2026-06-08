@@ -81,7 +81,7 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
 
     // ── 주인공 피로/컨디션 패치 (공식경기의 50% 강도) ──────────
     const fatigueDelta   = Math.ceil(ip * 2);
-    const conditionDelta = -Math.ceil(ip * 0.8);
+    const conditionDelta = -Math.ceil(ip * 0.5);  // 0.8 → 0.5 완화
     gameStore.applyWeekResult(
       {
         fatigue:   Math.min(100, protagonist.fatigue   + fatigueDelta),

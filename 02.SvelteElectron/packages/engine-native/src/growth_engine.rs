@@ -425,6 +425,12 @@ pub fn calc_training_growth(params: TrainingGrowthParams) -> GrowthResult {
     // 주간 자동 피로 회복 (-5): 매주 수동 처리 없이 기본 회복
     fatigue_delta -= 5.0;
 
+    // 주간 자동 컨디션 회복: 피로 낮을수록 더 빠르게 회복
+    let condition_auto_recovery = if p.fatigue >= 80.0 { 1.0 }
+        else if p.fatigue >= 60.0 { 3.0 }
+        else { 5.0 };
+    condition_delta += condition_auto_recovery;
+
     for (prog_id_opt, mult) in programs {
         let prog_id = match prog_id_opt { Some(id) => id, None => continue };
         let cfg = match get_program(prog_id) { Some(c) => c, None => continue };
@@ -623,7 +629,9 @@ pub fn calc_game_growth(params: GameGrowthParams) -> GrowthResult {
             pitching_xp,
             batting_xp,
             fatigue:   clamp(p.fatigue + 4.0 * (if p.fatigue >= 90.0 { 4.0 } else if p.fatigue >= 80.0 { 2.5 } else if p.fatigue >= 70.0 { 1.5 } else { 1.0 }), 0.0, 100.0),
-            condition: clamp(p.condition -  8.0, 0.0, 100.0),
+            condition: clamp(p.condition + if params.won { -3.0 }
+                else if params.score_diff >= 5 { -12.0 }
+                else { -6.0 }, 0.0, 100.0),
             morale: new_morale,
             pitches: None,
             pitch_state_action: "keep".to_string(),
