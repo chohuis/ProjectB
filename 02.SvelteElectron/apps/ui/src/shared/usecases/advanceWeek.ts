@@ -1678,15 +1678,14 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           // 정상 등판
           seasonStore.setCurrentDate(game.gameDate);
 
-          // 공식 경기: 브리핑 → 게임 순으로 push / 친선경기: 바로 게임
-          const gameAction: PendingAction = { type: "game", scheduleId: game.id };
+          // 브리핑 → 게임 순으로 push (공식·친선 모두)
+          const gameAction: PendingAction  = { type: "game", scheduleId: game.id };
           const briefAction: PendingAction = { type: "preGameBriefing", scheduleId: game.id };
-          const firstAction = game.isFriendly ? gameAction : briefAction;
 
-          if (!game.isFriendly) seasonStore.pushPendingAction(briefAction);
+          seasonStore.pushPendingAction(briefAction);
           seasonStore.pushPendingAction(gameAction);
           gameStore.save(); seasonStore.save();
-          return { processedWeek: nextWeekNum, logs: accLogs, newMessages: [], matchResults: accResults, stoppedBy: firstAction };
+          return { processedWeek: nextWeekNum, logs: accLogs, newMessages: [], matchResults: accResults, stoppedBy: briefAction };
         }
       } else {
         let entities = get(masterStore).entities;
