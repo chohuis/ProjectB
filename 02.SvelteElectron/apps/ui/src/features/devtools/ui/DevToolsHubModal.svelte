@@ -10,7 +10,6 @@
     openAchievement: void;
     openMessenger: void;
     openMatchLab: void;
-  openMatchEngine: void;
   }>();
 
   function close() {
@@ -37,9 +36,6 @@
     dispatch("openMatchLab");
   }
 
-  function openMatchEngine() {
-    dispatch("openMatchEngine");
-  }
 </script>
 
 {#if open}
@@ -76,10 +72,6 @@
           <span>밸런스 수치 조정, 즉시 반영, 영구 저장, 배치 시뮬레이션</span>
         </button>
 
-        <button type="button" class="tool-btn highlight" on:click={openMatchEngine}>
-          <strong>경기 엔진 테스트</strong>
-          <span>투구 시뮬레이션 직접 실행 — 타자 선택 후 실시간 경기 진행</span>
-        </button>
       </div>
     </section>
   </div>
@@ -145,11 +137,6 @@
   .tool-btn span {
     font-size: 12px;
     color: #9eb6d9;
-  }
-
-  .tool-btn.highlight {
-    border-color: #4a7ab8;
-    background: #1a3050;
   }
 
   .ghost {

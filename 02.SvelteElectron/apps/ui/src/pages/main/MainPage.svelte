@@ -20,7 +20,6 @@
   import SchedulePage from "../schedule/SchedulePage.svelte";
   import TrainingPage from "../training/TrainingPage.svelte";
   import FinancePage from "../finance/FinancePage.svelte";
-  import NewMatchPage from "../new-match/NewMatchPage.svelte";
   import LeaguePage from "../league/LeaguePage.svelte";
   import AchievementsPage from "../achievements/AchievementsPage.svelte";
   import MessagesPage from "../messages/MessagesPage.svelte";
@@ -314,10 +313,6 @@
     seasonStore.pushPendingAction({ type: "militaryEnlist" });
   }
 
-  function closeMatchEngine() {
-    currentTab = "home";
-  }
-
   function startInteractiveMatch() {
     if (!pendingGameEntry) return;
     const p = $gameStore.protagonist;
@@ -366,7 +361,6 @@
 
   // 키보드 이벤트 핸들러 - Ctrl+Q (메인 페이지에서만 동작)
   function handleGlobalShortcut(event: KeyboardEvent) {
-    if (currentTab === "test") return;
     if (!(event.ctrlKey || event.metaKey)) return;
     if (event.key !== "q" && event.key !== "Q") return;
 
@@ -398,8 +392,6 @@
     onComplete={completeInteractiveMatch}
     onCancel={() => { activeMatchContext = null; }}
   />
-{:else if currentTab === "test"}
-  <NewMatchPage matchContext={null} onComplete={() => {}} onCancel={closeMatchEngine} />
 {:else}
   <div class="layout">
     <TopHeader
@@ -485,10 +477,6 @@
   on:openMatchLab={() => {
     devToolsHubOpen = false;
     matchLabOpen = true;
-  }}
-  on:openMatchEngine={() => {
-    devToolsHubOpen = false;
-    currentTab = "test";
   }}
 />
 
