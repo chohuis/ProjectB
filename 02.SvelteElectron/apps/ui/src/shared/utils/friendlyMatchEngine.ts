@@ -81,21 +81,28 @@ export function planMonthlyFriendlies(
   const label = monthName(weekInYear);
   const weeksInRange = rangeEnd - rangeStart + 1;
 
-  // 이달 안에 이미 편성된 친선경기 수 집계
+  // 이달 내 짝수 주차만 친선 배정 (격주)
+  const evenWeeksInRange = [...Array(weeksInRange)]
+    .map((_, i) => absoluteWeek + i)
+    .filter(w => w % 2 === 0).length;
+
   const alreadyFriendly = schedule.filter(
-    (e) => e.isFriendly && e.week >= absoluteWeek && e.week < absoluteWeek + weeksInRange,
+    (e) => e.isFriendly && !e.id.startsWith("PRESN_") &&
+           e.week >= absoluteWeek && e.week < absoluteWeek + weeksInRange,
   ).length;
 
-  // 주당 1경기 목표 → 이달 남은 주 수만큼 편성
-  const needed = Math.max(0, weeksInRange - alreadyFriendly);
+  const needed = Math.max(0, evenWeeksInRange - alreadyFriendly);
   if (needed === 0) return { entries: [], monthLabel: label };
 
   const entries: ScheduleEntry[] = [];
 
-  // 매주 1경기 (수요일)
+  // 짝수 주차만 1경기 (수요일)
   for (let offset = 0; offset < weeksInRange && entries.length < needed; offset += 1) {
     const weekNum = absoluteWeek + offset;
     if (weekNum > seasonPhaseEnd) break;
+
+    // 홀수 주 건너뜀 (격주 = 짝수 주만)
+    if (weekNum % 2 !== 0) continue;
 
     // 이미 이 주에 친선경기가 있으면 건너뜀
     if (schedule.some((e) => e.isFriendly && e.week === weekNum)) continue;

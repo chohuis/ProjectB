@@ -297,13 +297,15 @@
   function formatDate(date: Date): string { return `${date.getMonth() + 1}/${date.getDate()}`; }
 
   // ── 시즌 뷰 ──────────────────────────────────────────────────
-  type WeekGames = { official: (typeof seasonEntries)[0] | null; friendly: (typeof seasonEntries)[0] | null };
+  type ScheduleEntryRow = (typeof seasonEntries)[0];
+  type WeekGames = { officials: ScheduleEntryRow[]; friendlies: ScheduleEntryRow[] };
   $: gamesByWeek = (() => {
     const m = new Map<number, WeekGames>();
     for (const e of seasonEntries) {
       if (!e.isProtagonistGame) continue;
-      const cur = m.get(e.week) ?? { official: null, friendly: null };
-      if (e.isFriendly) cur.friendly = e; else cur.official = e;
+      const cur = m.get(e.week) ?? { officials: [], friendlies: [] };
+      if (e.isFriendly) cur.friendlies.push(e);
+      else cur.officials.push(e);
       m.set(e.week, cur);
     }
     return m;
@@ -367,20 +369,19 @@
               <div class="week-timeline" use:dragScroll>
                 {#each allWeeks as week}
                   {@const phase    = weekPhase(week)}
-                  {@const wg       = gamesByWeek.get(week) ?? { official: null, friendly: null }}
-                  {@const official = wg.official}
-                  {@const friendly = wg.friendly}
-                  {@const isCurrent   = week === currentWeek}
-                  {@const isPast      = week < currentWeek}
-                  {@const isPostgame  = official ? psLabel(official.id) !== "" : false}
+                  {@const wg         = gamesByWeek.get(week) ?? { officials: [], friendlies: [] }}
+                  {@const isCurrent  = week === currentWeek}
+                  {@const isPast     = week < currentWeek}
+                  {@const hasPost    = wg.officials.some(o => psLabel(o.id) !== "")}
+                  {@const hasFriendly = wg.friendlies.length > 0}
                   <div class="week-row"
                     class:current={isCurrent}
                     class:past={isPast}
-                    class:postseason-game={isPostgame}
-                    class:has-friendly={!!friendly}
+                    class:postseason-game={hasPost}
+                    class:has-friendly={hasFriendly}
                     on:click={() => { view = "week"; cursor = new Date(seasonYear, 2, 1); cursor.setDate(cursor.getDate() + (week - 1) * 7); }}
                   >
-                    <!-- 주차 + 페이즈 (항상 표시) -->
+                    <!-- 주차 + 페이즈 -->
                     <div class="week-left">
                       <span class="week-num">W{week}</span>
                       <span class="phase-tag"
@@ -392,27 +393,29 @@
 
                     <!-- 경기 정보 영역 -->
                     <div class="week-games">
-                      {#if official}
-                        {@const isHome = official.homeTeamId === protagonistTeamId}
-                        {@const opp    = teamLabel(isHome ? official.awayTeamId : official.homeTeamId)}
-                        {@const done   = !!official.result}
-                        {@const psl    = psLabel(official.id)}
-                        <div class="game-row official">
-                          <span class="game-loc">{isHome ? "홈" : "원정"}</span>
-                          <span class="opponent">{psl ? psl + " " : ""}vs {opp}</span>
-                          <span class="status"
-                            class:win ={done && official.result?.winnerId === protagonistTeamId}
-                            class:lose={done && official.result?.winnerId !== protagonistTeamId}>
-                            {gameStatusLabel(official)}
-                          </span>
-                        </div>
-                      {:else if !friendly}
+                      {#if wg.officials.length > 0}
+                        {#each wg.officials as official}
+                          {@const isHome = official.homeTeamId === protagonistTeamId}
+                          {@const opp    = teamLabel(isHome ? official.awayTeamId : official.homeTeamId)}
+                          {@const done   = !!official.result}
+                          {@const psl    = psLabel(official.id)}
+                          <div class="game-row official">
+                            <span class="game-loc">{isHome ? "홈" : "원정"}</span>
+                            <span class="opponent">{psl ? psl + " " : ""}vs {opp}</span>
+                            <span class="status"
+                              class:win ={done && official.result?.winnerId === protagonistTeamId}
+                              class:lose={done && official.result?.winnerId !== protagonistTeamId}>
+                              {gameStatusLabel(official)}
+                            </span>
+                          </div>
+                        {/each}
+                      {:else if wg.friendlies.length === 0}
                         <div class="game-row">
                           <span class="no-game">{PHASE_TRAIN_LABEL[phase] ?? "–"}</span>
                         </div>
                       {/if}
 
-                      {#if friendly}
+                      {#each wg.friendlies as friendly}
                         {@const isHome = friendly.homeTeamId === protagonistTeamId}
                         {@const opp    = teamLabel(isHome ? friendly.awayTeamId : friendly.homeTeamId)}
                         {@const done   = !!friendly.result}
@@ -426,7 +429,7 @@
                             {gameStatusLabel(friendly)}
                           </span>
                         </div>
-                      {/if}
+                      {/each}
                     </div>
                   </div>
                 {/each}

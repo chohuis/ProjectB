@@ -331,10 +331,51 @@ fn generate_hs_group_weekly(
     entries
 }
 
+// ── 프리시즌 친선경기 생성 (W4-W9, 월·수 각 1경기) ─────────────
+fn generate_hs_preseason_friendlies(
+    my_team_id: &str,
+    all_teams: &[String],
+    season_year: u32,
+) -> Vec<ScheduleEntry> {
+    let opponents: Vec<&String> = all_teams.iter().filter(|t| t.as_str() != my_team_id).collect();
+    if opponents.is_empty() { return vec![]; }
+
+    let mut entries = Vec::new();
+    for week in 4u32..=9u32 {
+        // 월요일(offset=1)·수요일(offset=3) 2경기
+        for (slot, day_off) in [(0usize, 1u32), (1usize, 3u32)] {
+            let hash = (my_team_id.len() as u32)
+                .wrapping_mul(97)
+                .wrapping_add(week.wrapping_mul(31))
+                .wrapping_add(slot as u32 * 17) as usize;
+            let opp  = opponents[hash % opponents.len()];
+            let (home, away) = if hash % 2 == 0 {
+                (my_team_id.to_string(), opp.clone())
+            } else {
+                (opp.clone(), my_team_id.to_string())
+            };
+            entries.push(ScheduleEntry {
+                id: format!("PRESN_W{:02}_S{}", week, slot + 1),
+                week,
+                game_date: to_game_date(season_year, week, day_off),
+                league_id: Some("LEAGUE_HIGHSCHOOL".to_string()),
+                home_team_id: home,
+                away_team_id: away,
+                is_protagonist_game: true,
+                phase: "preseason".to_string(),
+            });
+        }
+    }
+    entries
+}
+
 pub fn generate_hs_schedule(p: GenerateHsScheduleParams) -> Vec<ScheduleEntry> {
     let sy = p.season_year.unwrap_or(2026);
+    let all_teams: Vec<String> = p.group_a.iter().chain(p.group_b.iter()).cloned().collect();
+
     let mut out = generate_hs_group_weekly(&p.group_a, &p.protagonist_team_id, 10, 42, "HS_A", sy);
     out.extend(generate_hs_group_weekly(&p.group_b, &p.protagonist_team_id, 10, 42, "HS_B", sy));
+    out.extend(generate_hs_preseason_friendlies(&p.protagonist_team_id, &all_teams, sy));
     out
 }
 

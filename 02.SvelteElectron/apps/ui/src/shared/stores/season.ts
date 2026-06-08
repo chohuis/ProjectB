@@ -343,9 +343,13 @@ function createSeasonStore() {
         generateAllLeagueSchedules(DEFAULT_LEAGUE_CONFIGS.map((c) => ({ ...c })), protagonistTeamId),
       ]);
 
-      // A조·B조 분리 후 leagueId 부여 (ID 충돌 없음 — Rust가 HS_A_*/HS_B_* 접두사 사용)
+      // PRESN_ 접두사 항목 → 프리시즌 친선경기 마킹
       const allHsSchedule = allHsEntries
-        .map((e) => ({ ...e, leagueId: "LEAGUE_HIGHSCHOOL" }))
+        .map((e) => ({
+          ...e,
+          leagueId: "LEAGUE_HIGHSCHOOL",
+          isFriendly: e.id.startsWith("PRESN_") ? true : (e.isFriendly ?? false),
+        }))
         .sort((a, b) => a.gameDate.localeCompare(b.gameDate));
 
       const leagueState: Record<string, LeagueSeasonState> = {
@@ -378,7 +382,11 @@ function createSeasonStore() {
       ]);
 
       const allHsSchedule = allHsEntries
-        .map((e) => ({ ...e, leagueId: "LEAGUE_HIGHSCHOOL" }))
+        .map((e) => ({
+          ...e,
+          leagueId: "LEAGUE_HIGHSCHOOL",
+          isFriendly: e.id.startsWith("PRESN_") ? true : (e.isFriendly ?? false),
+        }))
         .sort((a, b) => a.gameDate.localeCompare(b.gameDate));
 
       const leagueState: Record<string, LeagueSeasonState> = {
