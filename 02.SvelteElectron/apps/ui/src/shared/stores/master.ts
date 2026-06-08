@@ -679,10 +679,36 @@ function createMasterStore() {
     });
   }
 
+  // npcLiveStats의 pitching/batting 값을 entities에 인메모리 덮어쓰기
+  function applyNpcLiveStats(npcLiveStats: Record<string, import("../types/season").NpcLiveStat>) {
+    update((s) => {
+      const entities = s.entities.map((e) => {
+        if (e.role !== "player") return e;
+        const live = npcLiveStats[e.id];
+        if (!live) return e;
+        const player = (e.details as EntityDetails)?.player;
+        if (!player) return e;
+        return {
+          ...e,
+          details: {
+            ...e.details,
+            player: {
+              ...player,
+              ...(live.pitching ? { pitching: { ...live.pitching } as unknown as import("../types/save").PitchingAttributes } : {}),
+              ...(live.batting  ? { batting:  { ...live.batting  } as unknown as import("../types/save").BattingAttributes  } : {}),
+            },
+          },
+        };
+      });
+      return { ...s, entities };
+    });
+  }
+
   return {
     subscribe, load, loadEntities,
     reloadEvents, reloadAchievements,
     setupContentWatcher,
+    applyNpcLiveStats,
   };
 }
 

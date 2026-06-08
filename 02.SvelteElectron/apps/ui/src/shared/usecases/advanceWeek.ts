@@ -308,6 +308,125 @@ async function processNpcInjuries(weekNum: number): Promise<void> {
   }
 }
 
+// ── NPC 월간 성장 헬퍼 ────────────────────────────────────────
+
+// MONTH_STARTS_1 기준 이전 달 주차 범위 반환
+const MONTH_STARTS_1 = [1, 6, 10, 14, 19, 23, 27, 32, 36, 40, 45, 49];
+function getPrevMonthRange(weekInYear: number): { start: number; end: number } {
+  const idx = MONTH_STARTS_1.findIndex((w) => w === weekInYear);
+  if (idx <= 0) return { start: 1, end: weekInYear - 1 };
+  const start = MONTH_STARTS_1[idx - 1];
+  const end   = weekInYear - 1;
+  return { start, end };
+}
+
+// 이전 달 경기 결과에서 NPC별 ERA/AVG 집계
+function aggregateMonthlyPerf(
+  schedule: import("../types/season").ScheduleEntry[],
+  startWeek: number,
+  endWeek: number,
+): Record<string, { gamesPlayed: number; era?: number; battingAvg?: number }> {
+  const pitcherStats: Record<string, { er: number; ip: number }> = {};
+  const batterStats:  Record<string, { h: number; ab: number }> = {};
+
+  for (const entry of schedule) {
+    if (!entry.result || entry.week < startWeek || entry.week > endWeek) continue;
+    for (const line of entry.result.playerLines) {
+      if (line.role === "pitcher") {
+        const p = pitcherStats[line.playerId] ?? { er: 0, ip: 0 };
+        pitcherStats[line.playerId] = { er: p.er + line.er, ip: p.ip + line.ip };
+      } else {
+        const b = batterStats[line.playerId] ?? { h: 0, ab: 0 };
+        batterStats[line.playerId] = { h: b.h + line.h, ab: b.ab + line.ab };
+      }
+    }
+  }
+
+  const result: Record<string, { gamesPlayed: number; era?: number; battingAvg?: number }> = {};
+  for (const [id, st] of Object.entries(pitcherStats)) {
+    result[id] = { gamesPlayed: 1, era: st.ip > 0 ? Math.round((st.er * 9) / st.ip * 100) / 100 : undefined };
+  }
+  for (const [id, st] of Object.entries(batterStats)) {
+    result[id] = { gamesPlayed: 1, battingAvg: st.ab > 0 ? Math.round((st.h / st.ab) * 1000) / 1000 : undefined };
+  }
+  return result;
+}
+
+// 모든 선수 NPC 월간 성장 처리
+async function processMonthlyNpcGrowth(weekNum: number, weekInYear: number): Promise<void> {
+  const g = get(gameStore);
+  const s = get(seasonStore);
+  const m = get(masterStore);
+
+  // 현재 페이즈
+  const currentPhase = s.schedule.find((e) => e.week === weekNum)?.phase ?? "offseason";
+
+  // 팀 컨텍스트 조립
+  const teamContexts = m.teams.map((t) => {
+    const mgr   = m.entities.find((e) => e.role === "manager" && e.teamId === t.id);
+    const coach = m.entities.find((e) => e.role === "coach" && e.teamId === t.id);
+    return {
+      teamId: t.id,
+      facilityTier: t.tier ?? "독립",
+      managerDevelopment: (mgr?.details as any)?.manager?.stats?.development ?? 50,
+      coachTeaching: (coach?.details as any)?.coach?.stats?.teaching ?? 50,
+    };
+  });
+
+  // 이전 달 성적 집계
+  const { start, end } = getPrevMonthRange(weekInYear);
+  const allSchedule = [
+    ...s.schedule,
+    ...Object.values(s.leagueSchedules).flat(),
+  ];
+  const perfRaw = aggregateMonthlyPerf(allSchedule, start, end);
+  const perfData: Record<string, { gamesPlayed: number; era?: number; battingAvg?: number }> = perfRaw;
+
+  // 전체 선수 엔티티 → NpcLiveInput 변환
+  const npcs = m.entities
+    .filter((e) => e.role === "player")
+    .map((e) => {
+      const live = s.npcLiveStats[e.id];
+      const p    = (e.details as import("../stores/master").EntityDetails)?.player;
+      return {
+        npcId:           e.id,
+        teamId:          e.teamId,
+        playerType:      p?.playerType ?? "pitcher",
+        age:             e.age,
+        developmentRate: p?.developmentRate ?? 50,
+        potentialHidden: p?.potentialHidden ?? 75,
+        pitching:        live?.pitching ?? p?.pitching,
+        batting:         live?.batting  ?? p?.batting,
+        pitchingXp:      live?.pitchingXp ?? {},
+        battingXp:       live?.battingXp  ?? {},
+        peakOvr:         live?.peakOvr,
+      };
+    });
+
+  if (npcs.length === 0) return;
+
+  // Rust 호출
+  const result = JSON.parse(
+    await window.projectB!.npcCalcMonthlyGrowth(JSON.stringify({
+      npcs,
+      teamContexts,
+      perfData,
+      currentPhase,
+      monthIndex: MONTH_STARTS_1.indexOf(weekInYear),
+    }))
+  ) as { updated: Array<{
+    npcId: string;
+    pitching?: any;
+    batting?: any;
+    pitchingXp: Record<string, number>;
+    battingXp: Record<string, number>;
+    peakOvr: number;
+  }> };
+
+  // seasonStore 업데이트
+  seasonStore.applyNpcLiveGrowth(result.updated);
+}
+
 // ── 주간 처리 블록 ─────────────────────────────────────────────
 // week 경계를 넘을 때 호출: 훈련·이벤트·시험·메신저·진로·업적·배경리그
 // 반환: 새로 생긴 logs
@@ -355,6 +474,13 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       });
       logs.push(`[역할 배정] ${role}`);
     }
+  }
+
+  // W1: 주인공 스냅샷 저장 + NPC 라이브 스탯 초기화
+  if (weekNum === 1) {
+    gameStore.saveSeasonStartSnapshot();
+    seasonStore.initNpcLiveStats(m.entities);
+    seasonStore.snapNpcSeasonStart();
   }
 
   const isUniversity = g.protagonist.careerStage === "university";
@@ -630,6 +756,13 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       if (ef.scoutScore > 0) gameStore.updateScoutScore(ef.scoutScore);
       if (ef.morale > 0) gameStore.updateMorale(ef.morale);
     }
+  }
+
+  // NPC 월간 성장/하락 처리 (매월 첫 주)
+  if (isMonthStart(weekInYear)) {
+    await processMonthlyNpcGrowth(weekNum, weekInYear);
+    // 성장 결과를 masterStore.entities에 반영 (게임 시뮬레이션에 즉시 적용)
+    masterStore.applyNpcLiveStats(get(seasonStore).npcLiveStats);
   }
 
   // 친선경기 월간 플래너 (고교·대학·독립리그, 월 첫 주)
@@ -1345,6 +1478,69 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       return { ...result, logs: [...accLogs, ...result.logs], matchResults: [...accResults, ...result.matchResults] };
     }
 
+    // ── 주인공 경기 종료 후 같은 주차 남은 NPC 경기 처리 ─────────
+    // advanceWeek가 주인공 경기에서 멈춘 뒤 재호출될 때, 아직 처리
+    // 안 된 같은 주차 NPC 경기가 있으면 주차를 올리지 않고 먼저 완료.
+    {
+      const weekAlreadyStarted = s.schedule.some(
+        (e) => e.week === s.currentWeek && !!e.result,
+      );
+      const remainingNpcGames = s.schedule.filter(
+        (e) => e.week === s.currentWeek && !e.result && !e.isProtagonistGame,
+      );
+      const protagonistStillPending = s.schedule.some(
+        (e) => e.week === s.currentWeek && e.isProtagonistGame && !e.result,
+      );
+
+      if (weekAlreadyStarted && remainingNpcGames.length > 0 && !protagonistStillPending) {
+        const sorted = [...remainingNpcGames].sort((a, b) => a.gameDate.localeCompare(b.gameDate));
+        for (const game of sorted) {
+          const gCurrent = get(gameStore);
+          let entities = get(masterStore).entities;
+          if (entities.length === 0) {
+            await masterStore.loadEntities("");
+            entities = get(masterStore).entities;
+          }
+          const leagueId    = gCurrent.protagonist.leagueId;
+          const lStateSnap  = get(seasonStore).leagueState[leagueId];
+          const homeRotIdx  = lStateSnap?.teamRotationIndex?.[game.homeTeamId] ?? 0;
+          const awayRotIdx  = lStateSnap?.teamRotationIndex?.[game.awayTeamId] ?? 0;
+          const conditions  = lStateSnap?.playerConditions ?? {};
+
+          let npcResult: MatchResult;
+          let nextHomeRotIdx = homeRotIdx;
+          let nextAwayRotIdx = awayRotIdx;
+          let pitcherConds: Record<string, PlayerCondition> = {};
+
+          if (entities.length > 0) {
+            const sim = await simulateGame(game.homeTeamId, game.awayTeamId, entities, {
+              conditions, homeRotIdx, awayRotIdx, week: game.week,
+              npcInjuries: get(seasonStore).npcInjuries,
+              rotationSize: rotationSizeForStage(gCurrent.protagonist.careerStage),
+              npcLiveStats: get(seasonStore).npcLiveStats,
+            });
+            npcResult      = sim.result;
+            nextHomeRotIdx = sim.nextHomeRotIdx;
+            nextAwayRotIdx = sim.nextAwayRotIdx;
+            pitcherConds   = sim.pitcherConditions;
+          } else {
+            npcResult = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
+          }
+
+          seasonStore.applyProtagonistGroupNpcResult(
+            game.id, npcResult, leagueId,
+            game.homeTeamId, game.awayTeamId,
+            nextHomeRotIdx, nextAwayRotIdx, pitcherConds,
+          );
+          applyPostseasonResult(game.id, npcResult);
+          accResults.push(npcResult);
+          accLogs.push(`${game.homeTeamId} ${npcResult.homeScore}:${npcResult.awayScore} ${game.awayTeamId}`);
+        }
+        gameStore.save(); seasonStore.save();
+        return { processedWeek: s.currentWeek, logs: accLogs, newMessages: [], matchResults: accResults, stoppedBy: null };
+      }
+    }
+
     const nextWeekNum = s.currentWeek + 1;
     seasonStore.advanceWeek();
     seasonStore.setCurrentDate(toGameDate(s.seasonYear, nextWeekNum, 0));
@@ -1448,6 +1644,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
             conditions, homeRotIdx, awayRotIdx, week: game.week,
             npcInjuries: get(seasonStore).npcInjuries,
             rotationSize: rotationSizeForStage(gCurrent.protagonist.careerStage),
+            npcLiveStats: get(seasonStore).npcLiveStats,
           });
           npcResult      = sim.result;
           nextHomeRotIdx = sim.nextHomeRotIdx;

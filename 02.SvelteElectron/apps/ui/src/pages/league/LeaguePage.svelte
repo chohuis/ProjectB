@@ -23,10 +23,7 @@
     "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT",
   ]);
 
-  $: lockedLeagueSet = (
-    $gameStore.protagonist.careerStage === "highschool" &&
-    ($gameStore.protagonist.grade ?? 1) <= 2
-  ) ? PRO_LEAGUES : new Set<string>();
+  $: lockedLeagueSet = new Set<string>();
 
   function isLocked(lid: string): boolean {
     return lockedLeagueSet.has(lid);

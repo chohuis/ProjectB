@@ -41,6 +41,8 @@ export declare function simGameNative(paramsJson: string): string
 export declare function runOffseasonNative(paramsJson: string): string
 /** 고교 학년 진급 */
 export declare function advanceGradesNative(paramsJson: string): string
+/** NPC 월간 성장/하락 처리 */
+export declare function npcCalcMonthlyGrowth(paramsJson: string): string
 /** 신입생 벌크 생성 */
 export declare function generateFreshmenNative(paramsJson: string): string
 /** NPC 드래프트 시뮬 */

@@ -1,6 +1,6 @@
 import type { EntityRow, EntityPlayerDetails } from "../stores/master";
 import type { NpcInjuryEntry } from "../types/save";
-import type { MatchResult, PlayerCondition } from "../types/season";
+import type { MatchResult, NpcLiveStat, PlayerCondition } from "../types/season";
 import { buildTeamRoster } from "./rosterEngine";
 
 // ── 반환 타입 ─────────────────────────────────────────────────
@@ -24,10 +24,16 @@ function parseResult<T>(json: string): T {
 interface SimPitcher { id: string; velocity: number; movement: number; command: number; control: number; stamina: number }
 interface SimBatter  { id: string; contact: number;  power: number;    eye: number;    discipline: number }
 
-function toSimPitcher(id: string, entityMap: Map<string, EntityRow>): SimPitcher | null {
+// npcLiveStats가 있으면 성장 반영값 우선, 없으면 entity 기본값 사용
+function toSimPitcher(
+  id: string,
+  entityMap: Map<string, EntityRow>,
+  npcLiveStats?: Record<string, NpcLiveStat>,
+): SimPitcher | null {
   const e = entityMap.get(id);
   if (!e) return null;
-  const p = (e.details.player as EntityPlayerDetails).pitching;
+  const live = npcLiveStats?.[id];
+  const p = live?.pitching ?? (e.details.player as EntityPlayerDetails).pitching;
   return {
     id,
     velocity:  p?.velocity  ?? 50,
@@ -38,10 +44,15 @@ function toSimPitcher(id: string, entityMap: Map<string, EntityRow>): SimPitcher
   };
 }
 
-function toSimBatter(id: string, entityMap: Map<string, EntityRow>): SimBatter | null {
+function toSimBatter(
+  id: string,
+  entityMap: Map<string, EntityRow>,
+  npcLiveStats?: Record<string, NpcLiveStat>,
+): SimBatter | null {
   const e = entityMap.get(id);
   if (!e) return null;
-  const b = (e.details.player as EntityPlayerDetails).batting;
+  const live = npcLiveStats?.[id];
+  const b = live?.batting ?? (e.details.player as EntityPlayerDetails).batting;
   return {
     id,
     contact:    b?.contact    ?? 50,
@@ -63,16 +74,17 @@ export async function simulateGame(
     week?:         number;
     npcInjuries?:  Record<string, NpcInjuryEntry>;
     rotationSize?: number;
+    npcLiveStats?: Record<string, NpcLiveStat>;   // 월간 성장 반영값
   },
 ): Promise<SimGameResult> {
-  const { conditions = {}, homeRotIdx = 0, awayRotIdx = 0, week = 0, npcInjuries, rotationSize = 5 } = options ?? {};
+  const { conditions = {}, homeRotIdx = 0, awayRotIdx = 0, week = 0, npcInjuries, rotationSize = 5, npcLiveStats } = options ?? {};
   const entityMap = new Map(entities.map((e) => [e.id, e]));
 
   const homeRoster = buildTeamRoster(homeTeamId, entities, npcInjuries, rotationSize);
   const awayRoster = buildTeamRoster(awayTeamId, entities, npcInjuries, rotationSize);
 
-  const toSimPitchers = (ids: string[]) => ids.map(id => toSimPitcher(id, entityMap)).filter(Boolean) as SimPitcher[];
-  const toSimBatters  = (ids: string[]) => ids.map(id => toSimBatter(id, entityMap)).filter(Boolean)  as SimBatter[];
+  const toSimPitchers = (ids: string[]) => ids.map(id => toSimPitcher(id, entityMap, npcLiveStats)).filter(Boolean) as SimPitcher[];
+  const toSimBatters  = (ids: string[]) => ids.map(id => toSimBatter(id, entityMap, npcLiveStats)).filter(Boolean)  as SimBatter[];
 
   const params = {
     homeRotation: toSimPitchers(homeRoster.rotation),

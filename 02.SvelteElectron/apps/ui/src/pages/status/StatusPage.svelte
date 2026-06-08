@@ -12,8 +12,15 @@
 
   type StatGroup = {
     title: string;
-    items: Array<{ label: string; value: number }>;
+    items: Array<{ label: string; value: number; trend: "up" | "down" | "none" }>;
   };
+
+  function statTrend(current: number, snapshot: number | undefined): "up" | "down" | "none" {
+    if (snapshot == null) return "none";
+    if (current - snapshot >= 1) return "up";
+    if (snapshot - current >= 1) return "down";
+    return "none";
+  }
 
   $: statGroups = buildStatGroups($gameStore.protagonist);
   $: myStats = $seasonStore.stats[$gameStore.protagonist.id] ?? null;
@@ -36,24 +43,26 @@
   })();
 
   function buildStatGroups(p: typeof $gameStore.protagonist): StatGroup[] {
-    const pit = p.pitching;
-    const bat = p.batting;
+    const pit  = p.pitching;
+    const bat  = p.batting;
+    const sp   = p.seasonStartPitching;
+    const sb   = p.seasonStartBatting;
     const groups: StatGroup[] = [];
 
     if (p.playerType === "pitcher" || p.playerType === "twoWay") {
       groups.push({
         title: "투구",
         items: [
-          { label: "OVR",      value: pit.ovr },
-          { label: "구위",     value: pit.velocity },
-          { label: "커맨드",   value: pit.command },
-          { label: "제구",     value: pit.control },
-          { label: "무브먼트", value: pit.movement },
-          { label: "멘탈",     value: pit.mentality },
-          { label: "스태미나", value: pit.stamina },
-          { label: "회복력",   value: pit.recovery },
-          { label: "위기집중", value: pit.clutch },
-          { label: "견제력",   value: pit.holdRunners },
+          { label: "OVR",      value: pit.ovr,         trend: statTrend(pit.ovr,         sp?.ovr) },
+          { label: "구위",     value: pit.velocity,    trend: statTrend(pit.velocity,    sp?.velocity) },
+          { label: "커맨드",   value: pit.command,     trend: statTrend(pit.command,     sp?.command) },
+          { label: "제구",     value: pit.control,     trend: statTrend(pit.control,     sp?.control) },
+          { label: "무브먼트", value: pit.movement,    trend: statTrend(pit.movement,    sp?.movement) },
+          { label: "멘탈",     value: pit.mentality,   trend: statTrend(pit.mentality,   sp?.mentality) },
+          { label: "스태미나", value: pit.stamina,     trend: statTrend(pit.stamina,     sp?.stamina) },
+          { label: "회복력",   value: pit.recovery,    trend: statTrend(pit.recovery,    sp?.recovery) },
+          { label: "위기집중", value: pit.clutch,      trend: statTrend(pit.clutch,      sp?.clutch) },
+          { label: "견제력",   value: pit.holdRunners, trend: statTrend(pit.holdRunners, sp?.holdRunners) },
         ],
       });
     }
@@ -62,23 +71,23 @@
       groups.push({
         title: "타격",
         items: [
-          { label: "OVR",    value: bat.ovr },
-          { label: "컨택",   value: bat.contact },
-          { label: "장타력", value: bat.power },
-          { label: "선구안", value: bat.eye },
-          { label: "극기",   value: bat.discipline },
-          { label: "클러치", value: bat.battingClutch },
-          { label: "플래툰", value: bat.platoon },
-          { label: "번트",   value: bat.bunting },
+          { label: "OVR",    value: bat.ovr,          trend: statTrend(bat.ovr,          sb?.ovr) },
+          { label: "컨택",   value: bat.contact,      trend: statTrend(bat.contact,      sb?.contact) },
+          { label: "장타력", value: bat.power,        trend: statTrend(bat.power,        sb?.power) },
+          { label: "선구안", value: bat.eye,          trend: statTrend(bat.eye,          sb?.eye) },
+          { label: "극기",   value: bat.discipline,   trend: statTrend(bat.discipline,   sb?.discipline) },
+          { label: "클러치", value: bat.battingClutch,trend: statTrend(bat.battingClutch,sb?.battingClutch) },
+          { label: "플래툰", value: bat.platoon,      trend: statTrend(bat.platoon,      sb?.platoon) },
+          { label: "번트",   value: bat.bunting,      trend: statTrend(bat.bunting,      sb?.bunting) },
         ],
       });
       groups.push({
         title: "주루·수비",
         items: [
-          { label: "주력",     value: bat.speed },
-          { label: "주루판단", value: bat.baseInstinct },
-          { label: "수비",     value: bat.fielding },
-          { label: "어깨",     value: bat.arm },
+          { label: "주력",     value: bat.speed,        trend: statTrend(bat.speed,        sb?.speed) },
+          { label: "주루판단", value: bat.baseInstinct, trend: statTrend(bat.baseInstinct, sb?.baseInstinct) },
+          { label: "수비",     value: bat.fielding,     trend: statTrend(bat.fielding,     sb?.fielding) },
+          { label: "어깨",     value: bat.arm,          trend: statTrend(bat.arm,          sb?.arm) },
         ],
       });
     }
@@ -90,6 +99,11 @@
     if (value >= 70) return "good";
     if (value >= 50) return "mid";
     return "low";
+  }
+
+  function formatBirthday(bd: string): string {
+    const [, m, d] = bd.split("-");
+    return `2010년 ${parseInt(m)}월 ${parseInt(d)}일`;
   }
 
   const PITCH_NAMES: Record<string, string> = {
@@ -149,6 +163,9 @@
   <article class="card profile-card">
     <div class="identity">
       <p class="name">{$gameStore.player.name}</p>
+      {#if $gameStore.protagonist.birthday}
+        <p class="meta birthday">{formatBirthday($gameStore.protagonist.birthday)}</p>
+      {/if}
       <p class="meta">
         {$teamMap.get($gameStore.protagonist.teamId)?.name ?? $gameStore.player.team} · {$gameStore.player.year} · {$gameStore.player.position} · {$gameStore.player.role}
       </p>
@@ -242,7 +259,14 @@
               {#each group.items as stat}
                 <div class="stat-item">
                   <span class="label">{stat.label}</span>
-                  <span class={`value ${statTone(stat.value)}`}>{stat.value}</span>
+                  <span class={`value ${statTone(stat.value)}`}>
+                    {stat.value}
+                    {#if stat.trend === "up"}
+                      <span class="trend-arrow up">↑</span>
+                    {:else if stat.trend === "down"}
+                      <span class="trend-arrow down">↓</span>
+                    {/if}
+                  </span>
                 </div>
               {/each}
             </div>
@@ -477,6 +501,7 @@
 
   .name { font-size: 22px; font-weight: 700; color: #f1f6ff; }
   .meta { margin-top: 4px; color: #aebddd; font-size: 14px; }
+  .meta.birthday { color: #7a9ac8; font-size: 13px; }
 
   .tags { margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
   .tags span {
@@ -544,6 +569,9 @@
   .value.good { color: #68de92; }
   .value.mid  { color: #d8e8ff; }
   .value.low  { color: #ffb58a; }
+  .trend-arrow { font-size: 12px; font-weight: 700; margin-left: 2px; vertical-align: middle; }
+  .trend-arrow.up   { color: #ff6b6b; }
+  .trend-arrow.down { color: #74b9ff; }
 
   .pitches-card h3 { margin-bottom: 10px; }
   .pitch-list { display: flex; flex-wrap: wrap; gap: 8px; }

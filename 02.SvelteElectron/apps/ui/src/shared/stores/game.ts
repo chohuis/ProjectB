@@ -841,6 +841,18 @@ function createGameStore() {
       update((s) => ({ ...s, protagonist: { ...s.protagonist, position: pos } }));
     },
 
+    // 시즌 시작 시 주인공 스탯 스냅샷 저장 (능력치 트렌드 화살표용)
+    saveSeasonStartSnapshot() {
+      update((s) => ({
+        ...s,
+        protagonist: {
+          ...s.protagonist,
+          seasonStartPitching: { ...s.protagonist.pitching },
+          seasonStartBatting:  { ...s.protagonist.batting  },
+        },
+      }));
+    },
+
     setTrainingPlan(plan: Partial<TrainingPlanState>) {
       update((s) => ({ ...s, trainingPlan: { ...s.trainingPlan, ...plan } }));
     },

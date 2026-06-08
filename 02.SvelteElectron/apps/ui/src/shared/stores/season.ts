@@ -91,7 +91,74 @@ function createSeasonStore() {
         postseasonBrackets: season.postseasonBrackets ?? {},
         ablEastTeams: season.ablEastTeams ?? [], ablWestTeams: season.ablWestTeams ?? [],
         friendlyLog: season.friendlyLog ?? [],
+        npcLiveStats: season.npcLiveStats ?? {},
         schedule: (season.schedule ?? []).map((e) => e.gameDate ? e : { ...e, gameDate: `${season.seasonYear ?? 2026}-03-01` }),
+      });
+    },
+
+    // entity 목록 기준으로 npcLiveStats 초기화 (W1 또는 신규 엔티티 대응)
+    initNpcLiveStats(entities: import("../stores/master").EntityRow[]) {
+      update((s) => {
+        const stats = { ...s.npcLiveStats };
+        for (const e of entities) {
+          if (e.role !== "player") continue;
+          if (stats[e.id]) continue;
+          const p = (e.details as import("../stores/master").EntityDetails)?.player;
+          if (!p) continue;
+          stats[e.id] = {
+            pitching: p.pitching ? { ...p.pitching } : undefined,
+            batting:  p.batting  ? { ...p.batting  } : undefined,
+            pitchingXp: {},
+            battingXp:  {},
+            seasonStartPitching: p.pitching ? { ...p.pitching } : undefined,
+            seasonStartBatting:  p.batting  ? { ...p.batting  } : undefined,
+            peakOvr: p.pitching?.ovr ?? p.batting?.ovr,
+          };
+        }
+        return { ...s, npcLiveStats: stats };
+      });
+    },
+
+    // 월간 성장 결과를 npcLiveStats에 반영
+    applyNpcLiveGrowth(
+      updated: Array<{
+        npcId: string;
+        pitching?: import("../types/save").NpcPitchingAttrs;
+        batting?: import("../types/save").NpcBattingAttrs;
+        pitchingXp: Record<string, number>;
+        battingXp: Record<string, number>;
+        peakOvr: number;
+      }>
+    ) {
+      update((s) => {
+        const stats = { ...s.npcLiveStats };
+        for (const u of updated) {
+          stats[u.npcId] = {
+            ...(stats[u.npcId] ?? { pitchingXp: {}, battingXp: {} }),
+            pitching:   u.pitching,
+            batting:    u.batting,
+            pitchingXp: u.pitchingXp,
+            battingXp:  u.battingXp,
+            peakOvr:    u.peakOvr,
+          };
+        }
+        return { ...s, npcLiveStats: stats };
+      });
+    },
+
+    // 시즌 시작 스냅샷 갱신 (W1 호출)
+    snapNpcSeasonStart() {
+      update((s) => {
+        const stats = { ...s.npcLiveStats };
+        for (const id of Object.keys(stats)) {
+          const live = stats[id];
+          stats[id] = {
+            ...live,
+            seasonStartPitching: live.pitching ? { ...live.pitching } : undefined,
+            seasonStartBatting:  live.batting  ? { ...live.batting  } : undefined,
+          };
+        }
+        return { ...s, npcLiveStats: stats };
       });
     },
 

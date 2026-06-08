@@ -240,6 +240,17 @@ pub fn advance_grades_native(params_json: String) -> String {
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("advanceGradesNative/serialize", e))
 }
 
+/// NPC 월간 성장/하락 처리
+#[napi]
+pub fn npc_calc_monthly_growth(params_json: String) -> String {
+    let params: MonthlyNpcGrowthParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("npcCalcMonthlyGrowth", e),
+    };
+    let result = npc_sim::calc_monthly_npc_growth(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("npcCalcMonthlyGrowth/serialize", e))
+}
+
 /// 신입생 벌크 생성
 #[napi]
 pub fn generate_freshmen_native(params_json: String) -> String {

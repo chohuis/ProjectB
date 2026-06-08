@@ -17,6 +17,14 @@
   let handedness: Handedness = "R";
   let pitchingForm: PitchingForm = "overhand";
 
+  // 생일 (년도 2010 고정)
+  let birthMonth = 4;
+  let birthDay   = 1;
+  const DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  $: maxDay = DAYS_IN_MONTH[birthMonth - 1];
+  $: if (birthDay > maxDay) birthDay = maxDay;
+  $: birthdayStr = `2010-${String(birthMonth).padStart(2, "0")}-${String(birthDay).padStart(2, "0")}`;
+
   const handednessOptions: { value: Handedness; label: string }[] = [
     { value: "R", label: "우투" },
     { value: "L", label: "좌투" },
@@ -147,6 +155,7 @@
       pitchingXP: {},
       battingXP: {},
       pitches: preset.pitches,
+      birthday: birthdayStr,
       money: 1200,
       fame: 5,
       scoutScore: 15,
@@ -297,6 +306,23 @@
             maxlength="20"
             class:error={playerName.length === 0 && step === 1}
           />
+        </div>
+
+        <div class="field">
+          <label>생년월일</label>
+          <div class="birthday-row">
+            <span class="birth-year">2010년</span>
+            <select bind:value={birthMonth} class="birth-select">
+              {#each Array.from({length: 12}, (_, i) => i + 1) as m}
+                <option value={m}>{m}월</option>
+              {/each}
+            </select>
+            <select bind:value={birthDay} class="birth-select">
+              {#each Array.from({length: maxDay}, (_, i) => i + 1) as d}
+                <option value={d}>{d}일</option>
+              {/each}
+            </select>
+          </div>
         </div>
 
         <div class="field">
@@ -553,6 +579,10 @@
             <span class="val">{playerName}</span>
           </div>
           <div class="summary-row">
+            <span class="key">생년월일</span>
+            <span class="val">2010년 {birthMonth}월 {birthDay}일</span>
+          </div>
+          <div class="summary-row">
             <span class="key">투구 방향</span>
             <span class="val">{handednessLabel[handedness]}</span>
           </div>
@@ -743,6 +773,37 @@
 
   input.error {
     border-color: #804040;
+  }
+
+  /* ── 생일 ── */
+  .birthday-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .birth-year {
+    color: #7a9ac8;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 10px 4px;
+    white-space: nowrap;
+  }
+
+  .birth-select {
+    background: #111d34;
+    border: 1px solid #2d4470;
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: #e8f2ff;
+    font-size: 15px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .birth-select:focus {
+    border-color: #5a8fe8;
   }
 
   /* ── 라디오 버튼 ── */

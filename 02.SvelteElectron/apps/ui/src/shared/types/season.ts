@@ -231,6 +231,17 @@ export interface LeagueSeasonState {
   teamRotationIndex: Record<string, number>;           // teamId → 다음 선발 로테이션 슬롯
 }
 
+// ── NPC 라이브 스탯 (월간 성장/하락 반영, npcLiveStats에 저장) ──
+export interface NpcLiveStat {
+  pitching?: import("../types/save").NpcPitchingAttrs;
+  batting?: import("../types/save").NpcBattingAttrs;
+  pitchingXp: Record<string, number>;
+  battingXp: Record<string, number>;
+  seasonStartPitching?: import("../types/save").NpcPitchingAttrs;
+  seasonStartBatting?: import("../types/save").NpcBattingAttrs;
+  peakOvr?: number;
+}
+
 // ── save_season.json 전체 구조 ─────────────────────────────────
 export interface SaveSeason {
   version: number;      // 저장 포맷 버전
@@ -260,6 +271,8 @@ export interface SaveSeason {
   npcInjuries: Record<string, import("../types/save").NpcInjuryEntry>;
   // 친선경기 성적 이력
   friendlyLog: FriendlyPerformanceLog[];
+  // 모든 선수 NPC 라이브 스탯 (월간 성장/하락 누적, entityId → NpcLiveStat)
+  npcLiveStats: Record<string, NpcLiveStat>;
 }
 
 export const SAVE_SEASON_VERSION = 1;
@@ -302,6 +315,7 @@ export function makeEmptySeason(
     ablWestTeams: [],
     npcInjuries: {},
     friendlyLog: [],
+    npcLiveStats: {},
   };
 }
 

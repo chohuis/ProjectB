@@ -111,6 +111,7 @@ declare global {
       npcApplyDraft:                (p: string) => Promise<string>;
       npcDetermineProtagonistDraft: (p: string) => Promise<string>;
       npcAdvanceProtagonistGrade:   (p: string) => Promise<string>;
+      npcCalcMonthlyGrowth:         (p: string) => Promise<string>;
       // ── NPC 경기 기록 ──────────────────────────────────────────
       npcBulkInsertGameLogs:        (p: string) => Promise<string>;
       npcTrimGameLogs:              (p: string) => Promise<string>;

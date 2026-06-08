@@ -501,6 +501,7 @@ fn npc_core_ovr(npc: &NpcSaveState) -> f64 {
     }
 }
 
+#[allow(dead_code)]
 fn apply_aging_decay(mut npc: NpcSaveState) -> NpcSaveState {
     let age = npc.age;
     if age < 30 { return npc; }
@@ -713,8 +714,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             return n;
         }
 
-        // 4. 에이징
-        n = apply_aging_decay(n);
+        // 4. 에이징: 월간 감퇴(calc_monthly_npc_growth)로 이관, 오프시즌 중복 처리 제거
 
         // 5. 프로 연차 + FA
         if n.current_league == "LEAGUE_KBL" || n.current_league == "LEAGUE_ABL" {
@@ -1062,4 +1062,343 @@ pub fn advance_protagonist_grade(params: ProtagonistGradeParams) -> ProtagonistG
         new_age,
         is_graduating: false,
     }
+}
+
+// ── NPC 월간 성장 ─────────────────────────────────────────────────────────────
+
+use crate::sim_types::{
+    NpcLiveOutput, NpcMonthlyPerf, NpcTeamContext,
+    MonthlyNpcGrowthParams, MonthlyNpcGrowthResult,
+};
+
+fn age_growth_factor(age: i32) -> f64 {
+    match age {
+        i32::MIN..=17 => 1.35,
+        18..=20       => 1.20,
+        21..=23       => 1.00,
+        24..=26       => 0.70,
+        27..=29       => 0.30,
+        30..=32       => 0.08,
+        _             => 0.00,
+    }
+}
+
+fn facility_factor(tier: &str) -> f64 {
+    match tier {
+        "1군"  => 1.00,
+        "2군"  => 0.88,
+        "대학" => 0.95,
+        "고교" => 1.08,
+        _      => 0.78,
+    }
+}
+
+fn training_factor(ctx: &NpcTeamContext, phase: &str) -> f64 {
+    let fac  = facility_factor(&ctx.facility_tier);
+    let mgr  = 0.75 + ctx.manager_development / 250.0;
+    let cch  = 0.80 + ctx.coach_teaching / 200.0;
+    let mult = match phase {
+        "offseason"  => 1.50,
+        "preseason"  => 1.25,
+        "postseason" => 0.85,
+        _            => 1.00,
+    };
+    fac * mgr * cch * mult
+}
+
+fn quality_factor(perf: &NpcMonthlyPerf, player_type: &str) -> f64 {
+    if player_type == "pitcher" {
+        if let Some(era) = perf.era {
+            if era < 2.5 { return 1.40; }
+            if era < 3.5 { return 1.15; }
+            if era < 4.5 { return 1.00; }
+            if era < 6.0 { return 0.80; }
+            return 0.60;
+        }
+    } else {
+        if let Some(avg) = perf.batting_avg {
+            if avg > 0.300 { return 1.40; }
+            if avg > 0.270 { return 1.15; }
+            if avg > 0.240 { return 1.00; }
+            if avg > 0.200 { return 0.80; }
+            return 0.60;
+        }
+    }
+    1.00
+}
+
+fn perf_factor(perf: Option<&NpcMonthlyPerf>, phase: &str, player_type: &str) -> f64 {
+    let phase_weight = match phase {
+        "offseason"  => 0.20,
+        "preseason"  => 0.50,
+        "postseason" => 0.80,
+        _            => 1.00,
+    };
+    let base = if let Some(p) = perf {
+        let games = (p.games_played as f64 / 5.0).min(1.0);
+        games * quality_factor(p, player_type)
+    } else {
+        0.40
+    };
+    base * phase_weight
+}
+
+// 투수 스탯별 XP 비중 (나이에 따라 성장 방향 변화)
+fn pitching_xp_weights(age: i32) -> &'static [(&'static str, f64)] {
+    if age <= 23 {
+        &[("velocity",0.35),("command",0.30),("control",0.20),("movement",0.15)]
+    } else if age <= 28 {
+        &[("command",0.40),("control",0.35),("velocity",0.15),("movement",0.10)]
+    } else {
+        &[("mentality",0.50),("recovery",0.30),("command",0.20)]
+    }
+}
+
+// 타자 스탯별 XP 비중
+fn batting_xp_weights(age: i32) -> &'static [(&'static str, f64)] {
+    if age <= 23 {
+        &[("contact",0.35),("eye",0.25),("speed",0.20),("power",0.20)]
+    } else if age <= 28 {
+        &[("contact",0.40),("power",0.35),("eye",0.25)]
+    } else {
+        &[("eye",0.50),("discipline",0.30),("battingClutch",0.20)]
+    }
+}
+
+fn xp_threshold(v: f64) -> f64 { 7.5 + v * 0.35 }
+
+fn get_npc_pitching_stat(p: &NpcPitchingAttrs, stat: &str) -> f64 {
+    match stat {
+        "velocity"    => p.velocity,
+        "command"     => p.command,
+        "control"     => p.control,
+        "movement"    => p.movement,
+        "mentality"   => p.mentality,
+        "stamina"     => p.stamina,
+        "recovery"    => p.recovery,
+        "clutch"      => p.clutch,
+        "holdRunners" => p.hold_runners,
+        _             => 0.0,
+    }
+}
+
+fn set_npc_pitching_stat(p: &mut NpcPitchingAttrs, stat: &str, val: f64) {
+    match stat {
+        "velocity"    => p.velocity    = val,
+        "command"     => p.command     = val,
+        "control"     => p.control     = val,
+        "movement"    => p.movement    = val,
+        "mentality"   => p.mentality   = val,
+        "stamina"     => p.stamina     = val,
+        "recovery"    => p.recovery    = val,
+        "clutch"      => p.clutch      = val,
+        "holdRunners" => p.hold_runners = val,
+        _             => {}
+    }
+}
+
+fn get_npc_batting_stat(b: &NpcBattingAttrs, stat: &str) -> f64 {
+    match stat {
+        "contact"       => b.contact,
+        "power"         => b.power,
+        "eye"           => b.eye,
+        "discipline"    => b.discipline,
+        "speed"         => b.speed,
+        "baseInstinct"  => b.base_instinct,
+        "bunting"       => b.bunting,
+        "platoon"       => b.platoon,
+        "fielding"      => b.fielding,
+        "arm"           => b.arm,
+        "battingClutch" => b.batting_clutch,
+        _               => 0.0,
+    }
+}
+
+fn set_npc_batting_stat(b: &mut NpcBattingAttrs, stat: &str, val: f64) {
+    match stat {
+        "contact"       => b.contact       = val,
+        "power"         => b.power         = val,
+        "eye"           => b.eye           = val,
+        "discipline"    => b.discipline    = val,
+        "speed"         => b.speed         = val,
+        "baseInstinct"  => b.base_instinct = val,
+        "bunting"       => b.bunting       = val,
+        "platoon"       => b.platoon       = val,
+        "fielding"      => b.fielding      = val,
+        "arm"           => b.arm           = val,
+        "battingClutch" => b.batting_clutch = val,
+        _               => {}
+    }
+}
+
+fn calc_npc_pitching_ovr(p: &NpcPitchingAttrs) -> f64 {
+    let w = p.velocity * 2.5 + p.command * 2.5 + p.control * 2.0
+          + p.movement * 1.5 + p.stamina * 1.5 + p.mentality * 1.0
+          + p.recovery * 0.5 + p.clutch * 0.3 + p.hold_runners * 0.2;
+    (w / 12.0).round().max(1.0).min(99.0)
+}
+
+fn calc_npc_batting_ovr(b: &NpcBattingAttrs) -> f64 {
+    let w = b.contact * 2.0 + b.power * 1.8 + b.eye * 1.5
+          + b.discipline * 1.2 + b.speed * 1.3 + b.base_instinct * 0.7
+          + b.bunting * 0.3 + b.platoon * 0.3 + b.fielding * 1.3
+          + b.arm * 0.8 + b.batting_clutch * 0.6;
+    (w / 11.8).round().max(1.0).min(99.0)
+}
+
+// 월간 감퇴 (연간 총량의 1/12)
+fn apply_monthly_aging_pitch(p: &mut NpcPitchingAttrs, age: i32, perf: Option<&NpcMonthlyPerf>, phase: &str) {
+    if age < 30 { return; }
+
+    let perf_mod = if let Some(pf) = perf {
+        let q = quality_factor(pf, "pitcher");
+        if q >= 1.15 { 0.80 } else if q >= 1.00 { 1.00 } else { 1.20 }
+    } else { 1.00 };
+    let phase_mod = if phase == "offseason" { 0.85 } else { 1.00 };
+    let mgmt = perf_mod * phase_mod;
+
+    // 연간 감퇴 / 12 (기존 apply_aging_decay 수치 기준)
+    let (vel_y, sta_y, rec_y, cmd_y, ctrl_y) = match age {
+        30..=32 => (1.00, 0.80, 0.20, 0.30, 0.30),
+        33..=35 => (2.50, 2.00, 0.50, 3.20, 3.00),
+        _       => (4.00, 3.50, 0.80, 5.00, 4.50),
+    };
+
+    p.velocity = clamp_stat(p.velocity - vel_y  / 12.0 * mgmt);
+    p.stamina  = clamp_stat(p.stamina  - sta_y  / 12.0 * mgmt);
+    p.recovery = clamp_stat(p.recovery - rec_y  / 12.0 * mgmt);
+    p.command  = clamp_stat(p.command  - cmd_y  / 12.0 * mgmt);
+    p.control  = clamp_stat(p.control  - ctrl_y / 12.0 * mgmt);
+    p.ovr = calc_npc_pitching_ovr(p);
+}
+
+fn apply_monthly_aging_bat(b: &mut NpcBattingAttrs, age: i32, perf: Option<&NpcMonthlyPerf>, phase: &str) {
+    if age < 30 { return; }
+
+    let perf_mod = if let Some(pf) = perf {
+        let q = quality_factor(pf, "batter");
+        if q >= 1.15 { 0.80 } else if q >= 1.00 { 1.00 } else { 1.20 }
+    } else { 1.00 };
+    let phase_mod = if phase == "offseason" { 0.85 } else { 1.00 };
+    let mgmt = perf_mod * phase_mod;
+
+    let (spd_y, pow_y) = match age {
+        30..=32 => (0.80, 0.50),
+        33..=35 => (2.00, 1.50),
+        _       => (3.50, 2.80),
+    };
+
+    b.speed = clamp_stat(b.speed - spd_y / 12.0 * mgmt);
+    b.power = clamp_stat(b.power - pow_y / 12.0 * mgmt);
+    b.ovr   = calc_npc_batting_ovr(b);
+}
+
+pub fn calc_monthly_npc_growth(params: MonthlyNpcGrowthParams) -> MonthlyNpcGrowthResult {
+    let mut rng = rand::thread_rng();
+    let phase = params.current_phase.as_str();
+
+    // 팀 컨텍스트 맵
+    let ctx_map: HashMap<String, &NpcTeamContext> =
+        params.team_contexts.iter().map(|c| (c.team_id.clone(), c)).collect();
+
+    let default_ctx = NpcTeamContext {
+        team_id: String::new(),
+        facility_tier: "독립".into(),
+        manager_development: 50.0,
+        coach_teaching: 50.0,
+    };
+
+    let updated: Vec<NpcLiveOutput> = params.npcs.into_iter().map(|mut npc| {
+        let ctx = ctx_map.get(&npc.team_id).copied().unwrap_or(&default_ctx);
+        let perf = params.perf_data.get(&npc.npc_id);
+
+        let age_f     = age_growth_factor(npc.age);
+        let trn_f     = training_factor(ctx, phase);
+        let prf_f     = perf_factor(perf, phase, &npc.player_type);
+        let dev_f     = npc.development_rate as f64 / 50.0;
+        let rand_f    = 0.85 + rng.gen::<f64>() * 0.30;  // 0.85~1.15
+        let potential = npc.potential_hidden.unwrap_or(75.0).clamp(60.0, 99.0);
+        // A: 잠재력 속도 배율
+        let speed_f   = 0.80 + (potential - 60.0) / 39.0 * 0.40;
+
+        // 월간 기본 XP (성장이 있는 나이대만)
+        let base_xp = if age_f > 0.0 {
+            2.5 * dev_f * age_f * trn_f * prf_f * rand_f * speed_f
+        } else {
+            0.0
+        };
+
+        if npc.player_type == "pitcher" {
+            if let Some(ref mut pit) = npc.pitching {
+                // XP 배분 및 레벨업 (B: 스탯별 cap 보정 적용)
+                if base_xp > 0.0 {
+                    for &(stat, weight) in pitching_xp_weights(npc.age) {
+                        let cur  = get_npc_pitching_stat(pit, stat);
+                        // B: soft cap — 잠재력에 근접할수록 XP 감쇠
+                        let cap_f = {
+                            let ratio = cur / potential;
+                            if      ratio < 0.75 { 1.00 }
+                            else if ratio < 0.85 { 0.70 }
+                            else if ratio < 0.95 { 0.35 }
+                            else                 { 0.10 }
+                        };
+                        let gain = base_xp * weight * cap_f;
+                        let acc  = npc.pitching_xp.get(stat).copied().unwrap_or(0.0) + gain;
+                        if acc >= xp_threshold(cur) {
+                            set_npc_pitching_stat(pit, stat, clamp_stat(cur + 1.0));
+                            npc.pitching_xp.insert(stat.to_string(), acc - xp_threshold(cur));
+                        } else {
+                            npc.pitching_xp.insert(stat.to_string(), acc);
+                        }
+                    }
+                    pit.ovr = calc_npc_pitching_ovr(pit);
+                }
+                // 월간 에이징 감퇴
+                apply_monthly_aging_pitch(pit, npc.age, perf, phase);
+            }
+        } else {
+            if let Some(ref mut bat) = npc.batting {
+                if base_xp > 0.0 {
+                    for &(stat, weight) in batting_xp_weights(npc.age) {
+                        let cur  = get_npc_batting_stat(bat, stat);
+                        let cap_f = {
+                            let ratio = cur / potential;
+                            if      ratio < 0.75 { 1.00 }
+                            else if ratio < 0.85 { 0.70 }
+                            else if ratio < 0.95 { 0.35 }
+                            else                 { 0.10 }
+                        };
+                        let gain = base_xp * weight * cap_f;
+                        let acc  = npc.batting_xp.get(stat).copied().unwrap_or(0.0) + gain;
+                        if acc >= xp_threshold(cur) {
+                            set_npc_batting_stat(bat, stat, clamp_stat(cur + 1.0));
+                            npc.batting_xp.insert(stat.to_string(), acc - xp_threshold(cur));
+                        } else {
+                            npc.batting_xp.insert(stat.to_string(), acc);
+                        }
+                    }
+                    bat.ovr = calc_npc_batting_ovr(bat);
+                }
+                apply_monthly_aging_bat(bat, npc.age, perf, phase);
+            }
+        }
+
+        let current_ovr = if npc.player_type == "pitcher" {
+            npc.pitching.as_ref().map(|p| p.ovr).unwrap_or(0.0)
+        } else {
+            npc.batting.as_ref().map(|b| b.ovr).unwrap_or(0.0)
+        };
+        let peak = npc.peak_ovr.unwrap_or(0.0).max(current_ovr);
+
+        NpcLiveOutput {
+            npc_id:      npc.npc_id,
+            pitching:    npc.pitching,
+            batting:     npc.batting,
+            pitching_xp: npc.pitching_xp,
+            batting_xp:  npc.batting_xp,
+            peak_ovr:    peak,
+        }
+    }).collect();
+
+    MonthlyNpcGrowthResult { updated }
 }

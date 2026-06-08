@@ -134,6 +134,30 @@
     ? (($gameStore.npcs ?? []).find((n) => n.npcId === modalEntity!.id) ?? null)
     : null;
 
+  // NPC 라이브 스탯 (월간 성장 반영값 + 시즌 시작 스냅샷)
+  $: npcLive = entityId ? ($seasonStore.npcLiveStats[entityId] ?? null) : null;
+
+  // 실제 표시에 쓸 스탯: npcLiveStats 우선, 없으면 entity 기본값
+  $: livePitching = isProtagonistModal
+    ? $gameStore.protagonist.pitching
+    : (npcLive?.pitching ?? null);
+  $: liveBatting = isProtagonistModal
+    ? $gameStore.protagonist.batting
+    : (npcLive?.batting ?? null);
+  $: snapPitch = isProtagonistModal
+    ? $gameStore.protagonist.seasonStartPitching
+    : npcLive?.seasonStartPitching;
+  $: snapBat = isProtagonistModal
+    ? $gameStore.protagonist.seasonStartBatting
+    : npcLive?.seasonStartBatting;
+
+  function statTrend(current: number, snapshot: number | undefined): "up" | "down" | "none" {
+    if (snapshot == null) return "none";
+    if (current - snapshot >= 1) return "up";
+    if (snapshot - current >= 1) return "down";
+    return "none";
+  }
+
   $: faInfo = isProtagonistModal
     ? (() => {
         const p = $gameStore.protagonist;
@@ -142,6 +166,11 @@
         return { eligible: years >= 9, years, yearsLeft: Math.max(0, 9 - years) };
       })()
     : null;
+
+  function formatBirthday(bd: string): string {
+    const [, m, d] = bd.split("-");
+    return `2010년 ${parseInt(m)}월 ${parseInt(d)}일`;
+  }
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
@@ -162,6 +191,9 @@
       <header class="modal-header">
         <div class="modal-title-block">
           <h3 class="modal-name">{modalEntity.name}</h3>
+          {#if isProtagonistModal && protagonist.birthday}
+            <p class="modal-birthday">{formatBirthday(protagonist.birthday)}</p>
+          {/if}
           <p class="modal-meta">
             {roleLabel(modalEntity.role)} · {modalEntity.age}세
             {#if mp?.position} · {mp.position}{/if}
@@ -203,16 +235,28 @@
             <section class="modal-section">
               <h4>투구 능력치</h4>
               <div class="modal-stat-grid cols-5">
-                {#each [
-                  ["OVR", mp.pitching?.ovr], ["구위", mp.pitching?.velocity],
-                  ["커맨드", mp.pitching?.command], ["제구", mp.pitching?.control],
-                  ["무브먼트", mp.pitching?.movement], ["멘탈", mp.pitching?.mentality],
-                  ["스태미나", mp.pitching?.stamina], ["회복력", mp.pitching?.recovery],
-                  ["위기집중", mp.pitching?.clutch], ["견제력", mp.pitching?.holdRunners],
-                ] as [lbl, val]}
+                {#each ([
+                  ["OVR",      livePitching?.ovr         ?? mp.pitching?.ovr,         snapPitch?.ovr],
+                  ["구위",     livePitching?.velocity     ?? mp.pitching?.velocity,     snapPitch?.velocity],
+                  ["커맨드",   livePitching?.command      ?? mp.pitching?.command,      snapPitch?.command],
+                  ["제구",     livePitching?.control      ?? mp.pitching?.control,      snapPitch?.control],
+                  ["무브먼트", livePitching?.movement     ?? mp.pitching?.movement,     snapPitch?.movement],
+                  ["멘탈",     livePitching?.mentality    ?? mp.pitching?.mentality,    snapPitch?.mentality],
+                  ["스태미나", livePitching?.stamina      ?? mp.pitching?.stamina,      snapPitch?.stamina],
+                  ["회복력",   livePitching?.recovery     ?? mp.pitching?.recovery,     snapPitch?.recovery],
+                  ["위기집중", livePitching?.clutch       ?? mp.pitching?.clutch,       snapPitch?.clutch],
+                  ["견제력",   livePitching?.holdRunners  ?? mp.pitching?.holdRunners,  snapPitch?.holdRunners],
+                ] as [string, number|undefined, number|undefined][]) as item}
+                  {@const lbl = item[0]} {@const val = item[1]} {@const snap = item[2]}
+                  {@const trend = typeof val === "number" ? statTrend(val, snap) : "none"}
                   <div class="modal-stat-item">
                     <span class="ms-label">{lbl}</span>
-                    <span class="ms-value {statTone(typeof val === 'number' ? val : 50)}">{val ?? "-"}</span>
+                    <span class="ms-value {statTone(typeof val === 'number' ? val : 50)}">
+                      {val ?? "-"}
+                      {#if trend === "up"}  <span class="trend-arr up">↑</span>
+                      {:else if trend === "down"} <span class="trend-arr down">↓</span>
+                      {/if}
+                    </span>
                   </div>
                 {/each}
               </div>
@@ -223,15 +267,26 @@
             <section class="modal-section">
               <h4>타격 능력치</h4>
               <div class="modal-stat-grid cols-4">
-                {#each [
-                  ["OVR", mp.batting?.ovr], ["컨택", mp.batting?.contact],
-                  ["장타력", mp.batting?.power], ["선구안", mp.batting?.eye],
-                  ["극기", mp.batting?.discipline], ["클러치", mp.batting?.battingClutch],
-                  ["플래툰", mp.batting?.platoon], ["번트", mp.batting?.bunting],
-                ] as [lbl, val]}
+                {#each ([
+                  ["OVR",    liveBatting?.ovr          ?? mp.batting?.ovr,          snapBat?.ovr],
+                  ["컨택",   liveBatting?.contact      ?? mp.batting?.contact,      snapBat?.contact],
+                  ["장타력", liveBatting?.power        ?? mp.batting?.power,        snapBat?.power],
+                  ["선구안", liveBatting?.eye          ?? mp.batting?.eye,          snapBat?.eye],
+                  ["극기",   liveBatting?.discipline   ?? mp.batting?.discipline,   snapBat?.discipline],
+                  ["클러치", liveBatting?.battingClutch?? mp.batting?.battingClutch,snapBat?.battingClutch],
+                  ["플래툰", liveBatting?.platoon      ?? mp.batting?.platoon,      snapBat?.platoon],
+                  ["번트",   liveBatting?.bunting      ?? mp.batting?.bunting,      snapBat?.bunting],
+                ] as [string, number|undefined, number|undefined][]) as item}
+                  {@const lbl = item[0]} {@const val = item[1]} {@const snap = item[2]}
+                  {@const trend = typeof val === "number" ? statTrend(val, snap) : "none"}
                   <div class="modal-stat-item">
                     <span class="ms-label">{lbl}</span>
-                    <span class="ms-value {statTone(typeof val === 'number' ? val : 50)}">{val ?? "-"}</span>
+                    <span class="ms-value {statTone(typeof val === 'number' ? val : 50)}">
+                      {val ?? "-"}
+                      {#if trend === "up"}  <span class="trend-arr up">↑</span>
+                      {:else if trend === "down"} <span class="trend-arr down">↓</span>
+                      {/if}
+                    </span>
                   </div>
                 {/each}
               </div>
@@ -239,13 +294,22 @@
             <section class="modal-section">
               <h4>주루·수비</h4>
               <div class="modal-stat-grid cols-4">
-                {#each [
-                  ["주력", mp.batting?.speed], ["주루판단", mp.batting?.baseInstinct],
-                  ["수비", mp.batting?.fielding], ["어깨", mp.batting?.arm],
-                ] as [lbl, val]}
+                {#each ([
+                  ["주력",     liveBatting?.speed       ?? mp.batting?.speed,       snapBat?.speed],
+                  ["주루판단", liveBatting?.baseInstinct?? mp.batting?.baseInstinct, snapBat?.baseInstinct],
+                  ["수비",     liveBatting?.fielding    ?? mp.batting?.fielding,    snapBat?.fielding],
+                  ["어깨",     liveBatting?.arm         ?? mp.batting?.arm,         snapBat?.arm],
+                ] as [string, number|undefined, number|undefined][]) as item}
+                  {@const lbl = item[0]} {@const val = item[1]} {@const snap = item[2]}
+                  {@const trend = typeof val === "number" ? statTrend(val, snap) : "none"}
                   <div class="modal-stat-item">
                     <span class="ms-label">{lbl}</span>
-                    <span class="ms-value {statTone(typeof val === 'number' ? val : 50)}">{val ?? "-"}</span>
+                    <span class="ms-value {statTone(typeof val === 'number' ? val : 50)}">
+                      {val ?? "-"}
+                      {#if trend === "up"}  <span class="trend-arr up">↑</span>
+                      {:else if trend === "down"} <span class="trend-arr down">↓</span>
+                      {/if}
+                    </span>
                   </div>
                 {/each}
               </div>
@@ -547,6 +611,7 @@
   .modal-title-block { min-width: 0; }
   .modal-name { margin: 0; font-size: 20px; font-weight: 700; color: #f1f6ff; }
   .modal-meta { margin: 4px 0 0; color: #aebddd; font-size: 13px; }
+  .modal-birthday { margin: 2px 0 0; color: #7a9ac8; font-size: 12px; }
   .modal-notes { margin: 0; color: #8ca8cc; font-size: 12px; font-style: italic; }
   .status-badges { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; flex-shrink: 0; }
   .badge { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 12px; white-space: nowrap; }
@@ -576,6 +641,9 @@
   .ms-value.good { color: #68de92; }
   .ms-value.mid  { color: #d8e8ff; }
   .ms-value.low  { color: #ffb58a; }
+  .trend-arr { font-size: 11px; font-weight: 700; margin-left: 2px; vertical-align: middle; }
+  .trend-arr.up   { color: #ff6b6b; }
+  .trend-arr.down { color: #74b9ff; }
   .tag-row { display: flex; gap: 5px; flex-wrap: wrap; }
   .tag-badge { font-size: 11px; padding: 3px 9px; border-radius: 10px; background: #1f2f60; color: #90b8f8; border: 1px solid #2a4a8a; }
   .pitch-badge-list { display: flex; flex-wrap: wrap; gap: 6px; }

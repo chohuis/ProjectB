@@ -1,5 +1,34 @@
 import type { MessageItem } from "./main";
 
+// ── NPC 능력치 타입 (npcLiveStats에서 사용) ───────────────────
+export interface NpcPitchingAttrs {
+  ovr: number;
+  velocity: number;
+  command: number;
+  control: number;
+  movement: number;
+  mentality: number;
+  stamina: number;
+  recovery: number;
+  clutch: number;
+  holdRunners: number;
+}
+
+export interface NpcBattingAttrs {
+  ovr: number;
+  contact: number;
+  power: number;
+  eye: number;
+  discipline: number;
+  speed: number;
+  baseInstinct: number;
+  bunting: number;
+  platoon: number;
+  fielding: number;
+  arm: number;
+  battingClutch: number;
+}
+
 // ── 능력치 블록 ────────────────────────────────────────────────
 export interface PitchingAttributes {
   ovr: number;
@@ -268,6 +297,10 @@ export interface ProtagonistSave {
   };
   currentRole?: PitcherRole;  // 현재 시즌 역할 (시즌 시작 시 배정)
   careerRecords?: CareerSeasonRecord[];  // 시즌별 기록 히스토리
+  // 시즌 시작 스냅샷 (능력치 트렌드 화살표용)
+  seasonStartPitching?: PitchingAttributes;
+  seasonStartBatting?: BattingAttributes;
+  birthday?: string;  // "2010-MM-DD" 주인공 전용
 }
 
 // ── 고교 월간 유망주 TOP 10 ───────────────────────────────────

@@ -38,7 +38,11 @@
         if (!envelope) throw new Error("슬롯 데이터 없음");
         if (envelope.game)   gameStore.hydrateFromSlot(envelope.game, slotId);
         else                 gameStore.setCurrentSlotId(slotId);
-        if (envelope.season) seasonStore.hydrateFromSlot(envelope.season);
+        if (envelope.season) {
+          seasonStore.hydrateFromSlot(envelope.season);
+          // npcLiveStats → masterStore.entities 동기화 (월간 성장 반영)
+          masterStore.applyNpcLiveStats(envelope.season.npcLiveStats ?? {});
+        }
         phase = "playing";
       } catch (e) {
         loadError = "저장 파일을 불러오지 못했습니다.";

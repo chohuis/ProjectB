@@ -22,9 +22,20 @@ export function runSimBatch(
       week:       g.week ?? 0,
       npcInjuries,
     });
+
+    // 엔티티 없어서 시뮬 실패(winner_id="") 시 폴백으로 랜덤 결과 생성
+    let result = sim.result;
+    if (!result.winnerId) {
+      const api = (window as unknown as { projectB: Record<string, (p: string) => Promise<string>> }).projectB;
+      const fb = JSON.parse(
+        await api.weekCalcNpcFallback(JSON.stringify({ homeTeamId: g.homeTeamId, awayTeamId: g.awayTeamId }))
+      ) as { homeScore: number; awayScore: number; winnerId: string; loserId: string };
+      result = { homeScore: fb.homeScore, awayScore: fb.awayScore, winnerId: fb.winnerId, loserId: fb.loserId, playerLines: [], events: [] };
+    }
+
     return {
       id:                g.id,
-      result:            sim.result,
+      result,
       nextHomeRotIdx:    sim.nextHomeRotIdx,
       nextAwayRotIdx:    sim.nextAwayRotIdx,
       pitcherConditions: sim.pitcherConditions,

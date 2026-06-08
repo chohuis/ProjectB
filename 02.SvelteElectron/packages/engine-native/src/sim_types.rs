@@ -339,3 +339,74 @@ pub struct ProtagonistGradeParams {
     pub current_grade: i32,
     pub current_age: i32,
 }
+
+// ── NPC 월간 성장 타입 ────────────────────────────────────────────────────────
+
+/// 팀 환경 정보 (시설·감독·코치)
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NpcTeamContext {
+    pub team_id: String,
+    pub facility_tier: String,       // "1군"|"2군"|"고교"|"대학"|"독립"
+    pub manager_development: f64,    // 0~99
+    pub coach_teaching: f64,         // 0~99
+}
+
+/// 이전 달 경기 성적
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NpcMonthlyPerf {
+    pub games_played: i32,
+    pub era: Option<f64>,
+    pub batting_avg: Option<f64>,
+}
+
+/// 월간 성장 계산 입력 단위 (모든 선수 NPC 동일 구조)
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NpcLiveInput {
+    pub npc_id: String,
+    pub team_id: String,
+    pub player_type: String,   // "pitcher" | "batter"
+    pub age: i32,
+    pub development_rate: i32,
+    pub potential_hidden: Option<f64>,  // 60~99; None → 75
+    pub pitching: Option<NpcPitchingAttrs>,
+    pub batting: Option<NpcBattingAttrs>,
+    #[serde(default)]
+    pub pitching_xp: HashMap<String, f64>,
+    #[serde(default)]
+    pub batting_xp: HashMap<String, f64>,
+    pub peak_ovr: Option<f64>,
+}
+
+/// 월간 성장 계산 출력 단위
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NpcLiveOutput {
+    pub npc_id: String,
+    pub pitching: Option<NpcPitchingAttrs>,
+    pub batting: Option<NpcBattingAttrs>,
+    pub pitching_xp: HashMap<String, f64>,
+    pub batting_xp: HashMap<String, f64>,
+    pub peak_ovr: f64,
+}
+
+/// 월간 성장 전체 파라미터
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MonthlyNpcGrowthParams {
+    pub npcs: Vec<NpcLiveInput>,
+    pub team_contexts: Vec<NpcTeamContext>,
+    #[serde(default)]
+    pub perf_data: HashMap<String, NpcMonthlyPerf>,
+    pub current_phase: String,   // "preseason"|"season"|"postseason"|"offseason"
+    pub month_index: i32,        // 0~11
+}
+
+/// 월간 성장 결과
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MonthlyNpcGrowthResult {
+    pub updated: Vec<NpcLiveOutput>,
+}

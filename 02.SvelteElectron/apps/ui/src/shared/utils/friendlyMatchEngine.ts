@@ -54,12 +54,9 @@ function findFreeOpponent(
   allSchedule: ScheduleEntry[],
   leagueTeamIds: string[],
 ): string | null {
-  const busyTeams = new Set(
-    allSchedule
-      .filter((e) => e.week === week && !e.isFriendly && !e.result)
-      .flatMap((e) => [e.homeTeamId, e.awayTeamId]),
-  );
-  const candidates = leagueTeamIds.filter((t) => t !== myTeamId && !busyTeams.has(t));
+  // 친선경기(수요일)와 공식경기(토요일)는 날짜가 다르므로 상대팀의
+  // 공식경기 유무로 busy 판단하지 않음. 주인공 팀만 제외.
+  const candidates = leagueTeamIds.filter((t) => t !== myTeamId);
   if (!candidates.length) return null;
   return candidates[deterministicPick(myTeamId, week) % candidates.length];
 }
@@ -83,17 +80,18 @@ export function planMonthlyFriendlies(
   const [rangeStart, rangeEnd] = monthWeekRange(weekInYear);
   const label = monthName(weekInYear);
 
-  // 이미 이달에 편성된 친선경기 수
+  // 이미 이달에 편성된 친선경기 수 (격주 1경기 → 월 최대 2경기)
   const alreadyFriendly = schedule.filter(
     (e) => e.isFriendly && e.week >= absoluteWeek && e.week <= absoluteWeek + (rangeEnd - rangeStart),
   ).length;
-  const needed = Math.max(0, 4 - alreadyFriendly);
+  const needed = Math.max(0, 2 - alreadyFriendly);
   if (needed === 0) return { entries: [], monthLabel: label };
 
   const entries: ScheduleEntry[] = [];
   const weeksInRange = rangeEnd - rangeStart + 1;
 
-  for (let offset = 0; offset < weeksInRange && entries.length < needed; offset++) {
+  // 격주(2주 간격)로 편성
+  for (let offset = 0; offset < weeksInRange && entries.length < needed; offset += 2) {
     const weekNum = absoluteWeek + offset;
     if (weekNum > seasonPhaseEnd) break;
 

@@ -67,6 +67,7 @@ pub struct GrowthInput {
     pub development_rate: f64,
     pub diligence: Option<f64>,
     pub age: Option<u32>,
+    pub potential_hidden: Option<f64>,  // 60~99; None → 75 기본값
     pub pitching: PitchingAttributes,
     pub batting: BattingAttributes,
     #[serde(default)]
@@ -178,6 +179,22 @@ fn get_program(id: &str) -> Option<ProgramConfig> {
 fn clamp(v: f64, lo: f64, hi: f64) -> f64 { v.max(lo).min(hi) }
 
 fn xp_threshold(v: f64) -> f64 { 7.5 + v * 0.35 }
+
+/// A: 잠재력이 높을수록 XP 획득 속도 보너스 (0.80x ~ 1.20x)
+fn potential_speed_factor(potential: f64) -> f64 {
+    let p = potential.clamp(60.0, 99.0);
+    0.80 + (p - 60.0) / 39.0 * 0.40
+}
+
+/// B: 현재 스탯이 잠재력 상한에 가까울수록 XP 감쇠 (soft cap)
+fn potential_cap_factor(current: f64, potential: f64) -> f64 {
+    if potential <= 0.0 { return 1.0; }
+    let ratio = current / potential;
+    if      ratio < 0.75 { 1.00 }
+    else if ratio < 0.85 { 0.70 }
+    else if ratio < 0.95 { 0.35 }
+    else                 { 0.10 }
+}
 
 fn age_train_factor(age: u32) -> f64 {
     match age {
@@ -442,8 +459,25 @@ pub fn calc_training_growth(params: TrainingGrowthParams) -> GrowthResult {
     let mut pitching_xp = p.pitching_xp.clone();
     let mut batting_xp = p.batting_xp.clone();
 
-    let p_logs = apply_pitching_xp(&mut pitching, &mut pitching_xp, &pitching_gains);
-    let b_logs = apply_batting_xp(&mut batting, &mut batting_xp, &batting_gains);
+    // ── A·B potential 계수 적용 ──────────────────────────────
+    let potential = p.potential_hidden.unwrap_or(75.0).clamp(60.0, 99.0);
+    let speed     = potential_speed_factor(potential);
+
+    // 투수 스탯별 cap 보정
+    let mut pitching_gains_adj = pitching_gains.clone();
+    for (stat, gain) in pitching_gains_adj.iter_mut() {
+        let cur = get_pitching_stat(&pitching, stat);
+        *gain *= speed * potential_cap_factor(cur, potential);
+    }
+    // 타자 스탯별 cap 보정
+    let mut batting_gains_adj = batting_gains.clone();
+    for (stat, gain) in batting_gains_adj.iter_mut() {
+        let cur = get_batting_stat(&batting, stat);
+        *gain *= speed * potential_cap_factor(cur, potential);
+    }
+
+    let p_logs = apply_pitching_xp(&mut pitching, &mut pitching_xp, &pitching_gains_adj);
+    let b_logs = apply_batting_xp(&mut batting, &mut batting_xp, &batting_gains_adj);
 
     if !p_logs.is_empty() { pitching.ovr = calc_pitching_ovr(&pitching); }
     if !b_logs.is_empty() { batting.ovr  = calc_batting_ovr(&batting); }
@@ -544,8 +578,23 @@ pub fn calc_game_growth(params: GameGrowthParams) -> GrowthResult {
     let mut pitching_xp = p.pitching_xp.clone();
     let mut batting_xp = p.batting_xp.clone();
 
-    let p_logs = apply_pitching_xp(&mut pitching, &mut pitching_xp, &pitching_gains);
-    let b_logs = apply_batting_xp(&mut batting, &mut batting_xp, &batting_gains);
+    // ── A·B potential 계수 적용 (경기 성장) ──────────────────
+    let potential = p.potential_hidden.unwrap_or(75.0).clamp(60.0, 99.0);
+    let speed     = potential_speed_factor(potential);
+
+    let mut pitching_gains_adj = pitching_gains.clone();
+    for (stat, gain) in pitching_gains_adj.iter_mut() {
+        let cur = get_pitching_stat(&pitching, stat);
+        *gain *= speed * potential_cap_factor(cur, potential);
+    }
+    let mut batting_gains_adj = batting_gains.clone();
+    for (stat, gain) in batting_gains_adj.iter_mut() {
+        let cur = get_batting_stat(&batting, stat);
+        *gain *= speed * potential_cap_factor(cur, potential);
+    }
+
+    let p_logs = apply_pitching_xp(&mut pitching, &mut pitching_xp, &pitching_gains_adj);
+    let b_logs = apply_batting_xp(&mut batting, &mut batting_xp, &batting_gains_adj);
 
     if !p_logs.is_empty() { pitching.ovr = calc_pitching_ovr(&pitching); }
     if !b_logs.is_empty() { batting.ovr  = calc_batting_ovr(&batting); }
