@@ -1,15 +1,18 @@
 {
   "teamId": "TEAM_UNIV_CHUNGBUK",
-  "name": "충북대학교",
-  "nameEn": "Chungbuk National University",
+  "name": "미래창성대학교",
+  "nameEn": "Mirae Changseong University",
   "city": "청주",
   "cityEn": "Cheongju",
   "leagueId": "LEAGUE_UNIVERSITY",
+  "tier": "D",
+  "minAcademicGrade": 9,
+  "minBaseballScore": 0,
   "colors": [
     "#004080",
     "#ffffff"
   ],
-  "stadium": "충북대 야구장",
+  "stadium": "미래창성대 야구장",
   "roster": {
     "active": [
       "PLY_00261",

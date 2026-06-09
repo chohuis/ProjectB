@@ -20,30 +20,22 @@
   }
 
   function setupDefaults() {
-    draftChecked = $gameStore.schoolState.draftIntent;
-    universityChoices =
-      $gameStore.schoolState.careerChoiceUniversityApplications.length > 0
-        ? [...$gameStore.schoolState.careerChoiceUniversityApplications]
-        : [...$gameStore.schoolState.fallbackUniversityChoices];
-    independentChoices =
-      $gameStore.schoolState.careerChoiceIndependentApplications.length > 0
-        ? [...$gameStore.schoolState.careerChoiceIndependentApplications]
-        : [...$gameStore.schoolState.fallbackIndependentChoices];
+    const apps = $gameStore.schoolState.careerApplications;
+    draftChecked = apps?.draftApplied ?? false;
+    universityChoices = apps?.universityChoices ? [...apps.universityChoices] : [];
+    independentChoices = apps?.independentChoices ? [...apps.independentChoices] : [];
     universityChecked = universityChoices.length > 0;
     independentChecked = independentChoices.length > 0;
   }
   $: setupDefaults();
 
   async function persistHubState() {
-    gameStore.setCareerChoiceUiState({
-      popupOpened: true,
-      mode: "none",
-      confirmed: false,
-    });
-    gameStore.setDraftIntent(draftChecked);
+    gameStore.setCareerChoiceUiState({ popupOpened: true, mode: "none", confirmed: false });
     gameStore.setCareerApplications({
-      university: universityChoices,
-      independent: independentChoices,
+      draftApplied: draftChecked,
+      universityChoices: universityChoices.slice(0, 3),
+      independentChoices: independentChoices.slice(0, 3),
+      sportsMilitaryApplied: false,
     });
     await gameStore.save();
   }
@@ -64,9 +56,8 @@
     if (!confirm("바로 입대하시겠습니까? 기존 신청은 모두 무시됩니다.")) return;
     resolving = true;
     gameStore.enlistMilitary("general");
-    gameStore.setDraftIntent(false);
     gameStore.setCareerApplicationsSubmitted(false);
-    gameStore.clearFallbackAdmissions();
+    gameStore.clearCareerResults();
     gameStore.setCareerChoiceUiState({ popupOpened: false, mode: "none", confirmed: true });
     seasonStore.resolvePendingAction("careerChoiceHub");
     await gameStore.save();
@@ -79,21 +70,13 @@
     const hasAny = draftChecked || universityChecked || independentChecked;
     if (!hasAny) return;
     resolving = true;
-    gameStore.setDraftIntent(draftChecked);
-    gameStore.setCareerApplicationsSubmitted(true);
-    gameStore.setFallbackAdmissions({
+    gameStore.setCareerApplications({
+      draftApplied: draftChecked,
       universityChoices: universityChoices.slice(0, 3),
       independentChoices: independentChoices.slice(0, 3),
-      universityPassed: [],
-      independentPassed: [],
-      sportsMilitaryPassed: false,
-      draftPassed: false,
-      draftTeamId: null,
-      draftRound: null,
-      draftPick: null,
-      draftSigningBonus: 0,
-      pendingSelection: false,
+      sportsMilitaryApplied: false,
     });
+    gameStore.setCareerApplicationsSubmitted(true);
     gameStore.markCareerChoiceTriggered();
     gameStore.setCareerChoiceUiState({ popupOpened: false, mode: "none", confirmed: true });
     seasonStore.resolvePendingAction("careerChoiceHub");

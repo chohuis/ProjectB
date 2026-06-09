@@ -76,16 +76,7 @@
 
   async function choose(optionId: string) {
     if (!selected) return;
-    if (selected.id.startsWith("msg-hs-draft-invite-")) {
-      if (optionId === "join_draft") {
-        seasonStore.pushPendingAction({ type: "draft" });
-      } else {
-        gameStore.setDraftIntent(false);
-        if (!$seasonStore.pendingActions.some((a) => a.type === "careerChoice")) {
-          seasonStore.pushPendingAction({ type: "careerChoice" });
-        }
-      }
-    }
+    // msg-hs-draft-invite 는 새 흐름에서 더 이상 사용되지 않음 (careerResults pendingAction으로 대체)
     if (selected.id.startsWith("msg-hs-group-draw-")) {
       if (optionId === "join_draw") {
         seasonStore.pushPendingAction({ type: "hsGroupDraw" });

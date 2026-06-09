@@ -6,6 +6,31 @@ import type {
   ProtagonistDraftOutcome,
 } from "../types/save";
 
+// ── 드래프트 보드 타입 ────────────────────────────────────────────
+export interface DraftBoardCandidate {
+  id: string;
+  ovr: number;
+  age: number;
+  potential: number;
+  isUser: boolean;
+}
+
+export interface DraftBoardPick {
+  pickNo: number;
+  round: number;
+  teamId: string;
+  candidateId: string;
+  isUser: boolean;
+}
+
+export interface DraftBoardResult {
+  picks: DraftBoardPick[];
+  userDrafted: boolean;
+  userRound?: number;
+  userPickNo?: number;
+  userTeamId?: string;
+}
+
 // ── 상수 ─────────────────────────────────────────────────────
 export const KBL_TEAM_IDS = [
   "TEAM_KBL_TWINWOLVES_1",
@@ -89,6 +114,20 @@ export async function determineProtagonistDraft(
 // ── 미지명 주인공 재도전 (경량 — TS 유지) ────────────────────
 export function canRetryDraft(faUnsignedWeeks: number): boolean {
   return faUnsignedWeeks === 0;
+}
+
+// ── 드래프트 보드 전체 픽 시퀀스 (Rust DLL 위임) ─────────────────
+export async function runDraftBoard(
+  candidates: DraftBoardCandidate[],
+  protagonistScoutScore: number,
+  protagonistOvr: number,
+  teamIds: string[],
+  year: number,
+  rounds: number = DRAFT_ROUNDS,
+): Promise<DraftBoardResult> {
+  const params = { candidates, protagonistScoutScore, protagonistOvr, teamIds, year, rounds };
+  const json = await api().draftRunBoard(JSON.stringify(params));
+  return parseResult<DraftBoardResult>(json);
 }
 
 // 타입 re-export

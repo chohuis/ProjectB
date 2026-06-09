@@ -103,8 +103,8 @@ export type PendingAction =
   | { type: "message";         messageId: string }
   | { type: "event";           eventId: string; title: string; description: string; choices?: EventChoice[] }
   | { type: "careerChoiceHub" }
+  | { type: "careerResults" }
   | { type: "careerChoice" }
-  | { type: "draft" }
   | {
       type: "salaryNegotiation";
       teamId: string;
@@ -279,6 +279,8 @@ export interface SaveSeason {
   friendlyLog: FriendlyPerformanceLog[];
   // 모든 선수 NPC 라이브 스탯 (월간 성장/하락 누적, entityId → NpcLiveStat)
   npcLiveStats: Record<string, NpcLiveStat>;
+  // 전년도 KBL 최종 순위 — 드래프트 지명 순서 결정 (꼴지팀부터)
+  prevSeasonKblStandings: Standing[];
 }
 
 export const SAVE_SEASON_VERSION = 1;
@@ -322,6 +324,7 @@ export function makeEmptySeason(
     npcInjuries: {},
     friendlyLog: [],
     npcLiveStats: {},
+    prevSeasonKblStandings: [],
   };
 }
 

@@ -822,94 +822,77 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     logs.push(`[시험] ${examRes.messageSubject}`);
   }
 
-  // 고3 진로 선택 이벤트 (W50)
+  // 고3 / 대학 매년 W50 — careerChoiceHub 트리거
   const gLatest = get(gameStore);
-  if (
+  const needsHsHub =
     gLatest.protagonist.careerStage === "highschool" &&
     careerStageYear === 2 && weekInYear === 50 &&
-    !gLatest.schoolState.careerChoiceTriggered
-  ) {
+    !gLatest.schoolState.careerChoiceTriggered;
+  const needsUnivHub =
+    gLatest.protagonist.careerStage === "university" &&
+    weekInYear === 50 &&
+    !gLatest.schoolState.careerApplicationsSubmitted &&
+    gLatest.schoolState.careerResults === null &&
+    !get(seasonStore).pendingActions.some(
+      (a) => a.type === "careerChoiceHub" || a.type === "careerResults" || a.type === "careerChoice"
+    );
+  if (needsHsHub || needsUnivHub) {
     gameStore.markCareerChoiceTriggered();
     seasonStore.pushPendingAction({ type: "careerChoiceHub" });
   }
 
-  // 대학 졸업반 드래프트 이벤트 (W52)
+  // W51 진로 결과 계산 (고교3 / 대학3 공통)
   const gDraft = get(gameStore);
-  const hasCareerChoicePending = get(seasonStore).pendingActions.some(
-    (a) => a.type === "careerChoice" || a.type === "careerChoiceHub"
+  const hasCareerPending = get(seasonStore).pendingActions.some(
+    (a) => a.type === "careerChoice" || a.type === "careerChoiceHub" || a.type === "careerResults"
   );
-  const isUnivDraftWeek =
-    gDraft.protagonist.careerStage === "university" &&
-    careerStageYear === 3 && weekInYear === 52;
-  if (isUnivDraftWeek && !gDraft.schoolState.draftTriggered &&
-      !get(seasonStore).pendingActions.some((a) => a.type === "draft")) {
-    gameStore.markDraftTriggered(true);
-    seasonStore.pushPendingAction({ type: "draft" });
-  }
 
-  // 고교 W51 지원 결과
-  const needHsCareerResult =
+  const isHsResultWeek =
     gDraft.protagonist.careerStage === "highschool" &&
     gDraft.protagonist.grade === 3 && weekInYear === 51 &&
     gDraft.schoolState.careerApplicationsSubmitted &&
-    !gDraft.schoolState.fallbackSelectionPending &&
-    !hasCareerChoicePending;
-  if (needHsCareerResult) {
+    gDraft.schoolState.careerResults === null &&
+    !hasCareerPending;
+
+  const isUnivResultWeek =
+    gDraft.protagonist.careerStage === "university" &&
+    weekInYear === 51 &&
+    gDraft.schoolState.careerApplicationsSubmitted &&
+    gDraft.schoolState.careerResults === null &&
+    !hasCareerPending;
+
+  if (isHsResultWeek || isUnivResultWeek) {
     const p = gDraft.protagonist;
+    const apps = gDraft.schoolState.careerApplications;
+    const univChoices = apps?.universityChoices ?? [];
+    const indieChoices = apps?.independentChoices ?? [];
+    const draftApplied = apps?.draftApplied ?? false;
+
     const subjects = Object.values(gDraft.schoolState.subjectScores);
     const avgPct = subjects.length ? subjects.reduce((a, s2) => a + s2.percentile, 0) / subjects.length : 50;
-    const univChoices = gDraft.schoolState.fallbackUniversityChoices.slice(0, 3);
-    const indieChoices = gDraft.schoolState.fallbackIndependentChoices.slice(0, 3);
-    const admissionsCalc = JSON.parse(await window.projectB!.weekCalcHsAdmissions(JSON.stringify({
-      ovr: p.pitching.ovr, avgPct, univChoices, indieChoices,
-    }))) as { univPassed: string[]; indiePassed: string[]; sportsPassed: boolean };
-    const univPassed  = admissionsCalc.univPassed;
-    const indiePassed = admissionsCalc.indiePassed;
-    const sportsPassed = admissionsCalc.sportsPassed;
-    gameStore.setFallbackAdmissions({
-      universityChoices: univChoices, independentChoices: indieChoices,
-      universityPassed: univPassed,   independentPassed: indiePassed,
-      sportsMilitaryPassed: sportsPassed,
-      draftPassed: false, draftTeamId: null, draftRound: null, draftPick: null, draftSigningBonus: 0,
-    });
-    if (gDraft.schoolState.draftIntent) {
-      gameStore.addMessage({
-        id: `msg-hs-draft-invite-${Date.now()}`,
-        category: "system", sender: "Career Office",
-        subject: "W51 드래프트 참가 안내",
-        preview: "W51주 드래프트에 참가하시겠습니까?",
-        body: "드래프트 참가 신청이 완료되었습니다.\nW51주 드래프트에 참가하시겠습니까?",
-        createdAt: `W${weekNum}`, readAt: null,
-        decision: {
-          prompt: "W51주 드래프트에 참가하시겠습니까?",
-          options: [
-            { id: "join_draft", label: "참가", effectHint: "드래프트 진행" },
-            { id: "skip_draft", label: "불참", effectHint: "드래프트 제외 후 진로 선택" },
-          ],
-          selectedOptionId: null,
-        },
-      });
-    } else {
-      seasonStore.pushPendingAction({ type: "careerChoice" });
-      gameStore.addMessage({
-        id: `msg-career-result-${Date.now()}`,
-        category: "system", sender: "Career Office",
-        subject: "W51 application results",
-        preview: "지원 결과가 도착했습니다. 최종 진로를 선택하세요.",
-        body: "지원 결과가 도착했습니다.\n메인 화면에서 최종 진로를 선택하세요.",
-        createdAt: `W${weekNum}`, readAt: null,
-      });
-    }
-  }
 
-  const needFallbackChoice =
-    gDraft.protagonist.careerStage === "highschool" &&
-    gDraft.protagonist.grade === 3 && weekInYear >= 51 &&
-    gDraft.schoolState.fallbackSelectionPending;
-  if (needFallbackChoice && !get(seasonStore).pendingActions.some(
-    (a) => a.type === "careerChoice" || a.type === "careerChoiceHub"
-  )) {
-    seasonStore.pushPendingAction({ type: "careerChoice" });
+    const { UNIVERSITY_REQUIREMENTS, calcHsBaseballScore } = await import("../utils/universityUtils");
+    const hsBaseballScore = calcHsBaseballScore(gDraft.protagonist.careerRecords ?? []);
+    const univChoiceReqs = univChoices.map((teamId) => {
+      const req = UNIVERSITY_REQUIREMENTS[teamId];
+      return { teamId, minAcademicGrade: req?.minAcademicGrade ?? 9, minBaseballScore: req?.minBaseballScore ?? 0 };
+    });
+    const admissionsCalc = JSON.parse(await window.projectB!.weekCalcHsAdmissions(JSON.stringify({
+      ovr: p.pitching.ovr, avgPct, hsBaseballScore, univChoices: univChoiceReqs, indieChoices,
+    }))) as { univPassed: string[]; indiePassed: string[]; sportsPassed: boolean };
+
+    gameStore.setCareerResults({
+      draftDrafted: false,
+      draftTeamId: null,
+      draftRound: null,
+      draftPick: null,
+      draftSigningBonus: 0,
+      universityPassed: admissionsCalc.univPassed,
+      independentPassed: admissionsCalc.indiePassed,
+      sportsMilitaryPassed: admissionsCalc.sportsPassed,
+    });
+
+    seasonStore.pushPendingAction({ type: "careerResults" });
   }
 
   // 프로 트레이드 판정

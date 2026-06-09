@@ -5,6 +5,7 @@
     percentileToGrade, STUDY_MODE_EFFECTS, weeksUntilNextExam,
     UNIVERSITY_MAJORS, getUniversityEffBonus,
   } from "../../shared/utils/academicsEngine";
+  import { toGpa45 } from "../../shared/utils/universityUtils";
   import type { StudyMode } from "../../shared/types/save";
 
   const SUBJECT_NAMES: Record<string, string> = {
@@ -103,6 +104,12 @@
         <p class="lbl">평균 등급</p>
         <strong class={gradeClass(avgGrade)}>{avgGrade}등급</strong>
       </div>
+      {#if isUniv}
+        <div class="summary-item">
+          <p class="lbl">GPA</p>
+          <strong class={gradeClass(avgGrade)}>{toGpa45(avgPercentile).toFixed(1)} / 4.5</strong>
+        </div>
+      {/if}
     {/if}
     <div class="summary-item">
       <p class="lbl">학업 상태</p>

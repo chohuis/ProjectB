@@ -1,15 +1,18 @@
 {
   "teamId": "TEAM_UNIV_KNSU",
-  "name": "한국체육대학교",
-  "nameEn": "Korea National Sport University",
+  "name": "한빛체육대학교",
+  "nameEn": "Hanbbit Sports University",
   "city": "서울",
   "cityEn": "Seoul",
   "leagueId": "LEAGUE_UNIVERSITY",
+  "tier": "A",
+  "minAcademicGrade": 5,
+  "minBaseballScore": 20,
   "colors": [
     "#003087",
     "#ffffff"
   ],
-  "stadium": "한국체육대 야구장",
+  "stadium": "한빛체육대 야구장",
   "roster": {
     "active": [
       "PLY_00161",

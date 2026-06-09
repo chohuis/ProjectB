@@ -26,9 +26,8 @@
   import TeamPage from "../team/TeamPage.svelte";
   import EventManagerModal from "../../features/events/ui/EventManagerModal.svelte";
   import CareerChoiceHubModal from "../../features/career/ui/CareerChoiceHubModal.svelte";
+  import CareerResultsModal from "../../features/career/ui/CareerResultsModal.svelte";
   import CareerResultModal from "../../features/career/ui/CareerResultModal.svelte";
-  import DraftBoardModal from "../../features/career/ui/DraftBoardModal.svelte";
-  import DraftModal from "../../features/draft/ui/DraftModal.svelte";
   import ContractNegotiationModal from "../../features/contract/ui/ContractNegotiationModal.svelte";
   import OptionClauseModal from "../../features/contract/ui/OptionClauseModal.svelte";
   import TradeModal from "../../features/contract/ui/TradeModal.svelte";
@@ -82,9 +81,9 @@
       case "event":
       case "game":
       case "careerChoiceHub":
+      case "careerResults":
       case "careerChoice":
       case "militaryEnlist":
-      case "draft":
       case "trade":
       case "salaryNegotiation":
       case "optionClause":
@@ -115,8 +114,8 @@
 
   // 진로 선택 pendingAction
   $: pendingCareerChoiceHub = $nextPendingAction?.type === "careerChoiceHub";
+  $: pendingCareerResults = $nextPendingAction?.type === "careerResults";
   $: pendingCareerChoice = $nextPendingAction?.type === "careerChoice";
-  $: pendingDraft = $nextPendingAction?.type === "draft";
   $: pendingSalaryNegotiation = $nextPendingAction?.type === "salaryNegotiation" ? $nextPendingAction : null;
   $: pendingOptionClause = $nextPendingAction?.type === "optionClause" ? $nextPendingAction : null;
   $: pendingTrade = $nextPendingAction?.type === "trade" ? $nextPendingAction : null;
@@ -509,16 +508,12 @@
   <CareerChoiceHubModal />
 {/if}
 
-{#if pendingCareerChoice && currentTab === "messages"}
-  <CareerResultModal />
+{#if pendingCareerResults && currentTab === "messages"}
+  <CareerResultsModal />
 {/if}
 
-{#if pendingDraft && currentTab === "messages"}
-  {#if $gameStore.protagonist.careerStage === "highschool"}
-    <DraftBoardModal />
-  {:else}
-    <DraftModal />
-  {/if}
+{#if pendingCareerChoice && currentTab === "messages"}
+  <CareerResultModal />
 {/if}
 
 {#if pendingSalaryNegotiation && currentTab === "messages"}

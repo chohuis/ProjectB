@@ -197,6 +197,52 @@ pub struct ProtagonistDraftParams {
     pub team_ids: Vec<String>,
 }
 
+// ── 드래프트 보드 (커리어 선택 화면) ──────────────────────────────────────────
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DraftBoardCandidate {
+    pub id: String,
+    pub ovr: f64,
+    pub age: i32,
+    pub potential: f64,
+    pub is_user: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DraftBoardPick {
+    pub pick_no: i32,
+    pub round: i32,
+    pub team_id: String,
+    pub candidate_id: String,
+    pub is_user: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DraftBoardParams {
+    pub candidates: Vec<DraftBoardCandidate>,
+    pub protagonist_scout_score: f64,
+    pub protagonist_ovr: f64,
+    pub team_ids: Vec<String>,
+    pub year: i32,
+    pub rounds: i32,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DraftBoardResult {
+    pub picks: Vec<DraftBoardPick>,
+    pub user_drafted: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub user_round: Option<i32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub user_pick_no: Option<i32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub user_team_id: Option<String>,
+}
+
 // ── 게임 시뮬 파라미터 ────────────────────────────────────────────────────────
 
 fn default_stamina_cap() -> f64 { 60.0 }

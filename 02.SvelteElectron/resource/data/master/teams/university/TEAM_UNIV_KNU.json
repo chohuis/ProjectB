@@ -1,15 +1,18 @@
 {
   "teamId": "TEAM_UNIV_KNU",
-  "name": "경북대학교",
-  "nameEn": "Kyungpook National University",
+  "name": "동명과학대학교",
+  "nameEn": "Dongmyung Science University",
   "city": "대구",
   "cityEn": "Daegu",
   "leagueId": "LEAGUE_UNIVERSITY",
+  "tier": "C",
+  "minAcademicGrade": 7,
+  "minBaseballScore": 0,
   "colors": [
     "#003087",
     "#e8b800"
   ],
-  "stadium": "경북대 야구장",
+  "stadium": "동명과학대 야구장",
   "roster": {
     "active": [
       "PLY_00181",

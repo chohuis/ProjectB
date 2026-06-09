@@ -5,10 +5,15 @@
   import { seasonStore } from "../../../shared/stores/season";
   import type { EntityRow } from "../../../shared/stores/master";
   import type { NpcSaveState } from "../../../shared/types/save";
+  import {
+    runDraftBoard,
+    type DraftBoardCandidate,
+    type DraftBoardPick,
+  } from "../../../shared/utils/draftSystem";
 
   const dispatch = createEventDispatcher<{
     close: void;
-    completed: { drafted: boolean };
+    completed: { drafted: boolean; teamId: string | null; round: number | null; pick: number | null; signingBonus: number };
   }>();
 
   type OriginType = "HS" | "UNIV" | "IND";
@@ -43,7 +48,8 @@
   let pickCursor = 0;
   let candidates: Candidate[] = [];
   let draftTeamIds: string[] = [];
-  let picks: PickEntry[] = [];
+  let boardPicks: DraftBoardPick[] = [];   // Rust 사전 계산 전체 픽
+  let displayPicks: PickEntry[] = [];      // 화면에 표시된 픽 로그
   let userDrafted = false;
   let finished = false;
   let logEl: HTMLDivElement;
@@ -64,9 +70,7 @@
   })();
 
   $: currentTeamName = getTeamName(currentTeamId);
-
   $: undraftedCount = candidates.filter((c) => !c.drafted).length;
-
   $: filteredList =
     listFilter === "all"
       ? candidates
@@ -139,14 +143,23 @@
     await masterStore.loadEntities("LEAGUE_UNIVERSITY");
     await masterStore.loadEntities("LEAGUE_INDEPENDENT");
 
-    draftTeamIds = $masterStore.teams
-      .filter((t) => t.leagueId === "LEAGUE_KBL" && t.tier === "1군")
-      .map((t) => t.id);
+    // 전년도 KBL 순위 역순 (꼴지팀부터 지명) — 데이터 없으면 masterStore 순서 폴백
+    const prevStandings = $seasonStore.prevSeasonKblStandings ?? [];
+    if (prevStandings.length > 0) {
+      draftTeamIds = [...prevStandings]
+        .sort((a, b) => a.winPct - b.winPct || a.wins - b.wins)
+        .map((s) => s.teamId);
+    } else {
+      draftTeamIds = $masterStore.teams
+        .filter((t) => t.leagueId === "LEAGUE_KBL" && t.tier === "1군")
+        .map((t) => t.id);
+    }
 
     pickCursor = 0;
     userDrafted = false;
     finished = false;
-    picks = [];
+    displayPicks = [];
+    boardPicks = [];
 
     const seen = new Set<string>();
     const rows: Candidate[] = [];
@@ -168,7 +181,6 @@
         rows.push(buildFromNpc(npc, npc.npcId === heroId));
       }
     } else {
-      // 더미 세이브 등 npcs가 비어있을 때: 마스터 데이터에서 고교 3학년 로드
       await masterStore.loadEntities("LEAGUE_HIGHSCHOOL");
       const hsEntities = $masterStore.entities
         .filter((e) => e.leagueId === "LEAGUE_HIGHSCHOOL" && e.role === "player" && e.grade === 3)
@@ -224,21 +236,27 @@
       rows.push(buildFromEntity(e));
     }
 
-    rows.sort((a, b) => b.ovr - a.ovr || a.name.localeCompare(b.name, "ko"));
-
-    const scout = Math.max(1, Math.min(99, $gameStore.protagonist.scoutScore));
-    const ovr = Math.max(1, Math.min(99, $gameStore.protagonist.pitching.ovr));
-    const combined = scout * 0.62 + ovr * 0.38;
-    const targetPick = Math.max(1, Math.min(TOTAL_PICKS, Math.round((108 - combined) / 2.2)));
-
-    const heroIdx = rows.findIndex((r) => r.isUser);
-    if (heroIdx >= 0) {
-      const [hero] = rows.splice(heroIdx, 1);
-      rows.splice(Math.min(rows.length, Math.max(0, targetPick - 1)), 0, hero);
-    }
-
     candidates = rows;
     gameStore.clearCareerDraftPickLog();
+
+    // ── Rust에서 전체 픽 시퀀스 사전 계산 ──
+    const rustCandidates: DraftBoardCandidate[] = rows.map((c) => ({
+      id: c.id,
+      ovr: c.ovr,
+      age: c.age,
+      potential: c.potential,
+      isUser: c.isUser,
+    }));
+
+    boardPicks = (await runDraftBoard(
+      rustCandidates,
+      $gameStore.protagonist.scoutScore,
+      $gameStore.protagonist.pitching.ovr,
+      draftTeamIds,
+      $seasonStore.seasonYear,
+      ROUND_COUNT,
+    )).picks;
+
     loading = false;
   }
 
@@ -247,68 +265,50 @@
     started = true;
   }
 
-  function executePick(): PickEntry | null {
-    if (finished || pickCursor >= TOTAL_PICKS || draftTeamIds.length === 0) return null;
+  function applyPick(): PickEntry | null {
+    if (finished || pickCursor >= boardPicks.length) return null;
 
-    const teamOrder = pickCursor % PICKS_PER_ROUND;
-    const roundNo = Math.floor(pickCursor / PICKS_PER_ROUND) + 1;
-    const slot = roundNo % 2 === 1 ? teamOrder : PICKS_PER_ROUND - 1 - teamOrder;
-    const teamId = draftTeamIds[slot];
+    const bp = boardPicks[pickCursor];
+    const cidx = candidates.findIndex((c) => c.id === bp.candidateId);
+    if (cidx < 0) { pickCursor++; return null; }
 
-    const pool = candidates.filter((c) => !c.drafted).slice(0, 35);
-    if (pool.length === 0) { finished = true; return null; }
-
-    let bestIdx = 0;
-    let bestScore = -Infinity;
-    for (let i = 0; i < pool.length; i++) {
-      const c = pool[i];
-      // 18세 기준 1살 초과당 -3점 (고교 유리)
-      const agePenalty = Math.max(0, c.age - 18) * 3;
-      // 포텐셜 50 기준 ±보정 (개발률이 높으면 가산)
-      const potBonus = (c.potential - 50) * 0.3;
-      const score = c.ovr + potBonus - agePenalty + Math.random() * 6;
-      if (score > bestScore) { bestScore = score; bestIdx = i; }
-    }
-    const selected = pool[bestIdx];
-
-    const cidx = candidates.findIndex((c) => c.id === selected.id);
-    if (cidx >= 0) candidates[cidx] = { ...candidates[cidx], drafted: true };
+    candidates[cidx] = { ...candidates[cidx], drafted: true };
     candidates = candidates;
 
     const entry: PickEntry = {
-      pickNo: pickCursor + 1,
-      round: roundNo,
-      teamId,
-      teamName: getTeamName(teamId),
-      candidate: { ...selected },
+      pickNo: bp.pickNo,
+      round: bp.round,
+      teamId: bp.teamId,
+      teamName: getTeamName(bp.teamId),
+      candidate: { ...candidates[cidx] },
     };
-    picks = [...picks, entry];
+    displayPicks = [...displayPicks, entry];
 
     gameStore.appendCareerDraftPickLog({
-      pickNo: entry.pickNo,
-      round: roundNo,
-      teamId,
-      playerId: selected.id,
-      playerName: selected.name,
-      isUser: selected.isUser,
+      pickNo: bp.pickNo,
+      round: bp.round,
+      teamId: bp.teamId,
+      playerId: bp.candidateId,
+      playerName: candidates[cidx].name,
+      isUser: bp.isUser,
     });
 
-    if (selected.isUser) userDrafted = true;
-    pickCursor += 1;
-    if (pickCursor >= TOTAL_PICKS) finished = true;
+    if (bp.isUser) userDrafted = true;
+    pickCursor++;
+    if (pickCursor >= boardPicks.length) finished = true;
 
     return entry;
   }
 
   async function doNextPick() {
-    executePick();
+    applyPick();
     await tick();
     logEl?.scrollTo({ top: logEl.scrollHeight, behavior: "smooth" });
   }
 
   async function doAutoAll() {
     while (!finished) {
-      executePick();
+      applyPick();
       await tick();
     }
     await tick();
@@ -317,29 +317,17 @@
 
   async function complete() {
     const userPick = $gameStore.schoolState.careerDraftPickLog.find((r) => r.isUser) ?? null;
-    gameStore.setFallbackAdmissions({
-      universityChoices: $gameStore.schoolState.fallbackUniversityChoices,
-      independentChoices: $gameStore.schoolState.fallbackIndependentChoices,
-      universityPassed: $gameStore.schoolState.fallbackUniversityPassed,
-      independentPassed: $gameStore.schoolState.fallbackIndependentPassed,
-      sportsMilitaryPassed: $gameStore.schoolState.fallbackSportsMilitaryPassed,
-      draftPassed: userDrafted,
-      draftTeamId: userPick?.teamId ?? null,
-      draftRound: userPick?.round ?? null,
-      draftPick: userPick?.pickNo ?? null,
-      draftSigningBonus: userDrafted
-        ? Math.max(3000, Math.round(($gameStore.protagonist.pitching.ovr - 45) * 220))
-        : 0,
-      pendingSelection: true,
-    });
-    if (!userDrafted) gameStore.setDraftIntent(false);
-    seasonStore.resolvePendingAction("draft");
-    if (!$seasonStore.pendingActions.some((a) => a.type === "careerChoice")) {
-      seasonStore.pushPendingAction({ type: "careerChoice" });
-    }
     await gameStore.save();
     await seasonStore.save();
-    dispatch("completed", { drafted: userDrafted });
+    dispatch("completed", {
+      drafted: userDrafted,
+      teamId: userPick?.teamId ?? null,
+      round: userPick?.round ?? null,
+      pick: userPick?.pickNo ?? null,
+      signingBonus: userDrafted
+        ? Math.max(3000, Math.round(($gameStore.protagonist.pitching.ovr - 45) * 220))
+        : 0,
+    });
     dispatch("close");
   }
 </script>
@@ -363,7 +351,7 @@
         </div>
       {:else if started && finished}
         <div class="status-bar">
-          <span class="status-done">드래프트 완료 · 총 {picks.length}픽</span>
+          <span class="status-done">드래프트 완료 · 총 {displayPicks.length}픽</span>
         </div>
       {/if}
     </header>
@@ -373,7 +361,7 @@
       <div class="pre-start">
         <p class="pre-desc">KBL 8개 구단이 10라운드(총 80픽)에 걸쳐 신청 선수를 지명합니다.</p>
         <ul class="pre-info">
-          <li>참가 팀: KBL 1군 8개 구단</li>
+          <li>참가 팀: KBL 1군 8개 구단 (전년도 꼴지팀부터 지명)</li>
           <li>라운드: 10라운드 (스네이크 드래프트)</li>
           <li>총 지명 인원: 80명</li>
           <li>참가 선수: 고교 졸업예정 · 대학 · 독립리그</li>
@@ -397,7 +385,7 @@
       {:else}
         <div class="current-team-banner done">
           {#if userDrafted}
-            <span class="banner-team user-picked">지명 완료 — {picks.find(p => p.candidate.isUser)?.teamName}이(가) 지명했습니다</span>
+            <span class="banner-team user-picked">지명 완료 — {displayPicks.find(p => p.candidate.isUser)?.teamName}이(가) 지명했습니다</span>
           {:else}
             <span class="banner-team undrafted">지명되지 않았습니다</span>
           {/if}
@@ -411,7 +399,7 @@
         <div class="draft-log-wrap">
           <h4>지명 현황</h4>
           <div class="log-table-wrap" bind:this={logEl}>
-            {#if picks.length === 0}
+            {#if displayPicks.length === 0}
               <p class="empty-log">아직 지명된 선수가 없습니다.</p>
             {:else}
               <table class="log-table">
@@ -427,7 +415,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {#each picks as p (p.pickNo)}
+                  {#each displayPicks as p (p.pickNo)}
                     <tr class:user-row={p.candidate.isUser}>
                       <td class="td-pick">{p.pickNo}</td>
                       <td class="td-round">{p.round}</td>

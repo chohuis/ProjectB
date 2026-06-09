@@ -410,10 +410,19 @@ pub fn calc_npc_injuries(p: NpcInjuriesPayload) -> NpcInjuriesResult {
 
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
+pub struct UnivChoiceReq {
+    pub team_id: String,
+    pub min_academic_grade: u8,   // 1~9
+    pub min_baseball_score: f64,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct HsAdmissionsPayload {
     pub ovr: f64,
     pub avg_pct: f64,
-    pub univ_choices: Vec<String>,
+    pub hs_baseball_score: f64,
+    pub univ_choices: Vec<UnivChoiceReq>,
     pub indie_choices: Vec<String>,
 }
 
@@ -425,20 +434,40 @@ pub struct HsAdmissionsResult {
     pub sports_passed: bool,
 }
 
+fn pct_to_grade(pct: f64) -> u8 {
+    if pct <= 4.0  { 1 }
+    else if pct <= 11.0 { 2 }
+    else if pct <= 23.0 { 3 }
+    else if pct <= 40.0 { 4 }
+    else if pct <= 60.0 { 5 }
+    else if pct <= 77.0 { 6 }
+    else if pct <= 89.0 { 7 }
+    else if pct <= 96.0 { 8 }
+    else { 9 }
+}
+
 pub fn calc_hs_admissions(p: HsAdmissionsPayload) -> HsAdmissionsResult {
     let mut rng = rand::thread_rng();
     let ovr = p.ovr;
-    let avg_pct = p.avg_pct;
+    let academic_grade = pct_to_grade(p.avg_pct);
 
-    let univ_passed: Vec<String> = p.univ_choices.iter().enumerate()
-        .filter(|(i, _)| {
-            let cut = [58.0f64, 53.0, 48.0].get(*i).copied().unwrap_or(48.0);
-            let score = ovr * 0.62 + avg_pct * 0.38;
-            if score < cut - 8.0 { return false; }
-            let base = 28.0 + (score - cut) * 3.4;
-            rng.gen::<f64>() * 100.0 < base.clamp(8.0, 94.0)
+    let univ_passed: Vec<String> = p.univ_choices.iter()
+        .filter(|c| {
+            let meets_academic = academic_grade <= c.min_academic_grade;
+            let meets_baseball = p.hs_baseball_score >= c.min_baseball_score;
+            let chance = match (meets_academic, meets_baseball) {
+                (true, true) => {
+                    let a_bonus = (c.min_academic_grade as f64 - academic_grade as f64).max(0.0) * 3.0;
+                    let b_bonus = ((p.hs_baseball_score - c.min_baseball_score) / 20.0).min(10.0);
+                    (70.0 + a_bonus + b_bonus).min(92.0)
+                },
+                (true, false) => 28.0,
+                (false, true) => 22.0,
+                (false, false) => 8.0,
+            };
+            rng.gen::<f64>() * 100.0 < chance
         })
-        .map(|(_, id)| id.clone())
+        .map(|c| c.team_id.clone())
         .collect();
 
     let indie_passed: Vec<String> = p.indie_choices.iter().enumerate()

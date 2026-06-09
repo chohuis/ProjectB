@@ -1,15 +1,18 @@
 {
   "teamId": "TEAM_UNIV_DONGGUK",
-  "name": "동국대학교",
-  "nameEn": "Dongguk University",
+  "name": "가온문화대학교",
+  "nameEn": "Gaon Culture University",
   "city": "서울",
   "cityEn": "Seoul",
   "leagueId": "LEAGUE_UNIVERSITY",
+  "tier": "B",
+  "minAcademicGrade": 6,
+  "minBaseballScore": 10,
   "colors": [
     "#8b4513",
     "#ffffff"
   ],
-  "stadium": "동국대 야구장",
+  "stadium": "가온문화대 야구장",
   "roster": {
     "active": [
       "PLY_00281",

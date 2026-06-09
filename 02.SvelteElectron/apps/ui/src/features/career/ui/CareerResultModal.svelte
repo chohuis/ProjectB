@@ -2,16 +2,37 @@
   import { gameStore } from "../../../shared/stores/game";
   import { seasonStore } from "../../../shared/stores/season";
   import { masterStore } from "../../../shared/stores/master";
+  import { calcDraftSalary } from "../../../shared/utils/universityUtils";
 
   let resolving = false;
 
-  $: univPassed = $gameStore.schoolState.fallbackUniversityPassed;
-  $: indiePassed = $gameStore.schoolState.fallbackIndependentPassed;
-  $: sportsPassed = $gameStore.schoolState.fallbackSportsMilitaryPassed;
-  $: draftPassed = $gameStore.schoolState.fallbackDraftPassed;
+  $: results = $gameStore.schoolState.careerResults;
+  $: univPassed = results?.universityPassed ?? [];
+  $: indiePassed = results?.independentPassed ?? [];
+  $: sportsPassed = results?.sportsMilitaryPassed ?? false;
+  $: draftPassed = results?.draftDrafted ?? false;
+
+  // 대학 재학 중 여부 및 학년
+  $: isUniversity = $gameStore.protagonist.careerStage === "university";
+  $: univYear = isUniversity
+    ? Math.floor(Math.max(0, ($gameStore.schoolState.universityWeek ?? 1) - 1) / 52)
+    : -1;
+  $: isFinalYear = univYear >= 3;
+  $: canContinue = isUniversity && !isFinalYear && !draftPassed;
 
   function teamName(teamId: string): string {
     return $masterStore.teams.find((t) => t.id === teamId)?.name ?? teamId;
+  }
+
+  async function continueUniversity() {
+    if (resolving) return;
+    resolving = true;
+    gameStore.setCareerApplicationsSubmitted(false);
+    gameStore.clearCareerResults();
+    seasonStore.resolvePendingAction("careerChoice");
+    await gameStore.save();
+    await seasonStore.save();
+    resolving = false;
   }
 
   async function chooseResult(kind: "draft" | "university" | "independent" | "sports" | "general", teamId?: string) {
@@ -19,18 +40,19 @@
     resolving = true;
 
     if (kind === "draft") {
+      const draftRound = results?.draftRound ?? 10;
+      const offeredSalary = calcDraftSalary(draftRound, $gameStore.protagonist.pitching.ovr);
       seasonStore.resolvePendingAction("careerChoice");
       seasonStore.pushPendingAction({
         type: "salaryNegotiation",
-        teamId: $gameStore.schoolState.fallbackDraftTeamId ?? $gameStore.protagonist.teamId,
+        teamId: results?.draftTeamId ?? $gameStore.protagonist.teamId,
         leagueId: "LEAGUE_KBL",
-        offeredSalary: Math.max(3000, Math.round(($gameStore.protagonist.pitching.ovr - 45) * 220)),
+        offeredSalary,
         durationYears: 2,
-        signingBonus: $gameStore.schoolState.fallbackDraftSigningBonus,
+        signingBonus: results?.draftSigningBonus ?? 0,
       });
-      gameStore.setDraftIntent(false);
       gameStore.setCareerApplicationsSubmitted(false);
-      gameStore.clearFallbackAdmissions();
+      gameStore.clearCareerResults();
       gameStore.setCareerFinalChoice("draft");
     } else if (kind === "university" && teamId) {
       gameStore.applyDraftDecision({ stage: "university", leagueId: "LEAGUE_UNIVERSITY", teamId });
@@ -45,15 +67,13 @@
     } else if (kind === "sports") {
       gameStore.enlistMilitary("sports");
       gameStore.setCareerApplicationsSubmitted(false);
-      gameStore.setDraftIntent(false);
-      gameStore.clearFallbackAdmissions();
+      gameStore.clearCareerResults();
       gameStore.setCareerFinalChoice("sports");
       seasonStore.resolvePendingAction("careerChoice");
     } else {
       gameStore.enlistMilitary("general");
       gameStore.setCareerApplicationsSubmitted(false);
-      gameStore.setDraftIntent(false);
-      gameStore.clearFallbackAdmissions();
+      gameStore.clearCareerResults();
       gameStore.setCareerFinalChoice("general");
       seasonStore.resolvePendingAction("careerChoice");
     }
@@ -73,9 +93,15 @@
 
     <p class="body-text">합격/지명 결과에서 최종 경로 1개를 선택하세요.</p>
     <div class="options">
+      {#if canContinue}
+        <button class="opt-btn continue" type="button" on:click={continueUniversity}>
+          <span class="opt-label">다음 학년 진급 ({univYear + 2}학년)</span>
+          <span class="opt-sub">드래프트 미지명 — 대학 계속</span>
+        </button>
+      {/if}
       {#if draftPassed}
         <button class="opt-btn" type="button" on:click={() => chooseResult("draft")}>
-          <span class="opt-label">드래프트 지명: {teamName($gameStore.schoolState.fallbackDraftTeamId ?? "-")} / {$gameStore.schoolState.fallbackDraftRound}R {$gameStore.schoolState.fallbackDraftPick}P</span>
+          <span class="opt-label">드래프트 지명: {teamName(results?.draftTeamId ?? "-")} / {results?.draftRound}R {results?.draftPick}P</span>
         </button>
       {/if}
       {#each univPassed as teamId}
@@ -109,7 +135,9 @@
   h2 { margin: 0; color: #e8f0ff; }
   .body-text { margin: 0; color: #a8c0e0; }
   .options { display: grid; gap: 8px; }
-  .opt-btn { background: #111e38; border: 1px solid #2a4068; border-radius: 10px; padding: 10px 12px; text-align: left; cursor: pointer; display: block; width: 100%; }
+  .opt-btn { background: #111e38; border: 1px solid #2a4068; border-radius: 10px; padding: 10px 12px; text-align: left; cursor: pointer; display: grid; width: 100%; gap: 2px; }
   .opt-btn.danger { background: #3a1f1f; border-color: #804040; }
+  .opt-btn.continue { background: #0e2818; border-color: #2a6040; }
   .opt-label { color: #dceeff; font-weight: 600; }
+  .opt-sub { color: #6a9080; font-size: 11px; }
 </style>

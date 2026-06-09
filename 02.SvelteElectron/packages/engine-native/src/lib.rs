@@ -295,6 +295,17 @@ pub fn determine_protagonist_draft_native(params_json: String) -> String {
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("determineProtagonistDraftNative/serialize", e))
 }
 
+/// 드래프트 보드 — 전체 픽 시퀀스 사전 계산
+#[napi]
+pub fn run_draft_board_native(params_json: String) -> String {
+    let params: DraftBoardParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("runDraftBoardNative", e),
+    };
+    let result = npc_sim::run_draft_board(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("runDraftBoardNative/serialize", e))
+}
+
 /// 주인공 학년 진급
 #[napi]
 pub fn advance_protagonist_grade_native(params_json: String) -> String {

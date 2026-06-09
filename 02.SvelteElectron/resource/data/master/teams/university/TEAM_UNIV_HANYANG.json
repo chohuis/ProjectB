@@ -1,15 +1,18 @@
 {
   "teamId": "TEAM_UNIV_HANYANG",
-  "name": "한양대학교",
-  "nameEn": "Hanyang University",
+  "name": "청운공과대학교",
+  "nameEn": "Cheongun Institute of Technology",
   "city": "서울",
   "cityEn": "Seoul",
   "leagueId": "LEAGUE_UNIVERSITY",
+  "tier": "A",
+  "minAcademicGrade": 5,
+  "minBaseballScore": 20,
   "colors": [
     "#c00000",
     "#000000"
   ],
-  "stadium": "한양대 야구장",
+  "stadium": "청운공과대 야구장",
   "roster": {
     "active": [
       "PLY_00241",

@@ -382,6 +382,16 @@ export interface SubjectScore {
   assignment: number;  // 과제 이행률 (0~100)
 }
 
+export type UniversityTier = "S" | "A" | "B" | "C" | "D";
+
+export interface UniversityMaster {
+  teamId: string;
+  name: string;
+  tier: UniversityTier;
+  minAcademicGrade: number;  // 1~9 (낮을수록 좋음)
+  minBaseballScore: number;
+}
+
 export type CareerChoiceMode = "none" | "draft" | "university" | "independent";
 export type CareerFinalChoice = "none" | "draft" | "university" | "independent" | "sports" | "general";
 
@@ -392,6 +402,24 @@ export interface CareerDraftPickLogEntry {
   playerId: string;
   playerName: string;
   isUser: boolean;
+}
+
+export interface CareerApplications {
+  draftApplied: boolean;
+  universityChoices: string[];
+  independentChoices: string[];
+  sportsMilitaryApplied: boolean;
+}
+
+export interface CareerResults {
+  draftDrafted: boolean;
+  draftTeamId: string | null;
+  draftRound: number | null;
+  draftPick: number | null;
+  draftSigningBonus: number;
+  universityPassed: string[];
+  independentPassed: string[];
+  sportsMilitaryPassed: boolean;
 }
 
 export interface SchoolState {
@@ -407,24 +435,12 @@ export interface SchoolState {
   warningCount: number;
   careerChoiceTriggered: boolean;
   draftTriggered: boolean;
-  draftIntent: boolean;
   careerApplicationsSubmitted: boolean;
-  fallbackSelectionPending: boolean;
-  fallbackUniversityChoices: string[];
-  fallbackIndependentChoices: string[];
-  fallbackUniversityPassed: string[];
-  fallbackIndependentPassed: string[];
-  fallbackSportsMilitaryPassed: boolean;
-  fallbackDraftPassed: boolean;
-  fallbackDraftTeamId: string | null;
-  fallbackDraftRound: number | null;
-  fallbackDraftPick: number | null;
-  fallbackDraftSigningBonus: number;
+  careerApplications: CareerApplications | null;
+  careerResults: CareerResults | null;
   careerChoicePopupOpened: boolean;
   careerChoiceMode: CareerChoiceMode;
   careerChoiceConfirmed: boolean;
-  careerChoiceUniversityApplications: string[];
-  careerChoiceIndependentApplications: string[];
   careerDraftPickLog: CareerDraftPickLogEntry[];
   careerFinalChoice: CareerFinalChoice;
   universityWeek: number;

@@ -68,6 +68,7 @@ contextBridge.exposeInMainWorld("projectB", {
   salaryCalcOfferedSalaryForProtagonist: (p) => ipcRenderer.invoke("salary:calcOfferedSalaryForProtagonist",      p),
   faGenerateOffers:                      (p) => ipcRenderer.invoke("fa:generateOffers",                           p),
   draftCalcDraftRank:                    (p) => ipcRenderer.invoke("draft:calcDraftRank",                         p),
+  draftRunBoard:                         (p) => ipcRenderer.invoke("draft:runBoard",                              p),
 
   // ── 스케줄 엔진 (Phase 5) ────────────────────────────────────────────────
   scheduleGeneric:           (p) => ipcRenderer.invoke("schedule:generic",           p),

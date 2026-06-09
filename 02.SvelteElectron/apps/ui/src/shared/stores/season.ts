@@ -180,7 +180,11 @@ function createSeasonStore() {
     startNewSeason() {
       update((s) => {
         const teamIds = s.standings.map((st) => st.teamId);
-        return makeEmptySeason(s.leagueId, s.seasonYear + 1, s.totalWeeks, teamIds);
+        const next = makeEmptySeason(s.leagueId, s.seasonYear + 1, s.totalWeeks, teamIds);
+        // 전년도 KBL 최종 순위 보존 — 드래프트 지명 순서에 사용
+        const kblStandings = s.leagueState["LEAGUE_KBL"]?.standings ?? [];
+        next.prevSeasonKblStandings = kblStandings.length > 0 ? [...kblStandings] : (s.prevSeasonKblStandings ?? []);
+        return next;
       });
     },
 

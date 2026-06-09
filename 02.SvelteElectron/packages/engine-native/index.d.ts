@@ -51,6 +51,8 @@ export declare function runDraftNative(paramsJson: string): string
 export declare function applyDraftNative(paramsJson: string): string
 /** 주인공 드래프트 결과 결정 */
 export declare function determineProtagonistDraftNative(paramsJson: string): string
+/** 드래프트 보드 — 전체 픽 시퀀스 사전 계산 */
+export declare function runDraftBoardNative(paramsJson: string): string
 /** 주인공 학년 진급 */
 export declare function advanceProtagonistGradeNative(paramsJson: string): string
 /** 주간 훈련 성장 계산 */

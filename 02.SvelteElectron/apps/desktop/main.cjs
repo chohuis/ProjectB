@@ -595,6 +595,10 @@ app.whenReady().then(() => {
     try { return engineNative.calcDraftRankNative(paramsJson); }
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
+  ipcMain.handle("draft:runBoard", (_event, paramsJson) => {
+    try { return engineNative.runDraftBoardNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
 
   // ── 스케줄 엔진 ──────────────────────────────────────────────────────────────
   ipcMain.handle("schedule:generic", (_event, p) => {

@@ -3,9 +3,11 @@ import type { MessageItem } from "../types/main";
 import type {
   AchievementMetrics,
   AchievementRuntime,
+  CareerApplications,
   CareerChoiceMode,
   CareerDraftPickLogEntry,
   CareerFinalChoice,
+  CareerResults,
   CareerSeasonRecord,
   InjuryState,
   NpcCareerEntry,
@@ -169,24 +171,12 @@ const DEFAULT_SCHOOL: SchoolState = {
   warningCount: 0,
   careerChoiceTriggered: false,
   draftTriggered: false,
-  draftIntent: false,
   careerApplicationsSubmitted: false,
-  fallbackSelectionPending: false,
-  fallbackUniversityChoices: [],
-  fallbackIndependentChoices: [],
-  fallbackUniversityPassed: [],
-  fallbackIndependentPassed: [],
-  fallbackSportsMilitaryPassed: false,
-  fallbackDraftPassed: false,
-  fallbackDraftTeamId: null,
-  fallbackDraftRound: null,
-  fallbackDraftPick: null,
-  fallbackDraftSigningBonus: 0,
+  careerApplications: null,
+  careerResults: null,
   careerChoicePopupOpened: false,
   careerChoiceMode: "none",
   careerChoiceConfirmed: false,
-  careerChoiceUniversityApplications: [],
-  careerChoiceIndependentApplications: [],
   careerDraftPickLog: [],
   careerFinalChoice: "none",
   universityWeek: 0,
@@ -972,13 +962,6 @@ function createGameStore() {
       }));
     },
 
-    setDraftIntent(flag: boolean) {
-      update((s) => ({
-        ...s,
-        schoolState: { ...s.schoolState, draftIntent: flag },
-      }));
-    },
-
     setCareerApplicationsSubmitted(flag: boolean) {
       update((s) => ({
         ...s,
@@ -1002,14 +985,24 @@ function createGameStore() {
       }));
     },
 
-    setCareerApplications(payload: { university: string[]; independent: string[] }) {
+    setCareerApplications(payload: CareerApplications) {
       update((s) => ({
         ...s,
-        schoolState: {
-          ...s.schoolState,
-          careerChoiceUniversityApplications: payload.university.slice(0, 3),
-          careerChoiceIndependentApplications: payload.independent.slice(0, 3),
-        },
+        schoolState: { ...s.schoolState, careerApplications: payload },
+      }));
+    },
+
+    setCareerResults(results: CareerResults) {
+      update((s) => ({
+        ...s,
+        schoolState: { ...s.schoolState, careerResults: results },
+      }));
+    },
+
+    clearCareerResults() {
+      update((s) => ({
+        ...s,
+        schoolState: { ...s.schoolState, careerResults: null, careerApplications: null },
       }));
     },
 
@@ -1043,64 +1036,6 @@ function createGameStore() {
       }));
     },
 
-    setFallbackAdmissions(payload: {
-      universityChoices: string[];
-      independentChoices: string[];
-      universityPassed: string[];
-      independentPassed: string[];
-      sportsMilitaryPassed: boolean;
-      draftPassed?: boolean;
-      draftTeamId?: string | null;
-      draftRound?: number | null;
-      draftPick?: number | null;
-      draftSigningBonus?: number;
-      pendingSelection?: boolean;
-    }) {
-      update((s) => ({
-        ...s,
-        schoolState: {
-          ...s.schoolState,
-          fallbackSelectionPending: payload.pendingSelection ?? true,
-          fallbackUniversityChoices: payload.universityChoices,
-          fallbackIndependentChoices: payload.independentChoices,
-          fallbackUniversityPassed: payload.universityPassed,
-          fallbackIndependentPassed: payload.independentPassed,
-          fallbackSportsMilitaryPassed: payload.sportsMilitaryPassed,
-          fallbackDraftPassed: payload.draftPassed === true,
-          fallbackDraftTeamId: payload.draftTeamId ?? null,
-          fallbackDraftRound: payload.draftRound ?? null,
-          fallbackDraftPick: payload.draftPick ?? null,
-          fallbackDraftSigningBonus: payload.draftSigningBonus ?? 0,
-        },
-      }));
-    },
-
-    clearFallbackAdmissions() {
-      update((s) => ({
-        ...s,
-        schoolState: {
-          ...s.schoolState,
-          fallbackSelectionPending: false,
-          fallbackUniversityChoices: [],
-          fallbackIndependentChoices: [],
-          fallbackUniversityPassed: [],
-          fallbackIndependentPassed: [],
-          fallbackSportsMilitaryPassed: false,
-          fallbackDraftPassed: false,
-          fallbackDraftTeamId: null,
-          fallbackDraftRound: null,
-          fallbackDraftPick: null,
-          fallbackDraftSigningBonus: 0,
-          careerChoicePopupOpened: false,
-          careerChoiceMode: "none",
-          careerChoiceConfirmed: false,
-          careerChoiceUniversityApplications: [],
-          careerChoiceIndependentApplications: [],
-          careerDraftPickLog: [],
-          careerFinalChoice: "none",
-        },
-      }));
-    },
 
     // 대학 전공 선택 확정
     selectMajor(major: string) {
@@ -1167,24 +1102,12 @@ function createGameStore() {
         const schoolState: SchoolState = {
           ...s.schoolState,
           attendsUniversity: payload.stage === "university",
-          draftIntent: false,
           careerApplicationsSubmitted: false,
-          fallbackSelectionPending: false,
-          fallbackUniversityChoices: [],
-          fallbackIndependentChoices: [],
-          fallbackUniversityPassed: [],
-          fallbackIndependentPassed: [],
-          fallbackSportsMilitaryPassed: false,
-          fallbackDraftPassed: false,
-          fallbackDraftTeamId: null,
-          fallbackDraftRound: null,
-          fallbackDraftPick: null,
-          fallbackDraftSigningBonus: 0,
+          careerApplications: null,
+          careerResults: null,
           careerChoicePopupOpened: false,
           careerChoiceMode: "none",
           careerChoiceConfirmed: false,
-          careerChoiceUniversityApplications: [],
-          careerChoiceIndependentApplications: [],
           careerDraftPickLog: [],
           careerFinalChoice: "none",
           draftTriggered: payload.resetDraftTrigger ? false : s.schoolState.draftTriggered,

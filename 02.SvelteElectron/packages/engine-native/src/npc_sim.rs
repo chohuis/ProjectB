@@ -937,8 +937,7 @@ fn weighted_pick(weights: &[f64], rng: &mut LcgRand) -> usize {
 pub fn run_draft(params: DraftSimParams) -> DraftSimResult {
     let meta_map: HashMap<String, &NamedNpcMeta> = params.named_metas.iter()
         .map(|m| (m.npc_id.clone(), m)).collect();
-    let pool: Vec<&NpcSaveState> = params.candidates.iter()
-        .filter(|n| n.current_league == "LEAGUE_DRAFT_POOL").collect();
+    let pool: Vec<&NpcSaveState> = params.candidates.iter().collect();
     let year  = params.year;
     let mut rng = LcgRand::new(
         (year as u32).wrapping_mul(1337).wrapping_add((pool.len() as u32).wrapping_mul(7))
@@ -1045,6 +1044,96 @@ pub fn determine_protagonist_draft(params: ProtagonistDraftParams) -> Protagonis
         pick:    Some(pick),
         team_id: Some(teams[t_idx].clone()),
     }
+}
+
+pub fn run_draft_board(params: DraftBoardParams) -> DraftBoardResult {
+    let teams = &params.team_ids;
+    let n_teams = teams.len() as i32;
+    if n_teams == 0 || params.rounds == 0 {
+        return DraftBoardResult { picks: vec![], user_drafted: false, user_round: None, user_pick_no: None, user_team_id: None };
+    }
+
+    let total = params.rounds * n_teams;
+    let combined = params.protagonist_scout_score * 0.6 + params.protagonist_ovr * 0.4;
+    let target_pick = ((108.0 - combined) / 2.2).round() as i32;
+    let target_pick = target_pick.max(1).min(total) as usize;
+
+    // 비주인공 후보를 드래프트 점수 내림차순 정렬
+    let mut sorted: Vec<DraftBoardCandidate> = params.candidates.iter()
+        .filter(|c| !c.is_user)
+        .cloned()
+        .collect();
+    sorted.sort_by(|a, b| {
+        let sa = a.ovr + (a.potential - 50.0) * 0.3 - (a.age as f64 - 18.0).max(0.0) * 3.0;
+        let sb = b.ovr + (b.potential - 50.0) * 0.3 - (b.age as f64 - 18.0).max(0.0) * 3.0;
+        sb.partial_cmp(&sa).unwrap_or(std::cmp::Ordering::Equal)
+    });
+
+    // 주인공을 target_pick 위치에 삽입
+    let insert_pos = (target_pick - 1).min(sorted.len());
+    let user_opt = params.candidates.iter().find(|c| c.is_user).cloned();
+    if let Some(ref u) = user_opt {
+        sorted.insert(insert_pos, u.clone());
+    }
+
+    let mut rng = LcgRand::new(
+        (params.year as u32).wrapping_mul(1337).wrapping_add((sorted.len() as u32).wrapping_mul(7))
+    );
+
+    let mut drafted = vec![false; sorted.len()];
+    let mut picks: Vec<DraftBoardPick> = Vec::with_capacity(total as usize);
+    let mut user_drafted = false;
+    let mut user_round = None;
+    let mut user_pick_no = None;
+    let mut user_team_id = None;
+
+    'outer: for r in 1..=params.rounds {
+        for t in 0..n_teams {
+            let pick_no = (r - 1) * n_teams + t + 1;
+            // 스네이크: 홀수 라운드 정방향, 짝수 라운드 역방향
+            let team_slot = if r % 2 == 1 { t } else { n_teams - 1 - t };
+            let team_id = teams[team_slot as usize].clone();
+
+            // 미지명 후보 상위 35명 풀
+            let pool: Vec<usize> = (0..sorted.len())
+                .filter(|&i| !drafted[i])
+                .take(35)
+                .collect();
+
+            if pool.is_empty() { break 'outer; }
+
+            // 가중치 점수 계산 (noise [0, 6])
+            let scores: Vec<f64> = pool.iter().map(|&i| {
+                let c = &sorted[i];
+                let age_penalty = (c.age as f64 - 18.0).max(0.0) * 3.0;
+                let pot_bonus   = (c.potential - 50.0) * 0.3;
+                let noise       = rng.next() * 6.0;
+                (c.ovr + pot_bonus - age_penalty + noise).max(0.1)
+            }).collect();
+
+            let sel_pool_idx = weighted_pick(&scores, &mut rng);
+            let sel_idx = pool[sel_pool_idx];
+            drafted[sel_idx] = true;
+
+            let is_user = sorted[sel_idx].is_user;
+            if is_user {
+                user_drafted = true;
+                user_round    = Some(r);
+                user_pick_no  = Some(pick_no);
+                user_team_id  = Some(team_id.clone());
+            }
+
+            picks.push(DraftBoardPick {
+                pick_no,
+                round: r,
+                team_id,
+                candidate_id: sorted[sel_idx].id.clone(),
+                is_user,
+            });
+        }
+    }
+
+    DraftBoardResult { picks, user_drafted, user_round, user_pick_no, user_team_id }
 }
 
 pub fn advance_protagonist_grade(params: ProtagonistGradeParams) -> ProtagonistGradeResult {

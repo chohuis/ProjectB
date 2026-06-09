@@ -2,6 +2,8 @@
   import { onMount } from "svelte";
   import { createEventDispatcher } from "svelte";
   import { masterStore } from "../../../shared/stores/master";
+  import { gameStore } from "../../../shared/stores/game";
+  import { checkUniversityEligibility, calcHsBaseballScore, pctToGrade, UNIVERSITY_REQUIREMENTS } from "../../../shared/utils/universityUtils";
 
   export let initialSelected: string[] = [];
 
@@ -20,8 +22,20 @@
     loading = false;
   });
 
+  $: subjectScores = $gameStore.schoolState.subjectScores;
+  $: avgPct = Object.values(subjectScores).length
+    ? Object.values(subjectScores).reduce((a, s) => a + s.percentile, 0) / Object.values(subjectScores).length
+    : 50;
+  $: hsBaseballScore = calcHsBaseballScore($gameStore.protagonist.careerRecords ?? []);
+  $: avgGrade = pctToGrade(avgPct);
+
   $: teams = $masterStore.teams.filter((t) => t.leagueId === "LEAGUE_UNIVERSITY");
-  $: sortedTeams = [...teams].sort((a, b) => a.name.localeCompare(b.name, "ko"));
+  $: sortedTeams = [...teams].sort((a, b) => {
+    const ra = UNIVERSITY_REQUIREMENTS[a.id];
+    const rb = UNIVERSITY_REQUIREMENTS[b.id];
+    const tierOrder = { S: 0, A: 1, B: 2, C: 3, D: 4 };
+    return (tierOrder[ra?.tier ?? "D"] ?? 4) - (tierOrder[rb?.tier ?? "D"] ?? 4);
+  });
   $: if (!selectedTeamId || !sortedTeams.some((t) => t.id === selectedTeamId)) {
     selectedTeamId = sortedTeams[0]?.id ?? "";
   }
@@ -58,11 +72,20 @@
       <div class="layout">
         <section class="panel list">
           <h4>대학 목록</h4>
+          <div class="elig-info">
+            <span>내 교과: <strong>{avgGrade}등급</strong></span>
+            <span>야구 점수: <strong>{hsBaseballScore}점</strong></span>
+          </div>
           <div class="rows">
             {#each sortedTeams as team}
+              {@const req = UNIVERSITY_REQUIREMENTS[team.id]}
+              {@const elig = checkUniversityEligibility(team.id, avgPct, hsBaseballScore)}
               <button class:selected={selectedTeamId === team.id} on:click={() => (selectedTeamId = team.id)}>
-                <strong>{team.name}</strong>
-                <span>{selected.includes(team.id) ? "신청됨 ✓" : "미신청"}</span>
+                <span class="tier-badge tier-{req?.tier ?? 'D'}">{req?.tier ?? '?'}</span>
+                <strong class:dim={!elig.eligible}>{team.name}</strong>
+                <span class="elig-status" class:pass={elig.eligible} class:warn={!elig.eligible && (elig.meetsAcademic || elig.meetsBaseball)} class:fail={!elig.meetsAcademic && !elig.meetsBaseball}>
+                  {selected.includes(team.id) ? "신청됨 ✓" : elig.eligible ? "지원 가능" : "조건 미달"}
+                </span>
               </button>
             {/each}
           </div>
@@ -70,7 +93,20 @@
 
         <section class="panel detail">
           {#if selectedTeam}
-            <h4>{selectedTeam.name}</h4>
+            {@const req = UNIVERSITY_REQUIREMENTS[selectedTeam.id]}
+            {@const elig = checkUniversityEligibility(selectedTeam.id, avgPct, hsBaseballScore)}
+            <div class="detail-head">
+              <h4>{selectedTeam.name}</h4>
+              {#if req}<span class="tier-badge tier-{req.tier}">{req.tier}등급</span>{/if}
+            </div>
+            <div class="req-row">
+              <span class:meet={elig.meetsAcademic} class:nomeet={!elig.meetsAcademic}>
+                교과 {req?.minAcademicGrade ?? "-"}등급 이내 {elig.meetsAcademic ? "✓" : "✗"}
+              </span>
+              <span class:meet={elig.meetsBaseball} class:nomeet={!elig.meetsBaseball}>
+                야구 {req?.minBaseballScore ?? 0}점 이상 {elig.meetsBaseball ? "✓" : "✗"}
+              </span>
+            </div>
             <p class="meta">{selectedTeam.id}</p>
             {#if selectedTeam.profile}
               <div class="profile">
@@ -121,9 +157,25 @@
   .panel { border:1px solid #2f486f; border-radius:10px; background:#132441; padding:10px; min-height:0; overflow:hidden; }
   .list { display:grid; grid-template-rows:auto minmax(0,1fr); gap:8px; }
   .rows { min-height:0; overflow:auto; display:grid; gap:4px; align-content:start; }
-  .rows button { border:1px solid #2d456d; background:#172c4d; color:#d9e8ff; border-radius:8px; padding:7px 8px; text-align:left; display:flex; justify-content:space-between; gap:8px; cursor:pointer; }
+  .elig-info { display:flex; gap:12px; font-size:12px; color:#8ab0d8; padding:4px 2px; }
+  .elig-info strong { color:#d0e8ff; }
+  .rows button { border:1px solid #2d456d; background:#172c4d; color:#d9e8ff; border-radius:8px; padding:7px 8px; text-align:left; display:flex; align-items:center; gap:8px; cursor:pointer; }
   .rows button.selected { border-color:#77aaf8; background:#1f3a64; }
-  .rows button span { color:#a7bddd; font-size:12px; }
+  .rows button .dim { color:#567090; }
+  .elig-status { margin-left:auto; font-size:11px; }
+  .elig-status.pass { color:#60d090; }
+  .elig-status.warn { color:#d0a040; }
+  .elig-status.fail { color:#c06060; }
+  .tier-badge { font-size:10px; font-weight:700; padding:1px 5px; border-radius:3px; flex-shrink:0; border:1px solid; }
+  .tier-S { background:#1a1030; border-color:#7050c0; color:#c090f8; }
+  .tier-A { background:#101830; border-color:#2a5090; color:#70a8f8; }
+  .tier-B { background:#101a10; border-color:#2a6030; color:#60c070; }
+  .tier-C { background:#181810; border-color:#606020; color:#c0c050; }
+  .tier-D { background:#201010; border-color:#703030; color:#c07070; }
+  .detail-head { display:flex; align-items:center; gap:8px; }
+  .req-row { display:flex; gap:12px; font-size:12px; }
+  .req-row .meet { color:#60c080; }
+  .req-row .nomeet { color:#c06060; }
   .detail { display:grid; grid-template-rows:auto auto auto auto minmax(0,1fr) auto; gap:8px; }
   .meta { margin:0; color:#9ab2d8; font-size:12px; }
   .profile { border:1px solid #2d466f; border-radius:8px; background:#152b4a; padding:8px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; }

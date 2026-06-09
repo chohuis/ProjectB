@@ -1,15 +1,18 @@
 {
   "teamId": "TEAM_UNIV_YONSEI",
-  "name": "연세대학교",
-  "nameEn": "Yonsei University",
+  "name": "서해국제대학교",
+  "nameEn": "Seohae International University",
   "city": "서울",
   "cityEn": "Seoul",
   "leagueId": "LEAGUE_UNIVERSITY",
+  "tier": "S",
+  "minAcademicGrade": 4,
+  "minBaseballScore": 40,
   "colors": [
     "#003087",
     "#ffffff"
   ],
-  "stadium": "연세대 야구장",
+  "stadium": "서해국제대 야구장",
   "roster": {
     "active": [
       "PLY_00201",
