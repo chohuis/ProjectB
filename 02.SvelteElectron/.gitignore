@@ -12,6 +12,10 @@ resource/master.db
 resource/master.db-shm
 resource/master.db-wal
 
+# 빌드 시 자동 생성되는 마스터 데이터 인덱스
+resource/data/master/_manifest.json
+resource/data/master/entities/players/_index.json
+
 # 사용자 저장 데이터
 userData/
 
