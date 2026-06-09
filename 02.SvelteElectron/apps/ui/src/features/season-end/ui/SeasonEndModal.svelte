@@ -226,6 +226,77 @@
       psResult: postseasonResult?.myResult,
     });
 
+    // ── 독립리그: KBL 스카우트 제의 / 재계약 / 방출 ──────────────
+    if (p.careerStage === "independent") {
+      const myStats = mySeasonSt;
+      const era = myStats?.type === "pitcher" ? (myStats as PitcherSeasonStats).era : 9.99;
+      const avg = myStats?.type === "batter"  ? (myStats as BatterSeasonStats).avg  : 0.0;
+      const kblTeamIds = $masterStore.teams
+        .filter((t) => t.leagueId === "LEAGUE_KBL" && t.tier === "1군")
+        .map((t) => t.id);
+
+      const offerRaw = JSON.parse(
+        await window.projectB!.indieCalcScoutOffer(JSON.stringify({
+          ovr: p.pitching.ovr, era, avg,
+          playerType: p.playerType ?? "pitcher",
+          year: now, kblTeamIds,
+        }))
+      ) as { hasOffer: boolean; tier: string; teamId?: string; offeredSalary: number };
+
+      seasonStore.startNewSeason();
+
+      if (offerRaw.hasOffer && offerRaw.teamId) {
+        const label = offerRaw.tier === "first" ? "KBL 1군" : "KBL 2군";
+        gameStore.addMessage({
+          id: `msg-indie-scout-${Date.now()}`,
+          category: "system", sender: "에이전트",
+          subject: `${label} 스카우트 제의`,
+          preview: `${$masterStore.teams.find(t => t.id === offerRaw.teamId)?.name ?? offerRaw.teamId}에서 제의가 왔습니다.`,
+          body: `독립리그 시즌 성적을 인정받아 KBL 팀의 제의를 받았습니다.\n협상을 진행하세요.`,
+          createdAt: `Y${now}`, readAt: null,
+        });
+        seasonStore.pushPendingAction({
+          type: "salaryNegotiation",
+          teamId: offerRaw.teamId,
+          leagueId: "LEAGUE_KBL",
+          offeredSalary: offerRaw.offeredSalary,
+          durationYears: 2,
+          signingBonus: 0,
+        });
+      } else if (p.pitching.ovr >= 50) {
+        // 재계약 제의
+        seasonStore.pushPendingAction({
+          type: "salaryNegotiation",
+          teamId: p.teamId,
+          leagueId: "LEAGUE_INDEPENDENT",
+          offeredSalary: Math.max(800, Math.round((p.pitching.ovr - 40) * 60)),
+          durationYears: 1,
+          signingBonus: 0,
+        });
+      } else {
+        // 방출: careerResults 설정 후 careerChoice 발동
+        gameStore.setCareerResults({
+          draftDrafted: false, draftTeamId: null, draftRound: null,
+          draftPick: null, draftSigningBonus: 0,
+          universityPassed: [], independentPassed: [], sportsMilitaryPassed: false,
+        });
+        gameStore.addMessage({
+          id: `msg-indie-release-${Date.now()}`,
+          category: "system", sender: "구단",
+          subject: "방출 통보",
+          preview: "팀에서 방출 통보를 받았습니다.",
+          body: "이번 시즌 성적으로 인해 팀에서 방출되었습니다.\n다음 진로를 선택하세요.",
+          createdAt: `Y${now}`, readAt: null,
+        });
+        seasonStore.pushPendingAction({ type: "careerChoice" });
+      }
+
+      await gameStore.save();
+      await seasonStore.save();
+      isProcessing = false;
+      return;
+    }
+
     let progressedByHighschoolSync = false;
     if (p.careerStage === "highschool" && p.schoolId) {
       const ctx = await loadHighschoolContext(p.schoolId);
@@ -248,6 +319,33 @@
     const leagueStats: Record<string, Record<string, import("../../../shared/types/save").PlayerSeasonStats>> = {};
     for (const [lid, ls] of Object.entries($seasonStore.leagueState)) leagueStats[lid] = ls.stats;
     gameStore.applySeasonHistory($seasonStore.stats, leagueStats, now);
+
+    // ── 연간 병역 현황 메시지 (매년 발송) ─────────────────────
+    const offseasonSummary = (window as any).__lastOffseasonSummary as {
+      militaryEnlistedSports?: string[];
+      militaryEnlistedGeneral?: string[];
+      militaryDischargedNames?: string[];
+    } | null;
+    if (offseasonSummary) {
+      const sports   = offseasonSummary.militaryEnlistedSports ?? [];
+      const general  = offseasonSummary.militaryEnlistedGeneral ?? [];
+      const discharged = offseasonSummary.militaryDischargedNames ?? [];
+      if (sports.length + general.length + discharged.length > 0) {
+        const lines: string[] = [];
+        if (sports.length)    lines.push(`◆ 체육부대 입대 (${sports.length}명)\n  ${sports.slice(0, 5).join(", ")}${sports.length > 5 ? ` 외 ${sports.length - 5}명` : ""}`);
+        if (general.length)   lines.push(`◆ 일반부대 입대 (${general.length}명)\n  ${general.slice(0, 3).join(", ")}${general.length > 3 ? ` 외 ${general.length - 3}명` : ""}`);
+        if (discharged.length) lines.push(`◆ 전역 (${discharged.length}명)\n  ${discharged.slice(0, 3).join(", ")}${discharged.length > 3 ? ` 외 ${discharged.length - 3}명` : ""}`);
+        gameStore.addMessage({
+          id: `msg-military-annual-${now}`,
+          category: "news", sender: "병무청",
+          subject: `${now} 시즌 병역 현황`,
+          preview: `입대 ${sports.length + general.length}명, 전역 ${discharged.length}명`,
+          body: lines.join("\n\n"),
+          createdAt: `Y${now}`, readAt: null,
+        });
+      }
+      (window as any).__lastOffseasonSummary = null;
+    }
     await seasonStore.flushAllLeagueStatsToDb(now);
     await gameStore.processAllLeaguesSeasonEnd(now);
     await gameStore.applyAgingDecay();

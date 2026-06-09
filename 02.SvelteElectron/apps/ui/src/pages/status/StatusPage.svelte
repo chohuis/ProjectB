@@ -117,8 +117,37 @@
     1: "습득중", 2: "기초", 3: "보통", 4: "능숙", 5: "마스터",
   };
 
-  $: injury        = $gameStore.protagonist.injury;
-  $: injuryHistory = ($gameStore.protagonist.injuryHistory ?? []).slice().reverse();
+  $: p = $gameStore.protagonist;
+  $: injury        = p.injury;
+  $: injuryHistory = (p.injuryHistory ?? []).slice().reverse();
+
+  // ── 계약 / 병역 섹션 ─────────────────────────────────────────
+  $: contract = p.contract ?? null;
+  $: showContractSection =
+    p.careerStage === "pro_kbl" || p.careerStage === "pro_abl" || p.careerStage === "independent";
+  $: showMilitarySection = p.careerStage !== "highschool";
+  $: contractExpireYear  = contract ? ($seasonStore.seasonYear + contract.remainingYears) : null;
+  $: faYearsLeft         = Math.max(0, 9 - (p.proServiceYears ?? 0));
+
+  const LEAGUE_SHORT: Record<string, string> = {
+    LEAGUE_KBL: "KBL", LEAGUE_ABL: "ABL", LEAGUE_INDEPENDENT: "독립리그",
+  };
+
+  function formatSalary(s: number): string {
+    if (s >= 10000) return `${(s / 10000).toFixed(1)}억 원`;
+    return `${s.toLocaleString()}만 원`;
+  }
+
+  $: milStatusDisplay = (() => {
+    if (p.militaryStatus === "군필") return { text: "병역 완료", cls: "mil-done" };
+    if (p.militaryStatus === "면제") return { text: "병역 면제", cls: "mil-exempt" };
+    if (p.militaryStatus === "현역") {
+      const unit = p.sportsUnitSelected ? "체육부대" : "일반부대";
+      return { text: `복무 중 (${unit})`, cls: "mil-active" };
+    }
+    if (p.age >= 26) return { text: `병역 미이행 ⚠ 누적 패널티 -${p.militaryDeferPenalty ?? 0}pt`, cls: "mil-warn" };
+    return { text: "병역 미이행 (패널티 없음)", cls: "mil-pending" };
+  })();
 
   const TREATMENT_LABEL: Record<string, string> = {
     rest: "자연 휴식", conservative: "보존 치료", steroid: "스테로이드",
@@ -242,6 +271,59 @@
       </div>
     {/if}
   </article>
+
+  {#if showContractSection || showMilitarySection}
+    <article class="card info-card">
+      {#if showContractSection && contract}
+        <div class="info-section">
+          <span class="info-title">계약 정보</span>
+          <div class="info-rows">
+            <div class="info-row">
+              <span>소속</span>
+              <strong>{$teamMap.get(p.teamId)?.name ?? p.teamId} · {LEAGUE_SHORT[p.leagueId] ?? p.leagueId}</strong>
+            </div>
+            <div class="info-row">
+              <span>연봉</span>
+              <strong>{formatSalary(contract.salary)}</strong>
+            </div>
+            <div class="info-row">
+              <span>잔여 기간</span>
+              <strong>{contract.remainingYears}년{contractExpireYear ? ` (만료: ${contractExpireYear}년)` : ""}</strong>
+            </div>
+            <div class="info-row">
+              <span>FA 자격</span>
+              <strong>{faYearsLeft > 0 ? `${faYearsLeft}년 후` : "FA 자격 보유"}</strong>
+            </div>
+            {#if p.militaryStatus === "현역"}
+              <div class="info-row">
+                <span></span>
+                <span class="contract-extend-badge">군 복무 계약 +2년 적용됨</span>
+              </div>
+            {/if}
+          </div>
+        </div>
+      {/if}
+
+      {#if showMilitarySection}
+        {#if showContractSection && contract}<div class="info-divider"></div>{/if}
+        <div class="info-section">
+          <span class="info-title">병역 정보</span>
+          <div class="info-rows">
+            <div class="info-row">
+              <span>상태</span>
+              <strong class={milStatusDisplay.cls}>{milStatusDisplay.text}</strong>
+            </div>
+            {#if p.militaryStatus === "현역" && p.militaryDischargeYear}
+              <div class="info-row">
+                <span>전역 예정</span>
+                <strong>{p.militaryDischargeYear}년 W48</strong>
+              </div>
+            {/if}
+          </div>
+        </div>
+      {/if}
+    </article>
+  {/if}
 
   <nav class="tab-bar">
     <button class:tab-active={activeTab === "stats"}  on:click={() => (activeTab = "stats")}>능력치</button>
@@ -474,8 +556,8 @@
 
 <style>
   .page {
-    display: grid;
-    grid-template-rows: auto auto auto auto minmax(0, 1fr);
+    display: flex;
+    flex-direction: column;
     gap: 12px;
     height: 100%;
     min-height: 0;
@@ -539,6 +621,7 @@
   }
 
   .tab-content {
+    flex: 1;
     min-height: 0;
     overflow-y: auto;
     display: flex;
@@ -858,6 +941,37 @@
   .hist-sev.sev-surgery  { color: #d080ff; }
   .hist-name { color: #c8d8f0; }
   .hist-loss { color: #ff9b8a; font-size: 11px; margin-left: auto; }
+
+  /* ── 계약 / 병역 카드 ───────────────────────────────────────── */
+  .info-card { display: flex; flex-direction: column; gap: 10px; }
+
+  .info-section { display: grid; gap: 6px; }
+
+  .info-title {
+    font-size: 11px; font-weight: 700; color: #6a8ab8;
+    letter-spacing: 0.5px; text-transform: uppercase;
+  }
+
+  .info-rows { display: grid; gap: 4px; }
+
+  .info-row { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+  .info-row span:first-child { color: #7a9ac8; width: 64px; flex-shrink: 0; }
+  .info-row strong { color: #d8e8ff; }
+
+  .info-divider { height: 1px; background: #1e3058; }
+
+  .mil-done    { color: #68de92; }
+  .mil-exempt  { color: #9eb6de; }
+  .mil-active  { color: #60c0ff; }
+  .mil-warn    { color: #ff9060; }
+  .mil-pending { color: #9eb6de; }
+
+  .contract-extend-badge {
+    font-size: 11px; color: #ffd060;
+    background: rgba(255,200,60,0.10);
+    border: 1px solid rgba(255,200,60,0.3);
+    border-radius: 4px; padding: 2px 8px;
+  }
 
   @media (max-width: 960px) {
     .profile-card { grid-template-columns: 1fr; }

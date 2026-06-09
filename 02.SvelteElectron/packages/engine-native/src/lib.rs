@@ -464,6 +464,39 @@ pub fn calc_draft_rank_native(params_json: String) -> String {
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcDraftRankNative/serialize", e))
 }
 
+/// 체육부대 후보 30명 공개 (W50 루머)
+#[napi]
+pub fn calc_sports_unit_candidates_native(params_json: String) -> String {
+    let params: SportsUnitCandidatesParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("calcSportsUnitCandidatesNative", e),
+    };
+    let result = npc_sim::calc_sports_unit_candidates(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcSportsUnitCandidatesNative/serialize", e))
+}
+
+/// 체육부대 최종 선발 (W52 입대 신청자 기준)
+#[napi]
+pub fn calc_sports_unit_selection_native(params_json: String) -> String {
+    let params: SportsUnitSelectionParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("calcSportsUnitSelectionNative", e),
+    };
+    let result = npc_sim::calc_sports_unit_selection(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcSportsUnitSelectionNative/serialize", e))
+}
+
+/// 독립리그 KBL 스카우트 제의 계산
+#[napi]
+pub fn calc_indie_scout_offer_native(params_json: String) -> String {
+    let params: player_engine::IndieScoutOfferParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("calcIndieScoutOfferNative", e),
+    };
+    let result = player_engine::calc_indie_scout_offer(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcIndieScoutOfferNative/serialize", e))
+}
+
 // ── 스케줄 엔진 ───────────────────────────────────────────────────────────────
 
 #[napi]

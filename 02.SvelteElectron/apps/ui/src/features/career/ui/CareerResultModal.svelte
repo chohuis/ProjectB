@@ -20,6 +20,10 @@
   $: isFinalYear = univYear >= 3;
   $: canContinue = isUniversity && !isFinalYear && !draftPassed;
 
+  // 독립리그 계속 여부
+  $: isIndependent = $gameStore.protagonist.careerStage === "independent";
+  $: canContinueIndie = isIndependent && !draftPassed;
+
   function teamName(teamId: string): string {
     return $masterStore.teams.find((t) => t.id === teamId)?.name ?? teamId;
   }
@@ -64,6 +68,15 @@
       gameStore.setCareerApplicationsSubmitted(false);
       gameStore.setCareerFinalChoice("independent");
       seasonStore.resolvePendingAction("careerChoice");
+      // 입단 계약 협상 발동
+      seasonStore.pushPendingAction({
+        type: "salaryNegotiation",
+        teamId,
+        leagueId: "LEAGUE_INDEPENDENT",
+        offeredSalary: Math.max(800, Math.round(($gameStore.protagonist.pitching.ovr - 40) * 60)),
+        durationYears: 1,
+        signingBonus: 0,
+      });
     } else if (kind === "sports") {
       gameStore.enlistMilitary("sports");
       gameStore.setCareerApplicationsSubmitted(false);
@@ -97,6 +110,12 @@
         <button class="opt-btn continue" type="button" on:click={continueUniversity}>
           <span class="opt-label">다음 학년 진급 ({univYear + 2}학년)</span>
           <span class="opt-sub">드래프트 미지명 — 대학 계속</span>
+        </button>
+      {/if}
+      {#if canContinueIndie}
+        <button class="opt-btn continue" type="button" on:click={continueUniversity}>
+          <span class="opt-label">독립리그 계속</span>
+          <span class="opt-sub">드래프트 미지명 — 독립리그 시즌 계속</span>
         </button>
       {/if}
       {#if draftPassed}

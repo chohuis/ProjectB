@@ -836,7 +836,15 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     !get(seasonStore).pendingActions.some(
       (a) => a.type === "careerChoiceHub" || a.type === "careerResults" || a.type === "careerChoice"
     );
-  if (needsHsHub || needsUnivHub) {
+  const needsIndieHub =
+    gLatest.protagonist.careerStage === "independent" &&
+    weekInYear === 50 &&
+    !gLatest.schoolState.careerApplicationsSubmitted &&
+    gLatest.schoolState.careerResults === null &&
+    !get(seasonStore).pendingActions.some(
+      (a) => a.type === "careerChoiceHub" || a.type === "careerResults" || a.type === "careerChoice"
+    );
+  if (needsHsHub || needsUnivHub || needsIndieHub) {
     gameStore.markCareerChoiceTriggered();
     seasonStore.pushPendingAction({ type: "careerChoiceHub" });
   }
@@ -855,7 +863,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     !hasCareerPending;
 
   const isUnivResultWeek =
-    gDraft.protagonist.careerStage === "university" &&
+    (gDraft.protagonist.careerStage === "university" || gDraft.protagonist.careerStage === "independent") &&
     weekInYear === 51 &&
     gDraft.schoolState.careerApplicationsSubmitted &&
     gDraft.schoolState.careerResults === null &&
@@ -1432,17 +1440,65 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     }
   }
 
-  // ── 군입대 나이 체크 ──────────────────────────────────────────
+  // ── 군 복무 관련 트리거 ─────────────────────────────────────
   {
     const g = get(gameStore);
     const s = get(seasonStore);
-    const hasMilitaryPending = s.pendingActions.some((a) => a.type === "militaryEnlist");
-    if (!hasMilitaryPending && g.protagonist.careerStage !== "military" &&
-        g.protagonist.age >= 28 &&
-        (g.protagonist.careerStage === "pro_kbl" || g.protagonist.careerStage === "pro_abl" || g.protagonist.careerStage === "independent")) {
-      const action: PendingAction = { type: "militaryEnlist" };
-      seasonStore.pushPendingAction(action);
-      return { processedWeek: s.currentWeek, logs: ["입영 대상: 군 복무 진행이 필요합니다."], newMessages: [], matchResults: [], stoppedBy: action };
+    const p = g.protagonist;
+    const isMilUnresolved = p.militaryStatus === "미필"
+      && p.careerStage !== "military"
+      && p.careerStage !== "highschool";
+    const hasMilPending = s.pendingActions.some((a) => a.type === "militaryEnlist");
+
+    if (isMilUnresolved && !hasMilPending) {
+      // W4: 28세 강제 입대 경고
+      if (p.age === 28 && weekInYear === 4) {
+        gameStore.addMessage({
+          id: `msg-military-warning-${Date.now()}`,
+          category: "system", sender: "병무청",
+          subject: "입영 통지",
+          preview: "이번 시즌 W52에 입대합니다.",
+          body: "병역 의무 이행 통지서입니다.\n이번 시즌 W52 주차에 무조건 입대됩니다.",
+          createdAt: `W${weekNum}`, readAt: null,
+        });
+      }
+
+      // W50: 체육부대 후보 공개 메시지 (별도 처리 — SeasonEndModal 주기적 호출 예정)
+
+      // W52: 자발적 제안 (age ≤ 27)
+      if (p.age <= 27 && weekInYear === 52) {
+        gameStore.addMessage({
+          id: `msg-military-ask-${Date.now()}`,
+          category: "system", sender: "병무청",
+          subject: "입영 신청 안내",
+          preview: "이번 시즌 군 복무를 신청하시겠습니까?",
+          body: "군 복무를 신청하시겠습니까?\n신청 시 W52에 입대합니다.",
+          createdAt: `W${weekNum}`, readAt: null,
+          decision: {
+            prompt: "군 복무를 신청하시겠습니까?",
+            options: [
+              { id: "yes_enlist", label: "신청", effectHint: "W52 입대" },
+              { id: "no_enlist",  label: "이번엔 아니오", effectHint: "다음 해 재안내" },
+            ],
+            selectedOptionId: null,
+          },
+        });
+        const action: PendingAction = { type: "message", messageId: `msg-military-ask-${Date.now() - 1}` };
+        return { processedWeek: s.currentWeek, logs: ["군 복무 신청 안내"], newMessages: [], matchResults: [], stoppedBy: action };
+      }
+
+      // W52: 강제 입대 (age >= 28)
+      if (p.age >= 28 && weekInYear === 52) {
+        const action: PendingAction = { type: "militaryEnlist" };
+        seasonStore.pushPendingAction(action);
+        return { processedWeek: s.currentWeek, logs: ["강제 입대 처리"], newMessages: [], matchResults: [], stoppedBy: action };
+      }
+
+      // 26~27세 패널티 누적 (W1 시점 체크)
+      if (weekInYear === 1 && p.age >= 26) {
+        const penalty = p.age === 26 ? 3 : 5;
+        gameStore.addMilitaryDeferPenalty(penalty);
+      }
     }
   }
 

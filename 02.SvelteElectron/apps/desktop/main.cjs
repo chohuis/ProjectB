@@ -599,6 +599,18 @@ app.whenReady().then(() => {
     try { return engineNative.runDraftBoardNative(paramsJson); }
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
+  ipcMain.handle("military:calcCandidates", (_event, paramsJson) => {
+    try { return engineNative.calcSportsUnitCandidatesNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("military:calcSelection", (_event, paramsJson) => {
+    try { return engineNative.calcSportsUnitSelectionNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("indie:calcScoutOffer", (_event, paramsJson) => {
+    try { return engineNative.calcIndieScoutOfferNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
 
   // ── 스케줄 엔진 ──────────────────────────────────────────────────────────────
   ipcMain.handle("schedule:generic", (_event, p) => {

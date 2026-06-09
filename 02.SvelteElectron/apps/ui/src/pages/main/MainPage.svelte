@@ -533,7 +533,7 @@
 {/if}
 
 {#if pendingMilitaryEnlist && currentTab === "messages"}
-  <MilitaryEnlistModal />
+  <MilitaryEnlistModal sportsUnitSelected={$gameStore.protagonist.sportsUnitSelected ?? false} />
 {/if}
 
 {#if pendingInjuryTreatment && currentTab === "messages"}

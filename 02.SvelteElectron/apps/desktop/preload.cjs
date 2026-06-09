@@ -69,6 +69,9 @@ contextBridge.exposeInMainWorld("projectB", {
   faGenerateOffers:                      (p) => ipcRenderer.invoke("fa:generateOffers",                           p),
   draftCalcDraftRank:                    (p) => ipcRenderer.invoke("draft:calcDraftRank",                         p),
   draftRunBoard:                         (p) => ipcRenderer.invoke("draft:runBoard",                              p),
+  militaryCalcCandidates:                (p) => ipcRenderer.invoke("military:calcCandidates",                     p),
+  militaryCalcSelection:                 (p) => ipcRenderer.invoke("military:calcSelection",                      p),
+  indieCalcScoutOffer:                   (p) => ipcRenderer.invoke("indie:calcScoutOffer",                         p),
 
   // ── 스케줄 엔진 (Phase 5) ────────────────────────────────────────────────
   scheduleGeneric:           (p) => ipcRenderer.invoke("schedule:generic",           p),

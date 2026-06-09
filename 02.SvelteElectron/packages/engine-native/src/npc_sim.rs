@@ -10,11 +10,11 @@ fn clamp_stat(v: f64) -> f64 { v.max(1.0).min(99.0).round() }
 
 // ── 시드 기반 LCG (TS makeRand와 동일 알고리즘) ──────────────────────────────
 
-struct LcgRand { s: u32 }
+pub(crate) struct LcgRand { pub(crate) s: u32 }
 
 impl LcgRand {
-    fn new(seed: u32) -> Self { LcgRand { s: seed } }
-    fn next(&mut self) -> f64 {
+    pub(crate) fn new(seed: u32) -> Self { LcgRand { s: seed } }
+    pub(crate) fn next(&mut self) -> f64 {
         self.s = (self.s ^ (self.s >> 16)).wrapping_mul(0x045d9f3b);
         self.s = (self.s ^ (self.s >> 16)).wrapping_mul(0x045d9f3b);
         self.s ^= self.s >> 16;
@@ -662,27 +662,20 @@ fn normalize_offseason_npcs(
 
 pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     let mut rng = rand::thread_rng();
+    let mut lcg = LcgRand::new(
+        (params.season_year as u32).wrapping_mul(3571)
+    );
     let mut summary = SeasonEndSummary::default();
     let mut new_pending: Vec<NpcSaveState> = Vec::new();
     let season_year = params.season_year;
 
-    let processed: Vec<NpcSaveState> = params.npcs.into_iter().map(|npc| {
+    let mut processed: Vec<NpcSaveState> = params.npcs.into_iter().map(|npc| {
         if npc.current_league == "LEAGUE_HIGHSCHOOL" { return npc; }
 
         let mut n = npc;
 
-        // 1. 군 전역
-        if n.career_status == "military" {
-            if let Some(dy) = n.military_discharge_year {
-                if dy <= season_year {
-                    n.career_status   = "active".into();
-                    n.military_status = "군필".into();
-                    n.current_league  = "LEAGUE_INDEPENDENT".into();
-                    n.current_team    = "".into();
-                    summary.military_discharged_count += 1;
-                }
-            }
-        }
+        // 1. 군 복무 중: 다른 처리 건너뜀 (전역/입대는 별도 패스에서 처리)
+        if n.career_status == "military" { return n; }
 
         if n.career_status == "retired" || n.current_league == "LEAGUE_RETIRED" { return n; }
 
@@ -727,26 +720,90 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             }
         }
 
-        // 6. 군입대 판정
-        if n.military_status == "미필" {
-            let is_kbl = n.current_league == "LEAGUE_KBL" || n.current_league == "LEAGUE_ABL";
-            let threshold = if is_kbl { 27 } else { 24 };
-            let chance    = if is_kbl { 0.25 } else { 0.35 };
-            if n.age >= threshold && rng.gen::<f64>() < chance {
-                n.career_status        = "military".into();
-                n.military_status      = "현역".into();
-                n.military_enlist_year = Some(season_year);
-                n.military_discharge_year = Some(season_year + 2);
-                n.current_league       = "LEAGUE_MILITARY".into();
-                n.current_team         = "".into();
-                summary.military_enlisted_count += 1;
-                return n;
-            }
+        // 6. 연봉/계약 갱신 (active 선수, 군 복무/은퇴 제외)
+        if n.career_status == "active"
+            && n.current_league != "LEAGUE_MILITARY"
+            && n.current_league != "LEAGUE_RETIRED"
+        {
+            let ovr = npc_core_ovr(&n);
+            let (salary, years) = estimate_salary_and_contract(ovr, &n.current_league, &mut lcg);
+            n.current_salary = salary;
+            n.contract_years  = years;
         }
+
         n
     }).collect();
 
-    // 7. 은퇴 판정 + 로스터 캡
+    // 7. 전역 처리 (discharge_year 도달)
+    for n in processed.iter_mut() {
+        if n.career_status != "military" { continue; }
+        if let Some(dy) = n.military_discharge_year {
+            if dy <= season_year {
+                n.career_status   = "active".into();
+                n.military_status = "군필".into();
+                n.current_league  = "LEAGUE_INDEPENDENT".into();
+                n.current_team    = "".into();
+                summary.military_discharged_count += 1;
+                summary.military_discharged_names.push(n.name.clone());
+            }
+        }
+    }
+
+    // 8. 군입대 판정 (OVR/연봉 기반 지연 성향)
+    let enlist_candidates: Vec<(usize, f64, String)> = processed.iter().enumerate()
+        .filter_map(|(i, n)| {
+            if n.military_status != "미필" { return None; }
+            if n.current_league == "LEAGUE_HIGHSCHOOL" { return None; }
+            if n.career_status == "military" { return None; }
+            let ovr = npc_core_ovr(n);
+            let base_prob: f64 = match n.age {
+                i32::MIN..=22 => 0.05,
+                23 => 0.12,
+                24 => 0.22,
+                25 => 0.35,
+                26 => 0.55,
+                27 => 0.75,
+                _  => 1.0,
+            };
+            let ovr_delay    = if ovr >= 75.0 { 0.35 } else if ovr >= 68.0 { 0.18 } else { 0.0 };
+            let salary_delay = if n.current_salary >= 8000 { 0.30 }
+                               else if n.current_salary >= 4000 { 0.15 }
+                               else { 0.0 };
+            let final_prob = (base_prob - ovr_delay - salary_delay).max(0.05);
+            if rng.gen::<f64>() < final_prob {
+                Some((i, ovr, n.current_team.clone()))
+            } else {
+                None
+            }
+        })
+        .collect();
+
+    // 9. 체육부대 선발 (상위 10명, 팀당 최대 3명)
+    let sports_candidates: Vec<(String, f64, String)> = enlist_candidates.iter()
+        .map(|(i, ovr, team)| (processed[*i].npc_id.clone(), *ovr, team.clone()))
+        .collect();
+    let sports_selected = select_sports_unit_ids(&sports_candidates, 10, 3);
+
+    // 10. 입대 처리
+    for (i, _, _) in &enlist_candidates {
+        let n = &mut processed[*i];
+        n.career_status          = "military".into();
+        n.military_status        = "현역".into();
+        n.military_enlist_year   = Some(season_year);
+        n.military_discharge_year = Some(season_year + 2);
+        n.current_league         = "LEAGUE_MILITARY".into();
+        n.current_team           = "".into();
+        let is_sports = sports_selected.contains(&n.npc_id);
+        n.sports_unit_selected   = is_sports;
+        summary.military_enlisted_count += 1;
+        if is_sports {
+            summary.military_enlisted_sports.push(format!("{}(OVR {})", n.name, npc_core_ovr(n).round() as i32));
+        } else {
+            summary.military_enlisted_general.push(n.name.clone());
+        }
+    }
+
+    // 11. 은퇴 판정 + 로스터 캡
     let mut logs: Vec<String> = Vec::new();
     let mut after_normalize = normalize_offseason_npcs(processed, season_year, &mut summary, &mut logs, &mut rng);
 
@@ -907,9 +964,64 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
             military_enlist_year:    None,
             military_discharge_year: None,
             pro_service_years:       None,
+            current_salary:          0,
+            contract_years:          1,
+            sports_unit_selected:    false,
         });
     }
     result
+}
+
+// ── 연봉/계약 기간 추정 ───────────────────────────────────────────────────────
+
+fn estimate_salary_and_contract(ovr: f64, league: &str, rng: &mut LcgRand) -> (i64, i32) {
+    match league {
+        "LEAGUE_KBL" | "LEAGUE_ABL" => {
+            if ovr >= 75.0 {
+                let salary = ((ovr - 50.0) * 350.0 + 3000.0).round() as i64;
+                let years  = 3 + (rng.next() * 3.0) as i32;  // 3~5
+                (salary, years)
+            } else if ovr >= 68.0 {
+                let salary = ((ovr - 50.0) * 200.0 + 1500.0).round() as i64;
+                let years  = 2 + (rng.next() * 3.0) as i32;  // 2~4
+                (salary, years)
+            } else {
+                let salary = ((ovr - 40.0) * 80.0 + 800.0).max(800.0).round() as i64;
+                let years  = 1 + (rng.next() * 2.0) as i32;  // 1~2
+                (salary, years)
+            }
+        },
+        "LEAGUE_INDEPENDENT" => {
+            let salary = ((ovr - 40.0) * 60.0 + 500.0).max(500.0).round() as i64;
+            let years  = 1 + (rng.next() * 5.0) as i32;  // 1~5
+            (salary, years)
+        },
+        _ => (0, 1),
+    }
+}
+
+// ── 체육부대 선발 (내부 헬퍼) ─────────────────────────────────────────────────
+
+fn select_sports_unit_ids(
+    candidates: &[(String, f64, String)],  // (id, ovr, team_id)
+    max_total: usize,
+    max_per_team: usize,
+) -> std::collections::HashSet<String> {
+    let mut sorted = candidates.to_vec();
+    sorted.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
+
+    let mut selected: std::collections::HashSet<String> = std::collections::HashSet::new();
+    let mut team_count: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
+
+    for (id, _, team_id) in &sorted {
+        if selected.len() >= max_total { break; }
+        let cnt = team_count.entry(team_id.clone()).or_insert(0);
+        if *cnt < max_per_team {
+            selected.insert(id.clone());
+            *cnt += 1;
+        }
+    }
+    selected
 }
 
 // ── 드래프트 시뮬레이션 ───────────────────────────────────────────────────────
@@ -1044,6 +1156,28 @@ pub fn determine_protagonist_draft(params: ProtagonistDraftParams) -> Protagonis
         pick:    Some(pick),
         team_id: Some(teams[t_idx].clone()),
     }
+}
+
+// ── 체육부대 후보 30명 공개 (W50 루머) ───────────────────────────────────────
+
+pub fn calc_sports_unit_candidates(params: SportsUnitCandidatesParams) -> SportsUnitCandidatesResult {
+    let mut sorted = params.candidates.clone();
+    sorted.sort_by(|a, b| b.ovr.partial_cmp(&a.ovr).unwrap_or(std::cmp::Ordering::Equal));
+    let top = sorted.into_iter().take(params.top_n).collect::<Vec<_>>();
+    let protagonist_rank = top.iter().position(|c| c.is_protagonist).map(|i| i + 1);
+    SportsUnitCandidatesResult { top_candidates: top, protagonist_rank }
+}
+
+// ── 체육부대 최종 선발 (W52 입대 신청자 기준) ─────────────────────────────────
+
+pub fn calc_sports_unit_selection(params: SportsUnitSelectionParams) -> SportsUnitSelectionResult {
+    let pool: Vec<(String, f64, String)> = params.applicants.iter()
+        .map(|c| (c.id.clone(), c.ovr, c.team_id.clone()))
+        .collect();
+    let selected = select_sports_unit_ids(&pool, params.max_total, params.max_per_team);
+    let protagonist_selected = params.applicants.iter()
+        .any(|c| c.is_protagonist && selected.contains(&c.id));
+    SportsUnitSelectionResult { protagonist_selected, selected_ids: selected.into_iter().collect() }
 }
 
 pub fn run_draft_board(params: DraftBoardParams) -> DraftBoardResult {

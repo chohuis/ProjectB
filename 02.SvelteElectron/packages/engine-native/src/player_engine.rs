@@ -397,6 +397,65 @@ pub fn calc_draft_rank(params: CalcDraftRankParams) -> DraftRankResult {
     }
 }
 
+// ── 독립리그 KBL 스카우트 제의 계산 ──────────────────────────────
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct IndieScoutOfferParams {
+    pub ovr: f64,
+    pub era: f64,           // 투수 ERA (타자는 9.99 등 무효값)
+    pub avg: f64,           // 타자 타율 (투수는 0.0 등 무효값)
+    pub player_type: String, // "pitcher" | "batter"
+    pub year: i32,
+    pub kbl_team_ids: Vec<String>,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct IndieScoutOfferResult {
+    pub has_offer: bool,
+    pub tier: String,   // "first" | "second" | "none"
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub team_id: Option<String>,
+    pub offered_salary: i64,
+}
+
+pub fn calc_indie_scout_offer(p: IndieScoutOfferParams) -> IndieScoutOfferResult {
+    let is_pitcher = p.player_type == "pitcher";
+    let tier = if is_pitcher {
+        if p.ovr >= 63.0 && p.era <= 3.00 { "first" }
+        else if p.ovr >= 58.0 && p.era <= 3.80 { "second" }
+        else { "none" }
+    } else {
+        if p.ovr >= 63.0 && p.avg >= 0.300 { "first" }
+        else if p.ovr >= 58.0 && p.avg >= 0.270 { "second" }
+        else { "none" }
+    };
+
+    if tier == "none" || p.kbl_team_ids.is_empty() {
+        return IndieScoutOfferResult { has_offer: false, tier: "none".into(), team_id: None, offered_salary: 0 };
+    }
+
+    let mut rng = crate::npc_sim::LcgRand::new(
+        (p.year as u32).wrapping_mul(997).wrapping_add((p.ovr.round() as u32).wrapping_mul(31))
+    );
+    let t_idx = (rng.next() * p.kbl_team_ids.len() as f64) as usize % p.kbl_team_ids.len();
+    let team_id = p.kbl_team_ids[t_idx].clone();
+
+    let offered_salary = if tier == "first" {
+        (3000_i64).max(((p.ovr - 45.0) * 220.0).round() as i64)
+    } else {
+        (1500_i64).max(((p.ovr - 45.0) * 120.0).round() as i64)
+    };
+
+    IndieScoutOfferResult {
+        has_offer: true,
+        tier: tier.into(),
+        team_id: Some(team_id),
+        offered_salary,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

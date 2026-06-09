@@ -10,6 +10,8 @@
   let draftChecked = false;
   let universityChecked = false;
   let independentChecked = false;
+
+  $: isIndependent = $gameStore.protagonist.careerStage === "independent";
   let universityChoices: string[] = [];
   let independentChoices: string[] = [];
   let universityModalOpen = false;
@@ -67,7 +69,7 @@
 
   async function submitApplications() {
     if (resolving) return;
-    const hasAny = draftChecked || universityChecked || independentChecked;
+    const hasAny = draftChecked || universityChecked || independentChecked || isIndependent;
     if (!hasAny) return;
     resolving = true;
     gameStore.setCareerApplications({
@@ -92,32 +94,36 @@
       <span class="chip">진로 결정</span>
       <h2>W50 진로 신청 허브</h2>
     </div>
-    <p class="body-text">각 진로 페이지를 확인하고 체크한 뒤 신청 완료를 눌러 다음 주로 진행하세요.</p>
+    <p class="body-text">
+      {isIndependent ? "KBL 드래프트에 신청하세요. 미신청 시 독립리그를 계속합니다." : "각 진로 페이지를 확인하고 체크한 뒤 신청 완료를 눌러 다음 주로 진행하세요."}
+    </p>
 
     <div class="options">
       <button class="opt-btn" type="button" on:click={onClickDraftApply}>
         <span class="opt-label">드래프트 참가 신청 {draftChecked ? "✓" : ""}</span>
       </button>
 
-      <button class="opt-btn" type="button" on:click={() => (universityModalOpen = true)}>
-        <span class="opt-label">대학 진학 신청 {universityChecked ? `✓ (${universityChoices.length}/3)` : ""}</span>
-      </button>
-      {#if universityChecked}
-        <div class="opt-box"><div class="list">{#each universityChoices as teamId}<div class="picked">{teamName(teamId)}</div>{/each}</div></div>
-      {/if}
+      {#if !isIndependent}
+        <button class="opt-btn" type="button" on:click={() => (universityModalOpen = true)}>
+          <span class="opt-label">대학 진학 신청 {universityChecked ? `✓ (${universityChoices.length}/3)` : ""}</span>
+        </button>
+        {#if universityChecked}
+          <div class="opt-box"><div class="list">{#each universityChoices as teamId}<div class="picked">{teamName(teamId)}</div>{/each}</div></div>
+        {/if}
 
-      <button class="opt-btn" type="button" on:click={() => (independentModalOpen = true)}>
-        <span class="opt-label">독립리그 신청 {independentChecked ? `✓ (${independentChoices.length}/3)` : ""}</span>
-      </button>
-      {#if independentChecked}
-        <div class="opt-box"><div class="list">{#each independentChoices as teamId}<div class="picked">{teamName(teamId)}</div>{/each}</div></div>
+        <button class="opt-btn" type="button" on:click={() => (independentModalOpen = true)}>
+          <span class="opt-label">독립리그 신청 {independentChecked ? `✓ (${independentChoices.length}/3)` : ""}</span>
+        </button>
+        {#if independentChecked}
+          <div class="opt-box"><div class="list">{#each independentChoices as teamId}<div class="picked">{teamName(teamId)}</div>{/each}</div></div>
+        {/if}
       {/if}
 
       <button class="opt-btn danger" type="button" on:click={chooseMilitaryNow}>
         <span class="opt-label">군입대 (즉시 확정)</span>
       </button>
     </div>
-    <button class="submit" disabled={resolving || !(draftChecked || universityChecked || independentChecked)} on:click={submitApplications}>신청 완료</button>
+    <button class="submit" disabled={resolving || !(draftChecked || universityChecked || independentChecked || isIndependent)} on:click={submitApplications}>신청 완료</button>
   </div>
 </div>
 

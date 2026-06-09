@@ -281,6 +281,14 @@ export interface ProtagonistSave {
   militaryUnit: "sports" | "general" | null;
   militaryServiceWeeks: number;
   militaryRecoveryWeeks: number;
+  militaryStatus: "미필" | "현역" | "군필" | "면제";
+  militaryEnlistYear: number | null;
+  militaryDischargeYear: number | null;
+  militaryEnlistWeek: number | null;
+  sportsUnitSelected: boolean;
+  militaryHiatusStage: CareerStage | null;
+  militaryHiatusUniversityWeek: number | null;
+  militaryDeferPenalty: number;
   tradeAdaptationWeeks: number;
   faNegotiationRound: number;
   faUnsignedWeeks: number;

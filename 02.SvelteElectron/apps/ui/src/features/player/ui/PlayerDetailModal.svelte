@@ -171,6 +171,19 @@
     const [, m, d] = bd.split("-");
     return `2010년 ${parseInt(m)}월 ${parseInt(d)}일`;
   }
+
+  function npcMilText(status: string): string {
+    if (status === "군필") return "군필";
+    if (status === "면제") return "면제";
+    if (status === "현역") return "현역";
+    return "미필";
+  }
+  function npcMilClass(status: string): string {
+    if (status === "군필") return "npc-mil-done";
+    if (status === "면제") return "npc-mil-exempt";
+    if (status === "현역") return "npc-mil-active";
+    return "npc-mil-pending";
+  }
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
@@ -552,6 +565,20 @@
             {/if}
           </section>
 
+          {#if !isProtagonistModal && modalNpcSave}
+            <section class="modal-section">
+              <h4>병역</h4>
+              <div class="npc-mil-row">
+                <span class="npc-mil-status {npcMilClass(modalNpcSave.militaryStatus)}">
+                  {npcMilText(modalNpcSave.militaryStatus)}
+                </span>
+                {#if modalNpcSave.militaryStatus === "현역" && modalNpcSave.militaryDischargeYear}
+                  <span class="npc-mil-note">전역 예정: {modalNpcSave.militaryDischargeYear}년</span>
+                {/if}
+              </div>
+            </section>
+          {/if}
+
         {:else}
           {#if mc?.trainingBuffs}
             <section class="modal-section">
@@ -679,4 +706,11 @@
   .fa-bar { margin-top: 4px; padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; }
   .fa-ok   { background: #152a18; color: #68de92; border: 1px solid #2a5a30; }
   .fa-wait { background: #131f34; color: #9fb4d8; border: 1px solid #253451; }
+  .npc-mil-row { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+  .npc-mil-status { font-weight: 600; }
+  .npc-mil-done    { color: #68de92; }
+  .npc-mil-exempt  { color: #9eb6de; }
+  .npc-mil-active  { color: #60c0ff; }
+  .npc-mil-pending { color: #9eb6de; }
+  .npc-mil-note { font-size: 12px; color: #9eb6de; }
 </style>

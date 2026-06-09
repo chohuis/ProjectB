@@ -71,6 +71,12 @@ pub struct NpcSaveState {
     pub military_enlist_year: Option<i32>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub military_discharge_year: Option<i32>,
+    #[serde(default)]
+    pub current_salary: i64,
+    #[serde(default = "default_one")]
+    pub contract_years: i32,
+    #[serde(default)]
+    pub sports_unit_selected: bool,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pitching: Option<NpcPitchingAttrs>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -92,6 +98,12 @@ pub struct SeasonEndSummary {
     pub military_discharged_count: i32,
     pub fa_count: i32,
     pub univ_graduated_count: i32,
+    #[serde(default)]
+    pub military_enlisted_sports: Vec<String>,   // 체육부대 입대자 이름
+    #[serde(default)]
+    pub military_enlisted_general: Vec<String>,  // 일반부대 입대자 이름
+    #[serde(default)]
+    pub military_discharged_names: Vec<String>,  // 전역자 이름
 }
 
 // ── 오프시즌 처리 결과 (mailboxEntry는 TS에서 생성) ──────────────────────────
@@ -197,6 +209,47 @@ pub struct ProtagonistDraftParams {
     pub team_ids: Vec<String>,
 }
 
+// ── 체육부대 선발 ─────────────────────────────────────────────────────────────
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SportsUnitCandidate {
+    pub id: String,
+    pub name: String,
+    pub ovr: f64,
+    pub team_id: String,
+    pub is_protagonist: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SportsUnitCandidatesParams {
+    pub candidates: Vec<SportsUnitCandidate>,
+    pub top_n: usize,   // 30
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SportsUnitCandidatesResult {
+    pub top_candidates: Vec<SportsUnitCandidate>,
+    pub protagonist_rank: Option<usize>,  // 1-based, None이면 30위 밖
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SportsUnitSelectionParams {
+    pub applicants: Vec<SportsUnitCandidate>,
+    pub max_total: usize,      // 10
+    pub max_per_team: usize,   // 3
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SportsUnitSelectionResult {
+    pub protagonist_selected: bool,
+    pub selected_ids: Vec<String>,
+}
+
 // ── 드래프트 보드 (커리어 선택 화면) ──────────────────────────────────────────
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -246,6 +299,7 @@ pub struct DraftBoardResult {
 // ── 게임 시뮬 파라미터 ────────────────────────────────────────────────────────
 
 fn default_stamina_cap() -> f64 { 60.0 }
+fn default_one() -> i32 { 1 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]

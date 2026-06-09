@@ -139,6 +139,14 @@ const DEFAULT_PROTAGONIST: ProtagonistSave = {
   militaryUnit: null,
   militaryServiceWeeks: 0,
   militaryRecoveryWeeks: 0,
+  militaryStatus: "미필" as const,
+  militaryEnlistYear: null,
+  militaryDischargeYear: null,
+  militaryEnlistWeek: null,
+  sportsUnitSelected: false,
+  militaryHiatusStage: null,
+  militaryHiatusUniversityWeek: null,
+  militaryDeferPenalty: 0,
   tradeAdaptationWeeks: 0,
   faNegotiationRound: 0,
   faUnsignedWeeks: 0,
@@ -1128,7 +1136,9 @@ function createGameStore() {
     signContract(contract: ProContract) {
       update((s) => {
         const leagueStage =
-          contract.leagueId === "LEAGUE_ABL" ? "pro_abl" : "pro_kbl";
+          contract.leagueId === "LEAGUE_ABL"         ? "pro_abl" :
+          contract.leagueId === "LEAGUE_INDEPENDENT" ? "independent" :
+          "pro_kbl";
         const protagonist: ProtagonistSave = {
           ...s.protagonist,
           contract: { ...contract, status: "active" },
@@ -1172,14 +1182,38 @@ function createGameStore() {
       });
     },
 
-    enlistMilitary(unit: "sports" | "general") {
-      update((s) => {
-        const protagonist: ProtagonistSave = {
+    addMilitaryDeferPenalty(points: number) {
+      update((s) => ({
+        ...s,
+        protagonist: {
           ...s.protagonist,
+          militaryDeferPenalty: (s.protagonist.militaryDeferPenalty ?? 0) + points,
+        },
+      }));
+    },
+
+    enlistMilitary(unit: "sports" | "general", enlistWeek = 52, sportsUnitSelected = false, enlistYear?: number) {
+      update((s) => {
+        const now = s.protagonist;
+        const isPro = now.careerStage === "pro_kbl" || now.careerStage === "pro_abl" || now.careerStage === "independent";
+        const extendedContract = isPro && now.contract
+          ? { ...now.contract, remainingYears: now.contract.remainingYears + 2 }
+          : now.contract;
+        const protagonist: ProtagonistSave = {
+          ...now,
           careerStage: "military",
           militaryUnit: unit,
           militaryServiceWeeks: 0,
           militaryRecoveryWeeks: 0,
+          militaryStatus: "현역",
+          militaryEnlistWeek: enlistWeek,
+          militaryEnlistYear: enlistYear ?? null,
+          militaryDischargeYear: enlistYear != null ? enlistYear + 2 : null,
+          militaryHiatusStage: now.careerStage,
+          militaryHiatusUniversityWeek:
+            now.careerStage === "university" ? s.schoolState.universityWeek ?? 0 : null,
+          sportsUnitSelected,
+          contract: extendedContract,
         };
         return {
           ...s,
@@ -1202,18 +1236,21 @@ function createGameStore() {
 
     completeMilitaryService() {
       update((s) => {
-        const stage =
-          s.protagonist.leagueId === "LEAGUE_ABL"
-            ? "pro_abl"
-            : s.protagonist.leagueId === "LEAGUE_KBL"
-            ? "pro_kbl"
-            : "independent";
+        const p = s.protagonist;
+        // 휴학 단계 복구: militaryHiatusStage 우선, 없으면 leagueId 기반
+        const stage: import("../types/save").CareerStage =
+          (p.militaryHiatusStage as import("../types/save").CareerStage | null) ??
+          (p.leagueId === "LEAGUE_ABL" ? "pro_abl" :
+           p.leagueId === "LEAGUE_KBL" ? "pro_kbl" : "independent");
         const protagonist: ProtagonistSave = {
-          ...s.protagonist,
+          ...p,
           careerStage: stage,
           militaryUnit: null,
           militaryServiceWeeks: 0,
-          militaryRecoveryWeeks: s.protagonist.militaryUnit === "sports" ? 2 : 6,
+          militaryRecoveryWeeks: p.militaryUnit === "sports" ? 2 : 6,
+          militaryStatus: "군필",
+          militaryHiatusStage: null,
+          militaryHiatusUniversityWeek: null,
         };
         return {
           ...s,
@@ -1432,6 +1469,12 @@ function createGameStore() {
         }
         return n;
       });
+      // 병역 현황 메시지용 임시 저장
+      (window as any).__lastOffseasonSummary = {
+        militaryEnlistedSports:   result.summary.militaryEnlistedSports ?? [],
+        militaryEnlistedGeneral:  result.summary.militaryEnlistedGeneral ?? [],
+        militaryDischargedNames:  result.summary.militaryDischargedNames ?? [],
+      };
       update((st) => ({
         ...st,
         npcs: decayedNpcs,

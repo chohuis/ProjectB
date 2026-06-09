@@ -81,6 +81,12 @@ export declare function calcOfferedSalaryForProtagonistNative(paramsJson: string
 export declare function generateFaOffersNative(paramsJson: string): string
 /** 드래프트 순위/계약금 계산 */
 export declare function calcDraftRankNative(paramsJson: string): string
+/** 체육부대 후보 30명 공개 (W50 루머) */
+export declare function calcSportsUnitCandidatesNative(paramsJson: string): string
+/** 체육부대 최종 선발 (W52 입대 신청자 기준) */
+export declare function calcSportsUnitSelectionNative(paramsJson: string): string
+/** 독립리그 KBL 스카우트 제의 계산 */
+export declare function calcIndieScoutOfferNative(paramsJson: string): string
 export declare function generateScheduleNative(p: string): string
 export declare function generateKblScheduleNative(p: string): string
 export declare function generateAblScheduleNative(p: string): string
