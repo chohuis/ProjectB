@@ -173,12 +173,28 @@
     try {
       const p      = $gameStore.protagonist;
       const isHome = pendingGameEntry.homeTeamId === p.teamId;
-      const raw    = await window.projectB!.matchSimulateToEntry({
+
+      if ($masterStore.entities.length === 0) {
+        await masterStore.loadEntities("");
+      }
+      const entities        = $masterStore.entities;
+      const opponentTeamId  = isHome ? pendingGameEntry.awayTeamId : pendingGameEntry.homeTeamId;
+      const opponentLineup  = buildBatterLineup(opponentTeamId, entities);
+      const myLineup        = buildBatterLineup(p.teamId, entities);
+      const opponentPitcher = buildStarterStats(opponentTeamId, entities);
+      const myNpcStarter    = (p.position as string) !== "SP"
+                                ? buildStarterStats(p.teamId, entities)
+                                : undefined;
+
+      const raw = await window.projectB!.matchSimulateToEntry({
         pitcher: { name: p.name, command: p.pitching.command, velocity: p.pitching.velocity,
                    staminaCap: p.pitching.stamina, mentalResil: p.pitching.mentality },
-        batterMean: 55,
         role: (p.position as "SP" | "RP" | "CP") ?? "SP",
         protagonistSide: isHome ? "home" : "away",
+        ...(opponentLineup.length >= 9 ? { opponentLineup } : { batterMean: 55 }),
+        ...(myLineup.length >= 9       ? { myTeamLineup: myLineup } : {}),
+        ...(opponentPitcher            ? { opponentPitcher } : {}),
+        ...(myNpcStarter               ? { npcStarterPitcher: myNpcStarter } : {}),
       });
       const result = JSON.parse(raw) as any;
       if (result.error) {

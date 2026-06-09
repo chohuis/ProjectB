@@ -1623,6 +1623,7 @@ pub fn auto_simulate_half_inning(state: &MatchState, rng: &mut impl Rng) -> Half
 pub fn auto_simulate_until_entry(state: &MatchState, rng: &mut impl Rng) -> MatchState {
     let mut s = state.clone();
     let mut safety = 5000i32;
+    let mut last_inning = s.inning;
 
     while !s.is_finished && !s.protagonist_has_entered && safety > 0 {
         safety -= 1;
@@ -1632,6 +1633,17 @@ pub fn auto_simulate_until_entry(state: &MatchState, rng: &mut impl Rng) -> Matc
         }
         let decision = auto_pick_decision(&s, rng);
         s = step_pitch_core(&s, &decision, false, rng).next_state;
+
+        if s.inning != last_inning {
+            let idx = (last_inning as usize).saturating_sub(1);
+            let h = s.inning_scores.home.get(idx).copied().unwrap_or(0);
+            let a = s.inning_scores.away.get(idx).copied().unwrap_or(0);
+            s.pre_entry_logs.push(format!(
+                "{}회 종료 — 홈 {}점 / 원정 {}점 (누계 홈 {} : 원정 {})",
+                last_inning, h, a, s.score.home, s.score.away
+            ));
+            last_inning = s.inning;
+        }
     }
     s
 }

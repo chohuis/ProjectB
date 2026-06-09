@@ -486,37 +486,37 @@
           <h3>훈련 슬롯</h3>
 
           <label class="slot-label-wrap">
-            <span class="slot-label">주훈련 <span class="slot-mult">×1.0</span></span>
+            <span class="slot-label">주훈련</span>
             <select
               value={selectedMain}
               on:change={(e) => { gameStore.setTrainingPlan({ primaryProgramId: e.currentTarget.value }); gameStore.save(); }}
             >
               {#each allPrograms as p}
-                <option value={p.id}>{p.title}</option>
+                <option value={p.id} disabled={p.id === selectedSub1 || p.id === selectedSub2}>{p.title}</option>
               {/each}
             </select>
           </label>
 
           <label class="slot-label-wrap">
-            <span class="slot-label">보조훈련 1 <span class="slot-mult">×0.5</span></span>
+            <span class="slot-label">보조훈련 1</span>
             <select
               value={selectedSub1}
               on:change={(e) => { gameStore.setTrainingPlan({ secondaryProgramId: e.currentTarget.value }); gameStore.save(); }}
             >
               {#each allPrograms as p}
-                <option value={p.id}>{p.title}</option>
+                <option value={p.id} disabled={p.id === selectedMain || p.id === selectedSub2}>{p.title}</option>
               {/each}
             </select>
           </label>
 
           <label class="slot-label-wrap">
-            <span class="slot-label">보조훈련 2 <span class="slot-mult">×0.5</span></span>
+            <span class="slot-label">보조훈련 2</span>
             <select
               value={selectedSub2}
               on:change={(e) => { gameStore.setTrainingPlan({ secondary2ProgramId: e.currentTarget.value }); gameStore.save(); }}
             >
               {#each allPrograms as p}
-                <option value={p.id}>{p.title}</option>
+                <option value={p.id} disabled={p.id === selectedMain || p.id === selectedSub1}>{p.title}</option>
               {/each}
             </select>
           </label>

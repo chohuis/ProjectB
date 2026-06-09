@@ -410,10 +410,10 @@ pub fn calc_training_growth(params: TrainingGrowthParams) -> GrowthResult {
     let mut condition_delta = 0.0f64;
     let mut pitch_dev_gain = 0.0f64;
 
-    let programs: &[(Option<&str>, f64)] = &[
-        (params.plan.primary_program_id.as_deref(),    1.0),
-        (params.plan.secondary_program_id.as_deref(),  0.5),
-        (params.plan.secondary2_program_id.as_deref(), 0.5),
+    let programs: &[(Option<&str>, f64, f64)] = &[
+        (params.plan.primary_program_id.as_deref(),    2.5, 1.0),
+        (params.plan.secondary_program_id.as_deref(),  1.5, 0.5),
+        (params.plan.secondary2_program_id.as_deref(), 1.0, 0.5),
     ];
 
     // 피로 구간 승수: 70/80/90 기준 볼록 곡선 (회복 훈련에는 미적용)
@@ -431,26 +431,26 @@ pub fn calc_training_growth(params: TrainingGrowthParams) -> GrowthResult {
         else { 5.0 };
     condition_delta += condition_auto_recovery;
 
-    for (prog_id_opt, mult) in programs {
+    for (prog_id_opt, xp_mult, fat_mult) in programs {
         let prog_id = match prog_id_opt { Some(id) => id, None => continue };
         let cfg = match get_program(prog_id) { Some(c) => c, None => continue };
 
         if cfg.fatigue_cost > 0.0 {
-            fatigue_delta += cfg.fatigue_cost * mult * fat_zone_mult;
+            fatigue_delta += cfg.fatigue_cost * fat_mult * fat_zone_mult;
         } else {
-            fatigue_delta += cfg.fatigue_cost * mult; // 회복 훈련: 승수 미적용
+            fatigue_delta += cfg.fatigue_cost * fat_mult; // 회복 훈련: 승수 미적용
         }
-        condition_delta -= cfg.condition_cost * mult;
+        condition_delta -= cfg.condition_cost * fat_mult;
         if cfg.is_recovery { continue; }
 
         if cfg.is_pitch_dev {
             let cond_factor = p.condition / 100.0;
             let fat_factor = (1.0 - p.fatigue / 120.0).max(0.3);
-            pitch_dev_gain += cfg.progress_per_week * mult * cond_factor * fat_factor * eff;
+            pitch_dev_gain += cfg.progress_per_week * xp_mult * cond_factor * fat_factor * eff;
             continue;
         }
 
-        let xp = week_xp(cfg.base_xp, p.condition, p.fatigue, p.development_rate, diligence) * mult * eff;
+        let xp = week_xp(cfg.base_xp, p.condition, p.fatigue, p.development_rate, diligence) * xp_mult * eff;
 
         for &(stat, stat_mult) in cfg.gains_pitching {
             *pitching_gains.entry(stat.to_string()).or_insert(0.0) += xp * stat_mult;

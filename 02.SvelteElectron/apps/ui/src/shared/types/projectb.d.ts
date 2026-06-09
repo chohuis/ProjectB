@@ -84,6 +84,10 @@ declare global {
         batterMean?: number;
         role?: "SP" | "RP" | "CP";
         protagonistSide?: "home" | "away";
+        opponentLineup?: MatchBatterStats[];
+        myTeamLineup?: MatchBatterStats[];
+        opponentPitcher?: { name?: string; command?: number; velocity?: number; staminaCap?: number; mentalResil?: number; control?: number; movement?: number; clutch?: number; holdRunners?: number; };
+        npcStarterPitcher?: { name?: string; command?: number; velocity?: number; staminaCap?: number; mentalResil?: number; control?: number; movement?: number; clutch?: number; holdRunners?: number; };
       }) => Promise<string>;
       matchAutoFinishFromEntry: () => Promise<string>;
       // ── 게임 저장/불러오기 ──────────────────────────────────

@@ -219,15 +219,15 @@ function register(ipcMain, { loadCoreModule, engineNative }) {
     return {
       inningScores:         state.inningScores         ?? { home: [], away: [] },
       batterAccum:          state.batterAccum           ?? {},
-      homeLineup:           (state.homeLineup  ?? []).map(b => b.name ?? ""),
-      awayLineup:           (state.awayLineup  ?? []).map(b => b.name ?? ""),
+      homeLineup:           (state.homeLineup  ?? []).map(b => ({ id: b.id ?? "", name: b.name ?? "" })),
+      awayLineup:           (state.awayLineup  ?? []).map(b => ({ id: b.id ?? "", name: b.name ?? "" })),
       oppPitcherName:       state.opponentNpcPitcher?.name  ?? null,
       oppPitcherPitchCount: state.npcPitcherPitchCount?.opponent ?? 0,
       oppPitcherStamina:    state.npcPitcherStamina?.opponent    ?? 100,
       myPitcherName:        state.myNpcPitcher?.name        ?? null,
       myPitcherPitchCount:  state.npcPitcherPitchCount?.my  ?? 0,
       myPitcherStamina:     state.npcPitcherStamina?.my     ?? 100,
-      preEntryLogs:         (state.preEntryLogs ?? []).slice(-6),
+      preEntryLogs:         state.preEntryLogs ?? [],
       currentOuts:          state.outs ?? 0,
       runners: {
         first:  !!(state.runners?.first),

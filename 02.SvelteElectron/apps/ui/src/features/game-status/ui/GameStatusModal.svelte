@@ -9,8 +9,8 @@
   export type MatchSummary = {
     inningScores:         { home: number[]; away: number[] };
     batterAccum:          Record<string, { pa:number; ab:number; h:number; hr:number; rbi:number; bb:number; k:number }>;
-    homeLineup:           string[];
-    awayLineup:           string[];
+    homeLineup:           { id: string; name: string }[];
+    awayLineup:           { id: string; name: string }[];
     oppPitcherName:       string | null;
     oppPitcherPitchCount: number;
     oppPitcherStamina:    number;
@@ -68,10 +68,10 @@
   $: scores = info?.inningScores ?? { home: [], away: [] };
 
   // 타자 성적 목록 생성
-  function buildBatterRows(lineup: string[], accum: Record<string, any>) {
-    return lineup.map(name => {
-      const s = accum[name] ?? { ab: 0, h: 0, hr: 0, rbi: 0 };
-      return { name, ab: s.ab ?? 0, h: s.h ?? 0, hr: s.hr ?? 0, rbi: s.rbi ?? 0 };
+  function buildBatterRows(lineup: { id: string; name: string }[], accum: Record<string, any>) {
+    return lineup.map(r => {
+      const s = accum[r.id] ?? { ab: 0, h: 0, hr: 0, rbi: 0, bb: 0 };
+      return { name: r.name, ab: s.ab ?? 0, h: s.h ?? 0, hr: s.hr ?? 0, rbi: s.rbi ?? 0, bb: s.bb ?? 0 };
     }).filter(r => r.name);
   }
 
@@ -156,7 +156,7 @@
               </thead>
               <tbody>
                 <tr>
-                  <td class="td-team" class:my-team-row={isHome}>{homeTeamName.slice(0, 4)}</td>
+                  <td class="td-team" class:my-team-row={isHome}>{homeTeamName}</td>
                   {#each Array(9) as _, i}
                     <td class="td-inn"
                       class:current-inn={i + 1 === currentInning && simState === "ready"}
@@ -169,7 +169,7 @@
                   <td class="td-total">{entryInfo?.homeScore ?? noEntryInfo?.homeScore ?? 0}</td>
                 </tr>
                 <tr>
-                  <td class="td-team" class:my-team-row={!isHome}>{awayTeamName.slice(0, 4)}</td>
+                  <td class="td-team" class:my-team-row={!isHome}>{awayTeamName}</td>
                   {#each Array(9) as _, i}
                     <td class="td-inn"
                       class:current-inn={i + 1 === currentInning && simState === "ready"}
@@ -195,7 +195,9 @@
                     <tr>
                       <th class="bt-name">선수</th>
                       <th class="bt-stat">타율</th>
+                      <th class="bt-stat">안타</th>
                       <th class="bt-stat">HR</th>
+                      <th class="bt-stat">볼넷</th>
                       <th class="bt-stat">타점</th>
                     </tr>
                   </thead>
@@ -203,8 +205,10 @@
                     {#each grp.rows.slice(0, 9) as r}
                       <tr>
                         <td class="bt-name-cell">{r.name}</td>
-                        <td class="bt-val">{r.ab > 0 ? `${r.h}/${r.ab}` : "-"}</td>
+                        <td class="bt-val">{r.ab > 0 ? avg(r.ab, r.h) : "-"}</td>
+                        <td class="bt-val">{r.h > 0 ? r.h : "-"}</td>
                         <td class="bt-val">{r.hr > 0 ? r.hr : "-"}</td>
+                        <td class="bt-val">{r.bb > 0 ? r.bb : "-"}</td>
                         <td class="bt-val">{r.rbi > 0 ? r.rbi : "-"}</td>
                       </tr>
                     {/each}
@@ -414,7 +418,7 @@
   .th-inn { width: 28px; font-size: 11px; color: #4a6a90; }
   .th-total { width: 32px; font-weight: 700; color: #7a9acc; font-size: 12px; }
 
-  .td-team { text-align: left; font-size: 12px; font-weight: 700; color: #8aafd6; padding-left: 4px; }
+  .td-team { text-align: left; font-size: 12px; font-weight: 700; color: #8aafd6; padding-left: 4px; max-width: 52px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .td-team.my-team-row { color: #d0e8ff; }
   .td-inn { font-size: 13px; color: #7a9acc; }
   .td-inn.future-inn { color: #2a3a5a; }
