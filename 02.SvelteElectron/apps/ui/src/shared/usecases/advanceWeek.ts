@@ -148,14 +148,80 @@ function buildHsLeagueDigest(
   };
 }
 
-function makeTrainingMessage(week: number, logs: string[]): MessageItem {
+// ── 코치 관련 헬퍼 ───────────────────────────────────────────
+function getPitchCoachName(teamId: string, entities: import("../stores/master").EntityRow[]): string {
+  const coach = entities.find(
+    e => e.role === "coach" && e.teamId === teamId &&
+         (e.details as import("../stores/master").EntityDetails)?.coach?.specialty === "pitching"
+  );
+  return coach?.name ?? "투수 코치";
+}
+
+// Rust xp_threshold(v) = 7.5 + v * 0.35 동일 공식
+function xpThreshold(statVal: number): number { return 7.5 + statVal * 0.35; }
+function xpPct(xp: number, statVal: number): number {
+  return Math.min(99, Math.round(xp / xpThreshold(statVal) * 100));
+}
+function xpBar(pct: number): string {
+  const filled = Math.round(pct / 10);
+  return "█".repeat(filled) + "░".repeat(10 - filled);
+}
+
+const PITCH_STAT_LABELS: Record<string, [string, (p: PitchingAttributes) => number]> = {
+  velocity:    ["구속",    p => p.velocity],
+  command:     ["커맨드",  p => p.command],
+  control:     ["제구",    p => p.control],
+  movement:    ["무브먼트",p => p.movement],
+  stamina:     ["스태미나",p => p.stamina],
+  mentality:   ["멘탈",   p => p.mentality],
+  recovery:    ["회복력",  p => p.recovery],
+  clutch:      ["위기집중",p => p.clutch],
+  holdRunners: ["견제력",  p => p.holdRunners],
+};
+
+function makeTrainingMessage(
+  week: number,
+  logs: string[],
+  protagonist: ProtagonistSave,
+  coachName: string,
+): MessageItem {
+  const pit = protagonist.pitching;
+  const xp  = protagonist.pitchingXP ?? {};
+
+  // XP가 누적된 스탯만 표시 (최대 4개)
+  const activeStats = Object.keys(PITCH_STAT_LABELS)
+    .filter(s => (xp[s as keyof typeof xp] ?? 0) > 0.1)
+    .slice(0, 4);
+
+  const xpLines = activeStats.map(s => {
+    const [label, getter] = PITCH_STAT_LABELS[s]!;
+    const val = getter(pit);
+    const acc = xp[s as keyof typeof xp] ?? 0;
+    const pct = xpPct(acc, val);
+    const bar = xpBar(pct);
+    const leveledUp = logs.some(l => l.includes(`${label} +`));
+    return leveledUp
+      ? `${label.padEnd(5)}  ${bar}  ${val} (+1) ★`
+      : `${label.padEnd(5)}  ${bar}  ${pct}%  (현재 ${val})`;
+  });
+
+  const statusLine = `컨디션 ${protagonist.condition}  /  피로도 ${protagonist.fatigue}  /  사기 ${protagonist.morale}`;
+  const extraLogs = logs.filter(l => !l.startsWith("[훈련]"));
+
+  const bodyParts: string[] = [];
+  if (xpLines.length > 0) bodyParts.push(...xpLines);
+  bodyParts.push("", statusLine);
+  if (extraLogs.length > 0) bodyParts.push("", ...extraLogs);
+
+  const preview = xpLines[0] ?? statusLine;
+
   return {
     id: `msg-train-w${week}-${Date.now()}`,
     category: "system",
-    sender: "훈련 시스템",
-    subject: `W${week} 훈련 결과`,
-    preview: logs[0] ?? "",
-    body: logs.join("\n"),
+    sender: coachName,
+    subject: `W${week} 주간 훈련 결과`,
+    preview,
+    body: bodyParts.join("\n"),
     createdAt: `W${week}`,
     readAt: null,
   };
@@ -689,7 +755,11 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   if (ovrAfter > ovrBefore) gameStore.updateScoutScore(Math.min(3, Math.max(1, ovrAfter - ovrBefore)));
 
   gameStore.applyWeekResult(growth.protagonistPatch, growth.logs, [], weekNum, s.seasonYear);
-  if (growth.logs.length > 0) gameStore.addMessage(makeTrainingMessage(weekNum, growth.logs));
+  {
+    const afterP = get(gameStore).protagonist;
+    const coachName = getPitchCoachName(afterP.teamId, m.entities);
+    gameStore.addMessage(makeTrainingMessage(weekNum, growth.logs, afterP, coachName));
+  }
   logs.push(...growth.logs);
 
   // 이벤트 엔진
@@ -1146,6 +1216,94 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         });
       }
     }
+  }
+
+  // ── 코치 리포트 (3주마다, 군 복무 제외) ─────────────────────
+  if (weekInYear % 3 === 0 && gFinal.protagonist.careerStage !== "military") {
+    const p   = gFinal.protagonist;
+    const pit = p.pitching;
+    const myStats = sFinal.stats[p.id] as import("../types/save").PitcherSeasonStats | null ?? null;
+    const coachName = getPitchCoachName(p.teamId, mFinal.entities);
+
+    const era = myStats?.era ?? null;
+    const eraLine = era !== null
+      ? `  시즌 ERA ${era.toFixed(2)}  (${
+          era < 2.5 ? "최상위권" : era < 3.5 ? "안정권" : era < 5.0 ? "주의 필요" : "위험 수준"
+        })`
+      : null;
+
+    const fatigueTag = p.fatigue >= 70 ? "⚠ 위험" : p.fatigue >= 50 ? "주의" : "정상";
+
+    type Choice = { id: string; label: string; effectHint: string;
+      moraleDelta?: number; fatigueDelta?: number; conditionDelta?: number;
+      xp?: Record<string, number> };
+
+    let recommendation: string;
+    let choices: Choice[];
+
+    if (p.fatigue >= 65) {
+      recommendation = `피로도 ${p.fatigue} — 회복 최우선 권고.`;
+      choices = [
+        { id: "rest", label: "회복 집중",     effectHint: "피로 -8, 컨디션 +4", fatigueDelta: -8, conditionDelta: 4 },
+        { id: "push", label: "훈련 유지",     effectHint: "변화 없음" },
+      ];
+    } else if (p.condition >= 82 && p.morale >= 68) {
+      recommendation = `컨디션·사기 양호 — 집중 훈련 적기.`;
+      choices = [
+        { id: "intensive", label: "강도 높여 집중 훈련", effectHint: "커맨드 XP +3, 피로 +4", xp: { command: 3 }, fatigueDelta: 4 },
+        { id: "steady",    label: "현재 루틴 유지",     effectHint: "변화 없음" },
+      ];
+    } else if (p.morale <= 40) {
+      recommendation = `사기 저하 감지 — 멘탈 관리 병행 권고.`;
+      choices = [
+        { id: "mental",  label: "멘탈 케어 병행",   effectHint: "사기 +6, 훈련 효율 -10%", moraleDelta: 6 },
+        { id: "grind",   label: "훈련만 집중",      effectHint: "변화 없음" },
+      ];
+    } else {
+      recommendation = `현재 상태 안정적 — 루틴 유지 권장.`;
+      choices = [
+        { id: "balance",  label: "현재 루틴 유지",  effectHint: "변화 없음" },
+        { id: "recover",  label: "회복 세션 추가",  effectHint: "피로 -4, 컨디션 +2", fatigueDelta: -4, conditionDelta: 2 },
+      ];
+    }
+
+    const bodyLines = [
+      `■ 현재 수치`,
+      `  구속 ${pit.velocity}  커맨드 ${pit.command}  제구 ${pit.control}  스태미나 ${pit.stamina}`,
+      ...(eraLine ? [eraLine] : []),
+      ``,
+      `■ 상태`,
+      `  컨디션 ${p.condition}  /  피로도 ${p.fatigue} [${fatigueTag}]  /  사기 ${p.morale}`,
+      ``,
+      `■ 권고`,
+      `  ${recommendation}`,
+    ];
+
+    gameStore.addMessage({
+      id: `msg-coach-report-w${weekNum}-${Date.now()}`,
+      category: "coach",
+      sender: coachName,
+      subject: `[코치 리포트] W${weekNum} 점검`,
+      preview: recommendation,
+      body: bodyLines.join("\n"),
+      createdAt: `W${weekNum}`,
+      readAt: null,
+      decision: {
+        prompt: "이번 주 방향을 선택하세요.",
+        options: choices.map(c => ({
+          id: c.id,
+          label: c.label,
+          effectHint: c.effectHint,
+          effects: {
+            moraleDelta:    c.moraleDelta    ?? 0,
+            fatigueDelta:   c.fatigueDelta   ?? 0,
+            conditionDelta: c.conditionDelta ?? 0,
+            ...(c.xp ? { xp: c.xp } : {}),
+          },
+        })),
+        selectedOptionId: null,
+      },
+    });
   }
 
   return logs;
