@@ -1,0 +1,144 @@
+{
+  "events": [
+    {
+      "id": "MIL_SPT_FIRST_PRACTICE",
+      "title": "첫 야구 훈련",
+      "description": "처음으로 야구부 훈련에 합류했습니다.\n익숙한 공 냄새가 반갑지만 군 생활과 병행하는 게 쉽지 않습니다.",
+      "minRank": 0,
+      "choices": [
+        { "id": "ok", "label": "열심히 뛴다", "effectHint": "사기 +2, 피로 +3", "moraleDelta": 2, "fatigueDelta": 3 }
+      ]
+    },
+    {
+      "id": "MIL_SPT_FORM_ADJUST",
+      "title": "투구폼 재조정",
+      "description": "코치가 투구폼을 새로 잡아주겠다고 합니다.\n지금 폼을 유지할지, 새 폼에 도전할지 결정해야 합니다.",
+      "minRank": 0,
+      "choices": [
+        { "id": "change", "label": "새 폼에 도전",   "effectHint": "커맨드 -1 (적응 기간)", "statDelta": { "command": -1 } },
+        { "id": "keep",   "label": "현재 폼 유지",   "effectHint": "변화 없음" }
+      ]
+    },
+    {
+      "id": "MIL_SPT_REST_WEEK",
+      "title": "훈련 쉬는 주",
+      "description": "이번 주는 훈련 일정이 없는 휴식 주간입니다.\n충분히 몸을 회복할 수 있는 기회입니다.",
+      "choices": [
+        { "id": "ok", "label": "푹 쉰다", "effectHint": "사기 +2, 피로 -5", "moraleDelta": 2, "fatigueDelta": -5 }
+      ]
+    },
+    {
+      "id": "MIL_SPT_TRAINING_MATCH",
+      "title": "훈련 경기 선발",
+      "description": "이번 주 훈련 경기에서 선발로 나설 기회가 주어졌습니다.\n어떻게 임할지 선택하세요.",
+      "minRank": 1,
+      "choices": [
+        { "id": "best",   "label": "최선을 다한다",  "effectHint": "커맨드 XP +2, 피로 +3", "xp": { "command": 2 }, "fatigueDelta": 3 },
+        { "id": "steady", "label": "안정적으로 던진다", "effectHint": "사기 +1", "moraleDelta": 1 }
+      ]
+    },
+    {
+      "id": "MIL_SPT_RIVAL_PITCHER",
+      "title": "실력 좋은 동기 투수",
+      "description": "체육부대 동기 중 실력이 만만치 않은 투수가 있습니다.\n어떻게 대응할지 선택하세요.",
+      "minRank": 1,
+      "choices": [
+        { "id": "compete",  "label": "적극 경쟁한다",   "effectHint": "커맨드 +1, 피로 +2", "statDelta": { "command": 1 }, "fatigueDelta": 2 },
+        { "id": "coexist",  "label": "서로 인정한다",   "effectHint": "사기 +1", "moraleDelta": 1 }
+      ]
+    },
+    {
+      "id": "MIL_SPT_COACH_TIP",
+      "title": "코치 개인 지도",
+      "description": "부대 코치가 개인 지도를 해주겠다고 합니다.\n집중 레슨을 통해 커맨드를 다듬을 수 있습니다.",
+      "minRank": 1,
+      "choices": [
+        { "id": "ok", "label": "열심히 배운다", "effectHint": "커맨드 XP +2", "xp": { "command": 2 } }
+      ]
+    },
+    {
+      "id": "MIL_SPT_STAMINA_FOCUS",
+      "title": "체력 집중 훈련 주간",
+      "description": "이번 주는 체력 훈련에 집중하는 주간입니다.\n힘들지만 기초 체력이 향상됩니다.",
+      "minRank": 1,
+      "choices": [
+        { "id": "ok", "label": "전력으로 임한다", "effectHint": "스태미나 +1, 피로 +3", "statDelta": { "stamina": 1 }, "fatigueDelta": 3 }
+      ]
+    },
+    {
+      "id": "MIL_SPT_BREAKDOWN",
+      "title": "투구 슬럼프",
+      "description": "갑자기 공이 말을 듣지 않습니다.\n이 상황을 어떻게 극복할지 결정해야 합니다.",
+      "minRank": 1,
+      "choices": [
+        { "id": "coach",  "label": "멘탈 코치에게 상담", "effectHint": "사기 +2", "moraleDelta": 2 },
+        { "id": "grind",  "label": "혼자 극복한다",       "effectHint": "커맨드 XP +1", "xp": { "command": 1 } }
+      ]
+    },
+    {
+      "id": "MIL_SPT_INJURY_RISK",
+      "title": "혹독한 훈련 — 부상 위험",
+      "description": "강도 높은 훈련 일정이 잡혔습니다.\n무리하면 부상 위험이 있지만 그만큼 성장도 있습니다.",
+      "minRank": 2,
+      "choices": [
+        { "id": "push",   "label": "무리하게 훈련한다",  "effectHint": "스태미나 +1, 피로 +4", "statDelta": { "stamina": 1 }, "fatigueDelta": 4 },
+        { "id": "adjust", "label": "강도를 조절한다",    "effectHint": "사기 -1, 피로 +1", "moraleDelta": -1, "fatigueDelta": 1 }
+      ]
+    },
+    {
+      "id": "MIL_SPT_SPORTS_MEET",
+      "title": "체전 출전",
+      "description": "전국체전 야구 종목에 부대 대표로 출전하게 됐습니다.\n많은 관중 앞에서 던지는 소중한 기회입니다.",
+      "minRank": 2,
+      "choices": [
+        { "id": "ok", "label": "최선을 다한다", "effectHint": "사기 +3, 피로 +2", "moraleDelta": 3, "fatigueDelta": 2 }
+      ]
+    },
+    {
+      "id": "MIL_SPT_TEAM_VICTORY",
+      "title": "팀 경기 승리",
+      "description": "오늘 훈련 경기에서 팀이 승리했습니다.\n함께 승리를 나누는 기쁨이 있습니다.",
+      "minRank": 2,
+      "choices": [
+        { "id": "ok", "label": "함께 기뻐한다", "effectHint": "사기 +3", "moraleDelta": 3 }
+      ]
+    },
+    {
+      "id": "MIL_SPT_MEDIA_INTERVIEW",
+      "title": "체육부대 특집 인터뷰",
+      "description": "스포츠 매체에서 체육부대 군인 인터뷰를 요청했습니다.\n팬들에게 존재를 알릴 수 있는 기회입니다.",
+      "minRank": 2,
+      "choices": [
+        { "id": "ok", "label": "인터뷰에 응한다", "effectHint": "사기 +2", "moraleDelta": 2 }
+      ]
+    },
+    {
+      "id": "MIL_SPT_SENIOR_ADVICE",
+      "title": "전역 선배의 조언",
+      "description": "먼저 전역한 선배 선수가 부대를 찾아왔습니다.\n앞으로의 야구 인생에 대한 조언을 들을 수 있습니다.",
+      "minRank": 3,
+      "choices": [
+        { "id": "recovery", "label": "복귀 준비에 집중",    "effectHint": "회복력 +1", "statDelta": { "recovery": 1 } },
+        { "id": "final",    "label": "마지막 경기에 집중",  "effectHint": "사기 +2", "moraleDelta": 2 }
+      ]
+    },
+    {
+      "id": "MIL_SPT_LAST_GAME",
+      "title": "마지막 훈련 경기",
+      "description": "군 생활 중 마지막 공식 훈련 경기입니다.\n전역 후 복귀를 앞두고 설레는 마음으로 마운드에 섭니다.",
+      "minRank": 3,
+      "choices": [
+        { "id": "ok", "label": "최선을 다해 던진다", "effectHint": "사기 +4, 피로 +2", "moraleDelta": 4, "fatigueDelta": 2 }
+      ]
+    },
+    {
+      "id": "MIL_SPT_PRO_RETURN_PLAN",
+      "title": "복귀 구단 연락",
+      "description": "원 소속 구단에서 복귀 준비를 시작하자는 연락이 왔습니다.\n전역 후의 야구가 기다리고 있습니다.",
+      "minRank": 3,
+      "choices": [
+        { "id": "ok", "label": "기쁘게 답한다", "effectHint": "사기 +3", "moraleDelta": 3 }
+      ]
+    }
+  ]
+}

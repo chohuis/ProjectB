@@ -591,13 +591,17 @@ pub fn calc_exam_result(p: ExamPayload) -> ExamResult {
 #[serde(rename_all = "camelCase")]
 pub struct MilitaryWeekPayload {
     pub is_sports_unit: bool,
+    pub service_weeks: u32,
     pub stamina: u32,
     pub recovery: u32,
     pub command: u32,
     pub control: u32,
+    pub velocity: u32,
     pub morale: i32,
     pub fatigue: i32,
-    pub military_event_count: usize,
+    pub sports_event_count: usize,
+    pub general_event_count: usize,
+    pub common_event_count: usize,
 }
 
 #[derive(Serialize)]
@@ -607,36 +611,107 @@ pub struct MilitaryWeekResult {
     pub recovery: u32,
     pub command: u32,
     pub control: u32,
+    pub velocity: u32,
     pub morale: i32,
     pub fatigue: i32,
+    pub event_pool: Option<String>,
     pub event_index: Option<usize>,
+    pub rank: String,
+}
+
+fn military_rank(service_weeks: u32) -> &'static str {
+    match service_weeks {
+        0..=8   => "이병",
+        9..=34  => "일병",
+        35..=60 => "상병",
+        _       => "병장",
+    }
+}
+
+fn rank_index(service_weeks: u32) -> u32 {
+    match service_weeks {
+        0..=8   => 0,
+        9..=34  => 1,
+        35..=60 => 2,
+        _       => 3,
+    }
 }
 
 pub fn calc_military_week(p: MilitaryWeekPayload) -> MilitaryWeekResult {
     let mut rng = rand::thread_rng();
+    let ri = rank_index(p.service_weeks);
 
-    let (stamina, recovery, command, control) = if p.is_sports_unit {
-        let cmd = (p.command + if rng.gen::<f64>() < 0.4 { 1 } else { 0 }).min(99);
-        (p.stamina.saturating_add(1).min(99), p.recovery.saturating_add(1).min(99), cmd, p.control)
-    } else {
-        let cmd = p.command.saturating_sub(if rng.gen::<f64>() < 0.50 { 1 } else { 0 }).max(1);
-        let ctl = p.control.saturating_sub(if rng.gen::<f64>() < 0.45 { 1 } else { 0 }).max(1);
-        let rec = p.recovery.saturating_sub(if rng.gen::<f64>() < 0.35 { 1 } else { 0 }).max(1);
-        (p.stamina, rec, cmd, ctl)
-    };
+    // ── 체육부대 계급별 스탯 변화 ────────────────────────────────
+    let (stamina, recovery, command, control, velocity, morale_delta, fatigue_delta) =
+        if p.is_sports_unit {
+            let (sta_d, rec_prob, cmd_prob, vel_prob, mor, fat) = match ri {
+                0 => (0,    0.00, 0.30, 0.00,  -1,  1),  // 이병: 적응기
+                1 => (1,    0.25, 0.35, 0.00,   0, -1),  // 일병: 루틴
+                2 => (1,    1.00, 0.40, 0.00,   1, -2),  // 상병: 성장
+                _ => (1,    1.00, 0.50, 0.20,   2, -2),  // 병장: 완성
+            };
+            let stamina  = (p.stamina.saturating_add(sta_d as u32)).min(99);
+            let recovery = (p.recovery as i32 + if rng.gen::<f64>() < rec_prob { 1 } else { 0 }).clamp(1, 99) as u32;
+            let command  = (p.command  as i32 + if rng.gen::<f64>() < cmd_prob { 1 } else { if ri == 0 && rng.gen::<f64>() < 0.30 { -1 } else { 0 } }).clamp(1, 99) as u32;
+            let velocity = (p.velocity as i32 + if rng.gen::<f64>() < vel_prob { 1 } else { 0 }).clamp(1, 99) as u32;
+            (stamina, recovery, command, p.control, velocity, mor, fat)
+        } else {
+            // ── 일반부대 계급별 스탯 변화 ────────────────────────
+            let (cmd_prob, ctl_prob, rec_prob, mor, fat) = match ri {
+                0 => (0.75, 0.65, 0.20, -2,  4),  // 이병: 충격기
+                1 => (0.45, 0.40, 0.30, -1,  2),  // 일병: 임무기
+                2 => (0.25, 0.20, 0.20, -1,  1),  // 상병: 안정기 (50% 확률로 morale -1)
+                _ => (0.15, 0.00, 0.00,  0,  1),  // 병장: 전역 준비
+            };
+            let command  = p.command.saturating_sub(if rng.gen::<f64>() < cmd_prob { 1 } else { 0 }).max(1);
+            let control  = p.control.saturating_sub(if rng.gen::<f64>() < ctl_prob { 1 } else { 0 }).max(1);
+            let recovery = p.recovery.saturating_sub(if rng.gen::<f64>() < rec_prob { 1 } else { 0 }).max(1);
+            // 상병 morale: 50% 확률로 -1
+            let mor_adj = if ri == 2 && rng.gen::<f64>() < 0.50 { -1 }
+                         else if ri == 3 && rng.gen::<f64>() < 0.50 { 1 }
+                         else { mor };
+            (p.stamina, recovery, command, control, p.velocity, mor_adj, fat)
+        };
 
-    let morale_delta: i32 = if p.is_sports_unit { 1 } else { -1 };
-    let fatigue_delta: i32 = if p.is_sports_unit { -2 } else { 2 };
     let morale  = (p.morale  + morale_delta).clamp(0, 100);
     let fatigue = (p.fatigue + fatigue_delta).clamp(0, 100);
 
-    let event_index = if p.military_event_count > 0 && rng.gen::<f64>() < 0.35 {
-        Some(rng.gen_range(0..p.military_event_count))
+    // ── 이벤트 선택 (체육 70% + 공용 30% / 일반 70% + 공용 30%) ──
+    let total_sports  = p.sports_event_count;
+    let total_general = p.general_event_count;
+    let total_common  = p.common_event_count;
+
+    let (event_pool, event_index) = if rng.gen::<f64>() < 0.40 {
+        if p.is_sports_unit {
+            let use_common = total_common > 0 && rng.gen::<f64>() < 0.30;
+            if use_common {
+                (Some("common".to_string()), Some(rng.gen_range(0..total_common)))
+            } else if total_sports > 0 {
+                (Some("sports".to_string()), Some(rng.gen_range(0..total_sports)))
+            } else {
+                (None, None)
+            }
+        } else {
+            let use_common = total_common > 0 && rng.gen::<f64>() < 0.30;
+            if use_common {
+                (Some("common".to_string()), Some(rng.gen_range(0..total_common)))
+            } else if total_general > 0 {
+                (Some("general".to_string()), Some(rng.gen_range(0..total_general)))
+            } else {
+                (None, None)
+            }
+        }
     } else {
-        None
+        (None, None)
     };
 
-    MilitaryWeekResult { stamina, recovery, command, control, morale, fatigue, event_index }
+    let rank = military_rank(p.service_weeks).to_string();
+
+    MilitaryWeekResult {
+        stamina, recovery, command, control, velocity,
+        morale, fatigue,
+        event_pool, event_index, rank,
+    }
 }
 
 // ── NPC Fallback Score ────────────────────────────────────────

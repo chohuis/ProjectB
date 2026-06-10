@@ -153,6 +153,7 @@ const DEFAULT_PROTAGONIST: ProtagonistSave = {
   faUnsignedWeeks: 0,
   consecutiveLowMoraleWeeks: 0,
   consecutiveHighFatigueWeeks: 0,
+  careerTriggeredEvents: {},
 };
 
 const DEFAULT_TRAINING_PLAN: TrainingPlanState = {
@@ -1525,6 +1526,17 @@ function createGameStore() {
           player: toPlayerCompat(updated),
           logs: [...raw.logs, ...st.logs].slice(0, 30),
         };
+      });
+    },
+
+    recordCareerTriggeredEvents(events: Record<string, number>) {
+      if (Object.keys(events).length === 0) return;
+      update((st) => {
+        const updated: ProtagonistSave = {
+          ...st.protagonist,
+          careerTriggeredEvents: { ...(st.protagonist.careerTriggeredEvents ?? {}), ...events },
+        };
+        return { ...st, protagonist: updated, player: toPlayerCompat(updated) };
       });
     },
 

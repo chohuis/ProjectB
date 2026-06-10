@@ -1,0 +1,143 @@
+{
+  "events": [
+    {
+      "id": "MIL_GEN_BOOT_CAMP",
+      "title": "훈련소 강도 훈련",
+      "description": "기초군사훈련이 이어지고 있습니다.\n체력적으로 극한에 몰리지만 버텨야 합니다.",
+      "minRank": 0,
+      "choices": [
+        { "id": "ok", "label": "이를 악물고 버틴다", "effectHint": "커맨드 -1, 피로 +5, 사기 -2", "statDelta": { "command": -1 }, "fatigueDelta": 5, "moraleDelta": -2 }
+      ]
+    },
+    {
+      "id": "MIL_GEN_BASEBALL_DREAM",
+      "title": "야구가 그리울 때",
+      "description": "밤에 야구공 던지던 기억이 떠오릅니다.\n어떻게 마음을 다잡을지 선택하세요.",
+      "minRank": 0,
+      "choices": [
+        { "id": "imagine", "label": "공 던지는 상상을 한다",  "effectHint": "사기 +1", "moraleDelta": 1 },
+        { "id": "reality", "label": "현실을 직시한다",         "effectHint": "사기 -1", "moraleDelta": -1 }
+      ]
+    },
+    {
+      "id": "MIL_GEN_SENIOR_CONFLICT",
+      "title": "선임과 갈등",
+      "description": "선임 병사와 크고 작은 마찰이 생겼습니다.\n어떻게 대처할지 결정해야 합니다.",
+      "minRank": 0,
+      "choices": [
+        { "id": "endure",      "label": "그냥 참는다",     "effectHint": "사기 -3", "moraleDelta": -3 },
+        { "id": "communicate", "label": "솔직하게 소통한다", "effectHint": "사기 -1", "moraleDelta": -1 }
+      ]
+    },
+    {
+      "id": "MIL_GEN_PHONE_CALL",
+      "title": "가족과의 통화",
+      "description": "오늘은 가족과 통화할 수 있는 시간이 주어졌습니다.\n짧은 통화지만 큰 힘이 됩니다.",
+      "choices": [
+        { "id": "ok", "label": "반갑게 통화한다", "effectHint": "사기 +3", "moraleDelta": 3 }
+      ]
+    },
+    {
+      "id": "MIL_GEN_SOLO_PRACTICE",
+      "title": "혼자 하는 투구 연습",
+      "description": "틈틈이 빈 공터에서 혼자 그림자 투구를 했습니다.\n작지만 소중한 루틴입니다.",
+      "minRank": 1,
+      "choices": [
+        { "id": "ok", "label": "꾸준히 연습한다", "effectHint": "커맨드 XP +1, 사기 +1", "xp": { "command": 1 }, "moraleDelta": 1 }
+      ]
+    },
+    {
+      "id": "MIL_GEN_NIGHT_PATROL",
+      "title": "야간 경계 근무",
+      "description": "오늘 밤 경계 근무를 서야 합니다.\n잠을 못 자게 되어 다음 날까지 피로가 쌓입니다.",
+      "minRank": 1,
+      "choices": [
+        { "id": "ok", "label": "묵묵히 근무한다", "effectHint": "피로 +5, 사기 -2", "fatigueDelta": 5, "moraleDelta": -2 }
+      ]
+    },
+    {
+      "id": "MIL_GEN_SPECIAL_DUTY",
+      "title": "특기병 자원",
+      "description": "행정·체육 특기병을 모집하고 있습니다.\n지원하면 고된 일반 근무를 줄일 수 있습니다.",
+      "minRank": 1,
+      "choices": [
+        { "id": "apply",  "label": "지원한다",   "effectHint": "피로 -2, 사기 +1", "fatigueDelta": -2, "moraleDelta": 1 },
+        { "id": "skip",   "label": "안 한다",    "effectHint": "사기 -1", "moraleDelta": -1 }
+      ]
+    },
+    {
+      "id": "MIL_GEN_FIELD_MARCH",
+      "title": "40km 행군",
+      "description": "완전군장 행군 훈련이 시작됩니다.\n극도로 힘들지만 체력이 단련됩니다.",
+      "minRank": 1,
+      "choices": [
+        { "id": "ok", "label": "완주한다", "effectHint": "피로 +6, 스태미나 +1", "fatigueDelta": 6, "statDelta": { "stamina": 1 } }
+      ]
+    },
+    {
+      "id": "MIL_GEN_PHYSICAL_TEST",
+      "title": "체력 측정",
+      "description": "정기 체력 측정이 있습니다.\n어느 정도 힘을 쏟을지 결정하세요.",
+      "minRank": 1,
+      "choices": [
+        { "id": "best",    "label": "전력을 다한다",    "effectHint": "사기 +2, 피로 +3", "moraleDelta": 2, "fatigueDelta": 3 },
+        { "id": "average", "label": "적당히 한다",     "effectHint": "변화 없음" }
+      ]
+    },
+    {
+      "id": "MIL_GEN_BASE_SPORTS",
+      "title": "부대 내 스포츠 대회",
+      "description": "부대 내 족구·피구 대회가 열렸습니다.\n오랜만에 몸을 쓰면서 기분 전환이 됩니다.",
+      "minRank": 2,
+      "choices": [
+        { "id": "ok", "label": "열심히 참가한다", "effectHint": "사기 +2, 피로 +2", "moraleDelta": 2, "fatigueDelta": 2 }
+      ]
+    },
+    {
+      "id": "MIL_GEN_COMMANDER_PRAISE",
+      "title": "지휘관 표창",
+      "description": "성실한 근무 자세가 인정받아 지휘관 표창을 받았습니다.\n뜻밖의 격려에 기분이 좋아집니다.",
+      "minRank": 2,
+      "choices": [
+        { "id": "ok", "label": "감사히 받는다", "effectHint": "사기 +3", "moraleDelta": 3 }
+      ]
+    },
+    {
+      "id": "MIL_GEN_JUNIOR_TROUBLE",
+      "title": "후임 관리 문제",
+      "description": "말 안 듣는 후임 때문에 골치가 아픕니다.\n어떻게 처리할지 결정하세요.",
+      "minRank": 2,
+      "choices": [
+        { "id": "handle", "label": "직접 얘기한다", "effectHint": "피로 +2", "fatigueDelta": 2 },
+        { "id": "ignore", "label": "그냥 무시한다", "effectHint": "사기 -1", "moraleDelta": -1 }
+      ]
+    },
+    {
+      "id": "MIL_GEN_VACATION_EXTENDED",
+      "title": "휴가 연장 허가",
+      "description": "개인 사정으로 휴가 연장이 허가됐습니다.\n오랜만에 충분히 쉬는 시간입니다.",
+      "minRank": 2,
+      "choices": [
+        { "id": "ok", "label": "푹 쉰다", "effectHint": "사기 +5, 피로 -4", "moraleDelta": 5, "fatigueDelta": -4 }
+      ]
+    },
+    {
+      "id": "MIL_GEN_DISCHARGE_CEREMONY",
+      "title": "전역 예행 연습",
+      "description": "곧 있을 전역식 예행연습을 했습니다.\n이제 정말 얼마 남지 않았습니다.",
+      "minRank": 3,
+      "choices": [
+        { "id": "ok", "label": "설레는 마음으로 참여", "effectHint": "사기 +4", "moraleDelta": 4 }
+      ]
+    },
+    {
+      "id": "MIL_GEN_LAST_DUTY",
+      "title": "마지막 경계 근무",
+      "description": "군 생활 마지막 경계 근무를 섰습니다.\n이번이 끝이라는 생각에 감회가 새롭습니다.",
+      "minRank": 3,
+      "choices": [
+        { "id": "ok", "label": "끝까지 최선을 다한다", "effectHint": "사기 +3", "moraleDelta": 3 }
+      ]
+    }
+  ]
+}

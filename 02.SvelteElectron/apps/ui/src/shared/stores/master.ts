@@ -183,6 +183,25 @@ export interface EntityRow {
   details: EntityDetails;
 }
 
+// ── 군 이벤트 타입 ────────────────────────────────────────────
+export interface MilitaryEvent {
+  id: string;
+  title: string;
+  description: string;
+  minRank?: number;
+  choices?: Array<{
+    id: string;
+    label: string;
+    effectHint?: string;
+    moraleDelta?: number;
+    fatigueDelta?: number;
+    xp?: Record<string, number>;
+    statDelta?: Record<string, number>;
+  }>;
+  moraleDelta?: number;
+  fatigueDelta?: number;
+}
+
 // ── 스토어 상태 ───────────────────────────────────────────────
 export interface MasterState {
   loaded: boolean;
@@ -199,13 +218,9 @@ export interface MasterState {
   decisionTmpls: DecisionTemplate[];
   eventPools: EventPool[];
   achievements: import("../utils/achievementEngine").MasterAchievement[];
-  militaryEvents: Array<{
-    id: string;
-    title: string;
-    description: string;
-    moraleDelta?: number;
-    fatigueDelta?: number;
-  }>;
+  militaryCommonEvents: MilitaryEvent[];
+  militarySportsEvents: MilitaryEvent[];
+  militaryGeneralEvents: MilitaryEvent[];
 }
 
 // ── masterFetch 래퍼 (IPC 우선, fetch 폴백) ───────────────────
@@ -492,7 +507,9 @@ function createMasterStore() {
     decisionTmpls: [],
     eventPools: [],
     achievements: [],
-    militaryEvents: [],
+    militaryCommonEvents: [],
+    militarySportsEvents: [],
+    militaryGeneralEvents: [],
   });
 
   // ── manifest 기반 이벤트 로드 ──────────────────────────────
@@ -530,7 +547,8 @@ function createMasterStore() {
         trainingData, pitchData, unlockData, refsData,
         univTeamsIndex, indepTeamsIndex, hsTeamsIndex,
         msgTmplData, decisionTmplData,
-        poolMedia, poolSocial, poolTeamLife, militaryPoolData,
+        poolMedia, poolSocial, poolTeamLife,
+        militaryCommonData, militarySportsData, militaryGeneralData,
         manifest,
       ] = await Promise.all([
         fetchMaster<{ programs: TrainingProgram[] }>("training/programs_pitcher.json"),
@@ -552,9 +570,9 @@ function createMasterStore() {
         fetchMaster<Record<string, any>>("events/pools/social.json"),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         fetchMaster<Record<string, any>>("events/pools/team_life.json"),
-        fetchMaster<{ events: Array<{ id: string; title: string; description: string; moraleDelta?: number; fatigueDelta?: number }> }>(
-          "events/pools/military.json"
-        ),
+        fetchMaster<{ events: MilitaryEvent[] }>("events/pools/military_common.json"),
+        fetchMaster<{ events: MilitaryEvent[] }>("events/pools/military_sports.json"),
+        fetchMaster<{ events: MilitaryEvent[] }>("events/pools/military_general.json"),
         fetchMaster<Manifest>("_manifest.json"),
       ]);
 
@@ -615,7 +633,9 @@ function createMasterStore() {
         decisionTmpls,
         eventPools,
         achievements,
-        militaryEvents: militaryPoolData?.events ?? [],
+        militaryCommonEvents:  militaryCommonData?.events  ?? [],
+        militarySportsEvents:  militarySportsData?.events  ?? [],
+        militaryGeneralEvents: militaryGeneralData?.events ?? [],
       }));
 
       // 전체 엔티티 사전 로드 — 배경 리그 시뮬에 모든 팀 선수 데이터 필요

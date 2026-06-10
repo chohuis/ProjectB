@@ -715,6 +715,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   );
   for (const msg of evResult.newMessages) gameStore.addMessage(msg);
   seasonStore.recordTriggeredEvents(evResult.updatedTriggers);
+  gameStore.recordCareerTriggeredEvents(evResult.careerUpdatedTriggers);
 
   // 고교 월간 유망주 TOP 10 (4주마다)
   if (
@@ -1381,32 +1382,67 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
 
       gameStore.advanceMilitaryWeek();
       const isSportsUnit = g.protagonist.militaryUnit === "sports";
-      const militaryEvents = get(masterStore).militaryEvents;
+      const m = get(masterStore);
+      const serviceWeeks = g.protagonist.militaryServiceWeeks;
+
+      // 계급 기반 이벤트 필터링 (minRank 이하만 포함)
+      const rankIndex = serviceWeeks <= 8 ? 0 : serviceWeeks <= 34 ? 1 : serviceWeeks <= 60 ? 2 : 3;
+      const eligibleSports  = m.militarySportsEvents.filter(e => (e.minRank ?? 0) <= rankIndex);
+      const eligibleGeneral = m.militaryGeneralEvents.filter(e => (e.minRank ?? 0) <= rankIndex);
+      const eligibleCommon  = m.militaryCommonEvents.filter(e => (e.minRank ?? 0) <= rankIndex);
+
       const milCalc = JSON.parse(await window.projectB!.weekCalcMilitary(JSON.stringify({
         isSportsUnit,
+        serviceWeeks,
         stamina:  g.protagonist.pitching.stamina,
         recovery: g.protagonist.pitching.recovery,
         command:  g.protagonist.pitching.command,
         control:  g.protagonist.pitching.control,
+        velocity: g.protagonist.pitching.velocity,
         morale:   g.protagonist.morale,
         fatigue:  g.protagonist.fatigue,
-        militaryEventCount: militaryEvents.length,
-      }))) as { stamina: number; recovery: number; command: number; control: number; morale: number; fatigue: number; eventIndex: number | null };
-      if (milCalc.eventIndex !== null) {
-        const evt = militaryEvents[milCalc.eventIndex];
-        seasonStore.pushPendingAction({
-          type: "event", eventId: evt.id, title: evt.title, description: evt.description,
-          choices: [{ id: "ok", label: "확인", effects: { moraleDelta: evt.moraleDelta ?? 0, fatigueDelta: evt.fatigueDelta ?? 0 } }],
-        });
+        sportsEventCount:  eligibleSports.length,
+        generalEventCount: eligibleGeneral.length,
+        commonEventCount:  eligibleCommon.length,
+      }))) as {
+        stamina: number; recovery: number; command: number; control: number; velocity: number;
+        morale: number; fatigue: number;
+        eventPool: string | null; eventIndex: number | null; rank: string;
+      };
+
+      if (milCalc.eventPool !== null && milCalc.eventIndex !== null) {
+        const pool = milCalc.eventPool === "sports" ? eligibleSports
+                   : milCalc.eventPool === "general" ? eligibleGeneral
+                   : eligibleCommon;
+        const evt = pool[milCalc.eventIndex];
+        if (evt) {
+          const choices = evt.choices?.map((c) => ({
+            id: c.id,
+            label: c.label,
+            effects: {
+              moraleDelta:  c.moraleDelta  ?? 0,
+              fatigueDelta: c.fatigueDelta ?? 0,
+              xp:           c.xp,
+              statDelta:    c.statDelta,
+            },
+          })) ?? [{ id: "ok", label: "확인", effects: { moraleDelta: evt.moraleDelta ?? 0, fatigueDelta: evt.fatigueDelta ?? 0 } }];
+          seasonStore.pushPendingAction({
+            type: "event", eventId: evt.id, title: evt.title, description: evt.description, choices,
+          });
+        }
       }
+
       const pitching = {
         ...g.protagonist.pitching,
-        stamina: milCalc.stamina, recovery: milCalc.recovery,
-        command: milCalc.command, control: milCalc.control,
+        stamina:  milCalc.stamina,
+        recovery: milCalc.recovery,
+        command:  milCalc.command,
+        control:  milCalc.control,
+        velocity: milCalc.velocity,
       };
       gameStore.applyWeekResult(
         { morale: milCalc.morale, fatigue: milCalc.fatigue, pitching },
-        [isSportsUnit ? "군 복무(체육부대): 훈련 루틴 유지" : "군 복무(일반부대): 기본 근무 수행"],
+        [`군 복무(${isSportsUnit ? "체육부대" : "일반부대"}) — ${milCalc.rank}`],
         [], nextWeek, s.seasonYear,
       );
       const milEntities = get(masterStore).entities;

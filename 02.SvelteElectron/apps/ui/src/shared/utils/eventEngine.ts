@@ -9,26 +9,30 @@ function checkOncePolicy(
   seasonYear: number,
   careerStageYear: number,
 ): boolean {
-  const lastWeek = ctx.triggeredEvents[rule.id];
-  if (lastWeek === undefined) return true;
-
   switch (rule.oncePolicy) {
-    case "repeatable":
+    case "repeatable": {
+      const lastWeek = ctx.triggeredEvents[rule.id];
+      if (lastWeek === undefined) return true;
       if (rule.cooldownWeeks !== undefined) {
         return ctx.currentWeek - lastWeek >= rule.cooldownWeeks;
       }
       return true;
+    }
 
     case "once_per_season":
-      // seasonYear가 바뀌면 triggeredEvents가 초기화되므로 이미 기록 있으면 차단
-      return false;
+      // triggeredEvents는 startNewSeason()에서 초기화됨 → 이미 기록 있으면 이번 시즌 차단
+      return ctx.triggeredEvents[rule.id] === undefined;
 
-    case "once_per_stage_year":
+    case "once_per_stage_year": {
+      const lastWeek = ctx.triggeredEvents[rule.id];
+      if (lastWeek === undefined) return true;
       // careerStageYear 당 1회: 같은 스테이지-연도 내에 발생했으면 차단
       return careerStageYear !== Math.floor(lastWeek / 52);
+    }
 
     case "once_per_career":
-      return false;
+      // careerTriggeredEvents는 시즌을 넘어 유지됨 → 한 번이라도 기록 있으면 영구 차단
+      return (ctx.protagonist.careerTriggeredEvents ?? {})[rule.id] === undefined;
   }
 }
 
@@ -80,7 +84,8 @@ function weightedPick<T extends { weight?: number }>(items: T[], rand01: number)
 // ── 이벤트 엔진 메인 ──────────────────────────────────────────
 export interface EventEngineResult {
   newMessages: MessageItem[];
-  updatedTriggers: Record<string, number>; // 이번 주에 발생한 eventId → week
+  updatedTriggers: Record<string, number>;        // 시즌 트리거 (startNewSeason으로 초기화)
+  careerUpdatedTriggers: Record<string, number>;  // 커리어 트리거 (once_per_career 전용, 영구 유지)
 }
 
 export function runEventEngine(
@@ -95,6 +100,7 @@ export function runEventEngine(
 ): EventEngineResult {
   const newMessages: MessageItem[] = [];
   const updatedTriggers: Record<string, number> = {};
+  const careerUpdatedTriggers: Record<string, number> = {};
   const week = ctx.currentWeek;
   let ri = 0;
   const nextRand = () => randoms[ri++] ?? Math.random();
@@ -106,6 +112,9 @@ export function runEventEngine(
     const { message } = ruleToOutput(rule, msgTmpl, decTmpl, week);
     newMessages.push(message);
     updatedTriggers[rule.id] = week;
+    if (rule.oncePolicy === "once_per_career") {
+      careerUpdatedTriggers[rule.id] = week;
+    }
   }
 
   // ── 1. mandatory 이벤트 ───────────────────────────────────────
@@ -144,7 +153,6 @@ export function runEventEngine(
     if (nextRand() * 100 > pool.baseRoll.value) continue;
 
     const poolRules = poolRuleMap.get(pool.id) ?? [];
-    let picksThisWeek = 0;
 
     for (let i = 0; i < pool.maxPicksPerWeek; i++) {
       const eligible = poolRules.filter((r) =>
@@ -155,10 +163,8 @@ export function runEventEngine(
       const picked = weightedPick(eligible, nextRand());
       if (!picked) break;
       tryEmit(picked);
-      picksThisWeek++;
     }
-    void picksThisWeek;
   }
 
-  return { newMessages, updatedTriggers };
+  return { newMessages, updatedTriggers, careerUpdatedTriggers };
 }

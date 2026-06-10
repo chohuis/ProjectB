@@ -1,0 +1,93 @@
+{
+  "events": [
+    {
+      "id": "MIL_COM_FIRST_DAY",
+      "title": "자대 배치 첫날",
+      "description": "드디어 자대에 배치받았습니다.\n낯선 환경과 규율에 긴장감이 감돌지만, 이제 적응해야 합니다.",
+      "minRank": 0,
+      "choices": [
+        { "id": "ok", "label": "받아들인다", "effectHint": "사기 -1, 피로 +2", "moraleDelta": -1, "fatigueDelta": 2 }
+      ]
+    },
+    {
+      "id": "MIL_COM_FAMILY_VISIT",
+      "title": "면회",
+      "description": "가족이 면회를 왔습니다.\n짧은 시간이지만 든든한 힘이 됩니다.",
+      "choices": [
+        { "id": "ok", "label": "반갑게 맞이한다", "effectHint": "사기 +3", "moraleDelta": 3 }
+      ]
+    },
+    {
+      "id": "MIL_COM_BASEBALL_NEWS",
+      "title": "야구 소식 접하기",
+      "description": "동기에게서 프로야구 소식을 들었습니다.\n아는 선수가 좋은 활약을 펼치고 있다는 소식에 복잡한 감정이 밀려옵니다.",
+      "choices": [
+        { "id": "motivated", "label": "자극받는다", "effectHint": "사기 +2", "moraleDelta": 2 },
+        { "id": "neutral",   "label": "담담히 받아들인다", "effectHint": "변화 없음" }
+      ]
+    },
+    {
+      "id": "MIL_COM_SICK_BAY",
+      "title": "의무대 방문",
+      "description": "몸 상태가 좋지 않아 의무대를 다녀왔습니다.\n잠시 쉬면서 피로를 회복했습니다.",
+      "choices": [
+        { "id": "ok", "label": "치료를 받는다", "effectHint": "피로 -4", "fatigueDelta": -4 }
+      ]
+    },
+    {
+      "id": "MIL_COM_INSPECTION",
+      "title": "부대 검열",
+      "description": "상급 부대 검열이 있었습니다.\n준비 상태에 따라 결과가 달라집니다.",
+      "choices": [
+        { "id": "pass",  "label": "무사히 통과",   "effectHint": "사기 +2", "moraleDelta":  2 },
+        { "id": "fail",  "label": "지적을 받는다", "effectHint": "사기 -2", "moraleDelta": -2 }
+      ]
+    },
+    {
+      "id": "MIL_COM_VACATION",
+      "title": "외박 획득",
+      "description": "이번 주 외박을 받았습니다.\n짧은 자유 시간이지만 충전이 됩니다.",
+      "minRank": 1,
+      "choices": [
+        { "id": "ok", "label": "즐겁게 쉰다", "effectHint": "사기 +4, 피로 -3", "moraleDelta": 4, "fatigueDelta": -3 }
+      ]
+    },
+    {
+      "id": "MIL_COM_BUDDY_BOND",
+      "title": "전우와 친해짐",
+      "description": "부대 동기와 가까워질 기회가 생겼습니다.\n함께 시간을 보낼지, 훈련에 집중할지 선택해야 합니다.",
+      "minRank": 1,
+      "choices": [
+        { "id": "together", "label": "같이 어울린다",   "effectHint": "사기 +2", "moraleDelta": 2 },
+        { "id": "train",    "label": "혼자 훈련한다",   "effectHint": "커맨드 XP +1", "xp": { "command": 1 } }
+      ]
+    },
+    {
+      "id": "MIL_COM_JUNIOR_ENLIST",
+      "title": "후임 입대",
+      "description": "새 후임이 입대했습니다.\n이제 내가 선임이 됐다는 실감이 납니다.",
+      "minRank": 2,
+      "choices": [
+        { "id": "ok", "label": "잘 이끌어준다", "effectHint": "사기 +1", "moraleDelta": 1 }
+      ]
+    },
+    {
+      "id": "MIL_COM_EXTENDED_LEAVE",
+      "title": "특별 휴가",
+      "description": "포상 특별 휴가를 받았습니다.\n오랜만에 충분히 쉴 수 있는 기회입니다.",
+      "minRank": 2,
+      "choices": [
+        { "id": "ok", "label": "푹 쉰다", "effectHint": "사기 +5, 피로 -5", "moraleDelta": 5, "fatigueDelta": -5 }
+      ]
+    },
+    {
+      "id": "MIL_COM_DISCHARGE_LETTER",
+      "title": "전역 통보서 수령",
+      "description": "드디어 전역 일자가 명시된 통보서를 받았습니다.\n그날이 눈앞에 다가온 것이 실감납니다.",
+      "minRank": 3,
+      "choices": [
+        { "id": "ok", "label": "기쁘게 확인한다", "effectHint": "사기 +5", "moraleDelta": 5 }
+      ]
+    }
+  ]
+}

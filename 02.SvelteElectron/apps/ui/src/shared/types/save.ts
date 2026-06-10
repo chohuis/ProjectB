@@ -310,6 +310,8 @@ export interface ProtagonistSave {
   seasonStartPitching?: PitchingAttributes;
   seasonStartBatting?: BattingAttributes;
   birthday?: string;  // "2010-MM-DD" 주인공 전용
+  // once_per_career 이벤트 기록 — startNewSeason() 에서 초기화되는 triggeredEvents와 달리 커리어 전체 유지
+  careerTriggeredEvents?: Record<string, number>;  // eventId → 발동 시점 주차
 }
 
 // ── 고교 월간 유망주 TOP 10 ───────────────────────────────────

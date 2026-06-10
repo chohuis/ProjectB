@@ -3,7 +3,7 @@ import type { PitcherSeasonStats } from "../types/save";
 
 // ── 조건 단일 평가 ─────────────────────────────────────────────
 export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
-  const { protagonist, currentWeek, seasonPhase, standings, stats, triggeredEvents } = ctx;
+  const { protagonist, currentWeek, seasonPhase, standings, stats } = ctx;
 
   switch (cond.type) {
 
@@ -107,9 +107,13 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
       return cond.type === "team_rank_lte" ? rank <= cond.value : rank >= cond.value;
     }
 
-    // ── 미래 필드 (추후 구현, 현재는 false) ─────────────────────
     case "fame_gte":
+      return protagonist.fame >= cond.value;
+
     case "pro_year_gte":
+      return protagonist.proServiceYears >= cond.value;
+
+    // ── 미래 필드 (군 시스템 설계 시 구현) ──────────────────────
     case "military_phase":
       return false;
   }

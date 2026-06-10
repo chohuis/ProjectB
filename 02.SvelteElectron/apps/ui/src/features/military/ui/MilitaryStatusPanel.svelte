@@ -8,12 +8,21 @@
   $: progress = Math.round((p.militaryServiceWeeks / TOTAL_WEEKS) * 100);
   $: unitLabel = p.sportsUnitSelected ? "체육부대" : "일반부대";
   $: hasContract = !!p.contract;
+
+  $: rank = (() => {
+    const w = p.militaryServiceWeeks;
+    if (w <= 8)  return "이병";
+    if (w <= 34) return "일병";
+    if (w <= 60) return "상병";
+    return "병장";
+  })();
 </script>
 
 <section class="panel">
   <div class="head">
     <h3>군 복무 상태</h3>
     <div class="badges">
+      <span class="badge badge-rank">{rank}</span>
       <span class="badge" class:badge-sports={p.sportsUnitSelected}>{unitLabel}</span>
       {#if hasContract}
         <span class="badge badge-contract">계약 +2년 적용됨</span>
@@ -69,6 +78,12 @@
     background: #3a2f14;
     border-radius: 999px;
     padding: 2px 8px;
+  }
+  .badge.badge-rank {
+    color: #a0c8ff;
+    border-color: #2a5a90;
+    background: #0e1e38;
+    font-weight: 700;
   }
   .badge.badge-sports {
     color: #80f0b0;
