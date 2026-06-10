@@ -6,6 +6,13 @@ import type { SeasonStoreState } from "./season";
 import { accumulateStats, migrateLeagueState, updateStandings } from "../utils/season-helpers";
 import { makeStandings, ALL_TEAMS_BY_LEAGUE } from "../utils/leagueScheduler";
 import { simulateGame } from "../utils/gameSimulator";
+import { rotationSizeForLeague } from "../utils/rosterEngine";
+
+// 팀 소속 감독의 handlePersonnel 능력치 조회
+function getManagerHandlePersonnel(teamId: string, entities: EntityRow[]): number {
+  const mgr = entities.find((e) => e.teamId === teamId && e.role === "manager");
+  return (mgr?.details as any)?.manager?.stats?.handlePersonnel ?? 50;
+}
 
 const WEEKLY_FATIGUE_RECOVERY = 28;
 
@@ -15,12 +22,17 @@ export function runSimBatch(
   npcInjuries?: Record<string, NpcInjuryEntry>,
 ): Promise<SimWorkerResultItem[]> {
   return Promise.all(games.map(async (g) => {
+    const rotSize = g.leagueId ? rotationSizeForLeague(g.leagueId) : 5;
     const sim = await simulateGame(g.homeTeamId, g.awayTeamId, entities, {
-      conditions: g.conditions,
-      homeRotIdx: g.homeRotIdx ?? 0,
-      awayRotIdx: g.awayRotIdx ?? 0,
-      week:       g.week ?? 0,
+      conditions:           g.conditions,
+      homeRotIdx:           g.homeRotIdx ?? 0,
+      awayRotIdx:           g.awayRotIdx ?? 0,
+      week:                 g.week ?? 0,
       npcInjuries,
+      rotationSize:         rotSize,
+      leagueId:             g.leagueId ?? "",
+      homeHandlePersonnel:  getManagerHandlePersonnel(g.homeTeamId, entities),
+      awayHandlePersonnel:  getManagerHandlePersonnel(g.awayTeamId, entities),
     });
 
     // 엔티티 없어서 시뮬 실패(winner_id="") 시 폴백으로 랜덤 결과 생성
@@ -95,7 +107,7 @@ export async function simulateBackgroundLeagues(
     const lid = item.leagueId;
 
     nextSchedules[lid] = (nextSchedules[lid] ?? []).map((e) =>
-      e.id === item.id ? { ...e, result: { ...sim.result, playerLines: [] } } : e,
+      e.id === item.id ? { ...e, result: sim.result } : e,
     );
 
     const cur = migrateLeagueState(nextLeagueState[lid] ?? { standings: makeStandings(ALL_TEAMS_BY_LEAGUE[lid] ?? []) });
@@ -128,7 +140,7 @@ export function applyBackgroundLeagueUpdate(
   const nextSchedules = { ...s.leagueSchedules };
   const curSched = nextSchedules[leagueId] ?? [];
   nextSchedules[leagueId] = curSched.map((e) =>
-    e.id === scheduleId ? { ...e, result: { ...result, playerLines: [] } } : e,
+    e.id === scheduleId ? { ...e, result } : e,
   );
 
   const cur = migrateLeagueState(s.leagueState[leagueId] ?? { standings: makeStandings(ALL_TEAMS_BY_LEAGUE[leagueId] ?? []) });

@@ -1,5 +1,7 @@
 import type { EntityRow } from "../stores/master";
 import type { MatchBatterStats, MatchFielderStats } from "../types/projectb";
+import type { PlayerCondition } from "../types/season";
+import { rotationRestGames } from "./rosterEngine";
 
 export interface StarterStats {
   name?: string;
@@ -55,22 +57,55 @@ export function buildBatterLineup(teamId: string, entities: EntityRow[]): MatchB
 }
 
 // ── 선발 투수 스탯 빌드 ──────────────────────────────────────
-export function buildStarterStats(teamId: string, entities: EntityRow[]): StarterStats | undefined {
+export function buildStarterStats(
+  teamId: string,
+  entities: EntityRow[],
+  conditions?: Record<string, PlayerCondition>,
+  teamGameCount = 0,
+  leagueId = "",
+): StarterStats | undefined {
   const pitchers = entities.filter(
     (e) => e.teamId === teamId && e.role === "player" &&
       PITCHER_POS.includes(String(playerOf(e).position ?? "")),
   );
   if (pitchers.length === 0) return undefined;
-  const sorted = [...pitchers].sort((a, b) => {
-    const ORDER: Record<string, number> = { SP: 0, RP: 1, CP: 2 };
-    const da = ORDER[String(playerOf(a).position ?? "RP")] ?? 1;
-    const db = ORDER[String(playerOf(b).position ?? "RP")] ?? 1;
-    if (da !== db) return da - db;
-    return (playerOf(b).pitching?.ovr ?? 0) - (playerOf(a).pitching?.ovr ?? 0);
-  });
-  const pit = playerOf(sorted[0]).pitching ?? {};
+
+  const restRequired = leagueId ? rotationRestGames(leagueId) : 4;
+
+  const isAvailable = (e: EntityRow) => {
+    const cond = conditions?.[e.id];
+    if (!cond?.lastStartGameCount) return true;
+    return (teamGameCount - cond.lastStartGameCount) > restRequired;
+  };
+
+  const spList = pitchers.filter((e) => String(playerOf(e).position ?? "") === "SP");
+
+  // 가용 SP 중 OVR 최고, 없으면 가장 오래 쉰 SP, 없으면 RP/CP
+  const availableSp = spList
+    .filter(isAvailable)
+    .sort((a, b) => (playerOf(b).pitching?.ovr ?? 0) - (playerOf(a).pitching?.ovr ?? 0));
+
+  const fallbackSp = spList
+    .filter((e) => !isAvailable(e))
+    .sort((a, b) => {
+      const ga = conditions?.[a.id]?.lastStartGameCount ?? 0;
+      const gb = conditions?.[b.id]?.lastStartGameCount ?? 0;
+      return ga - gb;
+    });
+
+  const candidate = availableSp[0] ?? fallbackSp[0]
+    ?? [...pitchers].sort((a, b) => {
+      const ORDER: Record<string, number> = { SP: 0, RP: 1, CP: 2 };
+      const da = ORDER[String(playerOf(a).position ?? "RP")] ?? 1;
+      const db = ORDER[String(playerOf(b).position ?? "RP")] ?? 1;
+      if (da !== db) return da - db;
+      return (playerOf(b).pitching?.ovr ?? 0) - (playerOf(a).pitching?.ovr ?? 0);
+    })[0];
+
+  if (!candidate) return undefined;
+  const pit = playerOf(candidate).pitching ?? {};
   return {
-    name:        sorted[0].name ?? undefined,
+    name:        candidate.name ?? undefined,
     command:     pit.command    ?? 50,
     velocity:    pit.velocity   ?? 50,
     staminaCap:  pit.stamina    ?? 50,

@@ -1651,6 +1651,7 @@ function createGameStore() {
             teamId:    npc.currentTeam,
             statLine,
             highlights: [],
+            stats:     stat,
           };
           return { ...npc, careerHistory: [...npc.careerHistory, entry] };
         });
@@ -1658,12 +1659,15 @@ function createGameStore() {
       });
     },
 
-    appendCareerRecord(record: CareerSeasonRecord) {
+    appendCareerRecord(record: CareerSeasonRecord, seasonStats?: PlayerSeasonStats) {
       update((s) => ({
         ...s,
         protagonist: {
           ...s.protagonist,
-          careerRecords: [...(s.protagonist.careerRecords ?? []), record],
+          careerRecords: [
+            ...(s.protagonist.careerRecords ?? []),
+            seasonStats ? { ...record, stats: seasonStats } : record,
+          ],
         },
       }));
     },

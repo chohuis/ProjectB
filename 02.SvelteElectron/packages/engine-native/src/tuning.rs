@@ -83,8 +83,8 @@ pub fn park_quality_modifier(p: ParkType) -> f64 {
 pub const DOUBLE_PLAY_BASE_PROB: f64 = 0.22;
 
 // 감독 교체 임계값
-pub const NPC_STARTER_STAMINA_LIMIT: f64       = 25.0;
-pub const NPC_STARTER_PITCH_COUNT_SOFT: f64    = 80.0;
+pub const NPC_STARTER_STAMINA_LIMIT: f64       = 35.0;
+pub const NPC_STARTER_PITCH_COUNT_SOFT: f64    = 65.0;
 #[allow(dead_code)]
 pub const NPC_STARTER_PITCH_COUNT_HARD: f64    = 110.0;
 pub const PROTAGONIST_PITCH_COUNT_SOFT: f64    = 90.0;

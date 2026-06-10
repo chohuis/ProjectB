@@ -7,7 +7,7 @@ import { calcGameGrowth } from "../utils/growthEngine";
 import { simulateGame } from "../utils/gameSimulator";
 import type { MatchResult, PitcherGameLine, PlayerCondition, UnifiedGameOutcome } from "../types/season";
 import { buildFriendlyResultMessage, buildOfficialResultMessage, ratePerformance, type PitcherRole } from "../utils/friendlyMatchEngine";
-import { getTeamRotation, rotationSizeForLeague } from "../utils/rosterEngine";
+import { getTeamRotation, getTeamBullpen, rotationSizeForLeague } from "../utils/rosterEngine";
 
 function buildTeamMatchResult(
   homeTeamId: string,
@@ -101,10 +101,22 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
     if (oppPitcherId) {
       const prev = lState?.playerConditions?.[oppPitcherId];
       pitcherConditions[oppPitcherId] = {
-        fatigue:          Math.min(100, (prev?.fatigue ?? 50) + 15),
-        lastPitchedWeek:  outcome.week,
-        pitchOutsLast:    safeOuts,
+        fatigue:            Math.min(100, (prev?.fatigue ?? 50) + 15),
+        lastPitchedWeek:    outcome.week,
+        pitchOutsLast:      safeOuts,
+        lastStartGameCount: oppRotIdx,
+        consecutiveAppearances: 0,
       };
+    }
+
+    // ── 상대 불펜/마무리 연속 출전 카운터 리셋 ────────────────
+    const oppBullpenIds = getTeamBullpen(oppTeamId, entities, oppRotation).bullpen;
+    for (const rpId of oppBullpenIds) {
+      if (rpId === oppPitcherId) continue;
+      const prev = lState?.playerConditions?.[rpId];
+      if (prev) {
+        pitcherConditions[rpId] = { ...prev, consecutiveAppearances: 0 };
+      }
     }
 
     seasonStore.applyFriendlyResult(
@@ -250,6 +262,50 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
     achResult.updatedRuntime.some((r, i) => r.progress !== gAfter.achievements[i]?.progress)
   ) {
     gameStore.applyAchievementCheck(achResult);
+  }
+
+  // ── 상대팀 SP/불펜 로테이션 컨디션 업데이트 ──────────────────
+  {
+    const entities2  = get(masterStore).entities;
+    const sNow       = get(seasonStore);
+    const oppTeamId2 = outcome.homeTeamId === myTeamId ? outcome.awayTeamId : outcome.homeTeamId;
+    const oppIsHome  = oppTeamId2 === outcome.homeTeamId;
+    const leagueId2  = protagonist.leagueId;
+    const lState2    = sNow.leagueState[leagueId2];
+    const oppRotIdx2 = oppIsHome
+      ? (lState2?.teamRotationIndex?.[oppTeamId2] ?? 0)
+      : (lState2?.teamRotationIndex?.[oppTeamId2] ?? 0);
+    const rotSize2   = rotationSizeForLeague(leagueId2);
+    const oppRot2    = getTeamRotation(oppTeamId2, entities2, undefined, rotSize2, lState2?.playerConditions, outcome.week, oppRotIdx2, leagueId2);
+    const oppSpId    = oppRot2[oppRotIdx2 % Math.max(1, oppRot2.length)];
+    const oppBullpen2 = getTeamBullpen(oppTeamId2, entities2, oppRot2, undefined, lState2?.playerConditions, oppRotIdx2).bullpen;
+
+    const rotConditions: Record<string, PlayerCondition> = {};
+
+    // SP 컨디션 업데이트
+    if (oppSpId) {
+      const prev = lState2?.playerConditions?.[oppSpId];
+      rotConditions[oppSpId] = {
+        fatigue:            Math.min(100, (prev?.fatigue ?? 50) + 15),
+        lastPitchedWeek:    outcome.week,
+        pitchOutsLast:      safeOuts,
+        lastStartGameCount: oppRotIdx2,
+        consecutiveAppearances: 0,
+      };
+    }
+
+    // 불펜 연속 출전 카운터 리셋 (이 경기에 미출전)
+    for (const rpId of oppBullpen2) {
+      if (rpId === oppSpId) continue;
+      const prev = lState2?.playerConditions?.[rpId];
+      if (prev) {
+        rotConditions[rpId] = { ...prev, consecutiveAppearances: 0 };
+      }
+    }
+
+    if (Object.keys(rotConditions).length > 0) {
+      seasonStore.patchLeagueConditions(leagueId2, rotConditions);
+    }
   }
 
   // ── 경기 중 부상 처리 ─────────────────────────────────────────

@@ -298,6 +298,22 @@ function createSeasonStore() {
       });
     },
 
+    patchLeagueConditions(leagueId: string, conditions: Record<string, import("../types/season").PlayerCondition>) {
+      update((s) => {
+        const cur = migrateLeagueState(s.leagueState[leagueId] ?? {});
+        return {
+          ...s,
+          leagueState: {
+            ...s.leagueState,
+            [leagueId]: {
+              ...cur,
+              playerConditions: { ...cur.playerConditions, ...conditions },
+            },
+          },
+        };
+      });
+    },
+
     injectFriendlySchedule(entries: import("../types/season").ScheduleEntry[]) {
       update((s) => ({
         ...s,

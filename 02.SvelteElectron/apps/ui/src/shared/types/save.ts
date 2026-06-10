@@ -561,6 +561,7 @@ export interface NpcCareerEntry {
   teamId: string;
   statLine: string;  // "15승 3패 ERA 2.41" | "타율 .312 12홈런"
   highlights: string[];  // ["신인상", "올스타"]
+  stats?: PlayerSeasonStats;  // 연도별 상세 성적 (최근 5년 표시용)
 }
 
 export interface NpcSaveState {
@@ -668,6 +669,7 @@ export interface CareerSeasonRecord {
   ovr: number;
   awards: CareerAward[];
   psResult?: "champion" | "runnerUp" | "semiFinal" | "notQualified";
+  stats?: PlayerSeasonStats;  // 연도별 상세 성적 (최근 5년 표시용)
 }
 
 export interface SaveGame {

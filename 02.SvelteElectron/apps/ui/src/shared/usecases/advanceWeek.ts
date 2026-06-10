@@ -1536,6 +1536,93 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         ? [...orphanProtag, ...remainingNpcGames]  // 고아 경기 + NPC 경기 모두 처리
         : remainingNpcGames;                        // 정상: NPC 경기만
 
+      // processWeekBoundary pending으로 thisWeekGames 루프가 실행 안 된 케이스.
+      // weekAlreadyStarted=false + 미처리 경기 + pendingActions 없음 → 주 올리기 전에 처리.
+      const hasInterruptedWeekGames =
+        !weekAlreadyStarted &&
+        remainingGamesThisWeek.length > 0 &&
+        s.pendingActions.length === 0;
+
+      if (hasInterruptedWeekGames) {
+        const sorted = [...remainingGamesThisWeek].sort((a, b) => a.gameDate.localeCompare(b.gameDate));
+        for (const game of sorted) {
+          const sCurrent = get(seasonStore);
+          const freshGame = sCurrent.schedule.find((e) => e.id === game.id);
+          if (!freshGame || freshGame.result) continue;
+
+          const gCurrent = get(gameStore);
+          const isTeamGame =
+            game.homeTeamId === gCurrent.protagonist.teamId ||
+            game.awayTeamId === gCurrent.protagonist.teamId;
+
+          if (game.isProtagonistGame || (!game.isProtagonistGame && isTeamGame && gCurrent.protagonist.playerType === "pitcher")) {
+            const isInjured = !!gCurrent.protagonist.injury;
+            const cond = gCurrent.protagonist.condition;
+
+            if (isInjured || cond < 35) {
+              const result = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
+              if (game.isFriendly) {
+                const lSnap = get(seasonStore).leagueState[gCurrent.protagonist.leagueId];
+                seasonStore.applyFriendlyResult(game.id, result, gCurrent.protagonist.leagueId, game.homeTeamId, game.awayTeamId, (lSnap?.teamRotationIndex?.[game.homeTeamId] ?? 0) + 1, (lSnap?.teamRotationIndex?.[game.awayTeamId] ?? 0) + 1, null);
+              } else {
+                seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId);
+                await applyPostseasonResult(game.id, result);
+              }
+              accResults.push(result);
+              accLogs.push(isInjured ? "부상으로 인해 경기 출전 불가" : `컨디션 불량(${cond})으로 등판 회피`);
+            } else if (cond < 55) {
+              seasonStore.setCurrentDate(game.gameDate);
+              const action: PendingAction = { type: "conditionWarning", scheduleId: game.id, condition: cond };
+              seasonStore.pushPendingAction(action);
+              gameStore.save(); seasonStore.save();
+              return { processedWeek: s.currentWeek, logs: accLogs, newMessages: [], matchResults: accResults, stoppedBy: action };
+            } else {
+              seasonStore.setCurrentDate(game.gameDate);
+              const gameAction: PendingAction = { type: "game", scheduleId: game.id };
+              const briefAction: PendingAction = { type: "preGameBriefing", scheduleId: game.id };
+              seasonStore.pushPendingAction(briefAction);
+              seasonStore.pushPendingAction(gameAction);
+              gameStore.save(); seasonStore.save();
+              return { processedWeek: s.currentWeek, logs: accLogs, newMessages: [], matchResults: accResults, stoppedBy: briefAction };
+            }
+          } else {
+            let entities2 = get(masterStore).entities;
+            if (entities2.length === 0) { await masterStore.loadEntities(""); entities2 = get(masterStore).entities; }
+            const leagueId2   = gCurrent.protagonist.leagueId;
+            const lState2     = get(seasonStore).leagueState[leagueId2];
+            const homeRotIdx2 = lState2?.teamRotationIndex?.[game.homeTeamId] ?? 0;
+            const awayRotIdx2 = lState2?.teamRotationIndex?.[game.awayTeamId] ?? 0;
+            const conditions2 = lState2?.playerConditions ?? {};
+            let npcResult2: MatchResult;
+            let nextHomeRot2 = homeRotIdx2;
+            let nextAwayRot2 = awayRotIdx2;
+            let pitcherConds2: Record<string, PlayerCondition> = {};
+
+            if (entities2.length > 0) {
+              const sim2 = await simulateGame(game.homeTeamId, game.awayTeamId, entities2, {
+                conditions: conditions2, homeRotIdx: homeRotIdx2, awayRotIdx: awayRotIdx2, week: game.week,
+                npcInjuries: get(seasonStore).npcInjuries,
+                rotationSize: rotationSizeForStage(gCurrent.protagonist.careerStage),
+                npcLiveStats: get(seasonStore).npcLiveStats,
+              });
+              npcResult2 = sim2.result; nextHomeRot2 = sim2.nextHomeRotIdx; nextAwayRot2 = sim2.nextAwayRotIdx; pitcherConds2 = sim2.pitcherConditions;
+            } else {
+              npcResult2 = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
+            }
+            if (game.isFriendly) {
+              seasonStore.applyFriendlyResult(game.id, npcResult2, leagueId2, game.homeTeamId, game.awayTeamId, nextHomeRot2, nextAwayRot2, null, pitcherConds2);
+            } else {
+              seasonStore.applyProtagonistGroupNpcResult(game.id, npcResult2, leagueId2, game.homeTeamId, game.awayTeamId, nextHomeRot2, nextAwayRot2, pitcherConds2);
+              applyPostseasonResult(game.id, npcResult2);
+            }
+            accResults.push(npcResult2);
+            accLogs.push(`${game.homeTeamId} ${npcResult2.homeScore}:${npcResult2.awayScore} ${game.awayTeamId}`);
+          }
+        }
+        gameStore.save(); seasonStore.save();
+        return { processedWeek: s.currentWeek, logs: accLogs, newMessages: [], matchResults: accResults, stoppedBy: null };
+      }
+
       const shouldProcess = weekAlreadyStarted &&
         gamesToAutoSim.length > 0 &&
         (hasOrphan || remainingNpcGames.length > 0);
@@ -1575,12 +1662,21 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
             npcResult = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
           }
 
-          seasonStore.applyProtagonistGroupNpcResult(
-            game.id, npcResult, leagueId,
-            game.homeTeamId, game.awayTeamId,
-            nextHomeRotIdx, nextAwayRotIdx, pitcherConds,
-          );
-          applyPostseasonResult(game.id, npcResult);
+          if (game.isFriendly) {
+            seasonStore.applyFriendlyResult(
+              game.id, npcResult, leagueId,
+              game.homeTeamId, game.awayTeamId,
+              nextHomeRotIdx, nextAwayRotIdx,
+              null, pitcherConds,
+            );
+          } else {
+            seasonStore.applyProtagonistGroupNpcResult(
+              game.id, npcResult, leagueId,
+              game.homeTeamId, game.awayTeamId,
+              nextHomeRotIdx, nextAwayRotIdx, pitcherConds,
+            );
+            applyPostseasonResult(game.id, npcResult);
+          }
           accResults.push(npcResult);
           accLogs.push(`${game.homeTeamId} ${npcResult.homeScore}:${npcResult.awayScore} ${game.awayTeamId}`);
         }
@@ -1672,15 +1768,25 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           // 학사 경고 → 자동 시뮬
           gameStore.clearEligibilityBlock();
           const result = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
-          seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId);
-          await applyPostseasonResult(game.id, result);
+          if (game.isFriendly) {
+            const lSnap = get(seasonStore).leagueState[gCurrent.protagonist.leagueId];
+            seasonStore.applyFriendlyResult(game.id, result, gCurrent.protagonist.leagueId, game.homeTeamId, game.awayTeamId, (lSnap?.teamRotationIndex?.[game.homeTeamId] ?? 0) + 1, (lSnap?.teamRotationIndex?.[game.awayTeamId] ?? 0) + 1, null);
+          } else {
+            seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId);
+            await applyPostseasonResult(game.id, result);
+          }
           accResults.push(result);
           accLogs.push("학사 경고로 인해 경기 출전 불가");
         } else if (isInjured) {
           // 부상 중 → 자동 시뮬 + 메시지
           const result = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
-          seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId);
-          await applyPostseasonResult(game.id, result);
+          if (game.isFriendly) {
+            const lSnap = get(seasonStore).leagueState[gCurrent.protagonist.leagueId];
+            seasonStore.applyFriendlyResult(game.id, result, gCurrent.protagonist.leagueId, game.homeTeamId, game.awayTeamId, (lSnap?.teamRotationIndex?.[game.homeTeamId] ?? 0) + 1, (lSnap?.teamRotationIndex?.[game.awayTeamId] ?? 0) + 1, null);
+          } else {
+            seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId);
+            await applyPostseasonResult(game.id, result);
+          }
           accResults.push(result);
           accLogs.push("부상으로 인해 경기 출전 불가");
           gameStore.addMessage({
@@ -1694,8 +1800,13 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         } else if (cond < 35) {
           // 컨디션 극히 낮음 → 자동 회피 + 메시지
           const result = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
-          seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId);
-          await applyPostseasonResult(game.id, result);
+          if (game.isFriendly) {
+            const lSnap = get(seasonStore).leagueState[gCurrent.protagonist.leagueId];
+            seasonStore.applyFriendlyResult(game.id, result, gCurrent.protagonist.leagueId, game.homeTeamId, game.awayTeamId, (lSnap?.teamRotationIndex?.[game.homeTeamId] ?? 0) + 1, (lSnap?.teamRotationIndex?.[game.awayTeamId] ?? 0) + 1, null);
+          } else {
+            seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId);
+            await applyPostseasonResult(game.id, result);
+          }
           accResults.push(result);
           accLogs.push(`컨디션 불량(${cond})으로 등판 회피`);
           gameStore.addMessage({
@@ -1759,12 +1870,22 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           npcResult = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
         }
 
-        seasonStore.applyProtagonistGroupNpcResult(
-          game.id, npcResult, leagueId,
-          game.homeTeamId, game.awayTeamId,
-          nextHomeRotIdx, nextAwayRotIdx, pitcherConds,
-        );
-        applyPostseasonResult(game.id, npcResult);
+        if (game.isFriendly) {
+          // 친선경기 → 순위·통계 미반영, rotationIndex만 갱신
+          seasonStore.applyFriendlyResult(
+            game.id, npcResult, leagueId,
+            game.homeTeamId, game.awayTeamId,
+            nextHomeRotIdx, nextAwayRotIdx,
+            null, pitcherConds,
+          );
+        } else {
+          seasonStore.applyProtagonistGroupNpcResult(
+            game.id, npcResult, leagueId,
+            game.homeTeamId, game.awayTeamId,
+            nextHomeRotIdx, nextAwayRotIdx, pitcherConds,
+          );
+          applyPostseasonResult(game.id, npcResult);
+        }
         accResults.push(npcResult);
         accLogs.push(`${game.homeTeamId} ${npcResult.homeScore}:${npcResult.awayScore} ${game.awayTeamId}`);
       }

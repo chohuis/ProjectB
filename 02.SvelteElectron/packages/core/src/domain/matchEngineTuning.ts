@@ -84,8 +84,8 @@ export const DEFAULT_MATCH_ENGINE_TUNING: MatchEngineTuning = {
   doublePlayBaseProb: 0.22,
 
   managerChangeThresholds: {
-    npcStarterStaminaLimit: 25,
-    npcStarterPitchCountSoft: 80,
+    npcStarterStaminaLimit: 35,
+    npcStarterPitchCountSoft: 65,
     npcStarterPitchCountHard: 110,
     protagonistPitchCountSoft: 90,
     protagonistPitchCountHard: 120,

@@ -227,6 +227,9 @@ export interface PlayerCondition {
   fatigue: number;          // 0~100, 100 = 완전 회복
   lastPitchedWeek: number;  // 마지막 등판 주차 (0 = 미등판)
   pitchOutsLast: number;    // 직전 경기 던진 아웃 수
+  lastStartGameCount?: number;       // SP: 마지막 선발 시점의 teamRotationIndex
+  lastAppearanceGameCount?: number;  // RP/CP: 마지막 출전 시점의 teamRotationIndex
+  consecutiveAppearances?: number;   // RP/CP: 현재 연속 출전 수 (쉬면 0 리셋)
 }
 
 // ── 리그별 순위·스탯 ─────────────────────────────────────────
