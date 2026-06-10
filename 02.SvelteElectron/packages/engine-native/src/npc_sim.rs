@@ -1042,46 +1042,25 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
     result
 }
 
-// ── 연봉/계약 기간 추정 ───────────────────────────────────────────────────────
+// ── 연봉/계약 기간 추정 (player_engine.league_salary_mult 공식과 통일) ───────
+
+fn league_salary_mult(league: &str) -> f64 {
+    match league {
+        "LEAGUE_ABL"         => 3.5,
+        "LEAGUE_JBL"         => 2.0,
+        "LEAGUE_INDEPENDENT" => 0.35,
+        _                    => 1.0,  // KBL 기준
+    }
+}
 
 fn estimate_salary_and_contract(ovr: f64, league: &str, rng: &mut LcgRand) -> (i64, i32) {
-    match league {
-        "LEAGUE_KBL" | "LEAGUE_ABL" => {
-            if ovr >= 75.0 {
-                let salary = ((ovr - 50.0) * 350.0 + 3000.0).round() as i64;
-                let years  = 3 + (rng.next() * 3.0) as i32;  // 3~5
-                (salary, years)
-            } else if ovr >= 68.0 {
-                let salary = ((ovr - 50.0) * 200.0 + 1500.0).round() as i64;
-                let years  = 2 + (rng.next() * 3.0) as i32;  // 2~4
-                (salary, years)
-            } else {
-                let salary = ((ovr - 40.0) * 80.0 + 800.0).max(800.0).round() as i64;
-                let years  = 1 + (rng.next() * 2.0) as i32;  // 1~2
-                (salary, years)
-            }
-        },
-        "LEAGUE_JBL" => {
-            if ovr >= 75.0 {
-                let salary = ((ovr - 50.0) * 290.0 + 2400.0).round() as i64;
-                let years  = 2 + (rng.next() * 3.0) as i32;  // 2~4
-                (salary, years)
-            } else if ovr >= 68.0 {
-                let salary = ((ovr - 50.0) * 165.0 + 1200.0).round() as i64;
-                let years  = 1 + (rng.next() * 2.0) as i32;  // 1~2
-                (salary, years)
-            } else {
-                let salary = ((ovr - 40.0) * 70.0 + 650.0).max(650.0).round() as i64;
-                (salary, 1)
-            }
-        },
-        "LEAGUE_INDEPENDENT" => {
-            let salary = ((ovr - 40.0) * 60.0 + 500.0).max(500.0).round() as i64;
-            let years  = 1 + (rng.next() * 5.0) as i32;  // 1~5
-            (salary, years)
-        },
-        _ => (0, 1),
-    }
+    let base   = 1800.0 + (ovr - 50.0).max(0.0) * 220.0;
+    let salary = (base * league_salary_mult(league)).round() as i64;
+    let years  = if ovr >= 75.0      { 3 + (rng.next() * 3.0) as i32 }  // 3~5
+                 else if ovr >= 68.0 { 2 + (rng.next() * 3.0) as i32 }  // 2~4
+                 else if ovr >= 55.0 { 1 + (rng.next() * 2.0) as i32 }  // 1~2
+                 else                { 1 };
+    (salary, years)
 }
 
 // ── 체육부대 선발 (내부 헬퍼) ─────────────────────────────────────────────────
