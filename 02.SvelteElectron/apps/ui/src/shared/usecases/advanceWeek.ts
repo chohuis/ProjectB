@@ -897,7 +897,6 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       draftSigningBonus: 0,
       universityPassed: admissionsCalc.univPassed,
       independentPassed: admissionsCalc.indiePassed,
-      sportsMilitaryPassed: admissionsCalc.sportsPassed,
     });
 
     seasonStore.pushPendingAction({ type: "careerResults" });
@@ -1448,50 +1447,132 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     const isMilUnresolved = p.militaryStatus === "미필"
       && p.careerStage !== "military"
       && p.careerStage !== "highschool";
-    const hasMilPending = s.pendingActions.some((a) => a.type === "militaryEnlist");
+    const hasAnyMilPending = s.pendingActions.some(
+      (a) => a.type === "sportsUnitApplication" || a.type === "militaryEnlistAsk"
+    );
 
-    if (isMilUnresolved && !hasMilPending) {
-      // W4: 28세 강제 입대 경고
+    if (isMilUnresolved && !hasAnyMilPending) {
+      // W4: 28세 입영 기간 만료 경고
       if (p.age === 28 && weekInYear === 4) {
         gameStore.addMessage({
           id: `msg-military-warning-${Date.now()}`,
           category: "system", sender: "병무청",
-          subject: "입영 통지",
-          preview: "이번 시즌 W52에 입대합니다.",
-          body: "병역 의무 이행 통지서입니다.\n이번 시즌 W52 주차에 무조건 입대됩니다.",
+          subject: "입영 기간 만료 통지",
+          preview: "이번 시즌 W52에 입영 절차가 진행됩니다.",
+          body: "병역 의무 이행 기간이 만료되었습니다.\n이번 시즌 W52 주차에 입영 절차가 진행됩니다.",
           createdAt: `W${weekNum}`, readAt: null,
         });
       }
 
-      // W50: 체육부대 후보 공개 메시지 (별도 처리 — SeasonEndModal 주기적 호출 예정)
+      // W50: 체육부대 후보 30명 공개 (주인공 제외 NPC)
+      if (weekInYear === 50 && p.age <= 27) {
+        const m = get(masterStore);
+        const npcCandidates = m.entities
+          .filter((e) => {
+            if (e.role !== "player") return false;
+            const npcSave = g.npcs.find((n) => n.npcId === e.id);
+            return npcSave?.militaryStatus === "미필"
+              && npcSave.careerStatus === "active"
+              && e.id !== p.id;
+          })
+          .map((e) => {
+            const live = s.npcLiveStats[e.id];
+            const ep = (e.details as import("../stores/master").EntityDetails)?.player;
+            const ovr = live?.pitching?.ovr ?? ep?.pitching?.ovr ?? 50;
+            return { id: e.id, name: e.name, ovr, teamId: e.teamId, isProtagonist: false };
+          });
 
-      // W52: 자발적 제안 (age ≤ 27)
-      if (p.age <= 27 && weekInYear === 52) {
-        gameStore.addMessage({
-          id: `msg-military-ask-${Date.now()}`,
-          category: "system", sender: "병무청",
-          subject: "입영 신청 안내",
-          preview: "이번 시즌 군 복무를 신청하시겠습니까?",
-          body: "군 복무를 신청하시겠습니까?\n신청 시 W52에 입대합니다.",
-          createdAt: `W${weekNum}`, readAt: null,
-          decision: {
-            prompt: "군 복무를 신청하시겠습니까?",
-            options: [
-              { id: "yes_enlist", label: "신청", effectHint: "W52 입대" },
-              { id: "no_enlist",  label: "이번엔 아니오", effectHint: "다음 해 재안내" },
-            ],
-            selectedOptionId: null,
-          },
-        });
-        const action: PendingAction = { type: "message", messageId: `msg-military-ask-${Date.now() - 1}` };
-        return { processedWeek: s.currentWeek, logs: ["군 복무 신청 안내"], newMessages: [], matchResults: [], stoppedBy: action };
+        if (npcCandidates.length > 0) {
+          const raw = JSON.parse(
+            await window.projectB!.militaryCalcCandidates(JSON.stringify({ candidates: npcCandidates, topN: 30 }))
+          ) as { topCandidates: { id: string; name: string; ovr: number; teamId: string }[]; protagonistRank: number | null };
+
+          const teamById = new Map(m.teams.map((t) => [t.id, t.name]));
+          const listLines = raw.topCandidates.map((c, i) =>
+            `${i + 1}위  ${c.name} (${teamById.get(c.teamId) ?? c.teamId})  OVR ${Math.round(c.ovr)}`
+          );
+          const msgId = `msg-sports-candidates-${weekNum}-${s.seasonYear}`;
+          gameStore.addMessage({
+            id: msgId,
+            category: "news", sender: "스포츠조선",
+            subject: `${s.seasonYear} 체육부대 입대 후보 루머`,
+            preview: `이번 시즌 체육부대 후보 30인이 거론되고 있습니다.`,
+            body: [
+              `${s.seasonYear}년 체육부대 입대 후보로 거론되는 30인 명단입니다.`,
+              `실제 신청자는 다를 수 있습니다.`,
+              ``,
+              ...listLines,
+            ].join("\n"),
+            createdAt: `W${weekNum}`, readAt: null,
+          });
+
+          const action: PendingAction = { type: "sportsUnitApplication" };
+          seasonStore.pushPendingAction(action);
+          return { processedWeek: s.currentWeek, logs: ["체육부대 후보 공개"], newMessages: [], matchResults: [], stoppedBy: action };
+        }
       }
 
-      // W52: 강제 입대 (age >= 28)
-      if (p.age >= 28 && weekInYear === 52) {
-        const action: PendingAction = { type: "militaryEnlist" };
+      // W52: 체육부대 신청자 결과 처리
+      if (weekInYear === 52 && p.sportsUnitApplied) {
+        const m = get(masterStore);
+        const npcPool = m.entities
+          .filter((e) => {
+            if (e.role !== "player") return false;
+            const npcSave = g.npcs.find((n) => n.npcId === e.id);
+            return npcSave?.militaryStatus === "미필" && npcSave.careerStatus === "active" && e.id !== p.id;
+          })
+          .map((e) => {
+            const live = s.npcLiveStats[e.id];
+            const ep = (e.details as import("../stores/master").EntityDetails)?.player;
+            const ovr = live?.pitching?.ovr ?? ep?.pitching?.ovr ?? 50;
+            return { id: e.id, name: e.name, ovr, teamId: e.teamId, isProtagonist: false };
+          });
+
+        // NPC 29명 + 주인공 1명 = 30명 풀
+        const topNpcRaw = JSON.parse(
+          await window.projectB!.militaryCalcCandidates(JSON.stringify({ candidates: npcPool, topN: 29 }))
+        ) as { topCandidates: { id: string; name: string; ovr: number; teamId: string }[] };
+
+        const applicants = [
+          { id: p.id, name: p.name, ovr: p.pitching.ovr, teamId: p.teamId, isProtagonist: true },
+          ...topNpcRaw.topCandidates.map((c) => ({ ...c, isProtagonist: false })),
+        ];
+
+        const selResult = JSON.parse(
+          await window.projectB!.militaryCalcSelection(JSON.stringify({
+            applicants,
+            maxTotal: 10,
+            maxPerTeam: 3,
+          }))
+        ) as { protagonistSelected: boolean; selectedIds: string[] };
+
+        if (selResult.protagonistSelected) {
+          gameStore.addMessage({
+            id: `msg-sports-selected-${weekNum}`,
+            category: "system", sender: "병무청",
+            subject: "체육부대 선발 통보",
+            preview: "체육부대에 선발되었습니다.",
+            body: "이번 체육부대 선발에 합격하였습니다.\n체육부대로 입대합니다.",
+            createdAt: `W${weekNum}`, readAt: null,
+          });
+          gameStore.enlistMilitary("sports", weekNum, true, s.seasonYear);
+          seasonStore.initSeason("LEAGUE_MILITARY", s.seasonYear + 1, 100, []);
+          seasonStore.setSchedule([]);
+          await gameStore.save();
+          await seasonStore.save();
+          return { processedWeek: weekNum, logs: ["체육부대 입대"], newMessages: [], matchResults: [], stoppedBy: null };
+        }
+
+        const action: PendingAction = { type: "militaryEnlistAsk", reason: "rejected" };
         seasonStore.pushPendingAction(action);
-        return { processedWeek: s.currentWeek, logs: ["강제 입대 처리"], newMessages: [], matchResults: [], stoppedBy: action };
+        return { processedWeek: s.currentWeek, logs: ["체육부대 탈락"], newMessages: [], matchResults: [], stoppedBy: action };
+      }
+
+      // W52: 입영 기간 만료 (28세 이상, 미신청)
+      if (weekInYear === 52 && p.age >= 28) {
+        const action: PendingAction = { type: "militaryEnlistAsk", reason: "overdue" };
+        seasonStore.pushPendingAction(action);
+        return { processedWeek: s.currentWeek, logs: ["입영 기간 만료"], newMessages: [], matchResults: [], stoppedBy: action };
       }
 
       // 26~27세 패널티 누적 (W1 시점 체크)

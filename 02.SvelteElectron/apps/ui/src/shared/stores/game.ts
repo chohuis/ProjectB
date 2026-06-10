@@ -147,6 +147,7 @@ const DEFAULT_PROTAGONIST: ProtagonistSave = {
   militaryHiatusStage: null,
   militaryHiatusUniversityWeek: null,
   militaryDeferPenalty: 0,
+  sportsUnitApplied: false,
   tradeAdaptationWeeks: 0,
   faNegotiationRound: 0,
   faUnsignedWeeks: 0,
@@ -1192,6 +1193,13 @@ function createGameStore() {
       }));
     },
 
+    setSportsUnitApplied(flag: boolean) {
+      update((s) => ({
+        ...s,
+        protagonist: { ...s.protagonist, sportsUnitApplied: flag },
+      }));
+    },
+
     enlistMilitary(unit: "sports" | "general", enlistWeek = 52, sportsUnitSelected = false, enlistYear?: number) {
       update((s) => {
         const now = s.protagonist;
@@ -1439,6 +1447,7 @@ function createGameStore() {
           condition: Math.min(100, p.condition + 20),
           fatigue: Math.max(0, p.fatigue - 30),
           seasonHealth: { lowConditionWeeks: 0, highFatigueWeeks: 0, injuryCount: 0, totalWeeks: 0 },
+          sportsUnitApplied: false,
         };
         const schoolState = draftTriggeredReset
           ? { ...s.schoolState, draftTriggered: false }

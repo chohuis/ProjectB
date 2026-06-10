@@ -289,6 +289,7 @@ export interface ProtagonistSave {
   militaryHiatusStage: CareerStage | null;
   militaryHiatusUniversityWeek: number | null;
   militaryDeferPenalty: number;
+  sportsUnitApplied: boolean;
   tradeAdaptationWeeks: number;
   faNegotiationRound: number;
   faUnsignedWeeks: number;
@@ -427,7 +428,6 @@ export interface CareerResults {
   draftSigningBonus: number;
   universityPassed: string[];
   independentPassed: string[];
-  sportsMilitaryPassed: boolean;
 }
 
 export interface SchoolState {

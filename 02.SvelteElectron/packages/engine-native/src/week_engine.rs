@@ -431,7 +431,6 @@ pub struct HsAdmissionsPayload {
 pub struct HsAdmissionsResult {
     pub univ_passed: Vec<String>,
     pub indie_passed: Vec<String>,
-    pub sports_passed: bool,
 }
 
 fn pct_to_grade(pct: f64) -> u8 {
@@ -480,14 +479,7 @@ pub fn calc_hs_admissions(p: HsAdmissionsPayload) -> HsAdmissionsResult {
         .map(|(_, id)| id.clone())
         .collect();
 
-    let sports_passed = if ovr < 56.0 {
-        false
-    } else {
-        let base = 22.0 + (ovr - 56.0) * 2.1;
-        rng.gen::<f64>() * 100.0 < base.clamp(6.0, 84.0)
-    };
-
-    HsAdmissionsResult { univ_passed, indie_passed, sports_passed }
+    HsAdmissionsResult { univ_passed, indie_passed }
 }
 
 // ── Trade Rumor ───────────────────────────────────────────────

@@ -115,7 +115,8 @@ export type PendingAction =
     }
   | { type: "faMarket" }
   | { type: "trade"; fromTeamId: string; toTeamId: string }
-  | { type: "militaryEnlist" }
+  | { type: "sportsUnitApplication" }
+  | { type: "militaryEnlistAsk"; reason: "rejected" | "overdue" }
   | {
       type: "optionClause";
       optionType: "team" | "player";

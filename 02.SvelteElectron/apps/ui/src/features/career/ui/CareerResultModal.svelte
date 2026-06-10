@@ -9,7 +9,6 @@
   $: results = $gameStore.schoolState.careerResults;
   $: univPassed = results?.universityPassed ?? [];
   $: indiePassed = results?.independentPassed ?? [];
-  $: sportsPassed = results?.sportsMilitaryPassed ?? false;
   $: draftPassed = results?.draftDrafted ?? false;
 
   // 대학 재학 중 여부 및 학년
@@ -77,14 +76,11 @@
         durationYears: 1,
         signingBonus: 0,
       });
-    } else if (kind === "sports") {
-      gameStore.enlistMilitary("sports");
-      gameStore.setCareerApplicationsSubmitted(false);
-      gameStore.clearCareerResults();
-      gameStore.setCareerFinalChoice("sports");
-      seasonStore.resolvePendingAction("careerChoice");
     } else {
-      gameStore.enlistMilitary("general");
+      // 전원 탈락: 현역 입대 (고3 강제 케이스)
+      gameStore.enlistMilitary("general", 52, false, $seasonStore.seasonYear);
+      seasonStore.initSeason("LEAGUE_MILITARY", ($seasonStore.seasonYear || 2026) + 1, 100, []);
+      seasonStore.setSchedule([]);
       gameStore.setCareerApplicationsSubmitted(false);
       gameStore.clearCareerResults();
       gameStore.setCareerFinalChoice("general");
@@ -133,12 +129,7 @@
           <span class="opt-label">독립리그 합격: {teamName(teamId)}</span>
         </button>
       {/each}
-      {#if sportsPassed}
-        <button class="opt-btn" type="button" on:click={() => chooseResult("sports")}>
-          <span class="opt-label">체육부대 입대</span>
-        </button>
-      {/if}
-      {#if !draftPassed && univPassed.length === 0 && indiePassed.length === 0 && !sportsPassed}
+      {#if !draftPassed && univPassed.length === 0 && indiePassed.length === 0}
         <button class="opt-btn danger" type="button" on:click={() => chooseResult("general")}>
           <span class="opt-label">전원 탈락: 현역 입대</span>
         </button>

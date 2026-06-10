@@ -32,8 +32,9 @@
   import OptionClauseModal from "../../features/contract/ui/OptionClauseModal.svelte";
   import TradeModal from "../../features/contract/ui/TradeModal.svelte";
   import FaMarketModal from "../../features/contract/ui/FaMarketModal.svelte";
-  import MilitaryEnlistModal from "../../features/military/ui/MilitaryEnlistModal.svelte";
   import MilitaryStatusPanel from "../../features/military/ui/MilitaryStatusPanel.svelte";
+  import SportsUnitApplicationModal from "../../features/military/ui/SportsUnitApplicationModal.svelte";
+  import MilitaryEnlistAskModal from "../../features/military/ui/MilitaryEnlistAskModal.svelte";
   import DevToolsHubModal from "../../features/devtools/ui/DevToolsHubModal.svelte";
   import MatchEngineLabModal from "../../features/match-engine-lab/ui/MatchEngineLabModal.svelte";
   import EntityManagerModal from "../../features/entity-manager/ui/EntityManagerModal.svelte";
@@ -83,7 +84,8 @@
       case "careerChoiceHub":
       case "careerResults":
       case "careerChoice":
-      case "militaryEnlist":
+      case "sportsUnitApplication":
+      case "militaryEnlistAsk":
       case "trade":
       case "salaryNegotiation":
       case "optionClause":
@@ -120,7 +122,10 @@
   $: pendingOptionClause = $nextPendingAction?.type === "optionClause" ? $nextPendingAction : null;
   $: pendingTrade = $nextPendingAction?.type === "trade" ? $nextPendingAction : null;
   $: pendingFaMarket = $nextPendingAction?.type === "faMarket";
-  $: pendingMilitaryEnlist = $nextPendingAction?.type === "militaryEnlist";
+  $: pendingSportsUnitApp = $nextPendingAction?.type === "sportsUnitApplication";
+  $: pendingMilitaryEnlistAsk = $nextPendingAction?.type === "militaryEnlistAsk"
+    ? ($nextPendingAction as import("../../shared/types/season").PendingAction & { type: "militaryEnlistAsk" })
+    : null;
   $: pendingInjuryTreatment  = $nextPendingAction?.type === "injuryTreatment"  ? $nextPendingAction : null;
   $: pendingConditionWarning = $nextPendingAction?.type === "conditionWarning" ? $nextPendingAction : null;
   $: pendingPreGameBriefing  = $nextPendingAction?.type === "preGameBriefing"  ? $nextPendingAction : null;
@@ -300,12 +305,6 @@
       ? `전역까지 ${Math.max(0, 104 - $gameStore.protagonist.militaryServiceWeeks)}주 남음`
       : "";
 
-  $: canVoluntaryEnlist =
-    ($gameStore.protagonist.careerStage === "pro_kbl" ||
-      $gameStore.protagonist.careerStage === "pro_abl" ||
-      $gameStore.protagonist.careerStage === "independent") &&
-    $gameStore.protagonist.careerStage !== "military" &&
-    !$seasonStore.pendingActions.some((a) => a.type === "militaryEnlist");
 
   $: pendingByTab = $seasonStore.pendingActions.reduce((acc, action) => {
     const tab = tabForPending(action);
@@ -321,11 +320,6 @@
     const pa = $nextPendingAction;
     if (!pa) return;
     currentTab = tabForPending(pa);
-  }
-
-  function triggerVoluntaryEnlist() {
-    if (!canVoluntaryEnlist) return;
-    seasonStore.pushPendingAction({ type: "militaryEnlist" });
   }
 
   function startInteractiveMatch() {
@@ -432,12 +426,6 @@
 
       <main>
         <div class="tab-content">
-          {#if canVoluntaryEnlist}
-            <div class="voluntary-enlist-banner">
-              <span>군복무를 지금 시작할 수 있습니다.</span>
-              <button on:click={triggerVoluntaryEnlist}>지원 입대</button>
-            </div>
-          {/if}
           {#if $gameStore.protagonist.careerStage === "military"}
             <MilitaryStatusPanel />
           {/if}
@@ -532,8 +520,12 @@
   <FaMarketModal />
 {/if}
 
-{#if pendingMilitaryEnlist && currentTab === "messages"}
-  <MilitaryEnlistModal sportsUnitSelected={$gameStore.protagonist.sportsUnitSelected ?? false} />
+{#if pendingSportsUnitApp && currentTab === "messages"}
+  <SportsUnitApplicationModal />
+{/if}
+
+{#if pendingMilitaryEnlistAsk && currentTab === "messages"}
+  <MilitaryEnlistAskModal reason={pendingMilitaryEnlistAsk.reason} />
 {/if}
 
 {#if pendingInjuryTreatment && currentTab === "messages"}
@@ -643,27 +635,7 @@
     min-height: 0;
   }
 
-  .voluntary-enlist-banner {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-    padding: 8px 10px;
-    border: 1px solid #8b6a2d;
-    border-radius: 10px;
-    background: #302410;
-    color: #ffe8a8;
-  }
 
-  .voluntary-enlist-banner button {
-    border: 1px solid #c19a53;
-    background: #4c3b1b;
-    color: #ffecc1;
-    border-radius: 8px;
-    padding: 6px 10px;
-    cursor: pointer;
-  }
 
   .placeholder {
     background: #161f33;
