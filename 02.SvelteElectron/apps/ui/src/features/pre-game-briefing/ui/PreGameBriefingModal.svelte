@@ -393,7 +393,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 14px 20px;
+    padding: 10px 16px;
     border-bottom: 1px solid #1e3050;
     background: #0a1628;
     flex: 0 0 auto;
@@ -428,29 +428,29 @@
     color: #f0c060;
   }
 
-  /* ── 본문 스크롤 영역 ── */
+  /* ── 본문 영역 (스크롤 없음) ── */
   .briefing-body {
     flex: 1 1 0;
-    overflow-y: auto;
-    padding: 16px 20px;
+    overflow: hidden;
+    padding: 10px 16px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 8px;
   }
 
   /* ── 날씨/구장 ── */
   .info-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 8px;
   }
 
   .info-card {
-    border-radius: 10px;
-    padding: 12px 14px;
+    border-radius: 8px;
+    padding: 7px 10px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
   }
 
   .weather-card { background: #0f1e38; border: 1px solid #1e3a5e; }
@@ -458,7 +458,7 @@
 
   .info-card-label {
     margin: 0;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     color: #6888b4;
     text-transform: uppercase;
@@ -467,33 +467,33 @@
 
   .info-card-value {
     margin: 0;
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 700;
     color: #d0e8ff;
   }
 
   .info-card-desc {
     margin: 0;
-    font-size: 12px;
+    font-size: 11px;
     color: #8aaccc;
-    line-height: 1.4;
+    line-height: 1.3;
   }
 
   /* ── 섹션 제목 ── */
   .section-title {
-    margin: 0 0 8px;
-    font-size: 13px;
+    margin: 0 0 4px;
+    font-size: 11px;
     font-weight: 700;
     color: #7a9acc;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
   }
 
   .team-summary {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 400;
     color: #5a7aa8;
     text-transform: none;
@@ -506,27 +506,27 @@
   .starter-card {
     background: #0f1e38;
     border: 1px solid #1e3a5e;
-    border-radius: 10px;
-    padding: 12px 16px;
+    border-radius: 8px;
+    padding: 7px 12px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
   }
 
   .starter-info {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
   }
 
   .starter-name {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 700;
     color: #e8f2ff;
   }
 
   .starter-meta {
-    font-size: 12px;
+    font-size: 11px;
     color: #7a9acc;
   }
 
@@ -534,23 +534,23 @@
     margin-left: auto;
     background: #1a3060;
     border: 1px solid #2d5090;
-    border-radius: 6px;
-    font-size: 12px;
+    border-radius: 5px;
+    font-size: 11px;
     font-weight: 700;
     color: #80b8f0;
-    padding: 2px 8px;
+    padding: 2px 6px;
   }
 
   .starter-stats {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
     flex-wrap: wrap;
   }
 
   .stat-sep {
     width: 1px;
-    height: 18px;
+    height: 16px;
     background: #1e3050;
   }
 
@@ -558,7 +558,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
+    gap: 1px;
   }
 
   .stat-label {
@@ -568,30 +568,31 @@
   }
 
   .stat-val {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
     color: #c0d8f8;
   }
 
   .no-stat {
-    font-size: 12px;
+    font-size: 11px;
     color: #4a6a90;
     font-style: italic;
   }
 
   /* ── 타선 테이블 ── */
-  .lineup-section { display: flex; flex-direction: column; }
+  .lineup-section { display: flex; flex-direction: column; flex: 1 1 0; min-height: 0; }
 
   .lineup-table-wrap {
     border: 1px solid #1e3050;
-    border-radius: 10px;
+    border-radius: 8px;
     overflow: hidden;
+    flex: 1 1 0;
   }
 
   .lineup-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .lineup-table thead tr {
@@ -599,9 +600,9 @@
   }
 
   .lineup-table th {
-    padding: 7px 10px;
+    padding: 5px 8px;
     text-align: left;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     color: #5a7aa8;
     text-transform: uppercase;
@@ -610,9 +611,9 @@
     border-bottom: 1px solid #1e3050;
   }
 
-  .th-num  { width: 28px; text-align: center; }
-  .th-hand { width: 36px; text-align: center; }
-  .th-ovr  { width: 52px; text-align: center; }
+  .th-num  { width: 24px; text-align: center; }
+  .th-hand { width: 32px; text-align: center; }
+  .th-ovr  { width: 46px; text-align: center; }
 
   /* 타자 행 위협 레벨 */
   .batter-row { border-bottom: 1px solid #122040; }
@@ -624,22 +625,22 @@
   .batter-row:hover { filter: brightness(1.12); }
 
   .lineup-table td {
-    padding: 7px 10px;
+    padding: 5px 8px;
     color: #c0d0e8;
     vertical-align: middle;
   }
 
-  .td-num  { text-align: center; color: #5a7aa8; font-size: 12px; }
+  .td-num  { text-align: center; color: #5a7aa8; font-size: 11px; }
   .td-name { font-weight: 700; color: #e0ecff; }
-  .td-hand { text-align: center; font-size: 12px; color: #7a98b8; }
+  .td-hand { text-align: center; font-size: 11px; color: #7a98b8; }
   .td-ovr  { text-align: center; }
-  .td-stat { font-size: 12px; color: #8aaac8; font-feature-settings: "tnum"; }
+  .td-stat { font-size: 11px; color: #8aaac8; font-feature-settings: "tnum"; }
 
   .ovr-dot {
     display: inline-block;
-    border-radius: 4px;
-    padding: 2px 6px;
-    font-size: 12px;
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 11px;
     font-weight: 700;
   }
 
@@ -647,18 +648,18 @@
   .ovr-dot.threat-dot-1 { background: #28200a; color: #d4a040; }
   .ovr-dot.threat-dot-2 { background: #2a0a0a; color: #f07070; }
 
-  .td-note { font-size: 12px; }
+  .td-note { font-size: 11px; }
   .threat-note-0 { color: #6a8ab0; }
   .threat-note-1 { color: #c09030; }
   .threat-note-2 { color: #d06060; font-weight: 600; }
 
-  .no-data { color: #3a5070; font-style: italic; font-size: 11px; }
+  .no-data { color: #3a5070; font-style: italic; font-size: 10px; }
 
   /* ── 하단 버튼 ── */
   .briefing-footer {
     flex: 0 0 auto;
     border-top: 1px solid #1e3050;
-    padding: 14px 20px;
+    padding: 10px 16px;
     display: flex;
     justify-content: flex-end;
     background: #0a1628;
@@ -669,9 +670,9 @@
     border: 1px solid #3a78c0;
     border-radius: 8px;
     color: #d0e8ff;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
-    padding: 10px 28px;
+    padding: 8px 24px;
     cursor: pointer;
     letter-spacing: 0.5px;
     transition: background 0.12s, border-color 0.12s;

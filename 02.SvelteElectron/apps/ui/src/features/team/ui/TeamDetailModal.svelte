@@ -87,29 +87,48 @@
 
   // ── 선발라인업 ────────────────────────────────────────────────
   interface RotationEntry { player: EntityRow; isTemp: boolean; }
+  interface BullpenData {
+    rp:    EntityRow[];   // RP 포지션
+    cp:    EntityRow[];   // CP 포지션
+    extra: EntityRow[];   // 로테이션에 못 든 나머지 후보
+  }
 
   $: maxRot = rotationSizeForLeague(team?.leagueId ?? "");
 
-  function buildRotation(members: EntityRow[], max: number): { rotation: RotationEntry[]; bullpenCount: number } {
+  function buildRotation(
+    members: EntityRow[],
+    max: number,
+  ): { rotation: RotationEntry[]; bullpen: BullpenData } {
     const all = members
       .filter((e) => e.role === "player" && playerType(e) !== "batter")
       .sort((a, b) => playerOvr(b) - playerOvr(a));
 
     const sps  = all.filter((e) => playerPos(e) === "SP");
-    const rest = all.filter((e) => playerPos(e) !== "SP");
+    const rps  = all.filter((e) => playerPos(e) === "RP");
+    const cps  = all.filter((e) => playerPos(e) === "CP");
 
     const rotation: RotationEntry[] = [];
     sps.slice(0, max).forEach((p) => rotation.push({ player: p, isTemp: false }));
+    // SP 부족 시 RP/CP로 임시 보충
     if (rotation.length < max) {
-      rest.slice(0, max - rotation.length).forEach((p) => rotation.push({ player: p, isTemp: true }));
+      [...rps, ...cps]
+        .slice(0, max - rotation.length)
+        .forEach((p) => rotation.push({ player: p, isTemp: true }));
     }
 
     const usedIds = new Set(rotation.map((r) => r.player.id));
-    const bullpenCount = all.filter((e) => !usedIds.has(e.id)).length;
-    return { rotation, bullpenCount };
+
+    return {
+      rotation,
+      bullpen: {
+        rp:    rps.filter((e) => !usedIds.has(e.id)),
+        cp:    cps.filter((e) => !usedIds.has(e.id)),
+        extra: sps.filter((e) => !usedIds.has(e.id)),  // 로테이션에 못 든 SP
+      },
+    };
   }
 
-  $: ({ rotation: spRotation, bullpenCount } = buildRotation(allMembers, maxRot));
+  $: ({ rotation: spRotation, bullpen: bullpenData } = buildRotation(allMembers, maxRot));
 
   const SP_LABELS = ["1선발", "2선발", "3선발", "4선발", "5선발"];
   const LINEUP_POSITIONS = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH"] as const;
@@ -454,35 +473,117 @@
           {/if}
 
           <div class="lineup-grid">
-            <section class="lineup-section">
-              <h4>선발 로테이션</h4>
-              {#if spRotation.length === 0}
-                <p class="empty">투수 데이터 없음</p>
-              {:else}
-                <div class="lineup-rows">
-                  {#each spRotation as entry, i}
-                    <div
-                      class="lineup-row"
-                      class:hero={entry.player.id === $gameStore.protagonist.id}
-                      on:dblclick={() => { playerModalId = entry.player.id; }}
-                      title="더블클릭: 선수 상세 보기"
-                      style="cursor:pointer"
-                    >
-                      <span class="slot-label">{SP_LABELS[i] ?? `${i + 1}선발`}</span>
-                      <span class="player-name">
-                        {entry.player.name}
-                        {#if entry.player.id === $gameStore.protagonist.id}<span class="hero-tag">나</span>{/if}
-                      </span>
-                      <span class="pos-tag" class:pos-temp={entry.isTemp}>{playerPos(entry.player)}{entry.isTemp ? "*" : ""}</span>
-                      <span class="ovr-tag">{playerOvr(entry.player)}</span>
-                    </div>
-                  {/each}
-                  {#if bullpenCount > 0}
-                    <div class="lineup-more">불펜 {bullpenCount}명</div>
-                  {/if}
-                </div>
+            <div class="pitcher-col">
+              <!-- 선발 로테이션 -->
+              <section class="lineup-section">
+                <h4>선발 로테이션</h4>
+                {#if spRotation.length === 0}
+                  <p class="empty">투수 데이터 없음</p>
+                {:else}
+                  <div class="lineup-rows">
+                    {#each spRotation as entry, i}
+                      <div
+                        class="lineup-row"
+                        class:hero={entry.player.id === $gameStore.protagonist.id}
+                        on:dblclick={() => { playerModalId = entry.player.id; }}
+                        title="더블클릭: 선수 상세 보기"
+                        style="cursor:pointer"
+                      >
+                        <span class="slot-label">{SP_LABELS[i] ?? `${i + 1}선발`}</span>
+                        <span class="player-name">
+                          {entry.player.name}
+                          {#if entry.player.id === $gameStore.protagonist.id}<span class="hero-tag">나</span>{/if}
+                        </span>
+                        <span class="pos-tag" class:pos-temp={entry.isTemp}>{playerPos(entry.player)}{entry.isTemp ? "*" : ""}</span>
+                        <span class="ovr-tag">{playerOvr(entry.player)}</span>
+                      </div>
+                    {/each}
+                  </div>
+                {/if}
+              </section>
+
+              <!-- 중계 투수 -->
+              <section class="lineup-section">
+                <h4>중계 투수 (RP)</h4>
+                {#if bullpenData.rp.length === 0}
+                  <p class="empty-sm">없음</p>
+                {:else}
+                  <div class="lineup-rows">
+                    {#each bullpenData.rp as player}
+                      <div
+                        class="lineup-row"
+                        class:hero={player.id === $gameStore.protagonist.id}
+                        on:dblclick={() => { playerModalId = player.id; }}
+                        title="더블클릭: 선수 상세 보기"
+                        style="cursor:pointer"
+                      >
+                        <span class="slot-label rp-label">중계</span>
+                        <span class="player-name">
+                          {player.name}
+                          {#if player.id === $gameStore.protagonist.id}<span class="hero-tag">나</span>{/if}
+                        </span>
+                        <span class="pos-tag">RP</span>
+                        <span class="ovr-tag">{playerOvr(player)}</span>
+                      </div>
+                    {/each}
+                  </div>
+                {/if}
+              </section>
+
+              <!-- 마무리 투수 -->
+              <section class="lineup-section">
+                <h4>마무리 (CP)</h4>
+                {#if bullpenData.cp.length === 0}
+                  <p class="empty-sm">없음</p>
+                {:else}
+                  <div class="lineup-rows">
+                    {#each bullpenData.cp as player}
+                      <div
+                        class="lineup-row"
+                        class:hero={player.id === $gameStore.protagonist.id}
+                        on:dblclick={() => { playerModalId = player.id; }}
+                        title="더블클릭: 선수 상세 보기"
+                        style="cursor:pointer"
+                      >
+                        <span class="slot-label cp-label">마무리</span>
+                        <span class="player-name">
+                          {player.name}
+                          {#if player.id === $gameStore.protagonist.id}<span class="hero-tag">나</span>{/if}
+                        </span>
+                        <span class="pos-tag">CP</span>
+                        <span class="ovr-tag">{playerOvr(player)}</span>
+                      </div>
+                    {/each}
+                  </div>
+                {/if}
+              </section>
+
+              <!-- 불펜 후보 (로테이션 외 SP) -->
+              {#if bullpenData.extra.length > 0}
+                <section class="lineup-section">
+                  <h4>불펜 후보</h4>
+                  <div class="lineup-rows">
+                    {#each bullpenData.extra as player}
+                      <div
+                        class="lineup-row"
+                        class:hero={player.id === $gameStore.protagonist.id}
+                        on:dblclick={() => { playerModalId = player.id; }}
+                        title="더블클릭: 선수 상세 보기"
+                        style="cursor:pointer"
+                      >
+                        <span class="slot-label extra-label">후보</span>
+                        <span class="player-name">
+                          {player.name}
+                          {#if player.id === $gameStore.protagonist.id}<span class="hero-tag">나</span>{/if}
+                        </span>
+                        <span class="pos-tag pos-temp">SP</span>
+                        <span class="ovr-tag">{playerOvr(player)}</span>
+                      </div>
+                    {/each}
+                  </div>
+                </section>
               {/if}
-            </section>
+            </div>
 
             <section class="lineup-section">
               <h4>타순</h4>
@@ -752,7 +853,8 @@
     border-radius: 999px; padding: 2px 8px;
   }
 
-  .lineup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .lineup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+  .pitcher-col { display: flex; flex-direction: column; gap: 14px; }
   .lineup-section { display: grid; gap: 6px; align-content: start; }
   .lineup-rows { display: grid; gap: 4px; }
   .lineup-row {
@@ -762,17 +864,21 @@
     border-radius: 7px; padding: 6px 8px; font-size: 12px;
   }
   .lineup-row.hero { border-color: rgba(240,224,96,0.4); background: rgba(240,224,96,0.05); }
-  .slot-label { font-size: 11px; color: #6080a0; font-weight: 700; }
+  .slot-label { font-size: 11px; color: #6080a0; font-weight: 700; white-space: nowrap; }
+  .rp-label   { color: #70b8f8; }
+  .cp-label   { color: #f0c060; }
+  .extra-label { color: #9898b8; }
   .player-name { color: #d5e2fd; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .pos-tag { text-align: center; font-size: 10px; color: #6888a8; }
   .pos-temp { color: #f0a040; }
   .ovr-tag { text-align: right; font-weight: 700; color: #68de92; font-size: 12px; }
-  .lineup-more { font-size: 11px; color: #6080a0; text-align: center; padding: 4px; }
+  .empty-sm { margin: 0; font-size: 11px; color: #506080; padding: 2px 0; }
 
   .empty { color: #9db2d8; font-size: 13px; margin: 0; }
 
   @media (max-width: 700px) {
     .info-grid { grid-template-columns: 1fr; }
     .lineup-grid { grid-template-columns: 1fr; }
+    .pitcher-col { gap: 10px; }
   }
 </style>

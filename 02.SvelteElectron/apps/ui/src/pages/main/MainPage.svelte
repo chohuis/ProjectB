@@ -572,11 +572,14 @@
             const result = JSON.parse(await window.projectB!.weekCalcNpcFallback(
               JSON.stringify({ homeTeamId: entry.homeTeamId, awayTeamId: entry.awayTeamId })
             )) as { homeScore: number; awayScore: number; winnerId: string; loserId: string };
-            seasonStore.applyMatchResult(schedId, {
-              homeScore: result.homeScore, awayScore: result.awayScore,
-              winnerId: result.winnerId, loserId: result.loserId,
-              playerLines: [], events: [],
-            }, $gameStore.protagonist.leagueId);
+            const matchResult = { homeScore: result.homeScore, awayScore: result.awayScore, winnerId: result.winnerId, loserId: result.loserId, playerLines: [], events: [] };
+            if (entry.isFriendly) {
+              const leagueId = $gameStore.protagonist.leagueId;
+              const lState = $seasonStore.leagueState[leagueId];
+              seasonStore.applyFriendlyResult(schedId, matchResult, leagueId, entry.homeTeamId, entry.awayTeamId, (lState?.teamRotationIndex?.[entry.homeTeamId] ?? 0) + 1, (lState?.teamRotationIndex?.[entry.awayTeamId] ?? 0) + 1, null);
+            } else {
+              seasonStore.applyMatchResult(schedId, matchResult, $gameStore.protagonist.leagueId);
+            }
           }
           await gameStore.save(); await seasonStore.save();
         }}>등판 회피</button>

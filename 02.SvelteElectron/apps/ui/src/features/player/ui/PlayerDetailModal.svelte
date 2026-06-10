@@ -11,7 +11,7 @@
   function handleOverlayClick(e: MouseEvent) { if (e.target === e.currentTarget) close(); }
   function handleKeydown(e: KeyboardEvent) { if (e.key === "Escape") close(); }
 
-  type ModalTab = "stats" | "record";
+  type ModalTab = "stats" | "record" | "history";
   let modalTab: ModalTab = "stats";
   $: if (entityId) modalTab = "stats";
 
@@ -108,7 +108,8 @@
       .filter((e) => {
         if (!e.result || seen.has(e.id)) return false;
         seen.add(e.id);
-        return e.homeTeamId === teamId || e.awayTeamId === teamId;
+        return (e.homeTeamId === teamId || e.awayTeamId === teamId)
+          && !!e.result.playerLines.some((l) => l.playerId === entityId);
       })
       .sort((a, b) => b.week - a.week)
       .slice(0, 5);
@@ -233,6 +234,9 @@
         <button class:mtab-active={modalTab === "record"} on:click={() => (modalTab = "record")}>
           {isPlayer ? "기록" : "경력"}
         </button>
+        {#if isPlayer}
+          <button class:mtab-active={modalTab === "history"} on:click={() => (modalTab = "history")}>연도별 성적</button>
+        {/if}
       </nav>
 
       {#if modalTab === "stats"}
@@ -579,6 +583,84 @@
             </section>
           {/if}
 
+      {:else if modalTab === "history" && isPlayer}
+        <!-- ══ TAB 3: 연도별 성적 ══ -->
+        {@const historyEntries = (() => {
+          if (isProtagonistModal) {
+            return [...($gameStore.protagonist.careerRecords ?? [])]
+              .reverse()
+              .slice(0, 5)
+              .map((r) => ({
+                year: r.year,
+                leagueId: r.leagueId,
+                teamId: r.teamId,
+                statLine: r.statLine,
+                rank: r.rank,
+                totalTeams: r.totalTeams,
+                stats: r.stats,
+              }));
+          }
+          return [...(modalNpcSave?.careerHistory ?? [])]
+            .reverse()
+            .slice(0, 5)
+            .map((r) => ({
+              year: r.year,
+              leagueId: r.leagueId,
+              teamId: r.teamId,
+              statLine: r.statLine,
+              rank: undefined,
+              totalTeams: undefined,
+              stats: r.stats,
+            }));
+        })()}
+
+        <section class="modal-section">
+          <h4>연도별 성적 (최근 5년)</h4>
+          {#if historyEntries.length === 0}
+            <p class="modal-pending">시즌 기록 없음</p>
+          {:else}
+            <table class="career-table history-table">
+              <thead>
+                <tr>
+                  <th>연도</th><th>리그</th><th>팀</th>
+                  {#if historyEntries[0]?.stats?.type === "pitcher" || (!historyEntries[0]?.stats && isPitcher)}
+                    <th>G</th><th>W</th><th>L</th><th>SV</th><th>IP</th><th>ERA</th><th>K</th><th>BB</th><th>WHIP</th>
+                  {:else}
+                    <th>G</th><th>AVG</th><th>HR</th><th>RBI</th><th>OPS</th><th>SB</th>
+                  {/if}
+                  <th>순위</th>
+                </tr>
+              </thead>
+              <tbody>
+                {#each historyEntries as entry}
+                  {@const st = entry.stats}
+                  <tr>
+                    <td>{entry.year}</td>
+                    <td class="league-cell">{LEAGUE_DISPLAY[entry.leagueId] ?? entry.leagueId}</td>
+                    <td>{teamById.get(entry.teamId) ?? entry.teamId}</td>
+                    {#if st?.type === "pitcher"}
+                      <td>{st.g}</td><td>{st.w}</td><td>{st.l}</td><td>{st.sv ?? 0}</td>
+                      <td>{st.ip?.toFixed(1) ?? "-"}</td><td class="era-cell">{st.era?.toFixed(2) ?? "-"}</td>
+                      <td>{st.k}</td><td>{st.bb}</td><td>{st.whip?.toFixed(2) ?? "-"}</td>
+                    {:else if st?.type === "batter"}
+                      <td>{st.g}</td><td class="avg-cell">{st.avg?.toFixed(3)?.replace(/^0/,"") ?? "-"}</td>
+                      <td>{st.hr}</td><td>{st.rbi}</td>
+                      <td>{st.ops?.toFixed(3)?.replace(/^0/,"") ?? "-"}</td><td>{st.sb}</td>
+                    {:else}
+                      <td colspan="9" class="stat-summary">{entry.statLine || "-"}</td>
+                    {/if}
+                    <td class="rank-cell">
+                      {#if entry.rank && entry.totalTeams}{entry.rank}/{entry.totalTeams}
+                      {:else if entry.rank}{entry.rank}위
+                      {:else}-{/if}
+                    </td>
+                  </tr>
+                {/each}
+              </tbody>
+            </table>
+          {/if}
+        </section>
+
         {:else}
           {#if mc?.trainingBuffs}
             <section class="modal-section">
@@ -687,6 +769,13 @@
   .pitch-badge.grade-1 { border-color: #3a4060; background: #10142a; color: #6878a8; }
   .pitch-badge.grade-1 .badge-grade { color: #485878; }
   .game-table, .career-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .history-table th, .history-table td { text-align: center; }
+  .history-table td:nth-child(3) { text-align: left; }
+  .era-cell  { color: #68de92; font-weight: 700; }
+  .avg-cell  { color: #80b8f8; font-weight: 700; }
+  .rank-cell { color: #9fb4d8; font-size: 11px; }
+  .league-cell { font-size: 11px; color: #6080a0; }
+  .stat-summary { color: #8aa4cc; text-align: left; font-style: italic; }
   .game-table th, .career-table th { color: #9fb4d8; padding: 5px 8px; text-align: left; border-bottom: 1px solid #253451; font-weight: 500; }
   .game-table td, .career-table td { color: #d8e8ff; padding: 6px 8px; border-bottom: 1px solid #1a2e4a; }
   .game-table tr:last-child td, .career-table tr:last-child td { border-bottom: none; }

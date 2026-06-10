@@ -188,7 +188,8 @@
       .filter((e) => {
         if (!e.result || seen.has(e.id)) return false;
         seen.add(e.id);
-        return e.homeTeamId === teamId || e.awayTeamId === teamId;
+        return (e.homeTeamId === teamId || e.awayTeamId === teamId)
+          && !!e.result.playerLines.some((l) => l.playerId === modalEntityId);
       })
       .sort((a, b) => b.week - a.week)
       .slice(0, 5);

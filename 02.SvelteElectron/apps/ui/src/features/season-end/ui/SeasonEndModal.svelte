@@ -224,7 +224,7 @@
       ovr:    p.pitching.ovr,
       awards: protagonistAwards,
       psResult: postseasonResult?.myResult,
-    });
+    }, mySeasonSt ?? undefined);
 
     // ── 독립리그: KBL 스카우트 제의 / 재계약 / 방출 ──────────────
     if (p.careerStage === "independent") {
