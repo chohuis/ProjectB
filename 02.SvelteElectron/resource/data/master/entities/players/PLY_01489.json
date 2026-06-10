@@ -49,6 +49,17 @@
       "primaryPosition": "2B",
       "positionRatings": {
         "2B": 68
+      },
+      "proServiceYears": 12,
+      "contract": {
+        "salary": 6300,
+        "durationYears": 1,
+        "remainingYears": 1,
+        "signingBonus": 0,
+        "teamOptionYears": 0,
+        "playerOptionYears": 0,
+        "noTrade": false,
+        "status": "active"
       }
     },
     "coach": {

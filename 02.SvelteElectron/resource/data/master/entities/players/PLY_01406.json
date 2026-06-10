@@ -67,7 +67,18 @@
           "id": "PITCH_SLIDER",
           "grade": 5
         }
-      ]
+      ],
+      "proServiceYears": 15,
+      "contract": {
+        "salary": 30200,
+        "durationYears": 4,
+        "remainingYears": 4,
+        "signingBonus": 0,
+        "teamOptionYears": 0,
+        "playerOptionYears": 0,
+        "noTrade": false,
+        "status": "active"
+      }
     },
     "coach": {
       "specialty": "-",

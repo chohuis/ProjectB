@@ -59,7 +59,18 @@
           "id": "PITCH_CHANGEUP",
           "grade": 3
         }
-      ]
+      ],
+      "proServiceYears": 10,
+      "contract": {
+        "salary": 8400,
+        "durationYears": 4,
+        "remainingYears": 4,
+        "signingBonus": 0,
+        "teamOptionYears": 0,
+        "playerOptionYears": 0,
+        "noTrade": false,
+        "status": "active"
+      }
     },
     "coach": {
       "specialty": "-",

@@ -71,7 +71,18 @@
           "id": "PITCH_CUTTER",
           "grade": 2
         }
-      ]
+      ],
+      "proServiceYears": 5,
+      "contract": {
+        "salary": 5800,
+        "durationYears": 3,
+        "remainingYears": 2,
+        "signingBonus": 0,
+        "teamOptionYears": 0,
+        "playerOptionYears": 0,
+        "noTrade": false,
+        "status": "active"
+      }
     },
     "coach": {
       "specialty": "-",

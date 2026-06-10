@@ -49,6 +49,17 @@
       "primaryPosition": "3B",
       "positionRatings": {
         "3B": 87
+      },
+      "proServiceYears": 1,
+      "contract": {
+        "salary": 19400,
+        "durationYears": 3,
+        "remainingYears": 3,
+        "signingBonus": 0,
+        "teamOptionYears": 0,
+        "playerOptionYears": 0,
+        "noTrade": false,
+        "status": "active"
       }
     },
     "coach": {

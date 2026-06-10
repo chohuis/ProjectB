@@ -49,6 +49,17 @@
       "primaryPosition": "1B",
       "positionRatings": {
         "1B": 79
+      },
+      "proServiceYears": 15,
+      "contract": {
+        "salary": 3800,
+        "durationYears": 2,
+        "remainingYears": 1,
+        "signingBonus": 0,
+        "teamOptionYears": 0,
+        "playerOptionYears": 0,
+        "noTrade": false,
+        "status": "active"
       }
     },
     "coach": {

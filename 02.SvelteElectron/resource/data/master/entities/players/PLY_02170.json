@@ -71,7 +71,18 @@
           "id": "PITCH_SCREWBALL",
           "grade": 2
         }
-      ]
+      ],
+      "proServiceYears": 8,
+      "contract": {
+        "salary": 34000,
+        "durationYears": 4,
+        "remainingYears": 4,
+        "signingBonus": 0,
+        "teamOptionYears": 0,
+        "playerOptionYears": 0,
+        "noTrade": false,
+        "status": "active"
+      }
     },
     "coach": {
       "specialty": "-",

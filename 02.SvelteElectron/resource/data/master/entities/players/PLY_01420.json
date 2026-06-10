@@ -49,6 +49,17 @@
       "primaryPosition": "C",
       "positionRatings": {
         "C": 81
+      },
+      "proServiceYears": 9,
+      "contract": {
+        "salary": 14800,
+        "durationYears": 2,
+        "remainingYears": 1,
+        "signingBonus": 0,
+        "teamOptionYears": 0,
+        "playerOptionYears": 0,
+        "noTrade": false,
+        "status": "active"
       }
     },
     "coach": {

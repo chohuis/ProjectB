@@ -49,6 +49,17 @@
       "primaryPosition": "LF",
       "positionRatings": {
         "LF": 79
+      },
+      "proServiceYears": 6,
+      "contract": {
+        "salary": 13200,
+        "durationYears": 2,
+        "remainingYears": 1,
+        "signingBonus": 0,
+        "teamOptionYears": 0,
+        "playerOptionYears": 0,
+        "noTrade": false,
+        "status": "active"
       }
     },
     "coach": {

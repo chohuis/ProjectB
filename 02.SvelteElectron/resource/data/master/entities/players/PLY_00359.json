@@ -49,6 +49,17 @@
       "primaryPosition": "RF",
       "positionRatings": {
         "RF": 60
+      },
+      "proServiceYears": 0,
+      "contract": {
+        "salary": 600,
+        "durationYears": 1,
+        "remainingYears": 1,
+        "signingBonus": 0,
+        "teamOptionYears": 0,
+        "playerOptionYears": 0,
+        "noTrade": false,
+        "status": "active"
       }
     },
     "coach": {

@@ -45,7 +45,18 @@
         "platoon": 52
       },
       "developmentRate": 47,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 0,
+      "contract": {
+        "salary": 3600,
+        "durationYears": 1,
+        "remainingYears": 1,
+        "signingBonus": 0,
+        "teamOptionYears": 0,
+        "playerOptionYears": 0,
+        "noTrade": false,
+        "status": "active"
+      }
     },
     "coach": {
       "specialty": "-",

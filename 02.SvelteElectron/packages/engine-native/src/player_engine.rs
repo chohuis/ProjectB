@@ -215,7 +215,12 @@ pub fn calc_season_rating(params: CalcSeasonRatingParams) -> i64 {
 }
 
 fn league_salary_mult(league_id: &str) -> f64 {
-    match league_id { "LEAGUE_ABL" => 3.5, _ => 1.0 }
+    match league_id {
+        "LEAGUE_ABL"         => 3.5,
+        "LEAGUE_JBL"         => 2.0,
+        "LEAGUE_INDEPENDENT" => 0.35,
+        _                    => 1.0,
+    }
 }
 
 #[derive(Debug, Deserialize)]

@@ -49,6 +49,17 @@
       "primaryPosition": "DH",
       "positionRatings": {
         "DH": 79
+      },
+      "proServiceYears": 3,
+      "contract": {
+        "salary": 13200,
+        "durationYears": 2,
+        "remainingYears": 1,
+        "signingBonus": 0,
+        "teamOptionYears": 0,
+        "playerOptionYears": 0,
+        "noTrade": false,
+        "status": "active"
       }
     },
     "coach": {

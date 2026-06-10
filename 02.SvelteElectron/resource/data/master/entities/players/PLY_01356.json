@@ -49,6 +49,17 @@
       "primaryPosition": "SS",
       "positionRatings": {
         "SS": 70
+      },
+      "proServiceYears": 11,
+      "contract": {
+        "salary": 6300,
+        "durationYears": 2,
+        "remainingYears": 1,
+        "signingBonus": 0,
+        "teamOptionYears": 0,
+        "playerOptionYears": 0,
+        "noTrade": false,
+        "status": "active"
       }
     },
     "coach": {

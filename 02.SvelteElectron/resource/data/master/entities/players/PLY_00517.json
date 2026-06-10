@@ -59,7 +59,18 @@
           "id": "PITCH_SINKER",
           "grade": 5
         }
-      ]
+      ],
+      "proServiceYears": 11,
+      "contract": {
+        "salary": 8000,
+        "durationYears": 3,
+        "remainingYears": 2,
+        "signingBonus": 0,
+        "teamOptionYears": 0,
+        "playerOptionYears": 0,
+        "noTrade": false,
+        "status": "active"
+      }
     },
     "coach": {
       "specialty": "-",

@@ -59,7 +59,18 @@
           "id": "PITCH_KNUCKLEBALL",
           "grade": 5
         }
-      ]
+      ],
+      "proServiceYears": 4,
+      "contract": {
+        "salary": 19400,
+        "durationYears": 3,
+        "remainingYears": 1,
+        "signingBonus": 0,
+        "teamOptionYears": 0,
+        "playerOptionYears": 0,
+        "noTrade": false,
+        "status": "active"
+      }
     },
     "coach": {
       "specialty": "-",

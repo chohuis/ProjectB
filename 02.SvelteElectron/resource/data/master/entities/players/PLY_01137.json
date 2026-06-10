@@ -67,7 +67,18 @@
           "id": "PITCH_SPLITTER",
           "grade": 5
         }
-      ]
+      ],
+      "proServiceYears": 4,
+      "contract": {
+        "salary": 25600,
+        "durationYears": 3,
+        "remainingYears": 2,
+        "signingBonus": 0,
+        "teamOptionYears": 0,
+        "playerOptionYears": 0,
+        "noTrade": false,
+        "status": "active"
+      }
     },
     "coach": {
       "specialty": "-",

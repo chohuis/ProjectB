@@ -129,6 +129,17 @@ export interface EntityCoachDetails {
   trainingBuffs: string;
 }
 
+export interface NpcContract {
+  salary: number;
+  durationYears: number;
+  remainingYears: number;
+  signingBonus: number;
+  teamOptionYears: number;
+  playerOptionYears: number;
+  noTrade: boolean;
+  status: "active" | "expired";
+}
+
 export interface EntityPlayerDetails {
   playerType: "pitcher" | "batter" | "twoWay";
   handedness: "L" | "R";
@@ -142,6 +153,8 @@ export interface EntityPlayerDetails {
   popularity?: number;
   developmentRate: number;
   potentialHidden: number;
+  proServiceYears?: number;
+  contract?: NpcContract;
 }
 
 export interface EntityDetails {

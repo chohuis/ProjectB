@@ -59,7 +59,18 @@
           "id": "PITCH_FORKBALL",
           "grade": 5
         }
-      ]
+      ],
+      "proServiceYears": 13,
+      "contract": {
+        "salary": 6400,
+        "durationYears": 3,
+        "remainingYears": 2,
+        "signingBonus": 0,
+        "teamOptionYears": 0,
+        "playerOptionYears": 0,
+        "noTrade": false,
+        "status": "active"
+      }
     },
     "coach": {
       "specialty": "-",

@@ -49,6 +49,17 @@
       "primaryPosition": "CF",
       "positionRatings": {
         "CF": 75
+      },
+      "proServiceYears": 5,
+      "contract": {
+        "salary": 10200,
+        "durationYears": 2,
+        "remainingYears": 1,
+        "signingBonus": 0,
+        "teamOptionYears": 0,
+        "playerOptionYears": 0,
+        "noTrade": false,
+        "status": "active"
       }
     },
     "coach": {
