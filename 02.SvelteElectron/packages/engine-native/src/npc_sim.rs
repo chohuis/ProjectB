@@ -554,6 +554,54 @@ fn is_kbl_farm_team(team_id: &str) -> bool {
     )
 }
 
+fn abl_farm_team(team_id: &str) -> Option<&'static str> {
+    match team_id {
+        "TEAM_ABL_EMPIRE_1"           => Some("TEAM_ABL_EMPIRE_2"),
+        "TEAM_ABL_HARBORHAWKS_1"      => Some("TEAM_ABL_HARBORHAWKS_2"),
+        "TEAM_ABL_SUNDRAGONS_1"       => Some("TEAM_ABL_SUNDRAGONS_2"),
+        "TEAM_ABL_WINDBEARS_1"        => Some("TEAM_ABL_WINDBEARS_2"),
+        "TEAM_ABL_SPACECOMETS_1"      => Some("TEAM_ABL_SPACECOMETS_2"),
+        "TEAM_ABL_PEACHTREEFALCONS_1" => Some("TEAM_ABL_PEACHTREEFALCONS_2"),
+        "TEAM_ABL_LONESTARS_1"        => Some("TEAM_ABL_LONESTARS_2"),
+        "TEAM_ABL_RAINARROWS_1"       => Some("TEAM_ABL_RAINARROWS_2"),
+        "TEAM_ABL_BAYSEALS_1"         => Some("TEAM_ABL_BAYSEALS_2"),
+        "TEAM_ABL_WAVERIDERS_1"       => Some("TEAM_ABL_WAVERIDERS_2"),
+        "TEAM_ABL_MOTORWOLVES_1"      => Some("TEAM_ABL_MOTORWOLVES_2"),
+        "TEAM_ABL_MOUNTAINPEAKS_1"    => Some("TEAM_ABL_MOUNTAINPEAKS_2"),
+        "TEAM_ABL_LAKESPIRITS_1"      => Some("TEAM_ABL_LAKESPIRITS_2"),
+        "TEAM_ABL_COASTALRAYS_1"      => Some("TEAM_ABL_COASTALRAYS_2"),
+        "TEAM_ABL_DESERTSERPENTS_1"   => Some("TEAM_ABL_DESERTSERPENTS_2"),
+        "TEAM_ABL_RIVERCARDINALS_1"   => Some("TEAM_ABL_RIVERCARDINALS_2"),
+        _ => None,
+    }
+}
+
+fn is_abl_farm_team(team_id: &str) -> bool {
+    team_id.starts_with("TEAM_ABL_") && team_id.ends_with("_2")
+}
+
+fn jbl_farm_team(team_id: &str) -> Option<&'static str> {
+    match team_id {
+        "TEAM_JBL_CL_NEONCRANES_1"     => Some("TEAM_JBL_CL_NEONCRANES_2"),
+        "TEAM_JBL_CL_TEMPOSTINGS_1"    => Some("TEAM_JBL_CL_TEMPOSTINGS_2"),
+        "TEAM_JBL_CL_IRONDRAKES_1"     => Some("TEAM_JBL_CL_IRONDRAKES_2"),
+        "TEAM_JBL_CL_TIDERAVES_1"      => Some("TEAM_JBL_CL_TIDERAVES_2"),
+        "TEAM_JBL_CL_SILVERWOLVES_1"   => Some("TEAM_JBL_CL_SILVERWOLVES_2"),
+        "TEAM_JBL_CL_IRONSTORMS_1"     => Some("TEAM_JBL_CL_IRONSTORMS_2"),
+        "TEAM_JBL_PL_THUNDERFALCONS_1" => Some("TEAM_JBL_PL_THUNDERFALCONS_2"),
+        "TEAM_JBL_PL_POLARBEARS_1"     => Some("TEAM_JBL_PL_POLARBEARS_2"),
+        "TEAM_JBL_PL_SPIRITBUFFALOS_1" => Some("TEAM_JBL_PL_SPIRITBUFFALOS_2"),
+        "TEAM_JBL_PL_MARINESOLDIERS_1" => Some("TEAM_JBL_PL_MARINESOLDIERS_2"),
+        "TEAM_JBL_PL_SEAGULLS_1"       => Some("TEAM_JBL_PL_SEAGULLS_2"),
+        "TEAM_JBL_PL_SUNS_1"           => Some("TEAM_JBL_PL_SUNS_2"),
+        _ => None,
+    }
+}
+
+fn is_jbl_farm_team(team_id: &str) -> bool {
+    team_id.starts_with("TEAM_JBL_") && team_id.ends_with("_2")
+}
+
 fn roster_rule(league_id: &str) -> Option<(i32, i32)> {
     match league_id {
         "LEAGUE_HIGHSCHOOL"  => Some((18, 30)),
@@ -561,6 +609,7 @@ fn roster_rule(league_id: &str) -> Option<(i32, i32)> {
         "LEAGUE_INDEPENDENT" => Some((18, 45)),
         "LEAGUE_KBL"         => Some((40, 65)),
         "LEAGUE_ABL"         => Some((50, 90)),
+        "LEAGUE_JBL"         => Some((45, 80)),
         _ => None,
     }
 }
@@ -641,9 +690,27 @@ fn normalize_offseason_npcs(
                         npc.current_team   = "".into();
                     }
                 } else if league_id == "LEAGUE_ABL" {
-                    logs.push(format!("{} → 독립리그 (ABL 로스터 초과)", npc.name));
-                    npc.current_league = "LEAGUE_INDEPENDENT".into();
-                    npc.current_team   = "".into();
+                    if let Some(farm) = abl_farm_team(&npc.current_team) {
+                        logs.push(format!("{} → ABL 2군 강등", npc.name));
+                        npc.current_team = farm.into();
+                    } else {
+                        logs.push(format!("{} 은퇴 (ABL 로스터 초과)", npc.name));
+                        npc.career_status  = "retired".into();
+                        npc.current_league = "LEAGUE_RETIRED".into();
+                        npc.current_team   = "".into();
+                        summary.retired_count += 1;
+                    }
+                } else if league_id == "LEAGUE_JBL" {
+                    if let Some(farm) = jbl_farm_team(&npc.current_team) {
+                        logs.push(format!("{} → JBL 2군 강등", npc.name));
+                        npc.current_team = farm.into();
+                    } else {
+                        logs.push(format!("{} 은퇴 (JBL 로스터 초과)", npc.name));
+                        npc.career_status  = "retired".into();
+                        npc.current_league = "LEAGUE_RETIRED".into();
+                        npc.current_team   = "".into();
+                        summary.retired_count += 1;
+                    }
                 } else {
                     logs.push(format!("{} 은퇴 (로스터 초과)", npc.name));
                     npc.career_status  = "retired".into();
@@ -710,7 +777,10 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         // 4. 에이징: 월간 감퇴(calc_monthly_npc_growth)로 이관, 오프시즌 중복 처리 제거
 
         // 5. 프로 연차 + FA
-        if n.current_league == "LEAGUE_KBL" || n.current_league == "LEAGUE_ABL" {
+        if n.current_league == "LEAGUE_KBL"
+            || n.current_league == "LEAGUE_ABL"
+            || n.current_league == "LEAGUE_JBL"
+        {
             n.pro_service_years = Some(n.pro_service_years.unwrap_or(0) + 1);
             if n.pro_service_years.unwrap_or(0) >= 9 && rng.gen::<f64>() < 0.6 {
                 n.current_league = "LEAGUE_FREE_AGENT".into();
@@ -989,6 +1059,20 @@ fn estimate_salary_and_contract(ovr: f64, league: &str, rng: &mut LcgRand) -> (i
                 let salary = ((ovr - 40.0) * 80.0 + 800.0).max(800.0).round() as i64;
                 let years  = 1 + (rng.next() * 2.0) as i32;  // 1~2
                 (salary, years)
+            }
+        },
+        "LEAGUE_JBL" => {
+            if ovr >= 75.0 {
+                let salary = ((ovr - 50.0) * 290.0 + 2400.0).round() as i64;
+                let years  = 2 + (rng.next() * 3.0) as i32;  // 2~4
+                (salary, years)
+            } else if ovr >= 68.0 {
+                let salary = ((ovr - 50.0) * 165.0 + 1200.0).round() as i64;
+                let years  = 1 + (rng.next() * 2.0) as i32;  // 1~2
+                (salary, years)
+            } else {
+                let salary = ((ovr - 40.0) * 70.0 + 650.0).max(650.0).round() as i64;
+                (salary, 1)
             }
         },
         "LEAGUE_INDEPENDENT" => {
