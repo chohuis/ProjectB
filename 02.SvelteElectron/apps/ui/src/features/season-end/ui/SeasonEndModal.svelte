@@ -237,6 +237,34 @@
       await gameStore.applyAgingDecay();
       gameStore.advanceSeasonYear($seasonStore.seasonYear);
 
+      // ── 2군 리그 우승팀 발표 메시지 ────────────────────────────
+      const FARM_LEAGUE_NAMES: Record<string, string> = {
+        LEAGUE_KBL_FARM: "KBL 2군", LEAGUE_ABL_FARM: "ABL 마이너", LEAGUE_JBL_FARM: "JBL 2군",
+      };
+      for (const [lid, label] of Object.entries(FARM_LEAGUE_NAMES)) {
+        const ls = $seasonStore.leagueState[lid];
+        if (!ls || ls.standings.length === 0) continue;
+        const sorted = [...ls.standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
+        if (!sorted.some((s) => s.wins + s.losses > 0)) continue;
+        const champion = $masterStore.teams.find((t) => t.id === sorted[0].teamId)?.name ?? sorted[0].teamId;
+        const runnerUp = sorted[1]
+          ? ($masterStore.teams.find((t) => t.id === sorted[1].teamId)?.name ?? sorted[1].teamId)
+          : "-";
+        gameStore.addMessage({
+          id: `msg-farm-champion-${lid}-${now}`,
+          category: "news", sender: "리그 사무국",
+          subject: `${now} ${label} 시즌 종료`,
+          preview: `${label} 우승: ${champion}`,
+          body: [
+            `${now} ${label} 정규리그가 종료되었습니다.`,
+            ``,
+            `우승: ${champion}  (${sorted[0].wins}승 ${sorted[0].losses}패)`,
+            `준우승: ${runnerUp}`,
+          ].join("\n"),
+          createdAt: `W${$seasonStore.currentWeek}`, readAt: null,
+        });
+      }
+
       const pending = p.pendingNextContract;
       if (pending) {
         gameStore.applyPendingNextContract();

@@ -21,7 +21,11 @@
   const PRO_LEAGUES = new Set([
     "LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL",
     "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT",
+    "LEAGUE_KBL_FARM", "LEAGUE_ABL_FARM", "LEAGUE_JBL_FARM",
   ]);
+
+  const FARM_LEAGUES = new Set(["LEAGUE_KBL_FARM", "LEAGUE_ABL_FARM", "LEAGUE_JBL_FARM"]);
+  function isFarmLeague(lid: string): boolean { return FARM_LEAGUES.has(lid); }
 
   $: lockedLeagueSet = new Set<string>();
 
@@ -44,6 +48,9 @@
       LEAGUE_KBL:         "KBL",
       LEAGUE_ABL:         "ABL",
       LEAGUE_JBL:         "JBL",
+      LEAGUE_KBL_FARM:    "KBL 2군",
+      LEAGUE_ABL_FARM:    "ABL 마이너",
+      LEAGUE_JBL_FARM:    "JBL 2군",
     };
     return map[lid] ?? lid;
   }
@@ -56,6 +63,9 @@
       LEAGUE_KBL:         "KBL",
       LEAGUE_ABL:         "ABL",
       LEAGUE_JBL:         "JBL",
+      LEAGUE_KBL_FARM:    "KBL 2군",
+      LEAGUE_ABL_FARM:    "ABL 마이너",
+      LEAGUE_JBL_FARM:    "JBL 2군",
     };
     return map[lid] ?? lid;
   }
@@ -68,12 +78,13 @@
     .filter((s) => ($seasonStore.hsGroupB ?? []).includes(s.teamId))
     .sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
 
-  // ── 멀티리그 순위표 ────────────────────────────────────────────
+  // ── 멀티리그 순위표 ─────────────────────────────────────────
+  // farm 리그는 1군 뒤에 표시, 내 리그가 맨 앞
   $: allLeagueIds = (() => {
-    const all = [
-      myLeagueId,
-      ...Object.keys($seasonStore.leagueState).filter((lid) => lid !== myLeagueId),
-    ].filter(Boolean);
+    const keys = Object.keys($seasonStore.leagueState).filter(Boolean);
+    const main = [myLeagueId, ...keys.filter((lid) => lid !== myLeagueId && !isFarmLeague(lid))];
+    const farm = keys.filter(isFarmLeague);
+    const all  = [...main, ...farm];
     if (lockedLeagueSet.size === 0) return all;
     return [
       ...all.filter((lid) => !lockedLeagueSet.has(lid)),
@@ -93,9 +104,10 @@
   $: selectedStandings = getLeagueStandings(selectedLeagueId || myLeagueId);
 
   // ── 스탯 리더보드 ─────────────────────────────────────────────
+  // leaderboard는 farm 리그 제외 (배경 시뮬 전용)
   $: lbLeagueIds = (() => {
     const others = Object.keys($seasonStore.leagueState)
-      .filter((lid) => lid !== myLeagueId && !lockedLeagueSet.has(lid));
+      .filter((lid) => lid !== myLeagueId && !lockedLeagueSet.has(lid) && !isFarmLeague(lid));
     return [myLeagueId, ...others].filter(Boolean);
   })();
 
@@ -188,9 +200,11 @@
         <nav class="league-nav">
           {#each allLeagueIds as lid}
             {@const locked = isLocked(lid)}
+            {@const farm   = isFarmLeague(lid)}
             <button
               class:active={!locked && selectedLeagueId === lid}
               class:locked={locked}
+              class:farm-btn={farm}
               on:click={() => { if (!locked) selectedLeagueId = lid; }}
               title={locked ? "3학년 진급 후 열람 가능" : undefined}
             >
@@ -198,6 +212,7 @@
               {leagueName(lid)}
               {#if !locked && lid === myLeagueId}<span class="my-badge">내 리그</span>{/if}
               {#if locked}<span class="lock-hint">3학년↑</span>{/if}
+              {#if farm}<span class="farm-badge">2군</span>{/if}
             </button>
           {/each}
         </nav>
@@ -495,6 +510,22 @@
     color: #f0e060;
     background: rgba(240,224,96,0.15);
     border-radius: 4px;
+    padding: 1px 4px;
+    display: block;
+  }
+
+  .league-nav button.farm-btn {
+    border-color: #1e3a2e;
+    background: #0f1e18;
+    color: #80b898;
+  }
+  .league-nav button.farm-btn.active { background: #1a3828; border-color: #3a7a58; color: #a8e8c0; }
+
+  .farm-badge {
+    font-size: 9px;
+    color: #60c080;
+    background: rgba(96,192,128,0.15);
+    border-radius: 3px;
     padding: 1px 4px;
     display: block;
   }
