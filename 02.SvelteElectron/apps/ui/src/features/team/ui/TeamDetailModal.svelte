@@ -59,7 +59,7 @@
         teamId: p.teamId, age: p.age, status: "active" as const,
         originLeagueId: p.leagueId, leagueId: p.leagueId,
         clubId: "", schoolId: p.schoolId ?? "", grade: p.grade, notes: "",
-        details: { player: { position: p.position, playerType: p.playerType, pitching: p.pitching, batting: p.batting, developmentRate: p.developmentRate, potentialHidden: p.potentialHidden, handedness: p.handedness, jerseyNumber: p.jerseyNumber } } as any,
+        details: { player: { position: p.position, playerType: p.playerType, pitching: p.pitching, batting: p.batting, developmentRate: p.developmentRate, potentialHidden: p.potentialHidden, handedness: p.handedness, jerseyNumber: p.jerseyNumber }, coach: null, manager: null, owner: null },
       }] : []),
       ...$masterStore.entities.filter((e) => e.teamId === teamId),
     ];
@@ -71,18 +71,18 @@
   })();
 
   $: manager = allMembers.find((e) => e.role === "manager");
-  $: managerDetails = manager ? (manager.details as any).manager as EntityManagerDetails : null;
+  $: managerDetails = manager ? (manager.details as EntityDetails).manager : null;
 
   function playerOvr(row: EntityRow): number {
-    const d = (row.details as any)?.player as EntityPlayerDetails | undefined;
+    const d = (row.details as EntityDetails)?.player;
     if (!d) return 0;
     return d.playerType === "batter" ? (d.batting?.ovr ?? 0) : (d.pitching?.ovr ?? 0);
   }
   function playerPos(row: EntityRow): string {
-    return ((row.details as any)?.player as EntityPlayerDetails | undefined)?.position ?? "-";
+    return (row.details as EntityDetails)?.player?.position ?? "-";
   }
   function playerType(row: EntityRow): "pitcher" | "batter" | "twoWay" {
-    return ((row.details as any)?.player as EntityPlayerDetails | undefined)?.playerType ?? "pitcher";
+    return (row.details as EntityDetails)?.player?.playerType ?? "pitcher";
   }
 
   // ── 선발라인업 ────────────────────────────────────────────────
@@ -156,7 +156,7 @@
     }
 
     const bs = (p: EntityRow) => {
-      const b = ((p.details as any)?.player as any)?.batting;
+      const b = (p.details as EntityDetails)?.player?.batting;
       return { spd: b?.speed ?? 50, con: b?.contact ?? 50, pow: b?.power ?? 50, eye: b?.eye ?? 50, ovr: b?.ovr ?? 50, clu: b?.battingClutch ?? 50 };
     };
     const scoreFns: Record<number, (p: EntityRow) => number> = {
@@ -433,7 +433,7 @@
                 </thead>
                 <tbody>
                   {#each allMembers.filter(e => e.role !== "owner") as row}
-                    {@const d = (row.details as any)?.player as EntityPlayerDetails | undefined}
+                    {@const d = (row.details as EntityDetails)?.player}
                     <tr
                       class:hero={row.id === $gameStore.protagonist.id}
                       class:clickable={row.role === "player"}

@@ -68,7 +68,7 @@
   $: scores = info?.inningScores ?? { home: [], away: [] };
 
   // 타자 성적 목록 생성
-  function buildBatterRows(lineup: { id: string; name: string }[], accum: Record<string, any>) {
+  function buildBatterRows(lineup: { id: string; name: string }[], accum: Record<string, { ab?: number; h?: number; hr?: number; rbi?: number; bb?: number }>) {
     return lineup.map(r => {
       const s = accum[r.id] ?? { ab: 0, h: 0, hr: 0, rbi: 0, bb: 0 };
       return { name: r.name, ab: s.ab ?? 0, h: s.h ?? 0, hr: s.hr ?? 0, rbi: s.rbi ?? 0, bb: s.bb ?? 0 };

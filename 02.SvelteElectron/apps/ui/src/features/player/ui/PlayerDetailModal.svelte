@@ -2,6 +2,7 @@
   import { createEventDispatcher } from "svelte";
   import { gameStore } from "../../../shared/stores/game";
   import { masterStore } from "../../../shared/stores/master";
+  import type { EntityDetails } from "../../../shared/stores/master";
   import { seasonStore } from "../../../shared/stores/season";
 
   export let entityId: string = "";
@@ -67,7 +68,8 @@
           diligence: p.diligence, popularity: p.popularity,
           developmentRate: p.developmentRate, potentialHidden: p.potentialHidden,
         },
-      } as any,
+        coach: null, manager: null, owner: null,
+      },
     };
   })();
 
@@ -82,7 +84,7 @@
   $: modalStats = modalEntity
     ? ($seasonStore.stats[modalEntity.id]
         ?? Object.values($seasonStore.leagueState ?? {})
-            .map((ls) => (ls as any).stats?.[modalEntity!.id])
+            .map((ls) => (ls as { stats?: Record<string, unknown> }).stats?.[modalEntity!.id])
             .find(Boolean)
         ?? null)
     : null;
@@ -98,7 +100,7 @@
         .slice(0, 5);
     }
     const teamId   = modalEntity.teamId ?? "";
-    const leagueId = (modalEntity as any)?.leagueId ?? (modalEntity as any)?.originLeagueId ?? "";
+    const leagueId = modalEntity?.leagueId ?? modalEntity?.originLeagueId ?? "";
     const entries = [
       ...($seasonStore.leagueSchedules[leagueId] ?? []),
       ...$seasonStore.schedule.filter((e) => e.leagueId === leagueId),
@@ -118,7 +120,7 @@
   $: modalTeamRank = (() => {
     if (!modalEntity) return null;
     const teamId   = modalEntity.teamId;
-    const leagueId = (modalEntity as any)?.leagueId ?? (modalEntity as any)?.originLeagueId ?? "";
+    const leagueId = modalEntity?.leagueId ?? modalEntity?.originLeagueId ?? "";
     let standings = $seasonStore.standings;
     if (!standings.find((s) => s.teamId === teamId)) {
       const ls = ($seasonStore.leagueState ?? {})[leagueId];
@@ -190,9 +192,9 @@
 <svelte:window on:keydown={handleKeydown} />
 
 {#if modalEntity}
-  {@const mp = (modalEntity.details as any)?.player}
-  {@const mc = (modalEntity.details as any)?.coach}
-  {@const mm = (modalEntity.details as any)?.manager}
+  {@const mp = (modalEntity.details as EntityDetails)?.player}
+  {@const mc = (modalEntity.details as EntityDetails)?.coach}
+  {@const mm = (modalEntity.details as EntityDetails)?.manager}
   {@const isPlayer = modalEntity.role === "player" && !!mp}
   {@const isPitcher = isPlayer && (mp.playerType === "pitcher" || mp.playerType === "twoWay")}
   {@const isBatter  = isPlayer && (mp.playerType === "batter"  || mp.playerType === "twoWay")}

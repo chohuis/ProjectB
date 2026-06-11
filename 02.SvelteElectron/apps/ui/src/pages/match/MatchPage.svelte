@@ -6,7 +6,7 @@
   import { fieldStyleStore, type FieldStyle } from "../../shared/stores/settings";
   import { gameStore } from "../../shared/stores/game";
   import { masterStore } from "../../shared/stores/master";
-  import type { EntityRow } from "../../shared/stores/master";
+  import type { EntityRow, EntityDetails } from "../../shared/stores/master";
   import type { InteractiveMatchContext, InteractiveMatchResult } from "../../shared/types/season";
 
   let fieldStyle: FieldStyle = 'retro';
@@ -375,7 +375,7 @@
     const opponentsInTeam = entities.filter((e: EntityRow) =>
       e.teamId === opponentTeamId &&
       e.role === 'player' &&
-      !pitcherPos.includes(String((e.details as any)?.player?.position ?? ''))
+      !pitcherPos.includes(String((e.details as EntityDetails)?.player?.position ?? ''))
     );
 
     // 상대팀 타자 데이터가 9명 미만이면 리그 전체에서 대체 (seed/blank 대응)
@@ -384,12 +384,12 @@
         ? opponentsInTeam
         : entities.filter((e: EntityRow) =>
             e.role === 'player' &&
-            !pitcherPos.includes(String((e.details as any)?.player?.position ?? ''))
+            !pitcherPos.includes(String((e.details as EntityDetails)?.player?.position ?? ''))
           );
 
     if (opponents.length < 9) return [];
     const sorted = [...opponents].sort((a: EntityRow, b: EntityRow) =>
-      ((b.details as any)?.player?.batting?.ovr ?? 0) - ((a.details as any)?.player?.batting?.ovr ?? 0)
+      ((b.details as EntityDetails)?.player?.batting?.ovr ?? 0) - ((a.details as EntityDetails)?.player?.batting?.ovr ?? 0)
     );
 
     // 포지션 기반 우선 선발, 부족 인원은 OVR 상위로 채움
@@ -398,7 +398,7 @@
     for (const pos of fieldOrder) {
       const found = sorted.find((e) => {
         if (used.has(e.id)) return false;
-        const p = String((e.details as any)?.player?.position ?? "");
+        const p = String((e.details as EntityDetails)?.player?.position ?? "");
         return p === pos;
       });
       if (found) {
@@ -414,7 +414,7 @@
     }
 
     return picked.slice(0, 9).map((e: EntityRow) => {
-      const bat = (e.details as any)?.player?.batting ?? {};
+      const bat = (e.details as EntityDetails)?.player?.batting ?? {};
       return {
         id: e.id,
         name: e.name ?? undefined,
@@ -441,18 +441,18 @@
     const pitchers = entities.filter((e: EntityRow) =>
       e.teamId === teamId &&
       e.role === 'player' &&
-      pitcherPos.includes(String((e.details as any)?.player?.position ?? ''))
+      pitcherPos.includes(String((e.details as EntityDetails)?.player?.position ?? ''))
     );
     if (pitchers.length === 0) return undefined;
     const sorted = [...pitchers].sort((a: EntityRow, b: EntityRow) => {
       const posOrder: Record<string, number> = { SP: 0, RP: 1, CP: 2 };
-      const aDiff = posOrder[String((a.details as any)?.player?.position ?? 'RP')] ?? 1;
-      const bDiff = posOrder[String((b.details as any)?.player?.position ?? 'RP')] ?? 1;
+      const aDiff = posOrder[String((a.details as EntityDetails)?.player?.position ?? 'RP')] ?? 1;
+      const bDiff = posOrder[String((b.details as EntityDetails)?.player?.position ?? 'RP')] ?? 1;
       if (aDiff !== bDiff) return aDiff - bDiff;
-      return ((b.details as any)?.player?.pitching?.ovr ?? 0) - ((a.details as any)?.player?.pitching?.ovr ?? 0);
+      return ((b.details as EntityDetails)?.player?.pitching?.ovr ?? 0) - ((a.details as EntityDetails)?.player?.pitching?.ovr ?? 0);
     });
     const src = sorted[0];
-    const pit = (src.details as any)?.player?.pitching ?? {};
+    const pit = (src.details as EntityDetails)?.player?.pitching ?? {};
     return {
       name: src.name ?? undefined,
       command: pit.command ?? 50,
@@ -476,13 +476,13 @@
       "3B": { x: 22, y: 70 }, SS: { x: 37, y: 55 }, LF: { x: 18, y: 28 }, CF: { x: 50, y: 16 }, RF: { x: 82, y: 28 },
     };
     const pickByPos = (pos: string) =>
-      entities.find((e) => String((e.details as any)?.player?.position ?? "") === pos);
+      entities.find((e) => String((e.details as EntityDetails)?.player?.position ?? "") === pos);
     const pickPitcher = () =>
       pickByPos("SP") ?? pickByPos("RP") ?? pickByPos("CP") ?? entities[0];
 
     return posOrder.map((pos) => {
       const source = pos === "P" ? pickPitcher() : pickByPos(pos);
-      const bat = (source?.details as any)?.player?.batting ?? {};
+      const bat = (source?.details as EntityDetails)?.player?.batting ?? {};
       return {
         position: pos,
         name: source?.name ?? pos,
@@ -1220,8 +1220,8 @@
       }
 
       // 경기 중 부상 처리
-      if ((response as any).midGameInjury) {
-        const inj = (response as any).midGameInjury as { injuryType: string; severity: string };
+      if (response.midGameInjury) {
+        const inj = response.midGameInjury;
         midGameInjuryAlert = inj;
         pushLog(`⚠️ 경기 중 부상 — ${inj.injuryType} (${inj.severity === "light" ? "경상" : inj.severity === "moderate" ? "중상" : "중증"})`, "log-auto");
         await handleGameOver(inj);

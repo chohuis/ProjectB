@@ -200,7 +200,7 @@
         ...(opponentPitcher            ? { opponentPitcher } : {}),
         ...(myNpcStarter               ? { npcStarterPitcher: myNpcStarter } : {}),
       });
-      const result = JSON.parse(raw) as any;
+      const result = JSON.parse(raw) as { error?: string; entryReached?: boolean; homeScore?: number; awayScore?: number; [key: string]: unknown };
       if (result.error) {
         gameSimState    = "error";
         gameSimErrorMsg = result.error;

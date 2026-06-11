@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { createEventDispatcher } from "svelte";
   import { masterStore } from "../../../shared/stores/master";
+  import type { EntityDetails } from "../../../shared/stores/master";
   import { gameStore } from "../../../shared/stores/game";
   import { checkUniversityEligibility, calcHsBaseballScore, pctToGrade, UNIVERSITY_REQUIREMENTS } from "../../../shared/utils/universityUtils";
 
@@ -123,7 +124,7 @@
             </div>
             <div class="roster">
               {#each rosterRows.slice(0, 18) as row}
-                {@const p = (row.details as any)?.player}
+                {@const p = (row.details as EntityDetails)?.player}
                 <div class="roster-row">
                   <strong>{row.name}</strong>
                   <span>{row.role === "player" ? (p?.position ?? "-") : row.role}</span>

@@ -324,11 +324,8 @@
     gameStore.applySeasonHistory($seasonStore.stats, leagueStats, now);
 
     // ── 연간 병역 현황 메시지 (매년 발송) ─────────────────────
-    const offseasonSummary = (window as any).__lastOffseasonSummary as {
-      militaryEnlistedSports?: string[];
-      militaryEnlistedGeneral?: string[];
-      militaryDischargedNames?: string[];
-    } | null;
+    type OffseasonSummary = { militaryEnlistedSports?: string[]; militaryEnlistedGeneral?: string[]; militaryDischargedNames?: string[] };
+    const offseasonSummary = (window as Window & { __lastOffseasonSummary?: OffseasonSummary | null }).__lastOffseasonSummary ?? null;
     if (offseasonSummary) {
       const sports   = offseasonSummary.militaryEnlistedSports ?? [];
       const general  = offseasonSummary.militaryEnlistedGeneral ?? [];
@@ -347,7 +344,7 @@
           createdAt: `Y${now}`, readAt: null,
         });
       }
-      (window as any).__lastOffseasonSummary = null;
+      (window as Window & { __lastOffseasonSummary?: unknown }).__lastOffseasonSummary = null;
     }
     await seasonStore.flushAllLeagueStatsToDb(now);
     await gameStore.processAllLeaguesSeasonEnd(now);

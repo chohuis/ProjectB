@@ -3,7 +3,7 @@
   import { gameStore } from "../../../shared/stores/game";
   import { masterStore } from "../../../shared/stores/master";
   import { seasonStore } from "../../../shared/stores/season";
-  import type { EntityRow } from "../../../shared/stores/master";
+  import type { EntityRow, EntityDetails } from "../../../shared/stores/master";
   import type { NpcSaveState } from "../../../shared/types/save";
   import {
     runDraftBoard,
@@ -93,7 +93,7 @@
   }
 
   function buildFromEntity(e: EntityRow, isUser = false): Candidate {
-    const p = (e.details as any)?.player ?? {};
+    const p = (e.details as EntityDetails)?.player ?? {};
     const pitchOvr = Number(p.pitching?.ovr ?? 0);
     const batOvr = Number(p.batting?.ovr ?? 0);
     return {
@@ -133,7 +133,7 @@
   }
 
   function entityOvr(e: EntityRow): number {
-    const p = (e.details as any)?.player ?? {};
+    const p = (e.details as EntityDetails)?.player ?? {};
     return Math.max(Number(p.pitching?.ovr ?? 0), Number(p.batting?.ovr ?? 0));
   }
 
@@ -200,7 +200,7 @@
         id: heroId,
         name: heroName,
         ovr: $gameStore.protagonist.pitching.ovr,
-        age: ($gameStore.protagonist as any).age ?? 18,
+        age: $gameStore.protagonist.age ?? 18,
         potential: 75,
         isUser: true,
         position: $gameStore.protagonist.position ?? "SP",

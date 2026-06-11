@@ -74,6 +74,8 @@ declare global {
           animationCues: MatchAnimationCue[];
           landingTarget: { x: number; y: number };
         } | null;
+        midGameInjury?: { injuryType: string; severity: string } | null;
+        error?: string;
       }>;
       matchFinish: () => Promise<{ snapshot: MatchSnapshot; summary: string; batterLines?: unknown[]; playerLines?: unknown[] }>;
       matchMoundVisit: () => Promise<{ snapshot: MatchSnapshot } | null>;
@@ -92,9 +94,9 @@ declare global {
       matchAutoFinishFromEntry: () => Promise<string>;
       // ── 게임 저장/불러오기 ──────────────────────────────────
       gameLoad:   () => Promise<SaveGame | null>;
-      gameSave:   (data: SaveGame) => Promise<void>;
+      gameSave:   (data: SaveGame) => Promise<{ ok: boolean; error?: string }>;
       seasonLoad: () => Promise<SaveSeason | null>;
-      seasonSave: (data: SaveSeason) => Promise<void>;
+      seasonSave: (data: SaveSeason) => Promise<{ ok: boolean; error?: string }>;
       listSlots: () => Promise<SaveSlotMeta[]>;
       loadSlot: (slotId: string) => Promise<SaveSlotEnvelope | null>;
       saveSlot: (payload: { slotId: string; game: SaveGame | null; season: SaveSeason | null }) => Promise<{

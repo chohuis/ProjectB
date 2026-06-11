@@ -11,13 +11,16 @@ function register(ipcMain, { db, dbListSlots, dbLoadSlot, dbSaveSlot, signSlot, 
   });
 
   ipcMain.handle("game:save", (_event, data) => {
-    if (!data || typeof data !== "object" || Array.isArray(data)) return;
+    if (!data || typeof data !== "object" || Array.isArray(data))
+      return { ok: false, error: "invalid data" };
     try {
       const cur = dbLoadSlot(db, DEFAULT_SLOT_ID);
       dbSaveSlot(db, DEFAULT_SLOT_ID, data, cur?.season ?? null);
       signSlot(db, DEFAULT_SLOT_ID, data, cur?.season ?? null);
+      return { ok: true };
     } catch (e) {
       console.error("[game:save] 저장 실패:", e);
+      return { ok: false, error: String(e?.message ?? e) };
     }
   });
 
@@ -31,13 +34,16 @@ function register(ipcMain, { db, dbListSlots, dbLoadSlot, dbSaveSlot, signSlot, 
   });
 
   ipcMain.handle("season:save", (_event, data) => {
-    if (!data || typeof data !== "object" || Array.isArray(data)) return;
+    if (!data || typeof data !== "object" || Array.isArray(data))
+      return { ok: false, error: "invalid data" };
     try {
       const cur = dbLoadSlot(db, DEFAULT_SLOT_ID);
       dbSaveSlot(db, DEFAULT_SLOT_ID, cur?.game ?? null, data);
       signSlot(db, DEFAULT_SLOT_ID, cur?.game ?? null, data);
+      return { ok: true };
     } catch (e) {
       console.error("[season:save] 저장 실패:", e);
+      return { ok: false, error: String(e?.message ?? e) };
     }
   });
 

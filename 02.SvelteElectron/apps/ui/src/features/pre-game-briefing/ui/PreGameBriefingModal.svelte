@@ -3,7 +3,7 @@
   import { gameStore } from "../../../shared/stores/game";
   import { seasonStore } from "../../../shared/stores/season";
   import { masterStore } from "../../../shared/stores/master";
-  import type { EntityRow } from "../../../shared/stores/master";
+  import type { EntityRow, EntityDetails, NpcLiveStats } from "../../../shared/stores/master";
   import { derivePreGameWeather, derivePreGamePark } from "../../../shared/utils/matchLineupBuilder";
   import type { PreGameWeather, PreGamePark } from "../../../shared/utils/matchLineupBuilder";
 
@@ -39,7 +39,7 @@
   };
 
   // ── 데이터 계산 헬퍼 ──────────────────────────────────────────
-  function playerOf(e: EntityRow) { return (e.details as any)?.player ?? {}; }
+  function playerOf(e: EntityRow) { return (e.details as EntityDetails)?.player ?? {}; }
 
   function buildLineup(oppTeamId: string, entities: EntityRow[]): EntityRow[] {
     const inTeam = entities.filter(e =>
@@ -77,7 +77,7 @@
       })[0];
   }
 
-  function getLiveBat(id: string, entities: EntityRow[], npcLiveStats: Record<string, any>) {
+  function getLiveBat(id: string, entities: EntityRow[], npcLiveStats: NpcLiveStats) {
     const live = npcLiveStats[id]?.batting ?? {};
     const base = playerOf(entities.find(e => e.id === id) ?? {} as EntityRow).batting ?? {};
     return {
@@ -92,7 +92,7 @@
     };
   }
 
-  function getLivePit(id: string, entities: EntityRow[], npcLiveStats: Record<string, any>) {
+  function getLivePit(id: string, entities: EntityRow[], npcLiveStats: NpcLiveStats) {
     const live = npcLiveStats[id]?.pitching ?? {};
     const base = playerOf(entities.find(e => e.id === id) ?? {} as EntityRow).pitching ?? {};
     return {
@@ -164,7 +164,7 @@
 
     const leagueId  = g.protagonist.leagueId;
     const statsMap  = s.leagueState[leagueId]?.stats ?? {};
-    const liveStats = s.npcLiveStats as Record<string, any>;
+    const liveStats = s.npcLiveStats as NpcLiveStats;
     const entities  = m.entities;
 
     // 선발 투수

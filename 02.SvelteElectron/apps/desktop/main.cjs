@@ -76,25 +76,21 @@ function verifySlot(db, slotId) {
 }
 
 // ── 마스터 데이터 체크섬 (SHA-256) ──────────────────────────────────────────
-function computeFileSha256(filePath) {
-  if (!fs.existsSync(filePath)) return null;
-  return createHash("sha256").update(fs.readFileSync(filePath)).digest("hex");
-}
-
-function checkMasterIntegrity(masterDbPath, userDataDir) {
+async function checkMasterIntegrity(masterDbPath, userDataDir) {
   const checksumFile = path.join(userDataDir, "master_checksum.json");
-  const currentHash = computeFileSha256(masterDbPath);
-  if (!currentHash) return;
   try {
+    if (!fs.existsSync(masterDbPath)) return;
+    const buf = await fs.promises.readFile(masterDbPath);
+    const currentHash = createHash("sha256").update(buf).digest("hex");
     if (fs.existsSync(checksumFile)) {
-      const stored = JSON.parse(fs.readFileSync(checksumFile, "utf8"));
+      const stored = JSON.parse(await fs.promises.readFile(checksumFile, "utf8"));
       if (stored.hash !== currentHash) {
         console.warn("[integrity] master.db 체크섬 불일치 — 파일이 변경되었습니다.");
         console.warn(`  이전: ${stored.hash}`);
         console.warn(`  현재: ${currentHash}`);
       }
     }
-    fs.writeFileSync(
+    await fs.promises.writeFile(
       checksumFile,
       JSON.stringify({ hash: currentHash, updatedAt: new Date().toISOString() }),
       "utf8",
@@ -228,7 +224,9 @@ app.whenReady().then(() => {
     CREATE INDEX IF NOT EXISTS idx_entity_overlay_deleted_league ON entity_overlay_deleted(league_id);
   `);
 
-  if (!isDev) checkMasterIntegrity(masterDbPath, userDataDir);
+  if (!isDev) checkMasterIntegrity(masterDbPath, userDataDir).catch((e) => {
+    console.warn("[integrity] 체크섬 비동기 처리 실패:", e);
+  });
 
   tuningIpc.applyTuningFromFile(resourceBase, tuningSchema, loadCoreModule).then((res) => {
     if (!res.ok) console.warn("[tuning] invalid tuning file. fallback to defaults.", res.errors);

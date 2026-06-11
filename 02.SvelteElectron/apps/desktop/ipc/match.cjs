@@ -77,6 +77,7 @@ function register(ipcMain, { loadCoreModule, engineNative }) {
       }
 
       let guard = 0;
+      let prevStateKey = "";
       while (!state.isFinished && guard++ < 50) {
         const phase = core.advanceGamePhase(state);
         if (phase.phase === "protagonist_pitch" || phase.phase === "game_over") break;
@@ -93,6 +94,17 @@ function register(ipcMain, { loadCoreModule, engineNative }) {
         } else {
           break;
         }
+        const newStateKey = `${state.inning}-${state.half}-${state.outs}-${state.score.home}-${state.score.away}`;
+        if (newStateKey === prevStateKey) {
+          console.error("[match:start] 상태 변화 없음, 강제 종료 (guard:", guard, ")");
+          state = core.autoSimulateToGameEnd(state);
+          break;
+        }
+        prevStateKey = newStateKey;
+      }
+      if (guard >= 50 && !state.isFinished) {
+        console.error("[match:start] guard 한계(50) 도달, 강제 종료");
+        state = core.autoSimulateToGameEnd(state);
       }
 
       activeMatchState = state;
@@ -103,27 +115,31 @@ function register(ipcMain, { loadCoreModule, engineNative }) {
   });
 
   ipcMain.handle("match:step", async (_event, decision) => {
-    const core = await loadCoreModule();
-    if (!activeMatchState) activeMatchState = core.startMatch({});
-    if (!core.isProtagonistPitching(activeMatchState)) {
-      return { snapshot: toSnapshotDto(activeMatchState, [], core), outcome: null };
-    }
-    if (!decision || typeof decision !== "object" || Array.isArray(decision)) {
-      return { snapshot: toSnapshotDto(activeMatchState, [], core), outcome: null };
-    }
-    const result = core.stepPitch(activeMatchState, decision);
-    activeMatchState = result.nextState;
-
-    let midGameInjury = null;
-    if (result.outcome?.resultCode === "WALK" || result.outcome?.resultCode?.startsWith("HIT_")) {
-      const injuryCheck = core.checkMidGameInjury?.(activeMatchState);
-      if (injuryCheck?.injured) {
-        midGameInjury = injuryCheck;
-        activeMatchState = injuryCheck.nextState ?? activeMatchState;
+    try {
+      const core = await loadCoreModule();
+      if (!activeMatchState) activeMatchState = core.startMatch({});
+      if (!core.isProtagonistPitching(activeMatchState)) {
+        return { snapshot: toSnapshotDto(activeMatchState, [], core), outcome: null };
       }
-    }
+      if (!decision || typeof decision !== "object" || Array.isArray(decision)) {
+        return { snapshot: toSnapshotDto(activeMatchState, [], core), outcome: null };
+      }
+      const result = core.stepPitch(activeMatchState, decision);
+      activeMatchState = result.nextState;
 
-    return { snapshot: toSnapshotDto(activeMatchState, [], core), outcome: result.outcome, midGameInjury };
+      let midGameInjury = null;
+      if (result.outcome?.resultCode === "WALK" || result.outcome?.resultCode?.startsWith("HIT_")) {
+        const injuryCheck = core.checkMidGameInjury?.(activeMatchState);
+        if (injuryCheck?.injured) {
+          midGameInjury = injuryCheck;
+          activeMatchState = injuryCheck.nextState ?? activeMatchState;
+        }
+      }
+
+      return { snapshot: toSnapshotDto(activeMatchState, [], core), outcome: result.outcome, midGameInjury };
+    } catch (e) {
+      return { error: String(e?.message ?? e) };
+    }
   });
 
   ipcMain.handle("match:next-inning", async () => {

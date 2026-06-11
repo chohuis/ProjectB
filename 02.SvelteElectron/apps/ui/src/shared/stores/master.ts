@@ -159,9 +159,9 @@ export interface EntityPlayerDetails {
 
 export interface EntityDetails {
   player: EntityPlayerDetails;
-  coach: EntityCoachDetails;
-  manager: EntityManagerDetails;
-  owner: Record<string, unknown>;
+  coach:   EntityCoachDetails   | null;
+  manager: EntityManagerDetails | null;
+  owner:   Record<string, unknown> | null;
 }
 
 // ── 인물 엔티티 타입 (people_*.json 구조) ─────────────────────
@@ -183,6 +183,18 @@ export interface EntityRow {
   militaryStatus?: "미필" | "군필" | "현역" | "면제";
   details: EntityDetails;
 }
+
+// ── NPC 라이브 스탯 타입 ───────────────────────────────────────
+export interface NpcLiveStat {
+  pitching?: import("../types/save").PitchingAttributes;
+  batting?:  import("../types/save").BattingAttributes;
+  pitchingXp?:         Record<string, number>;
+  battingXp?:          Record<string, number>;
+  seasonStartPitching?: import("../types/save").PitchingAttributes;
+  seasonStartBatting?:  import("../types/save").BattingAttributes;
+  peakOvr?: number;
+}
+export type NpcLiveStats = Record<string, NpcLiveStat>;
 
 // ── 군 이벤트 타입 ────────────────────────────────────────────
 export interface MilitaryEvent {

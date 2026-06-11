@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { t } from "../../shared/i18n";
   import { masterStore } from "../../shared/stores/master";
+  import type { EntityDetails } from "../../shared/stores/master";
   import { gameStore } from "../../shared/stores/game";
   import TeamDetailModal from "../../features/team/ui/TeamDetailModal.svelte";
 
@@ -67,7 +68,7 @@
     return {
       id: p.id, name: p.name, role: "player" as const,
       teamId: p.teamId, age: p.age, status: "active" as const,
-      details: { player: { position: p.position, playerType: p.playerType } } as any,
+      details: { player: { position: p.position, playerType: p.playerType } as EntityDetails["player"], coach: null, manager: null, owner: null },
     };
   })();
 
@@ -167,7 +168,7 @@
               <p class="empty">로스터 데이터가 없습니다.</p>
             {:else}
               {#each teamRows as row}
-                {@const p = (row.details as any)?.player}
+                {@const p = (row.details as EntityDetails)?.player}
                 <div class="roster-row" class:hero-row={row.id === $gameStore.protagonist.id}>
                   <strong>
                     {row.name}
