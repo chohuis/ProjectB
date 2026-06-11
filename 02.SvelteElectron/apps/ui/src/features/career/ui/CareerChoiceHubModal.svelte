@@ -49,7 +49,7 @@
   function onClickDraftApply() {
     draftChecked = !draftChecked;
     if (draftChecked) {
-      alert("드래프트 참가 신청이 완료되었습니다. W51주차에 참가 여부 메시지가 도착합니다.");
+      alert("드래프트 참가 신청이 완료되었습니다. W47주차에 참가 여부 메시지가 도착합니다.");
     }
   }
 
@@ -92,7 +92,7 @@
   <div class="modal">
     <div class="modal-header">
       <span class="chip">진로 결정</span>
-      <h2>W50 진로 신청 허브</h2>
+      <h2>{$gameStore.protagonist.careerStage === "highschool" ? "W44" : $gameStore.protagonist.careerStage === "university" ? "W42" : "W39"} 진로 신청 허브</h2>
     </div>
     <p class="body-text">
       {isIndependent ? "KBL 드래프트에 신청하세요. 미신청 시 독립리그를 계속합니다." : "각 진로 페이지를 확인하고 체크한 뒤 신청 완료를 눌러 다음 주로 진행하세요."}

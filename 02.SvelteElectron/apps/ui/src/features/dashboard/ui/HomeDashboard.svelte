@@ -48,6 +48,17 @@
   // 부상위험 추정 (피로 기반 프록시)
   $: injuryRisk = Math.min(99, Math.max(0, Math.round((fatigue - 55) * 0.9)));
 
+  // 오프시즌 여부 — 프로 선수이고 남은 시즌/포스트 경기가 없을 때
+  $: isProStage = ["pro_kbl", "pro_abl", "pro_jbl"].includes(protagonist.careerStage);
+  $: hasRemainingGames = $seasonStore.schedule.some(
+    (e) => !e.result && !e.isFriendly && (e.phase === "season" || e.phase === "postseason"),
+  );
+  $: isOffseason = isProStage && !hasRemainingGames && $seasonStore.currentWeek > 0;
+  $: offseasonWeek = $seasonStore.currentWeek;
+  $: pendingNextTeam = protagonist.pendingNextContract
+    ? ($teamMap.get(protagonist.pendingNextContract.teamId)?.name ?? protagonist.pendingNextContract.teamId)
+    : null;
+
   // 리스크 알림
   $: riskAlerts = [
     ...(eligibilityBlocked ? [`학사 경고 — 이번 주 경기 출전 정지`] : []),
@@ -107,6 +118,16 @@
 
     <article class="card schedule-card">
       <h3>일정 및 경기</h3>
+      {#if isOffseason}
+        <div class="offseason-banner">
+          <p class="offseason-title">오프시즌 (W{offseasonWeek})</p>
+          {#if pendingNextTeam}
+            <p class="offseason-sub">{pendingNextTeam} 계약 완료 — W52 새 시즌 시작</p>
+          {:else}
+            <p class="offseason-sub">W43 연봉협상·FA 오픈 · W50 체육부대 · W52 시즌 리셋</p>
+          {/if}
+        </div>
+      {/if}
       {#if eligibilityBlocked}
         <div class="block-banner">학사 경고 — 이번 주 경기 출전 정지</div>
       {/if}
@@ -115,7 +136,7 @@
           <p><strong>{nextGameLabel}</strong> vs {nextGameOpponent}</p>
           <p>{isHomeGame ? "홈" : "원정"} · W{nextGame.week}</p>
         </div>
-      {:else}
+      {:else if !isOffseason}
         <div class="next-game">
           <p>남은 경기가 없습니다</p>
         </div>
@@ -265,6 +286,17 @@
     font-size: 13px;
     padding: 4px 0;
   }
+
+  .offseason-banner {
+    background: #0e1e3a;
+    border: 1px solid #2a4878;
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: grid;
+    gap: 4px;
+  }
+  .offseason-title { margin: 0; font-size: 13px; font-weight: 700; color: #7ab0f0; }
+  .offseason-sub   { margin: 0; font-size: 11px; color: #4a7ab0; }
 
   .block-banner {
     background: #3a0c0c;

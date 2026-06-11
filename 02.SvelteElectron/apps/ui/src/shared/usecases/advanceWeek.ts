@@ -1056,13 +1056,37 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         gameStore.applySeasonContractProgress();
         const gAfterProg = get(gameStore);
         const updatedContract = gAfterProg.protagonist.contract;
+        const myStats = (sOff.stats[gAfterProg.protagonist.id] ?? null) as import("../types/save").PitcherSeasonStats | null;
 
-        if (!updatedContract) {
-          // 계약 만료 → FA or 재계약 강요
+        if (updatedContract && updatedContract.remainingYears === 0) {
+          // 계약 만료 — 옵션 조항 우선 처리
+          const offeredSalary = await calcOfferedSalaryForProtagonist(gAfterProg.protagonist, myStats);
+          if (updatedContract.teamOptionYears > 0) {
+            const seasonRating = await calcSeasonRating(myStats);
+            const exercised = seasonRating >= 60;
+            const action: PendingAction = { type: "optionClause", optionType: "team", exercised, nextSalary: offeredSalary };
+            seasonStore.pushPendingAction(action);
+          } else if (updatedContract.playerOptionYears > 0) {
+            const action: PendingAction = { type: "optionClause", optionType: "player", exercised: false, nextSalary: offeredSalary };
+            seasonStore.pushPendingAction(action);
+          } else if (isFaEligible(gAfterProg.protagonist, gAfterProg.schoolState.attendsUniversity)) {
+            seasonStore.pushPendingAction({ type: "faMarket" });
+          } else {
+            seasonStore.pushPendingAction({
+              type: "salaryNegotiation",
+              teamId: updatedContract.teamId,
+              leagueId: updatedContract.leagueId,
+              offeredSalary,
+              durationYears: 1,
+              signingBonus: 0,
+            });
+          }
+        } else if (!updatedContract) {
+          // 계약 자체 없음 (이례적) — FA or 최소 계약
           if (isFaEligible(gAfterProg.protagonist, gAfterProg.schoolState.attendsUniversity)) {
             seasonStore.pushPendingAction({ type: "faMarket" });
           } else {
-            const offeredSalary = await calcOfferedSalaryForProtagonist(gAfterProg.protagonist, null);
+            const offeredSalary = await calcOfferedSalaryForProtagonist(gAfterProg.protagonist, myStats);
             seasonStore.pushPendingAction({
               type: "salaryNegotiation",
               teamId: gAfterProg.protagonist.teamId,
@@ -1073,10 +1097,8 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
             });
           }
         } else if (updatedContract.remainingYears > 0) {
-          // 잔여 계약 — 연봉협상 오퍼
-          const offeredSalary = await calcOfferedSalaryForProtagonist(gAfterProg.protagonist,
-            (sOff.stats[gAfterProg.protagonist.id] ?? null) as import("../types/save").PitcherSeasonStats | null
-          );
+          // 잔여 계약 있음 — 연봉협상 오퍼
+          const offeredSalary = await calcOfferedSalaryForProtagonist(gAfterProg.protagonist, myStats);
           seasonStore.pushPendingAction({
             type: "salaryNegotiation",
             teamId: updatedContract.teamId,

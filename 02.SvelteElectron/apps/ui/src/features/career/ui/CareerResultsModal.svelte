@@ -68,7 +68,7 @@
     <section class="modal">
       <header>
         <p class="chip">진로 결과</p>
-        <h2>W51 지원 결과 확인</h2>
+        <h2>W47 지원 결과 확인</h2>
       </header>
 
       <div class="results-grid">

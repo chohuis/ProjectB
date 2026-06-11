@@ -28,7 +28,22 @@
     resolving = true;
     const offer: FaOffer = { ...selectedOffer, salary: requestedSalary };
     const contract = toContract(offer);
+    const signingTeamName = $masterStore.teams.find((t) => t.id === contract.teamId)?.name ?? contract.teamId;
     gameStore.setPendingNextContract(contract);
+    gameStore.addMessage({
+      id: `msg-fa-signed-${Date.now()}`,
+      category: "system", sender: "에이전트",
+      subject: "FA 계약 서명 완료",
+      preview: `${signingTeamName}와 FA 계약이 완료되었습니다.`,
+      body: [
+        `${signingTeamName}와 FA 계약이 완료되었습니다.`,
+        `연봉: ${requestedSalary.toLocaleString()}만원 / ${offer.durationYears}년`,
+        `계약금: ${offer.signingBonus.toLocaleString()}만원`,
+        ``,
+        `W52 새 시즌 시작 시 정식 적용됩니다.`,
+      ].join("\n"),
+      createdAt: `W${$seasonStore.currentWeek}`, readAt: null,
+    });
     gameStore.resetFaProgress();
     seasonStore.resolvePendingAction("faMarket");
     await gameStore.save();

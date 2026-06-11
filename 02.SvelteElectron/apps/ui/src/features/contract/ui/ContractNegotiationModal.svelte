@@ -32,8 +32,10 @@
   ).then((r) => (marketSalary = r));
 
   // 오프시즌 계약: 군 전역 후 복귀 계약 제외 모두 pendingNextContract에 보관
-  // 군 전역(military → pro): 즉시 시즌 초기화 / 그 외 모든 입단·재계약: W52 리셋 시 적용
-  $: isOffseasonRenewal = $gameStore.protagonist.careerStage !== "military";
+  // 군 전역 판정: careerStage가 military이거나 현재 시즌이 LEAGUE_MILITARY (전역 직후)
+  $: isMilitaryReturn = $gameStore.protagonist.careerStage === "military"
+    || $seasonStore.leagueId === "LEAGUE_MILITARY";
+  $: isOffseasonRenewal = !isMilitaryReturn;
 
   async function accept() {
     if (resolving) return;
@@ -53,6 +55,20 @@
 
     if (isOffseasonRenewal) {
       gameStore.setPendingNextContract(contract);
+      gameStore.addMessage({
+        id: `msg-contract-signed-${Date.now()}`,
+        category: "system", sender: "에이전트",
+        subject: "계약 서명 완료",
+        preview: `${teamName}와 계약이 완료되었습니다. W52 새 시즌부터 적용됩니다.`,
+        body: [
+          `${teamName}와의 계약이 완료되었습니다.`,
+          `연봉: ${requestedSalary.toLocaleString()}만원 / ${action.durationYears}년`,
+          `계약금: ${action.signingBonus.toLocaleString()}만원`,
+          ``,
+          `W52 새 시즌 시작 시 정식 적용됩니다.`,
+        ].join("\n"),
+        createdAt: `W${$seasonStore.currentWeek}`, readAt: null,
+      });
       seasonStore.resolvePendingAction("salaryNegotiation");
       await gameStore.save();
       await seasonStore.save();

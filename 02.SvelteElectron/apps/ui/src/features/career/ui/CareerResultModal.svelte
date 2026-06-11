@@ -97,7 +97,7 @@
   <div class="modal">
     <div class="modal-header">
       <span class="chip">진로 결정</span>
-      <h2>W51 최종 선택</h2>
+      <h2>W47 최종 선택</h2>
     </div>
 
     <p class="body-text">합격/지명 결과에서 최종 경로 1개를 선택하세요.</p>
