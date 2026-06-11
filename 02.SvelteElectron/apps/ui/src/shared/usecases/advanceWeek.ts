@@ -852,10 +852,10 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       ...(sFriendly.leagueState[proto.leagueId]?.standings.map((s) => s.teamId) ?? []),
     ].filter((v, i, a) => a.indexOf(v) === i);  // 중복 제거
 
-    // 리그 시즌 종료 주차 추정 (고교 W48, 대학 W36, 독립리그 W40)
+    // 리그 시즌 종료 주차 추정 (고교 W44, 대학 W42, 독립리그 W39)
     const seasonPhaseEnd =
-      proto.careerStage === "highschool"  ? 48 :
-      proto.careerStage === "university"  ? 36 : 40;
+      proto.careerStage === "highschool"  ? 44 :
+      proto.careerStage === "university"  ? 42 : 39;
 
     const plan = planMonthlyFriendlies(
       weekInYear,
@@ -893,15 +893,16 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     logs.push(`[시험] ${examRes.messageSubject}`);
   }
 
-  // 고3 / 대학 매년 W50 — careerChoiceHub 트리거
+  // 진로허브 트리거 — 스테이지별 시즌 종료 직후
+  // HS 3학년: W44 (결승 직후) / 대학: W42 (결승 직후) / 독립: W39 (결승 직후)
   const gLatest = get(gameStore);
   const needsHsHub =
     gLatest.protagonist.careerStage === "highschool" &&
-    careerStageYear === 2 && weekInYear === 50 &&
+    careerStageYear === 2 && weekInYear === 44 &&
     !gLatest.schoolState.careerChoiceTriggered;
   const needsUnivHub =
     gLatest.protagonist.careerStage === "university" &&
-    weekInYear === 50 &&
+    weekInYear === 42 &&
     !gLatest.schoolState.careerApplicationsSubmitted &&
     gLatest.schoolState.careerResults === null &&
     !get(seasonStore).pendingActions.some(
@@ -909,7 +910,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     );
   const needsIndieHub =
     gLatest.protagonist.careerStage === "independent" &&
-    weekInYear === 50 &&
+    weekInYear === 39 &&
     !gLatest.schoolState.careerApplicationsSubmitted &&
     gLatest.schoolState.careerResults === null &&
     !get(seasonStore).pendingActions.some(
@@ -920,7 +921,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     seasonStore.pushPendingAction({ type: "careerChoiceHub" });
   }
 
-  // W51 진로 결과 계산 (고교3 / 대학3 공통)
+  // W47 진로 결과 계산 — KBL 드래프트(W44~W46) 마감 후 전 스테이지 동시 발표
   const gDraft = get(gameStore);
   const hasCareerPending = get(seasonStore).pendingActions.some(
     (a) => a.type === "careerChoice" || a.type === "careerChoiceHub" || a.type === "careerResults"
@@ -928,14 +929,14 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
 
   const isHsResultWeek =
     gDraft.protagonist.careerStage === "highschool" &&
-    gDraft.protagonist.grade === 3 && weekInYear === 51 &&
+    gDraft.protagonist.grade === 3 && weekInYear === 47 &&
     gDraft.schoolState.careerApplicationsSubmitted &&
     gDraft.schoolState.careerResults === null &&
     !hasCareerPending;
 
   const isUnivResultWeek =
     (gDraft.protagonist.careerStage === "university" || gDraft.protagonist.careerStage === "independent") &&
-    weekInYear === 51 &&
+    weekInYear === 47 &&
     gDraft.schoolState.careerApplicationsSubmitted &&
     gDraft.schoolState.careerResults === null &&
     !hasCareerPending;
@@ -999,6 +1000,104 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
           choices: [{ id: "ok", label: "확인" }],
         });
         seasonStore.pushPendingAction({ type: "trade", fromTeamId: gTrade.protagonist.teamId, toTeamId: tradeCalc.toTeamId });
+      }
+    }
+  }
+
+  // ── 오프시즌 이벤트 ─────────────────────────────────────────────
+  {
+    const gOff = get(gameStore);
+    const sOff = get(seasonStore);
+    const isProStage = ["pro_kbl", "pro_abl", "pro_jbl"].includes(gOff.protagonist.careerStage);
+
+    // W39: 독립리그 시즌 종료 총평 메시지
+    if (gOff.protagonist.careerStage === "independent" && weekInYear === 39) {
+      gameStore.addMessage({
+        id: `msg-indie-season-end-${sOff.seasonYear}`,
+        category: "system", sender: "리그 사무국",
+        subject: `${sOff.seasonYear} 독립리그 시즌 종료`,
+        preview: "시즌이 종료되었습니다. 진로 신청을 진행하세요.",
+        body: "독립리그 시즌이 종료되었습니다.\n드래프트 신청, 독립리그 재계약, 군입대 중 진로를 선택할 수 있습니다.\nW47에 최종 결과가 발표됩니다.",
+        createdAt: `W${weekNum}`, readAt: null,
+      });
+    }
+
+    // W40: 프로 시즌 총평 메시지
+    if (isProStage && weekInYear === 40) {
+      const myStats = sOff.stats[gOff.protagonist.id] as import("../types/save").PitcherSeasonStats | null ?? null;
+      const statSummary = myStats
+        ? `ERA ${myStats.era?.toFixed(2) ?? "-"} / ${myStats.w ?? 0}승 ${myStats.l ?? 0}패 / ${myStats.k ?? 0}K`
+        : "시즌 기록 없음";
+      gameStore.addMessage({
+        id: `msg-pro-season-end-${sOff.seasonYear}`,
+        category: "system", sender: "코칭스태프",
+        subject: `${sOff.seasonYear} 시즌 종료 — 오프시즌 시작`,
+        preview: `시즌 성적: ${statSummary}`,
+        body: [
+          `${sOff.seasonYear} 시즌이 종료되었습니다.`,
+          `시즌 성적: ${statSummary}`,
+          "",
+          "W43부터 연봉협상 및 FA 시장이 열립니다.",
+          "W50 체육부대 신청, W52 새 시즌 시작.",
+        ].join("\n"),
+        createdAt: `W${weekNum}`, readAt: null,
+      });
+    }
+
+    // W43: 프로 연봉협상 1차 + FA 시장 오픈
+    if (isProStage && weekInYear === 43) {
+      const contract = gOff.protagonist.contract;
+      const hasPending = sOff.pendingActions.some(
+        (a) => a.type === "salaryNegotiation" || a.type === "faMarket" || a.type === "optionClause"
+      );
+      const hasPendingNext = !!gOff.protagonist.pendingNextContract;
+
+      if (!hasPending && !hasPendingNext && contract) {
+        gameStore.applySeasonContractProgress();
+        const gAfterProg = get(gameStore);
+        const updatedContract = gAfterProg.protagonist.contract;
+
+        if (!updatedContract) {
+          // 계약 만료 → FA or 재계약 강요
+          if (isFaEligible(gAfterProg.protagonist, gAfterProg.schoolState.attendsUniversity)) {
+            seasonStore.pushPendingAction({ type: "faMarket" });
+          } else {
+            const offeredSalary = await calcOfferedSalaryForProtagonist(gAfterProg.protagonist, null);
+            seasonStore.pushPendingAction({
+              type: "salaryNegotiation",
+              teamId: gAfterProg.protagonist.teamId,
+              leagueId: gAfterProg.protagonist.leagueId,
+              offeredSalary,
+              durationYears: 1,
+              signingBonus: 0,
+            });
+          }
+        } else if (updatedContract.remainingYears > 0) {
+          // 잔여 계약 — 연봉협상 오퍼
+          const offeredSalary = await calcOfferedSalaryForProtagonist(gAfterProg.protagonist,
+            (sOff.stats[gAfterProg.protagonist.id] ?? null) as import("../types/save").PitcherSeasonStats | null
+          );
+          seasonStore.pushPendingAction({
+            type: "salaryNegotiation",
+            teamId: updatedContract.teamId,
+            leagueId: updatedContract.leagueId,
+            offeredSalary,
+            durationYears: updatedContract.remainingYears,
+            signingBonus: 0,
+          });
+        }
+      }
+    }
+
+    // W44~W49: FA 미계약자 매주 재트리거
+    if (isProStage && weekInYear >= 44 && weekInYear <= 49) {
+      const hasFaPending = sOff.pendingActions.some((a) => a.type === "faMarket");
+      const hasPendingNext = !!gOff.protagonist.pendingNextContract;
+      const isUnsignedFa = !gOff.protagonist.contract && !hasPendingNext && !hasFaPending &&
+        isFaEligible(gOff.protagonist, gOff.schoolState.attendsUniversity);
+      if (isUnsignedFa) {
+        gameStore.incrementFaUnsignedWeek();
+        seasonStore.pushPendingAction({ type: "faMarket" });
       }
     }
   }
@@ -1218,8 +1317,11 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     }
   }
 
-  // ── 코치 리포트 (3주마다, 군 복무 제외) ─────────────────────
-  if (weekInYear % 3 === 0 && gFinal.protagonist.careerStage !== "military") {
+  // ── 코치 리포트 (3주마다, 군 복무·오프시즌 제외) ──────────────
+  const isSeasonActive = sFinal.schedule.some(
+    (e) => !e.result && !e.isFriendly && (e.phase === "season" || e.phase === "postseason"),
+  );
+  if (weekInYear % 3 === 0 && gFinal.protagonist.careerStage !== "military" && isSeasonActive) {
     const p   = gFinal.protagonist;
     const pit = p.pitching;
     const myStats = sFinal.stats[p.id] as import("../types/save").PitcherSeasonStats | null ?? null;
@@ -1332,46 +1434,8 @@ async function handleSeasonEnd(): Promise<WeekAdvanceResult> {
     return { processedWeek: s.currentWeek, logs: ["전역 완료"], newMessages: [], matchResults: [], stoppedBy: null };
   }
 
-  const isProStage = g.protagonist.careerStage === "pro_kbl" || g.protagonist.careerStage === "pro_abl";
-  const hasOptionPending = s.pendingActions.some((a) => a.type === "optionClause");
-  const hasSalaryPending = s.pendingActions.some((a) => a.type === "salaryNegotiation");
-
-  if (isProStage && g.protagonist.contract && !hasOptionPending && !hasSalaryPending) {
-    gameStore.applySeasonContractProgress();
-    const gAfter   = get(gameStore);
-    const contract = gAfter.protagonist.contract;
-    if (!contract) return { processedWeek: s.currentWeek, logs: ["시즌이 종료되었습니다."], newMessages: [], matchResults: [], stoppedBy: null };
-
-    const myStats      = (s.stats[g.protagonist.id] ?? null) as import("../types/save").PitcherSeasonStats | null;
-    const seasonRating = await calcSeasonRating(myStats);
-    const offeredSalary = await calcOfferedSalaryForProtagonist(g.protagonist, myStats);
-
-    if (contract.remainingYears === 0) {
-      if (contract.teamOptionYears > 0) {
-        const exercised = seasonRating >= 60;
-        const action: PendingAction = { type: "optionClause", optionType: "team", exercised, nextSalary: offeredSalary };
-        seasonStore.pushPendingAction(action);
-        return { processedWeek: s.currentWeek, logs: ["시즌 종료: 팀 옵션 조항이 처리됩니다."], newMessages: [], matchResults: [], stoppedBy: action };
-      }
-      if (contract.playerOptionYears > 0) {
-        const action: PendingAction = { type: "optionClause", optionType: "player", exercised: false, nextSalary: offeredSalary };
-        seasonStore.pushPendingAction(action);
-        return { processedWeek: s.currentWeek, logs: ["시즌 종료: 선수 옵션 선택이 필요합니다."], newMessages: [], matchResults: [], stoppedBy: action };
-      }
-      if (isFaEligible(g.protagonist, g.schoolState.attendsUniversity)) {
-        const action: PendingAction = { type: "faMarket" };
-        seasonStore.pushPendingAction(action);
-        return { processedWeek: s.currentWeek, logs: ["시즌 종료: 계약 만료로 FA 시장에 진입합니다."], newMessages: [], matchResults: [], stoppedBy: action };
-      }
-      const action: PendingAction = { type: "salaryNegotiation", teamId: contract.teamId, leagueId: contract.leagueId, offeredSalary, durationYears: 1, signingBonus: 0 };
-      seasonStore.pushPendingAction(action);
-      return { processedWeek: s.currentWeek, logs: ["시즌 종료: FA 자격 미충족으로 연봉 협상을 진행합니다."], newMessages: [], matchResults: [], stoppedBy: action };
-    }
-    const action: PendingAction = { type: "salaryNegotiation", teamId: contract.teamId, leagueId: contract.leagueId, offeredSalary, durationYears: Math.max(1, contract.remainingYears), signingBonus: 0 };
-    seasonStore.pushPendingAction(action);
-    return { processedWeek: s.currentWeek, logs: ["시즌 종료: 연봉 협상을 진행하세요."], newMessages: [], matchResults: [], stoppedBy: action };
-  }
-
+  // 프로 계약 로직은 processWeekBoundary W43에서 처리
+  // handleSeasonEnd는 군 복무 전역 외 단순 시즌 종료 신호만 반환
   return { processedWeek: s.currentWeek, logs: ["시즌이 종료되었습니다."], newMessages: [], matchResults: [], stoppedBy: null };
 }
 

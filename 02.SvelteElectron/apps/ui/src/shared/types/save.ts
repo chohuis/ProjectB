@@ -294,6 +294,7 @@ export interface ProtagonistSave {
   faNegotiationRound: number;
   faUnsignedWeeks: number;
   contract?: ProContract;
+  pendingNextContract?: ProContract;  // 오프시즌 서명 완료, W52 시즌 리셋 시 적용
   consecutiveLowMoraleWeeks: number;
   consecutiveHighFatigueWeeks: number;
   injury?: InjuryState;

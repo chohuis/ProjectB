@@ -22,29 +22,14 @@
   $: unsignedWeeks = $gameStore.protagonist.faUnsignedWeeks ?? 0;
   $: faEligible = isFaEligible($gameStore.protagonist, $gameStore.schoolState.attendsUniversity);
 
+  // FA도 오프시즌 계약 — pendingNextContract에 보관 (W52에 시즌 리셋 시 적용)
   async function signWithOffer() {
     if (resolving || !selectedOffer) return;
     resolving = true;
     const offer: FaOffer = { ...selectedOffer, salary: requestedSalary };
     const contract = toContract(offer);
-    gameStore.signContract(contract);
+    gameStore.setPendingNextContract(contract);
     gameStore.resetFaProgress();
-
-    const proTeamIds = $masterStore.teams.filter((t) => t.leagueId === contract.leagueId).map((t) => t.id);
-    const seasonYear = ($seasonStore.seasonYear || 2026) + 1;
-    const isAbl = contract.leagueId === "LEAGUE_ABL";
-    const isJbl = contract.leagueId === "LEAGUE_JBL";
-    const totalWeeks = isAbl || isJbl ? 33 : 30;
-    seasonStore.initSeason(contract.leagueId, seasonYear, totalWeeks, proTeamIds);
-    seasonStore.setSchedule(
-      isAbl ? await generateAblSchedule(proTeamIds, contract.teamId) :
-      isJbl ? await generateJblSchedule(proTeamIds, contract.teamId) :
-              await generateKblSchedule(proTeamIds, contract.teamId),
-    );
-    if (isAbl) {
-      const { east, west } = await shuffleAblConferences(proTeamIds);
-      seasonStore.setAblConferences(east, west);
-    }
     seasonStore.resolvePendingAction("faMarket");
     await gameStore.save();
     await seasonStore.save();

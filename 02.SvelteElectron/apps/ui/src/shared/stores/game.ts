@@ -151,6 +151,7 @@ const DEFAULT_PROTAGONIST: ProtagonistSave = {
   tradeAdaptationWeeks: 0,
   faNegotiationRound: 0,
   faUnsignedWeeks: 0,
+  pendingNextContract: undefined,
   consecutiveLowMoraleWeeks: 0,
   consecutiveHighFatigueWeeks: 0,
   careerTriggeredEvents: {},
@@ -1159,6 +1160,48 @@ function createGameStore() {
           player: toPlayerCompat(protagonist),
           school: toSchoolCompat(protagonist.careerStage, s.schoolState),
         };
+      });
+    },
+
+    // 오프시즌 계약 서명 — 즉시 시즌 초기화 없이 pendingNextContract에 보관
+    // W52 SeasonEndModal에서 applyPendingNextContract 호출 시 실제 적용
+    setPendingNextContract(contract: ProContract) {
+      update((s) => {
+        const leagueStage =
+          contract.leagueId === "LEAGUE_ABL"         ? "pro_abl" :
+          contract.leagueId === "LEAGUE_JBL"         ? "pro_jbl" :
+          contract.leagueId === "LEAGUE_INDEPENDENT" ? "independent" :
+          "pro_kbl";
+        const protagonist: ProtagonistSave = {
+          ...s.protagonist,
+          pendingNextContract: { ...contract, status: "active" },
+          careerStage: leagueStage,
+          teamId: contract.teamId,
+          leagueId: contract.leagueId,
+          money: Math.max(0, s.protagonist.money + contract.signingBonus),
+          faNegotiationRound: 0,
+          faUnsignedWeeks: 0,
+        };
+        return {
+          ...s,
+          protagonist,
+          player: toPlayerCompat(protagonist),
+          school: toSchoolCompat(protagonist.careerStage, s.schoolState),
+        };
+      });
+    },
+
+    // W52 SeasonEndModal에서 호출 — pendingNextContract를 contract로 확정
+    applyPendingNextContract() {
+      update((s) => {
+        const pending = s.protagonist.pendingNextContract;
+        if (!pending) return s;
+        const protagonist: ProtagonistSave = {
+          ...s.protagonist,
+          contract: pending,
+          pendingNextContract: undefined,
+        };
+        return { ...s, protagonist, player: toPlayerCompat(protagonist) };
       });
     },
 

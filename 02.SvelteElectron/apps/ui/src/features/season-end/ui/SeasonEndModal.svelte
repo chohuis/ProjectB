@@ -226,69 +226,41 @@
       psResult: postseasonResult?.myResult,
     }, mySeasonSt ?? undefined);
 
-    // ── 독립리그: KBL 스카우트 제의 / 재계약 / 방출 ──────────────
-    if (p.careerStage === "independent") {
-      const myStats = mySeasonSt;
-      const era = myStats?.type === "pitcher" ? (myStats as PitcherSeasonStats).era : 9.99;
-      const avg = myStats?.type === "batter"  ? (myStats as BatterSeasonStats).avg  : 0.0;
-      const kblTeamIds = $masterStore.teams
-        .filter((t) => t.leagueId === "LEAGUE_KBL" && t.tier === "1군")
-        .map((t) => t.id);
+    // ── 프로(KBL/ABL/JBL): pendingNextContract 적용 후 새 시즌 초기화 ──
+    const isProStage = ["pro_kbl", "pro_abl", "pro_jbl"].includes(p.careerStage);
+    if (isProStage) {
+      const leagueStats2: Record<string, Record<string, import("../../../shared/types/save").PlayerSeasonStats>> = {};
+      for (const [lid, ls] of Object.entries($seasonStore.leagueState)) leagueStats2[lid] = ls.stats;
+      gameStore.applySeasonHistory($seasonStore.stats, leagueStats2, now);
+      await seasonStore.flushAllLeagueStatsToDb(now);
+      await gameStore.processAllLeaguesSeasonEnd(now);
+      await gameStore.applyAgingDecay();
+      gameStore.advanceSeasonYear($seasonStore.seasonYear);
 
-      const offerRaw = JSON.parse(
-        await window.projectB!.indieCalcScoutOffer(JSON.stringify({
-          ovr: p.pitching.ovr, era, avg,
-          playerType: p.playerType ?? "pitcher",
-          year: now, kblTeamIds,
-        }))
-      ) as { hasOffer: boolean; tier: string; teamId?: string; offeredSalary: number };
-
-      seasonStore.startNewSeason();
-
-      if (offerRaw.hasOffer && offerRaw.teamId) {
-        const label = offerRaw.tier === "first" ? "KBL 1군" : "KBL 2군";
-        gameStore.addMessage({
-          id: `msg-indie-scout-${Date.now()}`,
-          category: "system", sender: "에이전트",
-          subject: `${label} 스카우트 제의`,
-          preview: `${$masterStore.teams.find(t => t.id === offerRaw.teamId)?.name ?? offerRaw.teamId}에서 제의가 왔습니다.`,
-          body: `독립리그 시즌 성적을 인정받아 KBL 팀의 제의를 받았습니다.\n협상을 진행하세요.`,
-          createdAt: `Y${now}`, readAt: null,
-        });
-        seasonStore.pushPendingAction({
-          type: "salaryNegotiation",
-          teamId: offerRaw.teamId,
-          leagueId: "LEAGUE_KBL",
-          offeredSalary: offerRaw.offeredSalary,
-          durationYears: 2,
-          signingBonus: 0,
-        });
-      } else if (p.pitching.ovr >= 50) {
-        // 재계약 제의
-        seasonStore.pushPendingAction({
-          type: "salaryNegotiation",
-          teamId: p.teamId,
-          leagueId: "LEAGUE_INDEPENDENT",
-          offeredSalary: Math.max(800, Math.round((p.pitching.ovr - 40) * 60)),
-          durationYears: 1,
-          signingBonus: 0,
-        });
+      const pending = p.pendingNextContract;
+      if (pending) {
+        gameStore.applyPendingNextContract();
+        const proTeamIds = $masterStore.teams
+          .filter((t) => t.leagueId === pending.leagueId)
+          .map((t) => t.id);
+        const seasonYear = ($seasonStore.seasonYear || 2026) + 1;
+        const { generateKblSchedule, generateAblSchedule, generateJblSchedule } = await import("../../../shared/utils/scheduleGen");
+        const { shuffleAblConferences } = await import("../../../shared/utils/postseasonEngine");
+        const isAbl = pending.leagueId === "LEAGUE_ABL";
+        const isJbl = pending.leagueId === "LEAGUE_JBL";
+        seasonStore.initSeason(pending.leagueId, seasonYear, 52, proTeamIds);
+        seasonStore.setSchedule(
+          isAbl ? await generateAblSchedule(proTeamIds, pending.teamId) :
+          isJbl ? await generateJblSchedule(proTeamIds, pending.teamId) :
+                  await generateKblSchedule(proTeamIds, pending.teamId),
+        );
+        if (isAbl) {
+          const { east, west } = await shuffleAblConferences(proTeamIds);
+          seasonStore.setAblConferences(east, west);
+        }
       } else {
-        // 방출: careerResults 설정 후 careerChoice 발동
-        gameStore.setCareerResults({
-          draftDrafted: false, draftTeamId: null, draftRound: null,
-          draftPick: null, draftSigningBonus: 0,
-          universityPassed: [], independentPassed: [], sportsMilitaryPassed: false,
-        });
-        gameStore.addMessage({
-          id: `msg-indie-release-${Date.now()}`,
-          category: "system", sender: "구단",
-          subject: "방출 통보",
-          preview: "팀에서 방출 통보를 받았습니다.",
-          body: "이번 시즌 성적으로 인해 팀에서 방출되었습니다.\n다음 진로를 선택하세요.",
-          createdAt: `Y${now}`, readAt: null,
-        });
-        seasonStore.pushPendingAction({ type: "careerChoice" });
+        // 미서명 상태 — 최소 계약 강제 (Step 3에서 정상 처리, 여기는 폴백)
+        seasonStore.startNewSeason();
       }
 
       await gameStore.save();
@@ -296,6 +268,9 @@
       isProcessing = false;
       return;
     }
+
+    // ── 독립리그: 오프시즌 W39~W47에 careerChoiceHub로 이미 처리됨 ──
+    // SeasonEndModal에서는 연간 정산만 진행
 
     let progressedByHighschoolSync = false;
     if (p.careerStage === "highschool" && p.schoolId) {

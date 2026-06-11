@@ -505,7 +505,7 @@ pub fn calc_trade_rumor(p: TradeRumorPayload) -> TradeRumorResult {
     let bottom_team = p.my_rank > 0 && p.my_rank >= p.total_teams.saturating_sub(1);
     let poor_perf   = p.era >= 5.0;
     let elite_perf  = p.era <= 2.5;
-    let should_check = p.week_in_year >= 12 && p.week_in_year <= 40 && p.week_in_year % 4 == 0;
+    let should_check = p.week_in_year >= 12 && p.week_in_year <= 38 && p.week_in_year % 4 == 0;
 
     if !should_check || (!poor_perf && !elite_perf && !bottom_team) || p.same_league_teams.is_empty() {
         return TradeRumorResult { should_trigger: false, to_team_id: None };

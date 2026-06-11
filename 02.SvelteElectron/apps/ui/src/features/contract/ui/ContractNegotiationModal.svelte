@@ -31,6 +31,10 @@
     action.leagueId,
   ).then((r) => (marketSalary = r));
 
+  // 오프시즌 계약: 군 전역 후 복귀 계약 제외 모두 pendingNextContract에 보관
+  // 군 전역(military → pro): 즉시 시즌 초기화 / 그 외 모든 입단·재계약: W52 리셋 시 적용
+  $: isOffseasonRenewal = $gameStore.protagonist.careerStage !== "military";
+
   async function accept() {
     if (resolving) return;
     resolving = true;
@@ -46,6 +50,17 @@
       noTrade,
       status: "active",
     };
+
+    if (isOffseasonRenewal) {
+      gameStore.setPendingNextContract(contract);
+      seasonStore.resolvePendingAction("salaryNegotiation");
+      await gameStore.save();
+      await seasonStore.save();
+      resolving = false;
+      return;
+    }
+
+    // 첫 프로 입단 — 즉시 시즌 초기화
     gameStore.signContract(contract);
     const proTeamIds = $masterStore.teams
       .filter((t) => t.leagueId === action.leagueId)
@@ -53,8 +68,7 @@
     const seasonYear = ($seasonStore.seasonYear || 2026) + 1;
     const isAbl = action.leagueId === "LEAGUE_ABL";
     const isJbl = action.leagueId === "LEAGUE_JBL";
-    const totalWeeks = isAbl || isJbl ? 33 : 30;
-    seasonStore.initSeason(action.leagueId, seasonYear, totalWeeks, proTeamIds);
+    seasonStore.initSeason(action.leagueId, seasonYear, 52, proTeamIds);
     seasonStore.setSchedule(
       isAbl ? await generateAblSchedule(proTeamIds, contract.teamId) :
       isJbl ? await generateJblSchedule(proTeamIds, contract.teamId) :
