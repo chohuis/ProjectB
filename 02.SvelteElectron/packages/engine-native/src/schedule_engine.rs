@@ -278,6 +278,10 @@ pub fn generate_abl_schedule(p: GenerateProScheduleParams) -> Vec<ScheduleEntry>
     generate_pro_league_schedule(&p.team_ids, &p.protagonist_team_id, 7, 27, "ABL", p.season_year.unwrap_or(2026))
 }
 
+pub fn generate_jbl_schedule(p: GenerateProScheduleParams) -> Vec<ScheduleEntry> {
+    generate_pro_league_schedule(&p.team_ids, &p.protagonist_team_id, 7, 27, "JBL", p.season_year.unwrap_or(2026))
+}
+
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GenerateHsScheduleParams {

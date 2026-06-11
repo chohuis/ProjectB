@@ -2,7 +2,7 @@
   import { gameStore } from "../../../shared/stores/game";
   import { masterStore } from "../../../shared/stores/master";
   import { seasonStore } from "../../../shared/stores/season";
-  import { generateKblSchedule, generateAblSchedule } from "../../../shared/utils/scheduleGen";
+  import { generateKblSchedule, generateAblSchedule, generateJblSchedule } from "../../../shared/utils/scheduleGen";
   import { shuffleAblConferences } from "../../../shared/utils/postseasonEngine";
   import { generateFaOffers, isFaEligible, toContract, type FaOffer } from "../../../shared/utils/faEngine";
 
@@ -33,12 +33,13 @@
     const proTeamIds = $masterStore.teams.filter((t) => t.leagueId === contract.leagueId).map((t) => t.id);
     const seasonYear = ($seasonStore.seasonYear || 2026) + 1;
     const isAbl = contract.leagueId === "LEAGUE_ABL";
-    const totalWeeks = isAbl ? 33 : 30;
+    const isJbl = contract.leagueId === "LEAGUE_JBL";
+    const totalWeeks = isAbl || isJbl ? 33 : 30;
     seasonStore.initSeason(contract.leagueId, seasonYear, totalWeeks, proTeamIds);
     seasonStore.setSchedule(
-      isAbl
-        ? await generateAblSchedule(proTeamIds, contract.teamId)
-        : await generateKblSchedule(proTeamIds, contract.teamId),
+      isAbl ? await generateAblSchedule(proTeamIds, contract.teamId) :
+      isJbl ? await generateJblSchedule(proTeamIds, contract.teamId) :
+              await generateKblSchedule(proTeamIds, contract.teamId),
     );
     if (isAbl) {
       const { east, west } = await shuffleAblConferences(proTeamIds);

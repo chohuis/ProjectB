@@ -209,7 +209,7 @@ export const INJURY_SEVERITY: Record<InjuryType, InjurySeverity> = {
 };
 
 // ── 주인공 저장 데이터 ─────────────────────────────────────────
-export type CareerStage  = "highschool" | "university" | "pro" | "independent" | "military" | "pro_kbl" | "pro_abl";
+export type CareerStage  = "highschool" | "university" | "pro" | "independent" | "military" | "pro_kbl" | "pro_abl" | "pro_jbl";
 export type PlayerType   = "pitcher" | "batter" | "twoWay";
 export type Handedness   = "L" | "R" | "S";
 export type PitchingForm = "overhand" | "threeQuarter" | "sidearm" | "underhand";

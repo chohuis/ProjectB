@@ -56,6 +56,17 @@ export async function generateAblSchedule(
   return JSON.parse(raw);
 }
 
+export async function generateJblSchedule(
+  teamIds: string[],
+  protagonistTeamId: string,
+  seasonYear = 2026,
+): Promise<ScheduleEntry[]> {
+  const raw = await window.projectB!.scheduleJbl(
+    JSON.stringify({ teamIds, protagonistTeamId, seasonYear })
+  );
+  return JSON.parse(raw);
+}
+
 export async function generateHsSchedule(
   groupA: string[],
   groupB: string[],

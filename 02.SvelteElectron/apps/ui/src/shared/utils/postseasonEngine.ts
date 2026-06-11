@@ -45,6 +45,13 @@ export async function buildIndBracket(standings: Standing[]): Promise<Postseason
   return JSON.parse(raw);
 }
 
+export async function buildJblBracket(standings: Standing[]): Promise<PostseasonSeries[]> {
+  const raw = await window.projectB!.postseasonBuildJbl(
+    JSON.stringify({ standings })
+  );
+  return JSON.parse(raw);
+}
+
 export async function applyGameToSeries(
   series: PostseasonSeries,
   winnerId: string,

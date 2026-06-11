@@ -28,7 +28,7 @@ import { INJURY_LABEL } from "../types/save";
 import { toGameDate, generateHsPostseasonSemis, generateHsPostseasonFinal } from "../utils/scheduleGen";
 import { assignProtagonistRole, assignHighschoolPosition, ROLE_DESCRIPTION, isReliefsRole, relieverWouldPitch } from "../utils/pitcherRoleEngine";
 import {
-  buildKblBracket, buildAblBracket, buildUnivBracket, buildIndBracket,
+  buildKblBracket, buildAblBracket, buildUnivBracket, buildIndBracket, buildJblBracket,
   applyGameToSeries, fillNextSeries, resolveNonProtagonistSeries,
   makeSeriesGame, nextGameNum,
 } from "../utils/postseasonEngine";
@@ -1425,7 +1425,7 @@ async function injectLeaguePostseason(nextWeek: number): Promise<void> {
   const protagonistId = g.protagonist.teamId;
   const seasonYear    = s.seasonYear;
 
-  const SUPPORTED = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT"];
+  const SUPPORTED = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL", "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT"];
   if (!SUPPORTED.includes(leagueId)) return;
 
   // 정규시즌 경기가 남아 있으면 아직 아님
@@ -1439,6 +1439,7 @@ async function injectLeaguePostseason(nextWeek: number): Promise<void> {
     if (leagueId === "LEAGUE_KBL") built = await buildKblBracket(s.standings);
     else if (leagueId === "LEAGUE_UNIVERSITY") built = await buildUnivBracket(s.standings);
     else if (leagueId === "LEAGUE_INDEPENDENT") built = await buildIndBracket(s.standings);
+    else if (leagueId === "LEAGUE_JBL") built = await buildJblBracket(s.standings);
     else if (leagueId === "LEAGUE_ABL") {
       const east = s.ablEastTeams ?? [];
       const west = s.ablWestTeams ?? [];

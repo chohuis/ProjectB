@@ -16,7 +16,7 @@ pub fn calc_facility_eff(p: FacilityEffPayload) -> f64 {
         "university"  => 0.95,
         "military"    => 0.88,
         "independent" => 0.85,
-        "pro" | "pro_kbl" | "pro_abl" => {
+        "pro" | "pro_kbl" | "pro_abl" | "pro_jbl" => {
             if p.team_tier.as_deref() == Some("1군") { 1.05 } else { 0.95 }
         }
         _ => 0.92,
@@ -37,7 +37,7 @@ pub fn calc_weekly_net(p: WeeklyNetPayload) -> i32 {
         "highschool"  => (42 - 18) / 4,
         "university"  => (62 - 21) / 4,
         "military"    => (196 - 13) / 4,
-        "pro" | "pro_kbl" | "pro_abl" => {
+        "pro" | "pro_kbl" | "pro_abl" | "pro_jbl" => {
             let salary = p.salary.unwrap_or(3000) as f64;
             (salary / 52.0 - 54.0).round() as i32
         }

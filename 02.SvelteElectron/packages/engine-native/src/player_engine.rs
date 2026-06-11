@@ -328,10 +328,9 @@ pub fn generate_fa_offers(params: GenerateFaOffersParams) -> Vec<FaOffer> {
         indices.swap(i, j);
     }
 
-    indices[..n_picks].iter().map(|&idx| {
-        let team   = same_league[idx];
+    let make_offer = |team: &TeamRef, league_market: f64, rng: &mut rand::rngs::ThreadRng| -> FaOffer {
         let mult   = 0.85 + rng.gen::<f64>() * 0.35;
-        let salary = (market * mult * market_drop).round() as i64;
+        let salary = (league_market * mult * market_drop).round() as i64;
         FaOffer {
             team_id:             team.id.clone(),
             league_id:           team.league_id.clone(),
@@ -342,7 +341,38 @@ pub fn generate_fa_offers(params: GenerateFaOffersParams) -> Vec<FaOffer> {
             player_option_years: if rng.gen::<f64>() < 0.25 { 1 } else { 0 },
             no_trade:            rng.gen::<f64>() < 0.2,
         }
-    }).collect()
+    };
+
+    let mut offers: Vec<FaOffer> = indices[..n_picks].iter()
+        .map(|&idx| make_offer(same_league[idx], market, &mut rng))
+        .collect();
+
+    // KBL/ABL FA 중 OVR 65+ & 명성 20+ 이면 JBL 스카우트 오퍼 1~2개 추가
+    let can_get_jbl = (params.league_id == "LEAGUE_KBL" || params.league_id == "LEAGUE_ABL")
+        && params.pitching_ovr >= 65.0
+        && params.fame >= 20.0;
+
+    if can_get_jbl {
+        let jbl_teams: Vec<&TeamRef> = params.teams.iter()
+            .filter(|t| t.league_id == "LEAGUE_JBL")
+            .collect();
+        // OVR 75+ 이면 70%, 65~75이면 40%
+        let jbl_chance = if params.pitching_ovr >= 75.0 { 0.70 } else { 0.40 };
+        if !jbl_teams.is_empty() && rng.gen::<f64>() < jbl_chance {
+            let jbl_market = base * league_salary_mult("LEAGUE_JBL");
+            let n_jbl = rng.gen_range(1..=2usize).min(jbl_teams.len());
+            let mut jbl_idx: Vec<usize> = (0..jbl_teams.len()).collect();
+            for i in 0..n_jbl {
+                let j = rng.gen_range(i..jbl_teams.len());
+                jbl_idx.swap(i, j);
+            }
+            for &idx in &jbl_idx[..n_jbl] {
+                offers.push(make_offer(jbl_teams[idx], jbl_market, &mut rng));
+            }
+        }
+    }
+
+    offers
 }
 
 // ── Draft Engine ──────────────────────────────────────────────

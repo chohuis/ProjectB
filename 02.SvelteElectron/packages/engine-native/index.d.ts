@@ -90,6 +90,7 @@ export declare function calcIndieScoutOfferNative(paramsJson: string): string
 export declare function generateScheduleNative(p: string): string
 export declare function generateKblScheduleNative(p: string): string
 export declare function generateAblScheduleNative(p: string): string
+export declare function generateJblScheduleNative(p: string): string
 export declare function generateHsScheduleNative(p: string): string
 export declare function generateLeagueScheduleNative(p: string): string
 export declare function generateAllLeagueSchedulesNative(p: string): string
@@ -99,6 +100,7 @@ export declare function shuffleHsGroupsNative(p: string): string
 export declare function buildKblBracketNative(p: string): string
 export declare function buildAblBracketNative(p: string): string
 export declare function buildUnivBracketNative(p: string): string
+export declare function buildJblBracketNative(p: string): string
 export declare function buildIndBracketNative(p: string): string
 export declare function applyGameToSeriesNative(p: string): string
 export declare function fillNextSeriesNative(p: string): string

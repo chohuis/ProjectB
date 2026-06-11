@@ -99,6 +99,21 @@ pub fn build_univ_bracket(p: BuildBracketParams) -> Vec<PostseasonSeries> {
     ]
 }
 
+pub fn build_jbl_bracket(p: BuildBracketParams) -> Vec<PostseasonSeries> {
+    let cl: Vec<Standing> = p.standings.iter().filter(|s| s.team_id.contains("_CL_")).cloned().collect();
+    let pl: Vec<Standing> = p.standings.iter().filter(|s| s.team_id.contains("_PL_")).cloned().collect();
+    if cl.len() < 3 || pl.len() < 3 { return vec![]; }
+    let cl = sort_teams(&cl);
+    let pl = sort_teams(&pl);
+    vec![
+        PostseasonSeries { id: "JBL_CL_CS1".into(), league_id: "LEAGUE_JBL".into(), round: "CL 클라이맥스 1스테이지".into(), home_team_id: cl[1].clone(), away_team_id: cl[2].clone(), best_of: 3, home_wins: 0, away_wins: 0, winner: None, home_from: None, away_from: None,                       next_series_id: Some("JBL_CL_CF".into()), next_series_slot: Some("away".into()) },
+        PostseasonSeries { id: "JBL_PL_CS1".into(), league_id: "LEAGUE_JBL".into(), round: "PL 클라이맥스 1스테이지".into(), home_team_id: pl[1].clone(), away_team_id: pl[2].clone(), best_of: 3, home_wins: 0, away_wins: 0, winner: None, home_from: None, away_from: None,                       next_series_id: Some("JBL_PL_CF".into()),  next_series_slot: Some("away".into()) },
+        PostseasonSeries { id: "JBL_CL_CF".into(),  league_id: "LEAGUE_JBL".into(), round: "CL 클라이맥스 파이널".into(),    home_team_id: cl[0].clone(), away_team_id: "".into(),     best_of: 5, home_wins: 0, away_wins: 0, winner: None, home_from: None, away_from: Some("JBL_CL_CS1".into()), next_series_id: Some("JBL_JS".into()),    next_series_slot: Some("home".into()) },
+        PostseasonSeries { id: "JBL_PL_CF".into(),  league_id: "LEAGUE_JBL".into(), round: "PL 클라이맥스 파이널".into(),    home_team_id: pl[0].clone(), away_team_id: "".into(),     best_of: 5, home_wins: 0, away_wins: 0, winner: None, home_from: None, away_from: Some("JBL_PL_CS1".into()), next_series_id: Some("JBL_JS".into()),    next_series_slot: Some("away".into()) },
+        PostseasonSeries { id: "JBL_JS".into(),     league_id: "LEAGUE_JBL".into(), round: "일본시리즈".into(),              home_team_id: "".into(),     away_team_id: "".into(),     best_of: 7, home_wins: 0, away_wins: 0, winner: None, home_from: Some("JBL_CL_CF".into()), away_from: Some("JBL_PL_CF".into()), next_series_id: None, next_series_slot: None },
+    ]
+}
+
 pub fn build_ind_bracket(p: BuildBracketParams) -> Vec<PostseasonSeries> {
     let t = sort_teams(&p.standings);
     if t.len() < 2 { return vec![]; }

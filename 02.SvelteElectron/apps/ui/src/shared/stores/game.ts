@@ -1139,6 +1139,7 @@ function createGameStore() {
       update((s) => {
         const leagueStage =
           contract.leagueId === "LEAGUE_ABL"         ? "pro_abl" :
+          contract.leagueId === "LEAGUE_JBL"         ? "pro_jbl" :
           contract.leagueId === "LEAGUE_INDEPENDENT" ? "independent" :
           "pro_kbl";
         const protagonist: ProtagonistSave = {
@@ -1204,7 +1205,7 @@ function createGameStore() {
     enlistMilitary(unit: "sports" | "general", enlistWeek = 52, sportsUnitSelected = false, enlistYear?: number) {
       update((s) => {
         const now = s.protagonist;
-        const isPro = now.careerStage === "pro_kbl" || now.careerStage === "pro_abl" || now.careerStage === "independent";
+        const isPro = now.careerStage === "pro_kbl" || now.careerStage === "pro_abl" || now.careerStage === "pro_jbl" || now.careerStage === "independent";
         const extendedContract = isPro && now.contract
           ? { ...now.contract, remainingYears: now.contract.remainingYears + 2 }
           : now.contract;
@@ -1250,6 +1251,7 @@ function createGameStore() {
         const stage: import("../types/save").CareerStage =
           (p.militaryHiatusStage as import("../types/save").CareerStage | null) ??
           (p.leagueId === "LEAGUE_ABL" ? "pro_abl" :
+           p.leagueId === "LEAGUE_JBL" ? "pro_jbl" :
            p.leagueId === "LEAGUE_KBL" ? "pro_kbl" : "independent");
         const protagonist: ProtagonistSave = {
           ...p,
@@ -1432,7 +1434,7 @@ function createGameStore() {
     advanceSeasonYear(_seasonYear?: number) {
       update((s) => {
         const p = s.protagonist;
-        const isPro = ["pro", "pro_kbl", "pro_abl"].includes(p.careerStage);
+        const isPro = ["pro", "pro_kbl", "pro_abl", "pro_jbl"].includes(p.careerStage);
         const isStudent = ["highschool", "university"].includes(p.careerStage);
         const newGrade =
           isStudent && p.grade && p.grade < 3

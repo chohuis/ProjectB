@@ -527,6 +527,15 @@ pub fn generate_abl_schedule_native(p: String) -> String {
 }
 
 #[napi]
+pub fn generate_jbl_schedule_native(p: String) -> String {
+    let params: GenerateProScheduleParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("generateJblScheduleNative", e),
+    };
+    serde_json::to_string(&schedule_engine::generate_jbl_schedule(params))
+        .unwrap_or_else(|e| parse_err("generateJblScheduleNative/serialize", e))
+}
+
+#[napi]
 pub fn generate_hs_schedule_native(p: String) -> String {
     let params: GenerateHsScheduleParams = match serde_json::from_str(&p) {
         Ok(v) => v, Err(e) => return parse_err("generateHsScheduleNative", e),
@@ -607,6 +616,15 @@ pub fn build_univ_bracket_native(p: String) -> String {
     };
     serde_json::to_string(&postseason_engine::build_univ_bracket(params))
         .unwrap_or_else(|e| parse_err("buildUnivBracketNative/serialize", e))
+}
+
+#[napi]
+pub fn build_jbl_bracket_native(p: String) -> String {
+    let params: BuildBracketParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("buildJblBracketNative", e),
+    };
+    serde_json::to_string(&postseason_engine::build_jbl_bracket(params))
+        .unwrap_or_else(|e| parse_err("buildJblBracketNative/serialize", e))
 }
 
 #[napi]

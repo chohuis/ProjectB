@@ -145,6 +145,7 @@ declare global {
       scheduleGeneric:           (p: string) => Promise<string>;
       scheduleKbl:               (p: string) => Promise<string>;
       scheduleAbl:               (p: string) => Promise<string>;
+      scheduleJbl:               (p: string) => Promise<string>;
       scheduleHs:                (p: string) => Promise<string>;
       scheduleLeague:            (p: string) => Promise<string>;
       scheduleAllLeagues:        (p: string) => Promise<string>;
@@ -156,6 +157,7 @@ declare global {
       postseasonBuildAbl:   (p: string) => Promise<string>;
       postseasonBuildUniv:  (p: string) => Promise<string>;
       postseasonBuildInd:   (p: string) => Promise<string>;
+      postseasonBuildJbl:   (p: string) => Promise<string>;
       postseasonApplyGame:  (p: string) => Promise<string>;
       postseasonFillNext:   (p: string) => Promise<string>;
       postseasonResolveNpc: (p: string) => Promise<string>;

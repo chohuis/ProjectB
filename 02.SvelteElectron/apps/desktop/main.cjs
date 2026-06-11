@@ -625,6 +625,10 @@ app.whenReady().then(() => {
     try { return engineNative.generateAblScheduleNative(p); }
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
+  ipcMain.handle("schedule:jbl", (_event, p) => {
+    try { return engineNative.generateJblScheduleNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
   ipcMain.handle("schedule:hs", (_event, p) => {
     try { return engineNative.generateHsScheduleNative(p); }
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
@@ -665,6 +669,10 @@ app.whenReady().then(() => {
   });
   ipcMain.handle("postseason:buildInd", (_event, p) => {
     try { return engineNative.buildIndBracketNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("postseason:buildJbl", (_event, p) => {
+    try { return engineNative.buildJblBracketNative(p); }
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
   ipcMain.handle("postseason:applyGame", (_event, p) => {
