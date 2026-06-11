@@ -123,5 +123,6 @@
     "chat": {}
   },
   "diligence": 62,
-  "popularity": 59
+  "popularity": 59,
+  "militaryStatus": "군필"
 }

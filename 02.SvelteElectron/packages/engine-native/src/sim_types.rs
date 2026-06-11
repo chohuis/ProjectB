@@ -224,6 +224,7 @@ pub struct SportsUnitCandidate {
     pub name: String,
     pub ovr: f64,
     pub team_id: String,
+    pub position: String,
     pub is_protagonist: bool,
 }
 

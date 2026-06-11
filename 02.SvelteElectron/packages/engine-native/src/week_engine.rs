@@ -323,6 +323,7 @@ pub struct NpcInjuriesPayload {
 #[serde(rename_all = "camelCase")]
 pub struct NpcInjuryOccurrence {
     pub player_id: String,
+    pub injury_type: String,
     pub severity: String,
     pub recovery_weeks: u32,
 }
@@ -385,9 +386,14 @@ pub fn calc_npc_injuries(p: NpcInjuriesPayload) -> NpcInjuriesResult {
         }
 
         let tier_roll: f64 = rng.gen();
-        let tier = if tier_roll < 0.10 { "severe" } else if tier_roll < 0.40 { "moderate" } else { "light" };
+        // surgery: 2.5% / severe: 9.5% / moderate: 28% / light: 60%
+        let tier = if tier_roll < 0.025 { "surgery" }
+                   else if tier_roll < 0.12  { "severe" }
+                   else if tier_roll < 0.40  { "moderate" }
+                   else                      { "light" };
 
         let injury_type = match tier {
+            "surgery"  => pick_surgery_type(&mut rng),
             "severe"   => pick_severe_type(is_pitcher, &mut rng),
             "moderate" => pick_moderate_type(is_pitcher, &mut rng),
             _          => pick_light_type(is_pitcher, &mut rng),
@@ -398,6 +404,7 @@ pub fn calc_npc_injuries(p: NpcInjuriesPayload) -> NpcInjuriesResult {
 
         occurred.push(NpcInjuryOccurrence {
             player_id: player.player_id.clone(),
+            injury_type: injury_type.to_string(),
             severity,
             recovery_weeks,
         });

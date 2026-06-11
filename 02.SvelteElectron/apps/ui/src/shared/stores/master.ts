@@ -180,6 +180,7 @@ export interface EntityRow {
   schoolId: string;
   grade?: 1 | 2 | 3;
   notes: string;
+  militaryStatus?: "미필" | "군필" | "현역" | "면제";
   details: EntityDetails;
 }
 

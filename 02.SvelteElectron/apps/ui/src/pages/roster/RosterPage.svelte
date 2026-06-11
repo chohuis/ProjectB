@@ -244,21 +244,24 @@
     LEAGUE_ABL: "ABL", LEAGUE_JBL: "JBL", LEAGUE_IND: "독립 리그",
   };
 
+  import { INJURY_LABEL } from "../../shared/types/save";
+
   const SEV_BADGE: Record<string, string> = {
     light: "경상", moderate: "부상", severe: "중상", surgery: "수술",
   };
 
   $: npcInjuries = $seasonStore.npcInjuries ?? {};
+  $: npcRetired  = new Set($seasonStore.npcRetired ?? []);
 
-  function getRowInjury(rowId: string): { severity: string; weeksLeft: number; playingThrough: boolean } | null {
+  function getRowInjury(rowId: string): { severity: string; weeksLeft: number; playingThrough: boolean; type?: string } | null {
     if (rowId === $gameStore.protagonist.id) {
       const inj = $gameStore.protagonist.injury;
       if (!inj) return null;
-      return { severity: inj.severity, weeksLeft: inj.recoveryWeeksLeft, playingThrough: false };
+      return { severity: inj.severity, weeksLeft: inj.recoveryWeeksLeft, playingThrough: false, type: inj.type };
     }
     const npcInj = npcInjuries[rowId];
     if (!npcInj) return null;
-    return { severity: npcInj.severity, weeksLeft: npcInj.weeksLeft, playingThrough: npcInj.isPlayingThrough };
+    return { severity: npcInj.severity, weeksLeft: npcInj.weeksLeft, playingThrough: npcInj.isPlayingThrough, type: npcInj.type };
   }
 </script>
 
@@ -288,6 +291,7 @@
             {#each sortedRows as row}
               {@const p = (row.details as any)?.player}
               {@const rowInj = getRowInjury(row.id)}
+              {@const isRetired = npcRetired.has(row.id)}
               <button
                 class="data-row"
                 class:selected={selected?.id === row.id}
@@ -297,8 +301,11 @@
               >
                 <strong class="row-name">
                   {row.name}
-                  {#if rowInj}
-                    <span class="inj-badge inj-badge-{rowInj.severity}" title="{SEV_BADGE[rowInj.severity]} {rowInj.weeksLeft}주{rowInj.playingThrough ? ' (출전중)' : ''}">
+                  {#if isRetired}
+                    <span class="inj-badge inj-badge-retired">은퇴</span>
+                  {:else if rowInj}
+                    <span class="inj-badge inj-badge-{rowInj.severity}"
+                          title="{rowInj.type ? (INJURY_LABEL[rowInj.type as keyof typeof INJURY_LABEL] ?? SEV_BADGE[rowInj.severity]) : SEV_BADGE[rowInj.severity]} · {rowInj.weeksLeft}주 남음{rowInj.playingThrough ? ' (출전중)' : ''}">
                       {SEV_BADGE[rowInj.severity] ?? rowInj.severity}
                     </span>
                   {/if}
@@ -306,7 +313,7 @@
                 <span>{roleLabel(row.role as RoleTab)}</span>
                 <span>{row.role === "player" ? (p?.position ?? "-") : "-"}</span>
                 <span>{row.age}</span>
-                <span>{rowInj ? (rowInj.playingThrough ? "출전중" : "부상") : row.status}</span>
+                <span>{isRetired ? "은퇴" : rowInj ? (rowInj.playingThrough ? "출전중" : "부상") : row.status}</span>
               </button>
             {/each}
           {/if}
@@ -401,17 +408,29 @@
             {#if mp?.handedness} · {mp.handedness}투{/if}
           </p>
         </div>
-        <!-- 아이디어 1: 상태 배지 -->
+        <!-- 상태 배지 -->
         <div class="status-badges">
           {#if isPlayer}
             {#if isProtagonistModal}
               <span class="badge badge-{conditionClass(protagonist.condition)}">컨디션 {conditionLabel(protagonist.condition)}</span>
               <span class="badge badge-{fatigueClass(protagonist.fatigue)}">피로 {fatigueLabel(protagonist.fatigue)}</span>
               {#if protagonist.injury}
-                <span class="badge badge-injury">부상 · {protagonist.injury.recoveryWeeksLeft}주</span>
+                <span class="badge badge-injury">
+                  {INJURY_LABEL[protagonist.injury.type as keyof typeof INJURY_LABEL] ?? "부상"} · {protagonist.injury.recoveryWeeksLeft}주
+                </span>
               {/if}
             {:else}
-              <span class="badge badge-mid">{modalEntity.status ?? "활성"}</span>
+              {@const npcInj = npcInjuries[modalEntityId]}
+              {@const isModalRetired = npcRetired.has(modalEntityId)}
+              {#if isModalRetired}
+                <span class="badge badge-retired">부상 은퇴</span>
+              {:else if npcInj}
+                <span class="badge badge-injury">
+                  {INJURY_LABEL[npcInj.type as keyof typeof INJURY_LABEL] ?? SEV_BADGE[npcInj.severity]} · {npcInj.weeksLeft}주 남음{npcInj.isPlayingThrough ? " (출전중)" : ""}
+                </span>
+              {:else}
+                <span class="badge badge-mid">{modalEntity.status ?? "활성"}</span>
+              {/if}
             {/if}
           {/if}
         </div>
@@ -1037,4 +1056,6 @@
   .inj-badge-moderate { background:#2a1f08; color:#ffc040; border:1px solid #5a3a10; }
   .inj-badge-severe   { background:#2e1010; color:#ff8080; border:1px solid #6a2020; }
   .inj-badge-surgery  { background:#200e2e; color:#d090ff; border:1px solid #5a2a7a; }
+  .inj-badge-retired  { background:#1a1a1a; color:#888; border:1px solid #444; }
+  .badge-retired      { background:#1a1a1a; color:#888; border:1px solid #444; }
 </style>

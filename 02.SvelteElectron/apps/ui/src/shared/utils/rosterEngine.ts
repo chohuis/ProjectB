@@ -93,9 +93,10 @@ function applyNpcInjuries(entities: EntityRow[], npcInjuries: Record<string, Npc
 }
 
 // ── 팀 엔티티 분류 ────────────────────────────────────────────
-function getTeamPlayers(teamId: string, entities: EntityRow[], npcInjuries?: Record<string, NpcInjuryEntry>): EntityRow[] {
+function getTeamPlayers(teamId: string, entities: EntityRow[], npcInjuries?: Record<string, NpcInjuryEntry>, npcRetired?: string[]): EntityRow[] {
+  const retiredSet = new Set(npcRetired ?? []);
   const active = entities.filter(
-    (e) => e.role === "player" && e.teamId === teamId && e.status === "active",
+    (e) => e.role === "player" && e.teamId === teamId && e.status === "active" && !retiredSet.has(e.id),
   );
   return npcInjuries ? applyNpcInjuries(active, npcInjuries) : active;
 }
@@ -124,8 +125,9 @@ export function getTeamRotation(
   currentWeek = 0,
   teamGameCount?: number,
   leagueId?: string,
+  npcRetired?: string[],
 ): string[] {
-  const players = getTeamPlayers(teamId, entities, npcInjuries);
+  const players = getTeamPlayers(teamId, entities, npcInjuries, npcRetired);
   const pitchers = players.filter((e) => playerDetails(e).playerType === "pitcher");
 
   const restRequired = leagueId ? rotationRestGames(leagueId) : 4;
@@ -179,8 +181,9 @@ export function getTeamBullpen(
   conditions?: Record<string, PlayerCondition>,
   teamGameCount = 0,
   handlePersonnel = 50,
+  npcRetired?: string[],
 ): { bullpen: string[]; closer: string } {
-  const players = getTeamPlayers(teamId, entities, npcInjuries);
+  const players = getTeamPlayers(teamId, entities, npcInjuries, npcRetired);
   const rotSet = new Set(rotation);
 
   const reliefs = players.filter(
@@ -239,8 +242,9 @@ export function getTeamLineup(
   currentWeek = 0,
   teamGameCount = 0,
   handlePersonnel = 50,
+  npcRetired?: string[],
 ): string[] {
-  const players = getTeamPlayers(teamId, entities, npcInjuries);
+  const players = getTeamPlayers(teamId, entities, npcInjuries, npcRetired);
   let batters = players.filter(
     (e) =>
       playerDetails(e).playerType === "batter" ||
@@ -330,9 +334,10 @@ export function buildTeamRoster(
   teamGameCount = 0,
   leagueId = "",
   handlePersonnel = 50,
+  npcRetired?: string[],
 ): TeamRoster {
-  const rotation = getTeamRotation(teamId, entities, npcInjuries, maxRotation, conditions, currentWeek, teamGameCount, leagueId);
-  const { bullpen, closer } = getTeamBullpen(teamId, entities, rotation, npcInjuries, conditions, teamGameCount, handlePersonnel);
-  const lineup = getTeamLineup(teamId, entities, npcInjuries, conditions, currentWeek, teamGameCount, handlePersonnel);
+  const rotation = getTeamRotation(teamId, entities, npcInjuries, maxRotation, conditions, currentWeek, teamGameCount, leagueId, npcRetired);
+  const { bullpen, closer } = getTeamBullpen(teamId, entities, rotation, npcInjuries, conditions, teamGameCount, handlePersonnel, npcRetired);
+  const lineup = getTeamLineup(teamId, entities, npcInjuries, conditions, currentWeek, teamGameCount, handlePersonnel, npcRetired);
   return { rotation, bullpen, closer, lineup };
 }

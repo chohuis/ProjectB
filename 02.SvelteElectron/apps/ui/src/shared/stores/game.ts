@@ -763,6 +763,13 @@ function createGameStore() {
       update((s) => ({ ...s, pendingAchievements: [] }));
     },
 
+    updateNpcCareerStatus(npcId: string, status: import("../types/save").NpcCareerStatus) {
+      update((s) => ({
+        ...s,
+        npcs: s.npcs.map(n => n.npcId === npcId ? { ...n, careerStatus: status } : n),
+      }));
+    },
+
     // 감정 업데이트된 Named NPC 목록을 npcs 배열에 반영
     updateNamedNpcs(updatedNpcs: NpcSaveState[]) {
       const updatedMap = new Map(updatedNpcs.map(n => [n.npcId, n]));

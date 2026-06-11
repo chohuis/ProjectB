@@ -293,14 +293,41 @@ function getPermanentPenalty(inj: InjuryState): Partial<Record<string, number>> 
   return table[inj.type] ?? {};
 }
 
+// NPC 수술 부상 회복 후 OVR 영구 손실 테이블
+const NPC_INJURY_OVR_PENALTY: Partial<Record<InjuryType, number>> = {
+  UCL_FULL:         -5,
+  ROTATOR_FULL:     -8,
+  SHOULDER_SURGERY: -4,
+  UCL_PARTIAL:      -3,
+  ROTATOR_STRAIN:   -4,
+  BACK_HERNIATION:  -3,
+  YIPS:             -2,
+};
+
+// 은퇴 확률 계산
+function npcRetireChance(age: number, hasPriorSurgery: boolean): number {
+  if (age >= 36) return 0.65;
+  if (age >= 33) return 0.35;
+  if (hasPriorSurgery) return 0.40;
+  return 0.05;
+}
+
 async function processNpcInjuries(weekNum: number): Promise<void> {
-  seasonStore.tickNpcInjuries();
+  // ── 1. 회복 tick (weeksLeft - 1, 완치된 선수 목록 반환) ──────
+  const healed = seasonStore.tickNpcInjuries();
 
   const s = get(seasonStore);
   const g = get(gameStore);
   const m = get(masterStore);
 
-  // Build player role and consecutive appearance from schedule data (protagonist's league)
+  // 완치된 선수 → OVR 영구 손실 적용
+  for (const { playerId, entry } of healed) {
+    if (entry.permanentPenaltyApplied) continue;
+    const delta = NPC_INJURY_OVR_PENALTY[entry.type] ?? 0;
+    if (delta !== 0) seasonStore.patchNpcLiveOvr(playerId, delta);
+  }
+
+  // ── 2. 이번 주 새 부상 발생 계산 ────────────────────────────
   const playerData = new Map<string, { role: "pitcher" | "batter"; weeks: Set<number> }>();
   for (const entry of s.schedule) {
     if (!entry.result || entry.week >= weekNum) continue;
@@ -325,11 +352,14 @@ async function processNpcInjuries(weekNum: number): Promise<void> {
 
   type NpcEntry = { playerId: string; role: string; age: number; consecutiveApp: number; hasPriorInjury: boolean; isPlayingThrough: boolean; playingThroughSeverity: string | null };
   const players: NpcEntry[] = [];
+  const retired = new Set(s.npcRetired ?? []);
 
   for (const [playerId, data] of playerData) {
+    if (retired.has(playerId)) continue;
     const entity = entityMap.get(playerId);
     const age = ((entity?.details as { player?: { age?: number } } | undefined)?.player?.age) ?? 25;
     const existing = s.npcInjuries[playerId];
+    if (existing) continue; // 이미 부상 중인 선수는 신규 부상 판정 제외
 
     const weeksSorted = [...data.weeks].sort((a, b) => b - a);
     let consecutiveApp = 0;
@@ -347,30 +377,88 @@ async function processNpcInjuries(weekNum: number): Promise<void> {
 
     players.push({
       playerId, role, age, consecutiveApp,
-      hasPriorInjury: existing !== undefined,
-      isPlayingThrough: existing?.isPlayingThrough ?? false,
-      playingThroughSeverity: existing?.isPlayingThrough ? (existing.severity as string) : null,
+      hasPriorInjury: false,
+      isPlayingThrough: false,
+      playingThroughSeverity: null,
     });
   }
   if (players.length === 0) return;
 
+  // 은퇴 확률 판정용 난수 배치 (Rust에서 가져옴 — Math.random() 금지)
+  const retireRolls = JSON.parse(
+    await window.projectB!.weekRollRandomBatch(players.length)
+  ) as number[];
+
   const result = JSON.parse(
     await window.projectB!.weekCalcNpcInjuries(JSON.stringify({ players }))
-  ) as { occurred: { playerId: string; severity: string; recoveryWeeks: number }[] };
+  ) as { occurred: { playerId: string; injuryType: string; severity: string; recoveryWeeks: number }[] };
+
+  let retireRollIdx = 0;
 
   for (const occ of result.occurred) {
     const entity = entityMap.get(occ.playerId);
     const injuryMgmt = entity ? (mgrInjuryMgmt.get(entity.teamId) ?? 50) : 50;
+    const age = ((entity?.details as { player?: { age?: number } } | undefined)?.player?.age) ?? 25;
+    const isSurgery = occ.severity === "surgery";
+    const entityName = entity?.name ?? occ.playerId;
+    const injuryLabel = INJURY_LABEL[occ.injuryType as InjuryType] ?? occ.injuryType;
 
+    // ── 은퇴 판정 (수술 발생 즉시) ──────────────────────────
+    if (isSurgery) {
+      const npcSave = (g.npcs ?? []).find((n) => n.npcId === occ.playerId);
+      const hasPriorSurgery = npcSave?.injuryStatus?.severity === "surgery";
+      const retireChance = npcRetireChance(age, hasPriorSurgery);
+      const roll = retireRolls[retireRollIdx++ % retireRolls.length] ?? 0.5;
+
+      if (roll < retireChance) {
+        seasonStore.retireNpc(occ.playerId);
+        gameStore.updateNpcCareerStatus(occ.playerId, "retired");
+        gameStore.addMessage({
+          id:        `msg-npc-retire-${occ.playerId}-w${weekNum}-${Date.now()}`,
+          category:  "system",
+          sender:    "리그 사무국",
+          subject:   `은퇴 소식 — ${entityName}`,
+          preview:   `${injuryLabel}로 인한 은퇴`,
+          body:      `${entityName} 선수가 ${injuryLabel}을(를) 끝으로 현역에서 은퇴를 선언했습니다.\n\n재활보다 건강한 삶을 선택한 결정을 존중합니다.`,
+          createdAt: `W${weekNum}`,
+          readAt:    null,
+        });
+        continue; // 은퇴하면 부상 상태 등록 불필요
+      }
+    }
+
+    // ── 부상 상태 등록 ────────────────────────────────────────
     let isPlayingThrough = false;
-    if (occ.severity === "light")    isPlayingThrough = injuryMgmt < 70;
-    if (occ.severity === "moderate") isPlayingThrough = injuryMgmt < 40;
+    if (!isSurgery) {
+      if (occ.severity === "light")    isPlayingThrough = injuryMgmt < 70;
+      if (occ.severity === "moderate") isPlayingThrough = injuryMgmt < 40;
+    }
 
     seasonStore.setNpcInjury(occ.playerId, {
-      severity: occ.severity as InjurySeverity,
-      weeksLeft: occ.recoveryWeeks,
+      type:                   occ.injuryType as InjuryType,
+      severity:               occ.severity as InjurySeverity,
+      weeksLeft:              occ.recoveryWeeks,
+      totalWeeks:             occ.recoveryWeeks,
       isPlayingThrough,
+      permanentPenaltyApplied: false,
     });
+
+    // NpcSaveState 부상 상태 갱신
+    gameStore.updateNpcCareerStatus(occ.playerId, "injured");
+
+    // ── 수술 / 중증 → 리그 소식 메시지 ──────────────────────
+    if (isSurgery || occ.severity === "severe") {
+      gameStore.addMessage({
+        id:        `msg-npc-injury-${occ.playerId}-w${weekNum}-${Date.now()}`,
+        category:  "system",
+        sender:    "리그 사무국",
+        subject:   `부상 소식 — ${entityName} (${isSurgery ? "수술" : "중증"})`,
+        preview:   `${injuryLabel} / 회복 ${occ.recoveryWeeks}주`,
+        body:      `${entityName} 선수가 ${injuryLabel}으로 ${occ.recoveryWeeks}주 이탈 예정입니다.${isSurgery ? "\n\n수술이 필요한 상태로 이번 시즌 복귀는 어려울 수 있습니다." : ""}`,
+        createdAt: `W${weekNum}`,
+        readAt:    null,
+      });
+    }
   }
 }
 

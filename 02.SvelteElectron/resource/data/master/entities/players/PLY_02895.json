@@ -108,5 +108,6 @@
     "chat": {}
   },
   "diligence": 79,
-  "popularity": 12
+  "popularity": 12,
+  "militaryStatus": "현역"
 }

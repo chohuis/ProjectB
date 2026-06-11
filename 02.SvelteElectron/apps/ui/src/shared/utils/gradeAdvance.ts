@@ -51,7 +51,7 @@ export function entityToNpcState(
     careerStatus:  isMilitary ? "military" : "active",
     currentLeague: entity.leagueId,
     currentTeam:   entity.teamId,
-    militaryStatus:    isMilitary ? "현역" : "미필",
+    militaryStatus:    isMilitary ? "현역" : (entity.militaryStatus ?? "미필"),
     militaryUnit:      isMilitary ? "sports" : undefined,
     militaryEnlistYear:    isMilitary ? seasonYear - (group === "senior" ? 1 : 0) : undefined,
     militaryDischargeYear: isMilitary ? seasonYear + (group === "senior" ? 1 : 2) : undefined,

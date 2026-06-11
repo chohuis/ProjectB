@@ -69,6 +69,9 @@ function openMasterDb(dbPath) {
       bat_arm            INTEGER,
       bat_clutch         INTEGER,
 
+      -- 병역 상태 (마스터 데이터 기준 초기값)
+      military_status    TEXT,
+
       -- 코치/감독/구단주 능력치 (역할별 구조 상이 → JSON)
       staff_json         TEXT
     );
@@ -142,6 +145,8 @@ function entityToRow(e) {
     bat_arm:            b.arm          ?? null,
     bat_clutch:         b.battingClutch ?? null,
 
+    military_status:    e.militaryStatus ?? null,
+
     staff_json: Object.keys(staffData).length > 0 ? JSON.stringify(staffData) : null,
   };
 }
@@ -168,6 +173,7 @@ function main() {
       @bat_ovr, @bat_contact, @bat_power, @bat_eye,
       @bat_discipline, @bat_speed, @bat_base_instinct,
       @bat_bunting, @bat_platoon, @bat_fielding, @bat_arm, @bat_clutch,
+      @military_status,
       @staff_json
     )
   `);

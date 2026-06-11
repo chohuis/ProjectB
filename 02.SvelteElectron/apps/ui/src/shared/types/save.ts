@@ -86,9 +86,12 @@ export interface ManagerAttributes {
 
 // ── NPC 부상 상태 ──────────────────────────────────────────────
 export interface NpcInjuryEntry {
+  type: InjuryType;
   severity: InjurySeverity;
   weeksLeft: number;
+  totalWeeks: number;
   isPlayingThrough: boolean;  // 감독 스타일에 따라 부상 무릅쓰고 출전 중
+  permanentPenaltyApplied: boolean;
 }
 
 // ── 코치 능력치 ────────────────────────────────────────────────

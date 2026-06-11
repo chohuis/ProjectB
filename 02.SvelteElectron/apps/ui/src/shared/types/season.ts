@@ -279,6 +279,8 @@ export interface SaveSeason {
   ablWestTeams: string[];
   // NPC 부상 상태 (playerId → 부상 정보)
   npcInjuries: Record<string, import("../types/save").NpcInjuryEntry>;
+  // 부상 은퇴 NPC 목록 (playerId)
+  npcRetired: string[];
   // 친선경기 성적 이력
   friendlyLog: FriendlyPerformanceLog[];
   // 모든 선수 NPC 라이브 스탯 (월간 성장/하락 누적, entityId → NpcLiveStat)
@@ -326,6 +328,7 @@ export function makeEmptySeason(
     ablEastTeams: [],
     ablWestTeams: [],
     npcInjuries: {},
+    npcRetired: [],
     friendlyLog: [],
     npcLiveStats: {},
     prevSeasonKblStandings: [],

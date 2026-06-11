@@ -836,8 +836,15 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         }
     }
 
+    // 7.5 올해 전역자 포지션 수집 (Step 9 포지션 우선 선발용)
+    let vacating_positions: Vec<String> = processed.iter()
+        .filter(|n| n.current_team == "TEAM_SPORTS_UNIT"
+                 && n.military_discharge_year.map_or(false, |dy| dy <= season_year))
+        .map(|n| n.position.clone())
+        .collect();
+
     // 8. 군입대 판정 (OVR/연봉 기반 지연 성향)
-    let enlist_candidates: Vec<(usize, f64, String)> = processed.iter().enumerate()
+    let enlist_candidates: Vec<(usize, f64, String, String)> = processed.iter().enumerate()
         .filter_map(|(i, n)| {
             if n.military_status != "미필" { return None; }
             if n.current_league == "LEAGUE_HIGHSCHOOL" { return None; }
@@ -847,32 +854,32 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
                 i32::MIN..=22 => 0.05,
                 23 => 0.12,
                 24 => 0.22,
-                25 => 0.35,
-                26 => 0.55,
-                27 => 0.75,
+                25 => 0.60,
+                26 => 0.80,
+                27 => 0.95,
                 _  => 1.0,
             };
-            let ovr_delay    = if ovr >= 75.0 { 0.35 } else if ovr >= 68.0 { 0.18 } else { 0.0 };
-            let salary_delay = if n.current_salary >= 8000 { 0.30 }
-                               else if n.current_salary >= 4000 { 0.15 }
+            let ovr_delay    = if ovr >= 75.0 { 0.10 } else if ovr >= 68.0 { 0.05 } else { 0.0 };
+            let salary_delay = if n.current_salary >= 8000 { 0.10 }
+                               else if n.current_salary >= 4000 { 0.05 }
                                else { 0.0 };
             let final_prob = (base_prob - ovr_delay - salary_delay).max(0.05);
             if rng.gen::<f64>() < final_prob {
-                Some((i, ovr, n.current_team.clone()))
+                Some((i, ovr, n.current_team.clone(), n.position.clone()))
             } else {
                 None
             }
         })
         .collect();
 
-    // 9. 체육부대 선발 (상위 10명, 팀당 최대 3명)
-    let sports_candidates: Vec<(String, f64, String)> = enlist_candidates.iter()
-        .map(|(i, ovr, team)| (processed[*i].npc_id.clone(), *ovr, team.clone()))
+    // 9. 체육부대 선발 (포지션 우선, 이후 OVR 순 / 팀당 최대 3명)
+    let sports_candidates: Vec<(String, f64, String, String)> = enlist_candidates.iter()
+        .map(|(i, ovr, team, pos)| (processed[*i].npc_id.clone(), *ovr, team.clone(), pos.clone()))
         .collect();
-    let sports_selected = select_sports_unit_ids(&sports_candidates, 10, 3);
+    let sports_selected = select_sports_unit_ids(&sports_candidates, &vacating_positions, 10, 3);
 
     // 10. 입대 처리
-    for (i, _, _) in &enlist_candidates {
+    for (i, _, _, _) in &enlist_candidates {
         let n = &mut processed[*i];
         let is_sports = sports_selected.contains(&n.npc_id);
         // 원소속 저장 (전역 시 복귀용)
@@ -1093,21 +1100,35 @@ fn estimate_salary_and_contract(ovr: f64, league: &str, rng: &mut LcgRand) -> (i
     (salary, years)
 }
 
-// ── 체육부대 선발 (내부 헬퍼) ─────────────────────────────────────────────────
+// ── 체육부대 선발 (포지션 우선 → OVR 순) ─────────────────────────────────────
 
 fn select_sports_unit_ids(
-    candidates: &[(String, f64, String)],  // (id, ovr, team_id)
+    candidates: &[(String, f64, String, String)],  // (id, ovr, team_id, position)
+    vacating_positions: &[String],                 // 올해 전역자 포지션 목록
     max_total: usize,
     max_per_team: usize,
 ) -> std::collections::HashSet<String> {
-    let mut sorted = candidates.to_vec();
-    sorted.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
-
     let mut selected: std::collections::HashSet<String> = std::collections::HashSet::new();
     let mut team_count: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
 
-    for (id, _, team_id) in &sorted {
+    // OVR 내림차순 정렬 (Phase 1, 2 공통)
+    let mut sorted = candidates.to_vec();
+    sorted.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
+
+    // Phase 1: 전역 공백 포지션 채우기 (팀당 제한 무시)
+    let mut remaining_vacancies = vacating_positions.to_vec();
+    for (id, _, _, pos) in &sorted {
+        if remaining_vacancies.is_empty() { break; }
+        if let Some(idx) = remaining_vacancies.iter().position(|v| v == pos) {
+            selected.insert(id.clone());
+            remaining_vacancies.remove(idx);
+        }
+    }
+
+    // Phase 2: 잔여 슬롯 OVR 순 (팀당 max_per_team 적용)
+    for (id, _, team_id, _) in &sorted {
         if selected.len() >= max_total { break; }
+        if selected.contains(id) { continue; }
         let cnt = team_count.entry(team_id.clone()).or_insert(0);
         if *cnt < max_per_team {
             selected.insert(id.clone());
@@ -1264,10 +1285,11 @@ pub fn calc_sports_unit_candidates(params: SportsUnitCandidatesParams) -> Sports
 // ── 체육부대 최종 선발 (W52 입대 신청자 기준) ─────────────────────────────────
 
 pub fn calc_sports_unit_selection(params: SportsUnitSelectionParams) -> SportsUnitSelectionResult {
-    let pool: Vec<(String, f64, String)> = params.applicants.iter()
-        .map(|c| (c.id.clone(), c.ovr, c.team_id.clone()))
+    let pool: Vec<(String, f64, String, String)> = params.applicants.iter()
+        .map(|c| (c.id.clone(), c.ovr, c.team_id.clone(), c.position.clone()))
         .collect();
-    let selected = select_sports_unit_ids(&pool, params.max_total, params.max_per_team);
+    // 주인공 선발 시에는 vacating_positions 없이 OVR 순 Phase2만 동작
+    let selected = select_sports_unit_ids(&pool, &[], params.max_total, params.max_per_team);
     let protagonist_selected = params.applicants.iter()
         .any(|c| c.is_protagonist && selected.contains(&c.id));
     SportsUnitSelectionResult { protagonist_selected, selected_ids: selected.into_iter().collect() }

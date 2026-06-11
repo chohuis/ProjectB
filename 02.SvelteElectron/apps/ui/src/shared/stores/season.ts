@@ -92,6 +92,7 @@ function createSeasonStore() {
         ablEastTeams: season.ablEastTeams ?? [], ablWestTeams: season.ablWestTeams ?? [],
         friendlyLog: season.friendlyLog ?? [],
         npcLiveStats: season.npcLiveStats ?? {},
+        npcRetired: season.npcRetired ?? [],
         schedule: (season.schedule ?? []).map((e) => e.gameDate ? e : { ...e, gameDate: `${season.seasonYear ?? 2026}-03-01` }),
       });
     },
@@ -501,8 +502,31 @@ function createSeasonStore() {
       update((s) => NpcInjury.clearNpcInjury(s, playerId));
     },
 
-    tickNpcInjuries() {
-      update(NpcInjury.tickNpcInjuries);
+    tickNpcInjuries(): NpcInjury.HealedNpc[] {
+      let healed: NpcInjury.HealedNpc[] = [];
+      update((s) => {
+        const result = NpcInjury.tickNpcInjuries(s);
+        healed = result.healed;
+        return result.state;
+      });
+      return healed;
+    },
+
+    retireNpc(playerId: string) {
+      update((s) => NpcInjury.retireNpc(s, playerId));
+    },
+
+    patchNpcLiveOvr(playerId: string, ovrDelta: number) {
+      update((s) => {
+        const live = s.npcLiveStats[playerId];
+        if (!live) return s;
+        const patched = {
+          ...live,
+          pitching: live.pitching ? { ...live.pitching, ovr: Math.max(1, (live.pitching.ovr ?? 50) + ovrDelta) } : live.pitching,
+          batting:  live.batting  ? { ...live.batting,  ovr: Math.max(1, (live.batting.ovr  ?? 50) + ovrDelta) } : live.batting,
+        };
+        return { ...s, npcLiveStats: { ...s.npcLiveStats, [playerId]: patched } };
+      });
     },
 
     getLeagueStandings(leagueId: string): Standing[] {
