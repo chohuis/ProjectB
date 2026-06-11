@@ -1,0 +1,125 @@
+{
+  "id": "PLY_02910",
+  "name": "장상현",
+  "nameEn": "Jang Sanghyeon",
+  "role": "player",
+  "age": 22,
+  "status": "military",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "",
+  "teamId": "TEAM_SPORTS_UNIT",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "체육부대 복무 중|junior",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 29,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 42,
+        "velocity": 48,
+        "command": 40,
+        "control": 45,
+        "movement": 44,
+        "mentality": 40,
+        "recovery": 43,
+        "clutch": 39,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 29,
+        "contact": 26,
+        "power": 22,
+        "eye": 25,
+        "discipline": 21,
+        "speed": 28,
+        "baseInstinct": 25,
+        "bunting": 47,
+        "platoon": 53,
+        "fielding": 20,
+        "arm": 32,
+        "battingClutch": 27
+      },
+      "developmentRate": 66,
+      "potentialHidden": 63,
+      "primaryPosition": "RP",
+      "positionRatings": {
+        "RP": 45
+      },
+      "pitches": [
+        {
+          "id": "PITCH_FASTBALL",
+          "grade": 3
+        },
+        {
+          "id": "PITCH_SLIDER",
+          "grade": 3
+        },
+        {
+          "id": "PITCH_CURVE",
+          "grade": 3
+        }
+      ],
+      "proServiceYears": 0,
+      "contract": {
+        "salary": 1475,
+        "durationYears": 2,
+        "remainingYears": 0,
+        "signingBonus": 0,
+        "teamOptionYears": 0,
+        "playerOptionYears": 0,
+        "noTrade": false,
+        "status": "expired"
+      }
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analytics": 50,
+        "experience": 1
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  },
+  "diligence": 60,
+  "popularity": 11
+}

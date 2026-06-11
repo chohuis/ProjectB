@@ -26,6 +26,16 @@ export function entityToNpcState(
 ): NpcSaveState {
   const pl   = entity.details.player as EntityPlayerDetails;
   const grade = entity.grade ?? 3;
+  const isMilitary = entity.status === "military";
+  // 체육부대: notes에서 group 파악 ("senior" = 전역 1년 남음, "junior" = 막입대 2년 남음)
+  const notes = (entity as unknown as { notes?: string }).notes ?? "";
+  const group = notes.includes("senior") ? "senior" : "junior";
+  // clubId에서 원소속팀 ID 파생 (CLUB_KBL_TWINWOLVES → TEAM_KBL_TWINWOLVES_1)
+  const clubId = (entity as unknown as { clubId?: string }).clubId ?? "";
+  const originLeagueId = entity.originLeagueId ?? "";
+  const originalTeamId = clubId
+    ? clubId.replace(/^CLUB_/, "TEAM_") + "_1"
+    : undefined;
   return {
     npcId:        entity.id,
     name:         entity.name,
@@ -38,10 +48,15 @@ export function entityToNpcState(
     graduationYear: seasonYear + (3 - grade),
     isNamed,
     emotionRole,
-    careerStatus:  "active",
+    careerStatus:  isMilitary ? "military" : "active",
     currentLeague: entity.leagueId,
     currentTeam:   entity.teamId,
-    militaryStatus: "미필",
+    militaryStatus:    isMilitary ? "현역" : "미필",
+    militaryUnit:      isMilitary ? "sports" : undefined,
+    militaryEnlistYear:    isMilitary ? seasonYear - (group === "senior" ? 1 : 0) : undefined,
+    militaryDischargeYear: isMilitary ? seasonYear + (group === "senior" ? 1 : 2) : undefined,
+    originalLeagueId:  isMilitary && originLeagueId ? originLeagueId : undefined,
+    originalTeamId:    isMilitary && originalTeamId ? originalTeamId : undefined,
     pitching:      pl.pitching as PitchingAttributes | undefined,
     batting:       pl.batting  as BattingAttributes  | undefined,
     developmentRate: pl.developmentRate,

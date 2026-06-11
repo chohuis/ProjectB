@@ -1,0 +1,112 @@
+{
+  "id": "PLY_02909",
+  "name": "윤동욱",
+  "nameEn": "Yoon Dongwook",
+  "role": "player",
+  "age": 23,
+  "status": "military",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "",
+  "teamId": "TEAM_SPORTS_UNIT",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "체육부대 복무 중|junior",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 28,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 38,
+        "velocity": 38,
+        "command": 44,
+        "control": 40,
+        "movement": 46,
+        "mentality": 44,
+        "recovery": 39,
+        "clutch": 43,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 48,
+        "power": 50,
+        "eye": 51,
+        "discipline": 46,
+        "speed": 47,
+        "baseInstinct": 47,
+        "bunting": 32,
+        "platoon": 49,
+        "fielding": 49,
+        "arm": 60,
+        "battingClutch": 39
+      },
+      "developmentRate": 58,
+      "potentialHidden": 56,
+      "primaryPosition": "RF",
+      "positionRatings": {
+        "RF": 50
+      },
+      "pitches": [],
+      "proServiceYears": 0,
+      "contract": {
+        "salary": 1550,
+        "durationYears": 2,
+        "remainingYears": 0,
+        "signingBonus": 0,
+        "teamOptionYears": 0,
+        "playerOptionYears": 0,
+        "noTrade": false,
+        "status": "expired"
+      }
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analytics": 50,
+        "experience": 1
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  },
+  "diligence": 76,
+  "popularity": 36
+}

@@ -592,6 +592,9 @@ export interface NpcSaveState {
   militaryStatus: MilitaryStatus;
   militaryEnlistYear?: number;
   militaryDischargeYear?: number;
+  militaryUnit?: "sports" | "general";
+  originalLeagueId?: string;
+  originalTeamId?: string;
 
   // 군적
   pitching?: PitchingAttributes;

@@ -393,10 +393,57 @@ pub struct GenerateLeagueScheduleParams {
     pub cycles: u32,
     pub protagonist_team_id: String,
     pub season_year: Option<u32>,
+    pub series_games: Option<u32>,
 }
 
 pub fn generate_league_schedule(p: GenerateLeagueScheduleParams) -> Vec<ScheduleEntry> {
     let sy = p.season_year.unwrap_or(2026);
+    let games = p.series_games.unwrap_or(1);
+
+    // 2연전 모드: generate_pro_league_schedule 방식과 동일하되 시리즈당 2경기
+    if games >= 2 {
+        if p.teams.len() < 2 { return vec![]; }
+        let rounds = round_robin_pairs(&p.teams);
+        let total_slots = ((p.end_week - p.start_week + 1) * 2) as usize;
+        let prefix = p.league_id.replace("LEAGUE_", "");
+        let mut entries = Vec::new();
+        let mut game_seq = 0u32;
+
+        for week in p.start_week..=p.end_week {
+            let mut protagonist_started = false;
+            for si in 0..2usize {
+                let slot_idx = (week - p.start_week) as usize * 2 + si;
+                if slot_idx >= total_slots { break; }
+                let ridx   = slot_idx % rounds.len();
+                let flipped = (slot_idx / rounds.len()) % 2 == 1;
+                let series_label = if si == 0 { "A" } else { "B" };
+                let day_base: u32 = if si == 0 { 1 } else { 4 }; // A: 월+화, B: 목+금
+
+                for (h, a) in &rounds[ridx] {
+                    let (home, away) = if flipped { (a.clone(), h.clone()) } else { (h.clone(), a.clone()) };
+                    let is_pair = home == p.protagonist_team_id || away == p.protagonist_team_id;
+                    for g in 1u32..=games {
+                        game_seq += 1;
+                        let is_protagonist_game = is_pair && !protagonist_started && g == 1;
+                        if is_protagonist_game { protagonist_started = true; }
+                        entries.push(ScheduleEntry {
+                            id: format!("{}_W{:02}_S{}_G{}_{:04}", prefix, week, series_label, g, game_seq),
+                            week,
+                            game_date: to_game_date(sy, week, day_base + g - 1),
+                            league_id: Some(p.league_id.clone()),
+                            home_team_id: home.clone(),
+                            away_team_id: away.clone(),
+                            is_protagonist_game,
+                            phase: "season".to_string(),
+                        });
+                    }
+                }
+            }
+        }
+        return entries;
+    }
+
+    // 기존 1경기 모드 (하위호환)
     let base = build_round_robin(&p.teams);
     let mut all_rounds: Vec<Vec<(String, String)>> = Vec::new();
     for c in 0..p.cycles as usize {
@@ -420,6 +467,7 @@ pub struct LeagueConfigInput {
     pub cycles: u32,
     pub group_a: Option<Vec<String>>,
     pub group_b: Option<Vec<String>>,
+    pub series_games: Option<u32>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -437,7 +485,7 @@ pub fn generate_all_league_schedules(p: GenerateAllLeagueSchedulesParams) -> Has
         let entries = if let (Some(ga), Some(gb)) = (cfg.group_a, cfg.group_b) {
             generate_hs_schedule(GenerateHsScheduleParams { group_a: ga, group_b: gb, protagonist_team_id: p.protagonist_team_id.clone(), season_year: Some(sy) })
         } else {
-            generate_league_schedule(GenerateLeagueScheduleParams { league_id: cfg.league_id.clone(), teams: cfg.teams, start_week: cfg.start_week, end_week: cfg.end_week, cycles: cfg.cycles, protagonist_team_id: p.protagonist_team_id.clone(), season_year: Some(sy) })
+            generate_league_schedule(GenerateLeagueScheduleParams { league_id: cfg.league_id.clone(), teams: cfg.teams, start_week: cfg.start_week, end_week: cfg.end_week, cycles: cfg.cycles, protagonist_team_id: p.protagonist_team_id.clone(), season_year: Some(sy), series_games: cfg.series_games })
         };
         result.insert(cfg.league_id, entries);
     }

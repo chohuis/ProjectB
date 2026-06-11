@@ -61,13 +61,13 @@ const ABL_CLUBS = [
 ];
 
 const UNIV_TEAMS = [
-  { no: 1, teamId: "TEAM_UNIV_KNSU", schoolId: "SCHOOL_UNIV_KNSU" },
-  { no: 2, teamId: "TEAM_UNIV_KNU", schoolId: "SCHOOL_UNIV_KNU" },
-  { no: 3, teamId: "TEAM_UNIV_YONSEI", schoolId: "SCHOOL_UNIV_YONSEI" },
-  { no: 4, teamId: "TEAM_UNIV_KOREA", schoolId: "SCHOOL_UNIV_KOREA" },
-  { no: 5, teamId: "TEAM_UNIV_HANYANG", schoolId: "SCHOOL_UNIV_HANYANG" },
-  { no: 6, teamId: "TEAM_UNIV_CHUNGBUK", schoolId: "SCHOOL_UNIV_CHUNGBUK" },
-  { no: 7, teamId: "TEAM_UNIV_DONGGUK", schoolId: "SCHOOL_UNIV_DONGGUK" }
+  { no: 1, teamId: "TEAM_UNIV_HANBBIT", schoolId: "SCHOOL_UNIV_KNSU" },
+  { no: 2, teamId: "TEAM_UNIV_DONGMYUNG", schoolId: "SCHOOL_UNIV_KNU" },
+  { no: 3, teamId: "TEAM_UNIV_SEOHAE", schoolId: "SCHOOL_UNIV_YONSEI" },
+  { no: 4, teamId: "TEAM_UNIV_NAMGANG", schoolId: "SCHOOL_UNIV_KOREA" },
+  { no: 5, teamId: "TEAM_UNIV_CHEONGUN", schoolId: "SCHOOL_UNIV_HANYANG" },
+  { no: 6, teamId: "TEAM_UNIV_MIRAE", schoolId: "SCHOOL_UNIV_CHUNGBUK" },
+  { no: 7, teamId: "TEAM_UNIV_GAON", schoolId: "SCHOOL_UNIV_DONGGUK" }
 ];
 
 const JBL_CL_CLUBS = [

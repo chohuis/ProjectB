@@ -17,6 +17,7 @@ export interface LeagueConfig {
   cycles: number;
   groupA?: string[];
   groupB?: string[];
+  seriesGames?: number;
 }
 
 // ── Rust IPC 래퍼 ────────────────────────────────────────────────
@@ -40,9 +41,10 @@ export async function generateLeagueSchedule(
   cycles: number,
   protagonistTeamId: string,
   seasonYear = 2026,
+  seriesGames?: number,
 ): Promise<ScheduleEntry[]> {
   const raw = await window.projectB!.scheduleLeague(
-    JSON.stringify({ leagueId, teams, startWeek, endWeek, cycles, protagonistTeamId, seasonYear })
+    JSON.stringify({ leagueId, teams, startWeek, endWeek, cycles, protagonistTeamId, seasonYear, seriesGames })
   );
   return JSON.parse(raw);
 }
@@ -95,8 +97,9 @@ export const HS_GROUP_A = HS_ALL_TEAMS.slice(0, 8);
 export const HS_GROUP_B = HS_ALL_TEAMS.slice(8);
 
 export const UNIV_TEAMS = [
-  "TEAM_UNIV_KNSU", "TEAM_UNIV_KNU", "TEAM_UNIV_YONSEI",
-  "TEAM_UNIV_KOREA", "TEAM_UNIV_HANYANG", "TEAM_UNIV_CHUNGBUK", "TEAM_UNIV_DONGGUK",
+  "TEAM_UNIV_HANBBIT", "TEAM_UNIV_DONGMYUNG", "TEAM_UNIV_SEOHAE",
+  "TEAM_UNIV_NAMGANG", "TEAM_UNIV_CHEONGUN", "TEAM_UNIV_MIRAE", "TEAM_UNIV_GAON",
+  "TEAM_SPORTS_UNIT",
 ];
 
 export const IND_TEAMS = [
@@ -174,8 +177,8 @@ export const ALL_TEAMS_BY_LEAGUE: Record<string, string[]> = {
 };
 
 export const DEFAULT_LEAGUE_CONFIGS: Omit<LeagueConfig, "groupA" | "groupB">[] = [
-  { leagueId: "LEAGUE_UNIVERSITY",  teams: UNIV_TEAMS,      startWeek: 8, endWeek: 40, cycles: 5  },
-  { leagueId: "LEAGUE_INDEPENDENT", teams: IND_TEAMS,       startWeek: 6, endWeek: 38, cycles: 8  },
+  { leagueId: "LEAGUE_UNIVERSITY",  teams: UNIV_TEAMS,      startWeek: 8, endWeek: 40, cycles: 5,  seriesGames: 2 },
+  { leagueId: "LEAGUE_INDEPENDENT", teams: IND_TEAMS,       startWeek: 6, endWeek: 38, cycles: 8,  seriesGames: 2 },
   { leagueId: "LEAGUE_KBL",         teams: KBL_TEAMS,       startWeek: 1, endWeek: 50, cycles: 16 },
   { leagueId: "LEAGUE_ABL",         teams: ABL_TEAMS,       startWeek: 1, endWeek: 50, cycles: 9  },
   { leagueId: "LEAGUE_JBL",         teams: JBL_TEAMS,       startWeek: 1, endWeek: 50, cycles: 10 },

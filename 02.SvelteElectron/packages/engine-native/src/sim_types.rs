@@ -78,6 +78,12 @@ pub struct NpcSaveState {
     #[serde(default)]
     pub sports_unit_selected: bool,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub military_unit: Option<String>,       // "sports" | "general"
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub original_league_id: Option<String>,  // 입대 전 리그 (전역 시 복귀)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub original_team_id: Option<String>,    // 입대 전 팀 (전역 시 복귀)
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pitching: Option<NpcPitchingAttrs>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub batting: Option<NpcBattingAttrs>,

@@ -163,7 +163,7 @@ const HS_TEAMS = [
 // ── University Teams ──────────────────────────────────────────────────────────
 const UNIV_TEAMS = [
   {
-    teamId: 'TEAM_UNIV_KNSU',
+    teamId: 'TEAM_UNIV_HANBBIT',
     name: '한국체육대학교', nameEn: 'Korea National Sport University',
     city: '서울', cityEn: 'Seoul',
     colors: ['#003087', '#ffffff'],
@@ -171,7 +171,7 @@ const UNIV_TEAMS = [
     players: range(161, 180)
   },
   {
-    teamId: 'TEAM_UNIV_KNU',
+    teamId: 'TEAM_UNIV_DONGMYUNG',
     name: '경북대학교', nameEn: 'Kyungpook National University',
     city: '대구', cityEn: 'Daegu',
     colors: ['#003087', '#e8b800'],
@@ -179,7 +179,7 @@ const UNIV_TEAMS = [
     players: range(181, 200)
   },
   {
-    teamId: 'TEAM_UNIV_YONSEI',
+    teamId: 'TEAM_UNIV_SEOHAE',
     name: '연세대학교', nameEn: 'Yonsei University',
     city: '서울', cityEn: 'Seoul',
     colors: ['#003087', '#ffffff'],
@@ -187,7 +187,7 @@ const UNIV_TEAMS = [
     players: range(201, 220)
   },
   {
-    teamId: 'TEAM_UNIV_KOREA',
+    teamId: 'TEAM_UNIV_NAMGANG',
     name: '고려대학교', nameEn: 'Korea University',
     city: '서울', cityEn: 'Seoul',
     colors: ['#8b0000', '#ffffff'],
@@ -195,7 +195,7 @@ const UNIV_TEAMS = [
     players: range(221, 240)
   },
   {
-    teamId: 'TEAM_UNIV_HANYANG',
+    teamId: 'TEAM_UNIV_CHEONGUN',
     name: '한양대학교', nameEn: 'Hanyang University',
     city: '서울', cityEn: 'Seoul',
     colors: ['#c00000', '#000000'],
@@ -203,7 +203,7 @@ const UNIV_TEAMS = [
     players: range(241, 260)
   },
   {
-    teamId: 'TEAM_UNIV_CHUNGBUK',
+    teamId: 'TEAM_UNIV_MIRAE',
     name: '충북대학교', nameEn: 'Chungbuk National University',
     city: '청주', cityEn: 'Cheongju',
     colors: ['#004080', '#ffffff'],
@@ -211,7 +211,7 @@ const UNIV_TEAMS = [
     players: range(261, 280)
   },
   {
-    teamId: 'TEAM_UNIV_DONGGUK',
+    teamId: 'TEAM_UNIV_GAON',
     name: '동국대학교', nameEn: 'Dongguk University',
     city: '서울', cityEn: 'Seoul',
     colors: ['#8b4513', '#ffffff'],

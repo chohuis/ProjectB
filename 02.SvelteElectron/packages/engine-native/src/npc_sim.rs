@@ -744,8 +744,11 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
 
         let mut n = npc;
 
-        // 1. 군 복무 중: 다른 처리 건너뜀 (전역/입대는 별도 패스에서 처리)
-        if n.career_status == "military" { return n; }
+        // 1. 군 복무 중: 나이만 증가, 나머지 처리 건너뜀 (전역/입대는 별도 패스에서 처리)
+        if n.career_status == "military" {
+            n.age += 1;
+            return n;
+        }
 
         if n.career_status == "retired" || n.current_league == "LEAGUE_RETIRED" { return n; }
 
@@ -814,8 +817,19 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             if dy <= season_year {
                 n.career_status   = "active".into();
                 n.military_status = "군필".into();
-                n.current_league  = "LEAGUE_INDEPENDENT".into();
-                n.current_team    = "".into();
+                if n.military_unit.as_deref() == Some("sports") {
+                    // 체육부대: 원소속팀 복귀 (KBL/ABL), 독립 출신은 독립리그
+                    n.current_league = n.original_league_id.take()
+                        .unwrap_or_else(|| "LEAGUE_INDEPENDENT".into());
+                    n.current_team   = n.original_team_id.take().unwrap_or_default();
+                } else {
+                    // 일반부대: 독립리그 FA
+                    n.current_league = "LEAGUE_INDEPENDENT".into();
+                    n.current_team   = "".into();
+                    n.original_league_id = None;
+                    n.original_team_id   = None;
+                }
+                n.military_unit = None;
                 summary.military_discharged_count += 1;
                 summary.military_discharged_names.push(n.name.clone());
             }
@@ -860,13 +874,23 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     // 10. 입대 처리
     for (i, _, _) in &enlist_candidates {
         let n = &mut processed[*i];
+        let is_sports = sports_selected.contains(&n.npc_id);
+        // 원소속 저장 (전역 시 복귀용)
+        n.original_league_id     = Some(n.current_league.clone());
+        n.original_team_id       = Some(n.current_team.clone());
         n.career_status          = "military".into();
         n.military_status        = "현역".into();
+        n.military_unit          = Some(if is_sports { "sports" } else { "general" }.to_string());
         n.military_enlist_year   = Some(season_year);
         n.military_discharge_year = Some(season_year + 2);
-        n.current_league         = "LEAGUE_MILITARY".into();
-        n.current_team           = "".into();
-        let is_sports = sports_selected.contains(&n.npc_id);
+        // 체육부대: 대학리그 상무야구단 소속 / 일반부대: LEAGUE_MILITARY 보관
+        if is_sports {
+            n.current_league = "LEAGUE_UNIVERSITY".into();
+            n.current_team   = "TEAM_SPORTS_UNIT".into();
+        } else {
+            n.current_league = "LEAGUE_MILITARY".into();
+            n.current_team   = "".into();
+        }
         n.sports_unit_selected   = is_sports;
         summary.military_enlisted_count += 1;
         if is_sports {
@@ -1040,6 +1064,9 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
             current_salary:          0,
             contract_years:          1,
             sports_unit_selected:    false,
+            military_unit:           None,
+            original_league_id:      None,
+            original_team_id:        None,
         });
     }
     result

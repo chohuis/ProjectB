@@ -6,13 +6,14 @@ export const UNIVERSITY_REQUIREMENTS: Record<string, {
   minAcademicGrade: number;
   minBaseballScore: number;
 }> = {
-  TEAM_UNIV_KOREA:    { tier: "S", minAcademicGrade: 4, minBaseballScore: 40 },
-  TEAM_UNIV_YONSEI:   { tier: "S", minAcademicGrade: 4, minBaseballScore: 40 },
-  TEAM_UNIV_KNSU:     { tier: "A", minAcademicGrade: 5, minBaseballScore: 20 },
-  TEAM_UNIV_HANYANG:  { tier: "A", minAcademicGrade: 5, minBaseballScore: 20 },
-  TEAM_UNIV_DONGGUK:  { tier: "B", minAcademicGrade: 6, minBaseballScore: 10 },
-  TEAM_UNIV_KNU:      { tier: "C", minAcademicGrade: 7, minBaseballScore: 0  },
-  TEAM_UNIV_CHUNGBUK: { tier: "D", minAcademicGrade: 9, minBaseballScore: 0  },
+  TEAM_UNIV_NAMGANG:   { tier: "S", minAcademicGrade: 4, minBaseballScore: 40 },
+  TEAM_UNIV_SEOHAE:    { tier: "S", minAcademicGrade: 4, minBaseballScore: 40 },
+  TEAM_UNIV_HANBBIT:   { tier: "A", minAcademicGrade: 5, minBaseballScore: 20 },
+  TEAM_UNIV_CHEONGUN:  { tier: "A", minAcademicGrade: 5, minBaseballScore: 20 },
+  TEAM_UNIV_GAON:      { tier: "B", minAcademicGrade: 6, minBaseballScore: 10 },
+  TEAM_UNIV_DONGMYUNG: { tier: "C", minAcademicGrade: 7, minBaseballScore: 0  },
+  TEAM_UNIV_MIRAE:     { tier: "D", minAcademicGrade: 9, minBaseballScore: 0  },
+  TEAM_SPORTS_UNIT:    { tier: "D", minAcademicGrade: 9, minBaseballScore: 0  },
 };
 
 // ── 등급별 드래프트 스카우트 보너스 ─────────────────────────────────

@@ -1,0 +1,53 @@
+{
+  "teamId": "TEAM_SPORTS_UNIT",
+  "name": "상무야구단",
+  "nameEn": "Sangmu Baseball",
+  "city": "이천",
+  "cityEn": "Icheon",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "tier": "체육부대",
+  "minAcademicGrade": 9,
+  "minBaseballScore": 0,
+  "colors": [
+    "#1a3a6e",
+    "#c8a800"
+  ],
+  "stadium": "국군체육부대 야구장",
+  "roster": {
+    "active": [
+      "PLY_02882",
+      "PLY_02883",
+      "PLY_02884",
+      "PLY_02885",
+      "PLY_02886",
+      "PLY_02887",
+      "PLY_02888",
+      "PLY_02889",
+      "PLY_02890",
+      "PLY_02891",
+      "PLY_02892",
+      "PLY_02893",
+      "PLY_02894",
+      "PLY_02895",
+      "PLY_02896",
+      "PLY_02897",
+      "PLY_02898",
+      "PLY_02899",
+      "PLY_02900",
+      "PLY_02901",
+      "PLY_02902",
+      "PLY_02903",
+      "PLY_02904",
+      "PLY_02905",
+      "PLY_02906",
+      "PLY_02907",
+      "PLY_02908",
+      "PLY_02909",
+      "PLY_02910",
+      "PLY_02911"
+    ],
+    "rotation": [],
+    "lineup": [],
+    "bullpen": []
+  }
+}

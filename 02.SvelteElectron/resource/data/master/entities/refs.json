@@ -6055,11 +6055,11 @@
       }
     },
     {
-      "id": "TEAM_UNIV_KOREA",
+      "id": "TEAM_UNIV_NAMGANG",
       "name": "남강대학교",
       "nameEn": "Korea University",
       "leagueId": "LEAGUE_UNIVERSITY",
-      "clubId": "TEAM_UNIV_KOREA",
+      "clubId": "TEAM_UNIV_NAMGANG",
       "schoolId": "SCHOOL_UNIV_KOREA",
       "city": "서울",
       "stadium": "고려대 야구장",
@@ -6119,7 +6119,7 @@
           2020,
           2024
         ],
-        "rival": "TEAM_UNIV_YONSEI",
+        "rival": "TEAM_UNIV_SEOHAE",
         "peakEra": "1970~80년대 황금기 — 10년간 8회 우승",
         "recentRecords": [
           {
@@ -6156,11 +6156,11 @@
       }
     },
     {
-      "id": "TEAM_UNIV_YONSEI",
+      "id": "TEAM_UNIV_SEOHAE",
       "name": "서해국제대학교",
       "nameEn": "Yonsei University",
       "leagueId": "LEAGUE_UNIVERSITY",
-      "clubId": "TEAM_UNIV_YONSEI",
+      "clubId": "TEAM_UNIV_SEOHAE",
       "schoolId": "SCHOOL_UNIV_YONSEI",
       "city": "서울",
       "stadium": "연세대 야구장",
@@ -6216,7 +6216,7 @@
           2018,
           2021
         ],
-        "rival": "TEAM_UNIV_KOREA",
+        "rival": "TEAM_UNIV_NAMGANG",
         "peakEra": "1990년대 연세 전성기 — 5년간 4회 우승",
         "recentRecords": [
           {
@@ -6253,11 +6253,11 @@
       }
     },
     {
-      "id": "TEAM_UNIV_KNSU",
+      "id": "TEAM_UNIV_HANBBIT",
       "name": "한빛체육대학교",
       "nameEn": "Korea National Sport University",
       "leagueId": "LEAGUE_UNIVERSITY",
-      "clubId": "TEAM_UNIV_KNSU",
+      "clubId": "TEAM_UNIV_HANBBIT",
       "schoolId": "SCHOOL_UNIV_KNSU",
       "city": "서울",
       "stadium": "한국체육대 야구장",
@@ -6306,7 +6306,7 @@
           2019,
           2023
         ],
-        "rival": "TEAM_UNIV_HANYANG",
+        "rival": "TEAM_UNIV_CHEONGUN",
         "peakEra": "2000년대 체력 야구 전성기 — 6년간 4회 우승",
         "recentRecords": [
           {
@@ -6343,11 +6343,11 @@
       }
     },
     {
-      "id": "TEAM_UNIV_HANYANG",
+      "id": "TEAM_UNIV_CHEONGUN",
       "name": "청운공과대학교",
       "nameEn": "Hanyang University",
       "leagueId": "LEAGUE_UNIVERSITY",
-      "clubId": "TEAM_UNIV_HANYANG",
+      "clubId": "TEAM_UNIV_CHEONGUN",
       "schoolId": "SCHOOL_UNIV_HANYANG",
       "city": "서울",
       "stadium": "한양대 야구장",
@@ -6393,7 +6393,7 @@
           2013,
           2017
         ],
-        "rival": "TEAM_UNIV_KNSU",
+        "rival": "TEAM_UNIV_HANBBIT",
         "peakEra": "1990년대 에이스 듀오 시대 — 3년 연속 결승 진출",
         "recentRecords": [
           {
@@ -6430,11 +6430,11 @@
       }
     },
     {
-      "id": "TEAM_UNIV_DONGGUK",
+      "id": "TEAM_UNIV_GAON",
       "name": "가온문화대학교",
       "nameEn": "Dongguk University",
       "leagueId": "LEAGUE_UNIVERSITY",
-      "clubId": "TEAM_UNIV_DONGGUK",
+      "clubId": "TEAM_UNIV_GAON",
       "schoolId": "SCHOOL_UNIV_DONGGUK",
       "city": "서울",
       "stadium": "동국대 야구장",
@@ -6511,11 +6511,11 @@
       }
     },
     {
-      "id": "TEAM_UNIV_KNU",
+      "id": "TEAM_UNIV_DONGMYUNG",
       "name": "동명과학대학교",
       "nameEn": "Kyungpook National University",
       "leagueId": "LEAGUE_UNIVERSITY",
-      "clubId": "TEAM_UNIV_KNU",
+      "clubId": "TEAM_UNIV_DONGMYUNG",
       "schoolId": "SCHOOL_UNIV_KNU",
       "city": "대구",
       "stadium": "경북대 야구장",
@@ -6591,11 +6591,11 @@
       }
     },
     {
-      "id": "TEAM_UNIV_CHUNGBUK",
+      "id": "TEAM_UNIV_MIRAE",
       "name": "미래창성대학교",
       "nameEn": "Chungbuk National University",
       "leagueId": "LEAGUE_UNIVERSITY",
-      "clubId": "TEAM_UNIV_CHUNGBUK",
+      "clubId": "TEAM_UNIV_MIRAE",
       "schoolId": "SCHOOL_UNIV_CHUNGBUK",
       "city": "청주",
       "stadium": "충북대 야구장",
@@ -7276,6 +7276,12 @@
           }
         ]
       }
+    },
+    {
+      "id": "TEAM_SPORTS_UNIT",
+      "name": "상무야구단",
+      "leagueId": "LEAGUE_UNIVERSITY",
+      "tier": "체육부대"
     }
   ]
 }

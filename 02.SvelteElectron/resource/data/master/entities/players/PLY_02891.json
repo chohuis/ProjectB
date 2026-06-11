@@ -1,0 +1,112 @@
+{
+  "id": "PLY_02891",
+  "name": "임현석",
+  "nameEn": "Im Hyunseok",
+  "role": "player",
+  "age": 25,
+  "status": "military",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "CLUB_ABL_HARBORHAWKS",
+  "teamId": "TEAM_SPORTS_UNIT",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "체육부대 복무 중|senior",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 10,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 42,
+        "velocity": 39,
+        "command": 46,
+        "control": 40,
+        "movement": 37,
+        "mentality": 40,
+        "recovery": 38,
+        "clutch": 39,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 80,
+        "contact": 86,
+        "power": 87,
+        "eye": 78,
+        "discipline": 82,
+        "speed": 79,
+        "baseInstinct": 78,
+        "bunting": 72,
+        "platoon": 55,
+        "fielding": 85,
+        "arm": 84,
+        "battingClutch": 77
+      },
+      "developmentRate": 45,
+      "potentialHidden": 82,
+      "primaryPosition": "LF",
+      "positionRatings": {
+        "LF": 80
+      },
+      "pitches": [],
+      "proServiceYears": 3,
+      "contract": {
+        "salary": 39000,
+        "durationYears": 2,
+        "remainingYears": 0,
+        "signingBonus": 0,
+        "teamOptionYears": 0,
+        "playerOptionYears": 0,
+        "noTrade": false,
+        "status": "expired"
+      }
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analytics": 50,
+        "experience": 1
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  },
+  "diligence": 65,
+  "popularity": 39
+}
