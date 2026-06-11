@@ -63,6 +63,7 @@ export const ROSTER_RULES: Record<string, RosterRule> = {
   LEAGUE_INDEPENDENT: { min: 18, max: 45 },
   LEAGUE_KBL:         { min: 40, max: 65 },
   LEAGUE_ABL:         { min: 50, max: 90 },
+  LEAGUE_JBL:         { min: 45, max: 80 },
 };
 
 export function clampStat(v: number): number {

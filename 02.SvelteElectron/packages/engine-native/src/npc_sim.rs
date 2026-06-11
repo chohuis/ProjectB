@@ -610,6 +610,9 @@ fn roster_rule(league_id: &str) -> Option<(i32, i32)> {
         "LEAGUE_KBL"         => Some((40, 65)),
         "LEAGUE_ABL"         => Some((50, 90)),
         "LEAGUE_JBL"         => Some((45, 80)),
+        "LEAGUE_KBL_FARM"    => Some((20, 35)),
+        "LEAGUE_ABL_FARM"    => Some((20, 35)),
+        "LEAGUE_JBL_FARM"    => Some((20, 30)),
         _ => None,
     }
 }

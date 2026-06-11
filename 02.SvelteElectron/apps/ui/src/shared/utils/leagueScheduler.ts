@@ -133,6 +133,34 @@ export const JBL_TEAMS = [
   "TEAM_JBL_PL_SEAGULLS_1",      "TEAM_JBL_PL_SUNS_1",
 ];
 
+// ── 2군(팜) 팀 목록 ───────────────────────────────────────────
+export const KBL_FARM_TEAMS = [
+  "TEAM_KBL_TWINWOLVES_2", "TEAM_KBL_BEARGUARDIANS_2",
+  "TEAM_KBL_SKYGULLS_2", "TEAM_KBL_SOARINGEAGLES_2",
+  "TEAM_KBL_EMBERTIGERS_2", "TEAM_KBL_ROYALLIONS_2",
+  "TEAM_KBL_STEELDINOS_2", "TEAM_KBL_GIANTWHALES_2",
+];
+
+export const ABL_FARM_TEAMS = [
+  "TEAM_ABL_EMPIRE_2", "TEAM_ABL_HARBORHAWKS_2",
+  "TEAM_ABL_SUNDRAGONS_2", "TEAM_ABL_WINDBEARS_2",
+  "TEAM_ABL_SPACECOMETS_2", "TEAM_ABL_PEACHTREEFALCONS_2",
+  "TEAM_ABL_LONESTARS_2", "TEAM_ABL_RAINARROWS_2",
+  "TEAM_ABL_BAYSEALS_2", "TEAM_ABL_WAVERIDERS_2",
+  "TEAM_ABL_MOTORWOLVES_2", "TEAM_ABL_MOUNTAINPEAKS_2",
+  "TEAM_ABL_LAKESPIRITS_2", "TEAM_ABL_COASTALRAYS_2",
+  "TEAM_ABL_DESERTSERPENTS_2", "TEAM_ABL_RIVERCARDINALS_2",
+];
+
+export const JBL_FARM_TEAMS = [
+  "TEAM_JBL_CL_NEONCRANES_2",    "TEAM_JBL_CL_TEMPOSTINGS_2",
+  "TEAM_JBL_CL_IRONDRAKES_2",    "TEAM_JBL_CL_TIDERAVES_2",
+  "TEAM_JBL_CL_SILVERWOLVES_2",  "TEAM_JBL_CL_IRONSTORMS_2",
+  "TEAM_JBL_PL_THUNDERFALCONS_2","TEAM_JBL_PL_POLARBEARS_2",
+  "TEAM_JBL_PL_SPIRITBUFFALOS_2","TEAM_JBL_PL_MARINESOLDIERS_2",
+  "TEAM_JBL_PL_SEAGULLS_2",      "TEAM_JBL_PL_SUNS_2",
+];
+
 export const ALL_TEAMS_BY_LEAGUE: Record<string, string[]> = {
   LEAGUE_HIGHSCHOOL: HS_ALL_TEAMS,
   LEAGUE_UNIVERSITY: UNIV_TEAMS,
@@ -140,12 +168,19 @@ export const ALL_TEAMS_BY_LEAGUE: Record<string, string[]> = {
   LEAGUE_KBL: KBL_TEAMS,
   LEAGUE_ABL: ABL_TEAMS,
   LEAGUE_JBL: JBL_TEAMS,
+  LEAGUE_KBL_FARM: KBL_FARM_TEAMS,
+  LEAGUE_ABL_FARM: ABL_FARM_TEAMS,
+  LEAGUE_JBL_FARM: JBL_FARM_TEAMS,
 };
 
 export const DEFAULT_LEAGUE_CONFIGS: Omit<LeagueConfig, "groupA" | "groupB">[] = [
-  { leagueId: "LEAGUE_UNIVERSITY",  teams: UNIV_TEAMS,  startWeek: 8,  endWeek: 40, cycles: 5 },
-  { leagueId: "LEAGUE_INDEPENDENT", teams: IND_TEAMS,   startWeek: 6,  endWeek: 38, cycles: 8 },
-  { leagueId: "LEAGUE_KBL",         teams: KBL_TEAMS,   startWeek: 1,  endWeek: 50, cycles: 16 },
-  { leagueId: "LEAGUE_ABL",         teams: ABL_TEAMS,   startWeek: 1,  endWeek: 50, cycles: 9 },
-  { leagueId: "LEAGUE_JBL",         teams: JBL_TEAMS,   startWeek: 1,  endWeek: 50, cycles: 10 },
+  { leagueId: "LEAGUE_UNIVERSITY",  teams: UNIV_TEAMS,      startWeek: 8, endWeek: 40, cycles: 5  },
+  { leagueId: "LEAGUE_INDEPENDENT", teams: IND_TEAMS,       startWeek: 6, endWeek: 38, cycles: 8  },
+  { leagueId: "LEAGUE_KBL",         teams: KBL_TEAMS,       startWeek: 1, endWeek: 50, cycles: 16 },
+  { leagueId: "LEAGUE_ABL",         teams: ABL_TEAMS,       startWeek: 1, endWeek: 50, cycles: 9  },
+  { leagueId: "LEAGUE_JBL",         teams: JBL_TEAMS,       startWeek: 1, endWeek: 50, cycles: 10 },
+  // 2군: 포스트시즌 기간 활용, 플레이오프 없이 정규리그만 진행
+  { leagueId: "LEAGUE_KBL_FARM",    teams: KBL_FARM_TEAMS,  startWeek: 7, endWeek: 30, cycles: 18 },
+  { leagueId: "LEAGUE_ABL_FARM",    teams: ABL_FARM_TEAMS,  startWeek: 7, endWeek: 34, cycles: 10 },
+  { leagueId: "LEAGUE_JBL_FARM",    teams: JBL_FARM_TEAMS,  startWeek: 7, endWeek: 32, cycles: 13 },
 ];
