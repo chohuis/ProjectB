@@ -10,6 +10,20 @@
     "active": 35,
     "farm": 30
   },
+  "teamProfile": {
+    "ownerSpendingWillingness": 38,
+    "stability": 55,
+    "developmentFocus": 70,
+    "discipline": 58,
+    "ownerPatience": 65,
+    "winNowPressure": 33,
+    "scoutingQuality": 44,
+    "prestige": 36,
+    "marketAppeal": 40,
+    "clubhouseCulture": 55,
+    "medicalQuality": 43,
+    "farmInvestment": 58
+  },
   "salaryCap": 6000000,
   "currentPayroll": 0,
   "stadium": "Desert Diamond Stadium",

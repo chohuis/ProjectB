@@ -92,6 +92,10 @@ pub struct NpcSaveState {
     pub pro_service_years: Option<i32>,
     pub career_history: Vec<NpcCareerEntry>,
     pub achievements: Vec<String>,
+    #[serde(default)]
+    pub fame: f64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub personality: Option<NpcPersonality>,
 }
 
 // ── 시즌 종료 요약 ─────────────────────────────────────────────────────────────
@@ -485,6 +489,8 @@ pub struct NpcLiveInput {
     #[serde(default)]
     pub batting_xp: HashMap<String, f64>,
     pub peak_ovr: Option<f64>,
+    #[serde(default)]
+    pub current_fame: f64,
 }
 
 /// 월간 성장 계산 출력 단위
@@ -497,6 +503,8 @@ pub struct NpcLiveOutput {
     pub pitching_xp: HashMap<String, f64>,
     pub batting_xp: HashMap<String, f64>,
     pub peak_ovr: f64,
+    #[serde(default)]
+    pub fame_delta: f64,
 }
 
 /// 월간 성장 전체 파라미터
@@ -516,4 +524,152 @@ pub struct MonthlyNpcGrowthParams {
 #[serde(rename_all = "camelCase")]
 pub struct MonthlyNpcGrowthResult {
     pub updated: Vec<NpcLiveOutput>,
+}
+
+// ── 팀 프로필 ─────────────────────────────────────────────────────────────────
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ProTeamProfile {
+    pub owner_spending_willingness: f64,
+    pub stability: f64,
+    pub development_focus: f64,
+    pub discipline: f64,
+    pub owner_patience: f64,
+    pub win_now_pressure: f64,
+    pub scouting_quality: f64,
+    pub prestige: f64,
+    pub market_appeal: f64,
+    pub clubhouse_culture: f64,
+    pub medical_quality: f64,
+    pub farm_investment: f64,
+}
+
+// ── 선수 성향 ─────────────────────────────────────────────────────────────────
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NpcPersonality {
+    pub loyalty: f64,
+    pub ambition: f64,
+    pub greed: f64,
+    pub competitive_drive: f64,
+    pub stability_preference: f64,
+    #[serde(default)]
+    pub professionalism: f64,
+    pub overseas_ambition: f64,
+    pub market_preference: f64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub home_team_id: Option<String>,
+}
+
+// ── 스카우팅 타입 ──────────────────────────────────────────────────────────────
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ScoutingInputPlayer {
+    pub player_id: String,
+    pub true_ovr: f64,
+    pub true_potential: Option<f64>,
+    pub true_personality: Option<NpcPersonality>,
+    pub fame: f64,
+    pub age: i32,
+    pub is_own_player: bool,
+    pub is_prospect: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ScoutedPlayer {
+    pub player_id: String,
+    pub scouted_ovr: f64,
+    pub scouted_potential: Option<f64>,
+    pub scouted_personality: Option<NpcPersonality>,
+    pub confidence: f64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ScoutingNoiseParams {
+    pub scouting_quality: f64,
+    pub players: Vec<ScoutingInputPlayer>,
+    pub season_year: u32,
+    pub team_id: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ScoutingNoiseResult {
+    pub scouted: Vec<ScoutedPlayer>,
+}
+
+// ── 팀 엔진 공통 타입 ─────────────────────────────────────────────────────────
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RosterPlayerRef {
+    pub id: String,
+    pub position: String,
+    pub age: i32,
+    pub ovr: f64,
+    pub salary: i64,
+    pub remaining_years: i32,
+    pub pro_service_years: i32,
+    pub is_prospect: bool,
+    pub personality: Option<NpcPersonality>,
+    pub fame: f64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TradeAsset {
+    pub player_id: String,
+    pub team_id: String,
+    pub position: String,
+    pub age: i32,
+    pub ovr: f64,
+    pub true_ovr: f64,
+    pub salary: i64,
+    pub remaining_years: i32,
+    pub is_prospect: bool,
+    pub personality: Option<NpcPersonality>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct FaPlayerRef {
+    pub id: String,
+    pub position: String,
+    pub age: i32,
+    pub ovr: f64,
+    pub market_value: i64,
+    pub demand_salary: i64,
+    pub demand_years: i32,
+    pub fame: f64,
+    pub personality: Option<NpcPersonality>,
+    pub pro_service_years: i32,
+    pub current_league: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ContractOfferResult {
+    pub offer_salary: i64,
+    pub offer_years: i32,
+    pub signing_bonus: i64,
+    pub team_option_years: i32,
+    pub player_option_years: i32,
+    pub no_trade_clause: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TeamWithRoster {
+    pub team_id: String,
+    pub league_id: String,
+    pub profile: ProTeamProfile,
+    pub active_roster: Vec<String>,
+    pub farm_roster: Vec<String>,
+    pub salary_cap: i64,
+    pub current_payroll: i64,
 }

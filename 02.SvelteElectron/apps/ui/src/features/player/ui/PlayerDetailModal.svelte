@@ -90,6 +90,18 @@
     : null;
 
   $: teamById = new Map(($masterStore.teams ?? []).map((tm) => [tm.id, tm.name]));
+  $: clubById = new Map(($masterStore.clubs ?? []).map((c) => [c.id, c.name]));
+
+  function formatNotes(entity: typeof modalEntity): string {
+    if (!entity) return "";
+    const raw = (entity as unknown as { notes?: string }).notes ?? "";
+    if (!raw.includes("체육부대 복무 중")) return raw;
+    const clubId = (entity as unknown as { clubId?: string }).clubId ?? "";
+    const clubName = clubById.get(clubId) ?? clubId;
+    return clubName
+      ? `체육부대 복무 중|원 소속팀 ${clubName}`
+      : raw;
+  }
 
   $: modalRecentGames = (() => {
     if (!entityId || !modalEntity) return [];
@@ -248,7 +260,7 @@
               {#each protagonist.tags as tag}<span class="tag-badge">{tag}</span>{/each}
             </div>
           {/if}
-          {#if modalEntity.notes}<p class="modal-notes">{modalEntity.notes}</p>{/if}
+          {#if modalEntity.notes}<p class="modal-notes">{formatNotes(modalEntity)}</p>{/if}
 
           {#if isPitcher}
             <section class="modal-section">
@@ -384,7 +396,7 @@
 
         {:else}
           <section class="modal-section">
-            <p class="modal-pending">{modalEntity.notes || "정보 없음"}</p>
+            <p class="modal-pending">{formatNotes(modalEntity) || "정보 없음"}</p>
           </section>
         {/if}
 
@@ -687,7 +699,7 @@
                 </tbody>
               </table>
             {:else if modalEntity.notes}
-              <p class="modal-notes">{modalEntity.notes}</p>
+              <p class="modal-notes">{formatNotes(modalEntity)}</p>
             {:else}
               <p class="modal-pending">경력 정보 없음</p>
             {/if}

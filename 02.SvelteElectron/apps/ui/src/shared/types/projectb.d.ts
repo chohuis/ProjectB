@@ -176,6 +176,27 @@ declare global {
       weekCalcNpcFallback:  (p: string) => Promise<string>;
       weekCalcNpcInjuries:  (p: string) => Promise<string>;
       weekRollRandomBatch:  (count: number) => Promise<string>;
+      // ── scouting_engine ────────────────────────────────────
+      applyScoutingNoiseNative(p: string): Promise<string>;
+      // ── team_engine ────────────────────────────────────────
+      evalCallupCandidatesNative(p: string): Promise<string>;
+      evalCalldownCandidatesNative(p: string): Promise<string>;
+      evalReleasePriorityNative(p: string): Promise<string>;
+      evalFaBidNative(p: string): Promise<string>;
+      evalRenewalOfferNative(p: string): Promise<string>;
+      evalNewContractNative(p: string): Promise<string>;
+      evalRetirementSuggestionNative(p: string): Promise<string>;
+      generateTradeProposalsNative(p: string): Promise<string>;
+      evalTradeValueNative(p: string): Promise<string>;
+      calcWinNowPressureUpdateNative(p: string): Promise<string>;
+      calcScoutingImprovementNative(p: string): Promise<string>;
+      // ── player_agent ───────────────────────────────────────
+      playerEvalFaDecisionNative(p: string): Promise<string>;
+      playerEvalTradeResponseNative(p: string): Promise<string>;
+      playerEvalContractOfferNative(p: string): Promise<string>;
+      playerEvalRetirementResponseNative(p: string): Promise<string>;
+      playerRankFaOffersNative(p: string): Promise<string>;
+      updatePlayerLoyaltyNative(p: string): Promise<string>;
       // ── 마스터 데이터 (Electron 패키징 환경용 fallback) ──────
       masterFetch: (relPath: string) => Promise<unknown>;
       masterLoadEntities: (leagueId: string) => Promise<unknown[]>;

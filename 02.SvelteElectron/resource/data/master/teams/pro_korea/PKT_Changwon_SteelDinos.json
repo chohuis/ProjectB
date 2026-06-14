@@ -10,6 +10,20 @@
     "active": 35,
     "farm": 30
   },
+  "teamProfile": {
+    "ownerSpendingWillingness": 36,
+    "stability": 63,
+    "developmentFocus": 72,
+    "discipline": 65,
+    "ownerPatience": 68,
+    "winNowPressure": 32,
+    "scoutingQuality": 46,
+    "prestige": 40,
+    "marketAppeal": 38,
+    "clubhouseCulture": 62,
+    "medicalQuality": 42,
+    "farmInvestment": 60
+  },
   "salaryCap": 2000000,
   "currentPayroll": 0,
   "stadium": "창원 다이노 구장",

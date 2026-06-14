@@ -2,6 +2,7 @@ use std::collections::{HashMap, HashSet};
 use rand::Rng;
 
 use crate::sim_types::*;
+use crate::growth_engine::{calc_npc_fame_delta, CalcNpcFameDeltaParams, NpcPerfEntry};
 
 // ── 유틸 ─────────────────────────────────────────────────────────────────────
 
@@ -493,6 +494,15 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
 
 // ── NPC 공통 헬퍼 ────────────────────────────────────────────────────────────
 
+fn fa_eligibility_years(league_id: &str) -> i32 {
+    match league_id {
+        "LEAGUE_KBL" => 5,
+        "LEAGUE_ABL" => 6,
+        "LEAGUE_JBL" => 4,
+        _ => 9,
+    }
+}
+
 fn npc_core_ovr(npc: &NpcSaveState) -> f64 {
     if npc.player_type == "pitcher" {
         npc.pitching.as_ref().map(|p| p.ovr).unwrap_or(0.0)
@@ -788,7 +798,8 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             || n.current_league == "LEAGUE_JBL"
         {
             n.pro_service_years = Some(n.pro_service_years.unwrap_or(0) + 1);
-            if n.pro_service_years.unwrap_or(0) >= 9 && rng.gen::<f64>() < 0.6 {
+            let fa_threshold = fa_eligibility_years(&n.current_league);
+            if n.pro_service_years.unwrap_or(0) >= fa_threshold && rng.gen::<f64>() < 0.6 {
                 n.current_league = "LEAGUE_FREE_AGENT".into();
                 n.current_team   = "".into();
                 summary.fa_count += 1;
@@ -1074,6 +1085,8 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
             military_unit:           None,
             original_league_id:      None,
             original_team_id:        None,
+            fame:                    0.0,
+            personality:             None,
         });
     }
     result
@@ -1728,6 +1741,21 @@ pub fn calc_monthly_npc_growth(params: MonthlyNpcGrowthParams) -> MonthlyNpcGrow
         };
         let peak = npc.peak_ovr.unwrap_or(0.0).max(current_ovr);
 
+        let fame_delta = {
+            let perf_entry = params.perf_data.get(&npc.npc_id).map(|p| NpcPerfEntry {
+                games_played: p.games_played.max(0) as u32,
+                era:          p.era,
+                batting_avg:  p.batting_avg,
+            });
+            calc_npc_fame_delta(CalcNpcFameDeltaParams {
+                npc_id:       npc.npc_id.clone(),
+                current_fame: npc.current_fame,
+                team_id:      npc.team_id.clone(),
+                age:          npc.age as u32,
+                perf:         perf_entry,
+            })
+        };
+
         NpcLiveOutput {
             npc_id:      npc.npc_id,
             pitching:    npc.pitching,
@@ -1735,6 +1763,7 @@ pub fn calc_monthly_npc_growth(params: MonthlyNpcGrowthParams) -> MonthlyNpcGrow
             pitching_xp: npc.pitching_xp,
             batting_xp:  npc.batting_xp,
             peak_ovr:    peak,
+            fame_delta,
         }
     }).collect();
 

@@ -182,7 +182,7 @@ describe("migrateLeagueState", () => {
     const full = {
       standings: [],
       stats: { P1: { type: "pitcher" as const, g: 10, gs: 8, w: 5, l: 3, sv: 0, hd: 0, ip: 60, er: 20, h: 55, k: 70, bb: 15, era: 3.0, whip: 1.17 } },
-      playerConditions: { P1: { fatigue: 40, stamina: 80 } },
+      playerConditions: { P1: { fatigue: 40, stamina: 80, lastPitchedWeek: 0, pitchOutsLast: 0 } },
       teamRotationIndex: { TEAM_A: 2 },
     };
     const result = migrateLeagueState(full);

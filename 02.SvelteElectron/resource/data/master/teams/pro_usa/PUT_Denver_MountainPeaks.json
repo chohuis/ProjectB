@@ -10,6 +10,20 @@
     "active": 35,
     "farm": 30
   },
+  "teamProfile": {
+    "ownerSpendingWillingness": 54,
+    "stability": 62,
+    "developmentFocus": 55,
+    "discipline": 56,
+    "ownerPatience": 63,
+    "winNowPressure": 40,
+    "scoutingQuality": 58,
+    "prestige": 48,
+    "marketAppeal": 50,
+    "clubhouseCulture": 62,
+    "medicalQuality": 58,
+    "farmInvestment": 55
+  },
   "salaryCap": 8000000,
   "currentPayroll": 0,
   "stadium": "Peak Stadium",

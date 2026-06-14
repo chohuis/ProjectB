@@ -10,6 +10,20 @@
     "active": 35,
     "farm": 30
   },
+  "teamProfile": {
+    "ownerSpendingWillingness": 75,
+    "stability": 68,
+    "developmentFocus": 40,
+    "discipline": 65,
+    "ownerPatience": 45,
+    "winNowPressure": 65,
+    "scoutingQuality": 76,
+    "prestige": 78,
+    "marketAppeal": 72,
+    "clubhouseCulture": 62,
+    "medicalQuality": 76,
+    "farmInvestment": 58
+  },
   "salaryCap": 12000000,
   "currentPayroll": 0,
   "stadium": "Windy City Field",

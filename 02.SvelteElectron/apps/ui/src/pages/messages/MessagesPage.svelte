@@ -4,6 +4,7 @@
   import { seasonStore } from "../../shared/stores/season";
   import { masterStore } from "../../shared/stores/master";
   import HsGroupDrawModal from "../../features/hs-group-draw/ui/HsGroupDrawModal.svelte";
+  import TrainingStatBars from "../../features/messages/ui/TrainingStatBars.svelte";
 
   type FilterId = "all" | "unread" | MessageCategory;
 
@@ -221,9 +222,20 @@
       <p class="modal-meta">{selected.sender} · {selected.createdAt}</p>
 
       <div class="modal-body">
-        {#each selected.body.replace(/\\n/g, "\n").split("\n") as line}
-          <p>{line || " "}</p>
-        {/each}
+        {#if selected.metadata?.type === "training"}
+          {@const tm = (selected.metadata as import("../../shared/types/main").TrainingMetadata)}
+          <TrainingStatBars
+            stats={tm.stats}
+            condition={tm.condition}
+            fatigue={tm.fatigue}
+            morale={tm.morale}
+            extraLogs={tm.extraLogs}
+          />
+        {:else}
+          {#each selected.body.replace(/\\n/g, "\n").split("\n") as line}
+            <p>{line || " "}</p>
+          {/each}
+        {/if}
       </div>
 
       {#if dec}

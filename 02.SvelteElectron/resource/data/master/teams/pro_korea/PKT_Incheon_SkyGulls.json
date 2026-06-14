@@ -10,6 +10,20 @@
     "active": 35,
     "farm": 30
   },
+  "teamProfile": {
+    "ownerSpendingWillingness": 55,
+    "stability": 60,
+    "developmentFocus": 56,
+    "discipline": 58,
+    "ownerPatience": 63,
+    "winNowPressure": 42,
+    "scoutingQuality": 56,
+    "prestige": 48,
+    "marketAppeal": 52,
+    "clubhouseCulture": 60,
+    "medicalQuality": 58,
+    "farmInvestment": 54
+  },
   "salaryCap": 3500000,
   "currentPayroll": 0,
   "stadium": "인천 베이 구장",

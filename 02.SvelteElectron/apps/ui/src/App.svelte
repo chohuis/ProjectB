@@ -4,6 +4,7 @@
   import NewGamePage from "./pages/new-game/NewGamePage.svelte";
   import IntroScreen from "./features/intro/ui/IntroScreen.svelte";
   import SaveSlotScreen from "./features/save-slots/ui/SaveSlotScreen.svelte";
+  import { get } from "svelte/store";
   import { masterStore } from "./shared/stores/master";
   import { gameStore } from "./shared/stores/game";
   import { seasonStore } from "./shared/stores/season";
@@ -16,6 +17,7 @@
   onMount(async () => {
     await masterStore.load();
     masterStore.setupContentWatcher();
+    gameStore.initProTeamProfiles(get(masterStore).teams ?? []);
 
     try {
       const slots = await window.projectB?.listSlots?.();

@@ -739,6 +739,49 @@ app.whenReady().then(() => {
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
 
+  // ── scouting_engine ──────────────────────────────────────────────────────────
+  ipcMain.handle("scouting:applyNoise", (_e, p) => {
+    try { return engineNative.applyScoutingNoiseNative(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  // ── team_engine ──────────────────────────────────────────────────────────────
+  const teamHandles = [
+    ["team:evalCallup",          "evalCallupCandidatesNative"],
+    ["team:evalCalldown",        "evalCalldownCandidatesNative"],
+    ["team:evalRelease",         "evalReleasePriorityNative"],
+    ["team:evalFaBid",           "evalFaBidNative"],
+    ["team:evalRenewal",         "evalRenewalOfferNative"],
+    ["team:evalNewContract",     "evalNewContractNative"],
+    ["team:evalRetirement",      "evalRetirementSuggestionNative"],
+    ["team:generateTrade",       "generateTradeProposalsNative"],
+    ["team:evalTradeValue",      "evalTradeValueNative"],
+    ["team:winNowUpdate",        "calcWinNowPressureUpdateNative"],
+    ["team:scoutingImprovement", "calcScoutingImprovementNative"],
+  ];
+  for (const [channel, fn] of teamHandles) {
+    ipcMain.handle(channel, (_e, p) => {
+      try { return engineNative[fn](p); }
+      catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+    });
+  }
+
+  // ── player_agent ─────────────────────────────────────────────────────────────
+  const playerHandles = [
+    ["player:evalFaDecision",      "playerEvalFaDecisionNative"],
+    ["player:evalTradeResponse",   "playerEvalTradeResponseNative"],
+    ["player:evalContractOffer",   "playerEvalContractOfferNative"],
+    ["player:evalRetirementResp",  "playerEvalRetirementResponseNative"],
+    ["player:rankFaOffers",        "playerRankFaOffersNative"],
+    ["player:updateLoyalty",       "updatePlayerLoyaltyNative"],
+  ];
+  for (const [channel, fn] of playerHandles) {
+    ipcMain.handle(channel, (_e, p) => {
+      try { return engineNative[fn](p); }
+      catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+    });
+  }
+
   // ── CSP 헤더 주입 ────────────────────────────────────────────────────────────
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     const csp = isDev

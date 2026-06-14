@@ -70,9 +70,9 @@ pub struct GrowthInput {
     pub potential_hidden: Option<f64>,  // 60~99; None → 75 기본값
     pub pitching: PitchingAttributes,
     pub batting: BattingAttributes,
-    #[serde(default)]
+    #[serde(default, rename = "pitchingXP")]
     pub pitching_xp: HashMap<String, f64>,
-    #[serde(default)]
+    #[serde(default, rename = "battingXP")]
     pub batting_xp: HashMap<String, f64>,
     pub training_pitch_state: Option<TrainingPitchState>,
     #[serde(default)]
@@ -103,7 +103,9 @@ pub struct GameGrowthParams {
 pub struct GrowthPatch {
     pub pitching: PitchingAttributes,
     pub batting: BattingAttributes,
+    #[serde(rename = "pitchingXP")]
     pub pitching_xp: HashMap<String, f64>,
+    #[serde(rename = "battingXP")]
     pub batting_xp: HashMap<String, f64>,
     pub fatigue: f64,
     pub condition: f64,
@@ -749,6 +751,49 @@ pub fn calc_protagonist_aging(params: ProtagonistAgingParams) -> ProtagonistAgin
     }
 
     ProtagonistAgingResult { pitching, batting, logs }
+}
+
+// ── NPC fame delta 계산 ───────────────────────────────────────
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NpcPerfEntry {
+    pub games_played: u32,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub era: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub batting_avg: Option<f64>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CalcNpcFameDeltaParams {
+    pub npc_id: String,
+    pub current_fame: f64,
+    pub team_id: String,
+    pub age: u32,
+    pub perf: Option<NpcPerfEntry>,
+}
+
+pub fn calc_npc_fame_delta(p: CalcNpcFameDeltaParams) -> f64 {
+    let perf_delta: f64 = if let Some(perf) = p.perf {
+        if perf.games_played >= 5 {
+            if let Some(era) = perf.era {
+                if era < 2.50 { 3.0 } else if era < 3.50 { 1.0 } else if era > 5.00 { -1.5 } else { 0.0 }
+            } else if let Some(avg) = perf.batting_avg {
+                if avg > 0.320 { 3.0 } else if avg > 0.280 { 1.0 } else if avg < 0.220 { -1.5 } else { 0.0 }
+            } else { 0.0 }
+        } else { -0.5 }
+    } else { -0.5 };
+
+    let league_base = if p.team_id.contains("KBL") { 0.5 }
+        else if p.team_id.contains("ABL") { 1.0 }
+        else if p.team_id.contains("JBL") { 0.8 }
+        else { 0.1 };
+
+    let age_adj = if p.age >= 35 { -0.5 } else { 0.0 };
+
+    (perf_delta + league_base + age_adj).clamp(-5.0, 5.0)
 }
 
 #[cfg(test)]

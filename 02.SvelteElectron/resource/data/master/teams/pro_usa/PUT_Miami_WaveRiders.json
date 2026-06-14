@@ -10,6 +10,20 @@
     "active": 35,
     "farm": 30
   },
+  "teamProfile": {
+    "ownerSpendingWillingness": 58,
+    "stability": 55,
+    "developmentFocus": 50,
+    "discipline": 55,
+    "ownerPatience": 55,
+    "winNowPressure": 52,
+    "scoutingQuality": 60,
+    "prestige": 55,
+    "marketAppeal": 62,
+    "clubhouseCulture": 58,
+    "medicalQuality": 60,
+    "farmInvestment": 48
+  },
   "salaryCap": 8000000,
   "currentPayroll": 0,
   "stadium": "Wave Stadium",

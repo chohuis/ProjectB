@@ -570,6 +570,18 @@ export interface NpcCareerEntry {
   stats?: PlayerSeasonStats;  // 연도별 상세 성적 (최근 5년 표시용)
 }
 
+export interface NpcPersonality {
+  loyalty: number;
+  ambition: number;
+  greed: number;
+  competitiveDrive: number;
+  stabilityPreference: number;
+  professionalism: number;
+  overseasAmbition: number;
+  marketPreference: number;
+  homeTeamId?: string | null;
+}
+
 export interface NpcSaveState {
   npcId: string;
   name: string;
@@ -610,6 +622,9 @@ export interface NpcSaveState {
   };
   careerHistory: NpcCareerEntry[];
   achievements: string[];  // ["2025 신인상", "2027 MVP"]
+
+  fame: number;
+  personality?: NpcPersonality;
 
   // 감정 시스템 (Named NPC 전용, optional)
   emotion?:        NpcEmotion;

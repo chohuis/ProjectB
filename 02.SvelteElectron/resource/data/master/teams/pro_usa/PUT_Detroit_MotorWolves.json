@@ -10,6 +10,20 @@
     "active": 35,
     "farm": 30
   },
+  "teamProfile": {
+    "ownerSpendingWillingness": 52,
+    "stability": 62,
+    "developmentFocus": 56,
+    "discipline": 63,
+    "ownerPatience": 60,
+    "winNowPressure": 45,
+    "scoutingQuality": 56,
+    "prestige": 50,
+    "marketAppeal": 47,
+    "clubhouseCulture": 60,
+    "medicalQuality": 56,
+    "farmInvestment": 52
+  },
   "salaryCap": 8000000,
   "currentPayroll": 0,
   "stadium": "Motor City Park",

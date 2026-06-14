@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use rand::Rng;
 use crate::npc_sim;
-use crate::sim_types::{ProtagonistDraftParams};
+use crate::sim_types::{ProtagonistDraftParams, ProTeamProfile};
 
 // ── Career Chain ──────────────────────────────────────────────
 
@@ -283,6 +283,13 @@ pub fn calc_offered_salary_for_protagonist(params: CalcOfferedSalaryForProtagoni
 pub struct TeamRef {
     pub id: String,
     pub league_id: String,
+    // ── 신규 추가 ──
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub profile: Option<ProTeamProfile>,
+    #[serde(default)]
+    pub current_payroll: i64,
+    #[serde(default)]
+    pub salary_cap: i64,
 }
 
 #[derive(Debug, Deserialize)]
@@ -329,14 +336,35 @@ pub fn generate_fa_offers(params: GenerateFaOffersParams) -> Vec<FaOffer> {
     }
 
     let make_offer = |team: &TeamRef, league_market: f64, rng: &mut rand::rngs::ThreadRng| -> FaOffer {
-        let mult   = 0.85 + rng.gen::<f64>() * 0.35;
-        let salary = (league_market * mult * market_drop).round() as i64;
+        let (win_mult, year_bias, bonus_mult) = if let Some(ref profile) = team.profile {
+            let wm = 1.0 + (profile.win_now_pressure - 50.0) / 100.0 * 0.30;
+            let yb = if profile.stability > 65.0 { 1i32 } else if profile.stability < 35.0 { -1 } else { 0 };
+            let bm = 0.08 + profile.market_appeal / 100.0 * 0.12;
+            let flex = if team.salary_cap > 0 {
+                (team.salary_cap - team.current_payroll) as f64 / team.salary_cap as f64
+            } else { 0.5 };
+            let effective_wm = if flex < 0.15 { wm * 0.6 } else { wm };
+            (effective_wm, yb, bm)
+        } else {
+            (1.0, 0, 0.12)
+        };
+
+        let scouting_noise = if let Some(ref p) = team.profile {
+            (100.0 - p.scouting_quality) / 100.0 * 0.25
+        } else { 0.15 };
+
+        let noise   = (rng.gen::<f64>() * 2.0 - 1.0) * scouting_noise;
+        let mult    = (0.85 + rng.gen::<f64>() * 0.35) * win_mult;
+        let salary  = (league_market * mult * (1.0 + noise) * market_drop).round() as i64;
+        let dur_raw = rng.gen_range(1..=4i32) + year_bias;
+        let duration_years = dur_raw.clamp(1, 5) as u32;
+
         FaOffer {
             team_id:             team.id.clone(),
             league_id:           team.league_id.clone(),
             salary,
-            duration_years:      rng.gen_range(1..=4),
-            signing_bonus:       (salary as f64 * (0.12 + rng.gen::<f64>() * 0.16)).round() as i64,
+            duration_years,
+            signing_bonus:       (salary as f64 * (bonus_mult + rng.gen::<f64>() * 0.08)).round() as i64,
             team_option_years:   if rng.gen::<f64>() < 0.35 { 1 } else { 0 },
             player_option_years: if rng.gen::<f64>() < 0.25 { 1 } else { 0 },
             no_trade:            rng.gen::<f64>() < 0.2,

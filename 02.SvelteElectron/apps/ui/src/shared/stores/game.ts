@@ -71,6 +71,7 @@ export interface GameStoreState {
   seasonEndSummary: SeasonEndSummary | null;  // 직전 시즌 종료 처리 요약 (비저장)
   lastTop10Pitcher: import("../types/save").Top10Snapshot | null;  // 직전 투수 TOP10 스냅샷
   lastTop10Batter:  import("../types/save").Top10Snapshot | null;  // 직전 타자 TOP10 스냅샷
+  proTeamProfiles: Record<string, import("../stores/master").ProTeamProfile>;  // 런타임 팀 프로파일 (비저장)
   dayLabel: string;
   logs: string[];
   upcoming: string[];
@@ -329,6 +330,7 @@ function buildInitialState(): GameStoreState {
     seasonEndSummary: null,
     lastTop10Pitcher: null,
     lastTop10Batter:  null,
+    proTeamProfiles: {},
     dayLabel:     computeWeekLabel(1, BASE_SEASON_YEAR),
     logs:         ["훈련 루틴 설정 완료", "코치 면담으로 제구 +1", "팀 분위기 안정"],
     upcoming:     ["화요일 불펜 세션", "금요일 체력장", "토요일 주말 리그 1차전"],
@@ -440,6 +442,9 @@ function fromSaveGame(saved: SaveGame): GameStoreState {
     pendingDraft: [],
     pendingAchievements: [],
     seasonEndSummary: null,
+    lastTop10Pitcher: null,
+    lastTop10Batter:  null,
+    proTeamProfiles:  {},
     dayLabel:     computeWeekLabel(1, BASE_SEASON_YEAR),
     logs:         saved.recentLogs,
     upcoming:     saved.recentUpcoming,
@@ -777,6 +782,23 @@ function createGameStore() {
         ...s,
         npcs: s.npcs.map(n => updatedMap.get(n.npcId) ?? n),
       }));
+    },
+
+    patchProTeamProfile(teamId: string, profile: import("../stores/master").ProTeamProfile) {
+      update((s) => ({
+        ...s,
+        proTeamProfiles: { ...s.proTeamProfiles, [teamId]: profile },
+      }));
+    },
+
+    initProTeamProfiles(teams: import("../stores/master").TeamRef[]) {
+      update((s) => {
+        const map: Record<string, import("../stores/master").ProTeamProfile> = { ...s.proTeamProfiles };
+        for (const t of teams) {
+          if (t.proTeamProfile && !map[t.id]) map[t.id] = { ...t.proTeamProfile };
+        }
+        return { ...s, proTeamProfiles: map };
+      });
     },
 
     applyMoneyChange(delta: number) {
@@ -1533,9 +1555,9 @@ function createGameStore() {
       });
       // 병역 현황 메시지용 임시 저장
       (window as any).__lastOffseasonSummary = {
-        militaryEnlistedSports:   result.summary.militaryEnlistedSports ?? [],
-        militaryEnlistedGeneral:  result.summary.militaryEnlistedGeneral ?? [],
-        militaryDischargedNames:  result.summary.militaryDischargedNames ?? [],
+        militaryEnlistedSports:   (result.summary as any).militaryEnlistedSports ?? [],
+        militaryEnlistedGeneral:  (result.summary as any).militaryEnlistedGeneral ?? [],
+        militaryDischargedNames:  (result.summary as any).militaryDischargedNames ?? [],
       };
       update((st) => ({
         ...st,
@@ -1619,6 +1641,9 @@ function createGameStore() {
         pendingDraft: [],
         pendingAchievements: [],
         seasonEndSummary: null,
+        lastTop10Pitcher: null,
+        lastTop10Batter:  null,
+        proTeamProfiles:  {},
         dayLabel: computeWeekLabel(1, BASE_SEASON_YEAR),
         logs: [],
         upcoming: [],

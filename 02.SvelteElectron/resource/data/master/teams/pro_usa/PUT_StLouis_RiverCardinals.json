@@ -10,6 +10,20 @@
     "active": 35,
     "farm": 30
   },
+  "teamProfile": {
+    "ownerSpendingWillingness": 36,
+    "stability": 62,
+    "developmentFocus": 70,
+    "discipline": 62,
+    "ownerPatience": 66,
+    "winNowPressure": 32,
+    "scoutingQuality": 45,
+    "prestige": 42,
+    "marketAppeal": 38,
+    "clubhouseCulture": 60,
+    "medicalQuality": 43,
+    "farmInvestment": 58
+  },
   "salaryCap": 6000000,
   "currentPayroll": 0,
   "stadium": "River Field",

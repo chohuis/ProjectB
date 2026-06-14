@@ -10,6 +10,20 @@
     "active": 35,
     "farm": 30
   },
+  "teamProfile": {
+    "ownerSpendingWillingness": 58,
+    "stability": 60,
+    "developmentFocus": 52,
+    "discipline": 58,
+    "ownerPatience": 58,
+    "winNowPressure": 48,
+    "scoutingQuality": 60,
+    "prestige": 55,
+    "marketAppeal": 58,
+    "clubhouseCulture": 60,
+    "medicalQuality": 60,
+    "farmInvestment": 50
+  },
   "salaryCap": 9000000,
   "currentPayroll": 0,
   "stadium": "Comet Dome",

@@ -10,6 +10,20 @@
     "active": 35,
     "farm": 30
   },
+  "teamProfile": {
+    "ownerSpendingWillingness": 56,
+    "stability": 62,
+    "developmentFocus": 52,
+    "discipline": 63,
+    "ownerPatience": 58,
+    "winNowPressure": 48,
+    "scoutingQuality": 60,
+    "prestige": 58,
+    "marketAppeal": 50,
+    "clubhouseCulture": 65,
+    "medicalQuality": 60,
+    "farmInvestment": 50
+  },
   "salaryCap": 3500000,
   "currentPayroll": 0,
   "stadium": "광주 타이거 구장",

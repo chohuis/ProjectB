@@ -10,6 +10,20 @@
     "active": 35,
     "farm": 30
   },
+  "teamProfile": {
+    "ownerSpendingWillingness": 35,
+    "stability": 60,
+    "developmentFocus": 74,
+    "discipline": 60,
+    "ownerPatience": 70,
+    "winNowPressure": 30,
+    "scoutingQuality": 44,
+    "prestige": 38,
+    "marketAppeal": 42,
+    "clubhouseCulture": 62,
+    "medicalQuality": 42,
+    "farmInvestment": 60
+  },
   "salaryCap": 6000000,
   "currentPayroll": 0,
   "stadium": "Coastal Field",

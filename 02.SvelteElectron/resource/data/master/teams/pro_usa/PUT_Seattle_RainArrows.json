@@ -10,6 +10,20 @@
     "active": 35,
     "farm": 30
   },
+  "teamProfile": {
+    "ownerSpendingWillingness": 56,
+    "stability": 62,
+    "developmentFocus": 58,
+    "discipline": 60,
+    "ownerPatience": 62,
+    "winNowPressure": 40,
+    "scoutingQuality": 60,
+    "prestige": 52,
+    "marketAppeal": 55,
+    "clubhouseCulture": 65,
+    "medicalQuality": 60,
+    "farmInvestment": 56
+  },
   "salaryCap": 9000000,
   "currentPayroll": 0,
   "stadium": "Rain Arrow Park",

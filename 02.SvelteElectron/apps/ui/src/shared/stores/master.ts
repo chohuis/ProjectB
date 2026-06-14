@@ -50,10 +50,10 @@ export interface ClubRef {
 }
 
 export interface TeamProfile {
-  style: string;
-  desc: string;
-  tags: string[];
-  strengths: string[];
+  style?: string;
+  desc?: string;
+  tags?: string[];
+  strengths?: string[];
   funding?: "최상" | "상" | "중" | "하" | "최하";
   difficulty?: "최상" | "상" | "중" | "하" | "최하";
   prestige?: "S" | "A" | "B" | "C" | "D";
@@ -62,6 +62,21 @@ export interface TeamProfile {
   atmosphere?: "엄격" | "체계적" | "균형" | "자유로운" | "가족적";
   mediaPressure?: "낮음" | "보통" | "높음" | "극심";
   promoChance?: "높음" | "보통" | "낮음";
+}
+
+export interface ProTeamProfile {
+  ownerSpendingWillingness: number;
+  stability: number;
+  developmentFocus: number;
+  discipline: number;
+  ownerPatience: number;
+  winNowPressure: number;
+  scoutingQuality: number;
+  prestige: number;
+  marketAppeal: number;
+  clubhouseCulture: number;
+  medicalQuality: number;
+  farmInvestment: number;
 }
 
 export interface TeamRecord {
@@ -95,6 +110,7 @@ export interface TeamRef {
   colors?: [string, string];
   capacity?: number;
   profile?: TeamProfile;
+  proTeamProfile?: ProTeamProfile;
   history?: TeamHistory;
 }
 
@@ -181,6 +197,7 @@ export interface EntityRow {
   grade?: 1 | 2 | 3;
   notes: string;
   militaryStatus?: "미필" | "군필" | "현역" | "면제";
+  personality?: import("../types/save").NpcPersonality;
   details: EntityDetails;
 }
 
@@ -750,11 +767,24 @@ function createMasterStore() {
     });
   }
 
+  function patchEntityTeams(moves: Array<{ id: string; teamId: string }>) {
+    if (moves.length === 0) return;
+    const moveMap = new Map(moves.map((m) => [m.id, m.teamId]));
+    update((s) => ({
+      ...s,
+      entities: s.entities.map((e) => {
+        const newTeam = moveMap.get(e.id);
+        return newTeam ? { ...e, teamId: newTeam } : e;
+      }),
+    }));
+  }
+
   return {
     subscribe, load, loadEntities,
     reloadEvents, reloadAchievements,
     setupContentWatcher,
     applyNpcLiveStats,
+    patchEntityTeams,
   };
 }
 

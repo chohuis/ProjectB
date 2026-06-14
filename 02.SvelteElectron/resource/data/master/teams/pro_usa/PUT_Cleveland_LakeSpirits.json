@@ -10,6 +10,20 @@
     "active": 35,
     "farm": 30
   },
+  "teamProfile": {
+    "ownerSpendingWillingness": 36,
+    "stability": 58,
+    "developmentFocus": 72,
+    "discipline": 60,
+    "ownerPatience": 68,
+    "winNowPressure": 30,
+    "scoutingQuality": 46,
+    "prestige": 38,
+    "marketAppeal": 36,
+    "clubhouseCulture": 58,
+    "medicalQuality": 42,
+    "farmInvestment": 58
+  },
   "salaryCap": 6000000,
   "currentPayroll": 0,
   "stadium": "Lakefront Park",

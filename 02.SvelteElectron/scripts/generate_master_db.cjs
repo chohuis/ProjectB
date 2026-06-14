@@ -73,7 +73,10 @@ function openMasterDb(dbPath) {
       military_status    TEXT,
 
       -- 코치/감독/구단주 능력치 (역할별 구조 상이 → JSON)
-      staff_json         TEXT
+      staff_json         TEXT,
+
+      -- 플레이어 성격 (결정론적 생성)
+      personality_json   TEXT
     );
 
     CREATE INDEX idx_npc_master_league ON npc_master(league_id);
@@ -81,6 +84,54 @@ function openMasterDb(dbPath) {
     CREATE INDEX idx_npc_master_role   ON npc_master(role);
   `);
   return db;
+}
+
+// ── 결정론적 LCG ──────────────────────────────────────────────
+function makeLcg(seed) {
+  let s = (seed >>> 0) || 1;
+  return () => {
+    s = Math.imul(s, 1664525) + 1013904223 >>> 0;
+    return s / 0x100000000;
+  };
+}
+
+function clampInt(v, lo, hi) {
+  return Math.round(Math.min(hi, Math.max(lo, v)));
+}
+
+function generatePersonality(e) {
+  const pl      = e.details?.player ?? {};
+  const diligence  = e.diligence  ?? 60;
+  const popularity = e.popularity ?? 30;
+  const devRate    = pl.developmentRate  ?? 65;
+  const potential  = pl.potentialHidden  ?? 75;
+  const age        = e.age ?? 18;
+
+  const idNum = parseInt((e.id ?? "1").replace(/\D/g, ""), 10) || 1;
+  const lcg = makeLcg(idNum);
+
+  const bases = {
+    loyalty:             50,
+    ambition:            40 + popularity * 0.25 + (age <= 20 ? 10 : 0),
+    greed:               30 + (100 - diligence) * 0.15,
+    competitiveDrive:    45 + devRate   * 0.15,
+    stabilityPreference: 30 + age       * 0.80,
+    professionalism:     35 + diligence * 0.40,
+    overseasAmbition:    20 + potential * 0.15,
+    marketPreference:    40 + popularity* 0.20,
+  };
+
+  return JSON.stringify({
+    loyalty:             clampInt(bases.loyalty             + (lcg()-0.5)*40, 10, 90),
+    ambition:            clampInt(bases.ambition            + (lcg()-0.5)*40, 10, 95),
+    greed:               clampInt(bases.greed               + (lcg()-0.5)*40,  5, 95),
+    competitiveDrive:    clampInt(bases.competitiveDrive    + (lcg()-0.5)*40, 10, 95),
+    stabilityPreference: clampInt(bases.stabilityPreference + (lcg()-0.5)*35,  5, 95),
+    professionalism:     clampInt(bases.professionalism     + (lcg()-0.5)*30, 10, 95),
+    overseasAmbition:    clampInt(bases.overseasAmbition    + (lcg()-0.5)*30,  0, 90),
+    marketPreference:    clampInt(bases.marketPreference    + (lcg()-0.5)*40, 10, 90),
+    homeTeamId:          null,
+  });
 }
 
 // ── JSON → INSERT 행 변환 ──────────────────────────────────────
@@ -148,6 +199,7 @@ function entityToRow(e) {
     military_status:    e.militaryStatus ?? null,
 
     staff_json: Object.keys(staffData).length > 0 ? JSON.stringify(staffData) : null,
+    personality_json: e.role === "player" ? generatePersonality(e) : null,
   };
 }
 
@@ -174,7 +226,8 @@ function main() {
       @bat_discipline, @bat_speed, @bat_base_instinct,
       @bat_bunting, @bat_platoon, @bat_fielding, @bat_arm, @bat_clutch,
       @military_status,
-      @staff_json
+      @staff_json,
+      @personality_json
     )
   `);
 
@@ -186,7 +239,7 @@ function main() {
   let errors = 0;
   for (const file of files) {
     try {
-      const raw = fs.readFileSync(path.join(ENTITIES_DIR, file), "utf8");
+      const raw = fs.readFileSync(path.join(ENTITIES_DIR, file), "utf8").replace(/^﻿/, "");
       const entity = JSON.parse(raw);
       rows.push(entityToRow(entity));
     } catch (e) {

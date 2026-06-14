@@ -10,6 +10,20 @@
     "active": 35,
     "farm": 30
   },
+  "teamProfile": {
+    "ownerSpendingWillingness": 58,
+    "stability": 65,
+    "developmentFocus": 55,
+    "discipline": 60,
+    "ownerPatience": 62,
+    "winNowPressure": 42,
+    "scoutingQuality": 62,
+    "prestige": 60,
+    "marketAppeal": 52,
+    "clubhouseCulture": 62,
+    "medicalQuality": 58,
+    "farmInvestment": 55
+  },
   "salaryCap": 3500000,
   "currentPayroll": 0,
   "stadium": "대구 라이온 구장",

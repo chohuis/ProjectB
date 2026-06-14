@@ -10,6 +10,20 @@
     "active": 35,
     "farm": 30
   },
+  "teamProfile": {
+    "ownerSpendingWillingness": 78,
+    "stability": 70,
+    "developmentFocus": 36,
+    "discipline": 62,
+    "ownerPatience": 42,
+    "winNowPressure": 68,
+    "scoutingQuality": 80,
+    "prestige": 82,
+    "marketAppeal": 75,
+    "clubhouseCulture": 68,
+    "medicalQuality": 80,
+    "farmInvestment": 60
+  },
   "salaryCap": 13000000,
   "currentPayroll": 0,
   "stadium": "Harbor Park",

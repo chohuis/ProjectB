@@ -10,6 +10,20 @@
     "active": 35,
     "farm": 30
   },
+  "teamProfile": {
+    "ownerSpendingWillingness": 72,
+    "stability": 68,
+    "developmentFocus": 42,
+    "discipline": 62,
+    "ownerPatience": 48,
+    "winNowPressure": 62,
+    "scoutingQuality": 74,
+    "prestige": 80,
+    "marketAppeal": 72,
+    "clubhouseCulture": 65,
+    "medicalQuality": 75,
+    "farmInvestment": 58
+  },
   "salaryCap": 5000000,
   "currentPayroll": 0,
   "stadium": "서울 돔 구장",

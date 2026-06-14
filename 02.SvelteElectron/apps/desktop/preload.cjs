@@ -107,6 +107,30 @@ contextBridge.exposeInMainWorld("projectB", {
   weekCalcNpcInjuries:   (p) => ipcRenderer.invoke("week:calcNpcInjuries",   p),
   weekRollRandomBatch:   (count) => ipcRenderer.invoke("week:rollRandomBatch", count),
 
+  // ── scouting_engine ──────────────────────────────────────────────────────────
+  applyScoutingNoiseNative:        (p) => ipcRenderer.invoke("scouting:applyNoise", p),
+
+  // ── team_engine ──────────────────────────────────────────────────────────────
+  evalCallupCandidatesNative:      (p) => ipcRenderer.invoke("team:evalCallup", p),
+  evalCalldownCandidatesNative:    (p) => ipcRenderer.invoke("team:evalCalldown", p),
+  evalReleasePriorityNative:       (p) => ipcRenderer.invoke("team:evalRelease", p),
+  evalFaBidNative:                 (p) => ipcRenderer.invoke("team:evalFaBid", p),
+  evalRenewalOfferNative:          (p) => ipcRenderer.invoke("team:evalRenewal", p),
+  evalNewContractNative:           (p) => ipcRenderer.invoke("team:evalNewContract", p),
+  evalRetirementSuggestionNative:  (p) => ipcRenderer.invoke("team:evalRetirement", p),
+  generateTradeProposalsNative:    (p) => ipcRenderer.invoke("team:generateTrade", p),
+  evalTradeValueNative:            (p) => ipcRenderer.invoke("team:evalTradeValue", p),
+  calcWinNowPressureUpdateNative:  (p) => ipcRenderer.invoke("team:winNowUpdate", p),
+  calcScoutingImprovementNative:   (p) => ipcRenderer.invoke("team:scoutingImprovement", p),
+
+  // ── player_agent ─────────────────────────────────────────────────────────────
+  playerEvalFaDecisionNative:         (p) => ipcRenderer.invoke("player:evalFaDecision", p),
+  playerEvalTradeResponseNative:      (p) => ipcRenderer.invoke("player:evalTradeResponse", p),
+  playerEvalContractOfferNative:      (p) => ipcRenderer.invoke("player:evalContractOffer", p),
+  playerEvalRetirementResponseNative: (p) => ipcRenderer.invoke("player:evalRetirementResp", p),
+  playerRankFaOffersNative:           (p) => ipcRenderer.invoke("player:rankFaOffers", p),
+  updatePlayerLoyaltyNative:          (p) => ipcRenderer.invoke("player:updateLoyalty", p),
+
   // ── dev 전용 (프로덕션 빌드에서 미노출) ────────────────────────────────
   ...(isDev && {
     masterSave: (payload)        => ipcRenderer.invoke("master:save",       payload),

@@ -46,6 +46,23 @@ export interface MessageDecision {
   selectedOptionId: string | null;
 }
 
+export interface TrainingStat {
+  key: string;
+  label: string;
+  pct: number;
+  current: number;
+  leveledUp: boolean;
+}
+
+export interface TrainingMetadata {
+  type: "training";
+  stats: TrainingStat[];
+  condition: number;
+  fatigue: number;
+  morale: number;
+  extraLogs: string[];
+}
+
 export interface MessageItem {
   id: string;
   category: MessageCategory;
@@ -56,4 +73,5 @@ export interface MessageItem {
   createdAt: string;
   readAt: string | null;
   decision?: MessageDecision;
+  metadata?: TrainingMetadata | { type: string };
 }

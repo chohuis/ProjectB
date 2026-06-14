@@ -1166,6 +1166,7 @@ function masterRowToEntityRow(r) {
     leagueId: r.league_id ?? "", clubId: r.club_id ?? "",
     teamId: r.team_id ?? "", schoolId: r.school_id ?? "",
     grade: r.grade ?? undefined, notes: r.notes ?? "",
+    personality: r.personality_json ? JSON.parse(r.personality_json) : undefined,
     details: {
       player,
       coach:   staffData.coach   ?? null,

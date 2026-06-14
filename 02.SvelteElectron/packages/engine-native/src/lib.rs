@@ -14,6 +14,9 @@ mod player_engine;
 mod schedule_engine;
 mod postseason_engine;
 mod week_engine;
+mod team_engine;
+mod player_agent;
+mod scouting_engine;
 
 use types::*;
 use sim_types::*;
@@ -768,4 +771,56 @@ pub fn week_calc_npc_injuries_native(p: String) -> String {
     };
     serde_json::to_string(&week_engine::calc_npc_injuries(params))
         .unwrap_or_else(|e| parse_err("weekCalcNpcInjuriesNative/serialize", e))
+}
+
+// ── scouting_engine ───────────────────────────────────────────────────────────
+
+#[napi]
+pub fn apply_scouting_noise_native(params_json: String) -> String {
+    match serde_json::from_str(&params_json) {
+        Ok(p) => serde_json::to_string(&scouting_engine::apply_scouting_noise(p)).unwrap_or_default(),
+        Err(e) => format!(r#"{{"error":"{}"}}"#, e),
+    }
+}
+
+// ── team_engine ───────────────────────────────────────────────────────────────
+
+macro_rules! napi_team {
+    ($fn_name:ident, $rust_fn:expr) => {
+        #[napi]
+        pub fn $fn_name(params_json: String) -> String {
+            match serde_json::from_str(&params_json) {
+                Ok(p) => serde_json::to_string(&$rust_fn(p)).unwrap_or_default(),
+                Err(e) => format!(r#"{{"error":"{}"}}"#, e),
+            }
+        }
+    };
+}
+
+napi_team!(eval_callup_candidates_native,        team_engine::eval_callup_candidates);
+napi_team!(eval_calldown_candidates_native,      team_engine::eval_calldown_candidates);
+napi_team!(eval_release_priority_native,         team_engine::eval_release_priority);
+napi_team!(eval_fa_bid_native,                   team_engine::eval_fa_bid);
+napi_team!(eval_renewal_offer_native,            team_engine::eval_renewal_offer);
+napi_team!(eval_new_contract_native,             team_engine::eval_new_contract);
+napi_team!(eval_retirement_suggestion_native,    team_engine::eval_retirement_suggestion);
+napi_team!(generate_trade_proposals_native,      team_engine::generate_trade_proposals);
+napi_team!(eval_trade_value_native,              team_engine::eval_trade_value);
+napi_team!(calc_win_now_pressure_update_native,  team_engine::calc_win_now_pressure_update);
+napi_team!(calc_scouting_improvement_native,     team_engine::calc_scouting_improvement);
+
+// ── player_agent ──────────────────────────────────────────────────────────────
+
+napi_team!(player_eval_fa_decision_native,           player_agent::player_eval_fa_decision);
+napi_team!(player_eval_trade_response_native,        player_agent::player_eval_trade_response);
+napi_team!(player_eval_contract_offer_native,        player_agent::player_eval_contract_offer);
+napi_team!(player_eval_retirement_response_native,   player_agent::player_eval_retirement_response);
+napi_team!(player_rank_fa_offers_native,             player_agent::player_rank_fa_offers);
+
+#[napi]
+pub fn update_player_loyalty_native(params_json: String) -> String {
+    match serde_json::from_str::<player_agent::UpdateLoyaltyParams>(&params_json) {
+        Ok(p) => serde_json::to_string(&player_agent::update_player_loyalty(p)).unwrap_or_default(),
+        Err(e) => format!(r#"{{"error":"{}"}}"#, e),
+    }
 }

@@ -10,6 +10,20 @@
     "active": 35,
     "farm": 30
   },
+  "teamProfile": {
+    "ownerSpendingWillingness": 90,
+    "stability": 72,
+    "developmentFocus": 30,
+    "discipline": 68,
+    "ownerPatience": 38,
+    "winNowPressure": 72,
+    "scoutingQuality": 84,
+    "prestige": 88,
+    "marketAppeal": 85,
+    "clubhouseCulture": 65,
+    "medicalQuality": 84,
+    "farmInvestment": 58
+  },
   "salaryCap": 15000000,
   "currentPayroll": 0,
   "stadium": "Empire Field",

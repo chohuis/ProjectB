@@ -26,7 +26,7 @@ export function entityToNpcState(
 ): NpcSaveState {
   const pl   = entity.details.player as EntityPlayerDetails;
   const grade = entity.grade ?? 3;
-  const isMilitary = entity.status === "military";
+  const isMilitary = entity.militaryStatus === "현역";
   // 체육부대: notes에서 group 파악 ("senior" = 전역 1년 남음, "junior" = 막입대 2년 남음)
   const notes = (entity as unknown as { notes?: string }).notes ?? "";
   const group = notes.includes("senior") ? "senior" : "junior";
@@ -62,6 +62,8 @@ export function entityToNpcState(
     developmentRate: pl.developmentRate,
     careerHistory:  [],
     achievements:   [],
+    fame:           0,
+    personality:    entity.personality,
   };
 }
 

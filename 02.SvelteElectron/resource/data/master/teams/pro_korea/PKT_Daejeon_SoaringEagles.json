@@ -10,6 +10,20 @@
     "active": 35,
     "farm": 30
   },
+  "teamProfile": {
+    "ownerSpendingWillingness": 54,
+    "stability": 58,
+    "developmentFocus": 58,
+    "discipline": 55,
+    "ownerPatience": 60,
+    "winNowPressure": 45,
+    "scoutingQuality": 58,
+    "prestige": 50,
+    "marketAppeal": 48,
+    "clubhouseCulture": 58,
+    "medicalQuality": 56,
+    "farmInvestment": 52
+  },
   "salaryCap": 3500000,
   "currentPayroll": 0,
   "stadium": "대전 이글 구장",

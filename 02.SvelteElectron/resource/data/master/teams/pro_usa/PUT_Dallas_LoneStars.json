@@ -10,6 +10,20 @@
     "active": 35,
     "farm": 30
   },
+  "teamProfile": {
+    "ownerSpendingWillingness": 60,
+    "stability": 58,
+    "developmentFocus": 48,
+    "discipline": 60,
+    "ownerPatience": 55,
+    "winNowPressure": 52,
+    "scoutingQuality": 62,
+    "prestige": 56,
+    "marketAppeal": 60,
+    "clubhouseCulture": 58,
+    "medicalQuality": 62,
+    "farmInvestment": 50
+  },
   "salaryCap": 9000000,
   "currentPayroll": 0,
   "stadium": "Star Field",
