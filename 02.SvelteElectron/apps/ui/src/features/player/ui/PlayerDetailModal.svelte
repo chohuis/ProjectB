@@ -563,6 +563,7 @@
                 </div>
               {/if}
             {:else}
+              {@const npcContract = mp?.contract}
               {#if (modalNpcSave?.careerHistory?.length ?? 0) > 0}
                 <table class="career-table">
                   <thead><tr><th>연도</th><th>팀</th><th>기록</th><th>수상</th></tr></thead>
@@ -577,6 +578,18 @@
                     {/each}
                   </tbody>
                 </table>
+              {:else if npcContract}
+                <div class="contract-grid">
+                  <div class="contract-item"><span>리그</span><strong>{LEAGUE_DISPLAY[modalEntity.leagueId] ?? modalEntity.leagueId}</strong></div>
+                  <div class="contract-item"><span>계약 기간</span><strong>{npcContract.durationYears}년 중 {npcContract.remainingYears}년 잔여</strong></div>
+                  <div class="contract-item"><span>연봉</span><strong>{formatSalary(npcContract.salary)}</strong></div>
+                  {#if mp?.proServiceYears != null}
+                    <div class="contract-item"><span>프로 경력</span><strong>{mp.proServiceYears}년차</strong></div>
+                  {/if}
+                  {#if npcContract.noTrade}
+                    <div class="contract-item"><span>노트레이드</span><strong>있음</strong></div>
+                  {/if}
+                </div>
               {:else}
                 <p class="modal-pending">경력 정보 없음</p>
               {/if}

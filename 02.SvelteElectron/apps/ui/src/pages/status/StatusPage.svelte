@@ -102,9 +102,26 @@
   }
 
   function formatBirthday(bd: string): string {
-    const [, m, d] = bd.split("-");
-    return `2010년 ${parseInt(m)}월 ${parseInt(d)}일`;
+    const [y, m, d] = bd.split("-");
+    return `${y}년 ${parseInt(m)}월 ${parseInt(d)}일`;
   }
+
+  // XP 진행도 계산 (Rust xp_threshold와 동일: 7.5 + v * 0.35)
+  function xpThreshold(v: number): number { return 7.5 + v * 0.35; }
+  function xpPct(xp: number, v: number): number {
+    return Math.min(99, Math.round(xp / xpThreshold(v) * 100));
+  }
+
+  const PITCH_STAT_LABELS: [keyof typeof $gameStore.protagonist.pitching, string][] = [
+    ["velocity","구위"], ["command","커맨드"], ["control","제구"],
+    ["movement","무브먼트"], ["stamina","스태미나"], ["mentality","멘탈"],
+    ["recovery","회복력"], ["clutch","위기집중"], ["holdRunners","견제력"],
+  ];
+  const BATTING_STAT_LABELS: [keyof typeof $gameStore.protagonist.batting, string][] = [
+    ["contact","컨택"], ["power","장타력"], ["eye","선구안"],
+    ["discipline","극기"], ["battingClutch","클러치"], ["speed","주력"],
+    ["fielding","수비"],
+  ];
 
   const PITCH_NAMES: Record<string, string> = {
     PITCH_FASTBALL: "패스트볼", PITCH_SINKER: "싱커", PITCH_CUTTER: "커터",
@@ -294,6 +311,12 @@
               <span>FA 자격</span>
               <strong>{faYearsLeft > 0 ? `${faYearsLeft}년 후` : "FA 자격 보유"}</strong>
             </div>
+            {#if (p.proServiceYears ?? 0) > 0}
+              <div class="info-row">
+                <span>프로 경력</span>
+                <strong>{p.proServiceYears}년차</strong>
+              </div>
+            {/if}
             {#if p.militaryStatus === "현역"}
               <div class="info-row">
                 <span></span>
@@ -313,10 +336,22 @@
               <span>상태</span>
               <strong class={milStatusDisplay.cls}>{milStatusDisplay.text}</strong>
             </div>
+            {#if p.militaryEnlistYear}
+              <div class="info-row">
+                <span>입대</span>
+                <strong>{p.militaryEnlistYear}년</strong>
+              </div>
+            {/if}
             {#if p.militaryStatus === "현역" && p.militaryDischargeYear}
               <div class="info-row">
                 <span>전역 예정</span>
                 <strong>{p.militaryDischargeYear}년 W48</strong>
+              </div>
+            {/if}
+            {#if p.militaryStatus === "현역" && (p.militaryServiceWeeks ?? 0) > 0}
+              <div class="info-row">
+                <span>복무 기간</span>
+                <strong>{p.militaryServiceWeeks}주 경과</strong>
               </div>
             {/if}
           </div>
@@ -370,6 +405,48 @@
             </div>
           </article>
         {/if}
+      {/if}
+
+      <!-- XP 진행도 카드 -->
+      {#if $gameStore.protagonist.playerType === "pitcher" || $gameStore.protagonist.playerType === "twoWay"}
+        {@const xp = $gameStore.protagonist.pitchingXP ?? {}}
+        {@const pit = $gameStore.protagonist.pitching}
+        <article class="card xp-card">
+          <h3>훈련 XP 진행도</h3>
+          <div class="xp-list">
+            {#each PITCH_STAT_LABELS as [key, label]}
+              {@const val = (pit as Record<string, number>)[key as string] ?? 0}
+              {@const pct = xpPct((xp as Record<string, number>)[key as string] ?? 0, val)}
+              <div class="xp-row">
+                <span class="xp-label">{label}</span>
+                <div class="xp-track">
+                  <div class="xp-fill" style="width:{pct}%"></div>
+                </div>
+                <span class="xp-pct">{pct}%</span>
+              </div>
+            {/each}
+          </div>
+        </article>
+      {/if}
+      {#if $gameStore.protagonist.playerType === "batter" || $gameStore.protagonist.playerType === "twoWay"}
+        {@const xp = $gameStore.protagonist.battingXP ?? {}}
+        {@const bat = $gameStore.protagonist.batting}
+        <article class="card xp-card">
+          <h3>훈련 XP 진행도 (타격)</h3>
+          <div class="xp-list">
+            {#each BATTING_STAT_LABELS as [key, label]}
+              {@const val = (bat as Record<string, number>)[key as string] ?? 0}
+              {@const pct = xpPct((xp as Record<string, number>)[key as string] ?? 0, val)}
+              <div class="xp-row">
+                <span class="xp-label">{label}</span>
+                <div class="xp-track">
+                  <div class="xp-fill" style="width:{pct}%"></div>
+                </div>
+                <span class="xp-pct">{pct}%</span>
+              </div>
+            {/each}
+          </div>
+        </article>
       {/if}
 
     {:else}
@@ -655,6 +732,31 @@
   .trend-arrow { font-size: 12px; font-weight: 700; margin-left: 2px; vertical-align: middle; }
   .trend-arrow.up   { color: #ff6b6b; }
   .trend-arrow.down { color: #74b9ff; }
+
+  /* XP 진행도 카드 */
+  .xp-card h3 { font-size: 16px; margin-bottom: 10px; color: #ebf2ff; }
+  .xp-list { display: flex; flex-direction: column; gap: 6px; }
+  .xp-row {
+    display: grid;
+    grid-template-columns: 52px 1fr 36px;
+    align-items: center;
+    gap: 8px;
+  }
+  .xp-label { font-size: 12px; color: #8aabda; text-align: right; }
+  .xp-track {
+    height: 5px;
+    background: #1a2d4a;
+    border-radius: 3px;
+    overflow: hidden;
+    border: 1px solid #243a58;
+  }
+  .xp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #2a6cb8, #4d9ef5);
+    border-radius: 3px;
+    min-width: 2px;
+  }
+  .xp-pct { font-size: 11px; color: #6a8ab0; text-align: right; font-variant-numeric: tabular-nums; }
 
   .pitches-card h3 { margin-bottom: 10px; }
   .pitch-list { display: flex; flex-wrap: wrap; gap: 8px; }

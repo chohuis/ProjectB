@@ -1144,6 +1144,8 @@ function masterRowToEntityRow(r) {
     popularity:      r.popularity     ?? undefined,
     developmentRate: r.development_rate ?? 60,
     potentialHidden: r.potential_hidden ?? 60,
+    proServiceYears: r.pro_service_years ?? undefined,
+    contract: r.contract_json ? JSON.parse(r.contract_json) : undefined,
     pitching: r.pitch_ovr != null ? {
       ovr: r.pitch_ovr, stamina: r.pitch_stamina, velocity: r.pitch_velocity,
       command: r.pitch_command, control: r.pitch_control, movement: r.pitch_movement,
