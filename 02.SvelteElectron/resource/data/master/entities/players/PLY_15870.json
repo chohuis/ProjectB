@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15870",
+  "name": "톰슨 그랜트",
+  "nameEn": "Thompson Grant",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 18,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 65,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 66,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 70,
+        "velocity": 76,
+        "command": 67,
+        "control": 66,
+        "movement": 70,
+        "mentality": 76,
+        "recovery": 64,
+        "clutch": 65,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 68,
+        "power": 63,
+        "eye": 73,
+        "discipline": 71,
+        "speed": 70,
+        "baseInstinct": 68,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 73,
+        "arm": 70,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "SP": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

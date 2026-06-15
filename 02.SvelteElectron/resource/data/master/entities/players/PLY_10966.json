@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10966",
+  "name": "존스 콜",
+  "nameEn": "Jones Cole",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 89,
+      "primaryPosition": "CF",
+      "developmentRate": 63,
+      "potentialHidden": 75,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 52,
+        "velocity": 56,
+        "command": 54,
+        "control": 55,
+        "movement": 54,
+        "mentality": 59,
+        "recovery": 54,
+        "clutch": 52,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 59,
+        "power": 57,
+        "eye": 57,
+        "discipline": 50,
+        "speed": 65,
+        "baseInstinct": 52,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 59,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "CF": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

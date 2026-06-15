@@ -423,7 +423,7 @@ export function checkTeamMoodWarning(
   teammates: NpcSaveState[],
   week: number,
 ): MessageItem | null {
-  const active = teammates.filter(n => n.isNamed && n.emotion && n.emotionRole === "teammate");
+  const active = teammates.filter(n => n.emotion && n.emotionRole === "teammate");
   if (active.length === 0) return null;
 
   const avgResentment = active.reduce((s, n) => s + (n.emotion?.resentment ?? 0), 0) / active.length;
@@ -466,7 +466,7 @@ export function checkEmotionTriggers(
   prevEmotion: NpcEmotion,
   week: number,
 ): MessageItem | null {
-  if (!npc.isNamed || !npc.emotion) return null;
+  if (!npc.emotion) return null;
 
   switch (npc.emotionRole) {
     case "manager":  return checkManagerTriggers(npc, prevEmotion, npc.emotion, week);

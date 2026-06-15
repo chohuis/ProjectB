@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14071",
+  "name": "스미스 네이선",
+  "nameEn": "Smith Nathan",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 25,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 55,
+      "primaryPosition": "SP",
+      "developmentRate": 57,
+      "potentialHidden": 75,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 45,
+        "velocity": 55,
+        "command": 50,
+        "control": 52,
+        "movement": 47,
+        "mentality": 54,
+        "recovery": 43,
+        "clutch": 42,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 45,
+        "power": 42,
+        "eye": 39,
+        "discipline": 43,
+        "speed": 51,
+        "baseInstinct": 43,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 37,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SP": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

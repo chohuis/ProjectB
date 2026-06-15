@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07757",
+  "name": "한정욱",
+  "nameEn": "Han JungWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 41,
+      "primaryPosition": "SP",
+      "developmentRate": 48,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 60,
+        "velocity": 63,
+        "command": 48,
+        "control": 51,
+        "movement": 52,
+        "mentality": 57,
+        "recovery": 45,
+        "clutch": 43,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 43,
+        "power": 43,
+        "eye": 50,
+        "discipline": 40,
+        "speed": 45,
+        "baseInstinct": 45,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 41,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "SP": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

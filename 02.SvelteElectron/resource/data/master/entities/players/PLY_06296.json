@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06296",
+  "name": "송성재",
+  "nameEn": "Song SeongJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 96,
+      "primaryPosition": "3B",
+      "developmentRate": 49,
+      "potentialHidden": 50,
+      "pitching": {
+        "ovr": 36,
+        "stamina": 37,
+        "velocity": 42,
+        "command": 31,
+        "control": 29,
+        "movement": 29,
+        "mentality": 32,
+        "recovery": 24,
+        "clutch": 26,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 35,
+        "power": 36,
+        "eye": 30,
+        "discipline": 33,
+        "speed": 43,
+        "baseInstinct": 32,
+        "bunting": 18,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 32,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "3B": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

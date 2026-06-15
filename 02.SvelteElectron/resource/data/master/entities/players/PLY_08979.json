@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08979",
+  "name": "서도원",
+  "nameEn": "Seo DoWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 88,
+      "primaryPosition": "RF",
+      "developmentRate": 45,
+      "potentialHidden": 51,
+      "pitching": {
+        "ovr": 37,
+        "stamina": 34,
+        "velocity": 42,
+        "command": 34,
+        "control": 32,
+        "movement": 30,
+        "mentality": 31,
+        "recovery": 33,
+        "clutch": 31,
+        "holdRunners": 23
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 44,
+        "power": 46,
+        "eye": 46,
+        "discipline": 43,
+        "speed": 54,
+        "baseInstinct": 46,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 50,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "RF": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

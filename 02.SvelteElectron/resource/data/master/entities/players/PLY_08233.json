@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08233",
+  "name": "임성욱",
+  "nameEn": "Lim SeongWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 68,
+      "primaryPosition": "CF",
+      "developmentRate": 48,
+      "potentialHidden": 64,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 42,
+        "velocity": 45,
+        "command": 39,
+        "control": 42,
+        "movement": 41,
+        "mentality": 53,
+        "recovery": 42,
+        "clutch": 44,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 47,
+        "power": 42,
+        "eye": 47,
+        "discipline": 39,
+        "speed": 50,
+        "baseInstinct": 39,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 38,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "CF": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

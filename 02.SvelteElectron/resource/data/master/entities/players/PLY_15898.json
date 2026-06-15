@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15898",
+  "name": "워커 블레이크",
+  "nameEn": "Walker Blake",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 45,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 77,
+      "primaryPosition": "SP",
+      "developmentRate": 56,
+      "potentialHidden": 58,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 70,
+        "velocity": 77,
+        "command": 76,
+        "control": 68,
+        "movement": 69,
+        "mentality": 76,
+        "recovery": 65,
+        "clutch": 71,
+        "holdRunners": 70
+      },
+      "batting": {
+        "ovr": 74,
+        "contact": 78,
+        "power": 74,
+        "eye": 74,
+        "discipline": 78,
+        "speed": 73,
+        "baseInstinct": 70,
+        "bunting": 69,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 68,
+        "battingClutch": 69
+      },
+      "positionRatings": {
+        "SP": 74
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

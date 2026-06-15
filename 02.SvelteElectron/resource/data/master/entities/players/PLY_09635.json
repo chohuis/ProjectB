@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09635",
+  "name": "정혁성",
+  "nameEn": "Jung HyeokSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 30,
+      "primaryPosition": "SS",
+      "developmentRate": 54,
+      "potentialHidden": 64,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 38,
+        "velocity": 53,
+        "command": 38,
+        "control": 47,
+        "movement": 45,
+        "mentality": 48,
+        "recovery": 42,
+        "clutch": 36,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 40,
+        "power": 39,
+        "eye": 36,
+        "discipline": 42,
+        "speed": 47,
+        "baseInstinct": 36,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 32,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "SS": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

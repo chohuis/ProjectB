@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09202",
+  "name": "류훈재",
+  "nameEn": "Ryu HunJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 11,
+      "primaryPosition": "3B",
+      "developmentRate": 42,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 38,
+        "stamina": 35,
+        "velocity": 44,
+        "command": 32,
+        "control": 40,
+        "movement": 39,
+        "mentality": 40,
+        "recovery": 29,
+        "clutch": 35,
+        "holdRunners": 25
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 50,
+        "power": 47,
+        "eye": 45,
+        "discipline": 47,
+        "speed": 46,
+        "baseInstinct": 49,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 48,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "3B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

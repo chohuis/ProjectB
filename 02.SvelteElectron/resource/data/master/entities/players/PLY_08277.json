@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08277",
+  "name": "조동현",
+  "nameEn": "Jo DongHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 33,
+      "primaryPosition": "2B",
+      "developmentRate": 58,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 49,
+        "velocity": 57,
+        "command": 40,
+        "control": 44,
+        "movement": 46,
+        "mentality": 51,
+        "recovery": 50,
+        "clutch": 39,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 43,
+        "power": 35,
+        "eye": 36,
+        "discipline": 43,
+        "speed": 47,
+        "baseInstinct": 36,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 36,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "2B": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

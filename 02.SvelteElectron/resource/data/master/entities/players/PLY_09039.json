@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09039",
+  "name": "황민욱",
+  "nameEn": "Hwang MinWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 21,
+      "primaryPosition": "RF",
+      "developmentRate": 51,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 48,
+        "velocity": 56,
+        "command": 42,
+        "control": 51,
+        "movement": 53,
+        "mentality": 46,
+        "recovery": 41,
+        "clutch": 43,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 37,
+        "power": 33,
+        "eye": 40,
+        "discipline": 33,
+        "speed": 40,
+        "baseInstinct": 34,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 31,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "RF": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

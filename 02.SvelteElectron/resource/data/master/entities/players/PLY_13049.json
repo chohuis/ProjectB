@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13049",
+  "name": "잭슨 재크",
+  "nameEn": "Jackson Zach",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 31,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 34,
+      "primaryPosition": "1B",
+      "developmentRate": 60,
+      "potentialHidden": 76,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 67,
+        "velocity": 75,
+        "command": 77,
+        "control": 79,
+        "movement": 76,
+        "mentality": 71,
+        "recovery": 69,
+        "clutch": 65,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 74,
+        "contact": 71,
+        "power": 74,
+        "eye": 79,
+        "discipline": 76,
+        "speed": 76,
+        "baseInstinct": 75,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 71,
+        "battingClutch": 73
+      },
+      "positionRatings": {
+        "1B": 74
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

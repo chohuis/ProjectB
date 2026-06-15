@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08295",
+  "name": "전태완",
+  "nameEn": "Jeon TaeWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 34,
+      "primaryPosition": "SP",
+      "developmentRate": 47,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 38,
+        "velocity": 44,
+        "command": 35,
+        "control": 45,
+        "movement": 37,
+        "mentality": 42,
+        "recovery": 35,
+        "clutch": 31,
+        "holdRunners": 29
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 38,
+        "power": 35,
+        "eye": 36,
+        "discipline": 38,
+        "speed": 35,
+        "baseInstinct": 39,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 33,
+        "arm": 29,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "SP": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14301",
+  "name": "애덤스 네이선",
+  "nameEn": "Adams Nathan",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 20,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 7,
+      "primaryPosition": "1B",
+      "developmentRate": 59,
+      "potentialHidden": 51,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 59,
+        "velocity": 68,
+        "command": 66,
+        "control": 58,
+        "movement": 70,
+        "mentality": 71,
+        "recovery": 62,
+        "clutch": 55,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 61,
+        "power": 66,
+        "eye": 63,
+        "discipline": 59,
+        "speed": 63,
+        "baseInstinct": 59,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 58,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "1B": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

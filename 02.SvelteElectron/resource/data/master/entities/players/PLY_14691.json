@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14691",
+  "name": "그린 트레버",
+  "nameEn": "Green Trevor",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 11,
+      "primaryPosition": "LF",
+      "developmentRate": 63,
+      "potentialHidden": 79,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 66,
+        "velocity": 72,
+        "command": 55,
+        "control": 55,
+        "movement": 57,
+        "mentality": 66,
+        "recovery": 57,
+        "clutch": 53,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 61,
+        "power": 52,
+        "eye": 65,
+        "discipline": 57,
+        "speed": 65,
+        "baseInstinct": 53,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 52,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "LF": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

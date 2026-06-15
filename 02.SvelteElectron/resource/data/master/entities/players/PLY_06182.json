@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06182",
+  "name": "이민환",
+  "nameEn": "Lee MinHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 25,
+      "primaryPosition": "SS",
+      "developmentRate": 46,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 44,
+        "velocity": 42,
+        "command": 38,
+        "control": 39,
+        "movement": 36,
+        "mentality": 49,
+        "recovery": 36,
+        "clutch": 33,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 31,
+        "contact": 34,
+        "power": 21,
+        "eye": 34,
+        "discipline": 22,
+        "speed": 36,
+        "baseInstinct": 28,
+        "bunting": 16,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 25,
+        "battingClutch": 24
+      },
+      "positionRatings": {
+        "SS": 31
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

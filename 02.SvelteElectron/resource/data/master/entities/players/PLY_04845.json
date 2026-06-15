@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04845",
+  "name": "오세찬",
+  "nameEn": "Oh SeChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 67,
+      "primaryPosition": "SP",
+      "developmentRate": 56,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 41,
+        "stamina": 38,
+        "velocity": 50,
+        "command": 32,
+        "control": 44,
+        "movement": 40,
+        "mentality": 42,
+        "recovery": 37,
+        "clutch": 28,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 40,
+        "power": 32,
+        "eye": 34,
+        "discipline": 41,
+        "speed": 39,
+        "baseInstinct": 40,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 35,
+        "arm": 34,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "SP": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

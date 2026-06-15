@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10240",
+  "name": "토마스 조던",
+  "nameEn": "Thomas Jordan",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 38,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 42,
+      "primaryPosition": "C",
+      "developmentRate": 62,
+      "potentialHidden": 59,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 71,
+        "velocity": 85,
+        "command": 70,
+        "control": 78,
+        "movement": 73,
+        "mentality": 81,
+        "recovery": 76,
+        "clutch": 76,
+        "holdRunners": 63
+      },
+      "batting": {
+        "ovr": 78,
+        "contact": 81,
+        "power": 77,
+        "eye": 72,
+        "discipline": 69,
+        "speed": 83,
+        "baseInstinct": 73,
+        "bunting": 66,
+        "platoon": 50,
+        "fielding": 72,
+        "arm": 80,
+        "battingClutch": 79
+      },
+      "positionRatings": {
+        "C": 78
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

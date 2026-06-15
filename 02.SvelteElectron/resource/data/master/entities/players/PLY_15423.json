@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15423",
+  "name": "클라크 네이선",
+  "nameEn": "Clark Nathan",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 45,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 68,
+      "primaryPosition": "SP",
+      "developmentRate": 61,
+      "potentialHidden": 55,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 71,
+        "velocity": 83,
+        "command": 79,
+        "control": 76,
+        "movement": 75,
+        "mentality": 84,
+        "recovery": 67,
+        "clutch": 69,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 77,
+        "contact": 69,
+        "power": 76,
+        "eye": 76,
+        "discipline": 72,
+        "speed": 73,
+        "baseInstinct": 66,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 70,
+        "battingClutch": 68
+      },
+      "positionRatings": {
+        "SP": 77
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

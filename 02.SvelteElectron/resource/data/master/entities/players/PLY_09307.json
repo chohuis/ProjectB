@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09307",
+  "name": "오민원",
+  "nameEn": "Oh MinWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 30,
+      "primaryPosition": "SP",
+      "developmentRate": 51,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 47,
+        "velocity": 49,
+        "command": 47,
+        "control": 50,
+        "movement": 47,
+        "mentality": 46,
+        "recovery": 43,
+        "clutch": 37,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 35,
+        "contact": 39,
+        "power": 35,
+        "eye": 32,
+        "discipline": 29,
+        "speed": 31,
+        "baseInstinct": 31,
+        "bunting": 18,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 27,
+        "battingClutch": 24
+      },
+      "positionRatings": {
+        "SP": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

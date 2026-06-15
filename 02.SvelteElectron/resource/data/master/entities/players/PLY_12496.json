@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12496",
+  "name": "토마스 콜",
+  "nameEn": "Thomas Cole",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 42,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 14,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 84,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 62,
+        "velocity": 64,
+        "command": 67,
+        "control": 59,
+        "movement": 65,
+        "mentality": 72,
+        "recovery": 55,
+        "clutch": 59,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 70,
+        "power": 59,
+        "eye": 59,
+        "discipline": 66,
+        "speed": 67,
+        "baseInstinct": 63,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 64,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "SP": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

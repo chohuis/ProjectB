@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15214",
+  "name": "스콧 마커스",
+  "nameEn": "Scott Marcus",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 29,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 66,
+      "primaryPosition": "2B",
+      "developmentRate": 63,
+      "potentialHidden": 74,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 52,
+        "velocity": 54,
+        "command": 49,
+        "control": 49,
+        "movement": 55,
+        "mentality": 59,
+        "recovery": 47,
+        "clutch": 46,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 53,
+        "power": 53,
+        "eye": 51,
+        "discipline": 53,
+        "speed": 61,
+        "baseInstinct": 50,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 51,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "2B": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

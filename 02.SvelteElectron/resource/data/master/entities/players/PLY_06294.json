@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06294",
+  "name": "임민성",
+  "nameEn": "Lim MinSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 92,
+      "primaryPosition": "3B",
+      "developmentRate": 40,
+      "potentialHidden": 48,
+      "pitching": {
+        "ovr": 36,
+        "stamina": 29,
+        "velocity": 37,
+        "command": 29,
+        "control": 28,
+        "movement": 34,
+        "mentality": 37,
+        "recovery": 25,
+        "clutch": 24,
+        "holdRunners": 28
+      },
+      "batting": {
+        "ovr": 34,
+        "contact": 31,
+        "power": 24,
+        "eye": 27,
+        "discipline": 26,
+        "speed": 28,
+        "baseInstinct": 34,
+        "bunting": 14,
+        "platoon": 50,
+        "fielding": 25,
+        "arm": 26,
+        "battingClutch": 21
+      },
+      "positionRatings": {
+        "3B": 34
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

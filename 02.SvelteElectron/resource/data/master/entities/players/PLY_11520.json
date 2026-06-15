@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11520",
+  "name": "미첼 콜",
+  "nameEn": "Mitchell Cole",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 25,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 81,
+      "primaryPosition": "C",
+      "developmentRate": 50,
+      "potentialHidden": 78,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 77,
+        "velocity": 83,
+        "command": 74,
+        "control": 67,
+        "movement": 70,
+        "mentality": 77,
+        "recovery": 67,
+        "clutch": 72,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 74,
+        "power": 74,
+        "eye": 71,
+        "discipline": 76,
+        "speed": 78,
+        "baseInstinct": 76,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 73,
+        "arm": 64,
+        "battingClutch": 73
+      },
+      "positionRatings": {
+        "C": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

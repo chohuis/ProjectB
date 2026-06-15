@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08855",
+  "name": "이훈기",
+  "nameEn": "Lee HunKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 18,
+      "primaryPosition": "1B",
+      "developmentRate": 48,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 44,
+        "velocity": 57,
+        "command": 48,
+        "control": 43,
+        "movement": 47,
+        "mentality": 45,
+        "recovery": 43,
+        "clutch": 37,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 36,
+        "power": 36,
+        "eye": 31,
+        "discipline": 39,
+        "speed": 33,
+        "baseInstinct": 32,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 33,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "1B": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10231",
+  "name": "리 마커스",
+  "nameEn": "Lee Marcus",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 10,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 33,
+      "primaryPosition": "LF",
+      "developmentRate": 64,
+      "potentialHidden": 91,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 47,
+        "velocity": 54,
+        "command": 48,
+        "control": 48,
+        "movement": 50,
+        "mentality": 46,
+        "recovery": 43,
+        "clutch": 45,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 50,
+        "power": 53,
+        "eye": 50,
+        "discipline": 53,
+        "speed": 57,
+        "baseInstinct": 52,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 45,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "LF": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

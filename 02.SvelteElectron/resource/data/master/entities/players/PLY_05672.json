@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05672",
+  "name": "조우우",
+  "nameEn": "Jo WooWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 53,
+      "primaryPosition": "C",
+      "developmentRate": 57,
+      "potentialHidden": 84,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 59,
+        "velocity": 62,
+        "command": 54,
+        "control": 54,
+        "movement": 50,
+        "mentality": 55,
+        "recovery": 49,
+        "clutch": 54,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 51,
+        "power": 46,
+        "eye": 56,
+        "discipline": 47,
+        "speed": 57,
+        "baseInstinct": 45,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 47,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "C": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

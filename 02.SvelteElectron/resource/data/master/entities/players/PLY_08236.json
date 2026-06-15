@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08236",
+  "name": "김영진",
+  "nameEn": "Kim YoungJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 58,
+      "primaryPosition": "CF",
+      "developmentRate": 56,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 55,
+        "velocity": 64,
+        "command": 54,
+        "control": 50,
+        "movement": 53,
+        "mentality": 60,
+        "recovery": 48,
+        "clutch": 52,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 42,
+        "power": 41,
+        "eye": 51,
+        "discipline": 48,
+        "speed": 46,
+        "baseInstinct": 40,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 48,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "CF": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

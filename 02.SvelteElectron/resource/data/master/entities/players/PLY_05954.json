@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05954",
+  "name": "송기완",
+  "nameEn": "Song KiWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 79,
+      "primaryPosition": "SP",
+      "developmentRate": 56,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 55,
+        "velocity": 60,
+        "command": 55,
+        "control": 54,
+        "movement": 51,
+        "mentality": 49,
+        "recovery": 43,
+        "clutch": 45,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 34,
+        "power": 31,
+        "eye": 36,
+        "discipline": 41,
+        "speed": 38,
+        "baseInstinct": 31,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 33,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "SP": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

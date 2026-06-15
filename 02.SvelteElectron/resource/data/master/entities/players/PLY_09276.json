@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09276",
+  "name": "황우호",
+  "nameEn": "Hwang WooHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 87,
+      "primaryPosition": "SS",
+      "developmentRate": 43,
+      "potentialHidden": 39,
+      "pitching": {
+        "ovr": 34,
+        "stamina": 27,
+        "velocity": 38,
+        "command": 31,
+        "control": 32,
+        "movement": 26,
+        "mentality": 34,
+        "recovery": 27,
+        "clutch": 28,
+        "holdRunners": 20
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 37,
+        "power": 37,
+        "eye": 34,
+        "discipline": 37,
+        "speed": 36,
+        "baseInstinct": 34,
+        "bunting": 20,
+        "platoon": 50,
+        "fielding": 33,
+        "arm": 33,
+        "battingClutch": 27
+      },
+      "positionRatings": {
+        "SS": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

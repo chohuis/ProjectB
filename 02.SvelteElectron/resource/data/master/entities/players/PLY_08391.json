@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08391",
+  "name": "송영재",
+  "nameEn": "Song YoungJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 37,
+      "primaryPosition": "CF",
+      "developmentRate": 41,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 39,
+        "stamina": 39,
+        "velocity": 44,
+        "command": 34,
+        "control": 38,
+        "movement": 30,
+        "mentality": 43,
+        "recovery": 28,
+        "clutch": 29,
+        "holdRunners": 27
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 41,
+        "power": 34,
+        "eye": 37,
+        "discipline": 38,
+        "speed": 42,
+        "baseInstinct": 27,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 28,
+        "arm": 36,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "CF": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12158",
+  "name": "스콧 헌터",
+  "nameEn": "Scott Hunter",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 14,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 30,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 23,
+      "primaryPosition": "1B",
+      "developmentRate": 50,
+      "potentialHidden": 70,
+      "proServiceYears": 8,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 69,
+        "velocity": 80,
+        "command": 66,
+        "control": 73,
+        "movement": 75,
+        "mentality": 70,
+        "recovery": 72,
+        "clutch": 70,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 76,
+        "contact": 77,
+        "power": 74,
+        "eye": 73,
+        "discipline": 70,
+        "speed": 75,
+        "baseInstinct": 78,
+        "bunting": 71,
+        "platoon": 50,
+        "fielding": 73,
+        "arm": 66,
+        "battingClutch": 68
+      },
+      "positionRatings": {
+        "1B": 76
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

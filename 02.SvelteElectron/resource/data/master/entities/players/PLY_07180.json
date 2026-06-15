@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07180",
+  "name": "안민훈",
+  "nameEn": "An MinHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 48,
+      "primaryPosition": "SP",
+      "developmentRate": 57,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 45,
+        "velocity": 57,
+        "command": 49,
+        "control": 52,
+        "movement": 49,
+        "mentality": 52,
+        "recovery": 47,
+        "clutch": 47,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 38,
+        "power": 33,
+        "eye": 42,
+        "discipline": 34,
+        "speed": 41,
+        "baseInstinct": 39,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 32,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "SP": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

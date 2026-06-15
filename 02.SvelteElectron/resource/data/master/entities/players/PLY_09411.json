@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09411",
+  "name": "김수기",
+  "nameEn": "Kim SuKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 53,
+      "primaryPosition": "SP",
+      "developmentRate": 40,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 51,
+        "velocity": 47,
+        "command": 42,
+        "control": 45,
+        "movement": 39,
+        "mentality": 48,
+        "recovery": 47,
+        "clutch": 37,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 40,
+        "power": 27,
+        "eye": 33,
+        "discipline": 30,
+        "speed": 38,
+        "baseInstinct": 39,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 35,
+        "arm": 30,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "SP": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

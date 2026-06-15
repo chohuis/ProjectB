@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03743",
+  "name": "윤우욱",
+  "nameEn": "Yoon WooWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 64,
+      "primaryPosition": "CF",
+      "developmentRate": 71,
+      "potentialHidden": 83,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 62,
+        "velocity": 76,
+        "command": 56,
+        "control": 58,
+        "movement": 65,
+        "mentality": 69,
+        "recovery": 63,
+        "clutch": 59,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 57,
+        "power": 60,
+        "eye": 67,
+        "discipline": 64,
+        "speed": 65,
+        "baseInstinct": 56,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 65,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "CF": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

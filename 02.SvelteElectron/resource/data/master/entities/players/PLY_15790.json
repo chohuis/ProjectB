@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15790",
+  "name": "카터 타일러",
+  "nameEn": "Carter Tyler",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 38,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 55,
+      "primaryPosition": "1B",
+      "developmentRate": 53,
+      "potentialHidden": 52,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 65,
+        "velocity": 65,
+        "command": 67,
+        "control": 70,
+        "movement": 65,
+        "mentality": 69,
+        "recovery": 66,
+        "clutch": 62,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 66,
+        "power": 57,
+        "eye": 60,
+        "discipline": 56,
+        "speed": 70,
+        "baseInstinct": 64,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 56,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "1B": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

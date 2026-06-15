@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07645",
+  "name": "장지민",
+  "nameEn": "Jang JiMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 55,
+      "primaryPosition": "RF",
+      "developmentRate": 54,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 41,
+        "velocity": 53,
+        "command": 48,
+        "control": 44,
+        "movement": 41,
+        "mentality": 45,
+        "recovery": 42,
+        "clutch": 40,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 45,
+        "power": 46,
+        "eye": 50,
+        "discipline": 50,
+        "speed": 50,
+        "baseInstinct": 41,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 38,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "RF": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

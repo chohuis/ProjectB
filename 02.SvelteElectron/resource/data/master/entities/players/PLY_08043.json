@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08043",
+  "name": "정재훈",
+  "nameEn": "Jung JaeHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 6,
+      "primaryPosition": "3B",
+      "developmentRate": 63,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 51,
+        "velocity": 54,
+        "command": 38,
+        "control": 45,
+        "movement": 48,
+        "mentality": 45,
+        "recovery": 47,
+        "clutch": 38,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 55,
+        "power": 42,
+        "eye": 47,
+        "discipline": 50,
+        "speed": 59,
+        "baseInstinct": 47,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 52,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "3B": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

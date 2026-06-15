@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11044",
+  "name": "마틴 숀",
+  "nameEn": "Martin Sean",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 26,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 5,
+      "primaryPosition": "CF",
+      "developmentRate": 52,
+      "potentialHidden": 65,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 69,
+        "velocity": 78,
+        "command": 70,
+        "control": 65,
+        "movement": 60,
+        "mentality": 77,
+        "recovery": 61,
+        "clutch": 63,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 72,
+        "power": 69,
+        "eye": 66,
+        "discipline": 61,
+        "speed": 77,
+        "baseInstinct": 62,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 60,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "CF": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

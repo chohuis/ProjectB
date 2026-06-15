@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14260",
+  "name": "라이트 트레버",
+  "nameEn": "Wright Trevor",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 34,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 26,
+      "primaryPosition": "SS",
+      "developmentRate": 60,
+      "potentialHidden": 53,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 64,
+        "velocity": 66,
+        "command": 61,
+        "control": 63,
+        "movement": 63,
+        "mentality": 73,
+        "recovery": 62,
+        "clutch": 65,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 63,
+        "power": 61,
+        "eye": 67,
+        "discipline": 68,
+        "speed": 73,
+        "baseInstinct": 66,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 67,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "SS": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

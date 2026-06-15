@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04078",
+  "name": "신영윤",
+  "nameEn": "Shin YoungYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 82,
+      "primaryPosition": "3B",
+      "developmentRate": 56,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 53,
+        "velocity": 60,
+        "command": 53,
+        "control": 57,
+        "movement": 54,
+        "mentality": 54,
+        "recovery": 50,
+        "clutch": 42,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 57,
+        "power": 57,
+        "eye": 59,
+        "discipline": 59,
+        "speed": 65,
+        "baseInstinct": 55,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 56,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "3B": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

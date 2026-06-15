@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09228",
+  "name": "서정욱",
+  "nameEn": "Seo JungWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 43,
+      "primaryPosition": "SP",
+      "developmentRate": 42,
+      "potentialHidden": 41,
+      "pitching": {
+        "ovr": 38,
+        "stamina": 33,
+        "velocity": 37,
+        "command": 37,
+        "control": 39,
+        "movement": 37,
+        "mentality": 39,
+        "recovery": 37,
+        "clutch": 29,
+        "holdRunners": 22
+      },
+      "batting": {
+        "ovr": 35,
+        "contact": 33,
+        "power": 26,
+        "eye": 29,
+        "discipline": 37,
+        "speed": 41,
+        "baseInstinct": 27,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 29,
+        "arm": 31,
+        "battingClutch": 25
+      },
+      "positionRatings": {
+        "SP": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

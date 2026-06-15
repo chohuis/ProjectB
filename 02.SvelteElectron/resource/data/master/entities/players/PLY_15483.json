@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15483",
+  "name": "홀 코너",
+  "nameEn": "Hall Connor",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 16,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 73,
+      "primaryPosition": "SP",
+      "developmentRate": 44,
+      "potentialHidden": 83,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 66,
+        "velocity": 76,
+        "command": 67,
+        "control": 66,
+        "movement": 66,
+        "mentality": 68,
+        "recovery": 65,
+        "clutch": 61,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 66,
+        "power": 67,
+        "eye": 68,
+        "discipline": 62,
+        "speed": 70,
+        "baseInstinct": 64,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 63,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "SP": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

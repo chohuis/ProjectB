@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13558",
+  "name": "토마스 카를로스",
+  "nameEn": "Thomas Carlos",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 81,
+  "popularity": 36,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 30,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 58,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 80,
+        "stamina": 83,
+        "velocity": 79,
+        "command": 81,
+        "control": 78,
+        "movement": 77,
+        "mentality": 79,
+        "recovery": 80,
+        "clutch": 68,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 80,
+        "contact": 81,
+        "power": 77,
+        "eye": 74,
+        "discipline": 76,
+        "speed": 83,
+        "baseInstinct": 80,
+        "bunting": 72,
+        "platoon": 50,
+        "fielding": 72,
+        "arm": 72,
+        "battingClutch": 78
+      },
+      "positionRatings": {
+        "SP": 80
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08240",
+  "name": "류상준",
+  "nameEn": "Ryu SangJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 68,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 46,
+        "velocity": 44,
+        "command": 38,
+        "control": 35,
+        "movement": 39,
+        "mentality": 45,
+        "recovery": 43,
+        "clutch": 39,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 61,
+        "power": 53,
+        "eye": 56,
+        "discipline": 48,
+        "speed": 59,
+        "baseInstinct": 53,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 47,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "SP": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

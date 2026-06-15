@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14650",
+  "name": "무어 제이슨",
+  "nameEn": "Moore Jason",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 84,
+  "popularity": 48,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 29,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 73,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 55,
+      "proServiceYears": 7,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 61,
+        "velocity": 70,
+        "command": 59,
+        "control": 62,
+        "movement": 63,
+        "mentality": 66,
+        "recovery": 50,
+        "clutch": 53,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 53,
+        "power": 65,
+        "eye": 58,
+        "discipline": 61,
+        "speed": 61,
+        "baseInstinct": 62,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 56,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "SP": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

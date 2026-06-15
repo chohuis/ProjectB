@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07253",
+  "name": "전동혁",
+  "nameEn": "Jeon DongHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 98,
+      "primaryPosition": "LF",
+      "developmentRate": 52,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 55,
+        "velocity": 69,
+        "command": 54,
+        "control": 53,
+        "movement": 58,
+        "mentality": 56,
+        "recovery": 55,
+        "clutch": 52,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 39,
+        "power": 37,
+        "eye": 41,
+        "discipline": 44,
+        "speed": 39,
+        "baseInstinct": 36,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 36,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "LF": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

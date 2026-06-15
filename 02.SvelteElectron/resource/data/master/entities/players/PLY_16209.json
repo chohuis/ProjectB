@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16209",
+  "name": "브라운 에반",
+  "nameEn": "Brown Evan",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 38,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 64,
+      "primaryPosition": "1B",
+      "developmentRate": 66,
+      "potentialHidden": 87,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 50,
+        "velocity": 46,
+        "command": 48,
+        "control": 42,
+        "movement": 49,
+        "mentality": 48,
+        "recovery": 38,
+        "clutch": 48,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 52,
+        "power": 39,
+        "eye": 41,
+        "discipline": 39,
+        "speed": 42,
+        "baseInstinct": 40,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 49,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "1B": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07988",
+  "name": "황현수",
+  "nameEn": "Hwang HyeonSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 1,
+      "primaryPosition": "2B",
+      "developmentRate": 55,
+      "potentialHidden": 64,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 43,
+        "velocity": 46,
+        "command": 34,
+        "control": 43,
+        "movement": 39,
+        "mentality": 44,
+        "recovery": 38,
+        "clutch": 35,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 42,
+        "power": 39,
+        "eye": 44,
+        "discipline": 47,
+        "speed": 44,
+        "baseInstinct": 43,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 40,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "2B": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

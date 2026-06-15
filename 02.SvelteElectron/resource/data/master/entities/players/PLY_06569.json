@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06569",
+  "name": "권영우",
+  "nameEn": "Kwon YoungWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 72,
+      "primaryPosition": "3B",
+      "developmentRate": 69,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 45,
+        "velocity": 59,
+        "command": 49,
+        "control": 44,
+        "movement": 41,
+        "mentality": 51,
+        "recovery": 39,
+        "clutch": 47,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 57,
+        "power": 52,
+        "eye": 52,
+        "discipline": 51,
+        "speed": 60,
+        "baseInstinct": 49,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 50,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "3B": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

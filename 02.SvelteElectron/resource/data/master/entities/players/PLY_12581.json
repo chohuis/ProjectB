@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12581",
+  "name": "클라크 크리스",
+  "nameEn": "Clark Chris",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 84,
+  "popularity": 12,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 61,
+      "primaryPosition": "LF",
+      "developmentRate": 58,
+      "potentialHidden": 80,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 53,
+        "velocity": 64,
+        "command": 54,
+        "control": 51,
+        "movement": 47,
+        "mentality": 62,
+        "recovery": 46,
+        "clutch": 44,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 53,
+        "power": 46,
+        "eye": 55,
+        "discipline": 50,
+        "speed": 55,
+        "baseInstinct": 53,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 47,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "LF": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

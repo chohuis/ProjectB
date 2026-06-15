@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12538",
+  "name": "에르난데스 케빈",
+  "nameEn": "Hernandez Kevin",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 35,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 52,
+      "primaryPosition": "SP",
+      "developmentRate": 76,
+      "potentialHidden": 92,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 50,
+        "velocity": 60,
+        "command": 56,
+        "control": 59,
+        "movement": 56,
+        "mentality": 49,
+        "recovery": 47,
+        "clutch": 52,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 53,
+        "power": 49,
+        "eye": 47,
+        "discipline": 53,
+        "speed": 51,
+        "baseInstinct": 53,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 50,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

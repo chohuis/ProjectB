@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14860",
+  "name": "데이비스 제이슨",
+  "nameEn": "Davis Jason",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 38,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 95,
+      "primaryPosition": "CF",
+      "developmentRate": 52,
+      "potentialHidden": 83,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 59,
+        "velocity": 68,
+        "command": 60,
+        "control": 59,
+        "movement": 55,
+        "mentality": 69,
+        "recovery": 59,
+        "clutch": 55,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 54,
+        "power": 59,
+        "eye": 54,
+        "discipline": 64,
+        "speed": 65,
+        "baseInstinct": 53,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 54,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "CF": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

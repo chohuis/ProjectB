@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10940",
+  "name": "존슨 알렉스",
+  "nameEn": "Johnson Alex",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 10,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 34,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 84,
+      "primaryPosition": "SP",
+      "developmentRate": 36,
+      "potentialHidden": 60,
+      "proServiceYears": 12,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 67,
+        "velocity": 73,
+        "command": 69,
+        "control": 80,
+        "movement": 73,
+        "mentality": 74,
+        "recovery": 70,
+        "clutch": 66,
+        "holdRunners": 70
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 77,
+        "power": 75,
+        "eye": 73,
+        "discipline": 74,
+        "speed": 73,
+        "baseInstinct": 74,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 74,
+        "arm": 66,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "SP": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

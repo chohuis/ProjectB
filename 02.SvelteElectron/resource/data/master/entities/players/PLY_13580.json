@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13580",
+  "name": "존슨 조던",
+  "nameEn": "Johnson Jordan",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 37,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 81,
+      "primaryPosition": "3B",
+      "developmentRate": 65,
+      "potentialHidden": 74,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 71,
+        "velocity": 87,
+        "command": 69,
+        "control": 70,
+        "movement": 77,
+        "mentality": 74,
+        "recovery": 68,
+        "clutch": 69,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 78,
+        "contact": 73,
+        "power": 79,
+        "eye": 74,
+        "discipline": 72,
+        "speed": 72,
+        "baseInstinct": 78,
+        "bunting": 66,
+        "platoon": 50,
+        "fielding": 76,
+        "arm": 71,
+        "battingClutch": 76
+      },
+      "positionRatings": {
+        "3B": 78
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

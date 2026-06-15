@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15011",
+  "name": "영 브랜던",
+  "nameEn": "Young Brandon",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 47,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 15,
+      "primaryPosition": "C",
+      "developmentRate": 60,
+      "potentialHidden": 64,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 47,
+        "velocity": 58,
+        "command": 48,
+        "control": 52,
+        "movement": 53,
+        "mentality": 59,
+        "recovery": 57,
+        "clutch": 46,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 59,
+        "power": 57,
+        "eye": 47,
+        "discipline": 58,
+        "speed": 51,
+        "baseInstinct": 50,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 49,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "C": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15173",
+  "name": "라이트 에반",
+  "nameEn": "Wright Evan",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 10,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 24,
+      "primaryPosition": "SS",
+      "developmentRate": 57,
+      "potentialHidden": 78,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 51,
+        "velocity": 56,
+        "command": 40,
+        "control": 40,
+        "movement": 38,
+        "mentality": 42,
+        "recovery": 40,
+        "clutch": 39,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 40,
+        "power": 42,
+        "eye": 51,
+        "discipline": 44,
+        "speed": 45,
+        "baseInstinct": 42,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 47,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "SS": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

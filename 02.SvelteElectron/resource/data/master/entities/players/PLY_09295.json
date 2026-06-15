@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09295",
+  "name": "서도훈",
+  "nameEn": "Seo DoHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 71,
+      "primaryPosition": "RF",
+      "developmentRate": 44,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 45,
+        "velocity": 42,
+        "command": 36,
+        "control": 35,
+        "movement": 34,
+        "mentality": 44,
+        "recovery": 35,
+        "clutch": 30,
+        "holdRunners": 27
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 35,
+        "power": 38,
+        "eye": 37,
+        "discipline": 39,
+        "speed": 43,
+        "baseInstinct": 34,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 40,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "RF": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

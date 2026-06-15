@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05648",
+  "name": "최수혁",
+  "nameEn": "Choi SuHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 7,
+      "primaryPosition": "SP",
+      "developmentRate": 66,
+      "potentialHidden": 81,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 66,
+        "velocity": 64,
+        "command": 66,
+        "control": 60,
+        "movement": 60,
+        "mentality": 68,
+        "recovery": 64,
+        "clutch": 52,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 59,
+        "power": 50,
+        "eye": 55,
+        "discipline": 53,
+        "speed": 51,
+        "baseInstinct": 48,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 55,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "SP": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

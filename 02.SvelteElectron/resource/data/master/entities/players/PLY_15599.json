@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15599",
+  "name": "라이트 카를로스",
+  "nameEn": "Wright Carlos",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 40,
+      "primaryPosition": "SP",
+      "developmentRate": 69,
+      "potentialHidden": 90,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 49,
+        "velocity": 52,
+        "command": 53,
+        "control": 46,
+        "movement": 58,
+        "mentality": 48,
+        "recovery": 50,
+        "clutch": 42,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 50,
+        "power": 46,
+        "eye": 56,
+        "discipline": 53,
+        "speed": 60,
+        "baseInstinct": 46,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 46,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

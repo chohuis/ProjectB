@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07067",
+  "name": "오민환",
+  "nameEn": "Oh MinHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 13,
+      "primaryPosition": "LF",
+      "developmentRate": 47,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 47,
+        "velocity": 52,
+        "command": 40,
+        "control": 45,
+        "movement": 41,
+        "mentality": 48,
+        "recovery": 36,
+        "clutch": 41,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 47,
+        "power": 49,
+        "eye": 54,
+        "discipline": 53,
+        "speed": 50,
+        "baseInstinct": 51,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 45,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "LF": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

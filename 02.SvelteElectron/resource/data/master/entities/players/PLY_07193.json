@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07193",
+  "name": "한재진",
+  "nameEn": "Han JaeJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 82,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 50,
+        "velocity": 52,
+        "command": 43,
+        "control": 40,
+        "movement": 48,
+        "mentality": 44,
+        "recovery": 45,
+        "clutch": 40,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 40,
+        "power": 37,
+        "eye": 43,
+        "discipline": 47,
+        "speed": 44,
+        "baseInstinct": 38,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 35,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "SP": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

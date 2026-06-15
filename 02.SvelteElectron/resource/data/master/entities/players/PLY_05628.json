@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05628",
+  "name": "강동재",
+  "nameEn": "Kang DongJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 35,
+      "primaryPosition": "3B",
+      "developmentRate": 63,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 55,
+        "velocity": 61,
+        "command": 49,
+        "control": 57,
+        "movement": 59,
+        "mentality": 62,
+        "recovery": 56,
+        "clutch": 52,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 56,
+        "power": 52,
+        "eye": 54,
+        "discipline": 50,
+        "speed": 56,
+        "baseInstinct": 52,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 46,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "3B": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

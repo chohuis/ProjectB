@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09113",
+  "name": "송민완",
+  "nameEn": "Song MinWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 13,
+      "primaryPosition": "SP",
+      "developmentRate": 50,
+      "potentialHidden": 41,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 44,
+        "velocity": 57,
+        "command": 39,
+        "control": 51,
+        "movement": 48,
+        "mentality": 47,
+        "recovery": 45,
+        "clutch": 40,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 38,
+        "power": 36,
+        "eye": 38,
+        "discipline": 37,
+        "speed": 44,
+        "baseInstinct": 34,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 38,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "SP": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

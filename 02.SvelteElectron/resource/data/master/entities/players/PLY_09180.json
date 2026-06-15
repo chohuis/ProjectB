@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09180",
+  "name": "오혁찬",
+  "nameEn": "Oh HyeokChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 71,
+      "primaryPosition": "SS",
+      "developmentRate": 56,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 46,
+        "velocity": 57,
+        "command": 45,
+        "control": 49,
+        "movement": 49,
+        "mentality": 50,
+        "recovery": 49,
+        "clutch": 43,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 32,
+        "power": 33,
+        "eye": 35,
+        "discipline": 29,
+        "speed": 33,
+        "baseInstinct": 35,
+        "bunting": 15,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 31,
+        "battingClutch": 23
+      },
+      "positionRatings": {
+        "SS": 36
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08960",
+  "name": "오훈원",
+  "nameEn": "Oh HunWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 79,
+      "primaryPosition": "SP",
+      "developmentRate": 48,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 49,
+        "velocity": 53,
+        "command": 46,
+        "control": 52,
+        "movement": 46,
+        "mentality": 47,
+        "recovery": 43,
+        "clutch": 43,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 35,
+        "power": 31,
+        "eye": 38,
+        "discipline": 30,
+        "speed": 35,
+        "baseInstinct": 37,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 35,
+        "arm": 36,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "SP": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

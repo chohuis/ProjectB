@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12838",
+  "name": "데이비스 블레이크",
+  "nameEn": "Davis Blake",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 39,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 98,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 71,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 57,
+        "velocity": 71,
+        "command": 65,
+        "control": 62,
+        "movement": 57,
+        "mentality": 59,
+        "recovery": 59,
+        "clutch": 55,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 63,
+        "power": 68,
+        "eye": 63,
+        "discipline": 62,
+        "speed": 66,
+        "baseInstinct": 68,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 67,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "SP": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

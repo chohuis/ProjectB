@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04286",
+  "name": "조현진",
+  "nameEn": "Jo HyeonJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 17,
+      "primaryPosition": "3B",
+      "developmentRate": 52,
+      "potentialHidden": 86,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 54,
+        "velocity": 58,
+        "command": 48,
+        "control": 59,
+        "movement": 48,
+        "mentality": 62,
+        "recovery": 52,
+        "clutch": 48,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 41,
+        "power": 44,
+        "eye": 45,
+        "discipline": 43,
+        "speed": 46,
+        "baseInstinct": 45,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 47,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "3B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04844",
+  "name": "장찬원",
+  "nameEn": "Jang ChanWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 76,
+      "primaryPosition": "LF",
+      "developmentRate": 51,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 58,
+        "velocity": 62,
+        "command": 49,
+        "control": 54,
+        "movement": 55,
+        "mentality": 55,
+        "recovery": 44,
+        "clutch": 45,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 55,
+        "power": 52,
+        "eye": 49,
+        "discipline": 54,
+        "speed": 54,
+        "baseInstinct": 56,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 49,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "LF": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

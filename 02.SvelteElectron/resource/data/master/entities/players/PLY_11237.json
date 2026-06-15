@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11237",
+  "name": "데이비스 콜",
+  "nameEn": "Davis Cole",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 49,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 28,
+      "primaryPosition": "CF",
+      "developmentRate": 53,
+      "potentialHidden": 59,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 81,
+        "stamina": 84,
+        "velocity": 80,
+        "command": 81,
+        "control": 80,
+        "movement": 79,
+        "mentality": 86,
+        "recovery": 76,
+        "clutch": 80,
+        "holdRunners": 74
+      },
+      "batting": {
+        "ovr": 81,
+        "contact": 75,
+        "power": 75,
+        "eye": 80,
+        "discipline": 74,
+        "speed": 80,
+        "baseInstinct": 74,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 75,
+        "arm": 74,
+        "battingClutch": 82
+      },
+      "positionRatings": {
+        "CF": 81
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

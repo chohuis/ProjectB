@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11157",
+  "name": "그린 네이선",
+  "nameEn": "Green Nathan",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 18,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 95,
+      "primaryPosition": "RF",
+      "developmentRate": 55,
+      "potentialHidden": 70,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 64,
+        "velocity": 77,
+        "command": 64,
+        "control": 64,
+        "movement": 65,
+        "mentality": 67,
+        "recovery": 73,
+        "clutch": 72,
+        "holdRunners": 63
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 76,
+        "power": 61,
+        "eye": 72,
+        "discipline": 66,
+        "speed": 65,
+        "baseInstinct": 66,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 72,
+        "battingClutch": 69
+      },
+      "positionRatings": {
+        "RF": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

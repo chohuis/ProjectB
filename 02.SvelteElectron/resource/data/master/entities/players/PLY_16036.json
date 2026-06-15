@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16036",
+  "name": "존스 타일러",
+  "nameEn": "Jones Tyler",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 20,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 55,
+      "primaryPosition": "LF",
+      "developmentRate": 58,
+      "potentialHidden": 61,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 64,
+        "velocity": 76,
+        "command": 69,
+        "control": 61,
+        "movement": 63,
+        "mentality": 66,
+        "recovery": 67,
+        "clutch": 63,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 63,
+        "power": 59,
+        "eye": 63,
+        "discipline": 64,
+        "speed": 70,
+        "baseInstinct": 62,
+        "bunting": 63,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 64,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "LF": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

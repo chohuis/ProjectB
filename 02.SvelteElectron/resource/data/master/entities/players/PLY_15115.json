@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15115",
+  "name": "존슨 데릭",
+  "nameEn": "Johnson Derek",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 48,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 29,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 81,
+      "primaryPosition": "SP",
+      "developmentRate": 46,
+      "potentialHidden": 48,
+      "proServiceYears": 7,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 54,
+        "velocity": 54,
+        "command": 56,
+        "control": 46,
+        "movement": 47,
+        "mentality": 48,
+        "recovery": 50,
+        "clutch": 45,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 53,
+        "power": 50,
+        "eye": 50,
+        "discipline": 57,
+        "speed": 55,
+        "baseInstinct": 56,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 47,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

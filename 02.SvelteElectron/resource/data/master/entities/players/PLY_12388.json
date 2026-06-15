@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12388",
+  "name": "화이트 크리스",
+  "nameEn": "White Chris",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 47,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 95,
+      "primaryPosition": "1B",
+      "developmentRate": 69,
+      "potentialHidden": 72,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 80,
+        "stamina": 76,
+        "velocity": 82,
+        "command": 82,
+        "control": 74,
+        "movement": 84,
+        "mentality": 85,
+        "recovery": 81,
+        "clutch": 81,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 80,
+        "contact": 74,
+        "power": 70,
+        "eye": 73,
+        "discipline": 72,
+        "speed": 83,
+        "baseInstinct": 75,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 80,
+        "arm": 80,
+        "battingClutch": 75
+      },
+      "positionRatings": {
+        "1B": 80
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

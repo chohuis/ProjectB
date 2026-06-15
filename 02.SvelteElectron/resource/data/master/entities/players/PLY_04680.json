@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04680",
+  "name": "한훈우",
+  "nameEn": "Han HunWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 16,
+      "primaryPosition": "SP",
+      "developmentRate": 60,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 43,
+        "velocity": 45,
+        "command": 42,
+        "control": 38,
+        "movement": 45,
+        "mentality": 42,
+        "recovery": 37,
+        "clutch": 31,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 39,
+        "power": 33,
+        "eye": 33,
+        "discipline": 38,
+        "speed": 38,
+        "baseInstinct": 33,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 35,
+        "arm": 32,
+        "battingClutch": 26
+      },
+      "positionRatings": {
+        "SP": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

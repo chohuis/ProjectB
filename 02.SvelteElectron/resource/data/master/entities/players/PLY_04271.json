@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04271",
+  "name": "윤민식",
+  "nameEn": "Yoon MinSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 33,
+      "primaryPosition": "C",
+      "developmentRate": 65,
+      "potentialHidden": 85,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 64,
+        "velocity": 72,
+        "command": 57,
+        "control": 60,
+        "movement": 68,
+        "mentality": 72,
+        "recovery": 59,
+        "clutch": 52,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 58,
+        "power": 54,
+        "eye": 57,
+        "discipline": 56,
+        "speed": 59,
+        "baseInstinct": 54,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 51,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "C": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

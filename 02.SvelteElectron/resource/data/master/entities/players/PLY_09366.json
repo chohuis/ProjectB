@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09366",
+  "name": "전상훈",
+  "nameEn": "Jeon SangHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 36,
+      "primaryPosition": "2B",
+      "developmentRate": 52,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 52,
+        "velocity": 60,
+        "command": 52,
+        "control": 49,
+        "movement": 46,
+        "mentality": 50,
+        "recovery": 42,
+        "clutch": 47,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 40,
+        "power": 33,
+        "eye": 36,
+        "discipline": 32,
+        "speed": 44,
+        "baseInstinct": 40,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 29,
+        "arm": 33,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "2B": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08378",
+  "name": "박성환",
+  "nameEn": "Park SeongHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 97,
+      "primaryPosition": "3B",
+      "developmentRate": 46,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 52,
+        "velocity": 51,
+        "command": 52,
+        "control": 53,
+        "movement": 53,
+        "mentality": 55,
+        "recovery": 43,
+        "clutch": 41,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 29,
+        "power": 26,
+        "eye": 33,
+        "discipline": 36,
+        "speed": 40,
+        "baseInstinct": 29,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 28,
+        "arm": 35,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "3B": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

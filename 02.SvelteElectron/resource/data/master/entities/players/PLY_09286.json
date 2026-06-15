@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09286",
+  "name": "안기찬",
+  "nameEn": "An KiChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 33,
+      "primaryPosition": "C",
+      "developmentRate": 41,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 50,
+        "velocity": 49,
+        "command": 39,
+        "control": 40,
+        "movement": 40,
+        "mentality": 45,
+        "recovery": 43,
+        "clutch": 44,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 33,
+        "power": 29,
+        "eye": 39,
+        "discipline": 27,
+        "speed": 38,
+        "baseInstinct": 36,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 31,
+        "battingClutch": 27
+      },
+      "positionRatings": {
+        "C": 36
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

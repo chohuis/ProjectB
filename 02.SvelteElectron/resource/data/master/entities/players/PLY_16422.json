@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16422",
+  "name": "베이커 제이크",
+  "nameEn": "Baker Jake",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 10,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 12,
+      "primaryPosition": "RF",
+      "developmentRate": 59,
+      "potentialHidden": 67,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 51,
+        "velocity": 53,
+        "command": 48,
+        "control": 51,
+        "movement": 41,
+        "mentality": 54,
+        "recovery": 40,
+        "clutch": 42,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 47,
+        "power": 48,
+        "eye": 49,
+        "discipline": 38,
+        "speed": 50,
+        "baseInstinct": 43,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 43,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "RF": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

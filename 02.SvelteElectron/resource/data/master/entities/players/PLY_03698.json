@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03698",
+  "name": "박현재",
+  "nameEn": "Park HyeonJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 67,
+      "primaryPosition": "3B",
+      "developmentRate": 57,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 62,
+        "velocity": 69,
+        "command": 60,
+        "control": 62,
+        "movement": 67,
+        "mentality": 63,
+        "recovery": 58,
+        "clutch": 58,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 56,
+        "power": 47,
+        "eye": 52,
+        "discipline": 54,
+        "speed": 53,
+        "baseInstinct": 55,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 45,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "3B": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

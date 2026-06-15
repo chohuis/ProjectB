@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07883",
+  "name": "오동진",
+  "nameEn": "Oh DongJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 6,
+      "primaryPosition": "RF",
+      "developmentRate": 47,
+      "potentialHidden": 64,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 53,
+        "velocity": 56,
+        "command": 46,
+        "control": 47,
+        "movement": 49,
+        "mentality": 58,
+        "recovery": 49,
+        "clutch": 51,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 54,
+        "power": 46,
+        "eye": 54,
+        "discipline": 54,
+        "speed": 61,
+        "baseInstinct": 54,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 45,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "RF": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

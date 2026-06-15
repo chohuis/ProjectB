@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03901",
+  "name": "서상재",
+  "nameEn": "Seo SangJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 49,
+      "primaryPosition": "SP",
+      "developmentRate": 64,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 58,
+        "velocity": 70,
+        "command": 58,
+        "control": 57,
+        "movement": 58,
+        "mentality": 57,
+        "recovery": 60,
+        "clutch": 58,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 65,
+        "power": 56,
+        "eye": 60,
+        "discipline": 64,
+        "speed": 65,
+        "baseInstinct": 62,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 57,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "SP": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

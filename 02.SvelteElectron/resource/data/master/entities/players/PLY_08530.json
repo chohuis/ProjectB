@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08530",
+  "name": "정준재",
+  "nameEn": "Jung JunJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 50,
+      "primaryPosition": "C",
+      "developmentRate": 43,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 39,
+        "stamina": 37,
+        "velocity": 43,
+        "command": 32,
+        "control": 39,
+        "movement": 36,
+        "mentality": 42,
+        "recovery": 37,
+        "clutch": 34,
+        "holdRunners": 29
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 42,
+        "power": 48,
+        "eye": 48,
+        "discipline": 44,
+        "speed": 49,
+        "baseInstinct": 47,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 47,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "C": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

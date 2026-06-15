@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16311",
+  "name": "미첼 미겔",
+  "nameEn": "Mitchell Miguel",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 12,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 4,
+      "primaryPosition": "LF",
+      "developmentRate": 63,
+      "potentialHidden": 60,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 48,
+        "velocity": 52,
+        "command": 55,
+        "control": 46,
+        "movement": 50,
+        "mentality": 53,
+        "recovery": 51,
+        "clutch": 41,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 56,
+        "power": 54,
+        "eye": 55,
+        "discipline": 52,
+        "speed": 51,
+        "baseInstinct": 50,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 45,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "LF": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

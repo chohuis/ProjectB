@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05661",
+  "name": "류민찬",
+  "nameEn": "Ryu MinChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 40,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 50,
+        "velocity": 56,
+        "command": 40,
+        "control": 47,
+        "movement": 42,
+        "mentality": 47,
+        "recovery": 41,
+        "clutch": 42,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 60,
+        "power": 61,
+        "eye": 61,
+        "discipline": 55,
+        "speed": 58,
+        "baseInstinct": 62,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 52,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "SP": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

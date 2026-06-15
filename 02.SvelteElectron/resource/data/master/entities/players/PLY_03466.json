@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03466",
+  "name": "강진기",
+  "nameEn": "Kang JinKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 35,
+      "primaryPosition": "2B",
+      "developmentRate": 67,
+      "potentialHidden": 90,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 70,
+        "velocity": 81,
+        "command": 62,
+        "control": 68,
+        "movement": 63,
+        "mentality": 69,
+        "recovery": 67,
+        "clutch": 67,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 59,
+        "power": 57,
+        "eye": 57,
+        "discipline": 55,
+        "speed": 60,
+        "baseInstinct": 55,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 63,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "2B": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

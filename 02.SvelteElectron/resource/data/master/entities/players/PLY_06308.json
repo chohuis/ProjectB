@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06308",
+  "name": "오정성",
+  "nameEn": "Oh JungSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 86,
+      "primaryPosition": "3B",
+      "developmentRate": 53,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 59,
+        "velocity": 64,
+        "command": 51,
+        "control": 47,
+        "movement": 50,
+        "mentality": 52,
+        "recovery": 45,
+        "clutch": 41,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 48,
+        "power": 39,
+        "eye": 39,
+        "discipline": 35,
+        "speed": 45,
+        "baseInstinct": 35,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 42,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "3B": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

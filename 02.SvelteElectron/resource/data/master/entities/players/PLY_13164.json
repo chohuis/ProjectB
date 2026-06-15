@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13164",
+  "name": "로빈슨 콜",
+  "nameEn": "Robinson Cole",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 48,
+      "primaryPosition": "C",
+      "developmentRate": 69,
+      "potentialHidden": 61,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 58,
+        "velocity": 66,
+        "command": 63,
+        "control": 62,
+        "movement": 53,
+        "mentality": 60,
+        "recovery": 63,
+        "clutch": 50,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 59,
+        "power": 59,
+        "eye": 67,
+        "discipline": 63,
+        "speed": 68,
+        "baseInstinct": 65,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 57,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "C": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

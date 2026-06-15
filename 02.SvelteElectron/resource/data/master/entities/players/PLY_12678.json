@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12678",
+  "name": "토마스 헌터",
+  "nameEn": "Thomas Hunter",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 11,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 25,
+      "primaryPosition": "3B",
+      "developmentRate": 49,
+      "potentialHidden": 66,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 69,
+        "velocity": 72,
+        "command": 77,
+        "control": 75,
+        "movement": 65,
+        "mentality": 73,
+        "recovery": 73,
+        "clutch": 71,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 74,
+        "contact": 77,
+        "power": 74,
+        "eye": 73,
+        "discipline": 75,
+        "speed": 80,
+        "baseInstinct": 67,
+        "bunting": 66,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 75,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "3B": 74
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

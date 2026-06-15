@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04019",
+  "name": "조태완",
+  "nameEn": "Jo TaeWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 61,
+      "primaryPosition": "3B",
+      "developmentRate": 68,
+      "potentialHidden": 86,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 60,
+        "velocity": 56,
+        "command": 55,
+        "control": 52,
+        "movement": 55,
+        "mentality": 58,
+        "recovery": 54,
+        "clutch": 49,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 65,
+        "power": 54,
+        "eye": 56,
+        "discipline": 66,
+        "speed": 59,
+        "baseInstinct": 63,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 56,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "3B": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

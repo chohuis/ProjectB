@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10174",
+  "name": "해리스 크리스",
+  "nameEn": "Harris Chris",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 27,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 29,
+      "primaryPosition": "SP",
+      "developmentRate": 48,
+      "potentialHidden": 61,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 74,
+        "velocity": 85,
+        "command": 77,
+        "control": 67,
+        "movement": 72,
+        "mentality": 82,
+        "recovery": 68,
+        "clutch": 72,
+        "holdRunners": 74
+      },
+      "batting": {
+        "ovr": 76,
+        "contact": 74,
+        "power": 69,
+        "eye": 81,
+        "discipline": 71,
+        "speed": 81,
+        "baseInstinct": 66,
+        "bunting": 68,
+        "platoon": 50,
+        "fielding": 73,
+        "arm": 73,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "SP": 76
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

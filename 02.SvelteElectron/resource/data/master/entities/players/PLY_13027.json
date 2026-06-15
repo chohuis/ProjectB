@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13027",
+  "name": "윌리엄스 케빈",
+  "nameEn": "Williams Kevin",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 13,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 48,
+      "primaryPosition": "3B",
+      "developmentRate": 62,
+      "potentialHidden": 64,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 70,
+        "velocity": 68,
+        "command": 58,
+        "control": 69,
+        "movement": 72,
+        "mentality": 74,
+        "recovery": 66,
+        "clutch": 56,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 61,
+        "power": 72,
+        "eye": 64,
+        "discipline": 69,
+        "speed": 67,
+        "baseInstinct": 63,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 59,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "3B": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

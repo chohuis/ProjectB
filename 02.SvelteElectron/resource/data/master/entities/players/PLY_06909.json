@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06909",
+  "name": "윤준욱",
+  "nameEn": "Yoon JunWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 57,
+      "primaryPosition": "2B",
+      "developmentRate": 62,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 63,
+        "velocity": 67,
+        "command": 61,
+        "control": 61,
+        "movement": 67,
+        "mentality": 69,
+        "recovery": 55,
+        "clutch": 53,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 52,
+        "power": 40,
+        "eye": 47,
+        "discipline": 38,
+        "speed": 44,
+        "baseInstinct": 47,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 38,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "2B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

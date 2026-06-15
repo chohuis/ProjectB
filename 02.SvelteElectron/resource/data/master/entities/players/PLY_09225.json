@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09225",
+  "name": "한성혁",
+  "nameEn": "Han SeongHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 92,
+      "primaryPosition": "CF",
+      "developmentRate": 45,
+      "potentialHidden": 42,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 43,
+        "velocity": 48,
+        "command": 39,
+        "control": 46,
+        "movement": 47,
+        "mentality": 56,
+        "recovery": 44,
+        "clutch": 44,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 31,
+        "contact": 35,
+        "power": 24,
+        "eye": 22,
+        "discipline": 28,
+        "speed": 35,
+        "baseInstinct": 24,
+        "bunting": 10,
+        "platoon": 50,
+        "fielding": 20,
+        "arm": 28,
+        "battingClutch": 22
+      },
+      "positionRatings": {
+        "CF": 31
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

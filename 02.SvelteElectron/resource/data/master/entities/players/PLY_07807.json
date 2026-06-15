@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07807",
+  "name": "류찬완",
+  "nameEn": "Ryu ChanWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 30,
+      "primaryPosition": "3B",
+      "developmentRate": 58,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 50,
+        "velocity": 53,
+        "command": 50,
+        "control": 50,
+        "movement": 51,
+        "mentality": 51,
+        "recovery": 53,
+        "clutch": 44,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 42,
+        "power": 42,
+        "eye": 35,
+        "discipline": 35,
+        "speed": 40,
+        "baseInstinct": 38,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 39,
+        "battingClutch": 30
+      },
+      "positionRatings": {
+        "3B": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

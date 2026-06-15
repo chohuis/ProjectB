@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05617",
+  "name": "임수재",
+  "nameEn": "Lim SuJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 35,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 20,
+      "primaryPosition": "LF",
+      "developmentRate": 56,
+      "potentialHidden": 80,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 67,
+        "velocity": 67,
+        "command": 56,
+        "control": 60,
+        "movement": 55,
+        "mentality": 64,
+        "recovery": 55,
+        "clutch": 59,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 50,
+        "power": 48,
+        "eye": 46,
+        "discipline": 43,
+        "speed": 57,
+        "baseInstinct": 42,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 46,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "LF": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

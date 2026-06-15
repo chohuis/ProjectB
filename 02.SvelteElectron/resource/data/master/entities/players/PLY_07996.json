@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07996",
+  "name": "장태빈",
+  "nameEn": "Jang TaeBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 91,
+      "primaryPosition": "CF",
+      "developmentRate": 53,
+      "potentialHidden": 81,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 42,
+        "velocity": 56,
+        "command": 38,
+        "control": 47,
+        "movement": 49,
+        "mentality": 44,
+        "recovery": 43,
+        "clutch": 38,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 53,
+        "power": 51,
+        "eye": 45,
+        "discipline": 53,
+        "speed": 47,
+        "baseInstinct": 46,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 48,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "CF": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

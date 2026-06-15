@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03402",
+  "name": "송성완",
+  "nameEn": "Song SeongWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 22,
+      "primaryPosition": "RF",
+      "developmentRate": 62,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 80,
+        "velocity": 86,
+        "command": 69,
+        "control": 74,
+        "movement": 76,
+        "mentality": 79,
+        "recovery": 75,
+        "clutch": 71,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 50,
+        "power": 57,
+        "eye": 52,
+        "discipline": 51,
+        "speed": 61,
+        "baseInstinct": 47,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 48,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "RF": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

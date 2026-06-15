@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14094",
+  "name": "앤더슨 칼렙",
+  "nameEn": "Anderson Caleb",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 29,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 34,
+      "primaryPosition": "C",
+      "developmentRate": 44,
+      "potentialHidden": 84,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 53,
+        "velocity": 73,
+        "command": 64,
+        "control": 57,
+        "movement": 62,
+        "mentality": 66,
+        "recovery": 56,
+        "clutch": 50,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 56,
+        "power": 55,
+        "eye": 57,
+        "discipline": 58,
+        "speed": 56,
+        "baseInstinct": 54,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 61,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "C": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03098",
+  "name": "안찬준",
+  "nameEn": "An ChanJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 79,
+      "primaryPosition": "C",
+      "developmentRate": 73,
+      "potentialHidden": 86,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 59,
+        "velocity": 70,
+        "command": 62,
+        "control": 64,
+        "movement": 59,
+        "mentality": 63,
+        "recovery": 55,
+        "clutch": 52,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 60,
+        "power": 61,
+        "eye": 59,
+        "discipline": 59,
+        "speed": 65,
+        "baseInstinct": 60,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 61,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "C": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

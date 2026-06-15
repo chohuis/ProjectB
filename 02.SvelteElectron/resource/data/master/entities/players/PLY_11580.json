@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11580",
+  "name": "마르티네스 타일러",
+  "nameEn": "Martinez Tyler",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 40,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 66,
+      "primaryPosition": "CF",
+      "developmentRate": 68,
+      "potentialHidden": 76,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 64,
+        "velocity": 60,
+        "command": 53,
+        "control": 60,
+        "movement": 56,
+        "mentality": 56,
+        "recovery": 59,
+        "clutch": 51,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 63,
+        "power": 58,
+        "eye": 59,
+        "discipline": 55,
+        "speed": 62,
+        "baseInstinct": 57,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 63,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "CF": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

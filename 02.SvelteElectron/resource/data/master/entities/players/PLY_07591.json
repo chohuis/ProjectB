@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07591",
+  "name": "김기우",
+  "nameEn": "Kim KiWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 46,
+      "primaryPosition": "CF",
+      "developmentRate": 56,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 46,
+        "velocity": 49,
+        "command": 47,
+        "control": 52,
+        "movement": 51,
+        "mentality": 45,
+        "recovery": 45,
+        "clutch": 37,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 40,
+        "power": 33,
+        "eye": 44,
+        "discipline": 39,
+        "speed": 45,
+        "baseInstinct": 33,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 41,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "CF": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

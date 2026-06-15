@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10706",
+  "name": "무어 미겔",
+  "nameEn": "Moore Miguel",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 86,
+      "primaryPosition": "CF",
+      "developmentRate": 51,
+      "potentialHidden": 68,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 79,
+        "velocity": 74,
+        "command": 71,
+        "control": 73,
+        "movement": 70,
+        "mentality": 70,
+        "recovery": 64,
+        "clutch": 74,
+        "holdRunners": 73
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 68,
+        "power": 74,
+        "eye": 72,
+        "discipline": 77,
+        "speed": 78,
+        "baseInstinct": 77,
+        "bunting": 63,
+        "platoon": 50,
+        "fielding": 76,
+        "arm": 66,
+        "battingClutch": 74
+      },
+      "positionRatings": {
+        "CF": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

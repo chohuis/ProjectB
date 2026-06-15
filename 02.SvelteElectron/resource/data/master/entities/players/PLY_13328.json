@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13328",
+  "name": "로빈슨 칼렙",
+  "nameEn": "Robinson Caleb",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 26,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 6,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 67,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 66,
+        "velocity": 69,
+        "command": 55,
+        "control": 64,
+        "movement": 66,
+        "mentality": 63,
+        "recovery": 54,
+        "clutch": 56,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 68,
+        "power": 63,
+        "eye": 68,
+        "discipline": 62,
+        "speed": 58,
+        "baseInstinct": 64,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 61,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "SP": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

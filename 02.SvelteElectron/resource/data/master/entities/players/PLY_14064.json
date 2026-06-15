@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14064",
+  "name": "윌리엄스 미겔",
+  "nameEn": "Williams Miguel",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 47,
+      "primaryPosition": "SP",
+      "developmentRate": 64,
+      "potentialHidden": 65,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 52,
+        "velocity": 61,
+        "command": 52,
+        "control": 46,
+        "movement": 49,
+        "mentality": 52,
+        "recovery": 54,
+        "clutch": 48,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 57,
+        "power": 49,
+        "eye": 52,
+        "discipline": 51,
+        "speed": 54,
+        "baseInstinct": 48,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 51,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

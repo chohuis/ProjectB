@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05421",
+  "name": "조민준",
+  "nameEn": "Jo MinJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 17,
+      "primaryPosition": "SS",
+      "developmentRate": 64,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 63,
+        "velocity": 62,
+        "command": 60,
+        "control": 59,
+        "movement": 60,
+        "mentality": 63,
+        "recovery": 56,
+        "clutch": 52,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 54,
+        "power": 56,
+        "eye": 56,
+        "discipline": 57,
+        "speed": 56,
+        "baseInstinct": 53,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 50,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "SS": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

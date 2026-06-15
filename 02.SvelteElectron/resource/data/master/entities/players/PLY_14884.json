@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14884",
+  "name": "베이커 라이언",
+  "nameEn": "Baker Ryan",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 15,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 13,
+      "primaryPosition": "SS",
+      "developmentRate": 66,
+      "potentialHidden": 56,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 69,
+        "velocity": 71,
+        "command": 67,
+        "control": 64,
+        "movement": 60,
+        "mentality": 60,
+        "recovery": 60,
+        "clutch": 62,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 66,
+        "power": 61,
+        "eye": 69,
+        "discipline": 56,
+        "speed": 63,
+        "baseInstinct": 64,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 56,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "SS": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

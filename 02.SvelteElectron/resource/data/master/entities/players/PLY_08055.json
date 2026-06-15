@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08055",
+  "name": "임정성",
+  "nameEn": "Lim JungSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 79,
+      "primaryPosition": "RF",
+      "developmentRate": 64,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 48,
+        "velocity": 59,
+        "command": 48,
+        "control": 42,
+        "movement": 43,
+        "mentality": 53,
+        "recovery": 41,
+        "clutch": 45,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 34,
+        "power": 41,
+        "eye": 33,
+        "discipline": 33,
+        "speed": 36,
+        "baseInstinct": 31,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 31,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "RF": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

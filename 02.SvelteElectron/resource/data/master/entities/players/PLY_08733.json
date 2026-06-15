@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08733",
+  "name": "오우민",
+  "nameEn": "Oh WooMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 69,
+      "primaryPosition": "SP",
+      "developmentRate": 43,
+      "potentialHidden": 48,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 46,
+        "velocity": 55,
+        "command": 45,
+        "control": 44,
+        "movement": 43,
+        "mentality": 46,
+        "recovery": 38,
+        "clutch": 42,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 43,
+        "power": 35,
+        "eye": 31,
+        "discipline": 31,
+        "speed": 38,
+        "baseInstinct": 33,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 38,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "SP": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

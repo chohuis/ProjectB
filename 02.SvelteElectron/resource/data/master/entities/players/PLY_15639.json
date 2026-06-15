@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15639",
+  "name": "그린 조던",
+  "nameEn": "Green Jordan",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 17,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 82,
+      "primaryPosition": "CF",
+      "developmentRate": 45,
+      "potentialHidden": 52,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 64,
+        "velocity": 62,
+        "command": 55,
+        "control": 54,
+        "movement": 53,
+        "mentality": 61,
+        "recovery": 50,
+        "clutch": 55,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 53,
+        "power": 59,
+        "eye": 63,
+        "discipline": 65,
+        "speed": 64,
+        "baseInstinct": 52,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 58,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "CF": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

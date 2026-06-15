@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03305",
+  "name": "서혁혁",
+  "nameEn": "Seo HyeokHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 95,
+      "primaryPosition": "3B",
+      "developmentRate": 58,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 65,
+        "velocity": 71,
+        "command": 62,
+        "control": 69,
+        "movement": 73,
+        "mentality": 72,
+        "recovery": 63,
+        "clutch": 64,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 51,
+        "power": 55,
+        "eye": 52,
+        "discipline": 54,
+        "speed": 53,
+        "baseInstinct": 54,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 50,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "3B": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

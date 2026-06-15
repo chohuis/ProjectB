@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14474",
+  "name": "마틴 카일",
+  "nameEn": "Martin Kyle",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 25,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 34,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 90,
+      "primaryPosition": "SP",
+      "developmentRate": 46,
+      "potentialHidden": 43,
+      "proServiceYears": 12,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 62,
+        "velocity": 71,
+        "command": 53,
+        "control": 58,
+        "movement": 57,
+        "mentality": 57,
+        "recovery": 56,
+        "clutch": 60,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 64,
+        "power": 64,
+        "eye": 59,
+        "discipline": 62,
+        "speed": 68,
+        "baseInstinct": 64,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 66,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "SP": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

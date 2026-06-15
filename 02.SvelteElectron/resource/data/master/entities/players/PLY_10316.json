@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10316",
+  "name": "리 로건",
+  "nameEn": "Lee Logan",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 45,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 74,
+      "primaryPosition": "SP",
+      "developmentRate": 66,
+      "potentialHidden": 60,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 62,
+        "velocity": 64,
+        "command": 63,
+        "control": 61,
+        "movement": 60,
+        "mentality": 71,
+        "recovery": 53,
+        "clutch": 60,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 67,
+        "power": 65,
+        "eye": 60,
+        "discipline": 60,
+        "speed": 67,
+        "baseInstinct": 68,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 55,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "SP": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

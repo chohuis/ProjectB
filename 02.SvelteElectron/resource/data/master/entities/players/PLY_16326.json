@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16326",
+  "name": "카터 칼렙",
+  "nameEn": "Carter Caleb",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 14,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 34,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 81,
+      "primaryPosition": "1B",
+      "developmentRate": 46,
+      "potentialHidden": 48,
+      "proServiceYears": 12,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 46,
+        "velocity": 49,
+        "command": 43,
+        "control": 49,
+        "movement": 45,
+        "mentality": 45,
+        "recovery": 51,
+        "clutch": 48,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 54,
+        "power": 42,
+        "eye": 50,
+        "discipline": 45,
+        "speed": 44,
+        "baseInstinct": 48,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 41,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "1B": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

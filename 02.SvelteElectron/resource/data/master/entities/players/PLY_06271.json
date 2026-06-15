@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06271",
+  "name": "정동준",
+  "nameEn": "Jung DongJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 23,
+      "primaryPosition": "RF",
+      "developmentRate": 50,
+      "potentialHidden": 42,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 45,
+        "velocity": 56,
+        "command": 47,
+        "control": 47,
+        "movement": 49,
+        "mentality": 48,
+        "recovery": 43,
+        "clutch": 40,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 46,
+        "power": 50,
+        "eye": 42,
+        "discipline": 45,
+        "speed": 48,
+        "baseInstinct": 44,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 42,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "RF": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

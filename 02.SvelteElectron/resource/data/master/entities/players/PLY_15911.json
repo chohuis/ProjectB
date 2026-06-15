@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15911",
+  "name": "존슨 네이선",
+  "nameEn": "Johnson Nathan",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 47,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 14,
+      "primaryPosition": "2B",
+      "developmentRate": 47,
+      "potentialHidden": 71,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 58,
+        "velocity": 67,
+        "command": 62,
+        "control": 64,
+        "movement": 68,
+        "mentality": 66,
+        "recovery": 62,
+        "clutch": 62,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 61,
+        "power": 59,
+        "eye": 56,
+        "discipline": 57,
+        "speed": 58,
+        "baseInstinct": 55,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 54,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "2B": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

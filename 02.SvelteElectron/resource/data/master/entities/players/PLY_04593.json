@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04593",
+  "name": "이기현",
+  "nameEn": "Lee KiHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 24,
+      "primaryPosition": "SS",
+      "developmentRate": 63,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 52,
+        "velocity": 50,
+        "command": 45,
+        "control": 46,
+        "movement": 42,
+        "mentality": 52,
+        "recovery": 50,
+        "clutch": 39,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 32,
+        "power": 34,
+        "eye": 41,
+        "discipline": 39,
+        "speed": 39,
+        "baseInstinct": 39,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 29,
+        "arm": 37,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "SS": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

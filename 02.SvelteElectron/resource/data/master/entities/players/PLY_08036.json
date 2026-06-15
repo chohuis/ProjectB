@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08036",
+  "name": "이도민",
+  "nameEn": "Lee DoMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 38,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 39,
+        "velocity": 40,
+        "command": 38,
+        "control": 33,
+        "movement": 31,
+        "mentality": 44,
+        "recovery": 38,
+        "clutch": 36,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 40,
+        "power": 38,
+        "eye": 35,
+        "discipline": 42,
+        "speed": 43,
+        "baseInstinct": 45,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 35,
+        "arm": 42,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "SP": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

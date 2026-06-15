@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09803",
+  "name": "조기훈",
+  "nameEn": "Jo KiHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 52,
+      "primaryPosition": "RF",
+      "developmentRate": 56,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 45,
+        "velocity": 60,
+        "command": 46,
+        "control": 51,
+        "movement": 52,
+        "mentality": 47,
+        "recovery": 49,
+        "clutch": 41,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 31,
+        "power": 35,
+        "eye": 36,
+        "discipline": 33,
+        "speed": 44,
+        "baseInstinct": 37,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 35,
+        "arm": 31,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "RF": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

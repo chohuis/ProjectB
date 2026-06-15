@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07192",
+  "name": "한동식",
+  "nameEn": "Han DongSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 6,
+      "primaryPosition": "SS",
+      "developmentRate": 60,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 55,
+        "velocity": 56,
+        "command": 44,
+        "control": 45,
+        "movement": 46,
+        "mentality": 45,
+        "recovery": 48,
+        "clutch": 39,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 52,
+        "power": 40,
+        "eye": 49,
+        "discipline": 41,
+        "speed": 49,
+        "baseInstinct": 46,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 43,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SS": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

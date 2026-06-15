@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13539",
+  "name": "스콧 카일",
+  "nameEn": "Scott Kyle",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 28,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 19,
+      "primaryPosition": "LF",
+      "developmentRate": 51,
+      "potentialHidden": 58,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 73,
+        "velocity": 73,
+        "command": 68,
+        "control": 76,
+        "movement": 72,
+        "mentality": 74,
+        "recovery": 75,
+        "clutch": 64,
+        "holdRunners": 73
+      },
+      "batting": {
+        "ovr": 76,
+        "contact": 70,
+        "power": 78,
+        "eye": 68,
+        "discipline": 75,
+        "speed": 82,
+        "baseInstinct": 70,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 74,
+        "arm": 76,
+        "battingClutch": 73
+      },
+      "positionRatings": {
+        "LF": 76
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

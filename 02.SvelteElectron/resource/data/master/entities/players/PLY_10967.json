@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10967",
+  "name": "윌리엄스 그랜트",
+  "nameEn": "Williams Grant",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 40,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 30,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 95,
+      "primaryPosition": "CF",
+      "developmentRate": 55,
+      "potentialHidden": 75,
+      "proServiceYears": 8,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 67,
+        "velocity": 74,
+        "command": 77,
+        "control": 71,
+        "movement": 79,
+        "mentality": 82,
+        "recovery": 76,
+        "clutch": 71,
+        "holdRunners": 68
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 73,
+        "power": 71,
+        "eye": 75,
+        "discipline": 69,
+        "speed": 73,
+        "baseInstinct": 66,
+        "bunting": 65,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 67,
+        "battingClutch": 68
+      },
+      "positionRatings": {
+        "CF": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

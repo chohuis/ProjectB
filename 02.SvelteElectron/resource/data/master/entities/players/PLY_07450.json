@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07450",
+  "name": "장세원",
+  "nameEn": "Jang SeWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 49,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 46,
+        "velocity": 46,
+        "command": 39,
+        "control": 38,
+        "movement": 47,
+        "mentality": 49,
+        "recovery": 43,
+        "clutch": 40,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 54,
+        "power": 40,
+        "eye": 43,
+        "discipline": 43,
+        "speed": 56,
+        "baseInstinct": 48,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 40,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "SP": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15320",
+  "name": "토마스 에반",
+  "nameEn": "Thomas Evan",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 33,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 32,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 57,
+      "primaryPosition": "SP",
+      "developmentRate": 36,
+      "potentialHidden": 49,
+      "proServiceYears": 10,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 57,
+        "velocity": 62,
+        "command": 45,
+        "control": 55,
+        "movement": 45,
+        "mentality": 57,
+        "recovery": 48,
+        "clutch": 49,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 51,
+        "power": 49,
+        "eye": 48,
+        "discipline": 48,
+        "speed": 46,
+        "baseInstinct": 47,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 42,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

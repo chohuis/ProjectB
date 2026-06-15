@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08424",
+  "name": "신찬원",
+  "nameEn": "Shin ChanWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 71,
+      "primaryPosition": "3B",
+      "developmentRate": 46,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 51,
+        "velocity": 52,
+        "command": 47,
+        "control": 46,
+        "movement": 41,
+        "mentality": 51,
+        "recovery": 42,
+        "clutch": 44,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 31,
+        "contact": 26,
+        "power": 31,
+        "eye": 27,
+        "discipline": 29,
+        "speed": 31,
+        "baseInstinct": 28,
+        "bunting": 10,
+        "platoon": 50,
+        "fielding": 25,
+        "arm": 25,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "3B": 31
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

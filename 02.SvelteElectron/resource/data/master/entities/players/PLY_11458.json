@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11458",
+  "name": "넬슨 칼렙",
+  "nameEn": "Nelson Caleb",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 34,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 57,
+      "primaryPosition": "1B",
+      "developmentRate": 55,
+      "potentialHidden": 55,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 71,
+        "velocity": 85,
+        "command": 64,
+        "control": 75,
+        "movement": 72,
+        "mentality": 69,
+        "recovery": 68,
+        "clutch": 63,
+        "holdRunners": 70
+      },
+      "batting": {
+        "ovr": 74,
+        "contact": 72,
+        "power": 68,
+        "eye": 78,
+        "discipline": 69,
+        "speed": 75,
+        "baseInstinct": 77,
+        "bunting": 68,
+        "platoon": 50,
+        "fielding": 73,
+        "arm": 68,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "1B": 74
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

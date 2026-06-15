@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16617",
+  "name": "존스 로건",
+  "nameEn": "Jones Logan",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 10,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 5,
+      "primaryPosition": "CF",
+      "developmentRate": 58,
+      "potentialHidden": 81,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 66,
+        "velocity": 79,
+        "command": 74,
+        "control": 73,
+        "movement": 68,
+        "mentality": 73,
+        "recovery": 75,
+        "clutch": 62,
+        "holdRunners": 68
+      },
+      "batting": {
+        "ovr": 74,
+        "contact": 69,
+        "power": 76,
+        "eye": 73,
+        "discipline": 64,
+        "speed": 79,
+        "baseInstinct": 76,
+        "bunting": 67,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 65,
+        "battingClutch": 69
+      },
+      "positionRatings": {
+        "CF": 74
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

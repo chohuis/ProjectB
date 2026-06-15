@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08910",
+  "name": "강세성",
+  "nameEn": "Kang SeSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 70,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 47,
+      "pitching": {
+        "ovr": 34,
+        "stamina": 33,
+        "velocity": 38,
+        "command": 24,
+        "control": 34,
+        "movement": 24,
+        "mentality": 30,
+        "recovery": 31,
+        "clutch": 24,
+        "holdRunners": 28
+      },
+      "batting": {
+        "ovr": 31,
+        "contact": 25,
+        "power": 28,
+        "eye": 26,
+        "discipline": 33,
+        "speed": 30,
+        "baseInstinct": 21,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 26,
+        "arm": 22,
+        "battingClutch": 19
+      },
+      "positionRatings": {
+        "SP": 34
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

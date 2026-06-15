@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11574",
+  "name": "로빈슨 숀",
+  "nameEn": "Robinson Sean",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 15,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 62,
+      "primaryPosition": "SP",
+      "developmentRate": 78,
+      "potentialHidden": 61,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 61,
+        "velocity": 71,
+        "command": 60,
+        "control": 65,
+        "movement": 58,
+        "mentality": 58,
+        "recovery": 57,
+        "clutch": 51,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 54,
+        "power": 57,
+        "eye": 55,
+        "discipline": 59,
+        "speed": 53,
+        "baseInstinct": 50,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 55,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "SP": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

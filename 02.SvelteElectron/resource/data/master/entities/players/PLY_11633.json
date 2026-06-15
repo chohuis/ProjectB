@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11633",
+  "name": "카터 케빈",
+  "nameEn": "Carter Kevin",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 84,
+  "popularity": 28,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 89,
+      "primaryPosition": "2B",
+      "developmentRate": 64,
+      "potentialHidden": 66,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 63,
+        "velocity": 72,
+        "command": 66,
+        "control": 58,
+        "movement": 56,
+        "mentality": 59,
+        "recovery": 58,
+        "clutch": 59,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 56,
+        "power": 61,
+        "eye": 59,
+        "discipline": 63,
+        "speed": 69,
+        "baseInstinct": 58,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 56,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "2B": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08342",
+  "name": "오성식",
+  "nameEn": "Oh SeongSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 15,
+      "primaryPosition": "RF",
+      "developmentRate": 57,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 41,
+        "stamina": 34,
+        "velocity": 45,
+        "command": 40,
+        "control": 37,
+        "movement": 34,
+        "mentality": 37,
+        "recovery": 39,
+        "clutch": 30,
+        "holdRunners": 27
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 44,
+        "power": 52,
+        "eye": 49,
+        "discipline": 50,
+        "speed": 56,
+        "baseInstinct": 40,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 52,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "RF": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

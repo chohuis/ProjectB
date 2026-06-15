@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03863",
+  "name": "송진원",
+  "nameEn": "Song JinWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 46,
+      "primaryPosition": "2B",
+      "developmentRate": 63,
+      "potentialHidden": 84,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 60,
+        "velocity": 72,
+        "command": 55,
+        "control": 58,
+        "movement": 65,
+        "mentality": 71,
+        "recovery": 65,
+        "clutch": 58,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 51,
+        "power": 51,
+        "eye": 54,
+        "discipline": 46,
+        "speed": 57,
+        "baseInstinct": 44,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 42,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "2B": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

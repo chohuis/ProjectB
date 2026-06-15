@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06546",
+  "name": "이성민",
+  "nameEn": "Lee SeongMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 78,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 88,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 49,
+        "velocity": 53,
+        "command": 51,
+        "control": 53,
+        "movement": 50,
+        "mentality": 56,
+        "recovery": 44,
+        "clutch": 43,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 61,
+        "power": 52,
+        "eye": 55,
+        "discipline": 61,
+        "speed": 66,
+        "baseInstinct": 59,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 52,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "SP": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

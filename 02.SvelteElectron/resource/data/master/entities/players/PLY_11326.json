@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11326",
+  "name": "테일러 루이스",
+  "nameEn": "Taylor Luis",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 84,
+  "popularity": 26,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 14,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 78,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 62,
+        "velocity": 78,
+        "command": 60,
+        "control": 64,
+        "movement": 64,
+        "mentality": 67,
+        "recovery": 58,
+        "clutch": 68,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 64,
+        "power": 62,
+        "eye": 61,
+        "discipline": 68,
+        "speed": 64,
+        "baseInstinct": 71,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 64,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "SP": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16181",
+  "name": "영 케빈",
+  "nameEn": "Young Kevin",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 34,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 2,
+      "primaryPosition": "SP",
+      "developmentRate": 43,
+      "potentialHidden": 52,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 49,
+        "velocity": 51,
+        "command": 51,
+        "control": 48,
+        "movement": 46,
+        "mentality": 49,
+        "recovery": 46,
+        "clutch": 46,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 58,
+        "power": 56,
+        "eye": 55,
+        "discipline": 54,
+        "speed": 57,
+        "baseInstinct": 54,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 50,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SP": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

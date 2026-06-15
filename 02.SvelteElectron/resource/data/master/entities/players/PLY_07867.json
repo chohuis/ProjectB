@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07867",
+  "name": "황혁완",
+  "nameEn": "Hwang HyeokWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 35,
+      "primaryPosition": "C",
+      "developmentRate": 45,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 43,
+        "velocity": 49,
+        "command": 39,
+        "control": 50,
+        "movement": 46,
+        "mentality": 47,
+        "recovery": 48,
+        "clutch": 46,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 50,
+        "power": 51,
+        "eye": 57,
+        "discipline": 54,
+        "speed": 58,
+        "baseInstinct": 54,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 46,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "C": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

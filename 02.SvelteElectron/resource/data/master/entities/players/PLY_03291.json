@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03291",
+  "name": "조우재",
+  "nameEn": "Jo WooJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 74,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 69,
+        "velocity": 82,
+        "command": 66,
+        "control": 76,
+        "movement": 65,
+        "mentality": 76,
+        "recovery": 71,
+        "clutch": 65,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 68,
+        "power": 68,
+        "eye": 69,
+        "discipline": 66,
+        "speed": 69,
+        "baseInstinct": 60,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 58,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "SP": 74
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

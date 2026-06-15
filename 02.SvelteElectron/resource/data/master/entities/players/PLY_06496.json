@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06496",
+  "name": "한동호",
+  "nameEn": "Han DongHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 49,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 81,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 69,
+        "velocity": 67,
+        "command": 63,
+        "control": 69,
+        "movement": 62,
+        "mentality": 75,
+        "recovery": 68,
+        "clutch": 57,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 56,
+        "power": 54,
+        "eye": 54,
+        "discipline": 53,
+        "speed": 62,
+        "baseInstinct": 55,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 57,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "SP": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

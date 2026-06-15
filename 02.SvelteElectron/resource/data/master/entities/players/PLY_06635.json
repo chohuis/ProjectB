@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06635",
+  "name": "황도빈",
+  "nameEn": "Hwang DoBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 73,
+      "primaryPosition": "SP",
+      "developmentRate": 67,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 71,
+        "velocity": 78,
+        "command": 64,
+        "control": 62,
+        "movement": 64,
+        "mentality": 68,
+        "recovery": 64,
+        "clutch": 57,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 43,
+        "power": 38,
+        "eye": 40,
+        "discipline": 38,
+        "speed": 44,
+        "baseInstinct": 38,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 36,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SP": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

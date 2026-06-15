@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04120",
+  "name": "윤태준",
+  "nameEn": "Yoon TaeJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 66,
+      "primaryPosition": "2B",
+      "developmentRate": 54,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 58,
+        "velocity": 70,
+        "command": 63,
+        "control": 57,
+        "movement": 66,
+        "mentality": 66,
+        "recovery": 55,
+        "clutch": 60,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 54,
+        "power": 53,
+        "eye": 52,
+        "discipline": 57,
+        "speed": 59,
+        "baseInstinct": 58,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 56,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "2B": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

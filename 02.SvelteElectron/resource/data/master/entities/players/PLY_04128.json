@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04128",
+  "name": "신현환",
+  "nameEn": "Shin HyeonHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 5,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 30,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 86,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 47,
+        "velocity": 54,
+        "command": 45,
+        "control": 44,
+        "movement": 55,
+        "mentality": 51,
+        "recovery": 42,
+        "clutch": 42,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 53,
+        "power": 48,
+        "eye": 45,
+        "discipline": 42,
+        "speed": 49,
+        "baseInstinct": 53,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 45,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "SP": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

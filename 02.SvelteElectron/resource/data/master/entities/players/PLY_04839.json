@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04839",
+  "name": "서태수",
+  "nameEn": "Seo TaeSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 68,
+      "primaryPosition": "SS",
+      "developmentRate": 47,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 43,
+        "velocity": 48,
+        "command": 40,
+        "control": 47,
+        "movement": 45,
+        "mentality": 49,
+        "recovery": 34,
+        "clutch": 40,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 50,
+        "power": 36,
+        "eye": 42,
+        "discipline": 39,
+        "speed": 44,
+        "baseInstinct": 44,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 46,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "SS": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

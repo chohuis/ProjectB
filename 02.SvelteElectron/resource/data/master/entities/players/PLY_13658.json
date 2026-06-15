@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13658",
+  "name": "앤더슨 제이크",
+  "nameEn": "Anderson Jake",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 12,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 66,
+      "primaryPosition": "LF",
+      "developmentRate": 41,
+      "potentialHidden": 45,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 66,
+        "velocity": 74,
+        "command": 65,
+        "control": 66,
+        "movement": 57,
+        "mentality": 66,
+        "recovery": 56,
+        "clutch": 58,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 58,
+        "power": 64,
+        "eye": 64,
+        "discipline": 66,
+        "speed": 64,
+        "baseInstinct": 67,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 59,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "LF": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

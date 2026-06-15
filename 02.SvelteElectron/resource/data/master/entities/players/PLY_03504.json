@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03504",
+  "name": "안준준",
+  "nameEn": "An JunJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 40,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 79,
+      "primaryPosition": "1B",
+      "developmentRate": 59,
+      "potentialHidden": 89,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 68,
+        "velocity": 72,
+        "command": 63,
+        "control": 67,
+        "movement": 63,
+        "mentality": 64,
+        "recovery": 59,
+        "clutch": 62,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 52,
+        "power": 49,
+        "eye": 48,
+        "discipline": 47,
+        "speed": 48,
+        "baseInstinct": 51,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 50,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "1B": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13494",
+  "name": "해리스 재크",
+  "nameEn": "Harris Zach",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 35,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 87,
+      "primaryPosition": "3B",
+      "developmentRate": 57,
+      "potentialHidden": 90,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 70,
+        "velocity": 76,
+        "command": 58,
+        "control": 70,
+        "movement": 63,
+        "mentality": 73,
+        "recovery": 60,
+        "clutch": 59,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 69,
+        "power": 60,
+        "eye": 61,
+        "discipline": 65,
+        "speed": 67,
+        "baseInstinct": 67,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 70,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "3B": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

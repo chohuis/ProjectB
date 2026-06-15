@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10461",
+  "name": "로드리게스 카일",
+  "nameEn": "Rodriguez Kyle",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 48,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 22,
+      "primaryPosition": "3B",
+      "developmentRate": 65,
+      "potentialHidden": 93,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 64,
+        "velocity": 74,
+        "command": 55,
+        "control": 55,
+        "movement": 55,
+        "mentality": 68,
+        "recovery": 64,
+        "clutch": 52,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 56,
+        "power": 62,
+        "eye": 65,
+        "discipline": 55,
+        "speed": 68,
+        "baseInstinct": 53,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 63,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "3B": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

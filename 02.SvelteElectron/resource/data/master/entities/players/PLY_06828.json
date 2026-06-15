@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06828",
+  "name": "송혁준",
+  "nameEn": "Song HyeokJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 40,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 64,
+      "primaryPosition": "SP",
+      "developmentRate": 67,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 58,
+        "velocity": 60,
+        "command": 60,
+        "control": 52,
+        "movement": 62,
+        "mentality": 61,
+        "recovery": 52,
+        "clutch": 50,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 48,
+        "power": 44,
+        "eye": 46,
+        "discipline": 38,
+        "speed": 43,
+        "baseInstinct": 38,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 43,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "SP": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

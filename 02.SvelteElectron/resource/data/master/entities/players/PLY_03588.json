@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03588",
+  "name": "조준윤",
+  "nameEn": "Jo JunYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 88,
+      "primaryPosition": "SP",
+      "developmentRate": 52,
+      "potentialHidden": 85,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 68,
+        "velocity": 70,
+        "command": 59,
+        "control": 61,
+        "movement": 66,
+        "mentality": 66,
+        "recovery": 63,
+        "clutch": 60,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 50,
+        "power": 49,
+        "eye": 48,
+        "discipline": 41,
+        "speed": 49,
+        "baseInstinct": 46,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 47,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SP": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05483",
+  "name": "윤수빈",
+  "nameEn": "Yoon SuBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 15,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 49,
+        "velocity": 61,
+        "command": 44,
+        "control": 48,
+        "movement": 55,
+        "mentality": 52,
+        "recovery": 49,
+        "clutch": 46,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 46,
+        "power": 52,
+        "eye": 51,
+        "discipline": 47,
+        "speed": 51,
+        "baseInstinct": 49,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 52,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "SP": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

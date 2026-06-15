@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04170",
+  "name": "오동준",
+  "nameEn": "Oh DongJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 23,
+      "primaryPosition": "CF",
+      "developmentRate": 55,
+      "potentialHidden": 85,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 54,
+        "velocity": 67,
+        "command": 54,
+        "control": 52,
+        "movement": 55,
+        "mentality": 64,
+        "recovery": 47,
+        "clutch": 47,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 46,
+        "power": 40,
+        "eye": 42,
+        "discipline": 42,
+        "speed": 50,
+        "baseInstinct": 44,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 49,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "CF": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16292",
+  "name": "무어 미겔",
+  "nameEn": "Moore Miguel",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 63,
+      "primaryPosition": "1B",
+      "developmentRate": 50,
+      "potentialHidden": 82,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 64,
+        "velocity": 63,
+        "command": 61,
+        "control": 61,
+        "movement": 54,
+        "mentality": 63,
+        "recovery": 54,
+        "clutch": 59,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 57,
+        "power": 63,
+        "eye": 64,
+        "discipline": 62,
+        "speed": 60,
+        "baseInstinct": 51,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 56,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "1B": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

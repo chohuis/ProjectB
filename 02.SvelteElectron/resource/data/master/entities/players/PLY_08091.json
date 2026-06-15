@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08091",
+  "name": "서찬우",
+  "nameEn": "Seo ChanWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 48,
+      "primaryPosition": "3B",
+      "developmentRate": 50,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 40,
+        "velocity": 40,
+        "command": 35,
+        "control": 42,
+        "movement": 33,
+        "mentality": 37,
+        "recovery": 39,
+        "clutch": 38,
+        "holdRunners": 29
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 42,
+        "power": 43,
+        "eye": 37,
+        "discipline": 36,
+        "speed": 50,
+        "baseInstinct": 40,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 36,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "3B": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

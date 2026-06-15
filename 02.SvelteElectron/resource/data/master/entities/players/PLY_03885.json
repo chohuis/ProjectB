@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03885",
+  "name": "강재윤",
+  "nameEn": "Kang JaeYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 40,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 84,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 86,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 67,
+        "velocity": 69,
+        "command": 59,
+        "control": 70,
+        "movement": 69,
+        "mentality": 67,
+        "recovery": 64,
+        "clutch": 60,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 54,
+        "power": 50,
+        "eye": 56,
+        "discipline": 51,
+        "speed": 59,
+        "baseInstinct": 45,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 51,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SP": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

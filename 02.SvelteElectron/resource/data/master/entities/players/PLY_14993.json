@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14993",
+  "name": "앨런 에릭",
+  "nameEn": "Allen Eric",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 14,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 54,
+      "primaryPosition": "CF",
+      "developmentRate": 73,
+      "potentialHidden": 63,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 53,
+        "velocity": 61,
+        "command": 51,
+        "control": 64,
+        "movement": 51,
+        "mentality": 57,
+        "recovery": 55,
+        "clutch": 49,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 54,
+        "power": 51,
+        "eye": 55,
+        "discipline": 54,
+        "speed": 56,
+        "baseInstinct": 56,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 49,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "CF": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

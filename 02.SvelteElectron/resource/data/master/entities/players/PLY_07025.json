@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07025",
+  "name": "최동진",
+  "nameEn": "Choi DongJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 92,
+      "primaryPosition": "3B",
+      "developmentRate": 46,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 41,
+        "velocity": 55,
+        "command": 42,
+        "control": 44,
+        "movement": 42,
+        "mentality": 46,
+        "recovery": 39,
+        "clutch": 41,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 47,
+        "power": 47,
+        "eye": 48,
+        "discipline": 54,
+        "speed": 52,
+        "baseInstinct": 46,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 54,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "3B": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

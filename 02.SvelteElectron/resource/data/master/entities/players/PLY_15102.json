@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15102",
+  "name": "애덤스 콜",
+  "nameEn": "Adams Cole",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 81,
+  "popularity": 34,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 80,
+      "primaryPosition": "C",
+      "developmentRate": 53,
+      "potentialHidden": 68,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 68,
+        "velocity": 82,
+        "command": 69,
+        "control": 70,
+        "movement": 75,
+        "mentality": 77,
+        "recovery": 71,
+        "clutch": 62,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 64,
+        "power": 74,
+        "eye": 63,
+        "discipline": 68,
+        "speed": 78,
+        "baseInstinct": 73,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 72,
+        "arm": 72,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "C": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

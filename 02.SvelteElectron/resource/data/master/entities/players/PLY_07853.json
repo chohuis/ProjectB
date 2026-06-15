@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07853",
+  "name": "황찬준",
+  "nameEn": "Hwang ChanJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 19,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 41,
+        "velocity": 47,
+        "command": 41,
+        "control": 47,
+        "movement": 41,
+        "mentality": 42,
+        "recovery": 41,
+        "clutch": 41,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 38,
+        "power": 39,
+        "eye": 35,
+        "discipline": 38,
+        "speed": 39,
+        "baseInstinct": 41,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 42,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "SP": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

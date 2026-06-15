@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05818",
+  "name": "조정호",
+  "nameEn": "Jo JungHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 27,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 60,
+        "velocity": 65,
+        "command": 59,
+        "control": 51,
+        "movement": 54,
+        "mentality": 54,
+        "recovery": 59,
+        "clutch": 49,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 55,
+        "power": 47,
+        "eye": 54,
+        "discipline": 46,
+        "speed": 59,
+        "baseInstinct": 49,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 48,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SP": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

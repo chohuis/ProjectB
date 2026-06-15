@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08599",
+  "name": "강진윤",
+  "nameEn": "Kang JinYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 49,
+      "primaryPosition": "SP",
+      "developmentRate": 48,
+      "potentialHidden": 43,
+      "pitching": {
+        "ovr": 38,
+        "stamina": 34,
+        "velocity": 38,
+        "command": 33,
+        "control": 41,
+        "movement": 39,
+        "mentality": 43,
+        "recovery": 29,
+        "clutch": 26,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 41,
+        "power": 30,
+        "eye": 38,
+        "discipline": 37,
+        "speed": 44,
+        "baseInstinct": 29,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 33,
+        "battingClutch": 26
+      },
+      "positionRatings": {
+        "SP": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

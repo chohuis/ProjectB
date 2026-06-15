@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09784",
+  "name": "강동진",
+  "nameEn": "Kang DongJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 62,
+      "primaryPosition": "1B",
+      "developmentRate": 42,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 33,
+        "stamina": 35,
+        "velocity": 36,
+        "command": 22,
+        "control": 36,
+        "movement": 25,
+        "mentality": 36,
+        "recovery": 30,
+        "clutch": 20,
+        "holdRunners": 27
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 39,
+        "power": 40,
+        "eye": 41,
+        "discipline": 39,
+        "speed": 40,
+        "baseInstinct": 34,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 35,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "1B": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

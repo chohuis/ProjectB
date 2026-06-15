@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13417",
+  "name": "리 미겔",
+  "nameEn": "Lee Miguel",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 19,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 64,
+      "primaryPosition": "SP",
+      "developmentRate": 63,
+      "potentialHidden": 74,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 55,
+        "velocity": 53,
+        "command": 43,
+        "control": 51,
+        "movement": 42,
+        "mentality": 50,
+        "recovery": 46,
+        "clutch": 45,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 43,
+        "power": 44,
+        "eye": 44,
+        "discipline": 44,
+        "speed": 55,
+        "baseInstinct": 44,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 42,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

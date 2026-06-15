@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04179",
+  "name": "오도욱",
+  "nameEn": "Oh DoWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 85,
+      "primaryPosition": "CF",
+      "developmentRate": 69,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 47,
+        "velocity": 56,
+        "command": 45,
+        "control": 45,
+        "movement": 44,
+        "mentality": 56,
+        "recovery": 48,
+        "clutch": 50,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 52,
+        "power": 49,
+        "eye": 45,
+        "discipline": 51,
+        "speed": 48,
+        "baseInstinct": 49,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 49,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "CF": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

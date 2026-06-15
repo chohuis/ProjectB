@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03115",
+  "name": "권준환",
+  "nameEn": "Kwon JunHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 12,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 93,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 70,
+        "velocity": 75,
+        "command": 70,
+        "control": 61,
+        "movement": 62,
+        "mentality": 63,
+        "recovery": 59,
+        "clutch": 65,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 52,
+        "power": 45,
+        "eye": 46,
+        "discipline": 57,
+        "speed": 54,
+        "baseInstinct": 53,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 50,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "SP": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

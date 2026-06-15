@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16632",
+  "name": "넬슨 데릭",
+  "nameEn": "Nelson Derek",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 26,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 67,
+      "primaryPosition": "RF",
+      "developmentRate": 57,
+      "potentialHidden": 68,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 55,
+        "velocity": 56,
+        "command": 52,
+        "control": 46,
+        "movement": 46,
+        "mentality": 49,
+        "recovery": 44,
+        "clutch": 53,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 50,
+        "power": 47,
+        "eye": 46,
+        "discipline": 52,
+        "speed": 47,
+        "baseInstinct": 52,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 56,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "RF": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

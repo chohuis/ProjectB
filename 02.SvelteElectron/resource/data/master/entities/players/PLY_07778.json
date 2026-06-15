@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07778",
+  "name": "송준민",
+  "nameEn": "Song JunMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 59,
+      "primaryPosition": "RF",
+      "developmentRate": 53,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 46,
+        "velocity": 54,
+        "command": 40,
+        "control": 49,
+        "movement": 47,
+        "mentality": 45,
+        "recovery": 43,
+        "clutch": 39,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 54,
+        "power": 49,
+        "eye": 60,
+        "discipline": 53,
+        "speed": 59,
+        "baseInstinct": 56,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 55,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "RF": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

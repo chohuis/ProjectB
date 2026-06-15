@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15169",
+  "name": "애덤스 에릭",
+  "nameEn": "Adams Eric",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 24,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 48,
+      "primaryPosition": "1B",
+      "developmentRate": 43,
+      "potentialHidden": 56,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 49,
+        "velocity": 65,
+        "command": 56,
+        "control": 47,
+        "movement": 45,
+        "mentality": 60,
+        "recovery": 56,
+        "clutch": 55,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 54,
+        "power": 48,
+        "eye": 46,
+        "discipline": 48,
+        "speed": 60,
+        "baseInstinct": 54,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 55,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "1B": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

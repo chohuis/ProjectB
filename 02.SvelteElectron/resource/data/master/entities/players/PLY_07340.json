@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07340",
+  "name": "서재재",
+  "nameEn": "Seo JaeJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 6,
+      "primaryPosition": "SP",
+      "developmentRate": 45,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 58,
+        "velocity": 60,
+        "command": 56,
+        "control": 61,
+        "movement": 52,
+        "mentality": 55,
+        "recovery": 49,
+        "clutch": 47,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 34,
+        "power": 32,
+        "eye": 41,
+        "discipline": 41,
+        "speed": 43,
+        "baseInstinct": 33,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 35,
+        "arm": 29,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "SP": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06762",
+  "name": "박도원",
+  "nameEn": "Park DoWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 98,
+      "primaryPosition": "SP",
+      "developmentRate": 57,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 53,
+        "velocity": 57,
+        "command": 56,
+        "control": 54,
+        "movement": 58,
+        "mentality": 55,
+        "recovery": 53,
+        "clutch": 46,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 49,
+        "power": 48,
+        "eye": 48,
+        "discipline": 54,
+        "speed": 55,
+        "baseInstinct": 45,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 44,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "SP": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

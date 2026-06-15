@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12008",
+  "name": "무어 제이크",
+  "nameEn": "Moore Jake",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 43,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 29,
+      "primaryPosition": "C",
+      "developmentRate": 62,
+      "potentialHidden": 94,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 55,
+        "velocity": 61,
+        "command": 54,
+        "control": 60,
+        "movement": 57,
+        "mentality": 57,
+        "recovery": 46,
+        "clutch": 46,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 49,
+        "power": 58,
+        "eye": 60,
+        "discipline": 48,
+        "speed": 56,
+        "baseInstinct": 58,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 51,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "C": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07877",
+  "name": "한도준",
+  "nameEn": "Han DoJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 61,
+      "primaryPosition": "1B",
+      "developmentRate": 64,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 55,
+        "velocity": 64,
+        "command": 62,
+        "control": 62,
+        "movement": 63,
+        "mentality": 64,
+        "recovery": 54,
+        "clutch": 58,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 51,
+        "power": 43,
+        "eye": 45,
+        "discipline": 39,
+        "speed": 50,
+        "baseInstinct": 37,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 38,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "1B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

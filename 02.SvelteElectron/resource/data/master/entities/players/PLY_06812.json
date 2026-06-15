@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06812",
+  "name": "권세원",
+  "nameEn": "Kwon SeWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 83,
+      "primaryPosition": "3B",
+      "developmentRate": 59,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 49,
+        "velocity": 56,
+        "command": 57,
+        "control": 58,
+        "movement": 46,
+        "mentality": 60,
+        "recovery": 54,
+        "clutch": 52,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 48,
+        "power": 38,
+        "eye": 41,
+        "discipline": 41,
+        "speed": 45,
+        "baseInstinct": 40,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 40,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "3B": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11179",
+  "name": "마틴 제이슨",
+  "nameEn": "Martin Jason",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 38,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 4,
+      "primaryPosition": "LF",
+      "developmentRate": 75,
+      "potentialHidden": 87,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 49,
+        "velocity": 59,
+        "command": 49,
+        "control": 51,
+        "movement": 48,
+        "mentality": 65,
+        "recovery": 59,
+        "clutch": 51,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 62,
+        "power": 47,
+        "eye": 57,
+        "discipline": 53,
+        "speed": 55,
+        "baseInstinct": 48,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 49,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "LF": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

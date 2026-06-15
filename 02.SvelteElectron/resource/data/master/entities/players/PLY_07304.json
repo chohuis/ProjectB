@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07304",
+  "name": "황준식",
+  "nameEn": "Hwang JunSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 18,
+      "primaryPosition": "SP",
+      "developmentRate": 48,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 43,
+        "velocity": 56,
+        "command": 43,
+        "control": 41,
+        "movement": 45,
+        "mentality": 52,
+        "recovery": 44,
+        "clutch": 35,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 58,
+        "power": 45,
+        "eye": 50,
+        "discipline": 47,
+        "speed": 60,
+        "baseInstinct": 55,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 52,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "SP": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

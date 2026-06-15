@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09374",
+  "name": "권성성",
+  "nameEn": "Kwon SeongSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 2,
+      "primaryPosition": "C",
+      "developmentRate": 46,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 33,
+        "stamina": 26,
+        "velocity": 31,
+        "command": 28,
+        "control": 33,
+        "movement": 32,
+        "mentality": 38,
+        "recovery": 22,
+        "clutch": 25,
+        "holdRunners": 24
+      },
+      "batting": {
+        "ovr": 30,
+        "contact": 31,
+        "power": 24,
+        "eye": 27,
+        "discipline": 27,
+        "speed": 36,
+        "baseInstinct": 23,
+        "bunting": 9,
+        "platoon": 50,
+        "fielding": 29,
+        "arm": 30,
+        "battingClutch": 25
+      },
+      "positionRatings": {
+        "C": 30
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08115",
+  "name": "임진훈",
+  "nameEn": "Lim JinHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 9,
+      "primaryPosition": "SP",
+      "developmentRate": 56,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 48,
+        "velocity": 57,
+        "command": 45,
+        "control": 49,
+        "movement": 47,
+        "mentality": 43,
+        "recovery": 46,
+        "clutch": 35,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 51,
+        "power": 51,
+        "eye": 49,
+        "discipline": 54,
+        "speed": 49,
+        "baseInstinct": 46,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 45,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SP": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

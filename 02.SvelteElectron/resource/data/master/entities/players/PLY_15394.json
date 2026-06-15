@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15394",
+  "name": "스콧 제이크",
+  "nameEn": "Scott Jake",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 17,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 33,
+      "primaryPosition": "SS",
+      "developmentRate": 60,
+      "potentialHidden": 66,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 49,
+        "velocity": 60,
+        "command": 49,
+        "control": 44,
+        "movement": 51,
+        "mentality": 49,
+        "recovery": 51,
+        "clutch": 50,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 53,
+        "power": 49,
+        "eye": 53,
+        "discipline": 53,
+        "speed": 60,
+        "baseInstinct": 51,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 55,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SS": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

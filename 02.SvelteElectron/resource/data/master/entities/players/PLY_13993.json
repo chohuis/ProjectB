@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13993",
+  "name": "해리스 카일",
+  "nameEn": "Harris Kyle",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 47,
+      "primaryPosition": "SP",
+      "developmentRate": 41,
+      "potentialHidden": 47,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 57,
+        "velocity": 63,
+        "command": 56,
+        "control": 49,
+        "movement": 57,
+        "mentality": 53,
+        "recovery": 48,
+        "clutch": 47,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 60,
+        "power": 56,
+        "eye": 54,
+        "discipline": 46,
+        "speed": 49,
+        "baseInstinct": 53,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 53,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

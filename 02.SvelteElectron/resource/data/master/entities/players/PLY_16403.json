@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16403",
+  "name": "워커 케빈",
+  "nameEn": "Walker Kevin",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 83,
+  "popularity": 14,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 31,
+      "primaryPosition": "1B",
+      "developmentRate": 44,
+      "potentialHidden": 63,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 59,
+        "velocity": 69,
+        "command": 51,
+        "control": 62,
+        "movement": 54,
+        "mentality": 57,
+        "recovery": 58,
+        "clutch": 60,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 63,
+        "power": 57,
+        "eye": 60,
+        "discipline": 58,
+        "speed": 57,
+        "baseInstinct": 60,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 59,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "1B": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

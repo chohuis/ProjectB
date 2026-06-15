@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05447",
+  "name": "정영빈",
+  "nameEn": "Jung YoungBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 43,
+      "primaryPosition": "SS",
+      "developmentRate": 54,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 43,
+        "velocity": 53,
+        "command": 39,
+        "control": 44,
+        "movement": 46,
+        "mentality": 47,
+        "recovery": 36,
+        "clutch": 40,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 51,
+        "power": 48,
+        "eye": 49,
+        "discipline": 46,
+        "speed": 51,
+        "baseInstinct": 42,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 43,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "SS": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

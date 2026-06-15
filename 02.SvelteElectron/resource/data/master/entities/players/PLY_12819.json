@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12819",
+  "name": "데이비스 코너",
+  "nameEn": "Davis Connor",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 37,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 59,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 93,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 62,
+        "velocity": 69,
+        "command": 50,
+        "control": 58,
+        "movement": 53,
+        "mentality": 67,
+        "recovery": 59,
+        "clutch": 59,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 65,
+        "power": 62,
+        "eye": 58,
+        "discipline": 54,
+        "speed": 64,
+        "baseInstinct": 52,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 57,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "SP": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

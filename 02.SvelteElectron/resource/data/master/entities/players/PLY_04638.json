@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04638",
+  "name": "송성수",
+  "nameEn": "Song SeongSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 30,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 48,
+        "velocity": 56,
+        "command": 45,
+        "control": 50,
+        "movement": 45,
+        "mentality": 57,
+        "recovery": 42,
+        "clutch": 47,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 33,
+        "power": 32,
+        "eye": 37,
+        "discipline": 39,
+        "speed": 39,
+        "baseInstinct": 32,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 33,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "SP": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

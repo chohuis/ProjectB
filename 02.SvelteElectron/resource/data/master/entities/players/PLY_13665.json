@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13665",
+  "name": "홀 다니엘",
+  "nameEn": "Hall Daniel",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 48,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 87,
+      "primaryPosition": "3B",
+      "developmentRate": 60,
+      "potentialHidden": 94,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 70,
+        "velocity": 65,
+        "command": 61,
+        "control": 66,
+        "movement": 63,
+        "mentality": 65,
+        "recovery": 57,
+        "clutch": 67,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 61,
+        "power": 58,
+        "eye": 66,
+        "discipline": 63,
+        "speed": 68,
+        "baseInstinct": 68,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 63,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "3B": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10987",
+  "name": "브라운 헌터",
+  "nameEn": "Brown Hunter",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 19,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 25,
+      "primaryPosition": "RF",
+      "developmentRate": 74,
+      "potentialHidden": 75,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 53,
+        "velocity": 50,
+        "command": 52,
+        "control": 49,
+        "movement": 53,
+        "mentality": 55,
+        "recovery": 50,
+        "clutch": 47,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 50,
+        "power": 49,
+        "eye": 55,
+        "discipline": 54,
+        "speed": 46,
+        "baseInstinct": 52,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 45,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "RF": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

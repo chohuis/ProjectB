@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06453",
+  "name": "오현혁",
+  "nameEn": "Oh HyeonHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 40,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 53,
+        "velocity": 59,
+        "command": 53,
+        "control": 58,
+        "movement": 51,
+        "mentality": 53,
+        "recovery": 45,
+        "clutch": 45,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 43,
+        "power": 39,
+        "eye": 47,
+        "discipline": 36,
+        "speed": 50,
+        "baseInstinct": 43,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 44,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

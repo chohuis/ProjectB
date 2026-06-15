@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06789",
+  "name": "윤기진",
+  "nameEn": "Yoon KiJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 45,
+      "primaryPosition": "SS",
+      "developmentRate": 53,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 59,
+        "velocity": 59,
+        "command": 53,
+        "control": 59,
+        "movement": 57,
+        "mentality": 62,
+        "recovery": 53,
+        "clutch": 56,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 54,
+        "power": 49,
+        "eye": 57,
+        "discipline": 49,
+        "speed": 55,
+        "baseInstinct": 56,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 57,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SS": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

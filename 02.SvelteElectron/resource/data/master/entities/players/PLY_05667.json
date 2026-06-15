@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05667",
+  "name": "조준욱",
+  "nameEn": "Jo JunWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 25,
+      "primaryPosition": "SP",
+      "developmentRate": 67,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 52,
+        "velocity": 57,
+        "command": 44,
+        "control": 56,
+        "movement": 47,
+        "mentality": 54,
+        "recovery": 48,
+        "clutch": 52,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 54,
+        "power": 54,
+        "eye": 51,
+        "discipline": 54,
+        "speed": 56,
+        "baseInstinct": 47,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 47,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "SP": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

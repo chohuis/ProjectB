@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05864",
+  "name": "이우식",
+  "nameEn": "Lee WooSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 84,
+      "primaryPosition": "LF",
+      "developmentRate": 55,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 38,
+        "velocity": 53,
+        "command": 42,
+        "control": 43,
+        "movement": 37,
+        "mentality": 46,
+        "recovery": 42,
+        "clutch": 36,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 38,
+        "power": 36,
+        "eye": 46,
+        "discipline": 39,
+        "speed": 44,
+        "baseInstinct": 39,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 42,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "LF": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

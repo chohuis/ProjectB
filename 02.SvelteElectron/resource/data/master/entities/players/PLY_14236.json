@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14236",
+  "name": "브라운 카일",
+  "nameEn": "Brown Kyle",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 11,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 53,
+      "primaryPosition": "C",
+      "developmentRate": 46,
+      "potentialHidden": 70,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 71,
+        "velocity": 65,
+        "command": 60,
+        "control": 63,
+        "movement": 65,
+        "mentality": 71,
+        "recovery": 61,
+        "clutch": 56,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 61,
+        "power": 64,
+        "eye": 68,
+        "discipline": 61,
+        "speed": 69,
+        "baseInstinct": 63,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 67,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "C": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

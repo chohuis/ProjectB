@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03113",
+  "name": "황진환",
+  "nameEn": "Hwang JinHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 4,
+      "primaryPosition": "LF",
+      "developmentRate": 58,
+      "potentialHidden": 96,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 70,
+        "velocity": 77,
+        "command": 65,
+        "control": 63,
+        "movement": 67,
+        "mentality": 73,
+        "recovery": 66,
+        "clutch": 69,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 48,
+        "power": 46,
+        "eye": 50,
+        "discipline": 44,
+        "speed": 50,
+        "baseInstinct": 47,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 50,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "LF": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

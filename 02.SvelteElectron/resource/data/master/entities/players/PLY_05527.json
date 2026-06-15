@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05527",
+  "name": "윤혁빈",
+  "nameEn": "Yoon HyeokBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 35,
+      "primaryPosition": "3B",
+      "developmentRate": 52,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 69,
+        "velocity": 63,
+        "command": 56,
+        "control": 64,
+        "movement": 67,
+        "mentality": 64,
+        "recovery": 59,
+        "clutch": 60,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 46,
+        "power": 45,
+        "eye": 43,
+        "discipline": 43,
+        "speed": 48,
+        "baseInstinct": 45,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 47,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "3B": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

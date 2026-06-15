@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03008",
+  "name": "조민빈",
+  "nameEn": "Jo MinBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 22,
+      "primaryPosition": "SP",
+      "developmentRate": 63,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 61,
+        "velocity": 64,
+        "command": 53,
+        "control": 60,
+        "movement": 63,
+        "mentality": 65,
+        "recovery": 53,
+        "clutch": 50,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 57,
+        "power": 55,
+        "eye": 62,
+        "discipline": 62,
+        "speed": 66,
+        "baseInstinct": 51,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 63,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "SP": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

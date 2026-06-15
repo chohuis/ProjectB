@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15907",
+  "name": "앤더슨 카일",
+  "nameEn": "Anderson Kyle",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 18,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 21,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 85,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 62,
+        "velocity": 64,
+        "command": 47,
+        "control": 55,
+        "movement": 55,
+        "mentality": 52,
+        "recovery": 56,
+        "clutch": 47,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 59,
+        "power": 48,
+        "eye": 58,
+        "discipline": 53,
+        "speed": 61,
+        "baseInstinct": 52,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 57,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

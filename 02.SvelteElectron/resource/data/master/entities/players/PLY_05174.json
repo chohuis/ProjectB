@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05174",
+  "name": "황기윤",
+  "nameEn": "Hwang KiYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 78,
+      "primaryPosition": "3B",
+      "developmentRate": 49,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 44,
+        "velocity": 44,
+        "command": 32,
+        "control": 38,
+        "movement": 34,
+        "mentality": 40,
+        "recovery": 37,
+        "clutch": 36,
+        "holdRunners": 28
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 50,
+        "power": 41,
+        "eye": 40,
+        "discipline": 38,
+        "speed": 43,
+        "baseInstinct": 38,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 48,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "3B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

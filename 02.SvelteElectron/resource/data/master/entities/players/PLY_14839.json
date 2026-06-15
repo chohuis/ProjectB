@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14839",
+  "name": "마르티네스 타일러",
+  "nameEn": "Martinez Tyler",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 3,
+      "primaryPosition": "SS",
+      "developmentRate": 61,
+      "potentialHidden": 78,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 67,
+        "velocity": 76,
+        "command": 69,
+        "control": 66,
+        "movement": 61,
+        "mentality": 63,
+        "recovery": 70,
+        "clutch": 57,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 70,
+        "power": 66,
+        "eye": 66,
+        "discipline": 66,
+        "speed": 65,
+        "baseInstinct": 67,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 62,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "SS": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

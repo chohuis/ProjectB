@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04730",
+  "name": "서찬성",
+  "nameEn": "Seo ChanSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 52,
+      "primaryPosition": "C",
+      "developmentRate": 49,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 49,
+        "velocity": 56,
+        "command": 47,
+        "control": 43,
+        "movement": 42,
+        "mentality": 50,
+        "recovery": 49,
+        "clutch": 48,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 32,
+        "power": 36,
+        "eye": 35,
+        "discipline": 33,
+        "speed": 40,
+        "baseInstinct": 31,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 28,
+        "arm": 35,
+        "battingClutch": 27
+      },
+      "positionRatings": {
+        "C": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

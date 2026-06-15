@@ -1,0 +1,73 @@
+{
+  "id": "PLY_09945",
+  "name": "데이비스 에반",
+  "nameEn": "Davis Evan",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 33,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 83,
+      "primaryPosition": "RF",
+      "developmentRate": 66,
+      "potentialHidden": 71,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 63,
+        "velocity": 74,
+        "command": 60,
+        "control": 61,
+        "movement": 57,
+        "mentality": 68,
+        "recovery": 67,
+        "clutch": 66,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 57,
+        "power": 69,
+        "eye": 67,
+        "discipline": 62,
+        "speed": 67,
+        "baseInstinct": 69,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 63,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "RF": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

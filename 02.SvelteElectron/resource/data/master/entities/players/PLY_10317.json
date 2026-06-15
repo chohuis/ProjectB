@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10317",
+  "name": "로드리게스 미겔",
+  "nameEn": "Rodriguez Miguel",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 18,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 2,
+      "primaryPosition": "SP",
+      "developmentRate": 76,
+      "potentialHidden": 76,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 64,
+        "velocity": 61,
+        "command": 66,
+        "control": 57,
+        "movement": 55,
+        "mentality": 60,
+        "recovery": 52,
+        "clutch": 58,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 55,
+        "power": 55,
+        "eye": 66,
+        "discipline": 62,
+        "speed": 57,
+        "baseInstinct": 53,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 57,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "SP": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

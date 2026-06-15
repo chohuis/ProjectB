@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15537",
+  "name": "해리스 블레이크",
+  "nameEn": "Harris Blake",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 12,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 30,
+      "primaryPosition": "3B",
+      "developmentRate": 68,
+      "potentialHidden": 68,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 47,
+        "velocity": 49,
+        "command": 43,
+        "control": 47,
+        "movement": 45,
+        "mentality": 53,
+        "recovery": 38,
+        "clutch": 47,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 45,
+        "power": 40,
+        "eye": 49,
+        "discipline": 46,
+        "speed": 51,
+        "baseInstinct": 48,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 42,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "3B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

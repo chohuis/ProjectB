@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07391",
+  "name": "장훈빈",
+  "nameEn": "Jang HunBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 51,
+      "primaryPosition": "1B",
+      "developmentRate": 49,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 54,
+        "velocity": 57,
+        "command": 43,
+        "control": 44,
+        "movement": 44,
+        "mentality": 51,
+        "recovery": 44,
+        "clutch": 45,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 49,
+        "power": 38,
+        "eye": 41,
+        "discipline": 43,
+        "speed": 48,
+        "baseInstinct": 44,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 39,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "1B": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04495",
+  "name": "신훈기",
+  "nameEn": "Shin HunKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 44,
+      "primaryPosition": "CF",
+      "developmentRate": 54,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 63,
+        "velocity": 70,
+        "command": 58,
+        "control": 58,
+        "movement": 59,
+        "mentality": 67,
+        "recovery": 60,
+        "clutch": 57,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 53,
+        "power": 49,
+        "eye": 52,
+        "discipline": 46,
+        "speed": 48,
+        "baseInstinct": 52,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 52,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "CF": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12757",
+  "name": "브라운 에릭",
+  "nameEn": "Brown Eric",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 46,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 7,
+      "primaryPosition": "3B",
+      "developmentRate": 64,
+      "potentialHidden": 70,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 80,
+        "stamina": 76,
+        "velocity": 91,
+        "command": 79,
+        "control": 81,
+        "movement": 83,
+        "mentality": 82,
+        "recovery": 74,
+        "clutch": 69,
+        "holdRunners": 68
+      },
+      "batting": {
+        "ovr": 80,
+        "contact": 82,
+        "power": 82,
+        "eye": 84,
+        "discipline": 81,
+        "speed": 86,
+        "baseInstinct": 79,
+        "bunting": 74,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 70,
+        "battingClutch": 73
+      },
+      "positionRatings": {
+        "3B": 80
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

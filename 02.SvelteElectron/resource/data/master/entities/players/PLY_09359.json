@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09359",
+  "name": "정찬성",
+  "nameEn": "Jung ChanSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 19,
+      "primaryPosition": "3B",
+      "developmentRate": 50,
+      "potentialHidden": 43,
+      "pitching": {
+        "ovr": 35,
+        "stamina": 34,
+        "velocity": 38,
+        "command": 29,
+        "control": 32,
+        "movement": 34,
+        "mentality": 37,
+        "recovery": 28,
+        "clutch": 30,
+        "holdRunners": 27
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 51,
+        "power": 44,
+        "eye": 41,
+        "discipline": 44,
+        "speed": 45,
+        "baseInstinct": 46,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 44,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "3B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09175",
+  "name": "한상준",
+  "nameEn": "Han SangJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 84,
+      "primaryPosition": "SP",
+      "developmentRate": 46,
+      "potentialHidden": 46,
+      "pitching": {
+        "ovr": 36,
+        "stamina": 34,
+        "velocity": 45,
+        "command": 32,
+        "control": 37,
+        "movement": 28,
+        "mentality": 35,
+        "recovery": 32,
+        "clutch": 28,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 34,
+        "contact": 31,
+        "power": 32,
+        "eye": 33,
+        "discipline": 26,
+        "speed": 40,
+        "baseInstinct": 34,
+        "bunting": 13,
+        "platoon": 50,
+        "fielding": 28,
+        "arm": 28,
+        "battingClutch": 20
+      },
+      "positionRatings": {
+        "SP": 36
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

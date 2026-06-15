@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04930",
+  "name": "오상성",
+  "nameEn": "Oh SangSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 91,
+      "primaryPosition": "3B",
+      "developmentRate": 54,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 44,
+        "velocity": 54,
+        "command": 39,
+        "control": 42,
+        "movement": 43,
+        "mentality": 44,
+        "recovery": 42,
+        "clutch": 39,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 44,
+        "power": 32,
+        "eye": 38,
+        "discipline": 37,
+        "speed": 45,
+        "baseInstinct": 32,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 32,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "3B": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

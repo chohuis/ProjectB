@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03792",
+  "name": "윤지환",
+  "nameEn": "Yoon JiHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 5,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 26,
+      "primaryPosition": "SP",
+      "developmentRate": 69,
+      "potentialHidden": 90,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 44,
+        "velocity": 53,
+        "command": 48,
+        "control": 49,
+        "movement": 53,
+        "mentality": 51,
+        "recovery": 45,
+        "clutch": 44,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 51,
+        "power": 45,
+        "eye": 42,
+        "discipline": 48,
+        "speed": 53,
+        "baseInstinct": 43,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 43,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

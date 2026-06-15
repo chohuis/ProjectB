@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07787",
+  "name": "오지욱",
+  "nameEn": "Oh JiWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 9,
+      "primaryPosition": "1B",
+      "developmentRate": 62,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 51,
+        "velocity": 52,
+        "command": 52,
+        "control": 49,
+        "movement": 55,
+        "mentality": 52,
+        "recovery": 53,
+        "clutch": 51,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 45,
+        "power": 38,
+        "eye": 46,
+        "discipline": 43,
+        "speed": 49,
+        "baseInstinct": 39,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 46,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "1B": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

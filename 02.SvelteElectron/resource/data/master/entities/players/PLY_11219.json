@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11219",
+  "name": "에르난데스 크리스",
+  "nameEn": "Hernandez Chris",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 47,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 27,
+      "primaryPosition": "C",
+      "developmentRate": 70,
+      "potentialHidden": 66,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 62,
+        "velocity": 67,
+        "command": 52,
+        "control": 62,
+        "movement": 54,
+        "mentality": 63,
+        "recovery": 57,
+        "clutch": 61,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 64,
+        "power": 61,
+        "eye": 56,
+        "discipline": 65,
+        "speed": 65,
+        "baseInstinct": 57,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 59,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "C": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

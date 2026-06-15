@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09715",
+  "name": "강도훈",
+  "nameEn": "Kang DoHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 63,
+      "primaryPosition": "C",
+      "developmentRate": 52,
+      "potentialHidden": 48,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 50,
+        "velocity": 59,
+        "command": 42,
+        "control": 52,
+        "movement": 47,
+        "mentality": 55,
+        "recovery": 50,
+        "clutch": 44,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 37,
+        "power": 41,
+        "eye": 37,
+        "discipline": 36,
+        "speed": 47,
+        "baseInstinct": 42,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 39,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "C": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

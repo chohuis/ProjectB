@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04741",
+  "name": "박찬재",
+  "nameEn": "Park ChanJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 31,
+      "primaryPosition": "SP",
+      "developmentRate": 54,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 44,
+        "velocity": 54,
+        "command": 46,
+        "control": 48,
+        "movement": 44,
+        "mentality": 52,
+        "recovery": 42,
+        "clutch": 47,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 43,
+        "power": 44,
+        "eye": 44,
+        "discipline": 37,
+        "speed": 48,
+        "baseInstinct": 37,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 33,
+        "arm": 41,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "SP": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

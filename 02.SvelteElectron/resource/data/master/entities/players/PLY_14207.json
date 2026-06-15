@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14207",
+  "name": "존스 카를로스",
+  "nameEn": "Jones Carlos",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 82,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 63,
+      "primaryPosition": "1B",
+      "developmentRate": 45,
+      "potentialHidden": 72,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 59,
+        "velocity": 69,
+        "command": 60,
+        "control": 55,
+        "movement": 58,
+        "mentality": 67,
+        "recovery": 61,
+        "clutch": 59,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 57,
+        "power": 58,
+        "eye": 67,
+        "discipline": 67,
+        "speed": 69,
+        "baseInstinct": 62,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 57,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "1B": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

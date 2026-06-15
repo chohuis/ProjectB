@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07458",
+  "name": "최진준",
+  "nameEn": "Choi JinJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 87,
+      "primaryPosition": "CF",
+      "developmentRate": 61,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 50,
+        "velocity": 59,
+        "command": 48,
+        "control": 55,
+        "movement": 45,
+        "mentality": 53,
+        "recovery": 44,
+        "clutch": 44,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 41,
+        "power": 42,
+        "eye": 46,
+        "discipline": 38,
+        "speed": 51,
+        "baseInstinct": 37,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 39,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "CF": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

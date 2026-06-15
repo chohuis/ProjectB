@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06078",
+  "name": "조진찬",
+  "nameEn": "Jo JinChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 28,
+      "primaryPosition": "SP",
+      "developmentRate": 63,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 51,
+        "velocity": 59,
+        "command": 38,
+        "control": 40,
+        "movement": 49,
+        "mentality": 47,
+        "recovery": 42,
+        "clutch": 45,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 50,
+        "power": 41,
+        "eye": 43,
+        "discipline": 41,
+        "speed": 52,
+        "baseInstinct": 44,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 49,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SP": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

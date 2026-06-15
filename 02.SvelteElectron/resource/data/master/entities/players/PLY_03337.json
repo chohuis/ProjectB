@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03337",
+  "name": "임재원",
+  "nameEn": "Lim JaeWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 12,
+      "primaryPosition": "CF",
+      "developmentRate": 60,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 62,
+        "velocity": 64,
+        "command": 60,
+        "control": 52,
+        "movement": 56,
+        "mentality": 59,
+        "recovery": 58,
+        "clutch": 56,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 65,
+        "power": 66,
+        "eye": 70,
+        "discipline": 69,
+        "speed": 71,
+        "baseInstinct": 60,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 67,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "CF": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

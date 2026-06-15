@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16165",
+  "name": "킹 타일러",
+  "nameEn": "King Tyler",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 49,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 18,
+      "primaryPosition": "SS",
+      "developmentRate": 58,
+      "potentialHidden": 64,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 44,
+        "velocity": 55,
+        "command": 50,
+        "control": 52,
+        "movement": 42,
+        "mentality": 46,
+        "recovery": 40,
+        "clutch": 49,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 47,
+        "power": 50,
+        "eye": 51,
+        "discipline": 42,
+        "speed": 53,
+        "baseInstinct": 45,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 38,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SS": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

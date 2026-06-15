@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04933",
+  "name": "이동완",
+  "nameEn": "Lee DongWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 21,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 44,
+        "velocity": 52,
+        "command": 47,
+        "control": 38,
+        "movement": 40,
+        "mentality": 51,
+        "recovery": 38,
+        "clutch": 42,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 29,
+        "power": 34,
+        "eye": 31,
+        "discipline": 36,
+        "speed": 39,
+        "baseInstinct": 27,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 28,
+        "arm": 32,
+        "battingClutch": 22
+      },
+      "positionRatings": {
+        "SP": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09232",
+  "name": "정우우",
+  "nameEn": "Jung WooWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 35,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 4,
+      "primaryPosition": "CF",
+      "developmentRate": 53,
+      "potentialHidden": 47,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 51,
+        "velocity": 57,
+        "command": 41,
+        "control": 46,
+        "movement": 45,
+        "mentality": 50,
+        "recovery": 36,
+        "clutch": 41,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 36,
+        "power": 25,
+        "eye": 29,
+        "discipline": 31,
+        "speed": 38,
+        "baseInstinct": 29,
+        "bunting": 20,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 35,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "CF": 36
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04636",
+  "name": "전성찬",
+  "nameEn": "Jeon SeongChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 33,
+      "primaryPosition": "C",
+      "developmentRate": 49,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 48,
+        "velocity": 48,
+        "command": 42,
+        "control": 38,
+        "movement": 46,
+        "mentality": 49,
+        "recovery": 41,
+        "clutch": 34,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 43,
+        "power": 41,
+        "eye": 45,
+        "discipline": 51,
+        "speed": 48,
+        "baseInstinct": 43,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 48,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "C": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

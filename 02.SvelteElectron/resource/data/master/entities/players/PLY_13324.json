@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13324",
+  "name": "가르시아 재크",
+  "nameEn": "Garcia Zach",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 19,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 91,
+      "primaryPosition": "LF",
+      "developmentRate": 51,
+      "potentialHidden": 57,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 75,
+        "velocity": 79,
+        "command": 71,
+        "control": 66,
+        "movement": 76,
+        "mentality": 78,
+        "recovery": 74,
+        "clutch": 63,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 74,
+        "power": 75,
+        "eye": 68,
+        "discipline": 72,
+        "speed": 79,
+        "baseInstinct": 66,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 74,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "LF": 73
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12329",
+  "name": "잭슨 에반",
+  "nameEn": "Jackson Evan",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 83,
+  "popularity": 24,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 93,
+      "primaryPosition": "CF",
+      "developmentRate": 56,
+      "potentialHidden": 59,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 69,
+        "velocity": 78,
+        "command": 65,
+        "control": 69,
+        "movement": 67,
+        "mentality": 74,
+        "recovery": 70,
+        "clutch": 63,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 78,
+        "power": 76,
+        "eye": 69,
+        "discipline": 66,
+        "speed": 76,
+        "baseInstinct": 62,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 74,
+        "arm": 73,
+        "battingClutch": 73
+      },
+      "positionRatings": {
+        "CF": 73
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

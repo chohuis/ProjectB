@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05359",
+  "name": "서준우",
+  "nameEn": "Seo JunWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 23,
+      "primaryPosition": "RF",
+      "developmentRate": 60,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 52,
+        "velocity": 57,
+        "command": 53,
+        "control": 58,
+        "movement": 51,
+        "mentality": 58,
+        "recovery": 55,
+        "clutch": 48,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 58,
+        "power": 49,
+        "eye": 55,
+        "discipline": 58,
+        "speed": 56,
+        "baseInstinct": 59,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 55,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "RF": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15581",
+  "name": "미첼 제이크",
+  "nameEn": "Mitchell Jake",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 84,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 95,
+      "primaryPosition": "1B",
+      "developmentRate": 73,
+      "potentialHidden": 70,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 50,
+        "velocity": 48,
+        "command": 50,
+        "control": 53,
+        "movement": 43,
+        "mentality": 50,
+        "recovery": 48,
+        "clutch": 47,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 53,
+        "power": 51,
+        "eye": 51,
+        "discipline": 50,
+        "speed": 53,
+        "baseInstinct": 49,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 51,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "1B": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

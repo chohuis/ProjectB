@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15036",
+  "name": "테일러 케빈",
+  "nameEn": "Taylor Kevin",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 82,
+  "popularity": 38,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 27,
+      "primaryPosition": "SS",
+      "developmentRate": 52,
+      "potentialHidden": 58,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 40,
+        "velocity": 51,
+        "command": 37,
+        "control": 42,
+        "movement": 46,
+        "mentality": 42,
+        "recovery": 37,
+        "clutch": 44,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 49,
+        "power": 42,
+        "eye": 49,
+        "discipline": 44,
+        "speed": 51,
+        "baseInstinct": 44,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 40,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "SS": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04738",
+  "name": "박민현",
+  "nameEn": "Park MinHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 40,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 36,
+      "primaryPosition": "RF",
+      "developmentRate": 64,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 58,
+        "velocity": 58,
+        "command": 58,
+        "control": 56,
+        "movement": 53,
+        "mentality": 56,
+        "recovery": 48,
+        "clutch": 51,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 49,
+        "power": 44,
+        "eye": 56,
+        "discipline": 51,
+        "speed": 59,
+        "baseInstinct": 44,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 54,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "RF": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

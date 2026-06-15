@@ -1,0 +1,19 @@
+{
+  "id": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "name": "춘천 하이랜드 고등학교",
+  "shortName": "춘천 하이랜드",
+  "region": "춘천",
+  "tier": "B",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "gradeLevels": 3,
+  "annualRosterSize": 18,
+  "namedNpcPerYear": 0,
+  "template": {
+    "pitching": { "ovrMin": 42, "ovrMax": 62 },
+    "batting": { "ovrMin": 38, "ovrMax": 58 },
+    "developmentRate": { "min": 44, "max": 64 },
+    "potentialHidden": { "min": 50, "max": 80 }
+  },
+  "color": "#4E342E",
+  "notes": "강원 내륙 산악 지역 학교. 체력 훈련이 강점인 끈기형 팀."
+}

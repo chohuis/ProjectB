@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09260",
+  "name": "정재진",
+  "nameEn": "Jung JaeJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 13,
+      "primaryPosition": "SP",
+      "developmentRate": 57,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 35,
+        "stamina": 34,
+        "velocity": 35,
+        "command": 24,
+        "control": 36,
+        "movement": 29,
+        "mentality": 36,
+        "recovery": 29,
+        "clutch": 29,
+        "holdRunners": 27
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 40,
+        "power": 43,
+        "eye": 41,
+        "discipline": 39,
+        "speed": 43,
+        "baseInstinct": 45,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 39,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "SP": 35
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

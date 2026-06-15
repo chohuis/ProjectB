@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03208",
+  "name": "황태원",
+  "nameEn": "Hwang TaeWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 72,
+      "primaryPosition": "SP",
+      "developmentRate": 67,
+      "potentialHidden": 84,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 70,
+        "velocity": 71,
+        "command": 65,
+        "control": 63,
+        "movement": 73,
+        "mentality": 71,
+        "recovery": 68,
+        "clutch": 65,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 47,
+        "power": 47,
+        "eye": 50,
+        "discipline": 48,
+        "speed": 53,
+        "baseInstinct": 48,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 44,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SP": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05566",
+  "name": "조성현",
+  "nameEn": "Jo SeongHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 83,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 82,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 47,
+        "velocity": 54,
+        "command": 43,
+        "control": 51,
+        "movement": 50,
+        "mentality": 50,
+        "recovery": 42,
+        "clutch": 49,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 63,
+        "power": 59,
+        "eye": 53,
+        "discipline": 62,
+        "speed": 60,
+        "baseInstinct": 61,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 53,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

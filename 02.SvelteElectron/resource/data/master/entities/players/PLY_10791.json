@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10791",
+  "name": "애덤스 마커스",
+  "nameEn": "Adams Marcus",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 16,
+  "militaryStatus": "군필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 3,
+      "primaryPosition": "SP",
+      "developmentRate": 63,
+      "potentialHidden": 65,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 73,
+        "velocity": 67,
+        "command": 67,
+        "control": 72,
+        "movement": 66,
+        "mentality": 67,
+        "recovery": 71,
+        "clutch": 59,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 66,
+        "power": 60,
+        "eye": 63,
+        "discipline": 61,
+        "speed": 64,
+        "baseInstinct": 69,
+        "bunting": 63,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 66,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "SP": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

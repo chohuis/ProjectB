@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09245",
+  "name": "김태욱",
+  "nameEn": "Kim TaeWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 28,
+      "primaryPosition": "1B",
+      "developmentRate": 44,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 35,
+        "stamina": 36,
+        "velocity": 34,
+        "command": 35,
+        "control": 27,
+        "movement": 35,
+        "mentality": 40,
+        "recovery": 32,
+        "clutch": 28,
+        "holdRunners": 25
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 34,
+        "power": 28,
+        "eye": 35,
+        "discipline": 35,
+        "speed": 33,
+        "baseInstinct": 38,
+        "bunting": 19,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 39,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "1B": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

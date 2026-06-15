@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07217",
+  "name": "강정완",
+  "nameEn": "Kang JungWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 84,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 58,
+        "velocity": 60,
+        "command": 51,
+        "control": 54,
+        "movement": 57,
+        "mentality": 60,
+        "recovery": 49,
+        "clutch": 47,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 37,
+        "power": 35,
+        "eye": 45,
+        "discipline": 43,
+        "speed": 49,
+        "baseInstinct": 36,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 42,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "SP": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

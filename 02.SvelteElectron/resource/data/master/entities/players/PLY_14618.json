@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14618",
+  "name": "마르티네스 에반",
+  "nameEn": "Martinez Evan",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 19,
+  "militaryStatus": "군필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 71,
+      "primaryPosition": "C",
+      "developmentRate": 62,
+      "potentialHidden": 71,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 66,
+        "velocity": 75,
+        "command": 78,
+        "control": 72,
+        "movement": 65,
+        "mentality": 79,
+        "recovery": 74,
+        "clutch": 67,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 74,
+        "power": 71,
+        "eye": 74,
+        "discipline": 71,
+        "speed": 68,
+        "baseInstinct": 71,
+        "bunting": 65,
+        "platoon": 50,
+        "fielding": 73,
+        "arm": 76,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "C": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

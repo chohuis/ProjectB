@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16213",
+  "name": "화이트 에릭",
+  "nameEn": "White Eric",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 13,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 97,
+      "primaryPosition": "C",
+      "developmentRate": 73,
+      "potentialHidden": 88,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 44,
+        "velocity": 48,
+        "command": 41,
+        "control": 39,
+        "movement": 45,
+        "mentality": 44,
+        "recovery": 35,
+        "clutch": 42,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 41,
+        "power": 41,
+        "eye": 46,
+        "discipline": 40,
+        "speed": 45,
+        "baseInstinct": 37,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 39,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "C": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

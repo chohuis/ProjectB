@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06262",
+  "name": "송찬찬",
+  "nameEn": "Song ChanChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 34,
+      "primaryPosition": "C",
+      "developmentRate": 41,
+      "potentialHidden": 44,
+      "pitching": {
+        "ovr": 41,
+        "stamina": 42,
+        "velocity": 49,
+        "command": 32,
+        "control": 41,
+        "movement": 37,
+        "mentality": 38,
+        "recovery": 34,
+        "clutch": 30,
+        "holdRunners": 27
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 53,
+        "power": 42,
+        "eye": 41,
+        "discipline": 48,
+        "speed": 50,
+        "baseInstinct": 40,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 39,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "C": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

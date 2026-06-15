@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14959",
+  "name": "마틴 코디",
+  "nameEn": "Martin Cody",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 83,
+  "popularity": 15,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 85,
+      "primaryPosition": "3B",
+      "developmentRate": 45,
+      "potentialHidden": 53,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 62,
+        "velocity": 71,
+        "command": 60,
+        "control": 63,
+        "movement": 62,
+        "mentality": 64,
+        "recovery": 57,
+        "clutch": 56,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 61,
+        "power": 59,
+        "eye": 67,
+        "discipline": 67,
+        "speed": 69,
+        "baseInstinct": 64,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 63,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "3B": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

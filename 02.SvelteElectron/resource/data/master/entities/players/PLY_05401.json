@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05401",
+  "name": "김도성",
+  "nameEn": "Kim DoSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 87,
+      "primaryPosition": "LF",
+      "developmentRate": 57,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 62,
+        "velocity": 60,
+        "command": 59,
+        "control": 59,
+        "movement": 58,
+        "mentality": 54,
+        "recovery": 48,
+        "clutch": 46,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 46,
+        "power": 39,
+        "eye": 42,
+        "discipline": 43,
+        "speed": 49,
+        "baseInstinct": 40,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 35,
+        "arm": 35,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "LF": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

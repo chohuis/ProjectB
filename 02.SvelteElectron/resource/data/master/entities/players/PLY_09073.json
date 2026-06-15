@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09073",
+  "name": "김민윤",
+  "nameEn": "Kim MinYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 16,
+      "primaryPosition": "RF",
+      "developmentRate": 56,
+      "potentialHidden": 47,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 49,
+        "velocity": 54,
+        "command": 47,
+        "control": 51,
+        "movement": 46,
+        "mentality": 53,
+        "recovery": 48,
+        "clutch": 34,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 41,
+        "power": 45,
+        "eye": 41,
+        "discipline": 38,
+        "speed": 46,
+        "baseInstinct": 44,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 45,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "RF": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

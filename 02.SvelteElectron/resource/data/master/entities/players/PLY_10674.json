@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10674",
+  "name": "윌리엄스 에릭",
+  "nameEn": "Williams Eric",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 11,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 88,
+      "primaryPosition": "1B",
+      "developmentRate": 57,
+      "potentialHidden": 62,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 70,
+        "velocity": 69,
+        "command": 65,
+        "control": 68,
+        "movement": 70,
+        "mentality": 68,
+        "recovery": 69,
+        "clutch": 58,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 67,
+        "power": 68,
+        "eye": 63,
+        "discipline": 59,
+        "speed": 65,
+        "baseInstinct": 70,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 59,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "1B": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

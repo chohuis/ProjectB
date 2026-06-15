@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06487",
+  "name": "김우준",
+  "nameEn": "Kim WooJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 34,
+      "primaryPosition": "1B",
+      "developmentRate": 57,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 57,
+        "velocity": 70,
+        "command": 50,
+        "control": 62,
+        "movement": 58,
+        "mentality": 58,
+        "recovery": 57,
+        "clutch": 58,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 47,
+        "power": 50,
+        "eye": 48,
+        "discipline": 53,
+        "speed": 58,
+        "baseInstinct": 52,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 44,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "1B": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

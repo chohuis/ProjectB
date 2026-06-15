@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07738",
+  "name": "오세찬",
+  "nameEn": "Oh SeChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 23,
+      "primaryPosition": "2B",
+      "developmentRate": 45,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 53,
+        "velocity": 62,
+        "command": 49,
+        "control": 59,
+        "movement": 51,
+        "mentality": 62,
+        "recovery": 51,
+        "clutch": 50,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 45,
+        "power": 45,
+        "eye": 44,
+        "discipline": 39,
+        "speed": 53,
+        "baseInstinct": 42,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 44,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "2B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

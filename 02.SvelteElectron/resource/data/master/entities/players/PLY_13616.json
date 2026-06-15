@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13616",
+  "name": "존슨 카를로스",
+  "nameEn": "Johnson Carlos",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 49,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 26,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 74,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 70,
+        "velocity": 73,
+        "command": 62,
+        "control": 69,
+        "movement": 71,
+        "mentality": 68,
+        "recovery": 64,
+        "clutch": 58,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 60,
+        "power": 60,
+        "eye": 64,
+        "discipline": 65,
+        "speed": 70,
+        "baseInstinct": 67,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 60,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "SP": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16444",
+  "name": "앨런 콜",
+  "nameEn": "Allen Cole",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 34,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 62,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 73,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 75,
+        "velocity": 73,
+        "command": 64,
+        "control": 65,
+        "movement": 72,
+        "mentality": 78,
+        "recovery": 68,
+        "clutch": 72,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 68,
+        "power": 73,
+        "eye": 65,
+        "discipline": 71,
+        "speed": 66,
+        "baseInstinct": 71,
+        "bunting": 65,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 69,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "SP": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

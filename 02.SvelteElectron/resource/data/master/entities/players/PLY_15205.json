@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15205",
+  "name": "리 타일러",
+  "nameEn": "Lee Tyler",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 81,
+  "popularity": 12,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 95,
+      "primaryPosition": "CF",
+      "developmentRate": 61,
+      "potentialHidden": 74,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 44,
+        "velocity": 61,
+        "command": 49,
+        "control": 49,
+        "movement": 49,
+        "mentality": 47,
+        "recovery": 53,
+        "clutch": 45,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 53,
+        "power": 46,
+        "eye": 47,
+        "discipline": 47,
+        "speed": 49,
+        "baseInstinct": 45,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 54,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "CF": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12821",
+  "name": "존스 제이크",
+  "nameEn": "Jones Jake",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 13,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 92,
+      "primaryPosition": "CF",
+      "developmentRate": 56,
+      "potentialHidden": 86,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 60,
+        "velocity": 59,
+        "command": 57,
+        "control": 61,
+        "movement": 51,
+        "mentality": 58,
+        "recovery": 57,
+        "clutch": 52,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 54,
+        "power": 50,
+        "eye": 63,
+        "discipline": 53,
+        "speed": 58,
+        "baseInstinct": 55,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 56,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "CF": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03085",
+  "name": "한진훈",
+  "nameEn": "Han JinHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 43,
+      "primaryPosition": "CF",
+      "developmentRate": 64,
+      "potentialHidden": 88,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 75,
+        "velocity": 74,
+        "command": 65,
+        "control": 64,
+        "movement": 64,
+        "mentality": 77,
+        "recovery": 60,
+        "clutch": 65,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 66,
+        "power": 59,
+        "eye": 65,
+        "discipline": 55,
+        "speed": 63,
+        "baseInstinct": 59,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 58,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "CF": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

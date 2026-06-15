@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08543",
+  "name": "조진호",
+  "nameEn": "Jo JinHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 7,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 45,
+        "velocity": 50,
+        "command": 43,
+        "control": 50,
+        "movement": 43,
+        "mentality": 53,
+        "recovery": 44,
+        "clutch": 43,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 40,
+        "power": 30,
+        "eye": 39,
+        "discipline": 35,
+        "speed": 42,
+        "baseInstinct": 30,
+        "bunting": 18,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 31,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "SP": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

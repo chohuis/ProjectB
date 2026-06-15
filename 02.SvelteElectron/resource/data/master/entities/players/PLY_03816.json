@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03816",
+  "name": "임상혁",
+  "nameEn": "Lim SangHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 22,
+      "primaryPosition": "1B",
+      "developmentRate": 59,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 63,
+        "velocity": 66,
+        "command": 62,
+        "control": 65,
+        "movement": 56,
+        "mentality": 69,
+        "recovery": 59,
+        "clutch": 57,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 46,
+        "power": 45,
+        "eye": 53,
+        "discipline": 53,
+        "speed": 54,
+        "baseInstinct": 50,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 47,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "1B": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

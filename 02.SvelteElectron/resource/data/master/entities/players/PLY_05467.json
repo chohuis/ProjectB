@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05467",
+  "name": "신동민",
+  "nameEn": "Shin DongMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 87,
+      "primaryPosition": "CF",
+      "developmentRate": 59,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 59,
+        "velocity": 72,
+        "command": 65,
+        "control": 58,
+        "movement": 59,
+        "mentality": 60,
+        "recovery": 55,
+        "clutch": 62,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 57,
+        "power": 61,
+        "eye": 52,
+        "discipline": 55,
+        "speed": 55,
+        "baseInstinct": 58,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 55,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "CF": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

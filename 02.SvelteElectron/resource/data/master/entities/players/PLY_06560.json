@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06560",
+  "name": "박성윤",
+  "nameEn": "Park SeongYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 53,
+      "primaryPosition": "LF",
+      "developmentRate": 62,
+      "potentialHidden": 83,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 67,
+        "velocity": 72,
+        "command": 54,
+        "control": 61,
+        "movement": 57,
+        "mentality": 69,
+        "recovery": 57,
+        "clutch": 59,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 58,
+        "power": 51,
+        "eye": 52,
+        "discipline": 55,
+        "speed": 58,
+        "baseInstinct": 51,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 50,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "LF": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

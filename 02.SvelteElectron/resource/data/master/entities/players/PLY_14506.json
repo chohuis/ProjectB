@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14506",
+  "name": "윌리엄스 재크",
+  "nameEn": "Williams Zach",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 14,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 32,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 27,
+      "primaryPosition": "SS",
+      "developmentRate": 47,
+      "potentialHidden": 45,
+      "proServiceYears": 10,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 59,
+        "velocity": 67,
+        "command": 63,
+        "control": 63,
+        "movement": 59,
+        "mentality": 58,
+        "recovery": 63,
+        "clutch": 64,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 61,
+        "power": 57,
+        "eye": 62,
+        "discipline": 66,
+        "speed": 59,
+        "baseInstinct": 57,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 67,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "SS": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

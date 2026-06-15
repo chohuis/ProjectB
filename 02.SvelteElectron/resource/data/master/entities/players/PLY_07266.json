@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07266",
+  "name": "송도원",
+  "nameEn": "Song DoWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 11,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 64,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 51,
+        "velocity": 54,
+        "command": 45,
+        "control": 46,
+        "movement": 55,
+        "mentality": 53,
+        "recovery": 52,
+        "clutch": 41,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 41,
+        "power": 35,
+        "eye": 34,
+        "discipline": 42,
+        "speed": 37,
+        "baseInstinct": 33,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 43,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "SP": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

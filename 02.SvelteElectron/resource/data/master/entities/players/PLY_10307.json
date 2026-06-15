@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10307",
+  "name": "화이트 데릭",
+  "nameEn": "White Derek",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 36,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 1,
+      "primaryPosition": "LF",
+      "developmentRate": 72,
+      "potentialHidden": 94,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 53,
+        "velocity": 58,
+        "command": 57,
+        "control": 47,
+        "movement": 56,
+        "mentality": 61,
+        "recovery": 53,
+        "clutch": 48,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 57,
+        "power": 55,
+        "eye": 58,
+        "discipline": 53,
+        "speed": 54,
+        "baseInstinct": 47,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 48,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "LF": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

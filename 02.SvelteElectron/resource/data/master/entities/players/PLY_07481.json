@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07481",
+  "name": "류상수",
+  "nameEn": "Ryu SangSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 40,
+      "primaryPosition": "CF",
+      "developmentRate": 62,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 53,
+        "velocity": 59,
+        "command": 59,
+        "control": 49,
+        "movement": 58,
+        "mentality": 60,
+        "recovery": 47,
+        "clutch": 55,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 50,
+        "power": 43,
+        "eye": 45,
+        "discipline": 51,
+        "speed": 50,
+        "baseInstinct": 48,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 45,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "CF": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

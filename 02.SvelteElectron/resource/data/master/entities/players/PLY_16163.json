@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16163",
+  "name": "에르난데스 카일",
+  "nameEn": "Hernandez Kyle",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 47,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 29,
+      "primaryPosition": "1B",
+      "developmentRate": 67,
+      "potentialHidden": 68,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 60,
+        "velocity": 57,
+        "command": 57,
+        "control": 51,
+        "movement": 62,
+        "mentality": 58,
+        "recovery": 58,
+        "clutch": 48,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 51,
+        "power": 49,
+        "eye": 58,
+        "discipline": 60,
+        "speed": 59,
+        "baseInstinct": 59,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 57,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "1B": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

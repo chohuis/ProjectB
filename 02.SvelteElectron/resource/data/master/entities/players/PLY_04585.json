@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04585",
+  "name": "김기혁",
+  "nameEn": "Kim KiHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 90,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 56,
+        "velocity": 61,
+        "command": 53,
+        "control": 61,
+        "movement": 51,
+        "mentality": 64,
+        "recovery": 52,
+        "clutch": 49,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 50,
+        "power": 43,
+        "eye": 50,
+        "discipline": 44,
+        "speed": 44,
+        "baseInstinct": 39,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 42,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "SP": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

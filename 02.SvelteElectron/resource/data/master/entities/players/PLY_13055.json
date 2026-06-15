@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13055",
+  "name": "데이비스 루이스",
+  "nameEn": "Davis Luis",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 39,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 68,
+      "primaryPosition": "CF",
+      "developmentRate": 79,
+      "potentialHidden": 75,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 60,
+        "velocity": 71,
+        "command": 53,
+        "control": 66,
+        "movement": 64,
+        "mentality": 69,
+        "recovery": 57,
+        "clutch": 55,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 62,
+        "power": 53,
+        "eye": 62,
+        "discipline": 66,
+        "speed": 62,
+        "baseInstinct": 64,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 65,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "CF": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

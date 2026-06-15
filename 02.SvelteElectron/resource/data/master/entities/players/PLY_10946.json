@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10946",
+  "name": "톰슨 제이슨",
+  "nameEn": "Thompson Jason",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 49,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 22,
+      "primaryPosition": "1B",
+      "developmentRate": 77,
+      "potentialHidden": 75,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 53,
+        "velocity": 56,
+        "command": 44,
+        "control": 45,
+        "movement": 55,
+        "mentality": 51,
+        "recovery": 45,
+        "clutch": 49,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 55,
+        "power": 50,
+        "eye": 48,
+        "discipline": 47,
+        "speed": 58,
+        "baseInstinct": 51,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 46,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "1B": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05610",
+  "name": "김민완",
+  "nameEn": "Kim MinWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 5,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 30,
+      "primaryPosition": "3B",
+      "developmentRate": 62,
+      "potentialHidden": 85,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 60,
+        "velocity": 57,
+        "command": 53,
+        "control": 60,
+        "movement": 53,
+        "mentality": 63,
+        "recovery": 47,
+        "clutch": 52,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 41,
+        "power": 46,
+        "eye": 38,
+        "discipline": 47,
+        "speed": 49,
+        "baseInstinct": 47,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 43,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "3B": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

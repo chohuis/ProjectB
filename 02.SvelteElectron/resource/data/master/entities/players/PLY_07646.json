@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07646",
+  "name": "최현윤",
+  "nameEn": "Choi HyeonYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 55,
+      "primaryPosition": "LF",
+      "developmentRate": 62,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 44,
+        "velocity": 44,
+        "command": 34,
+        "control": 40,
+        "movement": 34,
+        "mentality": 48,
+        "recovery": 35,
+        "clutch": 34,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 44,
+        "power": 35,
+        "eye": 43,
+        "discipline": 36,
+        "speed": 47,
+        "baseInstinct": 37,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 40,
+        "battingClutch": 30
+      },
+      "positionRatings": {
+        "LF": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

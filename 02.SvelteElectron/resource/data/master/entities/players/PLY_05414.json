@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05414",
+  "name": "박현호",
+  "nameEn": "Park HyeonHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 41,
+      "primaryPosition": "3B",
+      "developmentRate": 49,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 50,
+        "velocity": 55,
+        "command": 48,
+        "control": 53,
+        "movement": 48,
+        "mentality": 58,
+        "recovery": 43,
+        "clutch": 43,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 57,
+        "power": 47,
+        "eye": 54,
+        "discipline": 49,
+        "speed": 56,
+        "baseInstinct": 53,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 54,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "3B": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

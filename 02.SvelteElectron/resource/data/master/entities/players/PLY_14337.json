@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14337",
+  "name": "스미스 브랜던",
+  "nameEn": "Smith Brandon",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 77,
+      "primaryPosition": "CF",
+      "developmentRate": 60,
+      "potentialHidden": 58,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 77,
+        "velocity": 79,
+        "command": 70,
+        "control": 73,
+        "movement": 69,
+        "mentality": 76,
+        "recovery": 68,
+        "clutch": 71,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 77,
+        "contact": 69,
+        "power": 69,
+        "eye": 77,
+        "discipline": 79,
+        "speed": 76,
+        "baseInstinct": 77,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 73,
+        "arm": 69,
+        "battingClutch": 70
+      },
+      "positionRatings": {
+        "CF": 77
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

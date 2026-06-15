@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03669",
+  "name": "강수식",
+  "nameEn": "Kang SuSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 14,
+      "primaryPosition": "C",
+      "developmentRate": 59,
+      "potentialHidden": 85,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 44,
+        "velocity": 58,
+        "command": 47,
+        "control": 46,
+        "movement": 50,
+        "mentality": 49,
+        "recovery": 39,
+        "clutch": 41,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 43,
+        "power": 43,
+        "eye": 48,
+        "discipline": 36,
+        "speed": 45,
+        "baseInstinct": 41,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 40,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "C": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

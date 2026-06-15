@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09124",
+  "name": "장우민",
+  "nameEn": "Jang WooMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 98,
+      "primaryPosition": "LF",
+      "developmentRate": 53,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 36,
+        "stamina": 31,
+        "velocity": 45,
+        "command": 29,
+        "control": 31,
+        "movement": 36,
+        "mentality": 35,
+        "recovery": 30,
+        "clutch": 28,
+        "holdRunners": 23
+      },
+      "batting": {
+        "ovr": 31,
+        "contact": 29,
+        "power": 29,
+        "eye": 32,
+        "discipline": 30,
+        "speed": 35,
+        "baseInstinct": 29,
+        "bunting": 12,
+        "platoon": 50,
+        "fielding": 25,
+        "arm": 26,
+        "battingClutch": 20
+      },
+      "positionRatings": {
+        "LF": 31
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

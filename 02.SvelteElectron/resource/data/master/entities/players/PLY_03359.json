@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03359",
+  "name": "박정현",
+  "nameEn": "Park JungHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 26,
+      "primaryPosition": "SP",
+      "developmentRate": 67,
+      "potentialHidden": 92,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 55,
+        "velocity": 60,
+        "command": 59,
+        "control": 62,
+        "movement": 54,
+        "mentality": 61,
+        "recovery": 51,
+        "clutch": 50,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 59,
+        "power": 59,
+        "eye": 62,
+        "discipline": 68,
+        "speed": 61,
+        "baseInstinct": 62,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 63,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "SP": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

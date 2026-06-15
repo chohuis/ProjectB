@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05732",
+  "name": "한현기",
+  "nameEn": "Han HyeonKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 86,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 59,
+        "velocity": 65,
+        "command": 53,
+        "control": 51,
+        "movement": 51,
+        "mentality": 55,
+        "recovery": 51,
+        "clutch": 54,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 41,
+        "power": 40,
+        "eye": 36,
+        "discipline": 37,
+        "speed": 41,
+        "baseInstinct": 40,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 35,
+        "arm": 35,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "SP": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

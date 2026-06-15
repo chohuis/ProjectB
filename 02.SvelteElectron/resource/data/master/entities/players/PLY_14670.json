@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14670",
+  "name": "클라크 헌터",
+  "nameEn": "Clark Hunter",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 40,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 31,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 77,
+      "primaryPosition": "SP",
+      "developmentRate": 42,
+      "potentialHidden": 68,
+      "proServiceYears": 9,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 62,
+        "velocity": 67,
+        "command": 56,
+        "control": 62,
+        "movement": 62,
+        "mentality": 65,
+        "recovery": 67,
+        "clutch": 62,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 57,
+        "power": 68,
+        "eye": 62,
+        "discipline": 61,
+        "speed": 68,
+        "baseInstinct": 62,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 67,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "SP": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15619",
+  "name": "톰슨 재크",
+  "nameEn": "Thompson Zach",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 27,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 39,
+      "primaryPosition": "SP",
+      "developmentRate": 56,
+      "potentialHidden": 62,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 54,
+        "velocity": 68,
+        "command": 49,
+        "control": 62,
+        "movement": 54,
+        "mentality": 63,
+        "recovery": 53,
+        "clutch": 54,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 52,
+        "power": 53,
+        "eye": 61,
+        "discipline": 57,
+        "speed": 65,
+        "baseInstinct": 52,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 57,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "SP": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

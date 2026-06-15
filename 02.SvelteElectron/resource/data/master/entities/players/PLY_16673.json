@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16673",
+  "name": "킹 브랜던",
+  "nameEn": "King Brandon",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 49,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 55,
+      "primaryPosition": "1B",
+      "developmentRate": 47,
+      "potentialHidden": 54,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 53,
+        "velocity": 69,
+        "command": 59,
+        "control": 64,
+        "movement": 63,
+        "mentality": 63,
+        "recovery": 56,
+        "clutch": 50,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 65,
+        "power": 56,
+        "eye": 63,
+        "discipline": 63,
+        "speed": 57,
+        "baseInstinct": 52,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 52,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "1B": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

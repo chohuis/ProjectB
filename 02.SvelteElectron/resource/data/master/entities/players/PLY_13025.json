@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13025",
+  "name": "앨런 에릭",
+  "nameEn": "Allen Eric",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 31,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 96,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 92,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 51,
+        "velocity": 55,
+        "command": 55,
+        "control": 47,
+        "movement": 56,
+        "mentality": 56,
+        "recovery": 53,
+        "clutch": 45,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 52,
+        "power": 54,
+        "eye": 49,
+        "discipline": 51,
+        "speed": 54,
+        "baseInstinct": 53,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 56,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "SP": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

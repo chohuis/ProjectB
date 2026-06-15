@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03261",
+  "name": "임동훈",
+  "nameEn": "Lim DongHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 43,
+      "primaryPosition": "RF",
+      "developmentRate": 61,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 56,
+        "velocity": 69,
+        "command": 62,
+        "control": 63,
+        "movement": 54,
+        "mentality": 62,
+        "recovery": 51,
+        "clutch": 58,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 60,
+        "power": 61,
+        "eye": 60,
+        "discipline": 61,
+        "speed": 72,
+        "baseInstinct": 66,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 64,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "RF": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

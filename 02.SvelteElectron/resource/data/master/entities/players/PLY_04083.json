@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04083",
+  "name": "김준원",
+  "nameEn": "Kim JunWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 66,
+      "primaryPosition": "3B",
+      "developmentRate": 61,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 70,
+        "velocity": 68,
+        "command": 63,
+        "control": 65,
+        "movement": 63,
+        "mentality": 70,
+        "recovery": 63,
+        "clutch": 64,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 64,
+        "power": 59,
+        "eye": 57,
+        "discipline": 55,
+        "speed": 63,
+        "baseInstinct": 57,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 62,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "3B": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

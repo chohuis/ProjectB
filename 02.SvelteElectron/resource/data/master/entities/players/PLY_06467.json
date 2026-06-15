@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06467",
+  "name": "한성찬",
+  "nameEn": "Han SeongChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 55,
+      "primaryPosition": "SP",
+      "developmentRate": 63,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 55,
+        "velocity": 60,
+        "command": 49,
+        "control": 50,
+        "movement": 47,
+        "mentality": 51,
+        "recovery": 56,
+        "clutch": 44,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 43,
+        "power": 46,
+        "eye": 40,
+        "discipline": 46,
+        "speed": 51,
+        "baseInstinct": 40,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 42,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "SP": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

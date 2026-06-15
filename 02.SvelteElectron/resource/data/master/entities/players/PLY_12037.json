@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12037",
+  "name": "잭슨 크리스",
+  "nameEn": "Jackson Chris",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 39,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 89,
+      "primaryPosition": "C",
+      "developmentRate": 70,
+      "potentialHidden": 68,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 74,
+        "velocity": 76,
+        "command": 69,
+        "control": 70,
+        "movement": 68,
+        "mentality": 74,
+        "recovery": 77,
+        "clutch": 74,
+        "holdRunners": 76
+      },
+      "batting": {
+        "ovr": 77,
+        "contact": 70,
+        "power": 67,
+        "eye": 80,
+        "discipline": 79,
+        "speed": 70,
+        "baseInstinct": 76,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 78,
+        "battingClutch": 74
+      },
+      "positionRatings": {
+        "C": 77
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

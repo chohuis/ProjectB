@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07995",
+  "name": "송지진",
+  "nameEn": "Song JiJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 21,
+      "primaryPosition": "RF",
+      "developmentRate": 57,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 48,
+        "velocity": 46,
+        "command": 47,
+        "control": 50,
+        "movement": 42,
+        "mentality": 50,
+        "recovery": 41,
+        "clutch": 36,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 37,
+        "power": 39,
+        "eye": 38,
+        "discipline": 38,
+        "speed": 43,
+        "baseInstinct": 31,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 39,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "RF": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

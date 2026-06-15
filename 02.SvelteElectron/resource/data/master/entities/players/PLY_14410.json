@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14410",
+  "name": "루이스 코너",
+  "nameEn": "Lewis Connor",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 84,
+  "popularity": 15,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 22,
+      "primaryPosition": "2B",
+      "developmentRate": 66,
+      "potentialHidden": 57,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 55,
+        "velocity": 50,
+        "command": 48,
+        "control": 55,
+        "movement": 44,
+        "mentality": 55,
+        "recovery": 53,
+        "clutch": 45,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 48,
+        "power": 49,
+        "eye": 51,
+        "discipline": 51,
+        "speed": 56,
+        "baseInstinct": 42,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 52,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "2B": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

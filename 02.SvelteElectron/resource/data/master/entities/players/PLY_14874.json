@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14874",
+  "name": "스콧 제이슨",
+  "nameEn": "Scott Jason",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 20,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 30,
+      "primaryPosition": "C",
+      "developmentRate": 59,
+      "potentialHidden": 62,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 56,
+        "velocity": 60,
+        "command": 58,
+        "control": 56,
+        "movement": 52,
+        "mentality": 57,
+        "recovery": 51,
+        "clutch": 56,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 57,
+        "power": 58,
+        "eye": 59,
+        "discipline": 62,
+        "speed": 54,
+        "baseInstinct": 56,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 61,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "C": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

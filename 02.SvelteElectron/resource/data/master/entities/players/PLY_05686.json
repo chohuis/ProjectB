@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05686",
+  "name": "장정현",
+  "nameEn": "Jang JungHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 67,
+      "primaryPosition": "1B",
+      "developmentRate": 62,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 60,
+        "velocity": 56,
+        "command": 52,
+        "control": 58,
+        "movement": 50,
+        "mentality": 54,
+        "recovery": 58,
+        "clutch": 56,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 62,
+        "power": 60,
+        "eye": 53,
+        "discipline": 59,
+        "speed": 61,
+        "baseInstinct": 54,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 58,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "1B": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

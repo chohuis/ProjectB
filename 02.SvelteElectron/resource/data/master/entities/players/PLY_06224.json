@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06224",
+  "name": "윤진찬",
+  "nameEn": "Yoon JinChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 40,
+      "primaryPosition": "SP",
+      "developmentRate": 46,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 38,
+        "velocity": 45,
+        "command": 37,
+        "control": 39,
+        "movement": 30,
+        "mentality": 44,
+        "recovery": 32,
+        "clutch": 36,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 34,
+        "contact": 29,
+        "power": 29,
+        "eye": 35,
+        "discipline": 30,
+        "speed": 30,
+        "baseInstinct": 29,
+        "bunting": 18,
+        "platoon": 50,
+        "fielding": 35,
+        "arm": 24,
+        "battingClutch": 24
+      },
+      "positionRatings": {
+        "SP": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

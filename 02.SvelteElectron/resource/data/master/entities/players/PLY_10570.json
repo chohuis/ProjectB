@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10570",
+  "name": "킹 코너",
+  "nameEn": "King Connor",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 17,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 74,
+      "primaryPosition": "SP",
+      "developmentRate": 80,
+      "potentialHidden": 68,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 61,
+        "velocity": 76,
+        "command": 61,
+        "control": 68,
+        "movement": 64,
+        "mentality": 71,
+        "recovery": 60,
+        "clutch": 54,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 58,
+        "power": 65,
+        "eye": 62,
+        "discipline": 64,
+        "speed": 64,
+        "baseInstinct": 61,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 54,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "SP": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

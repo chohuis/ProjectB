@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04661",
+  "name": "황찬식",
+  "nameEn": "Hwang ChanSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 46,
+      "primaryPosition": "CF",
+      "developmentRate": 49,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 54,
+        "velocity": 65,
+        "command": 50,
+        "control": 47,
+        "movement": 54,
+        "mentality": 55,
+        "recovery": 50,
+        "clutch": 53,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 48,
+        "power": 45,
+        "eye": 54,
+        "discipline": 50,
+        "speed": 49,
+        "baseInstinct": 56,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 44,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "CF": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

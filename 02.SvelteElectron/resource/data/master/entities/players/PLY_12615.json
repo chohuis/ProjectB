@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12615",
+  "name": "테일러 코너",
+  "nameEn": "Taylor Connor",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 82,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 29,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 56,
+      "primaryPosition": "3B",
+      "developmentRate": 35,
+      "potentialHidden": 63,
+      "proServiceYears": 7,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 58,
+        "velocity": 58,
+        "command": 60,
+        "control": 53,
+        "movement": 61,
+        "mentality": 59,
+        "recovery": 50,
+        "clutch": 49,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 61,
+        "power": 61,
+        "eye": 60,
+        "discipline": 55,
+        "speed": 54,
+        "baseInstinct": 54,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 51,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "3B": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

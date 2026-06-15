@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15162",
+  "name": "홀 재크",
+  "nameEn": "Hall Zach",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 35,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 17,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 85,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 44,
+        "velocity": 55,
+        "command": 47,
+        "control": 46,
+        "movement": 45,
+        "mentality": 48,
+        "recovery": 39,
+        "clutch": 48,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 55,
+        "power": 49,
+        "eye": 48,
+        "discipline": 43,
+        "speed": 54,
+        "baseInstinct": 43,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 46,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "SP": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

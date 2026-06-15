@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14125",
+  "name": "테일러 재크",
+  "nameEn": "Taylor Zach",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 29,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 34,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 66,
+      "primaryPosition": "SP",
+      "developmentRate": 39,
+      "potentialHidden": 66,
+      "proServiceYears": 12,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 58,
+        "velocity": 61,
+        "command": 57,
+        "control": 50,
+        "movement": 48,
+        "mentality": 61,
+        "recovery": 49,
+        "clutch": 50,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 49,
+        "power": 57,
+        "eye": 60,
+        "discipline": 54,
+        "speed": 54,
+        "baseInstinct": 44,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 47,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

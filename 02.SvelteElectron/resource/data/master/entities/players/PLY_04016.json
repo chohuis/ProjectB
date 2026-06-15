@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04016",
+  "name": "정영호",
+  "nameEn": "Jung YoungHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 54,
+      "primaryPosition": "3B",
+      "developmentRate": 70,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 52,
+        "velocity": 62,
+        "command": 44,
+        "control": 50,
+        "movement": 52,
+        "mentality": 50,
+        "recovery": 49,
+        "clutch": 52,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 67,
+        "power": 59,
+        "eye": 56,
+        "discipline": 66,
+        "speed": 64,
+        "baseInstinct": 61,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 61,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "3B": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

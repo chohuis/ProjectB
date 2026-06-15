@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07978",
+  "name": "안기빈",
+  "nameEn": "An KiBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 10,
+      "primaryPosition": "RF",
+      "developmentRate": 46,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 45,
+        "velocity": 57,
+        "command": 41,
+        "control": 45,
+        "movement": 40,
+        "mentality": 48,
+        "recovery": 36,
+        "clutch": 40,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 49,
+        "power": 39,
+        "eye": 50,
+        "discipline": 47,
+        "speed": 47,
+        "baseInstinct": 47,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 38,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "RF": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

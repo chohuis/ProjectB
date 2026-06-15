@@ -166,10 +166,12 @@
   // ── 멀티리그 순위표 ─────────────────────────────────────────
   // KBL → KBL2군 → ABL → ABL2군 → JBL → JBL2군 고정 순서
   const LEAGUE_ORDER = [
+    "LEAGUE_HIGHSCHOOL",
+    "LEAGUE_UNIVERSITY",
+    "LEAGUE_INDEPENDENT",
     "LEAGUE_KBL",     "LEAGUE_KBL_FARM",
     "LEAGUE_ABL",     "LEAGUE_ABL_FARM",
     "LEAGUE_JBL",     "LEAGUE_JBL_FARM",
-    "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT", "LEAGUE_HIGHSCHOOL",
   ];
 
   $: allLeagueIds = (() => {
@@ -289,7 +291,6 @@
         <nav class="league-nav">
           {#each allLeagueIds as lid}
             {@const locked = isLocked(lid)}
-            {@const farm   = isFarmLeague(lid)}
             <button
               class:active={!locked && selectedLeagueId === lid}
               class:locked={locked}
@@ -300,7 +301,6 @@
               {leagueName(lid)}
               {#if !locked && lid === myLeagueId}<span class="my-badge">내 리그</span>{/if}
               {#if locked}<span class="lock-hint">3학년↑</span>{/if}
-              {#if farm}<span class="farm-badge">2군</span>{/if}
             </button>
           {/each}
         </nav>
@@ -691,15 +691,6 @@
     color: #f0e060;
     background: rgba(240,224,96,0.15);
     border-radius: 4px;
-    padding: 1px 4px;
-    display: block;
-  }
-
-  .farm-badge {
-    font-size: 9px;
-    color: #8aabda;
-    background: rgba(138,171,218,0.12);
-    border-radius: 3px;
     padding: 1px 4px;
     display: block;
   }

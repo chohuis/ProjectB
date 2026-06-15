@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08592",
+  "name": "조현우",
+  "nameEn": "Jo HyeonWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 93,
+      "primaryPosition": "LF",
+      "developmentRate": 52,
+      "potentialHidden": 49,
+      "pitching": {
+        "ovr": 39,
+        "stamina": 37,
+        "velocity": 39,
+        "command": 34,
+        "control": 38,
+        "movement": 31,
+        "mentality": 42,
+        "recovery": 35,
+        "clutch": 34,
+        "holdRunners": 25
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 36,
+        "power": 28,
+        "eye": 31,
+        "discipline": 28,
+        "speed": 42,
+        "baseInstinct": 30,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 27,
+        "arm": 28,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "LF": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

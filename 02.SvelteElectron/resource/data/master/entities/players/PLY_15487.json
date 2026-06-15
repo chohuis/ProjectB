@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15487",
+  "name": "마르티네스 조던",
+  "nameEn": "Martinez Jordan",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 24,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 6,
+      "primaryPosition": "CF",
+      "developmentRate": 67,
+      "potentialHidden": 58,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 62,
+        "velocity": 61,
+        "command": 53,
+        "control": 50,
+        "movement": 61,
+        "mentality": 59,
+        "recovery": 54,
+        "clutch": 58,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 52,
+        "power": 55,
+        "eye": 61,
+        "discipline": 52,
+        "speed": 57,
+        "baseInstinct": 57,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 50,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "CF": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

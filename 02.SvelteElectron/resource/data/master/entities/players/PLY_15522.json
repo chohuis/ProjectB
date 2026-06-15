@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15522",
+  "name": "테일러 오스틴",
+  "nameEn": "Taylor Austin",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 84,
+  "popularity": 32,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 23,
+      "primaryPosition": "SP",
+      "developmentRate": 61,
+      "potentialHidden": 69,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 71,
+        "velocity": 79,
+        "command": 64,
+        "control": 68,
+        "movement": 66,
+        "mentality": 75,
+        "recovery": 71,
+        "clutch": 60,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 72,
+        "power": 69,
+        "eye": 65,
+        "discipline": 70,
+        "speed": 67,
+        "baseInstinct": 74,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 60,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "SP": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

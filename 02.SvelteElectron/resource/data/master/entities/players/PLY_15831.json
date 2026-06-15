@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15831",
+  "name": "애덤스 제이슨",
+  "nameEn": "Adams Jason",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 10,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 54,
+      "primaryPosition": "RF",
+      "developmentRate": 45,
+      "potentialHidden": 62,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 69,
+        "velocity": 76,
+        "command": 78,
+        "control": 78,
+        "movement": 74,
+        "mentality": 79,
+        "recovery": 65,
+        "clutch": 73,
+        "holdRunners": 71
+      },
+      "batting": {
+        "ovr": 76,
+        "contact": 79,
+        "power": 68,
+        "eye": 74,
+        "discipline": 78,
+        "speed": 82,
+        "baseInstinct": 75,
+        "bunting": 65,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 65,
+        "battingClutch": 71
+      },
+      "positionRatings": {
+        "RF": 76
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

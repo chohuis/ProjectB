@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10727",
+  "name": "라이트 헌터",
+  "nameEn": "Wright Hunter",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 35,
+  "militaryStatus": "군필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 60,
+      "primaryPosition": "2B",
+      "developmentRate": 65,
+      "potentialHidden": 72,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 65,
+        "velocity": 68,
+        "command": 66,
+        "control": 65,
+        "movement": 73,
+        "mentality": 67,
+        "recovery": 67,
+        "clutch": 71,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 69,
+        "power": 72,
+        "eye": 69,
+        "discipline": 73,
+        "speed": 74,
+        "baseInstinct": 63,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 68,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "2B": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

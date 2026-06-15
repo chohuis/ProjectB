@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07424",
+  "name": "류동식",
+  "nameEn": "Ryu DongSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 69,
+      "primaryPosition": "LF",
+      "developmentRate": 59,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 51,
+        "velocity": 58,
+        "command": 46,
+        "control": 45,
+        "movement": 54,
+        "mentality": 50,
+        "recovery": 51,
+        "clutch": 52,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 44,
+        "power": 40,
+        "eye": 43,
+        "discipline": 39,
+        "speed": 43,
+        "baseInstinct": 45,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 39,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "LF": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

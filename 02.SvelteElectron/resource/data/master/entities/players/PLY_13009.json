@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13009",
+  "name": "로드리게스 타일러",
+  "nameEn": "Rodriguez Tyler",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 11,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 19,
+      "primaryPosition": "CF",
+      "developmentRate": 58,
+      "potentialHidden": 71,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 75,
+        "velocity": 85,
+        "command": 78,
+        "control": 78,
+        "movement": 78,
+        "mentality": 82,
+        "recovery": 72,
+        "clutch": 75,
+        "holdRunners": 76
+      },
+      "batting": {
+        "ovr": 78,
+        "contact": 70,
+        "power": 77,
+        "eye": 81,
+        "discipline": 71,
+        "speed": 74,
+        "baseInstinct": 76,
+        "bunting": 66,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 77,
+        "battingClutch": 76
+      },
+      "positionRatings": {
+        "CF": 78
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

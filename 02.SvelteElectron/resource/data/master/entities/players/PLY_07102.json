@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07102",
+  "name": "최재민",
+  "nameEn": "Choi JaeMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 81,
+      "primaryPosition": "1B",
+      "developmentRate": 56,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 56,
+        "velocity": 65,
+        "command": 55,
+        "control": 58,
+        "movement": 50,
+        "mentality": 61,
+        "recovery": 48,
+        "clutch": 51,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 42,
+        "power": 42,
+        "eye": 44,
+        "discipline": 41,
+        "speed": 43,
+        "baseInstinct": 41,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 40,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "1B": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04045",
+  "name": "조태민",
+  "nameEn": "Jo TaeMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 48,
+      "primaryPosition": "1B",
+      "developmentRate": 63,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 62,
+        "velocity": 76,
+        "command": 62,
+        "control": 57,
+        "movement": 65,
+        "mentality": 69,
+        "recovery": 61,
+        "clutch": 60,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 52,
+        "power": 52,
+        "eye": 49,
+        "discipline": 51,
+        "speed": 54,
+        "baseInstinct": 45,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 54,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "1B": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

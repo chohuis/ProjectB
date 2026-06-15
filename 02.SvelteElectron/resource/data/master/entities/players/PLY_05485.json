@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05485",
+  "name": "장재우",
+  "nameEn": "Jang JaeWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 57,
+      "primaryPosition": "SP",
+      "developmentRate": 63,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 45,
+        "velocity": 49,
+        "command": 38,
+        "control": 46,
+        "movement": 49,
+        "mentality": 42,
+        "recovery": 37,
+        "clutch": 43,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 48,
+        "power": 46,
+        "eye": 53,
+        "discipline": 56,
+        "speed": 57,
+        "baseInstinct": 49,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 53,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SP": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

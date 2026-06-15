@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08232",
+  "name": "한우기",
+  "nameEn": "Han WooKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 13,
+      "primaryPosition": "2B",
+      "developmentRate": 56,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 42,
+        "velocity": 48,
+        "command": 43,
+        "control": 34,
+        "movement": 42,
+        "mentality": 48,
+        "recovery": 36,
+        "clutch": 30,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 49,
+        "power": 55,
+        "eye": 54,
+        "discipline": 46,
+        "speed": 57,
+        "baseInstinct": 50,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 47,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "2B": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

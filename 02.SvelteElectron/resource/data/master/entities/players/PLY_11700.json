@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11700",
+  "name": "클라크 루이스",
+  "nameEn": "Clark Luis",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 39,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 78,
+      "primaryPosition": "C",
+      "developmentRate": 58,
+      "potentialHidden": 57,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 79,
+        "stamina": 77,
+        "velocity": 84,
+        "command": 82,
+        "control": 77,
+        "movement": 77,
+        "mentality": 79,
+        "recovery": 69,
+        "clutch": 66,
+        "holdRunners": 77
+      },
+      "batting": {
+        "ovr": 79,
+        "contact": 72,
+        "power": 79,
+        "eye": 72,
+        "discipline": 77,
+        "speed": 85,
+        "baseInstinct": 73,
+        "bunting": 70,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 76,
+        "battingClutch": 69
+      },
+      "positionRatings": {
+        "C": 79
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07350",
+  "name": "신혁혁",
+  "nameEn": "Shin HyeokHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 57,
+      "primaryPosition": "SP",
+      "developmentRate": 56,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 44,
+        "velocity": 53,
+        "command": 37,
+        "control": 42,
+        "movement": 45,
+        "mentality": 40,
+        "recovery": 38,
+        "clutch": 41,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 43,
+        "power": 33,
+        "eye": 45,
+        "discipline": 44,
+        "speed": 46,
+        "baseInstinct": 43,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 34,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "SP": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14369",
+  "name": "가르시아 타일러",
+  "nameEn": "Garcia Tyler",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 66,
+      "primaryPosition": "2B",
+      "developmentRate": 50,
+      "potentialHidden": 62,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 50,
+        "velocity": 65,
+        "command": 60,
+        "control": 55,
+        "movement": 61,
+        "mentality": 52,
+        "recovery": 51,
+        "clutch": 47,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 49,
+        "power": 55,
+        "eye": 52,
+        "discipline": 58,
+        "speed": 55,
+        "baseInstinct": 60,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 50,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "2B": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

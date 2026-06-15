@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08846",
+  "name": "정지식",
+  "nameEn": "Jung JiSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 77,
+      "primaryPosition": "CF",
+      "developmentRate": 40,
+      "potentialHidden": 50,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 43,
+        "velocity": 53,
+        "command": 36,
+        "control": 45,
+        "movement": 44,
+        "mentality": 41,
+        "recovery": 43,
+        "clutch": 35,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 43,
+        "power": 47,
+        "eye": 43,
+        "discipline": 47,
+        "speed": 53,
+        "baseInstinct": 44,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 48,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "CF": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

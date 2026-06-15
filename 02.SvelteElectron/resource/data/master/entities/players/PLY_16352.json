@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16352",
+  "name": "리 헌터",
+  "nameEn": "Lee Hunter",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 46,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 94,
+      "primaryPosition": "1B",
+      "developmentRate": 62,
+      "potentialHidden": 60,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 64,
+        "velocity": 61,
+        "command": 56,
+        "control": 63,
+        "movement": 55,
+        "mentality": 69,
+        "recovery": 53,
+        "clutch": 57,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 61,
+        "power": 60,
+        "eye": 60,
+        "discipline": 53,
+        "speed": 60,
+        "baseInstinct": 63,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 61,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "1B": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

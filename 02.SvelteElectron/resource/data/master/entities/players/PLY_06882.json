@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06882",
+  "name": "강우윤",
+  "nameEn": "Kang WooYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 5,
+      "primaryPosition": "1B",
+      "developmentRate": 56,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 49,
+        "velocity": 57,
+        "command": 46,
+        "control": 47,
+        "movement": 49,
+        "mentality": 57,
+        "recovery": 46,
+        "clutch": 51,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 54,
+        "power": 54,
+        "eye": 63,
+        "discipline": 54,
+        "speed": 63,
+        "baseInstinct": 51,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 49,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "1B": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

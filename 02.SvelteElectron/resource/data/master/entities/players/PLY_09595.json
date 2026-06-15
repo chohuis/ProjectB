@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09595",
+  "name": "최상준",
+  "nameEn": "Choi SangJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 38,
+      "primaryPosition": "RF",
+      "developmentRate": 54,
+      "potentialHidden": 42,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 44,
+        "velocity": 46,
+        "command": 41,
+        "control": 46,
+        "movement": 44,
+        "mentality": 49,
+        "recovery": 45,
+        "clutch": 33,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 35,
+        "contact": 38,
+        "power": 35,
+        "eye": 27,
+        "discipline": 32,
+        "speed": 31,
+        "baseInstinct": 31,
+        "bunting": 18,
+        "platoon": 50,
+        "fielding": 29,
+        "arm": 34,
+        "battingClutch": 25
+      },
+      "positionRatings": {
+        "RF": 35
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

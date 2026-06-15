@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15339",
+  "name": "해리스 딜런",
+  "nameEn": "Harris Dylan",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 35,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 91,
+      "primaryPosition": "SP",
+      "developmentRate": 45,
+      "potentialHidden": 74,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 69,
+        "velocity": 79,
+        "command": 65,
+        "control": 69,
+        "movement": 69,
+        "mentality": 73,
+        "recovery": 76,
+        "clutch": 70,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 76,
+        "contact": 68,
+        "power": 70,
+        "eye": 74,
+        "discipline": 73,
+        "speed": 82,
+        "baseInstinct": 73,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 68,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "SP": 76
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

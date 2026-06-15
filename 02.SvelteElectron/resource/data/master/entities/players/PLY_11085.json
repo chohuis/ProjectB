@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11085",
+  "name": "루이스 미겔",
+  "nameEn": "Lewis Miguel",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 37,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 30,
+      "primaryPosition": "SP",
+      "developmentRate": 75,
+      "potentialHidden": 63,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 59,
+        "velocity": 58,
+        "command": 57,
+        "control": 64,
+        "movement": 53,
+        "mentality": 66,
+        "recovery": 57,
+        "clutch": 61,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 52,
+        "power": 60,
+        "eye": 57,
+        "discipline": 58,
+        "speed": 66,
+        "baseInstinct": 50,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 60,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "SP": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

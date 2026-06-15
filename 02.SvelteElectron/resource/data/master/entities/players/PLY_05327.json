@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05327",
+  "name": "조우혁",
+  "nameEn": "Jo WooHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 51,
+      "primaryPosition": "3B",
+      "developmentRate": 55,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 68,
+        "velocity": 64,
+        "command": 61,
+        "control": 60,
+        "movement": 57,
+        "mentality": 64,
+        "recovery": 62,
+        "clutch": 60,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 52,
+        "power": 51,
+        "eye": 44,
+        "discipline": 44,
+        "speed": 58,
+        "baseInstinct": 53,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 49,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "3B": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

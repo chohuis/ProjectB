@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08016",
+  "name": "이세진",
+  "nameEn": "Lee SeJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 29,
+      "primaryPosition": "SP",
+      "developmentRate": 57,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 41,
+        "stamina": 35,
+        "velocity": 44,
+        "command": 35,
+        "control": 39,
+        "movement": 33,
+        "mentality": 40,
+        "recovery": 37,
+        "clutch": 35,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 49,
+        "power": 53,
+        "eye": 50,
+        "discipline": 49,
+        "speed": 57,
+        "baseInstinct": 51,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 47,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "SP": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

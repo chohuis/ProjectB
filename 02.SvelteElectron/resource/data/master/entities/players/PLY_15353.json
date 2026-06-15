@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15353",
+  "name": "마르티네스 카일",
+  "nameEn": "Martinez Kyle",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 17,
+      "primaryPosition": "SP",
+      "developmentRate": 45,
+      "potentialHidden": 84,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 68,
+        "velocity": 75,
+        "command": 63,
+        "control": 77,
+        "movement": 76,
+        "mentality": 76,
+        "recovery": 68,
+        "clutch": 72,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 74,
+        "contact": 71,
+        "power": 68,
+        "eye": 75,
+        "discipline": 69,
+        "speed": 70,
+        "baseInstinct": 70,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 72,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "SP": 74
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

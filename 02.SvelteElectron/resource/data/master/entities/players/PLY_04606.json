@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04606",
+  "name": "강동윤",
+  "nameEn": "Kang DongYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 49,
+      "primaryPosition": "3B",
+      "developmentRate": 52,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 50,
+        "velocity": 51,
+        "command": 42,
+        "control": 45,
+        "movement": 46,
+        "mentality": 57,
+        "recovery": 42,
+        "clutch": 47,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 44,
+        "power": 44,
+        "eye": 44,
+        "discipline": 50,
+        "speed": 47,
+        "baseInstinct": 44,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 40,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "3B": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

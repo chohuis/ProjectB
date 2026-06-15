@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03322",
+  "name": "한우윤",
+  "nameEn": "Han WooYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 50,
+      "primaryPosition": "SP",
+      "developmentRate": 72,
+      "potentialHidden": 84,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 66,
+        "velocity": 71,
+        "command": 53,
+        "control": 55,
+        "movement": 62,
+        "mentality": 66,
+        "recovery": 52,
+        "clutch": 49,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 57,
+        "power": 63,
+        "eye": 58,
+        "discipline": 57,
+        "speed": 65,
+        "baseInstinct": 59,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 54,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SP": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

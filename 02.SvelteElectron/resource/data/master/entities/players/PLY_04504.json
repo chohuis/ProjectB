@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04504",
+  "name": "임현빈",
+  "nameEn": "Lim HyeonBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 48,
+      "primaryPosition": "LF",
+      "developmentRate": 57,
+      "potentialHidden": 80,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 43,
+        "velocity": 50,
+        "command": 37,
+        "control": 34,
+        "movement": 42,
+        "mentality": 42,
+        "recovery": 36,
+        "clutch": 31,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 49,
+        "power": 49,
+        "eye": 48,
+        "discipline": 51,
+        "speed": 46,
+        "baseInstinct": 49,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 47,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "LF": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

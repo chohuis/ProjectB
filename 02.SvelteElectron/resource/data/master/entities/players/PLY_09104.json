@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09104",
+  "name": "조진훈",
+  "nameEn": "Jo JinHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 2,
+      "primaryPosition": "SP",
+      "developmentRate": 42,
+      "potentialHidden": 50,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 45,
+        "velocity": 51,
+        "command": 44,
+        "control": 49,
+        "movement": 52,
+        "mentality": 50,
+        "recovery": 50,
+        "clutch": 47,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 31,
+        "contact": 24,
+        "power": 28,
+        "eye": 26,
+        "discipline": 25,
+        "speed": 28,
+        "baseInstinct": 23,
+        "bunting": 16,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 24,
+        "battingClutch": 25
+      },
+      "positionRatings": {
+        "SP": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

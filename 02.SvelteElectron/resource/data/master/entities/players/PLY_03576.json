@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03576",
+  "name": "윤성식",
+  "nameEn": "Yoon SeongSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 36,
+      "primaryPosition": "LF",
+      "developmentRate": 66,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 54,
+        "velocity": 70,
+        "command": 61,
+        "control": 55,
+        "movement": 56,
+        "mentality": 64,
+        "recovery": 53,
+        "clutch": 53,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 55,
+        "power": 40,
+        "eye": 42,
+        "discipline": 50,
+        "speed": 49,
+        "baseInstinct": 47,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 42,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "LF": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

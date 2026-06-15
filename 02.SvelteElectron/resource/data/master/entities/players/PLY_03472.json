@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03472",
+  "name": "박우환",
+  "nameEn": "Park WooHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 20,
+      "primaryPosition": "RF",
+      "developmentRate": 63,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 54,
+        "velocity": 60,
+        "command": 51,
+        "control": 52,
+        "movement": 59,
+        "mentality": 56,
+        "recovery": 52,
+        "clutch": 53,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 64,
+        "power": 69,
+        "eye": 65,
+        "discipline": 61,
+        "speed": 67,
+        "baseInstinct": 70,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 64,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "RF": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

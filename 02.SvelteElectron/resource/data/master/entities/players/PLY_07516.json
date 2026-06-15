@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07516",
+  "name": "박찬현",
+  "nameEn": "Park ChanHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 59,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 80,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 44,
+        "velocity": 46,
+        "command": 41,
+        "control": 37,
+        "movement": 36,
+        "mentality": 41,
+        "recovery": 34,
+        "clutch": 32,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 53,
+        "power": 43,
+        "eye": 52,
+        "discipline": 43,
+        "speed": 47,
+        "baseInstinct": 44,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 51,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "SP": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

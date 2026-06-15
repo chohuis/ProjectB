@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08127",
+  "name": "윤민완",
+  "nameEn": "Yoon MinWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 42,
+      "primaryPosition": "C",
+      "developmentRate": 50,
+      "potentialHidden": 81,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 46,
+        "velocity": 42,
+        "command": 36,
+        "control": 35,
+        "movement": 37,
+        "mentality": 46,
+        "recovery": 39,
+        "clutch": 37,
+        "holdRunners": 29
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 42,
+        "power": 46,
+        "eye": 53,
+        "discipline": 42,
+        "speed": 53,
+        "baseInstinct": 44,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 48,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "C": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06492",
+  "name": "최현기",
+  "nameEn": "Choi HyeonKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 62,
+      "primaryPosition": "C",
+      "developmentRate": 63,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 57,
+        "velocity": 65,
+        "command": 56,
+        "control": 61,
+        "movement": 57,
+        "mentality": 54,
+        "recovery": 53,
+        "clutch": 56,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 59,
+        "power": 50,
+        "eye": 53,
+        "discipline": 50,
+        "speed": 55,
+        "baseInstinct": 47,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 54,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "C": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

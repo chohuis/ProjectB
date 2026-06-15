@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15807",
+  "name": "잭슨 콜",
+  "nameEn": "Jackson Cole",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 12,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 18,
+      "primaryPosition": "1B",
+      "developmentRate": 39,
+      "potentialHidden": 44,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 49,
+        "velocity": 50,
+        "command": 41,
+        "control": 47,
+        "movement": 49,
+        "mentality": 55,
+        "recovery": 39,
+        "clutch": 41,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 43,
+        "power": 46,
+        "eye": 53,
+        "discipline": 52,
+        "speed": 49,
+        "baseInstinct": 52,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 43,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "1B": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06548",
+  "name": "강재진",
+  "nameEn": "Kang JaeJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 40,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 94,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 46,
+        "velocity": 59,
+        "command": 46,
+        "control": 54,
+        "movement": 48,
+        "mentality": 55,
+        "recovery": 51,
+        "clutch": 43,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 62,
+        "power": 55,
+        "eye": 58,
+        "discipline": 57,
+        "speed": 65,
+        "baseInstinct": 55,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 52,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

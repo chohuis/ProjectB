@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12093",
+  "name": "루이스 카를로스",
+  "nameEn": "Lewis Carlos",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 14,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 51,
+      "primaryPosition": "1B",
+      "developmentRate": 66,
+      "potentialHidden": 61,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 60,
+        "velocity": 78,
+        "command": 60,
+        "control": 61,
+        "movement": 65,
+        "mentality": 68,
+        "recovery": 65,
+        "clutch": 67,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 72,
+        "power": 59,
+        "eye": 72,
+        "discipline": 71,
+        "speed": 74,
+        "baseInstinct": 64,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 58,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "1B": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

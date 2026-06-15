@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04087",
+  "name": "신수욱",
+  "nameEn": "Shin SuWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 68,
+      "primaryPosition": "SS",
+      "developmentRate": 64,
+      "potentialHidden": 87,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 64,
+        "velocity": 75,
+        "command": 59,
+        "control": 68,
+        "movement": 64,
+        "mentality": 65,
+        "recovery": 64,
+        "clutch": 65,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 44,
+        "power": 50,
+        "eye": 47,
+        "discipline": 48,
+        "speed": 50,
+        "baseInstinct": 51,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 49,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SS": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

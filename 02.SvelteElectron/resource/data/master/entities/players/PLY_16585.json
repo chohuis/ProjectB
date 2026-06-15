@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16585",
+  "name": "카터 헌터",
+  "nameEn": "Carter Hunter",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 42,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 91,
+      "primaryPosition": "1B",
+      "developmentRate": 44,
+      "potentialHidden": 77,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 80,
+        "velocity": 82,
+        "command": 78,
+        "control": 80,
+        "movement": 75,
+        "mentality": 71,
+        "recovery": 72,
+        "clutch": 70,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 76,
+        "power": 76,
+        "eye": 70,
+        "discipline": 79,
+        "speed": 78,
+        "baseInstinct": 75,
+        "bunting": 68,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 75,
+        "battingClutch": 70
+      },
+      "positionRatings": {
+        "1B": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03109",
+  "name": "최진혁",
+  "nameEn": "Choi JinHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 45,
+      "primaryPosition": "LF",
+      "developmentRate": 68,
+      "potentialHidden": 85,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 79,
+        "velocity": 78,
+        "command": 64,
+        "control": 71,
+        "movement": 69,
+        "mentality": 75,
+        "recovery": 69,
+        "clutch": 65,
+        "holdRunners": 70
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 72,
+        "power": 66,
+        "eye": 62,
+        "discipline": 67,
+        "speed": 70,
+        "baseInstinct": 63,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 70,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "LF": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

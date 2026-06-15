@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04707",
+  "name": "안수욱",
+  "nameEn": "An SuWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 81,
+      "primaryPosition": "RF",
+      "developmentRate": 48,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 52,
+        "velocity": 52,
+        "command": 42,
+        "control": 49,
+        "movement": 50,
+        "mentality": 49,
+        "recovery": 41,
+        "clutch": 39,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 49,
+        "power": 46,
+        "eye": 53,
+        "discipline": 46,
+        "speed": 52,
+        "baseInstinct": 49,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 44,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "RF": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

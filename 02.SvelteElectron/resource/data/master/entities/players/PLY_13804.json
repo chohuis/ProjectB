@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13804",
+  "name": "가르시아 코너",
+  "nameEn": "Garcia Connor",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 12,
+      "primaryPosition": "3B",
+      "developmentRate": 50,
+      "potentialHidden": 60,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 68,
+        "velocity": 82,
+        "command": 62,
+        "control": 71,
+        "movement": 71,
+        "mentality": 68,
+        "recovery": 63,
+        "clutch": 68,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 64,
+        "power": 69,
+        "eye": 71,
+        "discipline": 69,
+        "speed": 70,
+        "baseInstinct": 64,
+        "bunting": 65,
+        "platoon": 50,
+        "fielding": 72,
+        "arm": 63,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "3B": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

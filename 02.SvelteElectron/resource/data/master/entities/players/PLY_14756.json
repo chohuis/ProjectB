@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14756",
+  "name": "스콧 숀",
+  "nameEn": "Scott Sean",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 48,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 86,
+      "primaryPosition": "C",
+      "developmentRate": 61,
+      "potentialHidden": 77,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 61,
+        "velocity": 64,
+        "command": 53,
+        "control": 60,
+        "movement": 64,
+        "mentality": 67,
+        "recovery": 58,
+        "clutch": 60,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 64,
+        "power": 61,
+        "eye": 57,
+        "discipline": 53,
+        "speed": 59,
+        "baseInstinct": 59,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 56,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "C": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

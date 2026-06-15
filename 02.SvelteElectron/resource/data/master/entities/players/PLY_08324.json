@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08324",
+  "name": "조태혁",
+  "nameEn": "Jo TaeHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 26,
+      "primaryPosition": "SS",
+      "developmentRate": 51,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 46,
+        "velocity": 51,
+        "command": 40,
+        "control": 37,
+        "movement": 39,
+        "mentality": 51,
+        "recovery": 36,
+        "clutch": 34,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 59,
+        "power": 47,
+        "eye": 51,
+        "discipline": 56,
+        "speed": 50,
+        "baseInstinct": 44,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 50,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "SS": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

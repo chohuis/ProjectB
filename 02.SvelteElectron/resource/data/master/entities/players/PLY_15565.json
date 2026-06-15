@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15565",
+  "name": "리 숀",
+  "nameEn": "Lee Sean",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 10,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 30,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 45,
+      "primaryPosition": "CF",
+      "developmentRate": 47,
+      "potentialHidden": 58,
+      "proServiceYears": 8,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 66,
+        "velocity": 74,
+        "command": 60,
+        "control": 61,
+        "movement": 63,
+        "mentality": 69,
+        "recovery": 62,
+        "clutch": 60,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 59,
+        "power": 70,
+        "eye": 70,
+        "discipline": 65,
+        "speed": 74,
+        "baseInstinct": 61,
+        "bunting": 63,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 66,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "CF": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

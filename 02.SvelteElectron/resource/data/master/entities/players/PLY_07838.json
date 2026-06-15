@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07838",
+  "name": "정동준",
+  "nameEn": "Jung DongJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 67,
+      "primaryPosition": "1B",
+      "developmentRate": 51,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 59,
+        "velocity": 63,
+        "command": 53,
+        "control": 62,
+        "movement": 58,
+        "mentality": 61,
+        "recovery": 54,
+        "clutch": 59,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 41,
+        "power": 36,
+        "eye": 46,
+        "discipline": 38,
+        "speed": 47,
+        "baseInstinct": 45,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 44,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "1B": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

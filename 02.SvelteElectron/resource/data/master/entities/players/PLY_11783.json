@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11783",
+  "name": "워커 제이크",
+  "nameEn": "Walker Jake",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 21,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 53,
+      "primaryPosition": "RF",
+      "developmentRate": 73,
+      "potentialHidden": 91,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 70,
+        "velocity": 69,
+        "command": 68,
+        "control": 63,
+        "movement": 71,
+        "mentality": 69,
+        "recovery": 56,
+        "clutch": 62,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 68,
+        "power": 59,
+        "eye": 69,
+        "discipline": 68,
+        "speed": 70,
+        "baseInstinct": 69,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 58,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "RF": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

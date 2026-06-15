@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03095",
+  "name": "이혁환",
+  "nameEn": "Lee HyeokHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 70,
+      "primaryPosition": "2B",
+      "developmentRate": 75,
+      "potentialHidden": 82,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 62,
+        "velocity": 64,
+        "command": 59,
+        "control": 55,
+        "movement": 51,
+        "mentality": 59,
+        "recovery": 54,
+        "clutch": 50,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 72,
+        "power": 64,
+        "eye": 68,
+        "discipline": 63,
+        "speed": 77,
+        "baseInstinct": 72,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 68,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "2B": 73
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15876",
+  "name": "홀 콜",
+  "nameEn": "Hall Cole",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 34,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 58,
+      "primaryPosition": "RF",
+      "developmentRate": 45,
+      "potentialHidden": 49,
+      "proServiceYears": 12,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 49,
+        "velocity": 58,
+        "command": 54,
+        "control": 45,
+        "movement": 51,
+        "mentality": 56,
+        "recovery": 43,
+        "clutch": 51,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 50,
+        "power": 41,
+        "eye": 48,
+        "discipline": 44,
+        "speed": 48,
+        "baseInstinct": 42,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 44,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "RF": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

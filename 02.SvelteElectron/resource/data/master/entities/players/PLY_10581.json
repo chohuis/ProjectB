@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10581",
+  "name": "스콧 라이언",
+  "nameEn": "Scott Ryan",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 47,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 90,
+      "primaryPosition": "2B",
+      "developmentRate": 51,
+      "potentialHidden": 76,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 79,
+        "velocity": 80,
+        "command": 73,
+        "control": 77,
+        "movement": 70,
+        "mentality": 71,
+        "recovery": 75,
+        "clutch": 69,
+        "holdRunners": 68
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 71,
+        "power": 68,
+        "eye": 74,
+        "discipline": 73,
+        "speed": 76,
+        "baseInstinct": 77,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 76,
+        "arm": 73,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "2B": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

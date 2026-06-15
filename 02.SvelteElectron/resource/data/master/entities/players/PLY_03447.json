@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03447",
+  "name": "윤지훈",
+  "nameEn": "Yoon JiHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 59,
+      "primaryPosition": "2B",
+      "developmentRate": 64,
+      "potentialHidden": 94,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 64,
+        "velocity": 71,
+        "command": 66,
+        "control": 74,
+        "movement": 70,
+        "mentality": 69,
+        "recovery": 60,
+        "clutch": 61,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 68,
+        "power": 71,
+        "eye": 72,
+        "discipline": 67,
+        "speed": 72,
+        "baseInstinct": 63,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 65,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "2B": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

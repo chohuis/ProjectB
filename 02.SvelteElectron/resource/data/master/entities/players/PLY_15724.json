@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15724",
+  "name": "톰슨 마커스",
+  "nameEn": "Thompson Marcus",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 41,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 18,
+      "primaryPosition": "3B",
+      "developmentRate": 63,
+      "potentialHidden": 74,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 56,
+        "velocity": 64,
+        "command": 55,
+        "control": 50,
+        "movement": 53,
+        "mentality": 58,
+        "recovery": 55,
+        "clutch": 50,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 51,
+        "power": 57,
+        "eye": 49,
+        "discipline": 48,
+        "speed": 50,
+        "baseInstinct": 52,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 52,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "3B": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

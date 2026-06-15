@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13430",
+  "name": "브라운 코너",
+  "nameEn": "Brown Connor",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 81,
+  "popularity": 31,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 22,
+      "primaryPosition": "SS",
+      "developmentRate": 61,
+      "potentialHidden": 67,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 79,
+        "velocity": 80,
+        "command": 66,
+        "control": 74,
+        "movement": 79,
+        "mentality": 75,
+        "recovery": 78,
+        "clutch": 67,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 77,
+        "contact": 80,
+        "power": 78,
+        "eye": 73,
+        "discipline": 79,
+        "speed": 79,
+        "baseInstinct": 70,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 76,
+        "arm": 78,
+        "battingClutch": 74
+      },
+      "positionRatings": {
+        "SS": 77
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08680",
+  "name": "윤재환",
+  "nameEn": "Yoon JaeHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 5,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 34,
+      "primaryPosition": "LF",
+      "developmentRate": 55,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 50,
+        "velocity": 52,
+        "command": 50,
+        "control": 45,
+        "movement": 44,
+        "mentality": 49,
+        "recovery": 48,
+        "clutch": 49,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 47,
+        "power": 35,
+        "eye": 48,
+        "discipline": 39,
+        "speed": 42,
+        "baseInstinct": 40,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 44,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "LF": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06704",
+  "name": "권정우",
+  "nameEn": "Kwon JungWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 97,
+      "primaryPosition": "C",
+      "developmentRate": 66,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 54,
+        "velocity": 66,
+        "command": 59,
+        "control": 54,
+        "movement": 61,
+        "mentality": 60,
+        "recovery": 57,
+        "clutch": 54,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 51,
+        "power": 50,
+        "eye": 50,
+        "discipline": 47,
+        "speed": 50,
+        "baseInstinct": 45,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 47,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "C": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

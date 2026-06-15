@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06341",
+  "name": "강우빈",
+  "nameEn": "Kang WooBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 87,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 54,
+        "velocity": 54,
+        "command": 51,
+        "control": 52,
+        "movement": 52,
+        "mentality": 58,
+        "recovery": 44,
+        "clutch": 49,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 50,
+        "power": 40,
+        "eye": 42,
+        "discipline": 46,
+        "speed": 50,
+        "baseInstinct": 41,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 42,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SP": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03670",
+  "name": "박현기",
+  "nameEn": "Park HyeonKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 69,
+      "primaryPosition": "LF",
+      "developmentRate": 60,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 57,
+        "velocity": 68,
+        "command": 55,
+        "control": 54,
+        "movement": 58,
+        "mentality": 56,
+        "recovery": 46,
+        "clutch": 48,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 63,
+        "power": 58,
+        "eye": 63,
+        "discipline": 58,
+        "speed": 64,
+        "baseInstinct": 62,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 58,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "LF": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

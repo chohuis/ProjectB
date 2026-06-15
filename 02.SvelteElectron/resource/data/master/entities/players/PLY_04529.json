@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04529",
+  "name": "이상수",
+  "nameEn": "Lee SangSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 13,
+      "primaryPosition": "SS",
+      "developmentRate": 54,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 47,
+        "velocity": 49,
+        "command": 45,
+        "control": 47,
+        "movement": 42,
+        "mentality": 43,
+        "recovery": 35,
+        "clutch": 36,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 54,
+        "power": 50,
+        "eye": 47,
+        "discipline": 51,
+        "speed": 58,
+        "baseInstinct": 45,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 44,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SS": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

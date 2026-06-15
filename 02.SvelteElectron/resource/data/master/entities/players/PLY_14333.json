@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14333",
+  "name": "미첼 데릭",
+  "nameEn": "Mitchell Derek",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 92,
+      "primaryPosition": "2B",
+      "developmentRate": 57,
+      "potentialHidden": 56,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 58,
+        "velocity": 69,
+        "command": 68,
+        "control": 68,
+        "movement": 66,
+        "mentality": 65,
+        "recovery": 62,
+        "clutch": 54,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 67,
+        "power": 61,
+        "eye": 63,
+        "discipline": 57,
+        "speed": 62,
+        "baseInstinct": 56,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 66,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "2B": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

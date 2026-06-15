@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09348",
+  "name": "오혁우",
+  "nameEn": "Oh HyeokWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 62,
+      "primaryPosition": "SS",
+      "developmentRate": 51,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 48,
+        "velocity": 55,
+        "command": 44,
+        "control": 44,
+        "movement": 41,
+        "mentality": 48,
+        "recovery": 38,
+        "clutch": 38,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 38,
+        "power": 33,
+        "eye": 41,
+        "discipline": 42,
+        "speed": 42,
+        "baseInstinct": 35,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 33,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "SS": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

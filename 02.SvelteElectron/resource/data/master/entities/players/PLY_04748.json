@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04748",
+  "name": "권재현",
+  "nameEn": "Kwon JaeHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 33,
+      "primaryPosition": "LF",
+      "developmentRate": 47,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 44,
+        "velocity": 51,
+        "command": 39,
+        "control": 41,
+        "movement": 39,
+        "mentality": 51,
+        "recovery": 36,
+        "clutch": 32,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 43,
+        "power": 44,
+        "eye": 45,
+        "discipline": 48,
+        "speed": 41,
+        "baseInstinct": 47,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 40,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "LF": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

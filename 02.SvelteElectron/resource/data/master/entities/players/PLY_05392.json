@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05392",
+  "name": "장현성",
+  "nameEn": "Jang HyeonSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 18,
+      "primaryPosition": "2B",
+      "developmentRate": 57,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 60,
+        "velocity": 63,
+        "command": 59,
+        "control": 65,
+        "movement": 56,
+        "mentality": 65,
+        "recovery": 54,
+        "clutch": 57,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 50,
+        "power": 45,
+        "eye": 51,
+        "discipline": 47,
+        "speed": 59,
+        "baseInstinct": 52,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 45,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "2B": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

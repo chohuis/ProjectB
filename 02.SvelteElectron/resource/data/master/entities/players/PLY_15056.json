@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15056",
+  "name": "브라운 루이스",
+  "nameEn": "Brown Luis",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 26,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 97,
+      "primaryPosition": "LF",
+      "developmentRate": 43,
+      "potentialHidden": 75,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 73,
+        "velocity": 76,
+        "command": 63,
+        "control": 67,
+        "movement": 65,
+        "mentality": 67,
+        "recovery": 66,
+        "clutch": 64,
+        "holdRunners": 69
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 65,
+        "power": 75,
+        "eye": 66,
+        "discipline": 67,
+        "speed": 80,
+        "baseInstinct": 70,
+        "bunting": 68,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 67,
+        "battingClutch": 70
+      },
+      "positionRatings": {
+        "LF": 73
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

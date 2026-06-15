@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08940",
+  "name": "송기완",
+  "nameEn": "Song KiWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 79,
+      "primaryPosition": "SP",
+      "developmentRate": 52,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 48,
+        "velocity": 53,
+        "command": 48,
+        "control": 47,
+        "movement": 44,
+        "mentality": 42,
+        "recovery": 36,
+        "clutch": 38,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 35,
+        "contact": 28,
+        "power": 25,
+        "eye": 30,
+        "discipline": 35,
+        "speed": 32,
+        "baseInstinct": 25,
+        "bunting": 17,
+        "platoon": 50,
+        "fielding": 26,
+        "arm": 27,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "SP": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

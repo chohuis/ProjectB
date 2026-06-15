@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03326",
+  "name": "오찬재",
+  "nameEn": "Oh ChanJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 88,
+      "primaryPosition": "SS",
+      "developmentRate": 65,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 57,
+        "velocity": 60,
+        "command": 57,
+        "control": 61,
+        "movement": 59,
+        "mentality": 66,
+        "recovery": 49,
+        "clutch": 48,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 71,
+        "power": 68,
+        "eye": 70,
+        "discipline": 68,
+        "speed": 65,
+        "baseInstinct": 60,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 57,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "SS": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

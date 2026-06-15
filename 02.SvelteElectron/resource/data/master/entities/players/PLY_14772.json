@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14772",
+  "name": "스미스 데릭",
+  "nameEn": "Smith Derek",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 19,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 59,
+      "primaryPosition": "1B",
+      "developmentRate": 64,
+      "potentialHidden": 56,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 66,
+        "velocity": 71,
+        "command": 73,
+        "control": 69,
+        "movement": 69,
+        "mentality": 79,
+        "recovery": 66,
+        "clutch": 68,
+        "holdRunners": 69
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 75,
+        "power": 68,
+        "eye": 75,
+        "discipline": 70,
+        "speed": 74,
+        "baseInstinct": 63,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 74,
+        "arm": 67,
+        "battingClutch": 71
+      },
+      "positionRatings": {
+        "1B": 73
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

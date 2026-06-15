@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08363",
+  "name": "정민빈",
+  "nameEn": "Jung MinBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 55,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 42,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 47,
+        "velocity": 60,
+        "command": 45,
+        "control": 51,
+        "movement": 50,
+        "mentality": 53,
+        "recovery": 50,
+        "clutch": 46,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 35,
+        "contact": 37,
+        "power": 26,
+        "eye": 31,
+        "discipline": 27,
+        "speed": 32,
+        "baseInstinct": 25,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 28,
+        "arm": 24,
+        "battingClutch": 23
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

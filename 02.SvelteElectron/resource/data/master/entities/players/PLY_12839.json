@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12839",
+  "name": "애덤스 블레이크",
+  "nameEn": "Adams Blake",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 36,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 36,
+      "primaryPosition": "1B",
+      "developmentRate": 63,
+      "potentialHidden": 84,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 64,
+        "velocity": 70,
+        "command": 61,
+        "control": 65,
+        "movement": 58,
+        "mentality": 60,
+        "recovery": 62,
+        "clutch": 48,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 55,
+        "power": 54,
+        "eye": 58,
+        "discipline": 55,
+        "speed": 64,
+        "baseInstinct": 53,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 52,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "1B": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

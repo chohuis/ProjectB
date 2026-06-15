@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09685",
+  "name": "강혁윤",
+  "nameEn": "Kang HyeokYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 8,
+      "primaryPosition": "SS",
+      "developmentRate": 57,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 44,
+        "velocity": 51,
+        "command": 37,
+        "control": 39,
+        "movement": 41,
+        "mentality": 43,
+        "recovery": 43,
+        "clutch": 39,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 35,
+        "power": 29,
+        "eye": 38,
+        "discipline": 36,
+        "speed": 38,
+        "baseInstinct": 29,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 28,
+        "arm": 27,
+        "battingClutch": 25
+      },
+      "positionRatings": {
+        "SS": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

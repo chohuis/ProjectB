@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05170",
+  "name": "서도원",
+  "nameEn": "Seo DoWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 88,
+      "primaryPosition": "RF",
+      "developmentRate": 49,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 41,
+        "velocity": 49,
+        "command": 41,
+        "control": 39,
+        "movement": 37,
+        "mentality": 38,
+        "recovery": 40,
+        "clutch": 38,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 50,
+        "power": 52,
+        "eye": 52,
+        "discipline": 49,
+        "speed": 60,
+        "baseInstinct": 52,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 56,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "RF": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

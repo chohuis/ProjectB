@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03476",
+  "name": "최도민",
+  "nameEn": "Choi DoMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 3,
+      "primaryPosition": "2B",
+      "developmentRate": 72,
+      "potentialHidden": 86,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 73,
+        "velocity": 78,
+        "command": 70,
+        "control": 72,
+        "movement": 73,
+        "mentality": 77,
+        "recovery": 67,
+        "clutch": 68,
+        "holdRunners": 70
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 50,
+        "power": 51,
+        "eye": 49,
+        "discipline": 55,
+        "speed": 62,
+        "baseInstinct": 53,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 51,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "2B": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

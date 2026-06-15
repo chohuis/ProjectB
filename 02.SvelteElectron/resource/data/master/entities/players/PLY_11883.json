@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11883",
+  "name": "그린 로건",
+  "nameEn": "Green Logan",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 36,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 92,
+      "primaryPosition": "2B",
+      "developmentRate": 69,
+      "potentialHidden": 73,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 79,
+        "stamina": 78,
+        "velocity": 80,
+        "command": 76,
+        "control": 80,
+        "movement": 82,
+        "mentality": 76,
+        "recovery": 81,
+        "clutch": 79,
+        "holdRunners": 76
+      },
+      "batting": {
+        "ovr": 79,
+        "contact": 82,
+        "power": 70,
+        "eye": 74,
+        "discipline": 82,
+        "speed": 79,
+        "baseInstinct": 70,
+        "bunting": 71,
+        "platoon": 50,
+        "fielding": 76,
+        "arm": 74,
+        "battingClutch": 76
+      },
+      "positionRatings": {
+        "2B": 79
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

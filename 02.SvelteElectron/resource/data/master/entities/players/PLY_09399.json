@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09399",
+  "name": "신지수",
+  "nameEn": "Shin JiSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 48,
+      "primaryPosition": "C",
+      "developmentRate": 57,
+      "potentialHidden": 50,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 53,
+        "velocity": 52,
+        "command": 42,
+        "control": 45,
+        "movement": 46,
+        "mentality": 51,
+        "recovery": 47,
+        "clutch": 39,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 44,
+        "power": 39,
+        "eye": 37,
+        "discipline": 40,
+        "speed": 43,
+        "baseInstinct": 31,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 37,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "C": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

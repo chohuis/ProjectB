@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08292",
+  "name": "황영훈",
+  "nameEn": "Hwang YoungHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 5,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 59,
+      "primaryPosition": "SP",
+      "developmentRate": 54,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 52,
+        "velocity": 62,
+        "command": 52,
+        "control": 58,
+        "movement": 49,
+        "mentality": 53,
+        "recovery": 49,
+        "clutch": 54,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 39,
+        "power": 35,
+        "eye": 38,
+        "discipline": 39,
+        "speed": 49,
+        "baseInstinct": 43,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 34,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "SP": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06419",
+  "name": "강태우",
+  "nameEn": "Kang TaeWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 9,
+      "primaryPosition": "SP",
+      "developmentRate": 45,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 53,
+        "velocity": 54,
+        "command": 48,
+        "control": 53,
+        "movement": 47,
+        "mentality": 46,
+        "recovery": 41,
+        "clutch": 40,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 33,
+        "contact": 33,
+        "power": 24,
+        "eye": 29,
+        "discipline": 27,
+        "speed": 39,
+        "baseInstinct": 27,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 28,
+        "arm": 31,
+        "battingClutch": 23
+      },
+      "positionRatings": {
+        "SP": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

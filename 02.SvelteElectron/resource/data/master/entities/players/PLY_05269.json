@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05269",
+  "name": "최우원",
+  "nameEn": "Choi WooWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 60,
+      "primaryPosition": "2B",
+      "developmentRate": 60,
+      "potentialHidden": 64,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 63,
+        "velocity": 62,
+        "command": 49,
+        "control": 52,
+        "movement": 53,
+        "mentality": 59,
+        "recovery": 54,
+        "clutch": 54,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 41,
+        "power": 40,
+        "eye": 31,
+        "discipline": 32,
+        "speed": 45,
+        "baseInstinct": 35,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 36,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "2B": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

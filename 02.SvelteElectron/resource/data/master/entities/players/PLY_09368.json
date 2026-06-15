@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09368",
+  "name": "조현성",
+  "nameEn": "Jo HyeonSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 55,
+      "primaryPosition": "3B",
+      "developmentRate": 42,
+      "potentialHidden": 64,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 50,
+        "velocity": 49,
+        "command": 51,
+        "control": 45,
+        "movement": 47,
+        "mentality": 47,
+        "recovery": 45,
+        "clutch": 38,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 48,
+        "power": 44,
+        "eye": 47,
+        "discipline": 47,
+        "speed": 52,
+        "baseInstinct": 36,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 39,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "3B": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

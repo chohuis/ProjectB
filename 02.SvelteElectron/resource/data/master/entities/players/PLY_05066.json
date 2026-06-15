@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05066",
+  "name": "송수빈",
+  "nameEn": "Song SuBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 11,
+      "primaryPosition": "3B",
+      "developmentRate": 50,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 52,
+        "velocity": 67,
+        "command": 56,
+        "control": 54,
+        "movement": 55,
+        "mentality": 64,
+        "recovery": 59,
+        "clutch": 53,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 53,
+        "power": 46,
+        "eye": 55,
+        "discipline": 57,
+        "speed": 51,
+        "baseInstinct": 52,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 46,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "3B": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

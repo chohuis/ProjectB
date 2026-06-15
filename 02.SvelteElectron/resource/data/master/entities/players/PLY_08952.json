@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08952",
+  "name": "박지민",
+  "nameEn": "Park JiMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 35,
+      "primaryPosition": "SP",
+      "developmentRate": 51,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 42,
+        "velocity": 45,
+        "command": 30,
+        "control": 43,
+        "movement": 41,
+        "mentality": 35,
+        "recovery": 37,
+        "clutch": 37,
+        "holdRunners": 27
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 36,
+        "power": 25,
+        "eye": 39,
+        "discipline": 30,
+        "speed": 36,
+        "baseInstinct": 27,
+        "bunting": 16,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 30,
+        "battingClutch": 27
+      },
+      "positionRatings": {
+        "SP": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07165",
+  "name": "신동재",
+  "nameEn": "Shin DongJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 41,
+      "primaryPosition": "1B",
+      "developmentRate": 57,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 47,
+        "velocity": 62,
+        "command": 53,
+        "control": 51,
+        "movement": 47,
+        "mentality": 56,
+        "recovery": 50,
+        "clutch": 51,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 52,
+        "power": 46,
+        "eye": 57,
+        "discipline": 48,
+        "speed": 60,
+        "baseInstinct": 51,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 49,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "1B": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13065",
+  "name": "화이트 재크",
+  "nameEn": "White Zach",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 84,
+  "popularity": 16,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 49,
+      "primaryPosition": "SP",
+      "developmentRate": 60,
+      "potentialHidden": 83,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 63,
+        "velocity": 74,
+        "command": 65,
+        "control": 68,
+        "movement": 64,
+        "mentality": 60,
+        "recovery": 59,
+        "clutch": 55,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 61,
+        "power": 60,
+        "eye": 65,
+        "discipline": 59,
+        "speed": 62,
+        "baseInstinct": 64,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 60,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "SP": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

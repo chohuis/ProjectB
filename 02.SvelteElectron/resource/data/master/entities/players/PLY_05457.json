@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05457",
+  "name": "이도현",
+  "nameEn": "Lee DoHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 28,
+      "primaryPosition": "1B",
+      "developmentRate": 57,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 69,
+        "velocity": 70,
+        "command": 55,
+        "control": 64,
+        "movement": 64,
+        "mentality": 69,
+        "recovery": 59,
+        "clutch": 53,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 51,
+        "power": 47,
+        "eye": 57,
+        "discipline": 56,
+        "speed": 59,
+        "baseInstinct": 56,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 47,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "1B": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

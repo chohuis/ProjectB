@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06520",
+  "name": "이혁찬",
+  "nameEn": "Lee HyeokChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 37,
+      "primaryPosition": "LF",
+      "developmentRate": 54,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 54,
+        "velocity": 53,
+        "command": 53,
+        "control": 47,
+        "movement": 56,
+        "mentality": 59,
+        "recovery": 51,
+        "clutch": 44,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 44,
+        "power": 45,
+        "eye": 44,
+        "discipline": 36,
+        "speed": 50,
+        "baseInstinct": 39,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 41,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "LF": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

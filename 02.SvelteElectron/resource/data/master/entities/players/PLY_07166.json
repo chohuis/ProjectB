@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07166",
+  "name": "황세혁",
+  "nameEn": "Hwang SeHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 3,
+      "primaryPosition": "3B",
+      "developmentRate": 64,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 36,
+        "velocity": 51,
+        "command": 34,
+        "control": 43,
+        "movement": 40,
+        "mentality": 41,
+        "recovery": 32,
+        "clutch": 35,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 46,
+        "power": 45,
+        "eye": 45,
+        "discipline": 46,
+        "speed": 56,
+        "baseInstinct": 46,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 44,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "3B": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

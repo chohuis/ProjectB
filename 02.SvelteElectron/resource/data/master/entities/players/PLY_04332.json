@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04332",
+  "name": "장도윤",
+  "nameEn": "Jang DoYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 52,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 60,
+        "velocity": 74,
+        "command": 59,
+        "control": 63,
+        "movement": 61,
+        "mentality": 63,
+        "recovery": 61,
+        "clutch": 59,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 45,
+        "power": 42,
+        "eye": 41,
+        "discipline": 36,
+        "speed": 50,
+        "baseInstinct": 37,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 38,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SP": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03883",
+  "name": "류동성",
+  "nameEn": "Ryu DongSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 38,
+      "primaryPosition": "CF",
+      "developmentRate": 66,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 60,
+        "velocity": 67,
+        "command": 55,
+        "control": 59,
+        "movement": 57,
+        "mentality": 71,
+        "recovery": 54,
+        "clutch": 55,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 60,
+        "power": 56,
+        "eye": 54,
+        "discipline": 58,
+        "speed": 56,
+        "baseInstinct": 48,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 52,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "CF": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03043",
+  "name": "오정식",
+  "nameEn": "Oh JungSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 16,
+      "primaryPosition": "RF",
+      "developmentRate": 64,
+      "potentialHidden": 80,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 70,
+        "velocity": 86,
+        "command": 78,
+        "control": 74,
+        "movement": 68,
+        "mentality": 75,
+        "recovery": 67,
+        "clutch": 74,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 66,
+        "power": 57,
+        "eye": 64,
+        "discipline": 60,
+        "speed": 58,
+        "baseInstinct": 60,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 52,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "RF": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

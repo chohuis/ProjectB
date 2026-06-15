@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04372",
+  "name": "정정혁",
+  "nameEn": "Jung JungHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 14,
+      "primaryPosition": "1B",
+      "developmentRate": 56,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 66,
+        "velocity": 68,
+        "command": 67,
+        "control": 68,
+        "movement": 71,
+        "mentality": 74,
+        "recovery": 61,
+        "clutch": 67,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 52,
+        "power": 60,
+        "eye": 53,
+        "discipline": 54,
+        "speed": 61,
+        "baseInstinct": 56,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 56,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "1B": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

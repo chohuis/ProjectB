@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03162",
+  "name": "이민원",
+  "nameEn": "Lee MinWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 17,
+      "primaryPosition": "SP",
+      "developmentRate": 68,
+      "potentialHidden": 92,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 57,
+        "velocity": 64,
+        "command": 52,
+        "control": 56,
+        "movement": 55,
+        "mentality": 56,
+        "recovery": 48,
+        "clutch": 46,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 50,
+        "power": 44,
+        "eye": 54,
+        "discipline": 55,
+        "speed": 59,
+        "baseInstinct": 48,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 48,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "SP": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

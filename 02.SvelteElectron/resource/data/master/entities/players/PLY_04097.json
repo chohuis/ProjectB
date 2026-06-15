@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04097",
+  "name": "권기현",
+  "nameEn": "Kwon KiHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 80,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 86,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 62,
+        "velocity": 65,
+        "command": 53,
+        "control": 58,
+        "movement": 59,
+        "mentality": 66,
+        "recovery": 62,
+        "clutch": 62,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 55,
+        "power": 57,
+        "eye": 58,
+        "discipline": 48,
+        "speed": 51,
+        "baseInstinct": 54,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 46,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SP": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13281",
+  "name": "톰슨 케빈",
+  "nameEn": "Thompson Kevin",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 40,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 80,
+      "primaryPosition": "LF",
+      "developmentRate": 52,
+      "potentialHidden": 83,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 76,
+        "velocity": 72,
+        "command": 63,
+        "control": 69,
+        "movement": 67,
+        "mentality": 66,
+        "recovery": 64,
+        "clutch": 63,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 64,
+        "power": 73,
+        "eye": 71,
+        "discipline": 76,
+        "speed": 71,
+        "baseInstinct": 70,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 68,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "LF": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

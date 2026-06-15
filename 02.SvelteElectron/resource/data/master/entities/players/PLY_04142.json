@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04142",
+  "name": "김현진",
+  "nameEn": "Kim HyeonJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 26,
+      "primaryPosition": "RF",
+      "developmentRate": 68,
+      "potentialHidden": 85,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 53,
+        "velocity": 56,
+        "command": 44,
+        "control": 46,
+        "movement": 44,
+        "mentality": 49,
+        "recovery": 47,
+        "clutch": 47,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 47,
+        "power": 44,
+        "eye": 51,
+        "discipline": 45,
+        "speed": 54,
+        "baseInstinct": 45,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 43,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "RF": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

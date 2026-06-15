@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07367",
+  "name": "권영기",
+  "nameEn": "Kwon YoungKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 32,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 63,
+        "velocity": 63,
+        "command": 57,
+        "control": 53,
+        "movement": 57,
+        "mentality": 55,
+        "recovery": 55,
+        "clutch": 53,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 39,
+        "power": 40,
+        "eye": 40,
+        "discipline": 40,
+        "speed": 40,
+        "baseInstinct": 31,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 37,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "SP": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09723",
+  "name": "한준우",
+  "nameEn": "Han JunWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 76,
+      "primaryPosition": "SS",
+      "developmentRate": 56,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 44,
+        "velocity": 50,
+        "command": 52,
+        "control": 50,
+        "movement": 45,
+        "mentality": 56,
+        "recovery": 46,
+        "clutch": 48,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 44,
+        "power": 42,
+        "eye": 43,
+        "discipline": 47,
+        "speed": 47,
+        "baseInstinct": 42,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 46,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SS": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

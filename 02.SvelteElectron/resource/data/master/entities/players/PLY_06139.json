@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06139",
+  "name": "조태민",
+  "nameEn": "Jo TaeMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 48,
+      "primaryPosition": "1B",
+      "developmentRate": 51,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 47,
+        "velocity": 61,
+        "command": 47,
+        "control": 42,
+        "movement": 50,
+        "mentality": 54,
+        "recovery": 46,
+        "clutch": 45,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 37,
+        "power": 37,
+        "eye": 34,
+        "discipline": 36,
+        "speed": 39,
+        "baseInstinct": 30,
+        "bunting": 19,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 39,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "1B": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

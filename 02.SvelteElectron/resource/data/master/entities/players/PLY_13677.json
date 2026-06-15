@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13677",
+  "name": "가르시아 그랜트",
+  "nameEn": "Garcia Grant",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 48,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 34,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 43,
+      "primaryPosition": "SS",
+      "developmentRate": 42,
+      "potentialHidden": 46,
+      "proServiceYears": 12,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 52,
+        "velocity": 61,
+        "command": 47,
+        "control": 54,
+        "movement": 46,
+        "mentality": 59,
+        "recovery": 50,
+        "clutch": 45,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 50,
+        "power": 46,
+        "eye": 55,
+        "discipline": 55,
+        "speed": 60,
+        "baseInstinct": 50,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 46,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "SS": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

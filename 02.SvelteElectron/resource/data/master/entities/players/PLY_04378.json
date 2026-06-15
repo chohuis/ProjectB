@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04378",
+  "name": "김재찬",
+  "nameEn": "Kim JaeChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 82,
+      "primaryPosition": "CF",
+      "developmentRate": 57,
+      "potentialHidden": 87,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 56,
+        "velocity": 57,
+        "command": 52,
+        "control": 56,
+        "movement": 52,
+        "mentality": 51,
+        "recovery": 46,
+        "clutch": 44,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 53,
+        "power": 54,
+        "eye": 57,
+        "discipline": 57,
+        "speed": 59,
+        "baseInstinct": 58,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 60,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "CF": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

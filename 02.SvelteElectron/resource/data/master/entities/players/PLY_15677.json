@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15677",
+  "name": "미첼 코너",
+  "nameEn": "Mitchell Connor",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 28,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 66,
+      "primaryPosition": "2B",
+      "developmentRate": 76,
+      "potentialHidden": 60,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 59,
+        "velocity": 61,
+        "command": 52,
+        "control": 52,
+        "movement": 63,
+        "mentality": 60,
+        "recovery": 53,
+        "clutch": 55,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 59,
+        "power": 55,
+        "eye": 64,
+        "discipline": 55,
+        "speed": 66,
+        "baseInstinct": 59,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 61,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "2B": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

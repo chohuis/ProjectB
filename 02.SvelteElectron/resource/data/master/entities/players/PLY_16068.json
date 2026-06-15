@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16068",
+  "name": "가르시아 숀",
+  "nameEn": "Garcia Sean",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 10,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 57,
+      "primaryPosition": "C",
+      "developmentRate": 76,
+      "potentialHidden": 74,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 57,
+        "velocity": 61,
+        "command": 53,
+        "control": 52,
+        "movement": 65,
+        "mentality": 65,
+        "recovery": 62,
+        "clutch": 62,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 61,
+        "power": 63,
+        "eye": 54,
+        "discipline": 60,
+        "speed": 62,
+        "baseInstinct": 62,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 62,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "C": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

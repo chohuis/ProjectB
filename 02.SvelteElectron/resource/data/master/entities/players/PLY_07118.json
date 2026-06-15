@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07118",
+  "name": "황훈기",
+  "nameEn": "Hwang HunKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 23,
+      "primaryPosition": "SP",
+      "developmentRate": 61,
+      "potentialHidden": 51,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 46,
+        "velocity": 51,
+        "command": 38,
+        "control": 40,
+        "movement": 46,
+        "mentality": 49,
+        "recovery": 40,
+        "clutch": 35,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 53,
+        "power": 49,
+        "eye": 51,
+        "discipline": 53,
+        "speed": 53,
+        "baseInstinct": 50,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 51,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SP": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

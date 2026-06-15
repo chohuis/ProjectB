@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03137",
+  "name": "송태민",
+  "nameEn": "Song TaeMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 69,
+      "primaryPosition": "RF",
+      "developmentRate": 62,
+      "potentialHidden": 93,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 67,
+        "velocity": 73,
+        "command": 64,
+        "control": 64,
+        "movement": 68,
+        "mentality": 73,
+        "recovery": 62,
+        "clutch": 62,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 64,
+        "power": 56,
+        "eye": 57,
+        "discipline": 56,
+        "speed": 61,
+        "baseInstinct": 51,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 52,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "RF": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

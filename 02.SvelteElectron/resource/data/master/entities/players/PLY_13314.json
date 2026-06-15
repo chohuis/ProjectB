@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13314",
+  "name": "테일러 타일러",
+  "nameEn": "Taylor Tyler",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 28,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 4,
+      "primaryPosition": "SP",
+      "developmentRate": 45,
+      "potentialHidden": 73,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 73,
+        "velocity": 80,
+        "command": 66,
+        "control": 65,
+        "movement": 65,
+        "mentality": 68,
+        "recovery": 73,
+        "clutch": 70,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 65,
+        "power": 71,
+        "eye": 72,
+        "discipline": 66,
+        "speed": 74,
+        "baseInstinct": 69,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 63,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "SP": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

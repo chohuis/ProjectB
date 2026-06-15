@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04640",
+  "name": "오상재",
+  "nameEn": "Oh SangJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 20,
+      "primaryPosition": "3B",
+      "developmentRate": 47,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 41,
+        "stamina": 35,
+        "velocity": 46,
+        "command": 37,
+        "control": 34,
+        "movement": 37,
+        "mentality": 36,
+        "recovery": 36,
+        "clutch": 29,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 40,
+        "power": 42,
+        "eye": 40,
+        "discipline": 42,
+        "speed": 44,
+        "baseInstinct": 39,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 38,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "3B": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

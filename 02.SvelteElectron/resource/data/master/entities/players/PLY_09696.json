@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09696",
+  "name": "한세기",
+  "nameEn": "Han SeKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 38,
+      "primaryPosition": "SS",
+      "developmentRate": 52,
+      "potentialHidden": 43,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 47,
+        "velocity": 59,
+        "command": 43,
+        "control": 50,
+        "movement": 43,
+        "mentality": 44,
+        "recovery": 45,
+        "clutch": 41,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 43,
+        "power": 40,
+        "eye": 40,
+        "discipline": 36,
+        "speed": 46,
+        "baseInstinct": 43,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 42,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SS": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

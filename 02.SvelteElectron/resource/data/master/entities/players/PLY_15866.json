@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15866",
+  "name": "앤더슨 다니엘",
+  "nameEn": "Anderson Daniel",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 29,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 34,
+      "primaryPosition": "RF",
+      "developmentRate": 63,
+      "potentialHidden": 64,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 60,
+        "velocity": 64,
+        "command": 55,
+        "control": 55,
+        "movement": 51,
+        "mentality": 59,
+        "recovery": 51,
+        "clutch": 55,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 64,
+        "power": 60,
+        "eye": 54,
+        "discipline": 51,
+        "speed": 65,
+        "baseInstinct": 56,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 51,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "RF": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

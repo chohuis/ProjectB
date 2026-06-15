@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08925",
+  "name": "안영수",
+  "nameEn": "An YoungSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 8,
+      "primaryPosition": "2B",
+      "developmentRate": 48,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 44,
+        "velocity": 47,
+        "command": 38,
+        "control": 39,
+        "movement": 47,
+        "mentality": 51,
+        "recovery": 45,
+        "clutch": 39,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 48,
+        "power": 39,
+        "eye": 47,
+        "discipline": 42,
+        "speed": 41,
+        "baseInstinct": 45,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 36,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "2B": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

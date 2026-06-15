@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06219",
+  "name": "윤현민",
+  "nameEn": "Yoon HyeonMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 84,
+      "primaryPosition": "1B",
+      "developmentRate": 57,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 40,
+        "velocity": 49,
+        "command": 41,
+        "control": 43,
+        "movement": 44,
+        "mentality": 39,
+        "recovery": 33,
+        "clutch": 35,
+        "holdRunners": 29
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 50,
+        "power": 40,
+        "eye": 50,
+        "discipline": 47,
+        "speed": 52,
+        "baseInstinct": 46,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 50,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "1B": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

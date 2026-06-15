@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06993",
+  "name": "윤우완",
+  "nameEn": "Yoon WooWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 26,
+      "primaryPosition": "SP",
+      "developmentRate": 54,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 56,
+        "velocity": 70,
+        "command": 62,
+        "control": 61,
+        "movement": 57,
+        "mentality": 61,
+        "recovery": 56,
+        "clutch": 58,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 57,
+        "power": 46,
+        "eye": 54,
+        "discipline": 55,
+        "speed": 52,
+        "baseInstinct": 45,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 49,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SP": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

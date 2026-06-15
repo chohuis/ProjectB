@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05328",
+  "name": "박동혁",
+  "nameEn": "Park DongHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 10,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 65,
+        "velocity": 71,
+        "command": 56,
+        "control": 65,
+        "movement": 58,
+        "mentality": 69,
+        "recovery": 61,
+        "clutch": 59,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 60,
+        "power": 57,
+        "eye": 64,
+        "discipline": 58,
+        "speed": 65,
+        "baseInstinct": 55,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 52,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "SP": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13296",
+  "name": "가르시아 에반",
+  "nameEn": "Garcia Evan",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 34,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 79,
+      "primaryPosition": "SP",
+      "developmentRate": 42,
+      "potentialHidden": 47,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 67,
+        "velocity": 73,
+        "command": 72,
+        "control": 67,
+        "movement": 67,
+        "mentality": 67,
+        "recovery": 61,
+        "clutch": 64,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 65,
+        "power": 62,
+        "eye": 68,
+        "discipline": 74,
+        "speed": 73,
+        "baseInstinct": 75,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 71,
+        "battingClutch": 71
+      },
+      "positionRatings": {
+        "SP": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09395",
+  "name": "신준훈",
+  "nameEn": "Shin JunHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 79,
+      "primaryPosition": "2B",
+      "developmentRate": 52,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 43,
+        "velocity": 44,
+        "command": 36,
+        "control": 37,
+        "movement": 41,
+        "mentality": 45,
+        "recovery": 33,
+        "clutch": 40,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 50,
+        "power": 41,
+        "eye": 51,
+        "discipline": 50,
+        "speed": 44,
+        "baseInstinct": 44,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 42,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "2B": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03350",
+  "name": "류도진",
+  "nameEn": "Ryu DoJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 53,
+      "primaryPosition": "LF",
+      "developmentRate": 63,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 62,
+        "velocity": 63,
+        "command": 56,
+        "control": 64,
+        "movement": 59,
+        "mentality": 63,
+        "recovery": 56,
+        "clutch": 56,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 47,
+        "power": 52,
+        "eye": 51,
+        "discipline": 55,
+        "speed": 52,
+        "baseInstinct": 44,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 43,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "LF": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

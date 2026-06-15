@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03907",
+  "name": "정지기",
+  "nameEn": "Jung JiKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 35,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 12,
+      "primaryPosition": "C",
+      "developmentRate": 59,
+      "potentialHidden": 80,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 62,
+        "velocity": 66,
+        "command": 56,
+        "control": 58,
+        "movement": 63,
+        "mentality": 59,
+        "recovery": 61,
+        "clutch": 53,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 49,
+        "power": 45,
+        "eye": 45,
+        "discipline": 48,
+        "speed": 54,
+        "baseInstinct": 47,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 42,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "C": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

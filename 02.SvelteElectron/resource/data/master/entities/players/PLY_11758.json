@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11758",
+  "name": "로빈슨 루이스",
+  "nameEn": "Robinson Luis",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 84,
+  "popularity": 41,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 7,
+      "primaryPosition": "2B",
+      "developmentRate": 56,
+      "potentialHidden": 83,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 58,
+        "velocity": 65,
+        "command": 51,
+        "control": 53,
+        "movement": 56,
+        "mentality": 63,
+        "recovery": 48,
+        "clutch": 57,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 49,
+        "power": 51,
+        "eye": 61,
+        "discipline": 55,
+        "speed": 63,
+        "baseInstinct": 50,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 52,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "2B": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

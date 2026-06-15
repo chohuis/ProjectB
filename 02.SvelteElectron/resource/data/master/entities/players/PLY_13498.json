@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13498",
+  "name": "마틴 조던",
+  "nameEn": "Martin Jordan",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 35,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 72,
+      "primaryPosition": "SP",
+      "developmentRate": 51,
+      "potentialHidden": 66,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 68,
+        "velocity": 76,
+        "command": 61,
+        "control": 70,
+        "movement": 74,
+        "mentality": 66,
+        "recovery": 70,
+        "clutch": 70,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 76,
+        "power": 73,
+        "eye": 74,
+        "discipline": 65,
+        "speed": 65,
+        "baseInstinct": 67,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 69,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "SP": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

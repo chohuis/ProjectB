@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04828",
+  "name": "최수혁",
+  "nameEn": "Choi SuHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 7,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 60,
+        "velocity": 58,
+        "command": 60,
+        "control": 54,
+        "movement": 54,
+        "mentality": 62,
+        "recovery": 58,
+        "clutch": 46,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 53,
+        "power": 44,
+        "eye": 49,
+        "discipline": 47,
+        "speed": 45,
+        "baseInstinct": 42,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 49,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SP": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

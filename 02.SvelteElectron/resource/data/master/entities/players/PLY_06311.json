@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06311",
+  "name": "송도우",
+  "nameEn": "Song DoWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 37,
+      "primaryPosition": "C",
+      "developmentRate": 56,
+      "potentialHidden": 50,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 47,
+        "velocity": 62,
+        "command": 51,
+        "control": 52,
+        "movement": 52,
+        "mentality": 50,
+        "recovery": 48,
+        "clutch": 47,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 34,
+        "contact": 33,
+        "power": 33,
+        "eye": 32,
+        "discipline": 34,
+        "speed": 30,
+        "baseInstinct": 24,
+        "bunting": 18,
+        "platoon": 50,
+        "fielding": 28,
+        "arm": 23,
+        "battingClutch": 27
+      },
+      "positionRatings": {
+        "C": 34
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

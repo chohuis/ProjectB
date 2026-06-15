@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07430",
+  "name": "임세식",
+  "nameEn": "Lim SeSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 34,
+      "primaryPosition": "2B",
+      "developmentRate": 48,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 47,
+        "velocity": 56,
+        "command": 42,
+        "control": 43,
+        "movement": 48,
+        "mentality": 46,
+        "recovery": 38,
+        "clutch": 37,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 53,
+        "power": 40,
+        "eye": 47,
+        "discipline": 47,
+        "speed": 52,
+        "baseInstinct": 44,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 48,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "2B": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

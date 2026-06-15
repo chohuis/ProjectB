@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07768",
+  "name": "윤현성",
+  "nameEn": "Yoon HyeonSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 64,
+      "primaryPosition": "C",
+      "developmentRate": 64,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 60,
+        "velocity": 60,
+        "command": 58,
+        "control": 53,
+        "movement": 49,
+        "mentality": 61,
+        "recovery": 50,
+        "clutch": 49,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 48,
+        "power": 40,
+        "eye": 51,
+        "discipline": 48,
+        "speed": 45,
+        "baseInstinct": 48,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 46,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "C": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

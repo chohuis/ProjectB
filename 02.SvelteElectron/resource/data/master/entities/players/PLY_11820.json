@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11820",
+  "name": "영 블레이크",
+  "nameEn": "Young Blake",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 17,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 45,
+      "primaryPosition": "RF",
+      "developmentRate": 62,
+      "potentialHidden": 59,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 70,
+        "velocity": 74,
+        "command": 62,
+        "control": 66,
+        "movement": 58,
+        "mentality": 62,
+        "recovery": 66,
+        "clutch": 54,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 68,
+        "power": 64,
+        "eye": 71,
+        "discipline": 64,
+        "speed": 61,
+        "baseInstinct": 58,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 57,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "RF": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16472",
+  "name": "로드리게스 딜런",
+  "nameEn": "Rodriguez Dylan",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 42,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 54,
+      "primaryPosition": "SP",
+      "developmentRate": 71,
+      "potentialHidden": 89,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 41,
+        "velocity": 57,
+        "command": 45,
+        "control": 48,
+        "movement": 40,
+        "mentality": 43,
+        "recovery": 39,
+        "clutch": 36,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 52,
+        "power": 38,
+        "eye": 51,
+        "discipline": 46,
+        "speed": 47,
+        "baseInstinct": 46,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 45,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "SP": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

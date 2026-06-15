@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13813",
+  "name": "그린 루이스",
+  "nameEn": "Green Luis",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 29,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 65,
+      "primaryPosition": "RF",
+      "developmentRate": 68,
+      "potentialHidden": 69,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 64,
+        "velocity": 61,
+        "command": 62,
+        "control": 61,
+        "movement": 66,
+        "mentality": 68,
+        "recovery": 53,
+        "clutch": 56,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 58,
+        "power": 65,
+        "eye": 65,
+        "discipline": 65,
+        "speed": 56,
+        "baseInstinct": 64,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 52,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "RF": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

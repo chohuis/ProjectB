@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09757",
+  "name": "권우원",
+  "nameEn": "Kwon WooWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 61,
+      "primaryPosition": "C",
+      "developmentRate": 44,
+      "potentialHidden": 64,
+      "pitching": {
+        "ovr": 39,
+        "stamina": 33,
+        "velocity": 47,
+        "command": 30,
+        "control": 33,
+        "movement": 35,
+        "mentality": 39,
+        "recovery": 33,
+        "clutch": 33,
+        "holdRunners": 28
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 35,
+        "power": 36,
+        "eye": 35,
+        "discipline": 36,
+        "speed": 39,
+        "baseInstinct": 35,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 33,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "C": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

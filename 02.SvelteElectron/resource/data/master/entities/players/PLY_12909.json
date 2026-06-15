@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12909",
+  "name": "베이커 조던",
+  "nameEn": "Baker Jordan",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 19,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 17,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 94,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 54,
+        "velocity": 62,
+        "command": 54,
+        "control": 58,
+        "movement": 59,
+        "mentality": 57,
+        "recovery": 59,
+        "clutch": 58,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 56,
+        "power": 52,
+        "eye": 56,
+        "discipline": 60,
+        "speed": 60,
+        "baseInstinct": 56,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 49,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "SP": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

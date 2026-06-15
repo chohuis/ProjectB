@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06371",
+  "name": "송정빈",
+  "nameEn": "Song JungBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 19,
+      "primaryPosition": "CF",
+      "developmentRate": 43,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 39,
+        "velocity": 46,
+        "command": 44,
+        "control": 39,
+        "movement": 42,
+        "mentality": 45,
+        "recovery": 38,
+        "clutch": 44,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 43,
+        "power": 40,
+        "eye": 47,
+        "discipline": 49,
+        "speed": 49,
+        "baseInstinct": 41,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 47,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "CF": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

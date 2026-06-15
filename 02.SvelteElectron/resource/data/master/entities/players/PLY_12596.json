@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12596",
+  "name": "앤더슨 타일러",
+  "nameEn": "Anderson Tyler",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 37,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 24,
+      "primaryPosition": "SP",
+      "developmentRate": 68,
+      "potentialHidden": 89,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 67,
+        "velocity": 74,
+        "command": 63,
+        "control": 61,
+        "movement": 57,
+        "mentality": 74,
+        "recovery": 62,
+        "clutch": 55,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 69,
+        "power": 61,
+        "eye": 60,
+        "discipline": 62,
+        "speed": 68,
+        "baseInstinct": 59,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 56,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "SP": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

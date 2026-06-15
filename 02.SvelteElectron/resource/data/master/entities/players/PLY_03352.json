@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03352",
+  "name": "안민호",
+  "nameEn": "An MinHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 36,
+      "primaryPosition": "RF",
+      "developmentRate": 68,
+      "potentialHidden": 95,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 71,
+        "velocity": 76,
+        "command": 74,
+        "control": 71,
+        "movement": 65,
+        "mentality": 75,
+        "recovery": 66,
+        "clutch": 67,
+        "holdRunners": 69
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 56,
+        "power": 61,
+        "eye": 59,
+        "discipline": 55,
+        "speed": 69,
+        "baseInstinct": 64,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 64,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "RF": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

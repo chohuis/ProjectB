@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07896",
+  "name": "임도민",
+  "nameEn": "Lim DoMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 75,
+      "primaryPosition": "3B",
+      "developmentRate": 58,
+      "potentialHidden": 64,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 63,
+        "velocity": 61,
+        "command": 59,
+        "control": 55,
+        "movement": 53,
+        "mentality": 64,
+        "recovery": 52,
+        "clutch": 53,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 38,
+        "power": 43,
+        "eye": 40,
+        "discipline": 38,
+        "speed": 48,
+        "baseInstinct": 45,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 45,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "3B": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

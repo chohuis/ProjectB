@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16106",
+  "name": "데이비스 재크",
+  "nameEn": "Davis Zach",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 25,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 91,
+      "primaryPosition": "RF",
+      "developmentRate": 50,
+      "potentialHidden": 67,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 63,
+        "velocity": 67,
+        "command": 56,
+        "control": 61,
+        "movement": 52,
+        "mentality": 67,
+        "recovery": 52,
+        "clutch": 48,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 55,
+        "power": 56,
+        "eye": 55,
+        "discipline": 53,
+        "speed": 55,
+        "baseInstinct": 62,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 58,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "RF": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

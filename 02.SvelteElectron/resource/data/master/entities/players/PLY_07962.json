@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07962",
+  "name": "강정우",
+  "nameEn": "Kang JungWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 54,
+      "primaryPosition": "SP",
+      "developmentRate": 51,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 49,
+        "velocity": 63,
+        "command": 48,
+        "control": 53,
+        "movement": 53,
+        "mentality": 49,
+        "recovery": 52,
+        "clutch": 46,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 42,
+        "power": 44,
+        "eye": 37,
+        "discipline": 36,
+        "speed": 46,
+        "baseInstinct": 44,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 38,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SP": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

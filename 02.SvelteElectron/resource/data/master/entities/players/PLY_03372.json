@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03372",
+  "name": "정민빈",
+  "nameEn": "Jung MinBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 85,
+      "primaryPosition": "1B",
+      "developmentRate": 74,
+      "potentialHidden": 89,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 74,
+        "velocity": 73,
+        "command": 64,
+        "control": 64,
+        "movement": 70,
+        "mentality": 67,
+        "recovery": 68,
+        "clutch": 62,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 64,
+        "power": 59,
+        "eye": 58,
+        "discipline": 63,
+        "speed": 68,
+        "baseInstinct": 59,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 54,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "1B": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07206",
+  "name": "서찬욱",
+  "nameEn": "Seo ChanWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 97,
+      "primaryPosition": "CF",
+      "developmentRate": 58,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 62,
+        "velocity": 58,
+        "command": 50,
+        "control": 53,
+        "movement": 61,
+        "mentality": 65,
+        "recovery": 48,
+        "clutch": 53,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 43,
+        "power": 43,
+        "eye": 43,
+        "discipline": 47,
+        "speed": 50,
+        "baseInstinct": 40,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 41,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "CF": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

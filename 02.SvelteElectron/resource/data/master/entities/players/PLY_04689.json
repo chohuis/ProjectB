@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04689",
+  "name": "조혁찬",
+  "nameEn": "Jo HyeokChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 81,
+      "primaryPosition": "LF",
+      "developmentRate": 46,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 38,
+        "velocity": 44,
+        "command": 37,
+        "control": 37,
+        "movement": 34,
+        "mentality": 40,
+        "recovery": 31,
+        "clutch": 36,
+        "holdRunners": 29
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 41,
+        "power": 46,
+        "eye": 52,
+        "discipline": 46,
+        "speed": 53,
+        "baseInstinct": 48,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 45,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "LF": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

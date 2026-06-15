@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14161",
+  "name": "가르시아 카일",
+  "nameEn": "Garcia Kyle",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 33,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 86,
+      "primaryPosition": "CF",
+      "developmentRate": 62,
+      "potentialHidden": 77,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 48,
+        "velocity": 52,
+        "command": 47,
+        "control": 38,
+        "movement": 47,
+        "mentality": 50,
+        "recovery": 42,
+        "clutch": 46,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 47,
+        "power": 48,
+        "eye": 48,
+        "discipline": 47,
+        "speed": 47,
+        "baseInstinct": 38,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 48,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "CF": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

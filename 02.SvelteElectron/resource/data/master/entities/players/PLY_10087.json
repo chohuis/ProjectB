@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10087",
+  "name": "홀 제이크",
+  "nameEn": "Hall Jake",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 17,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 31,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 6,
+      "primaryPosition": "SP",
+      "developmentRate": 38,
+      "potentialHidden": 70,
+      "proServiceYears": 9,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 66,
+        "velocity": 69,
+        "command": 65,
+        "control": 75,
+        "movement": 63,
+        "mentality": 69,
+        "recovery": 66,
+        "clutch": 68,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 63,
+        "power": 72,
+        "eye": 63,
+        "discipline": 68,
+        "speed": 69,
+        "baseInstinct": 64,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 67,
+        "battingClutch": 71
+      },
+      "positionRatings": {
+        "SP": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

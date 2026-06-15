@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08258",
+  "name": "신지재",
+  "nameEn": "Shin JiJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 91,
+      "primaryPosition": "1B",
+      "developmentRate": 49,
+      "potentialHidden": 80,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 44,
+        "velocity": 52,
+        "command": 38,
+        "control": 34,
+        "movement": 33,
+        "mentality": 40,
+        "recovery": 39,
+        "clutch": 30,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 57,
+        "power": 43,
+        "eye": 56,
+        "discipline": 54,
+        "speed": 59,
+        "baseInstinct": 50,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 48,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "1B": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

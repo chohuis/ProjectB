@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15656",
+  "name": "테일러 블레이크",
+  "nameEn": "Taylor Blake",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 17,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 2,
+      "primaryPosition": "LF",
+      "developmentRate": 65,
+      "potentialHidden": 67,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 57,
+        "velocity": 67,
+        "command": 50,
+        "control": 54,
+        "movement": 55,
+        "mentality": 50,
+        "recovery": 53,
+        "clutch": 56,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 59,
+        "power": 49,
+        "eye": 62,
+        "discipline": 57,
+        "speed": 53,
+        "baseInstinct": 48,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 56,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "LF": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

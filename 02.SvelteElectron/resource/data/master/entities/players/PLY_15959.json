@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15959",
+  "name": "로드리게스 네이선",
+  "nameEn": "Rodriguez Nathan",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 14,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 14,
+      "primaryPosition": "SP",
+      "developmentRate": 70,
+      "potentialHidden": 85,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 49,
+        "velocity": 52,
+        "command": 47,
+        "control": 43,
+        "movement": 49,
+        "mentality": 40,
+        "recovery": 38,
+        "clutch": 41,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 51,
+        "power": 44,
+        "eye": 49,
+        "discipline": 43,
+        "speed": 42,
+        "baseInstinct": 44,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 42,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SP": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

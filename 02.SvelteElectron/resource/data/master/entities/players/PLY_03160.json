@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03160",
+  "name": "강정수",
+  "nameEn": "Kang JungSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 2,
+      "primaryPosition": "LF",
+      "developmentRate": 68,
+      "potentialHidden": 81,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 63,
+        "velocity": 69,
+        "command": 51,
+        "control": 55,
+        "movement": 61,
+        "mentality": 60,
+        "recovery": 62,
+        "clutch": 49,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 64,
+        "power": 69,
+        "eye": 72,
+        "discipline": 69,
+        "speed": 75,
+        "baseInstinct": 64,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 67,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "LF": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07436",
+  "name": "정정윤",
+  "nameEn": "Jung JungYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 28,
+      "primaryPosition": "2B",
+      "developmentRate": 63,
+      "potentialHidden": 64,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 54,
+        "velocity": 63,
+        "command": 54,
+        "control": 53,
+        "movement": 53,
+        "mentality": 58,
+        "recovery": 51,
+        "clutch": 51,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 59,
+        "power": 51,
+        "eye": 50,
+        "discipline": 52,
+        "speed": 55,
+        "baseInstinct": 57,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 51,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "2B": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

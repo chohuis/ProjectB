@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16224",
+  "name": "스콧 케빈",
+  "nameEn": "Scott Kevin",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 13,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 29,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 55,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 54,
+        "velocity": 69,
+        "command": 54,
+        "control": 54,
+        "movement": 53,
+        "mentality": 57,
+        "recovery": 58,
+        "clutch": 50,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 59,
+        "power": 63,
+        "eye": 57,
+        "discipline": 63,
+        "speed": 58,
+        "baseInstinct": 60,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 59,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SP": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

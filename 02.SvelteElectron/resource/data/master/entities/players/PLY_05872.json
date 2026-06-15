@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05872",
+  "name": "권기윤",
+  "nameEn": "Kwon KiYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 82,
+      "primaryPosition": "SS",
+      "developmentRate": 64,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 40,
+        "velocity": 50,
+        "command": 44,
+        "control": 47,
+        "movement": 45,
+        "mentality": 47,
+        "recovery": 38,
+        "clutch": 45,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 42,
+        "power": 32,
+        "eye": 36,
+        "discipline": 37,
+        "speed": 40,
+        "baseInstinct": 33,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 40,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "SS": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

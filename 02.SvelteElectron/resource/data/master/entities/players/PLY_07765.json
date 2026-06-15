@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07765",
+  "name": "황정수",
+  "nameEn": "Hwang JungSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 5,
+      "primaryPosition": "2B",
+      "developmentRate": 55,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 47,
+        "velocity": 52,
+        "command": 43,
+        "control": 38,
+        "movement": 43,
+        "mentality": 41,
+        "recovery": 38,
+        "clutch": 36,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 49,
+        "power": 49,
+        "eye": 46,
+        "discipline": 46,
+        "speed": 52,
+        "baseInstinct": 50,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 47,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "2B": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

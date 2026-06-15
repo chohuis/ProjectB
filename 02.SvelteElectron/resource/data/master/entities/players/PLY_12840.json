@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12840",
+  "name": "가르시아 라이언",
+  "nameEn": "Garcia Ryan",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 21,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 20,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 61,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 71,
+        "velocity": 81,
+        "command": 71,
+        "control": 75,
+        "movement": 72,
+        "mentality": 68,
+        "recovery": 64,
+        "clutch": 63,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 75,
+        "power": 65,
+        "eye": 74,
+        "discipline": 73,
+        "speed": 72,
+        "baseInstinct": 73,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 65,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "SP": 73
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

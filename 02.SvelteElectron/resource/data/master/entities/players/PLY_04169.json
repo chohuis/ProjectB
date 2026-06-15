@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04169",
+  "name": "최준수",
+  "nameEn": "Choi JunSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 62,
+      "primaryPosition": "1B",
+      "developmentRate": 57,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 65,
+        "velocity": 76,
+        "command": 58,
+        "control": 64,
+        "movement": 65,
+        "mentality": 68,
+        "recovery": 58,
+        "clutch": 64,
+        "holdRunners": 63
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 57,
+        "power": 51,
+        "eye": 52,
+        "discipline": 52,
+        "speed": 56,
+        "baseInstinct": 55,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 57,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "1B": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

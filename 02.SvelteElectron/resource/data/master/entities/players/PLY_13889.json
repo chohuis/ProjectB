@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13889",
+  "name": "마르티네스 로건",
+  "nameEn": "Martinez Logan",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 45,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 49,
+      "primaryPosition": "CF",
+      "developmentRate": 58,
+      "potentialHidden": 80,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 68,
+        "velocity": 70,
+        "command": 59,
+        "control": 62,
+        "movement": 59,
+        "mentality": 73,
+        "recovery": 57,
+        "clutch": 60,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 62,
+        "power": 57,
+        "eye": 59,
+        "discipline": 65,
+        "speed": 60,
+        "baseInstinct": 64,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 57,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "CF": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

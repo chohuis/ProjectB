@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09732",
+  "name": "황기윤",
+  "nameEn": "Hwang KiYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 78,
+      "primaryPosition": "3B",
+      "developmentRate": 45,
+      "potentialHidden": 45,
+      "pitching": {
+        "ovr": 35,
+        "stamina": 37,
+        "velocity": 37,
+        "command": 25,
+        "control": 31,
+        "movement": 27,
+        "mentality": 33,
+        "recovery": 30,
+        "clutch": 29,
+        "holdRunners": 21
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 44,
+        "power": 35,
+        "eye": 34,
+        "discipline": 32,
+        "speed": 37,
+        "baseInstinct": 32,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 42,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "3B": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

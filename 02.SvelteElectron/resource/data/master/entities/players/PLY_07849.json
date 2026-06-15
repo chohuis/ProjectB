@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07849",
+  "name": "장혁빈",
+  "nameEn": "Jang HyeokBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 5,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 74,
+      "primaryPosition": "CF",
+      "developmentRate": 44,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 40,
+        "velocity": 53,
+        "command": 39,
+        "control": 38,
+        "movement": 43,
+        "mentality": 42,
+        "recovery": 35,
+        "clutch": 43,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 43,
+        "power": 40,
+        "eye": 44,
+        "discipline": 36,
+        "speed": 46,
+        "baseInstinct": 39,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 37,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "CF": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06332",
+  "name": "류진민",
+  "nameEn": "Ryu JinMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 55,
+      "primaryPosition": "1B",
+      "developmentRate": 44,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 45,
+        "velocity": 49,
+        "command": 39,
+        "control": 46,
+        "movement": 37,
+        "mentality": 48,
+        "recovery": 35,
+        "clutch": 39,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 39,
+        "power": 35,
+        "eye": 34,
+        "discipline": 27,
+        "speed": 37,
+        "baseInstinct": 35,
+        "bunting": 16,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 35,
+        "battingClutch": 24
+      },
+      "positionRatings": {
+        "1B": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

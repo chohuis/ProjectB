@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07442",
+  "name": "이재민",
+  "nameEn": "Lee JaeMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 62,
+      "primaryPosition": "2B",
+      "developmentRate": 46,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 51,
+        "velocity": 62,
+        "command": 43,
+        "control": 53,
+        "movement": 50,
+        "mentality": 52,
+        "recovery": 41,
+        "clutch": 49,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 57,
+        "power": 45,
+        "eye": 47,
+        "discipline": 46,
+        "speed": 58,
+        "baseInstinct": 44,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 50,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "2B": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

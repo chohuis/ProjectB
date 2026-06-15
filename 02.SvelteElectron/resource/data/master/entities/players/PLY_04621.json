@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04621",
+  "name": "정영완",
+  "nameEn": "Jung YoungWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 17,
+      "primaryPosition": "SP",
+      "developmentRate": 54,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 49,
+        "velocity": 53,
+        "command": 47,
+        "control": 42,
+        "movement": 44,
+        "mentality": 54,
+        "recovery": 41,
+        "clutch": 47,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 52,
+        "power": 41,
+        "eye": 46,
+        "discipline": 44,
+        "speed": 44,
+        "baseInstinct": 41,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 39,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "SP": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

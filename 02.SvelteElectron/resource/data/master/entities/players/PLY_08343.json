@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08343",
+  "name": "정상호",
+  "nameEn": "Jung SangHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 35,
+      "primaryPosition": "RF",
+      "developmentRate": 52,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 35,
+        "velocity": 52,
+        "command": 36,
+        "control": 35,
+        "movement": 41,
+        "mentality": 41,
+        "recovery": 34,
+        "clutch": 33,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 38,
+        "power": 31,
+        "eye": 41,
+        "discipline": 31,
+        "speed": 39,
+        "baseInstinct": 38,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 39,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "RF": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

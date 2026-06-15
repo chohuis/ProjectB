@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07628",
+  "name": "김재성",
+  "nameEn": "Kim JaeSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 62,
+      "primaryPosition": "1B",
+      "developmentRate": 48,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 57,
+        "velocity": 61,
+        "command": 54,
+        "control": 53,
+        "movement": 48,
+        "mentality": 59,
+        "recovery": 44,
+        "clutch": 46,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 43,
+        "power": 37,
+        "eye": 44,
+        "discipline": 41,
+        "speed": 48,
+        "baseInstinct": 35,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 41,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "1B": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03094",
+  "name": "송상원",
+  "nameEn": "Song SangWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 49,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 90,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 73,
+        "velocity": 78,
+        "command": 75,
+        "control": 70,
+        "movement": 73,
+        "mentality": 77,
+        "recovery": 68,
+        "clutch": 73,
+        "holdRunners": 72
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 58,
+        "power": 58,
+        "eye": 59,
+        "discipline": 52,
+        "speed": 62,
+        "baseInstinct": 57,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 54,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "SP": 76
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

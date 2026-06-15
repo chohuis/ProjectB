@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06015",
+  "name": "오동재",
+  "nameEn": "Oh DongJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 43,
+      "primaryPosition": "1B",
+      "developmentRate": 63,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 55,
+        "velocity": 59,
+        "command": 52,
+        "control": 56,
+        "movement": 55,
+        "mentality": 49,
+        "recovery": 49,
+        "clutch": 48,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 39,
+        "power": 38,
+        "eye": 42,
+        "discipline": 41,
+        "speed": 35,
+        "baseInstinct": 35,
+        "bunting": 20,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 34,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "1B": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

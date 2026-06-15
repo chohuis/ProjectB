@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03230",
+  "name": "임지기",
+  "nameEn": "Lim JiKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 59,
+      "primaryPosition": "LF",
+      "developmentRate": 63,
+      "potentialHidden": 88,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 58,
+        "velocity": 69,
+        "command": 52,
+        "control": 54,
+        "movement": 56,
+        "mentality": 56,
+        "recovery": 49,
+        "clutch": 47,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 54,
+        "power": 49,
+        "eye": 59,
+        "discipline": 53,
+        "speed": 57,
+        "baseInstinct": 50,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 59,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "LF": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

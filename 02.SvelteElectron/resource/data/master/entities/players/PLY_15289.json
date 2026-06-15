@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15289",
+  "name": "앤더슨 에반",
+  "nameEn": "Anderson Evan",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 41,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 66,
+      "primaryPosition": "SP",
+      "developmentRate": 71,
+      "potentialHidden": 86,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 39,
+        "velocity": 56,
+        "command": 41,
+        "control": 47,
+        "movement": 49,
+        "mentality": 44,
+        "recovery": 38,
+        "clutch": 37,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 46,
+        "power": 42,
+        "eye": 37,
+        "discipline": 41,
+        "speed": 49,
+        "baseInstinct": 38,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 47,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "SP": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

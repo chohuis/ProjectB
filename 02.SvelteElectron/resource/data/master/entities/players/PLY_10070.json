@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10070",
+  "name": "로빈슨 재크",
+  "nameEn": "Robinson Zach",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 26,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 11,
+      "primaryPosition": "C",
+      "developmentRate": 63,
+      "potentialHidden": 66,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 71,
+        "velocity": 69,
+        "command": 67,
+        "control": 65,
+        "movement": 59,
+        "mentality": 69,
+        "recovery": 58,
+        "clutch": 68,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 68,
+        "power": 68,
+        "eye": 65,
+        "discipline": 61,
+        "speed": 64,
+        "baseInstinct": 64,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 68,
+        "battingClutch": 70
+      },
+      "positionRatings": {
+        "C": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

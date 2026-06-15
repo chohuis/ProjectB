@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15207",
+  "name": "로드리게스 제이슨",
+  "nameEn": "Rodriguez Jason",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 20,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 31,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 34,
+      "primaryPosition": "SP",
+      "developmentRate": 41,
+      "potentialHidden": 65,
+      "proServiceYears": 9,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 56,
+        "velocity": 63,
+        "command": 54,
+        "control": 64,
+        "movement": 57,
+        "mentality": 69,
+        "recovery": 54,
+        "clutch": 53,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 58,
+        "power": 59,
+        "eye": 64,
+        "discipline": 60,
+        "speed": 69,
+        "baseInstinct": 55,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 66,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "SP": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

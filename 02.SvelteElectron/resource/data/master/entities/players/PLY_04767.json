@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04767",
+  "name": "권태혁",
+  "nameEn": "Kwon TaeHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 42,
+      "primaryPosition": "SP",
+      "developmentRate": 51,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 53,
+        "velocity": 61,
+        "command": 49,
+        "control": 51,
+        "movement": 48,
+        "mentality": 61,
+        "recovery": 55,
+        "clutch": 47,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 42,
+        "power": 41,
+        "eye": 41,
+        "discipline": 35,
+        "speed": 35,
+        "baseInstinct": 30,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 31,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

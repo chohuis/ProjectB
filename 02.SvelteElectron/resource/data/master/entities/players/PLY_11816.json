@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11816",
+  "name": "넬슨 케빈",
+  "nameEn": "Nelson Kevin",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 49,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 46,
+      "primaryPosition": "1B",
+      "developmentRate": 58,
+      "potentialHidden": 61,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 54,
+        "velocity": 65,
+        "command": 56,
+        "control": 60,
+        "movement": 46,
+        "mentality": 49,
+        "recovery": 44,
+        "clutch": 57,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 60,
+        "power": 56,
+        "eye": 50,
+        "discipline": 57,
+        "speed": 55,
+        "baseInstinct": 55,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 59,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "1B": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

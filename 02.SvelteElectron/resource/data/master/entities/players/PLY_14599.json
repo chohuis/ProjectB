@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14599",
+  "name": "미첼 제이슨",
+  "nameEn": "Mitchell Jason",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 31,
+  "militaryStatus": "군필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 18,
+      "primaryPosition": "3B",
+      "developmentRate": 67,
+      "potentialHidden": 89,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 46,
+        "velocity": 58,
+        "command": 51,
+        "control": 50,
+        "movement": 54,
+        "mentality": 52,
+        "recovery": 44,
+        "clutch": 45,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 53,
+        "power": 53,
+        "eye": 52,
+        "discipline": 51,
+        "speed": 58,
+        "baseInstinct": 47,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 41,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "3B": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

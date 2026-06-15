@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12066",
+  "name": "마틴 크리스",
+  "nameEn": "Martin Chris",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 27,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 59,
+      "primaryPosition": "2B",
+      "developmentRate": 50,
+      "potentialHidden": 70,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 64,
+        "velocity": 66,
+        "command": 55,
+        "control": 66,
+        "movement": 65,
+        "mentality": 57,
+        "recovery": 55,
+        "clutch": 54,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 59,
+        "power": 55,
+        "eye": 63,
+        "discipline": 61,
+        "speed": 68,
+        "baseInstinct": 63,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 65,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "2B": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07820",
+  "name": "장정원",
+  "nameEn": "Jang JungWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 10,
+      "primaryPosition": "C",
+      "developmentRate": 47,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 36,
+        "velocity": 52,
+        "command": 41,
+        "control": 36,
+        "movement": 43,
+        "mentality": 41,
+        "recovery": 35,
+        "clutch": 41,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 55,
+        "power": 44,
+        "eye": 52,
+        "discipline": 47,
+        "speed": 56,
+        "baseInstinct": 54,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 54,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "C": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

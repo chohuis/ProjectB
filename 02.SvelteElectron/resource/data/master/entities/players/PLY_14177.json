@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14177",
+  "name": "화이트 마커스",
+  "nameEn": "White Marcus",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 13,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 29,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 96,
+      "primaryPosition": "2B",
+      "developmentRate": 48,
+      "potentialHidden": 62,
+      "proServiceYears": 7,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 55,
+        "velocity": 68,
+        "command": 54,
+        "control": 63,
+        "movement": 59,
+        "mentality": 68,
+        "recovery": 57,
+        "clutch": 61,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 64,
+        "power": 61,
+        "eye": 68,
+        "discipline": 57,
+        "speed": 70,
+        "baseInstinct": 65,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 61,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "2B": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

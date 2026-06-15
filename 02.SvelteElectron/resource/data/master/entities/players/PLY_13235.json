@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13235",
+  "name": "토마스 미겔",
+  "nameEn": "Thomas Miguel",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 41,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 31,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 96,
+      "primaryPosition": "SP",
+      "developmentRate": 39,
+      "potentialHidden": 57,
+      "proServiceYears": 9,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 57,
+        "velocity": 63,
+        "command": 63,
+        "control": 65,
+        "movement": 58,
+        "mentality": 63,
+        "recovery": 51,
+        "clutch": 54,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 53,
+        "power": 52,
+        "eye": 61,
+        "discipline": 58,
+        "speed": 67,
+        "baseInstinct": 52,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 62,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "SP": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

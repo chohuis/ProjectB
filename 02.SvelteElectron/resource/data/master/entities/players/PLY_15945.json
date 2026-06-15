@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15945",
+  "name": "클라크 제이슨",
+  "nameEn": "Clark Jason",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 93,
+      "primaryPosition": "C",
+      "developmentRate": 59,
+      "potentialHidden": 71,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 72,
+        "velocity": 69,
+        "command": 63,
+        "control": 73,
+        "movement": 72,
+        "mentality": 69,
+        "recovery": 60,
+        "clutch": 62,
+        "holdRunners": 68
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 66,
+        "power": 61,
+        "eye": 63,
+        "discipline": 65,
+        "speed": 71,
+        "baseInstinct": 73,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 67,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "C": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

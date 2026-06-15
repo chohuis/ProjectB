@@ -1,0 +1,73 @@
+{
+  "id": "PLY_09873",
+  "name": "그린 조던",
+  "nameEn": "Green Jordan",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 94,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 79,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 81,
+        "stamina": 78,
+        "velocity": 80,
+        "command": 78,
+        "control": 72,
+        "movement": 78,
+        "mentality": 81,
+        "recovery": 71,
+        "clutch": 81,
+        "holdRunners": 77
+      },
+      "batting": {
+        "ovr": 81,
+        "contact": 84,
+        "power": 82,
+        "eye": 79,
+        "discipline": 83,
+        "speed": 87,
+        "baseInstinct": 82,
+        "bunting": 68,
+        "platoon": 50,
+        "fielding": 75,
+        "arm": 84,
+        "battingClutch": 77
+      },
+      "positionRatings": {
+        "SP": 81
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08456",
+  "name": "윤동준",
+  "nameEn": "Yoon DongJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 48,
+      "primaryPosition": "SP",
+      "developmentRate": 43,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 35,
+        "stamina": 28,
+        "velocity": 38,
+        "command": 30,
+        "control": 27,
+        "movement": 30,
+        "mentality": 38,
+        "recovery": 24,
+        "clutch": 22,
+        "holdRunners": 27
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 33,
+        "power": 35,
+        "eye": 30,
+        "discipline": 33,
+        "speed": 35,
+        "baseInstinct": 33,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 29,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "SP": 35
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

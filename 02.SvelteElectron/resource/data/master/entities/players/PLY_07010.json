@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07010",
+  "name": "박혁재",
+  "nameEn": "Park HyeokJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 86,
+      "primaryPosition": "1B",
+      "developmentRate": 59,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 54,
+        "velocity": 61,
+        "command": 47,
+        "control": 54,
+        "movement": 46,
+        "mentality": 48,
+        "recovery": 46,
+        "clutch": 43,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 41,
+        "power": 36,
+        "eye": 37,
+        "discipline": 44,
+        "speed": 42,
+        "baseInstinct": 37,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 38,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "1B": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

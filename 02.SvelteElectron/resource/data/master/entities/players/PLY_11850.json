@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11850",
+  "name": "앨런 네이선",
+  "nameEn": "Allen Nathan",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 85,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 78,
+      "primaryPosition": "RF",
+      "developmentRate": 54,
+      "potentialHidden": 66,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 78,
+        "velocity": 74,
+        "command": 77,
+        "control": 69,
+        "movement": 75,
+        "mentality": 79,
+        "recovery": 66,
+        "clutch": 70,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 77,
+        "contact": 77,
+        "power": 78,
+        "eye": 74,
+        "discipline": 67,
+        "speed": 77,
+        "baseInstinct": 76,
+        "bunting": 71,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 79,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "RF": 77
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

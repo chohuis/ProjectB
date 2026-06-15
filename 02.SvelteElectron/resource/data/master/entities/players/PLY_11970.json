@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11970",
+  "name": "영 알렉스",
+  "nameEn": "Young Alex",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 17,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 89,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 64,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 77,
+        "velocity": 83,
+        "command": 66,
+        "control": 69,
+        "movement": 67,
+        "mentality": 71,
+        "recovery": 69,
+        "clutch": 70,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 73,
+        "power": 73,
+        "eye": 77,
+        "discipline": 70,
+        "speed": 80,
+        "baseInstinct": 66,
+        "bunting": 69,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 69,
+        "battingClutch": 71
+      },
+      "positionRatings": {
+        "SP": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

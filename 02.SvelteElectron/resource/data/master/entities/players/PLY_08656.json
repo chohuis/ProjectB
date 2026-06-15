@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08656",
+  "name": "장수수",
+  "nameEn": "Jang SuSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 38,
+      "primaryPosition": "CF",
+      "developmentRate": 47,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 41,
+        "stamina": 42,
+        "velocity": 49,
+        "command": 38,
+        "control": 41,
+        "movement": 39,
+        "mentality": 41,
+        "recovery": 32,
+        "clutch": 31,
+        "holdRunners": 29
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 44,
+        "power": 47,
+        "eye": 43,
+        "discipline": 43,
+        "speed": 51,
+        "baseInstinct": 48,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 38,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "CF": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

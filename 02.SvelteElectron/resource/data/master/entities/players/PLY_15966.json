@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15966",
+  "name": "루이스 타일러",
+  "nameEn": "Lewis Tyler",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 25,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 30,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 82,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 61,
+        "velocity": 61,
+        "command": 62,
+        "control": 63,
+        "movement": 60,
+        "mentality": 65,
+        "recovery": 58,
+        "clutch": 54,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 54,
+        "power": 50,
+        "eye": 60,
+        "discipline": 58,
+        "speed": 66,
+        "baseInstinct": 55,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 57,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "SP": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

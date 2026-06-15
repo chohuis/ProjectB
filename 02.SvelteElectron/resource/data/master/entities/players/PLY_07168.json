@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07168",
+  "name": "강혁우",
+  "nameEn": "Kang HyeokWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 57,
+      "primaryPosition": "1B",
+      "developmentRate": 62,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 44,
+        "velocity": 57,
+        "command": 44,
+        "control": 48,
+        "movement": 47,
+        "mentality": 43,
+        "recovery": 39,
+        "clutch": 35,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 48,
+        "power": 47,
+        "eye": 49,
+        "discipline": 45,
+        "speed": 53,
+        "baseInstinct": 47,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 50,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "1B": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

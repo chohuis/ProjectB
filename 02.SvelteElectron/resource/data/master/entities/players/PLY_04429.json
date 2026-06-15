@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04429",
+  "name": "류재준",
+  "nameEn": "Ryu JaeJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 88,
+      "primaryPosition": "LF",
+      "developmentRate": 66,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 64,
+        "velocity": 70,
+        "command": 59,
+        "control": 60,
+        "movement": 60,
+        "mentality": 64,
+        "recovery": 57,
+        "clutch": 55,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 49,
+        "power": 40,
+        "eye": 45,
+        "discipline": 49,
+        "speed": 44,
+        "baseInstinct": 45,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 48,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "LF": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

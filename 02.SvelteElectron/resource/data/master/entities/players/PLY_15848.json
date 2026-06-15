@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15848",
+  "name": "넬슨 제이크",
+  "nameEn": "Nelson Jake",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 28,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 32,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 44,
+      "primaryPosition": "SP",
+      "developmentRate": 35,
+      "potentialHidden": 69,
+      "proServiceYears": 10,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 67,
+        "velocity": 73,
+        "command": 57,
+        "control": 57,
+        "movement": 57,
+        "mentality": 68,
+        "recovery": 54,
+        "clutch": 53,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 59,
+        "power": 64,
+        "eye": 64,
+        "discipline": 63,
+        "speed": 60,
+        "baseInstinct": 64,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 66,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "SP": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

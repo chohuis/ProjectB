@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13527",
+  "name": "존스 카일",
+  "nameEn": "Jones Kyle",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 77,
+      "primaryPosition": "LF",
+      "developmentRate": 57,
+      "potentialHidden": 62,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 67,
+        "velocity": 79,
+        "command": 67,
+        "control": 69,
+        "movement": 76,
+        "mentality": 72,
+        "recovery": 74,
+        "clutch": 74,
+        "holdRunners": 72
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 69,
+        "power": 67,
+        "eye": 78,
+        "discipline": 69,
+        "speed": 75,
+        "baseInstinct": 66,
+        "bunting": 70,
+        "platoon": 50,
+        "fielding": 76,
+        "arm": 65,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "LF": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

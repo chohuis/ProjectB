@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14010",
+  "name": "잭슨 루이스",
+  "nameEn": "Jackson Luis",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 42,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 82,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 58,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 51,
+        "velocity": 67,
+        "command": 48,
+        "control": 52,
+        "movement": 60,
+        "mentality": 61,
+        "recovery": 47,
+        "clutch": 59,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 53,
+        "power": 55,
+        "eye": 54,
+        "discipline": 54,
+        "speed": 62,
+        "baseInstinct": 57,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 47,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

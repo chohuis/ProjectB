@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11522",
+  "name": "루이스 코디",
+  "nameEn": "Lewis Cody",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 16,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 82,
+      "primaryPosition": "2B",
+      "developmentRate": 51,
+      "potentialHidden": 58,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 83,
+        "velocity": 76,
+        "command": 72,
+        "control": 77,
+        "movement": 74,
+        "mentality": 84,
+        "recovery": 71,
+        "clutch": 71,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 78,
+        "contact": 76,
+        "power": 79,
+        "eye": 77,
+        "discipline": 70,
+        "speed": 78,
+        "baseInstinct": 80,
+        "bunting": 69,
+        "platoon": 50,
+        "fielding": 80,
+        "arm": 76,
+        "battingClutch": 70
+      },
+      "positionRatings": {
+        "2B": 78
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

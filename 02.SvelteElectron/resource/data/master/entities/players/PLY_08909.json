@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08909",
+  "name": "최정기",
+  "nameEn": "Choi JungKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 54,
+      "primaryPosition": "LF",
+      "developmentRate": 45,
+      "potentialHidden": 46,
+      "pitching": {
+        "ovr": 35,
+        "stamina": 36,
+        "velocity": 36,
+        "command": 26,
+        "control": 36,
+        "movement": 26,
+        "mentality": 38,
+        "recovery": 24,
+        "clutch": 21,
+        "holdRunners": 25
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 50,
+        "power": 43,
+        "eye": 45,
+        "discipline": 43,
+        "speed": 44,
+        "baseInstinct": 46,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 47,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "LF": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

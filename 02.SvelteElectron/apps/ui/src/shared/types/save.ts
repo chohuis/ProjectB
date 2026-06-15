@@ -594,9 +594,8 @@ export interface NpcSaveState {
   schoolId: string;
   graduationYear: number;
 
-  // Named NPC 여부 — false인 NPC는 저장파일에 포함되지 않음
-  isNamed: boolean;
   emotionRole?: NpcEmotionRole;
+  potentialHidden?: number;  // 성장 cap 계산용 — 없으면 75 폴백 (구버전 세이브 호환)
 
   // 기본 정보
   careerStatus: NpcCareerStatus;
@@ -612,7 +611,9 @@ export interface NpcSaveState {
   originalTeamId?: string;
 
   // 군적
+  /** @deprecated 능력치는 SaveSeason.npcLiveStats에서 관리됨. 로드 시 이관 후 무시. */
   pitching?: PitchingAttributes;
+  /** @deprecated 능력치는 SaveSeason.npcLiveStats에서 관리됨. 로드 시 이관 후 무시. */
   batting?: BattingAttributes;
   developmentRate: number;
   proServiceYears?: number;  // 프로 입단 후 연수 (KBL/ABL FA 자격 기준: 9년)
@@ -626,7 +627,7 @@ export interface NpcSaveState {
   fame: number;
   personality?: NpcPersonality;
 
-  // 감정 시스템 (Named NPC 전용, optional)
+  // 감정 시스템 (emotionRole 있는 NPC에만 적용, optional)
   emotion?:        NpcEmotion;
   memories?:       NpcMemory[];
   emotionStatus?:  EmotionStatus;

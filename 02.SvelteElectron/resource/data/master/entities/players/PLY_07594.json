@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07594",
+  "name": "한진현",
+  "nameEn": "Han JinHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 33,
+      "primaryPosition": "SP",
+      "developmentRate": 47,
+      "potentialHidden": 64,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 55,
+        "velocity": 52,
+        "command": 52,
+        "control": 50,
+        "movement": 52,
+        "mentality": 52,
+        "recovery": 50,
+        "clutch": 45,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 38,
+        "power": 31,
+        "eye": 41,
+        "discipline": 33,
+        "speed": 39,
+        "baseInstinct": 32,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 30,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

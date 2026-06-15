@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06010",
+  "name": "최찬훈",
+  "nameEn": "Choi ChanHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 1,
+      "primaryPosition": "CF",
+      "developmentRate": 61,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 57,
+        "velocity": 60,
+        "command": 56,
+        "control": 55,
+        "movement": 53,
+        "mentality": 53,
+        "recovery": 45,
+        "clutch": 44,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 52,
+        "power": 49,
+        "eye": 51,
+        "discipline": 44,
+        "speed": 53,
+        "baseInstinct": 48,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 45,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "CF": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

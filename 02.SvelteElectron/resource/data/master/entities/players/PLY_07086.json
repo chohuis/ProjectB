@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07086",
+  "name": "조태혁",
+  "nameEn": "Jo TaeHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 23,
+      "primaryPosition": "1B",
+      "developmentRate": 48,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 59,
+        "velocity": 62,
+        "command": 57,
+        "control": 53,
+        "movement": 54,
+        "mentality": 64,
+        "recovery": 51,
+        "clutch": 51,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 42,
+        "power": 33,
+        "eye": 31,
+        "discipline": 35,
+        "speed": 41,
+        "baseInstinct": 32,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 29,
+        "arm": 28,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "1B": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

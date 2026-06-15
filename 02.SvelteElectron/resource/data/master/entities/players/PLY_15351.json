@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15351",
+  "name": "에르난데스 재크",
+  "nameEn": "Hernandez Zach",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 15,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 46,
+      "primaryPosition": "C",
+      "developmentRate": 58,
+      "potentialHidden": 80,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 51,
+        "velocity": 61,
+        "command": 49,
+        "control": 54,
+        "movement": 59,
+        "mentality": 52,
+        "recovery": 55,
+        "clutch": 52,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 52,
+        "power": 47,
+        "eye": 58,
+        "discipline": 59,
+        "speed": 60,
+        "baseInstinct": 58,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 53,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "C": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

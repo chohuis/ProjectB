@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05580",
+  "name": "안성훈",
+  "nameEn": "An SeongHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 27,
+      "primaryPosition": "SP",
+      "developmentRate": 52,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 51,
+        "velocity": 48,
+        "command": 48,
+        "control": 47,
+        "movement": 44,
+        "mentality": 44,
+        "recovery": 39,
+        "clutch": 46,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 56,
+        "power": 58,
+        "eye": 57,
+        "discipline": 52,
+        "speed": 56,
+        "baseInstinct": 55,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 55,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "SP": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

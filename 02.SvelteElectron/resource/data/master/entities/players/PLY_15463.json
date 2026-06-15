@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15463",
+  "name": "존슨 재크",
+  "nameEn": "Johnson Zach",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 66,
+      "primaryPosition": "SP",
+      "developmentRate": 43,
+      "potentialHidden": 76,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 60,
+        "velocity": 74,
+        "command": 54,
+        "control": 61,
+        "movement": 61,
+        "mentality": 58,
+        "recovery": 57,
+        "clutch": 61,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 67,
+        "power": 57,
+        "eye": 63,
+        "discipline": 62,
+        "speed": 69,
+        "baseInstinct": 56,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 58,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "SP": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

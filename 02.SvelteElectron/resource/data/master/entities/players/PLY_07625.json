@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07625",
+  "name": "이성기",
+  "nameEn": "Lee SeongKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 64,
+      "primaryPosition": "3B",
+      "developmentRate": 46,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 36,
+        "velocity": 51,
+        "command": 36,
+        "control": 45,
+        "movement": 43,
+        "mentality": 37,
+        "recovery": 41,
+        "clutch": 31,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 42,
+        "power": 46,
+        "eye": 38,
+        "discipline": 37,
+        "speed": 45,
+        "baseInstinct": 36,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 37,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "3B": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

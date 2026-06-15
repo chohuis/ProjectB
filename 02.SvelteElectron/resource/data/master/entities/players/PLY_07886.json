@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07886",
+  "name": "임상찬",
+  "nameEn": "Lim SangChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 40,
+      "primaryPosition": "2B",
+      "developmentRate": 50,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 52,
+        "velocity": 64,
+        "command": 56,
+        "control": 48,
+        "movement": 57,
+        "mentality": 60,
+        "recovery": 48,
+        "clutch": 54,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 50,
+        "power": 42,
+        "eye": 51,
+        "discipline": 49,
+        "speed": 46,
+        "baseInstinct": 49,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 44,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "2B": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

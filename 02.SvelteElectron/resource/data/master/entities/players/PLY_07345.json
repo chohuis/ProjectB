@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07345",
+  "name": "이혁찬",
+  "nameEn": "Lee HyeokChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 40,
+      "primaryPosition": "3B",
+      "developmentRate": 64,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 42,
+        "velocity": 54,
+        "command": 39,
+        "control": 47,
+        "movement": 42,
+        "mentality": 42,
+        "recovery": 44,
+        "clutch": 41,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 50,
+        "power": 41,
+        "eye": 43,
+        "discipline": 49,
+        "speed": 48,
+        "baseInstinct": 43,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 51,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "3B": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

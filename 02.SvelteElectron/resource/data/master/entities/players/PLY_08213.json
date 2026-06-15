@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08213",
+  "name": "서태진",
+  "nameEn": "Seo TaeJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 66,
+      "primaryPosition": "SP",
+      "developmentRate": 54,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 49,
+        "velocity": 63,
+        "command": 50,
+        "control": 55,
+        "movement": 57,
+        "mentality": 62,
+        "recovery": 53,
+        "clutch": 50,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 43,
+        "power": 47,
+        "eye": 44,
+        "discipline": 41,
+        "speed": 53,
+        "baseInstinct": 40,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 45,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "SP": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

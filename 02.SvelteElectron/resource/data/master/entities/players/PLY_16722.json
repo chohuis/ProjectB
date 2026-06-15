@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16722",
+  "name": "톰슨 코너",
+  "nameEn": "Thompson Connor",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 39,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 62,
+      "primaryPosition": "2B",
+      "developmentRate": 56,
+      "potentialHidden": 53,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 77,
+        "velocity": 79,
+        "command": 68,
+        "control": 76,
+        "movement": 71,
+        "mentality": 70,
+        "recovery": 72,
+        "clutch": 74,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 78,
+        "power": 73,
+        "eye": 75,
+        "discipline": 68,
+        "speed": 79,
+        "baseInstinct": 75,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 67,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "2B": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11324",
+  "name": "그린 재크",
+  "nameEn": "Green Zach",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 31,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 14,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 69,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 79,
+        "stamina": 76,
+        "velocity": 81,
+        "command": 73,
+        "control": 83,
+        "movement": 78,
+        "mentality": 82,
+        "recovery": 77,
+        "clutch": 71,
+        "holdRunners": 77
+      },
+      "batting": {
+        "ovr": 79,
+        "contact": 81,
+        "power": 82,
+        "eye": 74,
+        "discipline": 73,
+        "speed": 74,
+        "baseInstinct": 81,
+        "bunting": 71,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 80,
+        "battingClutch": 77
+      },
+      "positionRatings": {
+        "SP": 79
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03850",
+  "name": "박진수",
+  "nameEn": "Park JinSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 12,
+      "primaryPosition": "CF",
+      "developmentRate": 54,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 56,
+        "velocity": 67,
+        "command": 54,
+        "control": 59,
+        "movement": 62,
+        "mentality": 63,
+        "recovery": 54,
+        "clutch": 56,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 56,
+        "power": 46,
+        "eye": 57,
+        "discipline": 55,
+        "speed": 56,
+        "baseInstinct": 45,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 46,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "CF": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

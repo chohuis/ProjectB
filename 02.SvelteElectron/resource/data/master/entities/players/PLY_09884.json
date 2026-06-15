@@ -1,0 +1,73 @@
+{
+  "id": "PLY_09884",
+  "name": "잭슨 그랜트",
+  "nameEn": "Jackson Grant",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 54,
+      "primaryPosition": "LF",
+      "developmentRate": 66,
+      "potentialHidden": 95,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 48,
+        "velocity": 58,
+        "command": 48,
+        "control": 43,
+        "movement": 49,
+        "mentality": 54,
+        "recovery": 47,
+        "clutch": 49,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 42,
+        "power": 49,
+        "eye": 55,
+        "discipline": 49,
+        "speed": 47,
+        "baseInstinct": 47,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 40,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "LF": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14504",
+  "name": "로드리게스 브랜던",
+  "nameEn": "Rodriguez Brandon",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 24,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 42,
+      "primaryPosition": "SP",
+      "developmentRate": 63,
+      "potentialHidden": 77,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 61,
+        "velocity": 59,
+        "command": 59,
+        "control": 65,
+        "movement": 60,
+        "mentality": 63,
+        "recovery": 59,
+        "clutch": 53,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 65,
+        "power": 57,
+        "eye": 60,
+        "discipline": 54,
+        "speed": 56,
+        "baseInstinct": 51,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 58,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "SP": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

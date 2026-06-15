@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12746",
+  "name": "루이스 딜런",
+  "nameEn": "Lewis Dylan",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 26,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 92,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 70,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 52,
+        "velocity": 59,
+        "command": 50,
+        "control": 46,
+        "movement": 55,
+        "mentality": 46,
+        "recovery": 54,
+        "clutch": 43,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 55,
+        "power": 46,
+        "eye": 47,
+        "discipline": 46,
+        "speed": 55,
+        "baseInstinct": 47,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 54,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SP": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12747",
+  "name": "잭슨 헌터",
+  "nameEn": "Jackson Hunter",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 45,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 34,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 65,
+      "primaryPosition": "2B",
+      "developmentRate": 41,
+      "potentialHidden": 62,
+      "proServiceYears": 12,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 64,
+        "velocity": 74,
+        "command": 66,
+        "control": 61,
+        "movement": 57,
+        "mentality": 70,
+        "recovery": 57,
+        "clutch": 56,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 68,
+        "power": 55,
+        "eye": 60,
+        "discipline": 65,
+        "speed": 65,
+        "baseInstinct": 59,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 57,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "2B": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

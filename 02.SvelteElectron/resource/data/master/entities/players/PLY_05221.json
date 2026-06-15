@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05221",
+  "name": "오상환",
+  "nameEn": "Oh SangHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 77,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 44,
+        "velocity": 45,
+        "command": 40,
+        "control": 38,
+        "movement": 41,
+        "mentality": 45,
+        "recovery": 41,
+        "clutch": 39,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 45,
+        "power": 40,
+        "eye": 50,
+        "discipline": 44,
+        "speed": 53,
+        "baseInstinct": 46,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 42,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "SP": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

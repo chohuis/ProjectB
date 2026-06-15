@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03083",
+  "name": "박상윤",
+  "nameEn": "Park SangYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 54,
+      "primaryPosition": "SP",
+      "developmentRate": 74,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 62,
+        "velocity": 77,
+        "command": 68,
+        "control": 65,
+        "movement": 57,
+        "mentality": 66,
+        "recovery": 65,
+        "clutch": 54,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 49,
+        "power": 53,
+        "eye": 48,
+        "discipline": 54,
+        "speed": 58,
+        "baseInstinct": 52,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 45,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "SP": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

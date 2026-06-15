@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13090",
+  "name": "마르티네스 제이크",
+  "nameEn": "Martinez Jake",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 48,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 7,
+      "primaryPosition": "SS",
+      "developmentRate": 56,
+      "potentialHidden": 85,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 78,
+        "velocity": 74,
+        "command": 70,
+        "control": 77,
+        "movement": 67,
+        "mentality": 82,
+        "recovery": 66,
+        "clutch": 69,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 76,
+        "power": 70,
+        "eye": 75,
+        "discipline": 69,
+        "speed": 75,
+        "baseInstinct": 76,
+        "bunting": 69,
+        "platoon": 50,
+        "fielding": 74,
+        "arm": 71,
+        "battingClutch": 70
+      },
+      "positionRatings": {
+        "SS": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

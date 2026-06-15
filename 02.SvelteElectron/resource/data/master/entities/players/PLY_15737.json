@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15737",
+  "name": "홀 네이선",
+  "nameEn": "Hall Nathan",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 74,
+      "primaryPosition": "3B",
+      "developmentRate": 58,
+      "potentialHidden": 88,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 57,
+        "velocity": 72,
+        "command": 53,
+        "control": 62,
+        "movement": 51,
+        "mentality": 67,
+        "recovery": 52,
+        "clutch": 59,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 52,
+        "power": 53,
+        "eye": 65,
+        "discipline": 65,
+        "speed": 67,
+        "baseInstinct": 51,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 63,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "3B": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

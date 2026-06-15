@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09404",
+  "name": "윤현현",
+  "nameEn": "Yoon HyeonHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 10,
+      "primaryPosition": "SP",
+      "developmentRate": 51,
+      "potentialHidden": 46,
+      "pitching": {
+        "ovr": 37,
+        "stamina": 35,
+        "velocity": 43,
+        "command": 31,
+        "control": 34,
+        "movement": 32,
+        "mentality": 40,
+        "recovery": 33,
+        "clutch": 24,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 45,
+        "power": 45,
+        "eye": 42,
+        "discipline": 39,
+        "speed": 44,
+        "baseInstinct": 44,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 39,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "SP": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

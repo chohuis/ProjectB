@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13173",
+  "name": "가르시아 조던",
+  "nameEn": "Garcia Jordan",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 48,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 70,
+      "primaryPosition": "SS",
+      "developmentRate": 49,
+      "potentialHidden": 80,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 71,
+        "velocity": 77,
+        "command": 62,
+        "control": 68,
+        "movement": 69,
+        "mentality": 73,
+        "recovery": 69,
+        "clutch": 63,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 76,
+        "power": 65,
+        "eye": 68,
+        "discipline": 75,
+        "speed": 73,
+        "baseInstinct": 69,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 61,
+        "battingClutch": 69
+      },
+      "positionRatings": {
+        "SS": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08547",
+  "name": "박세현",
+  "nameEn": "Park SeHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 68,
+      "primaryPosition": "SP",
+      "developmentRate": 57,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 40,
+        "velocity": 38,
+        "command": 35,
+        "control": 38,
+        "movement": 40,
+        "mentality": 44,
+        "recovery": 29,
+        "clutch": 28,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 49,
+        "power": 48,
+        "eye": 49,
+        "discipline": 50,
+        "speed": 46,
+        "baseInstinct": 45,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 39,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "SP": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

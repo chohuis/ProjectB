@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10191",
+  "name": "마틴 오스틴",
+  "nameEn": "Martin Austin",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 32,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 9,
+      "primaryPosition": "SP",
+      "developmentRate": 51,
+      "potentialHidden": 86,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 66,
+        "velocity": 73,
+        "command": 67,
+        "control": 70,
+        "movement": 63,
+        "mentality": 63,
+        "recovery": 62,
+        "clutch": 58,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 70,
+        "power": 59,
+        "eye": 65,
+        "discipline": 67,
+        "speed": 69,
+        "baseInstinct": 56,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 60,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "SP": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

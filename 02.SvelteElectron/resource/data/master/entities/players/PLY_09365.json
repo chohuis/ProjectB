@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09365",
+  "name": "조준성",
+  "nameEn": "Jo JunSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 39,
+      "primaryPosition": "C",
+      "developmentRate": 42,
+      "potentialHidden": 44,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 35,
+        "velocity": 43,
+        "command": 37,
+        "control": 44,
+        "movement": 38,
+        "mentality": 46,
+        "recovery": 35,
+        "clutch": 35,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 31,
+        "contact": 28,
+        "power": 24,
+        "eye": 22,
+        "discipline": 31,
+        "speed": 35,
+        "baseInstinct": 31,
+        "bunting": 19,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 25,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "C": 31
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

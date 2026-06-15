@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06801",
+  "name": "서영환",
+  "nameEn": "Seo YoungHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 34,
+      "primaryPosition": "LF",
+      "developmentRate": 63,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 55,
+        "velocity": 69,
+        "command": 60,
+        "control": 58,
+        "movement": 57,
+        "mentality": 59,
+        "recovery": 57,
+        "clutch": 49,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 49,
+        "power": 45,
+        "eye": 55,
+        "discipline": 53,
+        "speed": 55,
+        "baseInstinct": 46,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 55,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "LF": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

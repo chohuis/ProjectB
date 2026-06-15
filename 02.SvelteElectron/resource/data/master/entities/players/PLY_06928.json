@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06928",
+  "name": "박성혁",
+  "nameEn": "Park SeongHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 94,
+      "primaryPosition": "CF",
+      "developmentRate": 57,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 60,
+        "velocity": 67,
+        "command": 54,
+        "control": 56,
+        "movement": 56,
+        "mentality": 59,
+        "recovery": 59,
+        "clutch": 49,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 58,
+        "power": 50,
+        "eye": 51,
+        "discipline": 48,
+        "speed": 50,
+        "baseInstinct": 47,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 46,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "CF": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14662",
+  "name": "가르시아 다니엘",
+  "nameEn": "Garcia Daniel",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 24,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 1,
+      "primaryPosition": "SP",
+      "developmentRate": 48,
+      "potentialHidden": 55,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 59,
+        "velocity": 71,
+        "command": 54,
+        "control": 60,
+        "movement": 62,
+        "mentality": 72,
+        "recovery": 65,
+        "clutch": 59,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 67,
+        "power": 67,
+        "eye": 68,
+        "discipline": 58,
+        "speed": 68,
+        "baseInstinct": 66,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 59,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "SP": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

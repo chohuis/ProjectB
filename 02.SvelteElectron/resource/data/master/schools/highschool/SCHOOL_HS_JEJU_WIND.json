@@ -1,0 +1,19 @@
+{
+  "id": "SCHOOL_HS_JEJU_WIND",
+  "name": "제주 윈드 고등학교",
+  "shortName": "제주 윈드",
+  "region": "제주",
+  "tier": "B",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "gradeLevels": 3,
+  "annualRosterSize": 18,
+  "namedNpcPerYear": 0,
+  "template": {
+    "pitching": { "ovrMin": 40, "ovrMax": 60 },
+    "batting": { "ovrMin": 38, "ovrMax": 58 },
+    "developmentRate": { "min": 44, "max": 64 },
+    "potentialHidden": { "min": 52, "max": 82 }
+  },
+  "color": "#00ACC1",
+  "notes": "섬 지역 학교. 독자적인 훈련 환경 덕분에 가끔 예상 밖의 인재가 나오는 곳."
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09271",
+  "name": "임동재",
+  "nameEn": "Lim DongJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 35,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 64,
+      "primaryPosition": "SS",
+      "developmentRate": 53,
+      "potentialHidden": 49,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 47,
+        "velocity": 52,
+        "command": 43,
+        "control": 47,
+        "movement": 38,
+        "mentality": 48,
+        "recovery": 41,
+        "clutch": 34,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 35,
+        "power": 34,
+        "eye": 37,
+        "discipline": 33,
+        "speed": 37,
+        "baseInstinct": 34,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 31,
+        "battingClutch": 25
+      },
+      "positionRatings": {
+        "SS": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

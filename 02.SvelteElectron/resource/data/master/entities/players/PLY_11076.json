@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11076",
+  "name": "화이트 마커스",
+  "nameEn": "White Marcus",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 25,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 30,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 96,
+      "primaryPosition": "RF",
+      "developmentRate": 52,
+      "potentialHidden": 55,
+      "proServiceYears": 8,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 50,
+        "velocity": 64,
+        "command": 48,
+        "control": 57,
+        "movement": 60,
+        "mentality": 51,
+        "recovery": 55,
+        "clutch": 53,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 55,
+        "power": 47,
+        "eye": 54,
+        "discipline": 58,
+        "speed": 54,
+        "baseInstinct": 53,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 50,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "RF": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

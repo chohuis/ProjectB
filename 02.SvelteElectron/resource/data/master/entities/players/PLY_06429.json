@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06429",
+  "name": "황기민",
+  "nameEn": "Hwang KiMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 13,
+      "primaryPosition": "CF",
+      "developmentRate": 55,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 36,
+        "velocity": 48,
+        "command": 41,
+        "control": 46,
+        "movement": 37,
+        "mentality": 48,
+        "recovery": 39,
+        "clutch": 34,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 47,
+        "power": 47,
+        "eye": 40,
+        "discipline": 43,
+        "speed": 42,
+        "baseInstinct": 43,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 40,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "CF": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09235",
+  "name": "오준재",
+  "nameEn": "Oh JunJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 59,
+      "primaryPosition": "RF",
+      "developmentRate": 54,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 52,
+        "velocity": 57,
+        "command": 45,
+        "control": 42,
+        "movement": 42,
+        "mentality": 51,
+        "recovery": 43,
+        "clutch": 41,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 51,
+        "power": 45,
+        "eye": 48,
+        "discipline": 47,
+        "speed": 45,
+        "baseInstinct": 39,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 48,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "RF": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

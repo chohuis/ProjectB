@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04641",
+  "name": "최훈원",
+  "nameEn": "Choi HunWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 88,
+      "primaryPosition": "LF",
+      "developmentRate": 53,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 46,
+        "velocity": 49,
+        "command": 42,
+        "control": 47,
+        "movement": 46,
+        "mentality": 46,
+        "recovery": 44,
+        "clutch": 37,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 41,
+        "power": 27,
+        "eye": 34,
+        "discipline": 29,
+        "speed": 38,
+        "baseInstinct": 30,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 34,
+        "battingClutch": 26
+      },
+      "positionRatings": {
+        "LF": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

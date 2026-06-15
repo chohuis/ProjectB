@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03034",
+  "name": "한훈우",
+  "nameEn": "Han HunWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 5,
+      "primaryPosition": "LF",
+      "developmentRate": 73,
+      "potentialHidden": 92,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 63,
+        "velocity": 71,
+        "command": 58,
+        "control": 64,
+        "movement": 57,
+        "mentality": 59,
+        "recovery": 59,
+        "clutch": 60,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 54,
+        "power": 61,
+        "eye": 60,
+        "discipline": 55,
+        "speed": 59,
+        "baseInstinct": 59,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 53,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "LF": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

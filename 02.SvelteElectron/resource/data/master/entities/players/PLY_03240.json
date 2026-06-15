@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03240",
+  "name": "강성혁",
+  "nameEn": "Kang SeongHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 82,
+      "primaryPosition": "SP",
+      "developmentRate": 60,
+      "potentialHidden": 95,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 62,
+        "velocity": 65,
+        "command": 61,
+        "control": 60,
+        "movement": 56,
+        "mentality": 63,
+        "recovery": 60,
+        "clutch": 56,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 55,
+        "power": 54,
+        "eye": 62,
+        "discipline": 51,
+        "speed": 65,
+        "baseInstinct": 57,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 61,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "SP": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07103",
+  "name": "오태재",
+  "nameEn": "Oh TaeJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 36,
+      "primaryPosition": "LF",
+      "developmentRate": 57,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 58,
+        "velocity": 61,
+        "command": 47,
+        "control": 57,
+        "movement": 51,
+        "mentality": 55,
+        "recovery": 51,
+        "clutch": 45,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 45,
+        "power": 40,
+        "eye": 41,
+        "discipline": 37,
+        "speed": 42,
+        "baseInstinct": 38,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 41,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "LF": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

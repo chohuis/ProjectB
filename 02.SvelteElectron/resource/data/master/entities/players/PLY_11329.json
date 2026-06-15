@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11329",
+  "name": "라이트 코디",
+  "nameEn": "Wright Cody",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 10,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 48,
+      "primaryPosition": "C",
+      "developmentRate": 53,
+      "potentialHidden": 56,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 75,
+        "velocity": 82,
+        "command": 66,
+        "control": 64,
+        "movement": 62,
+        "mentality": 66,
+        "recovery": 66,
+        "clutch": 66,
+        "holdRunners": 69
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 63,
+        "power": 69,
+        "eye": 63,
+        "discipline": 68,
+        "speed": 75,
+        "baseInstinct": 72,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 68,
+        "battingClutch": 70
+      },
+      "positionRatings": {
+        "C": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

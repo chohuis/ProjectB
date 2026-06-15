@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07312",
+  "name": "김정진",
+  "nameEn": "Kim JungJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 54,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 45,
+        "velocity": 54,
+        "command": 53,
+        "control": 55,
+        "movement": 52,
+        "mentality": 55,
+        "recovery": 43,
+        "clutch": 42,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 49,
+        "power": 53,
+        "eye": 57,
+        "discipline": 53,
+        "speed": 54,
+        "baseInstinct": 56,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 54,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

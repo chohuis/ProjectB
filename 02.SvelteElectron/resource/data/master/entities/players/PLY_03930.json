@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03930",
+  "name": "오훈완",
+  "nameEn": "Oh HunWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 90,
+      "primaryPosition": "CF",
+      "developmentRate": 63,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 63,
+        "velocity": 71,
+        "command": 58,
+        "control": 58,
+        "movement": 65,
+        "mentality": 62,
+        "recovery": 57,
+        "clutch": 51,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 56,
+        "power": 50,
+        "eye": 53,
+        "discipline": 56,
+        "speed": 49,
+        "baseInstinct": 48,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 52,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "CF": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

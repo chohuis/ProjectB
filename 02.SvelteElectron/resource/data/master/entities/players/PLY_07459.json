@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07459",
+  "name": "황수우",
+  "nameEn": "Hwang SuWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 88,
+      "primaryPosition": "SP",
+      "developmentRate": 56,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 57,
+        "velocity": 58,
+        "command": 55,
+        "control": 53,
+        "movement": 49,
+        "mentality": 58,
+        "recovery": 54,
+        "clutch": 50,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 51,
+        "power": 55,
+        "eye": 50,
+        "discipline": 54,
+        "speed": 56,
+        "baseInstinct": 55,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 49,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SP": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

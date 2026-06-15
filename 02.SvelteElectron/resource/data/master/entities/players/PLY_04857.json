@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04857",
+  "name": "정우욱",
+  "nameEn": "Jung WooWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 18,
+      "primaryPosition": "CF",
+      "developmentRate": 59,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 50,
+        "velocity": 56,
+        "command": 43,
+        "control": 49,
+        "movement": 44,
+        "mentality": 49,
+        "recovery": 46,
+        "clutch": 44,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 35,
+        "power": 39,
+        "eye": 38,
+        "discipline": 31,
+        "speed": 35,
+        "baseInstinct": 37,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 31,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "CF": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

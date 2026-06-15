@@ -1,5 +1,5 @@
 // scripts/generate_master_db.cjs
-// 빌드 타임: entity JSON 2,085개 → resource/master.db
+// 빌드 타임: entity JSON → resource/master.db
 
 const path = require("node:path");
 const fs   = require("node:fs");
@@ -80,12 +80,19 @@ function openMasterDb(dbPath) {
       staff_json         TEXT,
 
       -- 플레이어 성격 (결정론적 생성)
-      personality_json   TEXT
+      personality_json   TEXT,
+
+      -- 사전 생성 NPC 활성화 스케줄
+      entry_year         INTEGER,
+      entry_league       TEXT,
+      entry_team         TEXT,
+      entry_age          INTEGER
     );
 
-    CREATE INDEX idx_npc_master_league ON npc_master(league_id);
-    CREATE INDEX idx_npc_master_team   ON npc_master(team_id);
-    CREATE INDEX idx_npc_master_role   ON npc_master(role);
+    CREATE INDEX idx_npc_master_league     ON npc_master(league_id);
+    CREATE INDEX idx_npc_master_team       ON npc_master(team_id);
+    CREATE INDEX idx_npc_master_role       ON npc_master(role);
+    CREATE INDEX idx_npc_master_entry_year ON npc_master(entry_year);
   `);
   return db;
 }
@@ -207,6 +214,11 @@ function entityToRow(e) {
 
     staff_json: Object.keys(staffData).length > 0 ? JSON.stringify(staffData) : null,
     personality_json: e.role === "player" ? generatePersonality(e) : null,
+
+    entry_year:   e.entryYear   ?? null,
+    entry_league: e.entryLeague ?? null,
+    entry_team:   e.entryTeam   ?? null,
+    entry_age:    e.entryAge    ?? null,
   };
 }
 
@@ -235,7 +247,8 @@ function main() {
       @military_status,
       @pro_service_years, @contract_json,
       @staff_json,
-      @personality_json
+      @personality_json,
+      @entry_year, @entry_league, @entry_team, @entry_age
     )
   `);
 

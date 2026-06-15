@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09425",
+  "name": "이민찬",
+  "nameEn": "Lee MinChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 37,
+      "primaryPosition": "LF",
+      "developmentRate": 52,
+      "potentialHidden": 40,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 46,
+        "velocity": 49,
+        "command": 35,
+        "control": 36,
+        "movement": 37,
+        "mentality": 38,
+        "recovery": 42,
+        "clutch": 34,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 41,
+        "power": 29,
+        "eye": 36,
+        "discipline": 35,
+        "speed": 44,
+        "baseInstinct": 36,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 33,
+        "arm": 33,
+        "battingClutch": 27
+      },
+      "positionRatings": {
+        "LF": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

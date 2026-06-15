@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08777",
+  "name": "정준기",
+  "nameEn": "Jung JunKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 42,
+      "primaryPosition": "SS",
+      "developmentRate": 57,
+      "potentialHidden": 51,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 55,
+        "velocity": 50,
+        "command": 42,
+        "control": 46,
+        "movement": 45,
+        "mentality": 46,
+        "recovery": 48,
+        "clutch": 42,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 39,
+        "power": 33,
+        "eye": 33,
+        "discipline": 31,
+        "speed": 32,
+        "baseInstinct": 28,
+        "bunting": 20,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 30,
+        "battingClutch": 26
+      },
+      "positionRatings": {
+        "SS": 36
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09325",
+  "name": "신세욱",
+  "nameEn": "Shin SeWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 29,
+      "primaryPosition": "SS",
+      "developmentRate": 57,
+      "potentialHidden": 46,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 52,
+        "velocity": 50,
+        "command": 41,
+        "control": 47,
+        "movement": 39,
+        "mentality": 45,
+        "recovery": 41,
+        "clutch": 35,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 48,
+        "power": 50,
+        "eye": 47,
+        "discipline": 51,
+        "speed": 52,
+        "baseInstinct": 48,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 41,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SS": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

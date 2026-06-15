@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05621",
+  "name": "장혁기",
+  "nameEn": "Jang HyeokKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 91,
+      "primaryPosition": "SP",
+      "developmentRate": 64,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 47,
+        "velocity": 51,
+        "command": 44,
+        "control": 49,
+        "movement": 48,
+        "mentality": 54,
+        "recovery": 44,
+        "clutch": 45,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 55,
+        "power": 56,
+        "eye": 53,
+        "discipline": 51,
+        "speed": 56,
+        "baseInstinct": 51,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 50,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "SP": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

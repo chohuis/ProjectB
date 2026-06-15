@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12888",
+  "name": "존스 다니엘",
+  "nameEn": "Jones Daniel",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 58,
+      "primaryPosition": "SP",
+      "developmentRate": 54,
+      "potentialHidden": 53,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 64,
+        "velocity": 75,
+        "command": 66,
+        "control": 64,
+        "movement": 67,
+        "mentality": 72,
+        "recovery": 65,
+        "clutch": 60,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 57,
+        "power": 57,
+        "eye": 65,
+        "discipline": 69,
+        "speed": 61,
+        "baseInstinct": 64,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 62,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "SP": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

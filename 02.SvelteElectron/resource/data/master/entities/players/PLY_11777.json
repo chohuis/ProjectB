@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11777",
+  "name": "카터 마커스",
+  "nameEn": "Carter Marcus",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 13,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 45,
+      "primaryPosition": "SP",
+      "developmentRate": 52,
+      "potentialHidden": 73,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 69,
+        "velocity": 70,
+        "command": 73,
+        "control": 69,
+        "movement": 66,
+        "mentality": 65,
+        "recovery": 60,
+        "clutch": 67,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 65,
+        "power": 67,
+        "eye": 67,
+        "discipline": 68,
+        "speed": 70,
+        "baseInstinct": 69,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 71,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "SP": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

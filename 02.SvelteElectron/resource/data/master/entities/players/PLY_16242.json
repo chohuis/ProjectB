@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16242",
+  "name": "윌리엄스 카일",
+  "nameEn": "Williams Kyle",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 12,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 56,
+      "primaryPosition": "SS",
+      "developmentRate": 45,
+      "potentialHidden": 70,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 54,
+        "velocity": 60,
+        "command": 57,
+        "control": 65,
+        "movement": 64,
+        "mentality": 66,
+        "recovery": 57,
+        "clutch": 57,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 60,
+        "power": 51,
+        "eye": 54,
+        "discipline": 58,
+        "speed": 55,
+        "baseInstinct": 53,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 52,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "SS": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09163",
+  "name": "오우재",
+  "nameEn": "Oh WooJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 96,
+      "primaryPosition": "CF",
+      "developmentRate": 49,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 38,
+        "velocity": 54,
+        "command": 37,
+        "control": 38,
+        "movement": 35,
+        "mentality": 46,
+        "recovery": 44,
+        "clutch": 34,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 47,
+        "power": 44,
+        "eye": 35,
+        "discipline": 34,
+        "speed": 42,
+        "baseInstinct": 33,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 34,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "CF": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03241",
+  "name": "오준완",
+  "nameEn": "Oh JunWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 71,
+      "primaryPosition": "SP",
+      "developmentRate": 72,
+      "potentialHidden": 95,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 74,
+        "velocity": 83,
+        "command": 69,
+        "control": 73,
+        "movement": 72,
+        "mentality": 73,
+        "recovery": 68,
+        "clutch": 74,
+        "holdRunners": 71
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 70,
+        "power": 63,
+        "eye": 65,
+        "discipline": 62,
+        "speed": 62,
+        "baseInstinct": 58,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 59,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "SP": 76
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

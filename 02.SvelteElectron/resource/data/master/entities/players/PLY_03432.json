@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03432",
+  "name": "송찬민",
+  "nameEn": "Song ChanMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 36,
+      "primaryPosition": "SS",
+      "developmentRate": 65,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 60,
+        "velocity": 62,
+        "command": 57,
+        "control": 65,
+        "movement": 54,
+        "mentality": 66,
+        "recovery": 53,
+        "clutch": 59,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 52,
+        "power": 58,
+        "eye": 56,
+        "discipline": 52,
+        "speed": 64,
+        "baseInstinct": 54,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 57,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "SS": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

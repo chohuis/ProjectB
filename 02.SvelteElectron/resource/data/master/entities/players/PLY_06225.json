@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06225",
+  "name": "전성우",
+  "nameEn": "Jeon SeongWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 67,
+      "primaryPosition": "3B",
+      "developmentRate": 43,
+      "potentialHidden": 48,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 43,
+        "velocity": 48,
+        "command": 43,
+        "control": 37,
+        "movement": 47,
+        "mentality": 48,
+        "recovery": 43,
+        "clutch": 38,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 46,
+        "power": 40,
+        "eye": 46,
+        "discipline": 37,
+        "speed": 42,
+        "baseInstinct": 43,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 35,
+        "arm": 42,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "3B": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

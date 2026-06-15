@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13574",
+  "name": "화이트 블레이크",
+  "nameEn": "White Blake",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 34,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 91,
+      "primaryPosition": "SP",
+      "developmentRate": 52,
+      "potentialHidden": 67,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 72,
+        "velocity": 82,
+        "command": 68,
+        "control": 76,
+        "movement": 74,
+        "mentality": 71,
+        "recovery": 71,
+        "clutch": 73,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 74,
+        "contact": 72,
+        "power": 75,
+        "eye": 74,
+        "discipline": 73,
+        "speed": 68,
+        "baseInstinct": 77,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 77,
+        "arm": 73,
+        "battingClutch": 71
+      },
+      "positionRatings": {
+        "SP": 74
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

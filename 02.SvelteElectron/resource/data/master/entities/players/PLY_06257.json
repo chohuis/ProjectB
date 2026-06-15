@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06257",
+  "name": "강훈환",
+  "nameEn": "Kang HunHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 27,
+      "primaryPosition": "3B",
+      "developmentRate": 40,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 47,
+        "velocity": 47,
+        "command": 46,
+        "control": 44,
+        "movement": 40,
+        "mentality": 52,
+        "recovery": 40,
+        "clutch": 39,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 32,
+        "contact": 28,
+        "power": 29,
+        "eye": 26,
+        "discipline": 30,
+        "speed": 33,
+        "baseInstinct": 28,
+        "bunting": 15,
+        "platoon": 50,
+        "fielding": 24,
+        "arm": 32,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "3B": 32
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

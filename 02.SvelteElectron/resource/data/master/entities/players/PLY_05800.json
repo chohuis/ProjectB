@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05800",
+  "name": "한영완",
+  "nameEn": "Han YoungWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 39,
+      "primaryPosition": "SS",
+      "developmentRate": 54,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 60,
+        "velocity": 63,
+        "command": 50,
+        "control": 52,
+        "movement": 59,
+        "mentality": 62,
+        "recovery": 54,
+        "clutch": 55,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 56,
+        "power": 53,
+        "eye": 58,
+        "discipline": 49,
+        "speed": 59,
+        "baseInstinct": 51,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 52,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "SS": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

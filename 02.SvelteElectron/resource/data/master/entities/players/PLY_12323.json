@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12323",
+  "name": "카터 알렉스",
+  "nameEn": "Carter Alex",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 32,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 30,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 40,
+      "primaryPosition": "SS",
+      "developmentRate": 49,
+      "potentialHidden": 60,
+      "proServiceYears": 8,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 62,
+        "velocity": 62,
+        "command": 59,
+        "control": 58,
+        "movement": 64,
+        "mentality": 65,
+        "recovery": 60,
+        "clutch": 53,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 67,
+        "power": 63,
+        "eye": 63,
+        "discipline": 58,
+        "speed": 69,
+        "baseInstinct": 56,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 58,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "SS": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

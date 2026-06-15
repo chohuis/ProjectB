@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16307",
+  "name": "잭슨 마커스",
+  "nameEn": "Jackson Marcus",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 19,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 29,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 21,
+      "primaryPosition": "RF",
+      "developmentRate": 36,
+      "potentialHidden": 67,
+      "proServiceYears": 7,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 55,
+        "velocity": 67,
+        "command": 62,
+        "control": 56,
+        "movement": 59,
+        "mentality": 60,
+        "recovery": 57,
+        "clutch": 61,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 57,
+        "power": 56,
+        "eye": 56,
+        "discipline": 56,
+        "speed": 57,
+        "baseInstinct": 59,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 63,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "RF": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06186",
+  "name": "조진현",
+  "nameEn": "Jo JinHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 15,
+      "primaryPosition": "RF",
+      "developmentRate": 58,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 46,
+        "velocity": 49,
+        "command": 42,
+        "control": 43,
+        "movement": 42,
+        "mentality": 38,
+        "recovery": 35,
+        "clutch": 32,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 31,
+        "contact": 27,
+        "power": 30,
+        "eye": 27,
+        "discipline": 21,
+        "speed": 37,
+        "baseInstinct": 26,
+        "bunting": 14,
+        "platoon": 50,
+        "fielding": 27,
+        "arm": 26,
+        "battingClutch": 20
+      },
+      "positionRatings": {
+        "RF": 31
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

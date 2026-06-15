@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15293",
+  "name": "넬슨 다니엘",
+  "nameEn": "Nelson Daniel",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 65,
+      "primaryPosition": "1B",
+      "developmentRate": 68,
+      "potentialHidden": 74,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 42,
+        "velocity": 49,
+        "command": 39,
+        "control": 42,
+        "movement": 49,
+        "mentality": 42,
+        "recovery": 47,
+        "clutch": 42,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 46,
+        "power": 40,
+        "eye": 51,
+        "discipline": 40,
+        "speed": 45,
+        "baseInstinct": 37,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 42,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "1B": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

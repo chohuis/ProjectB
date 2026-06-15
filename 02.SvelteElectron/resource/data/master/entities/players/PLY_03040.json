@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03040",
+  "name": "박우성",
+  "nameEn": "Park WooSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 32,
+      "primaryPosition": "CF",
+      "developmentRate": 60,
+      "potentialHidden": 98,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 60,
+        "velocity": 68,
+        "command": 67,
+        "control": 63,
+        "movement": 67,
+        "mentality": 73,
+        "recovery": 64,
+        "clutch": 55,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 61,
+        "power": 54,
+        "eye": 65,
+        "discipline": 60,
+        "speed": 63,
+        "baseInstinct": 58,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 55,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "CF": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

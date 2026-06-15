@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03654",
+  "name": "최상윤",
+  "nameEn": "Choi SangYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 44,
+      "primaryPosition": "RF",
+      "developmentRate": 65,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 58,
+        "velocity": 71,
+        "command": 51,
+        "control": 59,
+        "movement": 54,
+        "mentality": 60,
+        "recovery": 56,
+        "clutch": 48,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 52,
+        "power": 42,
+        "eye": 50,
+        "discipline": 46,
+        "speed": 51,
+        "baseInstinct": 52,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 53,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "RF": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

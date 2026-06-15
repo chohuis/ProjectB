@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06204",
+  "name": "신태식",
+  "nameEn": "Shin TaeSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 10,
+      "primaryPosition": "LF",
+      "developmentRate": 56,
+      "potentialHidden": 43,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 41,
+        "velocity": 50,
+        "command": 42,
+        "control": 40,
+        "movement": 44,
+        "mentality": 47,
+        "recovery": 45,
+        "clutch": 38,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 43,
+        "power": 42,
+        "eye": 49,
+        "discipline": 38,
+        "speed": 51,
+        "baseInstinct": 38,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 46,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "LF": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

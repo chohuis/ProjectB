@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04219",
+  "name": "정수훈",
+  "nameEn": "Jung SuHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 74,
+      "primaryPosition": "SP",
+      "developmentRate": 71,
+      "potentialHidden": 64,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 49,
+        "velocity": 55,
+        "command": 48,
+        "control": 49,
+        "movement": 41,
+        "mentality": 50,
+        "recovery": 45,
+        "clutch": 44,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 55,
+        "power": 56,
+        "eye": 57,
+        "discipline": 57,
+        "speed": 57,
+        "baseInstinct": 56,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 54,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "SP": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

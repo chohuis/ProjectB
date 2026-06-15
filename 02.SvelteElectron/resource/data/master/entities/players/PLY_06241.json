@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06241",
+  "name": "전현기",
+  "nameEn": "Jeon HyeonKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 35,
+      "primaryPosition": "1B",
+      "developmentRate": 48,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 47,
+        "velocity": 43,
+        "command": 33,
+        "control": 39,
+        "movement": 44,
+        "mentality": 43,
+        "recovery": 40,
+        "clutch": 35,
+        "holdRunners": 28
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 47,
+        "power": 43,
+        "eye": 50,
+        "discipline": 41,
+        "speed": 53,
+        "baseInstinct": 48,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 45,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "1B": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

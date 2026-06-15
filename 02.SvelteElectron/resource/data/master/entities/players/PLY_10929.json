@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10929",
+  "name": "스콧 콜",
+  "nameEn": "Scott Cole",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 25,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 4,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 77,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 62,
+        "velocity": 75,
+        "command": 62,
+        "control": 62,
+        "movement": 58,
+        "mentality": 68,
+        "recovery": 63,
+        "clutch": 57,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 59,
+        "power": 63,
+        "eye": 60,
+        "discipline": 59,
+        "speed": 72,
+        "baseInstinct": 61,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 67,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "SP": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08930",
+  "name": "송성현",
+  "nameEn": "Song SeongHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 92,
+      "primaryPosition": "SS",
+      "developmentRate": 49,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 44,
+        "velocity": 42,
+        "command": 33,
+        "control": 40,
+        "movement": 35,
+        "mentality": 48,
+        "recovery": 36,
+        "clutch": 32,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 30,
+        "contact": 29,
+        "power": 22,
+        "eye": 23,
+        "discipline": 32,
+        "speed": 27,
+        "baseInstinct": 26,
+        "bunting": 17,
+        "platoon": 50,
+        "fielding": 24,
+        "arm": 29,
+        "battingClutch": 18
+      },
+      "positionRatings": {
+        "SS": 30
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

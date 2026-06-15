@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06931",
+  "name": "오성우",
+  "nameEn": "Oh SeongWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 66,
+      "primaryPosition": "2B",
+      "developmentRate": 56,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 54,
+        "velocity": 58,
+        "command": 47,
+        "control": 50,
+        "movement": 45,
+        "mentality": 52,
+        "recovery": 43,
+        "clutch": 48,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 56,
+        "power": 43,
+        "eye": 45,
+        "discipline": 48,
+        "speed": 53,
+        "baseInstinct": 51,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 48,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "2B": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07060",
+  "name": "조성우",
+  "nameEn": "Jo SeongWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 29,
+      "primaryPosition": "SS",
+      "developmentRate": 54,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 54,
+        "velocity": 64,
+        "command": 54,
+        "control": 61,
+        "movement": 51,
+        "mentality": 62,
+        "recovery": 51,
+        "clutch": 50,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 37,
+        "power": 37,
+        "eye": 32,
+        "discipline": 38,
+        "speed": 36,
+        "baseInstinct": 31,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 34,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "SS": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

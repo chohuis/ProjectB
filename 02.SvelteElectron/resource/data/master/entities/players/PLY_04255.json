@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04255",
+  "name": "류상현",
+  "nameEn": "Ryu SangHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 36,
+      "primaryPosition": "2B",
+      "developmentRate": 64,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 64,
+        "velocity": 66,
+        "command": 60,
+        "control": 67,
+        "movement": 63,
+        "mentality": 70,
+        "recovery": 57,
+        "clutch": 58,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 47,
+        "power": 45,
+        "eye": 48,
+        "discipline": 40,
+        "speed": 46,
+        "baseInstinct": 37,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 38,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "2B": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

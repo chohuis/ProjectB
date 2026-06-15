@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09275",
+  "name": "황수기",
+  "nameEn": "Hwang SuKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 94,
+      "primaryPosition": "3B",
+      "developmentRate": 51,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 36,
+        "stamina": 34,
+        "velocity": 35,
+        "command": 27,
+        "control": 29,
+        "movement": 31,
+        "mentality": 37,
+        "recovery": 27,
+        "clutch": 27,
+        "holdRunners": 21
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 41,
+        "power": 27,
+        "eye": 35,
+        "discipline": 37,
+        "speed": 36,
+        "baseInstinct": 32,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 33,
+        "arm": 27,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "3B": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

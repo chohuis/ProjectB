@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06900",
+  "name": "최현찬",
+  "nameEn": "Choi HyeonChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 33,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 59,
+        "velocity": 54,
+        "command": 47,
+        "control": 56,
+        "movement": 50,
+        "mentality": 55,
+        "recovery": 51,
+        "clutch": 48,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 51,
+        "power": 55,
+        "eye": 52,
+        "discipline": 50,
+        "speed": 53,
+        "baseInstinct": 57,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 48,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "SP": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

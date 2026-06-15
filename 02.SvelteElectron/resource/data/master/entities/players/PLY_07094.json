@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07094",
+  "name": "송태빈",
+  "nameEn": "Song TaeBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 98,
+      "primaryPosition": "LF",
+      "developmentRate": 51,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 50,
+        "velocity": 61,
+        "command": 45,
+        "control": 49,
+        "movement": 52,
+        "mentality": 59,
+        "recovery": 45,
+        "clutch": 40,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 45,
+        "power": 42,
+        "eye": 50,
+        "discipline": 44,
+        "speed": 44,
+        "baseInstinct": 40,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 40,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "LF": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

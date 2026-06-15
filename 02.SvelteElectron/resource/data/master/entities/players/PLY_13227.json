@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13227",
+  "name": "라이트 루이스",
+  "nameEn": "Wright Luis",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 82,
+  "popularity": 14,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 11,
+      "primaryPosition": "C",
+      "developmentRate": 61,
+      "potentialHidden": 90,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 51,
+        "velocity": 63,
+        "command": 54,
+        "control": 50,
+        "movement": 60,
+        "mentality": 52,
+        "recovery": 53,
+        "clutch": 54,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 50,
+        "power": 46,
+        "eye": 53,
+        "discipline": 55,
+        "speed": 60,
+        "baseInstinct": 59,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 59,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "C": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14431",
+  "name": "카터 마커스",
+  "nameEn": "Carter Marcus",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 36,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 80,
+      "primaryPosition": "RF",
+      "developmentRate": 54,
+      "potentialHidden": 55,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 71,
+        "velocity": 68,
+        "command": 61,
+        "control": 62,
+        "movement": 67,
+        "mentality": 61,
+        "recovery": 69,
+        "clutch": 68,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 66,
+        "power": 69,
+        "eye": 59,
+        "discipline": 68,
+        "speed": 71,
+        "baseInstinct": 57,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 58,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "RF": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10224",
+  "name": "킹 코디",
+  "nameEn": "King Cody",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 32,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 79,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 86,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 79,
+        "stamina": 76,
+        "velocity": 77,
+        "command": 79,
+        "control": 82,
+        "movement": 82,
+        "mentality": 76,
+        "recovery": 77,
+        "clutch": 77,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 79,
+        "contact": 81,
+        "power": 80,
+        "eye": 83,
+        "discipline": 76,
+        "speed": 81,
+        "baseInstinct": 78,
+        "bunting": 73,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 71,
+        "battingClutch": 77
+      },
+      "positionRatings": {
+        "SP": 79
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

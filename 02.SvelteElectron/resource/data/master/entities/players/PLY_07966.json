@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07966",
+  "name": "안현혁",
+  "nameEn": "An HyeonHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 96,
+      "primaryPosition": "SS",
+      "developmentRate": 49,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 47,
+        "velocity": 48,
+        "command": 44,
+        "control": 50,
+        "movement": 40,
+        "mentality": 48,
+        "recovery": 39,
+        "clutch": 41,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 57,
+        "power": 54,
+        "eye": 49,
+        "discipline": 56,
+        "speed": 60,
+        "baseInstinct": 53,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 54,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "SS": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13277",
+  "name": "베이커 헌터",
+  "nameEn": "Baker Hunter",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 49,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 82,
+      "primaryPosition": "SS",
+      "developmentRate": 55,
+      "potentialHidden": 63,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 63,
+        "velocity": 72,
+        "command": 56,
+        "control": 63,
+        "movement": 54,
+        "mentality": 61,
+        "recovery": 54,
+        "clutch": 60,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 59,
+        "power": 56,
+        "eye": 64,
+        "discipline": 65,
+        "speed": 65,
+        "baseInstinct": 54,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 51,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "SS": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09565",
+  "name": "최재우",
+  "nameEn": "Choi JaeWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 80,
+      "primaryPosition": "3B",
+      "developmentRate": 59,
+      "potentialHidden": 48,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 38,
+        "velocity": 50,
+        "command": 36,
+        "control": 34,
+        "movement": 38,
+        "mentality": 37,
+        "recovery": 39,
+        "clutch": 29,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 44,
+        "power": 42,
+        "eye": 48,
+        "discipline": 40,
+        "speed": 42,
+        "baseInstinct": 37,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 42,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "3B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

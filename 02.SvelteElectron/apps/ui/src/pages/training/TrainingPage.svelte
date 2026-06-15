@@ -69,7 +69,7 @@
   ];
 
   const recoveryPrograms: ProgramCard[] = [
-    { id: "TRN_RECOVERY", title: "컨디셔닝 회복", focus: "회복/유연성", gains: "피로 ↓, 컨디션 ↑", fatigue: -8, risk: 0 },
+    { id: "TRN_RECOVERY", title: "컨디셔닝 회복", focus: "회복/유연성", gains: "피로 ↓, 컨디션 ↑", fatigue: -10, risk: 0 },
   ];
 
   const GAIN_CHIPS: Record<string, Array<{ label: string; type: "up" | "down" }>> = {

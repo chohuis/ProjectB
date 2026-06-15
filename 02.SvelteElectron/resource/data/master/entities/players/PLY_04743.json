@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04743",
+  "name": "박수완",
+  "nameEn": "Park SuWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 88,
+      "primaryPosition": "2B",
+      "developmentRate": 53,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 50,
+        "velocity": 65,
+        "command": 57,
+        "control": 59,
+        "movement": 51,
+        "mentality": 54,
+        "recovery": 54,
+        "clutch": 44,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 47,
+        "power": 37,
+        "eye": 38,
+        "discipline": 37,
+        "speed": 39,
+        "baseInstinct": 40,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 36,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "2B": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

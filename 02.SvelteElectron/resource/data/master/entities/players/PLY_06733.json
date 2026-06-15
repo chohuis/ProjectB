@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06733",
+  "name": "권현빈",
+  "nameEn": "Kwon HyeonBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 16,
+      "primaryPosition": "LF",
+      "developmentRate": 51,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 53,
+        "velocity": 55,
+        "command": 47,
+        "control": 52,
+        "movement": 53,
+        "mentality": 54,
+        "recovery": 57,
+        "clutch": 45,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 43,
+        "power": 38,
+        "eye": 41,
+        "discipline": 36,
+        "speed": 49,
+        "baseInstinct": 45,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 46,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "LF": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

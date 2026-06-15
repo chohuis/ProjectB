@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05510",
+  "name": "임준식",
+  "nameEn": "Lim JunSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 42,
+      "primaryPosition": "CF",
+      "developmentRate": 63,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 60,
+        "velocity": 70,
+        "command": 61,
+        "control": 66,
+        "movement": 60,
+        "mentality": 71,
+        "recovery": 59,
+        "clutch": 55,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 52,
+        "power": 42,
+        "eye": 41,
+        "discipline": 47,
+        "speed": 43,
+        "baseInstinct": 48,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 46,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "CF": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

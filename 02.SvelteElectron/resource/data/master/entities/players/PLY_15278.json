@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15278",
+  "name": "로빈슨 루이스",
+  "nameEn": "Robinson Luis",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 84,
+  "popularity": 41,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 7,
+      "primaryPosition": "2B",
+      "developmentRate": 53,
+      "potentialHidden": 78,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 53,
+        "velocity": 60,
+        "command": 46,
+        "control": 48,
+        "movement": 51,
+        "mentality": 58,
+        "recovery": 43,
+        "clutch": 52,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 44,
+        "power": 46,
+        "eye": 56,
+        "discipline": 50,
+        "speed": 58,
+        "baseInstinct": 45,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 47,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "2B": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

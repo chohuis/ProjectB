@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11438",
+  "name": "잭슨 타일러",
+  "nameEn": "Jackson Tyler",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 83,
+  "popularity": 36,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 96,
+      "primaryPosition": "1B",
+      "developmentRate": 39,
+      "potentialHidden": 57,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 65,
+        "velocity": 71,
+        "command": 66,
+        "control": 62,
+        "movement": 68,
+        "mentality": 59,
+        "recovery": 54,
+        "clutch": 65,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 63,
+        "power": 65,
+        "eye": 57,
+        "discipline": 62,
+        "speed": 62,
+        "baseInstinct": 67,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 66,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "1B": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

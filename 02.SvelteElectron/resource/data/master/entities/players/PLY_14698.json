@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14698",
+  "name": "잭슨 카일",
+  "nameEn": "Jackson Kyle",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 47,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 83,
+      "primaryPosition": "2B",
+      "developmentRate": 56,
+      "potentialHidden": 74,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 45,
+        "velocity": 50,
+        "command": 44,
+        "control": 49,
+        "movement": 51,
+        "mentality": 47,
+        "recovery": 38,
+        "clutch": 48,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 47,
+        "power": 42,
+        "eye": 47,
+        "discipline": 52,
+        "speed": 51,
+        "baseInstinct": 46,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 41,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "2B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

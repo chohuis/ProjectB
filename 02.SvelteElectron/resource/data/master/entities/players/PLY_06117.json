@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06117",
+  "name": "권재현",
+  "nameEn": "Kwon JaeHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 40,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 92,
+      "primaryPosition": "1B",
+      "developmentRate": 52,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 48,
+        "velocity": 54,
+        "command": 39,
+        "control": 47,
+        "movement": 36,
+        "mentality": 40,
+        "recovery": 39,
+        "clutch": 32,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 32,
+        "power": 34,
+        "eye": 31,
+        "discipline": 30,
+        "speed": 41,
+        "baseInstinct": 34,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 26,
+        "arm": 36,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "1B": 36
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

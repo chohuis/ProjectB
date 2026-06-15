@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08046",
+  "name": "황세혁",
+  "nameEn": "Hwang SeHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 77,
+      "primaryPosition": "RF",
+      "developmentRate": 57,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 46,
+        "velocity": 58,
+        "command": 49,
+        "control": 54,
+        "movement": 48,
+        "mentality": 52,
+        "recovery": 46,
+        "clutch": 46,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 57,
+        "power": 51,
+        "eye": 50,
+        "discipline": 50,
+        "speed": 61,
+        "baseInstinct": 49,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 53,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "RF": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

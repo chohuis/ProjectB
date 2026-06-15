@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14191",
+  "name": "토마스 에반",
+  "nameEn": "Thomas Evan",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 32,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 59,
+      "primaryPosition": "C",
+      "developmentRate": 49,
+      "potentialHidden": 73,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 62,
+        "velocity": 73,
+        "command": 70,
+        "control": 61,
+        "movement": 70,
+        "mentality": 73,
+        "recovery": 70,
+        "clutch": 63,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 66,
+        "power": 69,
+        "eye": 69,
+        "discipline": 73,
+        "speed": 68,
+        "baseInstinct": 70,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 69,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "C": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

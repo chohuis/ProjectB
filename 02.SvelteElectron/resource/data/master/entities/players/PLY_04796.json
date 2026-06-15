@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04796",
+  "name": "임동재",
+  "nameEn": "Lim DongJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 66,
+      "primaryPosition": "SP",
+      "developmentRate": 45,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 41,
+        "stamina": 37,
+        "velocity": 46,
+        "command": 41,
+        "control": 38,
+        "movement": 36,
+        "mentality": 46,
+        "recovery": 36,
+        "clutch": 33,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 42,
+        "power": 32,
+        "eye": 40,
+        "discipline": 36,
+        "speed": 44,
+        "baseInstinct": 41,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 35,
+        "arm": 39,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "SP": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

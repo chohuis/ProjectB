@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07291",
+  "name": "오민기",
+  "nameEn": "Oh MinKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 1,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 53,
+        "velocity": 62,
+        "command": 53,
+        "control": 55,
+        "movement": 48,
+        "mentality": 59,
+        "recovery": 54,
+        "clutch": 52,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 54,
+        "power": 49,
+        "eye": 48,
+        "discipline": 51,
+        "speed": 47,
+        "baseInstinct": 50,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 44,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SP": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

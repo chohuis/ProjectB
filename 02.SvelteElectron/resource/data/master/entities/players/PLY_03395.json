@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03395",
+  "name": "서현환",
+  "nameEn": "Seo HyeonHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 67,
+      "primaryPosition": "SP",
+      "developmentRate": 66,
+      "potentialHidden": 90,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 74,
+        "velocity": 75,
+        "command": 73,
+        "control": 76,
+        "movement": 69,
+        "mentality": 79,
+        "recovery": 69,
+        "clutch": 59,
+        "holdRunners": 69
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 65,
+        "power": 63,
+        "eye": 54,
+        "discipline": 57,
+        "speed": 60,
+        "baseInstinct": 57,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 55,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "SP": 73
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

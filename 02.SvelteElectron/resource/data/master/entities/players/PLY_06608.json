@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06608",
+  "name": "신찬욱",
+  "nameEn": "Shin ChanWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 91,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 85,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 69,
+        "velocity": 73,
+        "command": 64,
+        "control": 63,
+        "movement": 70,
+        "mentality": 66,
+        "recovery": 59,
+        "clutch": 59,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 53,
+        "power": 49,
+        "eye": 51,
+        "discipline": 49,
+        "speed": 48,
+        "baseInstinct": 52,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 51,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SP": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

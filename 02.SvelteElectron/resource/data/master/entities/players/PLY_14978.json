@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14978",
+  "name": "마르티네스 다니엘",
+  "nameEn": "Martinez Daniel",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 16,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 31,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 73,
+      "primaryPosition": "2B",
+      "developmentRate": 50,
+      "potentialHidden": 54,
+      "proServiceYears": 9,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 63,
+        "velocity": 77,
+        "command": 64,
+        "control": 67,
+        "movement": 67,
+        "mentality": 69,
+        "recovery": 60,
+        "clutch": 56,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 66,
+        "power": 70,
+        "eye": 64,
+        "discipline": 70,
+        "speed": 65,
+        "baseInstinct": 58,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 60,
+        "battingClutch": 68
+      },
+      "positionRatings": {
+        "2B": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

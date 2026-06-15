@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08293",
+  "name": "오도욱",
+  "nameEn": "Oh DoWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 5,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 36,
+      "primaryPosition": "C",
+      "developmentRate": 64,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 54,
+        "velocity": 60,
+        "command": 46,
+        "control": 54,
+        "movement": 49,
+        "mentality": 53,
+        "recovery": 48,
+        "clutch": 46,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 43,
+        "power": 46,
+        "eye": 48,
+        "discipline": 49,
+        "speed": 43,
+        "baseInstinct": 38,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 43,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "C": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

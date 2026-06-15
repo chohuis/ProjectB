@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04869",
+  "name": "김성호",
+  "nameEn": "Kim SeongHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 84,
+      "primaryPosition": "RF",
+      "developmentRate": 50,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 54,
+        "velocity": 69,
+        "command": 54,
+        "control": 52,
+        "movement": 54,
+        "mentality": 65,
+        "recovery": 48,
+        "clutch": 49,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 39,
+        "power": 39,
+        "eye": 39,
+        "discipline": 41,
+        "speed": 36,
+        "baseInstinct": 41,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 33,
+        "arm": 39,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "RF": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

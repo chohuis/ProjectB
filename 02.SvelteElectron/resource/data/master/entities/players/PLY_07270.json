@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07270",
+  "name": "송준현",
+  "nameEn": "Song JunHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 42,
+      "primaryPosition": "1B",
+      "developmentRate": 53,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 51,
+        "velocity": 57,
+        "command": 59,
+        "control": 53,
+        "movement": 58,
+        "mentality": 63,
+        "recovery": 49,
+        "clutch": 45,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 32,
+        "power": 39,
+        "eye": 35,
+        "discipline": 41,
+        "speed": 41,
+        "baseInstinct": 31,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 34,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "1B": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11623",
+  "name": "앨런 오스틴",
+  "nameEn": "Allen Austin",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 49,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 59,
+      "primaryPosition": "SP",
+      "developmentRate": 63,
+      "potentialHidden": 56,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 67,
+        "velocity": 74,
+        "command": 67,
+        "control": 64,
+        "movement": 61,
+        "mentality": 72,
+        "recovery": 60,
+        "clutch": 61,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 69,
+        "power": 57,
+        "eye": 70,
+        "discipline": 59,
+        "speed": 71,
+        "baseInstinct": 67,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 68,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "SP": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

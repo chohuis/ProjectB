@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05613",
+  "name": "권수우",
+  "nameEn": "Kwon SuWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 82,
+      "primaryPosition": "1B",
+      "developmentRate": 64,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 45,
+        "velocity": 49,
+        "command": 41,
+        "control": 47,
+        "movement": 48,
+        "mentality": 50,
+        "recovery": 39,
+        "clutch": 39,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 44,
+        "power": 35,
+        "eye": 39,
+        "discipline": 35,
+        "speed": 41,
+        "baseInstinct": 37,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 41,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "1B": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

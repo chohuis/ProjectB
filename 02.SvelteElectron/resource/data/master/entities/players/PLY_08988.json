@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08988",
+  "name": "황태성",
+  "nameEn": "Hwang TaeSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 15,
+      "primaryPosition": "2B",
+      "developmentRate": 50,
+      "potentialHidden": 44,
+      "pitching": {
+        "ovr": 35,
+        "stamina": 36,
+        "velocity": 38,
+        "command": 34,
+        "control": 29,
+        "movement": 31,
+        "mentality": 35,
+        "recovery": 33,
+        "clutch": 31,
+        "holdRunners": 26
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 38,
+        "power": 33,
+        "eye": 34,
+        "discipline": 42,
+        "speed": 42,
+        "baseInstinct": 38,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 36,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "2B": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

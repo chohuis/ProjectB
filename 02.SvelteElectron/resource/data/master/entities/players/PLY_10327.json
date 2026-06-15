@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10327",
+  "name": "루이스 케빈",
+  "nameEn": "Lewis Kevin",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 25,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 21,
+      "primaryPosition": "SS",
+      "developmentRate": 64,
+      "potentialHidden": 86,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 80,
+        "velocity": 85,
+        "command": 80,
+        "control": 80,
+        "movement": 77,
+        "mentality": 78,
+        "recovery": 71,
+        "clutch": 68,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 77,
+        "contact": 77,
+        "power": 75,
+        "eye": 74,
+        "discipline": 81,
+        "speed": 79,
+        "baseInstinct": 70,
+        "bunting": 68,
+        "platoon": 50,
+        "fielding": 73,
+        "arm": 75,
+        "battingClutch": 74
+      },
+      "positionRatings": {
+        "SS": 77
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

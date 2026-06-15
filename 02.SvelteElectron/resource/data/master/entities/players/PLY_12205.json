@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12205",
+  "name": "홀 조던",
+  "nameEn": "Hall Jordan",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 85,
+  "popularity": 10,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 24,
+      "primaryPosition": "RF",
+      "developmentRate": 39,
+      "potentialHidden": 69,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 73,
+        "velocity": 74,
+        "command": 72,
+        "control": 78,
+        "movement": 77,
+        "mentality": 70,
+        "recovery": 64,
+        "clutch": 67,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 71,
+        "power": 65,
+        "eye": 76,
+        "discipline": 67,
+        "speed": 76,
+        "baseInstinct": 70,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 70,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "RF": 73
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

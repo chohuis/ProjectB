@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06829",
+  "name": "권기훈",
+  "nameEn": "Kwon KiHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 90,
+      "primaryPosition": "C",
+      "developmentRate": 64,
+      "potentialHidden": 87,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 68,
+        "velocity": 74,
+        "command": 59,
+        "control": 59,
+        "movement": 59,
+        "mentality": 63,
+        "recovery": 63,
+        "clutch": 59,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 53,
+        "power": 45,
+        "eye": 50,
+        "discipline": 40,
+        "speed": 45,
+        "baseInstinct": 46,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 41,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "C": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

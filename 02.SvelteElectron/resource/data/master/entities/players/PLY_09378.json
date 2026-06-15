@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09378",
+  "name": "오영수",
+  "nameEn": "Oh YoungSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 8,
+      "primaryPosition": "2B",
+      "developmentRate": 41,
+      "potentialHidden": 51,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 49,
+        "velocity": 45,
+        "command": 45,
+        "control": 45,
+        "movement": 44,
+        "mentality": 43,
+        "recovery": 43,
+        "clutch": 34,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 46,
+        "power": 43,
+        "eye": 42,
+        "discipline": 41,
+        "speed": 42,
+        "baseInstinct": 38,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 42,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "2B": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

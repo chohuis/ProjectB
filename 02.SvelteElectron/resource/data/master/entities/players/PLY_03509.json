@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03509",
+  "name": "박훈훈",
+  "nameEn": "Park HunHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 68,
+      "primaryPosition": "2B",
+      "developmentRate": 61,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 76,
+        "velocity": 86,
+        "command": 72,
+        "control": 74,
+        "movement": 68,
+        "mentality": 73,
+        "recovery": 67,
+        "clutch": 69,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 65,
+        "power": 62,
+        "eye": 66,
+        "discipline": 67,
+        "speed": 65,
+        "baseInstinct": 59,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 61,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "2B": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

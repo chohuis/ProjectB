@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15595",
+  "name": "마르티네스 숀",
+  "nameEn": "Martinez Sean",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 12,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 1,
+      "primaryPosition": "2B",
+      "developmentRate": 62,
+      "potentialHidden": 82,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 57,
+        "velocity": 59,
+        "command": 62,
+        "control": 62,
+        "movement": 58,
+        "mentality": 58,
+        "recovery": 58,
+        "clutch": 47,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 60,
+        "power": 51,
+        "eye": 62,
+        "discipline": 57,
+        "speed": 56,
+        "baseInstinct": 56,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 51,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "2B": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

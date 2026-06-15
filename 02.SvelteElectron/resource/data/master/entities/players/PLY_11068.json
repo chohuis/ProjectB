@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11068",
+  "name": "라이트 숀",
+  "nameEn": "Wright Sean",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 39,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 80,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 82,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 69,
+        "velocity": 81,
+        "command": 75,
+        "control": 74,
+        "movement": 76,
+        "mentality": 81,
+        "recovery": 72,
+        "clutch": 71,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 78,
+        "contact": 74,
+        "power": 71,
+        "eye": 71,
+        "discipline": 77,
+        "speed": 80,
+        "baseInstinct": 71,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 69,
+        "battingClutch": 73
+      },
+      "positionRatings": {
+        "SP": 78
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

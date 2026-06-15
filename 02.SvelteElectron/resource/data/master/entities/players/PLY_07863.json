@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07863",
+  "name": "송도호",
+  "nameEn": "Song DoHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 72,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 57,
+        "velocity": 69,
+        "command": 50,
+        "control": 56,
+        "movement": 55,
+        "mentality": 60,
+        "recovery": 52,
+        "clutch": 47,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 36,
+        "power": 34,
+        "eye": 33,
+        "discipline": 37,
+        "speed": 45,
+        "baseInstinct": 34,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 37,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "SP": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

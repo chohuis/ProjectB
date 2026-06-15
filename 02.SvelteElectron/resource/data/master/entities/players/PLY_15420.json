@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15420",
+  "name": "데이비스 오스틴",
+  "nameEn": "Davis Austin",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 84,
+  "popularity": 17,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 30,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 98,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 57,
+      "proServiceYears": 8,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 48,
+        "velocity": 56,
+        "command": 44,
+        "control": 50,
+        "movement": 49,
+        "mentality": 59,
+        "recovery": 51,
+        "clutch": 41,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 52,
+        "power": 49,
+        "eye": 46,
+        "discipline": 43,
+        "speed": 55,
+        "baseInstinct": 52,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 55,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

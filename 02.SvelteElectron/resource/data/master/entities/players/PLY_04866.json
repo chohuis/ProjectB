@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04866",
+  "name": "권도성",
+  "nameEn": "Kwon DoSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 11,
+      "primaryPosition": "2B",
+      "developmentRate": 53,
+      "potentialHidden": 51,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 44,
+        "velocity": 55,
+        "command": 46,
+        "control": 49,
+        "movement": 49,
+        "mentality": 51,
+        "recovery": 42,
+        "clutch": 45,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 37,
+        "power": 40,
+        "eye": 43,
+        "discipline": 39,
+        "speed": 47,
+        "baseInstinct": 35,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 41,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "2B": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

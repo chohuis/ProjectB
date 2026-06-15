@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03750",
+  "name": "안영민",
+  "nameEn": "An YoungMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 56,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 63,
+        "velocity": 71,
+        "command": 68,
+        "control": 61,
+        "movement": 61,
+        "mentality": 65,
+        "recovery": 66,
+        "clutch": 56,
+        "holdRunners": 63
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 49,
+        "power": 35,
+        "eye": 43,
+        "discipline": 41,
+        "speed": 42,
+        "baseInstinct": 41,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 38,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "SP": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11244",
+  "name": "해리스 콜",
+  "nameEn": "Harris Cole",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 10,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 30,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 57,
+      "primaryPosition": "LF",
+      "developmentRate": 36,
+      "potentialHidden": 60,
+      "proServiceYears": 8,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 63,
+        "velocity": 69,
+        "command": 50,
+        "control": 55,
+        "movement": 51,
+        "mentality": 64,
+        "recovery": 53,
+        "clutch": 56,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 63,
+        "power": 53,
+        "eye": 53,
+        "discipline": 57,
+        "speed": 64,
+        "baseInstinct": 62,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 53,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "LF": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

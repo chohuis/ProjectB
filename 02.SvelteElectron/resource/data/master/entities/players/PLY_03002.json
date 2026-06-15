@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03002",
+  "name": "윤상민",
+  "nameEn": "Yoon SangMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 41,
+      "primaryPosition": "SP",
+      "developmentRate": 72,
+      "potentialHidden": 90,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 57,
+        "velocity": 68,
+        "command": 64,
+        "control": 66,
+        "movement": 64,
+        "mentality": 68,
+        "recovery": 52,
+        "clutch": 51,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 60,
+        "power": 58,
+        "eye": 51,
+        "discipline": 56,
+        "speed": 62,
+        "baseInstinct": 53,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 48,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "SP": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

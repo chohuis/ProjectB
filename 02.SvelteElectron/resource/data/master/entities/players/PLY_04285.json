@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04285",
+  "name": "정우식",
+  "nameEn": "Jung WooSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 9,
+      "primaryPosition": "3B",
+      "developmentRate": 58,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 53,
+        "velocity": 55,
+        "command": 48,
+        "control": 51,
+        "movement": 54,
+        "mentality": 51,
+        "recovery": 49,
+        "clutch": 44,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 64,
+        "power": 62,
+        "eye": 53,
+        "discipline": 58,
+        "speed": 58,
+        "baseInstinct": 58,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 51,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "3B": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

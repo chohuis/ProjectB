@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15455",
+  "name": "로드리게스 블레이크",
+  "nameEn": "Rodriguez Blake",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 29,
+      "primaryPosition": "SS",
+      "developmentRate": 59,
+      "potentialHidden": 78,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 66,
+        "velocity": 80,
+        "command": 69,
+        "control": 65,
+        "movement": 71,
+        "mentality": 71,
+        "recovery": 67,
+        "clutch": 70,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 68,
+        "power": 63,
+        "eye": 74,
+        "discipline": 73,
+        "speed": 71,
+        "baseInstinct": 70,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 67,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "SS": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

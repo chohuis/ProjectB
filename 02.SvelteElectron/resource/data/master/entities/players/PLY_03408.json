@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03408",
+  "name": "강영재",
+  "nameEn": "Kang YoungJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 82,
+      "primaryPosition": "SP",
+      "developmentRate": 70,
+      "potentialHidden": 90,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 68,
+        "velocity": 74,
+        "command": 66,
+        "control": 74,
+        "movement": 72,
+        "mentality": 78,
+        "recovery": 69,
+        "clutch": 62,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 58,
+        "power": 56,
+        "eye": 57,
+        "discipline": 59,
+        "speed": 53,
+        "baseInstinct": 56,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 55,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SP": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

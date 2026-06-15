@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11815",
+  "name": "마르티네스 조던",
+  "nameEn": "Martinez Jordan",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 35,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 63,
+      "primaryPosition": "CF",
+      "developmentRate": 45,
+      "potentialHidden": 72,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 76,
+        "velocity": 87,
+        "command": 67,
+        "control": 70,
+        "movement": 75,
+        "mentality": 83,
+        "recovery": 78,
+        "clutch": 67,
+        "holdRunners": 75
+      },
+      "batting": {
+        "ovr": 77,
+        "contact": 75,
+        "power": 75,
+        "eye": 75,
+        "discipline": 79,
+        "speed": 84,
+        "baseInstinct": 74,
+        "bunting": 70,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 76,
+        "battingClutch": 71
+      },
+      "positionRatings": {
+        "CF": 77
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

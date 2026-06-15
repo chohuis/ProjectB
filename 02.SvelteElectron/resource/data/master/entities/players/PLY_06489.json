@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06489",
+  "name": "정상준",
+  "nameEn": "Jung SangJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 80,
+      "primaryPosition": "SS",
+      "developmentRate": 67,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 54,
+        "velocity": 50,
+        "command": 51,
+        "control": 50,
+        "movement": 44,
+        "mentality": 52,
+        "recovery": 47,
+        "clutch": 37,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 63,
+        "power": 58,
+        "eye": 63,
+        "discipline": 63,
+        "speed": 66,
+        "baseInstinct": 65,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 60,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "SS": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14004",
+  "name": "애덤스 로건",
+  "nameEn": "Adams Logan",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 17,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 77,
+      "primaryPosition": "3B",
+      "developmentRate": 60,
+      "potentialHidden": 61,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 70,
+        "velocity": 81,
+        "command": 66,
+        "control": 70,
+        "movement": 77,
+        "mentality": 73,
+        "recovery": 75,
+        "clutch": 65,
+        "holdRunners": 69
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 66,
+        "power": 74,
+        "eye": 66,
+        "discipline": 66,
+        "speed": 79,
+        "baseInstinct": 70,
+        "bunting": 68,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 69,
+        "battingClutch": 75
+      },
+      "positionRatings": {
+        "3B": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

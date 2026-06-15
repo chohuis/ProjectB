@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07826",
+  "name": "서현재",
+  "nameEn": "Seo HyeonJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 88,
+      "primaryPosition": "1B",
+      "developmentRate": 64,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 46,
+        "velocity": 52,
+        "command": 46,
+        "control": 49,
+        "movement": 45,
+        "mentality": 47,
+        "recovery": 42,
+        "clutch": 46,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 55,
+        "power": 50,
+        "eye": 52,
+        "discipline": 55,
+        "speed": 53,
+        "baseInstinct": 45,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 49,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "1B": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

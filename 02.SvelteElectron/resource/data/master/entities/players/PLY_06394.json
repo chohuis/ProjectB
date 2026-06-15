@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06394",
+  "name": "윤재민",
+  "nameEn": "Yoon JaeMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 50,
+      "primaryPosition": "SP",
+      "developmentRate": 52,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 38,
+        "velocity": 47,
+        "command": 38,
+        "control": 42,
+        "movement": 44,
+        "mentality": 42,
+        "recovery": 40,
+        "clutch": 37,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 39,
+        "power": 41,
+        "eye": 44,
+        "discipline": 40,
+        "speed": 45,
+        "baseInstinct": 38,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 33,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "SP": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14744",
+  "name": "라이트 재크",
+  "nameEn": "Wright Zach",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 32,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 42,
+      "primaryPosition": "SP",
+      "developmentRate": 61,
+      "potentialHidden": 57,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 50,
+        "velocity": 53,
+        "command": 38,
+        "control": 47,
+        "movement": 40,
+        "mentality": 42,
+        "recovery": 37,
+        "clutch": 42,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 46,
+        "power": 42,
+        "eye": 52,
+        "discipline": 43,
+        "speed": 43,
+        "baseInstinct": 38,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 48,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "SP": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

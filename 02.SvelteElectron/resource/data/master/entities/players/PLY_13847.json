@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13847",
+  "name": "무어 콜",
+  "nameEn": "Moore Cole",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 32,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 21,
+      "primaryPosition": "SP",
+      "developmentRate": 48,
+      "potentialHidden": 76,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 71,
+        "velocity": 86,
+        "command": 68,
+        "control": 77,
+        "movement": 76,
+        "mentality": 72,
+        "recovery": 69,
+        "clutch": 66,
+        "holdRunners": 73
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 78,
+        "power": 73,
+        "eye": 75,
+        "discipline": 71,
+        "speed": 71,
+        "baseInstinct": 75,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 75,
+        "battingClutch": 72
+      },
+      "positionRatings": {
+        "SP": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

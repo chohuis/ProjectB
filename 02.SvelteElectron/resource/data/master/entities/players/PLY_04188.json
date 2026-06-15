@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04188",
+  "name": "류정완",
+  "nameEn": "Ryu JungWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 5,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 73,
+      "primaryPosition": "SP",
+      "developmentRate": 68,
+      "potentialHidden": 82,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 53,
+        "velocity": 67,
+        "command": 48,
+        "control": 51,
+        "movement": 57,
+        "mentality": 60,
+        "recovery": 55,
+        "clutch": 50,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 62,
+        "power": 49,
+        "eye": 52,
+        "discipline": 56,
+        "speed": 63,
+        "baseInstinct": 59,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 51,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

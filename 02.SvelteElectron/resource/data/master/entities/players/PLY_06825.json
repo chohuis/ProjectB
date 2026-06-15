@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06825",
+  "name": "서찬완",
+  "nameEn": "Seo ChanWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 5,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 48,
+        "velocity": 57,
+        "command": 46,
+        "control": 52,
+        "movement": 46,
+        "mentality": 58,
+        "recovery": 49,
+        "clutch": 50,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 54,
+        "power": 54,
+        "eye": 54,
+        "discipline": 54,
+        "speed": 59,
+        "baseInstinct": 50,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 48,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

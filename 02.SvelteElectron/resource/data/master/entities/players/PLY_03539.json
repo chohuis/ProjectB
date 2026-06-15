@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03539",
+  "name": "송기빈",
+  "nameEn": "Song KiBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 95,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 58,
+        "velocity": 66,
+        "command": 56,
+        "control": 66,
+        "movement": 57,
+        "mentality": 68,
+        "recovery": 61,
+        "clutch": 52,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 53,
+        "power": 51,
+        "eye": 48,
+        "discipline": 53,
+        "speed": 48,
+        "baseInstinct": 48,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 47,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SP": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

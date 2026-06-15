@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03289",
+  "name": "류현재",
+  "nameEn": "Ryu HyeonJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 56,
+      "primaryPosition": "CF",
+      "developmentRate": 60,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 62,
+        "velocity": 66,
+        "command": 59,
+        "control": 60,
+        "movement": 55,
+        "mentality": 61,
+        "recovery": 58,
+        "clutch": 50,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 68,
+        "power": 63,
+        "eye": 69,
+        "discipline": 66,
+        "speed": 68,
+        "baseInstinct": 67,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 69,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "CF": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

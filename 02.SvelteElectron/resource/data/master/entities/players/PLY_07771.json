@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07771",
+  "name": "권수수",
+  "nameEn": "Kwon SuSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 68,
+      "primaryPosition": "SP",
+      "developmentRate": 63,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 51,
+        "velocity": 61,
+        "command": 50,
+        "control": 57,
+        "movement": 50,
+        "mentality": 58,
+        "recovery": 51,
+        "clutch": 45,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 43,
+        "power": 42,
+        "eye": 42,
+        "discipline": 42,
+        "speed": 51,
+        "baseInstinct": 39,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 47,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

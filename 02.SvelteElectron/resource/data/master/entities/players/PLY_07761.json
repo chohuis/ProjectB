@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07761",
+  "name": "장민기",
+  "nameEn": "Jang MinKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 72,
+      "primaryPosition": "SS",
+      "developmentRate": 51,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 53,
+        "velocity": 51,
+        "command": 47,
+        "control": 51,
+        "movement": 46,
+        "mentality": 47,
+        "recovery": 40,
+        "clutch": 37,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 46,
+        "power": 46,
+        "eye": 54,
+        "discipline": 43,
+        "speed": 47,
+        "baseInstinct": 52,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 45,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "SS": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

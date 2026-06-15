@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07707",
+  "name": "조도수",
+  "nameEn": "Jo DoSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 22,
+      "primaryPosition": "2B",
+      "developmentRate": 53,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 53,
+        "velocity": 60,
+        "command": 51,
+        "control": 61,
+        "movement": 59,
+        "mentality": 62,
+        "recovery": 49,
+        "clutch": 47,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 59,
+        "power": 53,
+        "eye": 57,
+        "discipline": 53,
+        "speed": 56,
+        "baseInstinct": 54,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 53,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "2B": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

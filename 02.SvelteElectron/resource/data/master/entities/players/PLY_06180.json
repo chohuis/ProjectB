@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06180",
+  "name": "이재빈",
+  "nameEn": "Lee JaeBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 75,
+      "primaryPosition": "RF",
+      "developmentRate": 47,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 53,
+        "velocity": 59,
+        "command": 50,
+        "control": 47,
+        "movement": 53,
+        "mentality": 57,
+        "recovery": 50,
+        "clutch": 49,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 46,
+        "power": 43,
+        "eye": 44,
+        "discipline": 46,
+        "speed": 40,
+        "baseInstinct": 42,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 43,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "RF": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

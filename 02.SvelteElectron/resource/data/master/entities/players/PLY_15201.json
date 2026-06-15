@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15201",
+  "name": "라이트 브랜던",
+  "nameEn": "Wright Brandon",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 19,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 49,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 77,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 65,
+        "velocity": 73,
+        "command": 67,
+        "control": 62,
+        "movement": 62,
+        "mentality": 72,
+        "recovery": 67,
+        "clutch": 65,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 65,
+        "power": 70,
+        "eye": 73,
+        "discipline": 63,
+        "speed": 75,
+        "baseInstinct": 71,
+        "bunting": 63,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 61,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "SP": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

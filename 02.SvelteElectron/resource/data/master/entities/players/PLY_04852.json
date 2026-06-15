@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04852",
+  "name": "박준진",
+  "nameEn": "Park JunJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 20,
+      "primaryPosition": "C",
+      "developmentRate": 49,
+      "potentialHidden": 64,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 55,
+        "velocity": 61,
+        "command": 48,
+        "control": 55,
+        "movement": 54,
+        "mentality": 59,
+        "recovery": 57,
+        "clutch": 43,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 45,
+        "power": 39,
+        "eye": 42,
+        "discipline": 44,
+        "speed": 48,
+        "baseInstinct": 39,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 45,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "C": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

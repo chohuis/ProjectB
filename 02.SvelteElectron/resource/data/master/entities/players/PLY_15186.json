@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15186",
+  "name": "윌리엄스 조던",
+  "nameEn": "Williams Jordan",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 15,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 51,
+      "primaryPosition": "C",
+      "developmentRate": 60,
+      "potentialHidden": 83,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 61,
+        "velocity": 58,
+        "command": 51,
+        "control": 56,
+        "movement": 52,
+        "mentality": 58,
+        "recovery": 44,
+        "clutch": 48,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 47,
+        "power": 54,
+        "eye": 60,
+        "discipline": 47,
+        "speed": 53,
+        "baseInstinct": 51,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 55,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "C": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

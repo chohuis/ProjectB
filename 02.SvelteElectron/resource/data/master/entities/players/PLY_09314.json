@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09314",
+  "name": "강민진",
+  "nameEn": "Kang MinJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 71,
+      "primaryPosition": "RF",
+      "developmentRate": 56,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 44,
+        "velocity": 46,
+        "command": 38,
+        "control": 36,
+        "movement": 44,
+        "mentality": 41,
+        "recovery": 43,
+        "clutch": 37,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 33,
+        "contact": 28,
+        "power": 31,
+        "eye": 36,
+        "discipline": 25,
+        "speed": 38,
+        "baseInstinct": 31,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 22,
+        "arm": 33,
+        "battingClutch": 23
+      },
+      "positionRatings": {
+        "RF": 33
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09205",
+  "name": "오진호",
+  "nameEn": "Oh JinHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 3,
+      "primaryPosition": "3B",
+      "developmentRate": 41,
+      "potentialHidden": 40,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 46,
+        "velocity": 49,
+        "command": 40,
+        "control": 42,
+        "movement": 36,
+        "mentality": 38,
+        "recovery": 37,
+        "clutch": 36,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 37,
+        "power": 32,
+        "eye": 37,
+        "discipline": 36,
+        "speed": 36,
+        "baseInstinct": 37,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 35,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "3B": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08287",
+  "name": "박찬식",
+  "nameEn": "Park ChanSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 47,
+      "primaryPosition": "2B",
+      "developmentRate": 53,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 48,
+        "velocity": 53,
+        "command": 51,
+        "control": 51,
+        "movement": 47,
+        "mentality": 50,
+        "recovery": 45,
+        "clutch": 42,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 51,
+        "power": 50,
+        "eye": 49,
+        "discipline": 46,
+        "speed": 54,
+        "baseInstinct": 47,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 47,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "2B": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05163",
+  "name": "윤지우",
+  "nameEn": "Yoon JiWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 35,
+      "primaryPosition": "RF",
+      "developmentRate": 46,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 38,
+        "velocity": 47,
+        "command": 44,
+        "control": 36,
+        "movement": 38,
+        "mentality": 43,
+        "recovery": 34,
+        "clutch": 42,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 47,
+        "power": 42,
+        "eye": 46,
+        "discipline": 41,
+        "speed": 44,
+        "baseInstinct": 39,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 35,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "RF": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

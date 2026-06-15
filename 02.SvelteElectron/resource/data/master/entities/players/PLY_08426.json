@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08426",
+  "name": "서정윤",
+  "nameEn": "Seo JungYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 96,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 33,
+        "stamina": 33,
+        "velocity": 37,
+        "command": 32,
+        "control": 25,
+        "movement": 34,
+        "mentality": 36,
+        "recovery": 23,
+        "clutch": 28,
+        "holdRunners": 24
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 41,
+        "power": 34,
+        "eye": 37,
+        "discipline": 36,
+        "speed": 36,
+        "baseInstinct": 34,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 33,
+        "arm": 34,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "SP": 33
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04684",
+  "name": "류훈수",
+  "nameEn": "Ryu HunSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 84,
+      "primaryPosition": "C",
+      "developmentRate": 50,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 41,
+        "stamina": 42,
+        "velocity": 49,
+        "command": 36,
+        "control": 36,
+        "movement": 38,
+        "mentality": 36,
+        "recovery": 38,
+        "clutch": 31,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 45,
+        "power": 33,
+        "eye": 45,
+        "discipline": 42,
+        "speed": 44,
+        "baseInstinct": 33,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 36,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "C": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

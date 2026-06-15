@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03368",
+  "name": "박민준",
+  "nameEn": "Park MinJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 18,
+      "primaryPosition": "3B",
+      "developmentRate": 64,
+      "potentialHidden": 93,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 55,
+        "velocity": 59,
+        "command": 53,
+        "control": 60,
+        "movement": 52,
+        "mentality": 59,
+        "recovery": 54,
+        "clutch": 58,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 59,
+        "power": 52,
+        "eye": 58,
+        "discipline": 62,
+        "speed": 61,
+        "baseInstinct": 62,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 56,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "3B": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

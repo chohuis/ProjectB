@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05400",
+  "name": "김세기",
+  "nameEn": "Kim SeKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 73,
+      "primaryPosition": "3B",
+      "developmentRate": 60,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 55,
+        "velocity": 60,
+        "command": 50,
+        "control": 49,
+        "movement": 55,
+        "mentality": 53,
+        "recovery": 49,
+        "clutch": 46,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 49,
+        "power": 43,
+        "eye": 48,
+        "discipline": 50,
+        "speed": 58,
+        "baseInstinct": 49,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 53,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "3B": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

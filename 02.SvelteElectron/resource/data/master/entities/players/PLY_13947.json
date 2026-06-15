@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13947",
+  "name": "앤더슨 크리스",
+  "nameEn": "Anderson Chris",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 27,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 65,
+      "primaryPosition": "SP",
+      "developmentRate": 79,
+      "potentialHidden": 79,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 59,
+        "velocity": 55,
+        "command": 57,
+        "control": 59,
+        "movement": 50,
+        "mentality": 59,
+        "recovery": 57,
+        "clutch": 43,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 54,
+        "power": 45,
+        "eye": 51,
+        "discipline": 46,
+        "speed": 61,
+        "baseInstinct": 56,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 54,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

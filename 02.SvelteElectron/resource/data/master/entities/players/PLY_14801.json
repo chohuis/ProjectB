@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14801",
+  "name": "마르티네스 알렉스",
+  "nameEn": "Martinez Alex",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 15,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 65,
+      "primaryPosition": "CF",
+      "developmentRate": 51,
+      "potentialHidden": 71,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 63,
+        "velocity": 68,
+        "command": 52,
+        "control": 58,
+        "movement": 58,
+        "mentality": 59,
+        "recovery": 63,
+        "clutch": 57,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 64,
+        "power": 62,
+        "eye": 63,
+        "discipline": 66,
+        "speed": 60,
+        "baseInstinct": 57,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 54,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "CF": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

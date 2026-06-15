@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03584",
+  "name": "박준진",
+  "nameEn": "Park JunJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 66,
+      "primaryPosition": "SP",
+      "developmentRate": 52,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 53,
+        "velocity": 61,
+        "command": 51,
+        "control": 44,
+        "movement": 48,
+        "mentality": 47,
+        "recovery": 48,
+        "clutch": 41,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 64,
+        "power": 56,
+        "eye": 62,
+        "discipline": 53,
+        "speed": 67,
+        "baseInstinct": 52,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 55,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04673",
+  "name": "윤수빈",
+  "nameEn": "Yoon SuBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 15,
+      "primaryPosition": "SP",
+      "developmentRate": 61,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 43,
+        "velocity": 55,
+        "command": 38,
+        "control": 42,
+        "movement": 49,
+        "mentality": 46,
+        "recovery": 43,
+        "clutch": 40,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 40,
+        "power": 46,
+        "eye": 45,
+        "discipline": 41,
+        "speed": 45,
+        "baseInstinct": 43,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 46,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "SP": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

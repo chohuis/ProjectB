@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09578",
+  "name": "황우수",
+  "nameEn": "Hwang WooSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 93,
+      "primaryPosition": "C",
+      "developmentRate": 46,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 46,
+        "velocity": 55,
+        "command": 38,
+        "control": 42,
+        "movement": 40,
+        "mentality": 51,
+        "recovery": 46,
+        "clutch": 41,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 32,
+        "contact": 24,
+        "power": 24,
+        "eye": 31,
+        "discipline": 25,
+        "speed": 32,
+        "baseInstinct": 32,
+        "bunting": 15,
+        "platoon": 50,
+        "fielding": 26,
+        "arm": 28,
+        "battingClutch": 18
+      },
+      "positionRatings": {
+        "C": 32
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

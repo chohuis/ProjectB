@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05876",
+  "name": "장세현",
+  "nameEn": "Jang SeHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 94,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 47,
+        "velocity": 64,
+        "command": 51,
+        "control": 48,
+        "movement": 52,
+        "mentality": 60,
+        "recovery": 45,
+        "clutch": 52,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 51,
+        "power": 55,
+        "eye": 47,
+        "discipline": 53,
+        "speed": 53,
+        "baseInstinct": 55,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 51,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SP": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

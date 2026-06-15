@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11007",
+  "name": "킹 로건",
+  "nameEn": "King Logan",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 82,
+  "popularity": 19,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 23,
+      "primaryPosition": "2B",
+      "developmentRate": 53,
+      "potentialHidden": 84,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 69,
+        "velocity": 77,
+        "command": 66,
+        "control": 74,
+        "movement": 79,
+        "mentality": 71,
+        "recovery": 72,
+        "clutch": 66,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 79,
+        "power": 72,
+        "eye": 80,
+        "discipline": 73,
+        "speed": 81,
+        "baseInstinct": 76,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 76,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "2B": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

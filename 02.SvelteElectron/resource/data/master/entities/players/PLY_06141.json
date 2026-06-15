@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06141",
+  "name": "김영완",
+  "nameEn": "Kim YoungWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 97,
+      "primaryPosition": "2B",
+      "developmentRate": 43,
+      "potentialHidden": 64,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 50,
+        "velocity": 56,
+        "command": 47,
+        "control": 49,
+        "movement": 47,
+        "mentality": 51,
+        "recovery": 49,
+        "clutch": 43,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 39,
+        "power": 40,
+        "eye": 41,
+        "discipline": 34,
+        "speed": 44,
+        "baseInstinct": 34,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 36,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "2B": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

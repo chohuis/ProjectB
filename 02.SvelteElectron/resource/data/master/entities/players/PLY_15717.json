@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15717",
+  "name": "존슨 에반",
+  "nameEn": "Johnson Evan",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 24,
+      "primaryPosition": "SP",
+      "developmentRate": 61,
+      "potentialHidden": 66,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 42,
+        "velocity": 52,
+        "command": 41,
+        "control": 44,
+        "movement": 40,
+        "mentality": 54,
+        "recovery": 38,
+        "clutch": 44,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 51,
+        "power": 48,
+        "eye": 41,
+        "discipline": 43,
+        "speed": 46,
+        "baseInstinct": 41,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 52,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SP": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

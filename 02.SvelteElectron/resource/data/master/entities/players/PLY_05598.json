@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05598",
+  "name": "이재환",
+  "nameEn": "Lee JaeHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 56,
+      "primaryPosition": "RF",
+      "developmentRate": 59,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 53,
+        "velocity": 57,
+        "command": 47,
+        "control": 56,
+        "movement": 56,
+        "mentality": 59,
+        "recovery": 47,
+        "clutch": 51,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 44,
+        "power": 44,
+        "eye": 46,
+        "discipline": 43,
+        "speed": 50,
+        "baseInstinct": 44,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 44,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "RF": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

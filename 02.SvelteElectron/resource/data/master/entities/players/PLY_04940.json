@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04940",
+  "name": "윤현찬",
+  "nameEn": "Yoon HyeonChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 27,
+      "primaryPosition": "RF",
+      "developmentRate": 61,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 41,
+        "stamina": 33,
+        "velocity": 46,
+        "command": 34,
+        "control": 36,
+        "movement": 38,
+        "mentality": 38,
+        "recovery": 35,
+        "clutch": 32,
+        "holdRunners": 29
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 47,
+        "power": 45,
+        "eye": 48,
+        "discipline": 40,
+        "speed": 51,
+        "baseInstinct": 39,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 48,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "RF": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

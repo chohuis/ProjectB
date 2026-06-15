@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05775",
+  "name": "조태성",
+  "nameEn": "Jo TaeSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 20,
+      "primaryPosition": "LF",
+      "developmentRate": 44,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 41,
+        "stamina": 39,
+        "velocity": 50,
+        "command": 31,
+        "control": 43,
+        "movement": 38,
+        "mentality": 39,
+        "recovery": 30,
+        "clutch": 30,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 50,
+        "power": 37,
+        "eye": 42,
+        "discipline": 47,
+        "speed": 50,
+        "baseInstinct": 45,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 42,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "LF": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11844",
+  "name": "홀 크리스",
+  "nameEn": "Hall Chris",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 27,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 38,
+      "primaryPosition": "1B",
+      "developmentRate": 65,
+      "potentialHidden": 70,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 70,
+        "velocity": 70,
+        "command": 64,
+        "control": 67,
+        "movement": 69,
+        "mentality": 68,
+        "recovery": 57,
+        "clutch": 64,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 59,
+        "power": 62,
+        "eye": 68,
+        "discipline": 68,
+        "speed": 71,
+        "baseInstinct": 66,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 61,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "1B": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

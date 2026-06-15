@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10001",
+  "name": "베이커 칼렙",
+  "nameEn": "Baker Caleb",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 27,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 31,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 14,
+      "primaryPosition": "SP",
+      "developmentRate": 48,
+      "potentialHidden": 46,
+      "proServiceYears": 9,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 57,
+        "velocity": 57,
+        "command": 56,
+        "control": 54,
+        "movement": 50,
+        "mentality": 65,
+        "recovery": 53,
+        "clutch": 59,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 54,
+        "power": 56,
+        "eye": 62,
+        "discipline": 61,
+        "speed": 64,
+        "baseInstinct": 59,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 48,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

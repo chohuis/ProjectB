@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03718",
+  "name": "송재완",
+  "nameEn": "Song JaeWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 94,
+      "primaryPosition": "RF",
+      "developmentRate": 69,
+      "potentialHidden": 89,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 52,
+        "velocity": 63,
+        "command": 60,
+        "control": 59,
+        "movement": 54,
+        "mentality": 63,
+        "recovery": 58,
+        "clutch": 46,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 51,
+        "power": 48,
+        "eye": 54,
+        "discipline": 50,
+        "speed": 59,
+        "baseInstinct": 58,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 48,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "RF": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

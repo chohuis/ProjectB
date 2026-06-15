@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04635",
+  "name": "조우우",
+  "nameEn": "Jo WooWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 8,
+      "primaryPosition": "SS",
+      "developmentRate": 61,
+      "potentialHidden": 51,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 63,
+        "velocity": 60,
+        "command": 58,
+        "control": 53,
+        "movement": 50,
+        "mentality": 63,
+        "recovery": 51,
+        "clutch": 46,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 42,
+        "power": 34,
+        "eye": 41,
+        "discipline": 36,
+        "speed": 38,
+        "baseInstinct": 37,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 38,
+        "battingClutch": 30
+      },
+      "positionRatings": {
+        "SS": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

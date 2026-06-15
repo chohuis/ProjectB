@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03607",
+  "name": "윤정우",
+  "nameEn": "Yoon JungWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 12,
+      "primaryPosition": "SP",
+      "developmentRate": 60,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 52,
+        "velocity": 57,
+        "command": 53,
+        "control": 60,
+        "movement": 56,
+        "mentality": 64,
+        "recovery": 48,
+        "clutch": 47,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 47,
+        "power": 49,
+        "eye": 54,
+        "discipline": 53,
+        "speed": 49,
+        "baseInstinct": 45,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 52,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "SP": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

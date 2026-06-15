@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16519",
+  "name": "영 에반",
+  "nameEn": "Young Evan",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 32,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 29,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 67,
+      "primaryPosition": "C",
+      "developmentRate": 36,
+      "potentialHidden": 72,
+      "proServiceYears": 7,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 67,
+        "velocity": 69,
+        "command": 65,
+        "control": 67,
+        "movement": 63,
+        "mentality": 58,
+        "recovery": 54,
+        "clutch": 62,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 59,
+        "power": 59,
+        "eye": 56,
+        "discipline": 60,
+        "speed": 68,
+        "baseInstinct": 58,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 60,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "C": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

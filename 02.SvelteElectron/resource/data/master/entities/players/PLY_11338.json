@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11338",
+  "name": "마르티네스 크리스",
+  "nameEn": "Martinez Chris",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 82,
+  "popularity": 21,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 88,
+      "primaryPosition": "CF",
+      "developmentRate": 70,
+      "potentialHidden": 81,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 60,
+        "velocity": 59,
+        "command": 54,
+        "control": 58,
+        "movement": 62,
+        "mentality": 60,
+        "recovery": 61,
+        "clutch": 55,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 60,
+        "power": 50,
+        "eye": 58,
+        "discipline": 55,
+        "speed": 65,
+        "baseInstinct": 53,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 62,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "CF": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03724",
+  "name": "권민환",
+  "nameEn": "Kwon MinHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 78,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 88,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 58,
+        "velocity": 58,
+        "command": 53,
+        "control": 58,
+        "movement": 54,
+        "mentality": 58,
+        "recovery": 57,
+        "clutch": 53,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 57,
+        "power": 58,
+        "eye": 57,
+        "discipline": 57,
+        "speed": 63,
+        "baseInstinct": 52,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 57,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "SP": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

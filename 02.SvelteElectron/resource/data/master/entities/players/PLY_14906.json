@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14906",
+  "name": "해리스 헌터",
+  "nameEn": "Harris Hunter",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 48,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 66,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 72,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 49,
+        "velocity": 61,
+        "command": 48,
+        "control": 58,
+        "movement": 45,
+        "mentality": 53,
+        "recovery": 51,
+        "clutch": 45,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 58,
+        "power": 45,
+        "eye": 46,
+        "discipline": 47,
+        "speed": 50,
+        "baseInstinct": 50,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 50,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SP": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

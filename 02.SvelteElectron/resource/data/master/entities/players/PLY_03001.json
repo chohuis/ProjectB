@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03001",
+  "name": "한민환",
+  "nameEn": "Han MinHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 30,
+      "primaryPosition": "2B",
+      "developmentRate": 62,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 74,
+        "velocity": 75,
+        "command": 71,
+        "control": 78,
+        "movement": 74,
+        "mentality": 82,
+        "recovery": 68,
+        "clutch": 68,
+        "holdRunners": 70
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 60,
+        "power": 48,
+        "eye": 55,
+        "discipline": 49,
+        "speed": 53,
+        "baseInstinct": 53,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 59,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "2B": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04703",
+  "name": "윤도원",
+  "nameEn": "Yoon DoWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 41,
+      "primaryPosition": "3B",
+      "developmentRate": 50,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 54,
+        "velocity": 61,
+        "command": 44,
+        "control": 45,
+        "movement": 46,
+        "mentality": 51,
+        "recovery": 52,
+        "clutch": 47,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 39,
+        "power": 40,
+        "eye": 45,
+        "discipline": 37,
+        "speed": 42,
+        "baseInstinct": 39,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 40,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "3B": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

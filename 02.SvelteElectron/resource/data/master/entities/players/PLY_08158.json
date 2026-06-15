@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08158",
+  "name": "박태기",
+  "nameEn": "Park TaeKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 3,
+      "primaryPosition": "1B",
+      "developmentRate": 61,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 48,
+        "velocity": 50,
+        "command": 48,
+        "control": 50,
+        "movement": 39,
+        "mentality": 48,
+        "recovery": 44,
+        "clutch": 38,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 41,
+        "power": 44,
+        "eye": 48,
+        "discipline": 48,
+        "speed": 53,
+        "baseInstinct": 38,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 43,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "1B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

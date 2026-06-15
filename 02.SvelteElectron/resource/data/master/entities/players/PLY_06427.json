@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06427",
+  "name": "강상호",
+  "nameEn": "Kang SangHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 57,
+      "primaryPosition": "2B",
+      "developmentRate": 56,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 37,
+        "stamina": 34,
+        "velocity": 39,
+        "command": 28,
+        "control": 37,
+        "movement": 35,
+        "mentality": 39,
+        "recovery": 34,
+        "clutch": 27,
+        "holdRunners": 26
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 43,
+        "power": 43,
+        "eye": 49,
+        "discipline": 39,
+        "speed": 45,
+        "baseInstinct": 45,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 47,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "2B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

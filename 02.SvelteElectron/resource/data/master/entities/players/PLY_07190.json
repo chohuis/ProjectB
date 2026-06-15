@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07190",
+  "name": "오지호",
+  "nameEn": "Oh JiHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 9,
+      "primaryPosition": "3B",
+      "developmentRate": 63,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 50,
+        "velocity": 52,
+        "command": 46,
+        "control": 45,
+        "movement": 43,
+        "mentality": 40,
+        "recovery": 34,
+        "clutch": 32,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 40,
+        "power": 44,
+        "eye": 41,
+        "discipline": 43,
+        "speed": 49,
+        "baseInstinct": 40,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 40,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "3B": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

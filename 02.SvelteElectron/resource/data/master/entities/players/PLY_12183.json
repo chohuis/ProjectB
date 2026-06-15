@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12183",
+  "name": "앤더슨 재크",
+  "nameEn": "Anderson Zach",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 47,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 7,
+      "primaryPosition": "RF",
+      "developmentRate": 73,
+      "potentialHidden": 81,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 63,
+        "velocity": 73,
+        "command": 60,
+        "control": 57,
+        "movement": 57,
+        "mentality": 66,
+        "recovery": 51,
+        "clutch": 58,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 58,
+        "power": 53,
+        "eye": 58,
+        "discipline": 59,
+        "speed": 59,
+        "baseInstinct": 62,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 58,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "RF": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

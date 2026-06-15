@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11926",
+  "name": "윌리엄스 알렉스",
+  "nameEn": "Williams Alex",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 47,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 52,
+      "primaryPosition": "SP",
+      "developmentRate": 56,
+      "potentialHidden": 64,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 68,
+        "velocity": 73,
+        "command": 59,
+        "control": 61,
+        "movement": 67,
+        "mentality": 72,
+        "recovery": 62,
+        "clutch": 61,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 65,
+        "power": 59,
+        "eye": 63,
+        "discipline": 64,
+        "speed": 65,
+        "baseInstinct": 60,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 62,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "SP": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

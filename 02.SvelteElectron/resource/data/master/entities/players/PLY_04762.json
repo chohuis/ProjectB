@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04762",
+  "name": "정영혁",
+  "nameEn": "Jung YoungHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 86,
+      "primaryPosition": "3B",
+      "developmentRate": 51,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 54,
+        "velocity": 61,
+        "command": 51,
+        "control": 56,
+        "movement": 50,
+        "mentality": 54,
+        "recovery": 48,
+        "clutch": 55,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 48,
+        "power": 39,
+        "eye": 40,
+        "discipline": 45,
+        "speed": 44,
+        "baseInstinct": 35,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 44,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "3B": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

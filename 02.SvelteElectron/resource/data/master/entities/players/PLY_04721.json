@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04721",
+  "name": "정우완",
+  "nameEn": "Jung WooWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 16,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 42,
+        "velocity": 46,
+        "command": 36,
+        "control": 40,
+        "movement": 43,
+        "mentality": 40,
+        "recovery": 33,
+        "clutch": 41,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 42,
+        "power": 32,
+        "eye": 40,
+        "discipline": 41,
+        "speed": 44,
+        "baseInstinct": 33,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 33,
+        "arm": 30,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "SP": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

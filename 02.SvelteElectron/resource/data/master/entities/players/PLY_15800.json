@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15800",
+  "name": "잭슨 코디",
+  "nameEn": "Jackson Cody",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 26,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 52,
+      "primaryPosition": "SP",
+      "developmentRate": 66,
+      "potentialHidden": 78,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 51,
+        "velocity": 58,
+        "command": 48,
+        "control": 52,
+        "movement": 46,
+        "mentality": 51,
+        "recovery": 48,
+        "clutch": 51,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 46,
+        "power": 51,
+        "eye": 50,
+        "discipline": 58,
+        "speed": 61,
+        "baseInstinct": 56,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 52,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

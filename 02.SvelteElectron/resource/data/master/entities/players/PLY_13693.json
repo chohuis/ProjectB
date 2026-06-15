@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13693",
+  "name": "가르시아 루이스",
+  "nameEn": "Garcia Luis",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 30,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 55,
+      "primaryPosition": "2B",
+      "developmentRate": 51,
+      "potentialHidden": 60,
+      "proServiceYears": 8,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 70,
+        "velocity": 83,
+        "command": 65,
+        "control": 75,
+        "movement": 79,
+        "mentality": 79,
+        "recovery": 72,
+        "clutch": 63,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 74,
+        "power": 68,
+        "eye": 67,
+        "discipline": 76,
+        "speed": 81,
+        "baseInstinct": 75,
+        "bunting": 68,
+        "platoon": 50,
+        "fielding": 74,
+        "arm": 73,
+        "battingClutch": 73
+      },
+      "positionRatings": {
+        "2B": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

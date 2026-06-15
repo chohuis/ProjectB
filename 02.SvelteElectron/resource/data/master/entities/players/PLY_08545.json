@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08545",
+  "name": "정정환",
+  "nameEn": "Jung JungHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 78,
+      "primaryPosition": "CF",
+      "developmentRate": 50,
+      "potentialHidden": 42,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 57,
+        "velocity": 57,
+        "command": 50,
+        "control": 49,
+        "movement": 54,
+        "mentality": 59,
+        "recovery": 44,
+        "clutch": 41,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 33,
+        "contact": 35,
+        "power": 22,
+        "eye": 27,
+        "discipline": 24,
+        "speed": 28,
+        "baseInstinct": 28,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 23,
+        "arm": 33,
+        "battingClutch": 24
+      },
+      "positionRatings": {
+        "CF": 33
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04397",
+  "name": "안현완",
+  "nameEn": "An HyeonWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 40,
+      "primaryPosition": "SP",
+      "developmentRate": 64,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 55,
+        "velocity": 55,
+        "command": 43,
+        "control": 54,
+        "movement": 53,
+        "mentality": 47,
+        "recovery": 44,
+        "clutch": 39,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 47,
+        "power": 46,
+        "eye": 47,
+        "discipline": 51,
+        "speed": 55,
+        "baseInstinct": 41,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 47,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SP": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

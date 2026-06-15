@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14765",
+  "name": "에르난데스 브랜던",
+  "nameEn": "Hernandez Brandon",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 14,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 64,
+      "primaryPosition": "LF",
+      "developmentRate": 52,
+      "potentialHidden": 64,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 61,
+        "velocity": 62,
+        "command": 61,
+        "control": 65,
+        "movement": 56,
+        "mentality": 57,
+        "recovery": 54,
+        "clutch": 54,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 66,
+        "power": 59,
+        "eye": 61,
+        "discipline": 63,
+        "speed": 59,
+        "baseInstinct": 59,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 62,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "LF": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12340",
+  "name": "브라운 블레이크",
+  "nameEn": "Brown Blake",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 15,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 30,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 48,
+      "primaryPosition": "2B",
+      "developmentRate": 51,
+      "potentialHidden": 75,
+      "proServiceYears": 8,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 70,
+        "velocity": 71,
+        "command": 59,
+        "control": 62,
+        "movement": 62,
+        "mentality": 61,
+        "recovery": 53,
+        "clutch": 52,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 64,
+        "power": 56,
+        "eye": 58,
+        "discipline": 68,
+        "speed": 71,
+        "baseInstinct": 56,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 65,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "2B": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

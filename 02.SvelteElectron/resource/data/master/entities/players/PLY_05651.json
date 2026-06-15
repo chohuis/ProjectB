@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05651",
+  "name": "전우수",
+  "nameEn": "Jeon WooSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 31,
+      "primaryPosition": "2B",
+      "developmentRate": 64,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 59,
+        "velocity": 68,
+        "command": 61,
+        "control": 61,
+        "movement": 66,
+        "mentality": 64,
+        "recovery": 56,
+        "clutch": 53,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 63,
+        "power": 61,
+        "eye": 54,
+        "discipline": 51,
+        "speed": 55,
+        "baseInstinct": 57,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 59,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "2B": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

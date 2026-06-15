@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05358",
+  "name": "오정완",
+  "nameEn": "Oh JungWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 28,
+      "primaryPosition": "RF",
+      "developmentRate": 56,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 47,
+        "velocity": 56,
+        "command": 48,
+        "control": 41,
+        "movement": 44,
+        "mentality": 51,
+        "recovery": 36,
+        "clutch": 35,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 40,
+        "power": 46,
+        "eye": 41,
+        "discipline": 37,
+        "speed": 41,
+        "baseInstinct": 44,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 47,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "RF": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

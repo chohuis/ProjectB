@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12382",
+  "name": "앤더슨 코디",
+  "nameEn": "Anderson Cody",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 18,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 62,
+      "primaryPosition": "SS",
+      "developmentRate": 65,
+      "potentialHidden": 65,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 79,
+        "stamina": 76,
+        "velocity": 80,
+        "command": 80,
+        "control": 72,
+        "movement": 71,
+        "mentality": 76,
+        "recovery": 73,
+        "clutch": 76,
+        "holdRunners": 77
+      },
+      "batting": {
+        "ovr": 79,
+        "contact": 76,
+        "power": 71,
+        "eye": 74,
+        "discipline": 76,
+        "speed": 73,
+        "baseInstinct": 81,
+        "bunting": 68,
+        "platoon": 50,
+        "fielding": 82,
+        "arm": 78,
+        "battingClutch": 69
+      },
+      "positionRatings": {
+        "SS": 79
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

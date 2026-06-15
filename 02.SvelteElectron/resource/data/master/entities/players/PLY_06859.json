@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06859",
+  "name": "송현찬",
+  "nameEn": "Song HyeonChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 37,
+      "primaryPosition": "3B",
+      "developmentRate": 66,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 62,
+        "velocity": 66,
+        "command": 65,
+        "control": 62,
+        "movement": 59,
+        "mentality": 69,
+        "recovery": 59,
+        "clutch": 54,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 48,
+        "power": 44,
+        "eye": 47,
+        "discipline": 48,
+        "speed": 44,
+        "baseInstinct": 44,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 40,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "3B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

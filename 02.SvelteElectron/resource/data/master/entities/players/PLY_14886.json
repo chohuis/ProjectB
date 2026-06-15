@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14886",
+  "name": "에르난데스 데릭",
+  "nameEn": "Hernandez Derek",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 2,
+      "primaryPosition": "SP",
+      "developmentRate": 68,
+      "potentialHidden": 64,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 58,
+        "velocity": 68,
+        "command": 62,
+        "control": 58,
+        "movement": 56,
+        "mentality": 66,
+        "recovery": 51,
+        "clutch": 63,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 67,
+        "power": 62,
+        "eye": 65,
+        "discipline": 57,
+        "speed": 68,
+        "baseInstinct": 56,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 55,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "SP": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

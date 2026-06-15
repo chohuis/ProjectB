@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10631",
+  "name": "브라운 알렉스",
+  "nameEn": "Brown Alex",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 32,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 21,
+      "primaryPosition": "SP",
+      "developmentRate": 60,
+      "potentialHidden": 66,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 70,
+        "velocity": 65,
+        "command": 63,
+        "control": 60,
+        "movement": 71,
+        "mentality": 65,
+        "recovery": 67,
+        "clutch": 60,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 64,
+        "power": 66,
+        "eye": 63,
+        "discipline": 64,
+        "speed": 60,
+        "baseInstinct": 66,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 57,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "SP": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06439",
+  "name": "오상민",
+  "nameEn": "Oh SangMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 94,
+      "primaryPosition": "SP",
+      "developmentRate": 51,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 50,
+        "velocity": 53,
+        "command": 44,
+        "control": 53,
+        "movement": 42,
+        "mentality": 48,
+        "recovery": 40,
+        "clutch": 43,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 33,
+        "contact": 35,
+        "power": 30,
+        "eye": 35,
+        "discipline": 34,
+        "speed": 38,
+        "baseInstinct": 28,
+        "bunting": 17,
+        "platoon": 50,
+        "fielding": 22,
+        "arm": 24,
+        "battingClutch": 24
+      },
+      "positionRatings": {
+        "SP": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

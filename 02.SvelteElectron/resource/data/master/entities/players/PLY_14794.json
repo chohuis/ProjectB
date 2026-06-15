@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14794",
+  "name": "무어 헌터",
+  "nameEn": "Moore Hunter",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 31,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 80,
+      "primaryPosition": "2B",
+      "developmentRate": 70,
+      "potentialHidden": 58,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 48,
+        "velocity": 51,
+        "command": 50,
+        "control": 52,
+        "movement": 49,
+        "mentality": 50,
+        "recovery": 39,
+        "clutch": 35,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 51,
+        "power": 40,
+        "eye": 52,
+        "discipline": 46,
+        "speed": 44,
+        "baseInstinct": 51,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 42,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "2B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

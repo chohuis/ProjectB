@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05976",
+  "name": "박성욱",
+  "nameEn": "Park SeongWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 30,
+      "primaryPosition": "SS",
+      "developmentRate": 59,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 44,
+        "velocity": 47,
+        "command": 37,
+        "control": 42,
+        "movement": 37,
+        "mentality": 38,
+        "recovery": 38,
+        "clutch": 35,
+        "holdRunners": 27
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 48,
+        "power": 47,
+        "eye": 51,
+        "discipline": 50,
+        "speed": 50,
+        "baseInstinct": 42,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 50,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "SS": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

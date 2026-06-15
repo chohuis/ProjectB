@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05656",
+  "name": "강우성",
+  "nameEn": "Kang WooSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 83,
+      "primaryPosition": "SS",
+      "developmentRate": 63,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 52,
+        "velocity": 61,
+        "command": 46,
+        "control": 49,
+        "movement": 46,
+        "mentality": 47,
+        "recovery": 45,
+        "clutch": 45,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 52,
+        "power": 51,
+        "eye": 45,
+        "discipline": 43,
+        "speed": 56,
+        "baseInstinct": 47,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 44,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "SS": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

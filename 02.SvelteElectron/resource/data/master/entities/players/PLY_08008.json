@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08008",
+  "name": "김세기",
+  "nameEn": "Kim SeKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 3,
+      "primaryPosition": "CF",
+      "developmentRate": 59,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 58,
+        "velocity": 58,
+        "command": 54,
+        "control": 52,
+        "movement": 52,
+        "mentality": 55,
+        "recovery": 53,
+        "clutch": 47,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 48,
+        "power": 49,
+        "eye": 46,
+        "discipline": 47,
+        "speed": 47,
+        "baseInstinct": 45,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 47,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "CF": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

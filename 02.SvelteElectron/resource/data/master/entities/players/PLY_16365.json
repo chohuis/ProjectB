@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16365",
+  "name": "해리스 데릭",
+  "nameEn": "Harris Derek",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 19,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 95,
+      "primaryPosition": "3B",
+      "developmentRate": 49,
+      "potentialHidden": 66,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 58,
+        "velocity": 64,
+        "command": 61,
+        "control": 68,
+        "movement": 56,
+        "mentality": 68,
+        "recovery": 58,
+        "clutch": 59,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 66,
+        "power": 63,
+        "eye": 63,
+        "discipline": 63,
+        "speed": 62,
+        "baseInstinct": 63,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 61,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "3B": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16087",
+  "name": "무어 라이언",
+  "nameEn": "Moore Ryan",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 25,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 24,
+      "primaryPosition": "SP",
+      "developmentRate": 73,
+      "potentialHidden": 80,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 54,
+        "velocity": 57,
+        "command": 39,
+        "control": 41,
+        "movement": 45,
+        "mentality": 43,
+        "recovery": 42,
+        "clutch": 37,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 52,
+        "power": 49,
+        "eye": 41,
+        "discipline": 41,
+        "speed": 49,
+        "baseInstinct": 44,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 48,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "SP": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

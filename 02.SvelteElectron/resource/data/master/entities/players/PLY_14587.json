@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14587",
+  "name": "존스 재크",
+  "nameEn": "Jones Zach",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 26,
+  "militaryStatus": "군필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 41,
+      "primaryPosition": "RF",
+      "developmentRate": 43,
+      "potentialHidden": 71,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 81,
+        "velocity": 81,
+        "command": 74,
+        "control": 77,
+        "movement": 78,
+        "mentality": 83,
+        "recovery": 67,
+        "clutch": 65,
+        "holdRunners": 71
+      },
+      "batting": {
+        "ovr": 77,
+        "contact": 70,
+        "power": 73,
+        "eye": 68,
+        "discipline": 79,
+        "speed": 72,
+        "baseInstinct": 66,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 77,
+        "arm": 78,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "RF": 77
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

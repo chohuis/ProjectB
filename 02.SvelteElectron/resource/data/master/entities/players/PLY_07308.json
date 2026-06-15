@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07308",
+  "name": "정정찬",
+  "nameEn": "Jung JungChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 76,
+      "primaryPosition": "SP",
+      "developmentRate": 46,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 51,
+        "velocity": 57,
+        "command": 48,
+        "control": 49,
+        "movement": 50,
+        "mentality": 56,
+        "recovery": 48,
+        "clutch": 50,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 50,
+        "power": 49,
+        "eye": 60,
+        "discipline": 58,
+        "speed": 58,
+        "baseInstinct": 48,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 56,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SP": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

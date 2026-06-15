@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07437",
+  "name": "오동찬",
+  "nameEn": "Oh DongChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 96,
+      "primaryPosition": "SS",
+      "developmentRate": 59,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 61,
+        "velocity": 64,
+        "command": 56,
+        "control": 58,
+        "movement": 57,
+        "mentality": 57,
+        "recovery": 59,
+        "clutch": 51,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 51,
+        "power": 46,
+        "eye": 54,
+        "discipline": 50,
+        "speed": 59,
+        "baseInstinct": 50,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 52,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "SS": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

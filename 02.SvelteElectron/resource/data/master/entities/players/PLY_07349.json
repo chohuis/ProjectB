@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07349",
+  "name": "강지찬",
+  "nameEn": "Kang JiChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 77,
+      "primaryPosition": "C",
+      "developmentRate": 45,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 45,
+        "velocity": 50,
+        "command": 48,
+        "control": 43,
+        "movement": 51,
+        "mentality": 47,
+        "recovery": 43,
+        "clutch": 42,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 43,
+        "power": 46,
+        "eye": 44,
+        "discipline": 38,
+        "speed": 45,
+        "baseInstinct": 41,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 37,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "C": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

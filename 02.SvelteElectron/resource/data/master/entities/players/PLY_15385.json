@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15385",
+  "name": "앤더슨 카를로스",
+  "nameEn": "Anderson Carlos",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 33,
+      "primaryPosition": "LF",
+      "developmentRate": 35,
+      "potentialHidden": 63,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 60,
+        "velocity": 69,
+        "command": 55,
+        "control": 58,
+        "movement": 64,
+        "mentality": 67,
+        "recovery": 57,
+        "clutch": 52,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 55,
+        "power": 58,
+        "eye": 60,
+        "discipline": 63,
+        "speed": 63,
+        "baseInstinct": 63,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 59,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "LF": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

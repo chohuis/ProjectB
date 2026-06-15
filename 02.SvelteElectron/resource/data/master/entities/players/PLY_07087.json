@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07087",
+  "name": "안재호",
+  "nameEn": "An JaeHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 11,
+      "primaryPosition": "1B",
+      "developmentRate": 57,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 46,
+        "velocity": 48,
+        "command": 39,
+        "control": 40,
+        "movement": 36,
+        "mentality": 43,
+        "recovery": 40,
+        "clutch": 41,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 55,
+        "power": 47,
+        "eye": 53,
+        "discipline": 58,
+        "speed": 60,
+        "baseInstinct": 56,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 51,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "1B": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

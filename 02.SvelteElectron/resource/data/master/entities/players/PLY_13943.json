@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13943",
+  "name": "해리스 로건",
+  "nameEn": "Harris Logan",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 42,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 55,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 59,
+        "velocity": 59,
+        "command": 50,
+        "control": 64,
+        "movement": 53,
+        "mentality": 55,
+        "recovery": 51,
+        "clutch": 50,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 53,
+        "power": 62,
+        "eye": 56,
+        "discipline": 57,
+        "speed": 59,
+        "baseInstinct": 62,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 58,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "SP": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

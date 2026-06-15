@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03824",
+  "name": "박찬준",
+  "nameEn": "Park ChanJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 61,
+      "primaryPosition": "CF",
+      "developmentRate": 68,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 66,
+        "velocity": 72,
+        "command": 55,
+        "control": 66,
+        "movement": 57,
+        "mentality": 63,
+        "recovery": 58,
+        "clutch": 60,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 56,
+        "power": 50,
+        "eye": 61,
+        "discipline": 61,
+        "speed": 59,
+        "baseInstinct": 50,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 50,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "CF": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

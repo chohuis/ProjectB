@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06035",
+  "name": "류진호",
+  "nameEn": "Ryu JinHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 31,
+      "primaryPosition": "CF",
+      "developmentRate": 63,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 59,
+        "velocity": 59,
+        "command": 51,
+        "control": 53,
+        "movement": 51,
+        "mentality": 54,
+        "recovery": 51,
+        "clutch": 45,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 48,
+        "power": 46,
+        "eye": 43,
+        "discipline": 45,
+        "speed": 54,
+        "baseInstinct": 48,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 48,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "CF": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

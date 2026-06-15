@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15696",
+  "name": "에르난데스 칼렙",
+  "nameEn": "Hernandez Caleb",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 29,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 31,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 11,
+      "primaryPosition": "LF",
+      "developmentRate": 48,
+      "potentialHidden": 64,
+      "proServiceYears": 9,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 52,
+        "velocity": 64,
+        "command": 62,
+        "control": 62,
+        "movement": 60,
+        "mentality": 56,
+        "recovery": 50,
+        "clutch": 47,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 52,
+        "power": 50,
+        "eye": 59,
+        "discipline": 52,
+        "speed": 57,
+        "baseInstinct": 56,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 52,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "LF": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

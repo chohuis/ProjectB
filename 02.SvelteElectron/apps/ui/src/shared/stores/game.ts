@@ -26,7 +26,6 @@ import { makeSaveGame, migrateSaveGame } from "../types/save";
 import {
   advanceHighSchoolGrades,
   advanceProtagonistGrade,
-  generateFreshmenNpcs,
   initHighSchoolNpcs,
 } from "../utils/gradeAdvance";
 import {
@@ -438,7 +437,10 @@ function fromSaveGame(saved: SaveGame): GameStoreState {
     schoolState:  { ...DEFAULT_SCHOOL, ...saved.schoolState },
     achievements,
     achievementMetrics: metrics,
-    npcs:         (saved.npcs ?? []).map(n => ({ ...n, isNamed: n.isNamed ?? true })),
+    npcs:         (saved.npcs ?? []).map(n => ({
+      ...n,
+      potentialHidden: n.potentialHidden ?? 75,
+    })),
     pendingDraft: [],
     pendingAchievements: [],
     seasonEndSummary: null,
@@ -551,7 +553,7 @@ function createGameStore() {
       return makeSaveGame(
         s.protagonist, s.mailbox, s.trainingPlan,
         s.schoolState, s.achievements, s.achievementMetrics, s.logs, s.upcoming,
-        s.npcs.filter(n => n.isNamed), s.trainingPresets,
+        s.npcs, s.trainingPresets,
       );
     },
 
@@ -566,7 +568,7 @@ function createGameStore() {
       const gameData = makeSaveGame(
         s.protagonist, s.mailbox, s.trainingPlan,
         s.schoolState, s.achievements, s.achievementMetrics, s.logs, s.upcoming,
-        s.npcs.filter(n => n.isNamed), s.trainingPresets,
+        s.npcs, s.trainingPresets,
       );
       try {
         if (s.currentSlotId && _getSeasonData) {
@@ -698,7 +700,17 @@ function createGameStore() {
           }
         }
 
-        const updated: ProtagonistSave = { ...p, condition, fatigue, morale, money, pitchingXP };
+        const clampStat = (v: number) => Math.max(1, Math.min(99, v));
+        const pitching = { ...p.pitching };
+        if (fx.statDelta) {
+          for (const [stat, amt] of Object.entries(fx.statDelta)) {
+            if (stat !== "ovr" && stat in pitching) {
+              (pitching as Record<string, number>)[stat] = clampStat((pitching as Record<string, number>)[stat] + amt);
+            }
+          }
+        }
+
+        const updated: ProtagonistSave = { ...p, condition, fatigue, morale, money, pitchingXP, pitching };
         const nextMetrics: AchievementMetrics = {
           ...s.achievementMetrics,
         };
@@ -775,13 +787,22 @@ function createGameStore() {
       }));
     },
 
-    // 감정 업데이트된 Named NPC 목록을 npcs 배열에 반영
-    updateNamedNpcs(updatedNpcs: NpcSaveState[]) {
+    // NPC 배열 업데이트
+    updateNpcs(updatedNpcs: NpcSaveState[]) {
       const updatedMap = new Map(updatedNpcs.map(n => [n.npcId, n]));
       update((s) => ({
         ...s,
         npcs: s.npcs.map(n => updatedMap.get(n.npcId) ?? n),
       }));
+    },
+
+    // 신규 NPC 추가 (entry_year 활성화 시 호출)
+    addNpcs(newNpcs: NpcSaveState[]) {
+      update((s) => {
+        const existingIds = new Set(s.npcs.map(n => n.npcId));
+        const fresh = newNpcs.filter(n => !existingIds.has(n.npcId));
+        return { ...s, npcs: [...s.npcs, ...fresh] };
+      });
     },
 
     patchProTeamProfile(teamId: string, profile: import("../stores/master").ProTeamProfile) {
@@ -1553,7 +1574,6 @@ function createGameStore() {
       const result = await runOffseasonProcessing(s.npcs, s.pendingDraft, seasonYear);
       const { decayDormantEmotion, archiveNpc } = await import("../utils/emotionEngine");
       const decayedNpcs = result.npcs.map(n => {
-        if (!n.isNamed) return n;
         if (n.emotionStatus === "dormant" && n.emotion) {
           return { ...n, emotion: decayDormantEmotion(n.emotion) };
         }
@@ -1694,16 +1714,6 @@ function createGameStore() {
       seasonYear: number,
     ) {
       const r = scenario.protagonistRoles;
-      const namedIds = new Set<string>([
-        ...r.seniorMentors,
-        r.seniorCaptain,
-        ...r.classmateRivals,
-        r.batteryPartner,
-        r.promisingJunior,
-        ...scenario.rivalAces,
-        ...scenario.initialZone0Npcs,
-      ].filter(Boolean));
-
       const emotionRoleMap = new Map<string, NpcEmotionRole>([
         ...r.seniorMentors.map((id): [string, NpcEmotionRole] => [id, "teammate"]),
         [r.seniorCaptain, "teammate"],
@@ -1716,18 +1726,13 @@ function createGameStore() {
 
       update((s) => ({
         ...s,
-        npcs: initHighSchoolNpcs(entities, seasonYear, namedIds, emotionRoleMap),
+        npcs: initHighSchoolNpcs(entities, seasonYear, emotionRoleMap),
       }));
     },
 
-    // 시즌 종료 처리: 학년 진급 + 졸업 + 신입생 생성
-    async processSeasonEnd(
-      seasonYear: number,
-      school: HighSchoolMaster,
-      namedRegistry: NamedNpcMeta[],
-      namedEntities: import("../stores/master").EntityRow[],
-      genIdOffset: number,
-    ) {
+    // 시즌 종료 처리: 학년 진급 + 졸업
+    // 신입생은 다음 시즌 W1에 master.db entry_year 기반으로 자동 활성화됨
+    async processSeasonEnd(seasonYear: number) {
       const s = get({ subscribe });
 
       // 1. 학년 진급 + 졸업
@@ -1739,22 +1744,13 @@ function createGameStore() {
         ? advanceProtagonistGrade(proto.grade, proto.age)
         : null;
 
-      // 3. 신입생 생성 (이번 학교의 Grade 1 명명 NPC 필터링)
-      const namedGrade1 = namedRegistry.filter(
-        m => m.schoolId === school.id &&
-             namedEntities.some(e => e.id === m.npcId && e.grade === 1)
-      );
-      const freshmen = await generateFreshmenNpcs(
-        school, namedGrade1, namedEntities, seasonYear + 1, genIdOffset
-      );
-
       const updatedProto = gradeResult
         ? { ...proto, ...gradeResult.patch }
         : proto;
 
       update((st) => ({
         ...st,
-        npcs: [...updated, ...freshmen.filter(n => n.isNamed)],
+        npcs: updated,
         protagonist: updatedProto,
         pendingDraft: graduated,
       }));

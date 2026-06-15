@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09716",
+  "name": "박영성",
+  "nameEn": "Park YoungSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 55,
+      "primaryPosition": "3B",
+      "developmentRate": 57,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 35,
+        "stamina": 29,
+        "velocity": 35,
+        "command": 24,
+        "control": 32,
+        "movement": 31,
+        "mentality": 38,
+        "recovery": 35,
+        "clutch": 30,
+        "holdRunners": 23
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 47,
+        "power": 43,
+        "eye": 44,
+        "discipline": 44,
+        "speed": 48,
+        "baseInstinct": 41,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 44,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "3B": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

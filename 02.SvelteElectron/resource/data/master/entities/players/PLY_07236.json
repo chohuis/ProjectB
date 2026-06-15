@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07236",
+  "name": "한영호",
+  "nameEn": "Han YoungHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 81,
+      "primaryPosition": "LF",
+      "developmentRate": 47,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 42,
+        "velocity": 51,
+        "command": 36,
+        "control": 37,
+        "movement": 37,
+        "mentality": 48,
+        "recovery": 35,
+        "clutch": 43,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 41,
+        "power": 33,
+        "eye": 44,
+        "discipline": 36,
+        "speed": 44,
+        "baseInstinct": 35,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 31,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "LF": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

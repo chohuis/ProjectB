@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08657",
+  "name": "황수원",
+  "nameEn": "Hwang SuWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 54,
+      "primaryPosition": "1B",
+      "developmentRate": 55,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 45,
+        "velocity": 44,
+        "command": 42,
+        "control": 40,
+        "movement": 45,
+        "mentality": 44,
+        "recovery": 34,
+        "clutch": 36,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 41,
+        "power": 42,
+        "eye": 38,
+        "discipline": 38,
+        "speed": 42,
+        "baseInstinct": 34,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 38,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "1B": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

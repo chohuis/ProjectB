@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13387",
+  "name": "홀 마커스",
+  "nameEn": "Hall Marcus",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 31,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 3,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 70,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 66,
+        "velocity": 66,
+        "command": 59,
+        "control": 69,
+        "movement": 65,
+        "mentality": 63,
+        "recovery": 71,
+        "clutch": 60,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 71,
+        "power": 67,
+        "eye": 65,
+        "discipline": 73,
+        "speed": 76,
+        "baseInstinct": 61,
+        "bunting": 63,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 69,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "SP": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

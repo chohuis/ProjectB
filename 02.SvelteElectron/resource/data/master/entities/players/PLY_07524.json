@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07524",
+  "name": "윤성재",
+  "nameEn": "Yoon SeongJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 8,
+      "primaryPosition": "CF",
+      "developmentRate": 55,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 65,
+        "velocity": 63,
+        "command": 59,
+        "control": 59,
+        "movement": 52,
+        "mentality": 60,
+        "recovery": 57,
+        "clutch": 49,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 45,
+        "power": 47,
+        "eye": 50,
+        "discipline": 48,
+        "speed": 43,
+        "baseInstinct": 42,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 44,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "CF": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

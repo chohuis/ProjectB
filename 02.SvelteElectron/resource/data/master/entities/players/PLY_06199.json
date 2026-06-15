@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06199",
+  "name": "최상윤",
+  "nameEn": "Choi SangYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 44,
+      "primaryPosition": "RF",
+      "developmentRate": 53,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 43,
+        "velocity": 56,
+        "command": 36,
+        "control": 44,
+        "movement": 39,
+        "mentality": 45,
+        "recovery": 41,
+        "clutch": 33,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 37,
+        "power": 27,
+        "eye": 35,
+        "discipline": 31,
+        "speed": 36,
+        "baseInstinct": 37,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 29,
+        "arm": 38,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "RF": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

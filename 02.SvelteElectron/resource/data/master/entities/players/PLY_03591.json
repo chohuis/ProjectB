@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03591",
+  "name": "임혁준",
+  "nameEn": "Lim HyeokJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 42,
+      "primaryPosition": "RF",
+      "developmentRate": 64,
+      "potentialHidden": 80,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 66,
+        "velocity": 73,
+        "command": 62,
+        "control": 56,
+        "movement": 56,
+        "mentality": 62,
+        "recovery": 57,
+        "clutch": 52,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 50,
+        "power": 53,
+        "eye": 49,
+        "discipline": 55,
+        "speed": 61,
+        "baseInstinct": 46,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 46,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "RF": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

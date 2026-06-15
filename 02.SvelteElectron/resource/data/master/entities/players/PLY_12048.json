@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12048",
+  "name": "앤더슨 블레이크",
+  "nameEn": "Anderson Blake",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 29,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 84,
+      "primaryPosition": "SS",
+      "developmentRate": 69,
+      "potentialHidden": 74,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 63,
+        "velocity": 71,
+        "command": 55,
+        "control": 64,
+        "movement": 65,
+        "mentality": 59,
+        "recovery": 54,
+        "clutch": 54,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 66,
+        "power": 64,
+        "eye": 62,
+        "discipline": 54,
+        "speed": 58,
+        "baseInstinct": 51,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 50,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "SS": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

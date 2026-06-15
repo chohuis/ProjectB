@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16047",
+  "name": "앨런 카일",
+  "nameEn": "Allen Kyle",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 36,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 69,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 82,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 48,
+        "velocity": 54,
+        "command": 40,
+        "control": 49,
+        "movement": 48,
+        "mentality": 49,
+        "recovery": 41,
+        "clutch": 46,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 41,
+        "power": 43,
+        "eye": 38,
+        "discipline": 46,
+        "speed": 50,
+        "baseInstinct": 37,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 41,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "SP": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

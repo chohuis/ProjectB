@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06950",
+  "name": "박상호",
+  "nameEn": "Park SangHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 68,
+      "primaryPosition": "3B",
+      "developmentRate": 57,
+      "potentialHidden": 87,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 54,
+        "velocity": 64,
+        "command": 50,
+        "control": 55,
+        "movement": 53,
+        "mentality": 54,
+        "recovery": 56,
+        "clutch": 50,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 52,
+        "power": 49,
+        "eye": 53,
+        "discipline": 48,
+        "speed": 51,
+        "baseInstinct": 50,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 53,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "3B": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

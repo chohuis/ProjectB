@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06423",
+  "name": "류도윤",
+  "nameEn": "Ryu DoYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 98,
+      "primaryPosition": "2B",
+      "developmentRate": 46,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 34,
+        "velocity": 46,
+        "command": 36,
+        "control": 42,
+        "movement": 38,
+        "mentality": 46,
+        "recovery": 36,
+        "clutch": 34,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 31,
+        "power": 34,
+        "eye": 33,
+        "discipline": 38,
+        "speed": 40,
+        "baseInstinct": 31,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 34,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "2B": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

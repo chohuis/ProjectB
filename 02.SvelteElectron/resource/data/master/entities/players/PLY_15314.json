@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15314",
+  "name": "테일러 다니엘",
+  "nameEn": "Taylor Daniel",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 38,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 90,
+      "primaryPosition": "LF",
+      "developmentRate": 63,
+      "potentialHidden": 83,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 65,
+        "velocity": 75,
+        "command": 71,
+        "control": 68,
+        "movement": 73,
+        "mentality": 73,
+        "recovery": 68,
+        "clutch": 65,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 70,
+        "power": 67,
+        "eye": 77,
+        "discipline": 74,
+        "speed": 79,
+        "baseInstinct": 68,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 73,
+        "arm": 71,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "LF": 73
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15549",
+  "name": "홀 브랜던",
+  "nameEn": "Hall Brandon",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 28,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 95,
+      "primaryPosition": "RF",
+      "developmentRate": 75,
+      "potentialHidden": 69,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 45,
+        "velocity": 51,
+        "command": 45,
+        "control": 51,
+        "movement": 48,
+        "mentality": 48,
+        "recovery": 45,
+        "clutch": 45,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 55,
+        "power": 42,
+        "eye": 48,
+        "discipline": 55,
+        "speed": 52,
+        "baseInstinct": 46,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 51,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "RF": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

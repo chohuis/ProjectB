@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09251",
+  "name": "윤진원",
+  "nameEn": "Yoon JinWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 14,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 45,
+        "velocity": 52,
+        "command": 39,
+        "control": 49,
+        "movement": 39,
+        "mentality": 50,
+        "recovery": 45,
+        "clutch": 38,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 33,
+        "power": 36,
+        "eye": 32,
+        "discipline": 33,
+        "speed": 39,
+        "baseInstinct": 33,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 28,
+        "battingClutch": 30
+      },
+      "positionRatings": {
+        "SP": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

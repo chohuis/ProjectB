@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11267",
+  "name": "베이커 마커스",
+  "nameEn": "Baker Marcus",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 41,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 61,
+      "primaryPosition": "SS",
+      "developmentRate": 45,
+      "potentialHidden": 61,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 79,
+        "stamina": 81,
+        "velocity": 76,
+        "command": 70,
+        "control": 83,
+        "movement": 78,
+        "mentality": 81,
+        "recovery": 76,
+        "clutch": 78,
+        "holdRunners": 74
+      },
+      "batting": {
+        "ovr": 79,
+        "contact": 80,
+        "power": 71,
+        "eye": 78,
+        "discipline": 77,
+        "speed": 79,
+        "baseInstinct": 74,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 77,
+        "arm": 72,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "SS": 79
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

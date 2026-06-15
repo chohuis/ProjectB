@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11986",
+  "name": "카터 블레이크",
+  "nameEn": "Carter Blake",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 24,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 69,
+      "primaryPosition": "CF",
+      "developmentRate": 57,
+      "potentialHidden": 94,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 66,
+        "velocity": 75,
+        "command": 56,
+        "control": 61,
+        "movement": 63,
+        "mentality": 67,
+        "recovery": 56,
+        "clutch": 63,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 72,
+        "power": 61,
+        "eye": 63,
+        "discipline": 61,
+        "speed": 66,
+        "baseInstinct": 64,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 67,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "CF": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

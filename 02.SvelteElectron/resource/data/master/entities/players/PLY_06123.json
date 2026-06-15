@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06123",
+  "name": "송현환",
+  "nameEn": "Song HyeonHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 76,
+      "primaryPosition": "RF",
+      "developmentRate": 49,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 45,
+        "velocity": 43,
+        "command": 43,
+        "control": 46,
+        "movement": 40,
+        "mentality": 49,
+        "recovery": 34,
+        "clutch": 32,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 31,
+        "power": 29,
+        "eye": 40,
+        "discipline": 28,
+        "speed": 33,
+        "baseInstinct": 32,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 35,
+        "arm": 35,
+        "battingClutch": 30
+      },
+      "positionRatings": {
+        "RF": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

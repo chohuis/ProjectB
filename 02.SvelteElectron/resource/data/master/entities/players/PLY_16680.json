@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16680",
+  "name": "브라운 타일러",
+  "nameEn": "Brown Tyler",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 26,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 72,
+      "primaryPosition": "LF",
+      "developmentRate": 73,
+      "potentialHidden": 72,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 50,
+        "velocity": 61,
+        "command": 58,
+        "control": 59,
+        "movement": 61,
+        "mentality": 63,
+        "recovery": 52,
+        "clutch": 54,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 50,
+        "power": 48,
+        "eye": 55,
+        "discipline": 55,
+        "speed": 57,
+        "baseInstinct": 52,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 51,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "LF": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

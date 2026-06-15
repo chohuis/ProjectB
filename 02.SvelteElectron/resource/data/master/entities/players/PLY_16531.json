@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16531",
+  "name": "베이커 미겔",
+  "nameEn": "Baker Miguel",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 11,
+      "primaryPosition": "1B",
+      "developmentRate": 70,
+      "potentialHidden": 84,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 59,
+        "velocity": 58,
+        "command": 50,
+        "control": 57,
+        "movement": 53,
+        "mentality": 66,
+        "recovery": 60,
+        "clutch": 58,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 53,
+        "power": 63,
+        "eye": 55,
+        "discipline": 62,
+        "speed": 58,
+        "baseInstinct": 49,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 49,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "1B": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

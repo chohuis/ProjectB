@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13570",
+  "name": "에르난데스 코디",
+  "nameEn": "Hernandez Cody",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 37,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 24,
+      "primaryPosition": "SS",
+      "developmentRate": 46,
+      "potentialHidden": 75,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 59,
+        "velocity": 69,
+        "command": 59,
+        "control": 63,
+        "movement": 68,
+        "mentality": 71,
+        "recovery": 59,
+        "clutch": 57,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 68,
+        "power": 63,
+        "eye": 67,
+        "discipline": 65,
+        "speed": 68,
+        "baseInstinct": 65,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 64,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "SS": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

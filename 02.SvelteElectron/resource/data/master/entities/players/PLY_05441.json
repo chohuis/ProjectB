@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05441",
+  "name": "임진빈",
+  "nameEn": "Lim JinBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 2,
+      "primaryPosition": "3B",
+      "developmentRate": 60,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 53,
+        "velocity": 55,
+        "command": 52,
+        "control": 52,
+        "movement": 53,
+        "mentality": 57,
+        "recovery": 46,
+        "clutch": 41,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 58,
+        "power": 58,
+        "eye": 56,
+        "discipline": 58,
+        "speed": 60,
+        "baseInstinct": 60,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 55,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "3B": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

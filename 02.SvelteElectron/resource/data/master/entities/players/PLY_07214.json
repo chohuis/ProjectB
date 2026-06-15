@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07214",
+  "name": "김혁수",
+  "nameEn": "Kim HyeokSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 55,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 53,
+        "velocity": 66,
+        "command": 46,
+        "control": 57,
+        "movement": 58,
+        "mentality": 57,
+        "recovery": 47,
+        "clutch": 45,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 58,
+        "power": 52,
+        "eye": 47,
+        "discipline": 51,
+        "speed": 60,
+        "baseInstinct": 51,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 53,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SP": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

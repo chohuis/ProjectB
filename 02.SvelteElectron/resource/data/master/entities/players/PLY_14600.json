@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14600",
+  "name": "해리스 숀",
+  "nameEn": "Harris Sean",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 14,
+  "militaryStatus": "군필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 27,
+      "primaryPosition": "SP",
+      "developmentRate": 72,
+      "potentialHidden": 56,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 44,
+        "velocity": 49,
+        "command": 37,
+        "control": 51,
+        "movement": 41,
+        "mentality": 41,
+        "recovery": 39,
+        "clutch": 47,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 45,
+        "power": 44,
+        "eye": 46,
+        "discipline": 43,
+        "speed": 40,
+        "baseInstinct": 48,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 38,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "SP": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

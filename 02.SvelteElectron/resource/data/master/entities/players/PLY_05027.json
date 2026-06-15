@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05027",
+  "name": "김현혁",
+  "nameEn": "Kim HyeonHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 37,
+      "primaryPosition": "SP",
+      "developmentRate": 52,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 59,
+        "velocity": 65,
+        "command": 52,
+        "control": 52,
+        "movement": 49,
+        "mentality": 59,
+        "recovery": 56,
+        "clutch": 54,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 47,
+        "power": 42,
+        "eye": 48,
+        "discipline": 54,
+        "speed": 49,
+        "baseInstinct": 50,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 45,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03508",
+  "name": "강준식",
+  "nameEn": "Kang JunSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 29,
+      "primaryPosition": "2B",
+      "developmentRate": 71,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 74,
+        "velocity": 78,
+        "command": 65,
+        "control": 67,
+        "movement": 67,
+        "mentality": 77,
+        "recovery": 66,
+        "clutch": 68,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 51,
+        "power": 54,
+        "eye": 51,
+        "discipline": 50,
+        "speed": 56,
+        "baseInstinct": 50,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 52,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "2B": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

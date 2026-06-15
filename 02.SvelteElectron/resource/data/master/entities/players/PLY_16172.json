@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16172",
+  "name": "영 딜런",
+  "nameEn": "Young Dylan",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 78,
+      "primaryPosition": "CF",
+      "developmentRate": 37,
+      "potentialHidden": 47,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 53,
+        "velocity": 66,
+        "command": 52,
+        "control": 55,
+        "movement": 56,
+        "mentality": 53,
+        "recovery": 48,
+        "clutch": 57,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 55,
+        "power": 58,
+        "eye": 60,
+        "discipline": 62,
+        "speed": 54,
+        "baseInstinct": 52,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 59,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "CF": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

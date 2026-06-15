@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03480",
+  "name": "윤민민",
+  "nameEn": "Yoon MinMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 16,
+      "primaryPosition": "RF",
+      "developmentRate": 69,
+      "potentialHidden": 95,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 75,
+        "velocity": 78,
+        "command": 70,
+        "control": 67,
+        "movement": 69,
+        "mentality": 80,
+        "recovery": 63,
+        "clutch": 60,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 61,
+        "power": 52,
+        "eye": 55,
+        "discipline": 55,
+        "speed": 65,
+        "baseInstinct": 60,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 51,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "RF": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

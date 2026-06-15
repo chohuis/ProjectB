@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05189",
+  "name": "임정빈",
+  "nameEn": "Lim JungBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 27,
+      "primaryPosition": "LF",
+      "developmentRate": 59,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 50,
+        "velocity": 57,
+        "command": 56,
+        "control": 49,
+        "movement": 59,
+        "mentality": 57,
+        "recovery": 53,
+        "clutch": 47,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 42,
+        "power": 41,
+        "eye": 34,
+        "discipline": 36,
+        "speed": 43,
+        "baseInstinct": 37,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 37,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "LF": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

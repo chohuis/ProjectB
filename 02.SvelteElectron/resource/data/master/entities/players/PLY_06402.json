@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06402",
+  "name": "최재찬",
+  "nameEn": "Choi JaeChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 61,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 43,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 47,
+        "velocity": 60,
+        "command": 47,
+        "control": 56,
+        "movement": 55,
+        "mentality": 53,
+        "recovery": 46,
+        "clutch": 50,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 32,
+        "contact": 34,
+        "power": 24,
+        "eye": 24,
+        "discipline": 23,
+        "speed": 28,
+        "baseInstinct": 25,
+        "bunting": 12,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 21,
+        "battingClutch": 20
+      },
+      "positionRatings": {
+        "SP": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

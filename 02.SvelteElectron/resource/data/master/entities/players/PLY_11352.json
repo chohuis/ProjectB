@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11352",
+  "name": "해리스 루이스",
+  "nameEn": "Harris Luis",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 83,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 56,
+      "primaryPosition": "SS",
+      "developmentRate": 76,
+      "potentialHidden": 70,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 68,
+        "velocity": 74,
+        "command": 69,
+        "control": 61,
+        "movement": 67,
+        "mentality": 65,
+        "recovery": 62,
+        "clutch": 67,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 61,
+        "power": 60,
+        "eye": 65,
+        "discipline": 61,
+        "speed": 67,
+        "baseInstinct": 60,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 66,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "SS": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07139",
+  "name": "신재민",
+  "nameEn": "Shin JaeMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 88,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 39,
+        "velocity": 42,
+        "command": 39,
+        "control": 43,
+        "movement": 42,
+        "mentality": 46,
+        "recovery": 42,
+        "clutch": 40,
+        "holdRunners": 29
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 44,
+        "power": 32,
+        "eye": 43,
+        "discipline": 39,
+        "speed": 38,
+        "baseInstinct": 37,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 41,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "SP": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

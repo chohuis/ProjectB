@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06404",
+  "name": "조찬성",
+  "nameEn": "Jo ChanSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 1,
+      "primaryPosition": "SP",
+      "developmentRate": 44,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 50,
+        "velocity": 59,
+        "command": 49,
+        "control": 54,
+        "movement": 49,
+        "mentality": 48,
+        "recovery": 49,
+        "clutch": 48,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 43,
+        "power": 37,
+        "eye": 44,
+        "discipline": 37,
+        "speed": 47,
+        "baseInstinct": 42,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 44,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SP": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

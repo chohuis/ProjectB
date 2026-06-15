@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03807",
+  "name": "임정진",
+  "nameEn": "Lim JungJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 58,
+      "primaryPosition": "C",
+      "developmentRate": 71,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 69,
+        "velocity": 68,
+        "command": 66,
+        "control": 65,
+        "movement": 58,
+        "mentality": 66,
+        "recovery": 60,
+        "clutch": 59,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 50,
+        "power": 49,
+        "eye": 50,
+        "discipline": 46,
+        "speed": 49,
+        "baseInstinct": 50,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 44,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "C": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

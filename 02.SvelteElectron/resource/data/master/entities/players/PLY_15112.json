@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15112",
+  "name": "로드리게스 에반",
+  "nameEn": "Rodriguez Evan",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 25,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 75,
+      "primaryPosition": "CF",
+      "developmentRate": 65,
+      "potentialHidden": 60,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 56,
+        "velocity": 68,
+        "command": 53,
+        "control": 64,
+        "movement": 63,
+        "mentality": 65,
+        "recovery": 63,
+        "clutch": 51,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 65,
+        "power": 56,
+        "eye": 60,
+        "discipline": 56,
+        "speed": 67,
+        "baseInstinct": 61,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 62,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "CF": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

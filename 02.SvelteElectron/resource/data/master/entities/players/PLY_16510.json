@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16510",
+  "name": "홀 오스틴",
+  "nameEn": "Hall Austin",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 36,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 38,
+      "primaryPosition": "RF",
+      "developmentRate": 43,
+      "potentialHidden": 66,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 61,
+        "velocity": 75,
+        "command": 68,
+        "control": 67,
+        "movement": 58,
+        "mentality": 65,
+        "recovery": 67,
+        "clutch": 66,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 59,
+        "power": 58,
+        "eye": 61,
+        "discipline": 68,
+        "speed": 61,
+        "baseInstinct": 59,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 66,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "RF": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13764",
+  "name": "그린 에릭",
+  "nameEn": "Green Eric",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 96,
+      "primaryPosition": "LF",
+      "developmentRate": 39,
+      "potentialHidden": 53,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 70,
+        "velocity": 78,
+        "command": 59,
+        "control": 68,
+        "movement": 62,
+        "mentality": 64,
+        "recovery": 59,
+        "clutch": 60,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 64,
+        "power": 62,
+        "eye": 69,
+        "discipline": 64,
+        "speed": 63,
+        "baseInstinct": 64,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 61,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "LF": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

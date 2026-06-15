@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06163",
+  "name": "안정윤",
+  "nameEn": "An JungYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 16,
+      "primaryPosition": "SS",
+      "developmentRate": 56,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 43,
+        "velocity": 48,
+        "command": 41,
+        "control": 43,
+        "movement": 44,
+        "mentality": 38,
+        "recovery": 41,
+        "clutch": 41,
+        "holdRunners": 29
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 39,
+        "power": 37,
+        "eye": 32,
+        "discipline": 31,
+        "speed": 37,
+        "baseInstinct": 29,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 35,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "SS": 36
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

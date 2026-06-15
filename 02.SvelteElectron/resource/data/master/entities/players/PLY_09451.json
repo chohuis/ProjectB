@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09451",
+  "name": "송도식",
+  "nameEn": "Song DoSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 73,
+      "primaryPosition": "3B",
+      "developmentRate": 47,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 39,
+        "stamina": 35,
+        "velocity": 45,
+        "command": 34,
+        "control": 39,
+        "movement": 30,
+        "mentality": 45,
+        "recovery": 33,
+        "clutch": 27,
+        "holdRunners": 24
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 31,
+        "power": 33,
+        "eye": 36,
+        "discipline": 38,
+        "speed": 34,
+        "baseInstinct": 30,
+        "bunting": 20,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 27,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "3B": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

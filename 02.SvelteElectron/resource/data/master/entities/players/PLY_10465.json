@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10465",
+  "name": "마르티네스 미겔",
+  "nameEn": "Martinez Miguel",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 64,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 55,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 83,
+        "velocity": 77,
+        "command": 78,
+        "control": 80,
+        "movement": 73,
+        "mentality": 82,
+        "recovery": 66,
+        "clutch": 77,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 78,
+        "contact": 78,
+        "power": 78,
+        "eye": 71,
+        "discipline": 78,
+        "speed": 72,
+        "baseInstinct": 73,
+        "bunting": 63,
+        "platoon": 50,
+        "fielding": 81,
+        "arm": 76,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "SP": 78
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

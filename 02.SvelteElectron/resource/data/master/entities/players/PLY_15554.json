@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15554",
+  "name": "넬슨 루이스",
+  "nameEn": "Nelson Luis",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 48,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 4,
+      "primaryPosition": "RF",
+      "developmentRate": 53,
+      "potentialHidden": 64,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 46,
+        "velocity": 47,
+        "command": 43,
+        "control": 45,
+        "movement": 48,
+        "mentality": 41,
+        "recovery": 39,
+        "clutch": 38,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 50,
+        "power": 36,
+        "eye": 44,
+        "discipline": 47,
+        "speed": 41,
+        "baseInstinct": 44,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 40,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "RF": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

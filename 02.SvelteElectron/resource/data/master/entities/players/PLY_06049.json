@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06049",
+  "name": "박찬욱",
+  "nameEn": "Park ChanWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 34,
+      "primaryPosition": "C",
+      "developmentRate": 62,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 54,
+        "velocity": 67,
+        "command": 47,
+        "control": 56,
+        "movement": 55,
+        "mentality": 55,
+        "recovery": 52,
+        "clutch": 47,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 38,
+        "power": 44,
+        "eye": 37,
+        "discipline": 40,
+        "speed": 43,
+        "baseInstinct": 44,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 37,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "C": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

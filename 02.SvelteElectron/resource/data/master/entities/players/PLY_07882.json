@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07882",
+  "name": "신진우",
+  "nameEn": "Shin JinWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 48,
+      "primaryPosition": "3B",
+      "developmentRate": 63,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 39,
+        "velocity": 44,
+        "command": 42,
+        "control": 44,
+        "movement": 34,
+        "mentality": 48,
+        "recovery": 36,
+        "clutch": 40,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 57,
+        "power": 51,
+        "eye": 54,
+        "discipline": 54,
+        "speed": 58,
+        "baseInstinct": 54,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 49,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "3B": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

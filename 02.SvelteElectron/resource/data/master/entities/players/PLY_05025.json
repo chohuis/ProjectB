@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05025",
+  "name": "권민완",
+  "nameEn": "Kwon MinWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 1,
+      "primaryPosition": "RF",
+      "developmentRate": 57,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 61,
+        "velocity": 56,
+        "command": 47,
+        "control": 50,
+        "movement": 53,
+        "mentality": 52,
+        "recovery": 48,
+        "clutch": 55,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 35,
+        "power": 35,
+        "eye": 35,
+        "discipline": 37,
+        "speed": 40,
+        "baseInstinct": 35,
+        "bunting": 20,
+        "platoon": 50,
+        "fielding": 27,
+        "arm": 28,
+        "battingClutch": 27
+      },
+      "positionRatings": {
+        "RF": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

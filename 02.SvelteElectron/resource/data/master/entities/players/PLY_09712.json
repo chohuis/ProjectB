@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09712",
+  "name": "조성성",
+  "nameEn": "Jo SeongSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 77,
+      "primaryPosition": "SS",
+      "developmentRate": 42,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 44,
+        "velocity": 45,
+        "command": 33,
+        "control": 41,
+        "movement": 40,
+        "mentality": 41,
+        "recovery": 37,
+        "clutch": 31,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 40,
+        "power": 33,
+        "eye": 32,
+        "discipline": 41,
+        "speed": 43,
+        "baseInstinct": 29,
+        "bunting": 20,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 31,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "SS": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

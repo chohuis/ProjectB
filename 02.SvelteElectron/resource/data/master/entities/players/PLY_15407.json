@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15407",
+  "name": "토마스 오스틴",
+  "nameEn": "Thomas Austin",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 28,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 10,
+      "primaryPosition": "C",
+      "developmentRate": 43,
+      "potentialHidden": 77,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 72,
+        "velocity": 75,
+        "command": 58,
+        "control": 64,
+        "movement": 69,
+        "mentality": 67,
+        "recovery": 59,
+        "clutch": 59,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 66,
+        "power": 65,
+        "eye": 71,
+        "discipline": 60,
+        "speed": 70,
+        "baseInstinct": 70,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 59,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "C": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

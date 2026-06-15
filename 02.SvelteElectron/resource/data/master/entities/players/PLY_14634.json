@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14634",
+  "name": "해리스 케빈",
+  "nameEn": "Harris Kevin",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 37,
+  "militaryStatus": "군필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 37,
+      "primaryPosition": "C",
+      "developmentRate": 57,
+      "potentialHidden": 81,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 60,
+        "velocity": 58,
+        "command": 52,
+        "control": 52,
+        "movement": 55,
+        "mentality": 58,
+        "recovery": 57,
+        "clutch": 51,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 55,
+        "power": 54,
+        "eye": 51,
+        "discipline": 52,
+        "speed": 51,
+        "baseInstinct": 56,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 60,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "C": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08716",
+  "name": "조상혁",
+  "nameEn": "Jo SangHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 49,
+      "primaryPosition": "LF",
+      "developmentRate": 46,
+      "potentialHidden": 43,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 42,
+        "velocity": 47,
+        "command": 41,
+        "control": 38,
+        "movement": 43,
+        "mentality": 44,
+        "recovery": 32,
+        "clutch": 32,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 52,
+        "power": 49,
+        "eye": 49,
+        "discipline": 44,
+        "speed": 52,
+        "baseInstinct": 45,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 45,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "LF": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

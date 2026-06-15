@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15022",
+  "name": "로빈슨 크리스",
+  "nameEn": "Robinson Chris",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 33,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 51,
+      "primaryPosition": "SP",
+      "developmentRate": 67,
+      "potentialHidden": 89,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 55,
+        "velocity": 59,
+        "command": 46,
+        "control": 49,
+        "movement": 56,
+        "mentality": 57,
+        "recovery": 50,
+        "clutch": 56,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 53,
+        "power": 46,
+        "eye": 47,
+        "discipline": 52,
+        "speed": 52,
+        "baseInstinct": 46,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 58,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "SP": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

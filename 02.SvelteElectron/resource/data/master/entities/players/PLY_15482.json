@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15482",
+  "name": "라이트 제이슨",
+  "nameEn": "Wright Jason",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 10,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 72,
+      "primaryPosition": "SP",
+      "developmentRate": 34,
+      "potentialHidden": 56,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 62,
+        "velocity": 73,
+        "command": 63,
+        "control": 59,
+        "movement": 68,
+        "mentality": 68,
+        "recovery": 59,
+        "clutch": 60,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 57,
+        "power": 61,
+        "eye": 57,
+        "discipline": 58,
+        "speed": 67,
+        "baseInstinct": 56,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 55,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "SP": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

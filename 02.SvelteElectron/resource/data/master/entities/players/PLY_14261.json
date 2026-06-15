@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14261",
+  "name": "로빈슨 코디",
+  "nameEn": "Robinson Cody",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 24,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 45,
+      "primaryPosition": "LF",
+      "developmentRate": 65,
+      "potentialHidden": 66,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 52,
+        "velocity": 57,
+        "command": 47,
+        "control": 42,
+        "movement": 52,
+        "mentality": 44,
+        "recovery": 41,
+        "clutch": 41,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 46,
+        "power": 41,
+        "eye": 50,
+        "discipline": 50,
+        "speed": 43,
+        "baseInstinct": 47,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 47,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "LF": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

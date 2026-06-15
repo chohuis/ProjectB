@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03158",
+  "name": "강상성",
+  "nameEn": "Kang SangSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 81,
+      "primaryPosition": "CF",
+      "developmentRate": 71,
+      "potentialHidden": 81,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 72,
+        "velocity": 76,
+        "command": 72,
+        "control": 73,
+        "movement": 77,
+        "mentality": 72,
+        "recovery": 73,
+        "clutch": 69,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 61,
+        "power": 50,
+        "eye": 60,
+        "discipline": 53,
+        "speed": 62,
+        "baseInstinct": 50,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 58,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "CF": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

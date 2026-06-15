@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07531",
+  "name": "이도수",
+  "nameEn": "Lee DoSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 76,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 47,
+        "velocity": 53,
+        "command": 47,
+        "control": 55,
+        "movement": 49,
+        "mentality": 53,
+        "recovery": 46,
+        "clutch": 44,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 50,
+        "power": 50,
+        "eye": 55,
+        "discipline": 48,
+        "speed": 52,
+        "baseInstinct": 50,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 49,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

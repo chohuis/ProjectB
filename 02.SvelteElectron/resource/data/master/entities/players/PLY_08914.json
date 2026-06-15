@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08914",
+  "name": "권도현",
+  "nameEn": "Kwon DoHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 6,
+      "primaryPosition": "LF",
+      "developmentRate": 44,
+      "potentialHidden": 41,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 52,
+        "velocity": 48,
+        "command": 46,
+        "control": 47,
+        "movement": 42,
+        "mentality": 53,
+        "recovery": 39,
+        "clutch": 37,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 46,
+        "power": 43,
+        "eye": 43,
+        "discipline": 37,
+        "speed": 49,
+        "baseInstinct": 45,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 37,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "LF": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

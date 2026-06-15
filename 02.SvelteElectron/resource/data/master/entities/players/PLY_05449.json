@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05449",
+  "name": "최훈원",
+  "nameEn": "Choi HunWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 88,
+      "primaryPosition": "LF",
+      "developmentRate": 57,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 52,
+        "velocity": 55,
+        "command": 48,
+        "control": 53,
+        "movement": 52,
+        "mentality": 52,
+        "recovery": 50,
+        "clutch": 43,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 47,
+        "power": 33,
+        "eye": 40,
+        "discipline": 35,
+        "speed": 44,
+        "baseInstinct": 36,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 40,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "LF": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

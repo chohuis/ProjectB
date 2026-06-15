@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08856",
+  "name": "이우식",
+  "nameEn": "Lee WooSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 84,
+      "primaryPosition": "LF",
+      "developmentRate": 51,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 37,
+        "stamina": 31,
+        "velocity": 46,
+        "command": 35,
+        "control": 36,
+        "movement": 30,
+        "mentality": 39,
+        "recovery": 35,
+        "clutch": 29,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 32,
+        "power": 30,
+        "eye": 40,
+        "discipline": 33,
+        "speed": 38,
+        "baseInstinct": 33,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 36,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "LF": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

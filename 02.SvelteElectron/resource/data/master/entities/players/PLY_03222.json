@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03222",
+  "name": "임기호",
+  "nameEn": "Lim KiHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 79,
+      "primaryPosition": "2B",
+      "developmentRate": 73,
+      "potentialHidden": 86,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 52,
+        "velocity": 61,
+        "command": 54,
+        "control": 52,
+        "movement": 55,
+        "mentality": 54,
+        "recovery": 59,
+        "clutch": 53,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 71,
+        "power": 57,
+        "eye": 70,
+        "discipline": 58,
+        "speed": 67,
+        "baseInstinct": 66,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 61,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "2B": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08050",
+  "name": "윤우훈",
+  "nameEn": "Yoon WooHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 24,
+      "primaryPosition": "SP",
+      "developmentRate": 47,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 53,
+        "velocity": 54,
+        "command": 49,
+        "control": 54,
+        "movement": 53,
+        "mentality": 51,
+        "recovery": 46,
+        "clutch": 39,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 41,
+        "power": 41,
+        "eye": 39,
+        "discipline": 38,
+        "speed": 48,
+        "baseInstinct": 42,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 37,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "SP": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15988",
+  "name": "존슨 트레버",
+  "nameEn": "Johnson Trevor",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 41,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 67,
+      "primaryPosition": "2B",
+      "developmentRate": 53,
+      "potentialHidden": 65,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 54,
+        "velocity": 59,
+        "command": 54,
+        "control": 52,
+        "movement": 48,
+        "mentality": 56,
+        "recovery": 54,
+        "clutch": 42,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 59,
+        "power": 45,
+        "eye": 49,
+        "discipline": 56,
+        "speed": 51,
+        "baseInstinct": 45,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 54,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "2B": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

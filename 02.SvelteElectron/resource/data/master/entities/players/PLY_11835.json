@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11835",
+  "name": "가르시아 칼렙",
+  "nameEn": "Garcia Caleb",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 43,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 19,
+      "primaryPosition": "SP",
+      "developmentRate": 76,
+      "potentialHidden": 71,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 55,
+        "velocity": 62,
+        "command": 48,
+        "control": 48,
+        "movement": 59,
+        "mentality": 57,
+        "recovery": 51,
+        "clutch": 51,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 51,
+        "power": 51,
+        "eye": 50,
+        "discipline": 56,
+        "speed": 59,
+        "baseInstinct": 52,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 56,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "SP": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

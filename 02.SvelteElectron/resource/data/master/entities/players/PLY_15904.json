@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15904",
+  "name": "잭슨 에릭",
+  "nameEn": "Jackson Eric",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 49,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 70,
+      "primaryPosition": "SP",
+      "developmentRate": 51,
+      "potentialHidden": 45,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 61,
+        "velocity": 71,
+        "command": 61,
+        "control": 64,
+        "movement": 64,
+        "mentality": 58,
+        "recovery": 56,
+        "clutch": 60,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 68,
+        "power": 63,
+        "eye": 67,
+        "discipline": 67,
+        "speed": 62,
+        "baseInstinct": 56,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 63,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "SP": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16645",
+  "name": "홀 블레이크",
+  "nameEn": "Hall Blake",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 35,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 28,
+      "primaryPosition": "2B",
+      "developmentRate": 67,
+      "potentialHidden": 86,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 53,
+        "velocity": 54,
+        "command": 55,
+        "control": 50,
+        "movement": 51,
+        "mentality": 51,
+        "recovery": 50,
+        "clutch": 40,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 52,
+        "power": 52,
+        "eye": 46,
+        "discipline": 53,
+        "speed": 59,
+        "baseInstinct": 53,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 53,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "2B": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

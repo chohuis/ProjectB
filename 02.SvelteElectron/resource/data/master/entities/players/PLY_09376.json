@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09376",
+  "name": "김정완",
+  "nameEn": "Kim JungWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 39,
+      "primaryPosition": "C",
+      "developmentRate": 42,
+      "potentialHidden": 39,
+      "pitching": {
+        "ovr": 38,
+        "stamina": 41,
+        "velocity": 46,
+        "command": 27,
+        "control": 30,
+        "movement": 34,
+        "mentality": 33,
+        "recovery": 34,
+        "clutch": 27,
+        "holdRunners": 25
+      },
+      "batting": {
+        "ovr": 35,
+        "contact": 36,
+        "power": 30,
+        "eye": 34,
+        "discipline": 36,
+        "speed": 36,
+        "baseInstinct": 35,
+        "bunting": 17,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 28,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "C": 35
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

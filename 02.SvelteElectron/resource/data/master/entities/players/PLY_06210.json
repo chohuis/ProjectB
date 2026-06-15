@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06210",
+  "name": "임민현",
+  "nameEn": "Lim MinHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 51,
+      "primaryPosition": "SS",
+      "developmentRate": 47,
+      "potentialHidden": 40,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 49,
+        "velocity": 51,
+        "command": 46,
+        "control": 45,
+        "movement": 40,
+        "mentality": 41,
+        "recovery": 46,
+        "clutch": 39,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 35,
+        "power": 30,
+        "eye": 40,
+        "discipline": 39,
+        "speed": 40,
+        "baseInstinct": 41,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 30,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "SS": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

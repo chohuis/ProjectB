@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12549",
+  "name": "앤더슨 칼렙",
+  "nameEn": "Anderson Caleb",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 37,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 7,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 84,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 52,
+        "velocity": 61,
+        "command": 61,
+        "control": 54,
+        "movement": 53,
+        "mentality": 65,
+        "recovery": 48,
+        "clutch": 60,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 51,
+        "power": 57,
+        "eye": 58,
+        "discipline": 59,
+        "speed": 59,
+        "baseInstinct": 59,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 61,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "SP": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

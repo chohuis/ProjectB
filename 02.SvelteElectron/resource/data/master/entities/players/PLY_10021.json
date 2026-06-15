@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10021",
+  "name": "클라크 헌터",
+  "nameEn": "Clark Hunter",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 26,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 92,
+      "primaryPosition": "3B",
+      "developmentRate": 71,
+      "potentialHidden": 60,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 56,
+        "velocity": 62,
+        "command": 51,
+        "control": 58,
+        "movement": 50,
+        "mentality": 60,
+        "recovery": 52,
+        "clutch": 49,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 51,
+        "power": 54,
+        "eye": 55,
+        "discipline": 50,
+        "speed": 52,
+        "baseInstinct": 55,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 58,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "3B": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

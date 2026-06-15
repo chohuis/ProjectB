@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10255",
+  "name": "윌리엄스 조던",
+  "nameEn": "Williams Jordan",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 42,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 15,
+      "primaryPosition": "SS",
+      "developmentRate": 53,
+      "potentialHidden": 66,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 64,
+        "velocity": 68,
+        "command": 63,
+        "control": 70,
+        "movement": 65,
+        "mentality": 64,
+        "recovery": 63,
+        "clutch": 61,
+        "holdRunners": 69
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 68,
+        "power": 61,
+        "eye": 61,
+        "discipline": 62,
+        "speed": 73,
+        "baseInstinct": 66,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 71,
+        "battingClutch": 70
+      },
+      "positionRatings": {
+        "SS": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06695",
+  "name": "황지현",
+  "nameEn": "Hwang JiHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 25,
+      "primaryPosition": "3B",
+      "developmentRate": 67,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 47,
+        "velocity": 63,
+        "command": 50,
+        "control": 54,
+        "movement": 54,
+        "mentality": 48,
+        "recovery": 48,
+        "clutch": 39,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 57,
+        "power": 59,
+        "eye": 55,
+        "discipline": 56,
+        "speed": 58,
+        "baseInstinct": 63,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 61,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "3B": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

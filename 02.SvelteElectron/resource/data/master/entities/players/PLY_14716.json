@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14716",
+  "name": "로드리게스 케빈",
+  "nameEn": "Rodriguez Kevin",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 13,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 34,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 62,
+      "primaryPosition": "3B",
+      "developmentRate": 39,
+      "potentialHidden": 53,
+      "proServiceYears": 12,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 60,
+        "velocity": 72,
+        "command": 52,
+        "control": 55,
+        "movement": 61,
+        "mentality": 64,
+        "recovery": 52,
+        "clutch": 57,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 66,
+        "power": 55,
+        "eye": 61,
+        "discipline": 66,
+        "speed": 63,
+        "baseInstinct": 64,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 57,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "3B": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

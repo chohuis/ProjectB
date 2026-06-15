@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15130",
+  "name": "스미스 오스틴",
+  "nameEn": "Smith Austin",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 14,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 30,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 21,
+      "primaryPosition": "LF",
+      "developmentRate": 46,
+      "potentialHidden": 67,
+      "proServiceYears": 8,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 56,
+        "velocity": 54,
+        "command": 54,
+        "control": 53,
+        "movement": 54,
+        "mentality": 61,
+        "recovery": 45,
+        "clutch": 49,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 57,
+        "power": 53,
+        "eye": 55,
+        "discipline": 49,
+        "speed": 58,
+        "baseInstinct": 48,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 53,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "LF": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

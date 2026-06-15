@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06814",
+  "name": "조훈훈",
+  "nameEn": "Jo HunHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 32,
+      "primaryPosition": "1B",
+      "developmentRate": 63,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 53,
+        "velocity": 65,
+        "command": 58,
+        "control": 62,
+        "movement": 59,
+        "mentality": 56,
+        "recovery": 57,
+        "clutch": 47,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 49,
+        "power": 46,
+        "eye": 49,
+        "discipline": 54,
+        "speed": 50,
+        "baseInstinct": 51,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 48,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "1B": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

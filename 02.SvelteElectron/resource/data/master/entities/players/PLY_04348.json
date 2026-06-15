@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04348",
+  "name": "한지찬",
+  "nameEn": "Han JiChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 33,
+      "primaryPosition": "SP",
+      "developmentRate": 61,
+      "potentialHidden": 85,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 57,
+        "velocity": 63,
+        "command": 59,
+        "control": 56,
+        "movement": 55,
+        "mentality": 64,
+        "recovery": 60,
+        "clutch": 50,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 61,
+        "power": 58,
+        "eye": 66,
+        "discipline": 62,
+        "speed": 68,
+        "baseInstinct": 56,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 61,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "SP": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

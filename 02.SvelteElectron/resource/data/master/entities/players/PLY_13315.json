@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13315",
+  "name": "에르난데스 네이선",
+  "nameEn": "Hernandez Nathan",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 35,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 63,
+      "primaryPosition": "C",
+      "developmentRate": 66,
+      "potentialHidden": 59,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 80,
+        "stamina": 77,
+        "velocity": 78,
+        "command": 69,
+        "control": 82,
+        "movement": 83,
+        "mentality": 81,
+        "recovery": 70,
+        "clutch": 79,
+        "holdRunners": 73
+      },
+      "batting": {
+        "ovr": 80,
+        "contact": 82,
+        "power": 83,
+        "eye": 73,
+        "discipline": 77,
+        "speed": 82,
+        "baseInstinct": 82,
+        "bunting": 66,
+        "platoon": 50,
+        "fielding": 75,
+        "arm": 80,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "C": 80
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

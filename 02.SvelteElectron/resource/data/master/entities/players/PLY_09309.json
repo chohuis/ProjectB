@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09309",
+  "name": "김훈성",
+  "nameEn": "Kim HunSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 25,
+      "primaryPosition": "SP",
+      "developmentRate": 44,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 46,
+        "velocity": 51,
+        "command": 45,
+        "control": 52,
+        "movement": 43,
+        "mentality": 46,
+        "recovery": 44,
+        "clutch": 46,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 32,
+        "contact": 32,
+        "power": 33,
+        "eye": 33,
+        "discipline": 24,
+        "speed": 28,
+        "baseInstinct": 25,
+        "bunting": 12,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 24,
+        "battingClutch": 23
+      },
+      "positionRatings": {
+        "SP": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

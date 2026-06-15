@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11238",
+  "name": "화이트 칼렙",
+  "nameEn": "White Caleb",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 10,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 31,
+      "primaryPosition": "CF",
+      "developmentRate": 56,
+      "potentialHidden": 72,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 67,
+        "velocity": 61,
+        "command": 52,
+        "control": 56,
+        "movement": 55,
+        "mentality": 65,
+        "recovery": 56,
+        "clutch": 61,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 67,
+        "power": 65,
+        "eye": 64,
+        "discipline": 66,
+        "speed": 66,
+        "baseInstinct": 62,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 61,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "CF": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

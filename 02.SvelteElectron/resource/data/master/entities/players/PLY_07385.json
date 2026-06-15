@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07385",
+  "name": "류민호",
+  "nameEn": "Ryu MinHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 94,
+      "primaryPosition": "RF",
+      "developmentRate": 48,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 56,
+        "velocity": 56,
+        "command": 54,
+        "control": 47,
+        "movement": 53,
+        "mentality": 54,
+        "recovery": 44,
+        "clutch": 43,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 48,
+        "power": 40,
+        "eye": 37,
+        "discipline": 44,
+        "speed": 47,
+        "baseInstinct": 39,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 38,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "RF": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

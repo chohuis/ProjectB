@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03893",
+  "name": "김준환",
+  "nameEn": "Kim JunHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 75,
+      "primaryPosition": "1B",
+      "developmentRate": 53,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 57,
+        "velocity": 55,
+        "command": 50,
+        "control": 45,
+        "movement": 49,
+        "mentality": 50,
+        "recovery": 51,
+        "clutch": 43,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 53,
+        "power": 52,
+        "eye": 61,
+        "discipline": 49,
+        "speed": 58,
+        "baseInstinct": 49,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 55,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "1B": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

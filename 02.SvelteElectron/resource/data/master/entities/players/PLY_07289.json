@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07289",
+  "name": "최훈혁",
+  "nameEn": "Choi HunHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 85,
+      "primaryPosition": "SS",
+      "developmentRate": 49,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 53,
+        "velocity": 54,
+        "command": 49,
+        "control": 50,
+        "movement": 52,
+        "mentality": 55,
+        "recovery": 55,
+        "clutch": 50,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 32,
+        "power": 34,
+        "eye": 41,
+        "discipline": 35,
+        "speed": 45,
+        "baseInstinct": 30,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 41,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "SS": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06978",
+  "name": "윤상기",
+  "nameEn": "Yoon SangKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 45,
+      "primaryPosition": "SP",
+      "developmentRate": 60,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 58,
+        "velocity": 60,
+        "command": 48,
+        "control": 54,
+        "movement": 53,
+        "mentality": 51,
+        "recovery": 53,
+        "clutch": 49,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 50,
+        "power": 41,
+        "eye": 44,
+        "discipline": 41,
+        "speed": 50,
+        "baseInstinct": 42,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 43,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

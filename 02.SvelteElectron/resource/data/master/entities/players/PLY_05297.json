@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05297",
+  "name": "안민준",
+  "nameEn": "An MinJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 80,
+      "primaryPosition": "CF",
+      "developmentRate": 61,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 52,
+        "velocity": 56,
+        "command": 56,
+        "control": 60,
+        "movement": 50,
+        "mentality": 57,
+        "recovery": 57,
+        "clutch": 45,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 36,
+        "power": 39,
+        "eye": 42,
+        "discipline": 31,
+        "speed": 34,
+        "baseInstinct": 33,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 28,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "CF": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11962",
+  "name": "앤더슨 미겔",
+  "nameEn": "Anderson Miguel",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 33,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 97,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 67,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 71,
+        "velocity": 84,
+        "command": 68,
+        "control": 74,
+        "movement": 79,
+        "mentality": 69,
+        "recovery": 72,
+        "clutch": 64,
+        "holdRunners": 74
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 80,
+        "power": 73,
+        "eye": 69,
+        "discipline": 66,
+        "speed": 75,
+        "baseInstinct": 76,
+        "bunting": 63,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 69,
+        "battingClutch": 71
+      },
+      "positionRatings": {
+        "SP": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

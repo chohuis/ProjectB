@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09313",
+  "name": "박태원",
+  "nameEn": "Park TaeWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 14,
+      "primaryPosition": "SP",
+      "developmentRate": 43,
+      "potentialHidden": 49,
+      "pitching": {
+        "ovr": 38,
+        "stamina": 32,
+        "velocity": 40,
+        "command": 35,
+        "control": 35,
+        "movement": 38,
+        "mentality": 39,
+        "recovery": 31,
+        "clutch": 30,
+        "holdRunners": 23
+      },
+      "batting": {
+        "ovr": 34,
+        "contact": 29,
+        "power": 24,
+        "eye": 28,
+        "discipline": 35,
+        "speed": 33,
+        "baseInstinct": 33,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 33,
+        "arm": 25,
+        "battingClutch": 25
+      },
+      "positionRatings": {
+        "SP": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

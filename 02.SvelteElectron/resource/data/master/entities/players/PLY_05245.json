@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05245",
+  "name": "이혁기",
+  "nameEn": "Lee HyeokKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 9,
+      "primaryPosition": "CF",
+      "developmentRate": 51,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 50,
+        "velocity": 62,
+        "command": 49,
+        "control": 56,
+        "movement": 55,
+        "mentality": 61,
+        "recovery": 53,
+        "clutch": 44,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 39,
+        "power": 38,
+        "eye": 37,
+        "discipline": 43,
+        "speed": 42,
+        "baseInstinct": 45,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 39,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "CF": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

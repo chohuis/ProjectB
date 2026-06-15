@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14104",
+  "name": "해리스 조던",
+  "nameEn": "Harris Jordan",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 26,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 20,
+      "primaryPosition": "SS",
+      "developmentRate": 49,
+      "potentialHidden": 69,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 70,
+        "velocity": 74,
+        "command": 61,
+        "control": 67,
+        "movement": 70,
+        "mentality": 64,
+        "recovery": 62,
+        "clutch": 59,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 60,
+        "power": 59,
+        "eye": 67,
+        "discipline": 69,
+        "speed": 71,
+        "baseInstinct": 66,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 64,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "SS": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

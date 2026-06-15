@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12181",
+  "name": "앤더슨 마커스",
+  "nameEn": "Anderson Marcus",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 78,
+      "primaryPosition": "RF",
+      "developmentRate": 64,
+      "potentialHidden": 81,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 71,
+        "velocity": 71,
+        "command": 70,
+        "control": 59,
+        "movement": 65,
+        "mentality": 72,
+        "recovery": 69,
+        "clutch": 67,
+        "holdRunners": 63
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 65,
+        "power": 67,
+        "eye": 67,
+        "discipline": 58,
+        "speed": 68,
+        "baseInstinct": 60,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 68,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "RF": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06336",
+  "name": "장도윤",
+  "nameEn": "Jang DoYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 52,
+      "primaryPosition": "SP",
+      "developmentRate": 43,
+      "potentialHidden": 45,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 45,
+        "velocity": 59,
+        "command": 44,
+        "control": 48,
+        "movement": 46,
+        "mentality": 48,
+        "recovery": 46,
+        "clutch": 44,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 31,
+        "contact": 30,
+        "power": 27,
+        "eye": 26,
+        "discipline": 21,
+        "speed": 35,
+        "baseInstinct": 22,
+        "bunting": 12,
+        "platoon": 50,
+        "fielding": 27,
+        "arm": 23,
+        "battingClutch": 27
+      },
+      "positionRatings": {
+        "SP": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

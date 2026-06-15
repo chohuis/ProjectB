@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03221",
+  "name": "서현수",
+  "nameEn": "Seo HyeonSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 70,
+      "primaryPosition": "3B",
+      "developmentRate": 71,
+      "potentialHidden": 91,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 75,
+        "velocity": 78,
+        "command": 74,
+        "control": 77,
+        "movement": 73,
+        "mentality": 79,
+        "recovery": 62,
+        "clutch": 66,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 55,
+        "power": 54,
+        "eye": 47,
+        "discipline": 44,
+        "speed": 50,
+        "baseInstinct": 47,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 44,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "3B": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16649",
+  "name": "클라크 알렉스",
+  "nameEn": "Clark Alex",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 82,
+  "popularity": 29,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 44,
+      "primaryPosition": "2B",
+      "developmentRate": 47,
+      "potentialHidden": 74,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 63,
+        "velocity": 70,
+        "command": 69,
+        "control": 73,
+        "movement": 63,
+        "mentality": 76,
+        "recovery": 65,
+        "clutch": 62,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 65,
+        "power": 68,
+        "eye": 61,
+        "discipline": 60,
+        "speed": 64,
+        "baseInstinct": 68,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 68,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "2B": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

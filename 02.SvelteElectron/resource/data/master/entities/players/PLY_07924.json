@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07924",
+  "name": "오훈윤",
+  "nameEn": "Oh HunYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 91,
+      "primaryPosition": "LF",
+      "developmentRate": 48,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 44,
+        "velocity": 54,
+        "command": 39,
+        "control": 42,
+        "movement": 40,
+        "mentality": 51,
+        "recovery": 48,
+        "clutch": 45,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 51,
+        "power": 49,
+        "eye": 47,
+        "discipline": 52,
+        "speed": 50,
+        "baseInstinct": 44,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 53,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "LF": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

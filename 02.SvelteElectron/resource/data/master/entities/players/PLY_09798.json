@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09798",
+  "name": "오민빈",
+  "nameEn": "Oh MinBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 62,
+      "primaryPosition": "C",
+      "developmentRate": 47,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 39,
+        "stamina": 38,
+        "velocity": 41,
+        "command": 37,
+        "control": 34,
+        "movement": 31,
+        "mentality": 39,
+        "recovery": 32,
+        "clutch": 32,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 48,
+        "power": 44,
+        "eye": 45,
+        "discipline": 36,
+        "speed": 51,
+        "baseInstinct": 41,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 39,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "C": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

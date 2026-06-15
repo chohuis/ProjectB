@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12143",
+  "name": "마틴 카일",
+  "nameEn": "Martin Kyle",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 48,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 36,
+      "primaryPosition": "LF",
+      "developmentRate": 72,
+      "potentialHidden": 61,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 51,
+        "velocity": 57,
+        "command": 56,
+        "control": 52,
+        "movement": 51,
+        "mentality": 52,
+        "recovery": 46,
+        "clutch": 57,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 57,
+        "power": 51,
+        "eye": 48,
+        "discipline": 50,
+        "speed": 51,
+        "baseInstinct": 55,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 57,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "LF": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

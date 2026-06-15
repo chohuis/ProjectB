@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12145",
+  "name": "무어 타일러",
+  "nameEn": "Moore Tyler",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 83,
+  "popularity": 37,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 72,
+      "primaryPosition": "LF",
+      "developmentRate": 62,
+      "potentialHidden": 75,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 74,
+        "velocity": 83,
+        "command": 80,
+        "control": 73,
+        "movement": 77,
+        "mentality": 82,
+        "recovery": 73,
+        "clutch": 70,
+        "holdRunners": 71
+      },
+      "batting": {
+        "ovr": 78,
+        "contact": 79,
+        "power": 78,
+        "eye": 72,
+        "discipline": 70,
+        "speed": 71,
+        "baseInstinct": 77,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 70,
+        "battingClutch": 69
+      },
+      "positionRatings": {
+        "LF": 78
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

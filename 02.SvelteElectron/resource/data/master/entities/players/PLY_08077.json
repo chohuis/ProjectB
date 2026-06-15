@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08077",
+  "name": "오상수",
+  "nameEn": "Oh SangSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 21,
+      "primaryPosition": "RF",
+      "developmentRate": 55,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 48,
+        "velocity": 51,
+        "command": 37,
+        "control": 45,
+        "movement": 39,
+        "mentality": 42,
+        "recovery": 42,
+        "clutch": 37,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 39,
+        "power": 46,
+        "eye": 39,
+        "discipline": 44,
+        "speed": 49,
+        "baseInstinct": 37,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 40,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "RF": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

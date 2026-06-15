@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08014",
+  "name": "안수우",
+  "nameEn": "An SuWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 34,
+      "primaryPosition": "C",
+      "developmentRate": 45,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 43,
+        "velocity": 53,
+        "command": 37,
+        "control": 41,
+        "movement": 40,
+        "mentality": 47,
+        "recovery": 42,
+        "clutch": 44,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 40,
+        "power": 34,
+        "eye": 35,
+        "discipline": 33,
+        "speed": 43,
+        "baseInstinct": 39,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 35,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "C": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

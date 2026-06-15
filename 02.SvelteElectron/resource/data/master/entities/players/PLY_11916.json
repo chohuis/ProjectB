@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11916",
+  "name": "로빈슨 미겔",
+  "nameEn": "Robinson Miguel",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 82,
+  "popularity": 49,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 67,
+      "primaryPosition": "CF",
+      "developmentRate": 69,
+      "potentialHidden": 70,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 66,
+        "velocity": 64,
+        "command": 66,
+        "control": 64,
+        "movement": 64,
+        "mentality": 70,
+        "recovery": 59,
+        "clutch": 65,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 63,
+        "power": 67,
+        "eye": 68,
+        "discipline": 58,
+        "speed": 67,
+        "baseInstinct": 58,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 65,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "CF": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12346",
+  "name": "스콧 블레이크",
+  "nameEn": "Scott Blake",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 12,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 30,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 40,
+      "primaryPosition": "CF",
+      "developmentRate": 37,
+      "potentialHidden": 74,
+      "proServiceYears": 8,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 51,
+        "velocity": 68,
+        "command": 60,
+        "control": 62,
+        "movement": 54,
+        "mentality": 56,
+        "recovery": 54,
+        "clutch": 52,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 60,
+        "power": 56,
+        "eye": 64,
+        "discipline": 63,
+        "speed": 60,
+        "baseInstinct": 49,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 56,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "CF": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

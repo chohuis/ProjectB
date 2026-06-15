@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05420",
+  "name": "정영윤",
+  "nameEn": "Jung YoungYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 28,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 84,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 44,
+        "velocity": 54,
+        "command": 38,
+        "control": 45,
+        "movement": 42,
+        "mentality": 51,
+        "recovery": 43,
+        "clutch": 41,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 54,
+        "power": 45,
+        "eye": 53,
+        "discipline": 53,
+        "speed": 57,
+        "baseInstinct": 49,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 43,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SP": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

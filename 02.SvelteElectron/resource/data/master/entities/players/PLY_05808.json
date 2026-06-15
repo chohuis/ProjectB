@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05808",
+  "name": "류혁준",
+  "nameEn": "Ryu HyeokJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 39,
+      "primaryPosition": "CF",
+      "developmentRate": 48,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 52,
+        "velocity": 62,
+        "command": 52,
+        "control": 57,
+        "movement": 49,
+        "mentality": 53,
+        "recovery": 49,
+        "clutch": 47,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 48,
+        "power": 43,
+        "eye": 51,
+        "discipline": 49,
+        "speed": 50,
+        "baseInstinct": 45,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 39,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "CF": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

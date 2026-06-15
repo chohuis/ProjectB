@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06724",
+  "name": "한혁혁",
+  "nameEn": "Han HyeokHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 89,
+      "primaryPosition": "LF",
+      "developmentRate": 66,
+      "potentialHidden": 83,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 69,
+        "velocity": 73,
+        "command": 60,
+        "control": 61,
+        "movement": 67,
+        "mentality": 66,
+        "recovery": 56,
+        "clutch": 58,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 62,
+        "power": 64,
+        "eye": 61,
+        "discipline": 58,
+        "speed": 61,
+        "baseInstinct": 61,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 59,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "LF": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

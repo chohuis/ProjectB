@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14887",
+  "name": "테일러 제이슨",
+  "nameEn": "Taylor Jason",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 11,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 31,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 49,
+      "primaryPosition": "2B",
+      "developmentRate": 48,
+      "potentialHidden": 47,
+      "proServiceYears": 9,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 62,
+        "velocity": 67,
+        "command": 66,
+        "control": 60,
+        "movement": 67,
+        "mentality": 59,
+        "recovery": 59,
+        "clutch": 53,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 59,
+        "power": 61,
+        "eye": 56,
+        "discipline": 60,
+        "speed": 62,
+        "baseInstinct": 58,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 66,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "2B": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

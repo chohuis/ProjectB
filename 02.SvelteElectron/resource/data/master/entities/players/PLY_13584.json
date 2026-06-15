@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13584",
+  "name": "로빈슨 라이언",
+  "nameEn": "Robinson Ryan",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 31,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 76,
+      "primaryPosition": "3B",
+      "developmentRate": 80,
+      "potentialHidden": 63,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 50,
+        "velocity": 67,
+        "command": 60,
+        "control": 53,
+        "movement": 60,
+        "mentality": 61,
+        "recovery": 58,
+        "clutch": 55,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 50,
+        "power": 62,
+        "eye": 60,
+        "discipline": 53,
+        "speed": 59,
+        "baseInstinct": 58,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 50,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "3B": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

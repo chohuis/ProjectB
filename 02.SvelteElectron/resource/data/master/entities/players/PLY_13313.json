@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13313",
+  "name": "가르시아 다니엘",
+  "nameEn": "Garcia Daniel",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 42,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 84,
+      "primaryPosition": "2B",
+      "developmentRate": 77,
+      "potentialHidden": 86,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 68,
+        "velocity": 68,
+        "command": 57,
+        "control": 71,
+        "movement": 67,
+        "mentality": 71,
+        "recovery": 64,
+        "clutch": 62,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 67,
+        "power": 69,
+        "eye": 67,
+        "discipline": 63,
+        "speed": 69,
+        "baseInstinct": 67,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 68,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "2B": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

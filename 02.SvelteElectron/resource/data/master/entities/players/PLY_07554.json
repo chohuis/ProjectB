@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07554",
+  "name": "박영욱",
+  "nameEn": "Park YoungWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 32,
+      "primaryPosition": "SP",
+      "developmentRate": 63,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 49,
+        "velocity": 47,
+        "command": 48,
+        "control": 45,
+        "movement": 38,
+        "mentality": 49,
+        "recovery": 36,
+        "clutch": 38,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 43,
+        "power": 43,
+        "eye": 48,
+        "discipline": 44,
+        "speed": 44,
+        "baseInstinct": 45,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 45,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "SP": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04917",
+  "name": "최혁혁",
+  "nameEn": "Choi HyeokHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 72,
+      "primaryPosition": "CF",
+      "developmentRate": 45,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 55,
+        "velocity": 61,
+        "command": 45,
+        "control": 59,
+        "movement": 56,
+        "mentality": 53,
+        "recovery": 46,
+        "clutch": 45,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 41,
+        "power": 43,
+        "eye": 48,
+        "discipline": 39,
+        "speed": 48,
+        "baseInstinct": 42,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 36,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "CF": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

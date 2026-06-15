@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05677",
+  "name": "류수성",
+  "nameEn": "Ryu SuSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 29,
+      "primaryPosition": "LF",
+      "developmentRate": 52,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 51,
+        "velocity": 62,
+        "command": 46,
+        "control": 53,
+        "movement": 54,
+        "mentality": 60,
+        "recovery": 53,
+        "clutch": 49,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 42,
+        "power": 45,
+        "eye": 42,
+        "discipline": 43,
+        "speed": 42,
+        "baseInstinct": 45,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 41,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "LF": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

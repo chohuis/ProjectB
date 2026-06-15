@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07433",
+  "name": "서영호",
+  "nameEn": "Seo YoungHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 56,
+      "primaryPosition": "SP",
+      "developmentRate": 46,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 55,
+        "velocity": 53,
+        "command": 52,
+        "control": 54,
+        "movement": 46,
+        "mentality": 51,
+        "recovery": 44,
+        "clutch": 47,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 52,
+        "power": 48,
+        "eye": 40,
+        "discipline": 48,
+        "speed": 52,
+        "baseInstinct": 48,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 42,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "SP": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

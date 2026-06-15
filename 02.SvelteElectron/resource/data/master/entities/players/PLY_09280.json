@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09280",
+  "name": "서태우",
+  "nameEn": "Seo TaeWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 45,
+      "primaryPosition": "SP",
+      "developmentRate": 56,
+      "potentialHidden": 40,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 46,
+        "velocity": 52,
+        "command": 39,
+        "control": 51,
+        "movement": 44,
+        "mentality": 51,
+        "recovery": 42,
+        "clutch": 46,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 38,
+        "power": 31,
+        "eye": 33,
+        "discipline": 37,
+        "speed": 43,
+        "baseInstinct": 28,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 33,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "SP": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

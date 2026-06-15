@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16267",
+  "name": "그린 칼렙",
+  "nameEn": "Green Caleb",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 83,
+  "popularity": 32,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 11,
+      "primaryPosition": "RF",
+      "developmentRate": 65,
+      "potentialHidden": 57,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 43,
+        "velocity": 51,
+        "command": 47,
+        "control": 47,
+        "movement": 48,
+        "mentality": 48,
+        "recovery": 50,
+        "clutch": 46,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 51,
+        "power": 40,
+        "eye": 51,
+        "discipline": 51,
+        "speed": 44,
+        "baseInstinct": 48,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 44,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "RF": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

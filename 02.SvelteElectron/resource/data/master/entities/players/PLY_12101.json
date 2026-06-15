@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12101",
+  "name": "스콧 다니엘",
+  "nameEn": "Scott Daniel",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 17,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 41,
+      "primaryPosition": "2B",
+      "developmentRate": 69,
+      "potentialHidden": 69,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 79,
+        "stamina": 75,
+        "velocity": 87,
+        "command": 74,
+        "control": 83,
+        "movement": 77,
+        "mentality": 75,
+        "recovery": 69,
+        "clutch": 67,
+        "holdRunners": 70
+      },
+      "batting": {
+        "ovr": 79,
+        "contact": 83,
+        "power": 82,
+        "eye": 70,
+        "discipline": 71,
+        "speed": 84,
+        "baseInstinct": 77,
+        "bunting": 72,
+        "platoon": 50,
+        "fielding": 81,
+        "arm": 75,
+        "battingClutch": 77
+      },
+      "positionRatings": {
+        "2B": 79
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

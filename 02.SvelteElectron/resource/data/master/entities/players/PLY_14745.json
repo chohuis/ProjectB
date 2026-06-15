@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14745",
+  "name": "무어 케빈",
+  "nameEn": "Moore Kevin",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 33,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 74,
+      "primaryPosition": "SP",
+      "developmentRate": 43,
+      "potentialHidden": 60,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 61,
+        "velocity": 64,
+        "command": 62,
+        "control": 61,
+        "movement": 58,
+        "mentality": 56,
+        "recovery": 62,
+        "clutch": 60,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 53,
+        "power": 59,
+        "eye": 65,
+        "discipline": 56,
+        "speed": 63,
+        "baseInstinct": 53,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 60,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "SP": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

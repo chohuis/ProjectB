@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05473",
+  "name": "송도기",
+  "nameEn": "Song DoKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 12,
+      "primaryPosition": "RF",
+      "developmentRate": 63,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 52,
+        "velocity": 67,
+        "command": 49,
+        "control": 56,
+        "movement": 55,
+        "mentality": 63,
+        "recovery": 45,
+        "clutch": 53,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 39,
+        "power": 36,
+        "eye": 37,
+        "discipline": 38,
+        "speed": 38,
+        "baseInstinct": 42,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 41,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "RF": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

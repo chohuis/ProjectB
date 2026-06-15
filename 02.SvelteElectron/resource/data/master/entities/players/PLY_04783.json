@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04783",
+  "name": "황현준",
+  "nameEn": "Hwang HyeonJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 64,
+      "primaryPosition": "SS",
+      "developmentRate": 51,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 50,
+        "velocity": 61,
+        "command": 54,
+        "control": 55,
+        "movement": 54,
+        "mentality": 55,
+        "recovery": 51,
+        "clutch": 45,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 56,
+        "power": 51,
+        "eye": 53,
+        "discipline": 48,
+        "speed": 48,
+        "baseInstinct": 54,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 52,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "SS": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03058",
+  "name": "임재완",
+  "nameEn": "Lim JaeWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 41,
+      "primaryPosition": "2B",
+      "developmentRate": 68,
+      "potentialHidden": 92,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 65,
+        "velocity": 75,
+        "command": 72,
+        "control": 69,
+        "movement": 74,
+        "mentality": 76,
+        "recovery": 72,
+        "clutch": 65,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 70,
+        "power": 68,
+        "eye": 63,
+        "discipline": 64,
+        "speed": 76,
+        "baseInstinct": 67,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 72,
+        "arm": 70,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "2B": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

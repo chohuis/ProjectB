@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06867",
+  "name": "송수찬",
+  "nameEn": "Song SuChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 57,
+      "primaryPosition": "1B",
+      "developmentRate": 60,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 58,
+        "velocity": 63,
+        "command": 63,
+        "control": 57,
+        "movement": 58,
+        "mentality": 65,
+        "recovery": 60,
+        "clutch": 50,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 61,
+        "power": 56,
+        "eye": 65,
+        "discipline": 60,
+        "speed": 60,
+        "baseInstinct": 63,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 61,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "1B": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

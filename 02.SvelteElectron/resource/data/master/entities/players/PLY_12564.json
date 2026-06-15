@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12564",
+  "name": "무어 마커스",
+  "nameEn": "Moore Marcus",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 27,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 63,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 64,
+        "velocity": 70,
+        "command": 68,
+        "control": 64,
+        "movement": 70,
+        "mentality": 71,
+        "recovery": 71,
+        "clutch": 66,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 71,
+        "power": 73,
+        "eye": 72,
+        "discipline": 74,
+        "speed": 75,
+        "baseInstinct": 68,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 73,
+        "arm": 71,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "SP": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

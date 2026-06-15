@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12810",
+  "name": "미첼 제이슨",
+  "nameEn": "Mitchell Jason",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 31,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 54,
+      "primaryPosition": "CF",
+      "developmentRate": 52,
+      "potentialHidden": 58,
+      "proServiceYears": 9,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 63,
+        "velocity": 65,
+        "command": 51,
+        "control": 62,
+        "movement": 54,
+        "mentality": 55,
+        "recovery": 55,
+        "clutch": 50,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 54,
+        "power": 50,
+        "eye": 57,
+        "discipline": 58,
+        "speed": 55,
+        "baseInstinct": 56,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 55,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "CF": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

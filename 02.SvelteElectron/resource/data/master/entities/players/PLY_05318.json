@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05318",
+  "name": "김상호",
+  "nameEn": "Kim SangHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 95,
+      "primaryPosition": "3B",
+      "developmentRate": 59,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 64,
+        "velocity": 62,
+        "command": 57,
+        "control": 64,
+        "movement": 63,
+        "mentality": 65,
+        "recovery": 58,
+        "clutch": 58,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 57,
+        "power": 48,
+        "eye": 50,
+        "discipline": 55,
+        "speed": 58,
+        "baseInstinct": 55,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 45,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "3B": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

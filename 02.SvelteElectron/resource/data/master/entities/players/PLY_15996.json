@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15996",
+  "name": "브라운 칼렙",
+  "nameEn": "Brown Caleb",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 38,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 31,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 31,
+      "primaryPosition": "SS",
+      "developmentRate": 42,
+      "potentialHidden": 54,
+      "proServiceYears": 9,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 62,
+        "velocity": 66,
+        "command": 63,
+        "control": 61,
+        "movement": 59,
+        "mentality": 59,
+        "recovery": 60,
+        "clutch": 53,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 57,
+        "power": 60,
+        "eye": 66,
+        "discipline": 61,
+        "speed": 64,
+        "baseInstinct": 62,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 56,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "SS": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

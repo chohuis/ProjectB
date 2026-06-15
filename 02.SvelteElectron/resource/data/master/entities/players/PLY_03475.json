@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03475",
+  "name": "전진재",
+  "nameEn": "Jeon JinJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 65,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 97,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 69,
+        "velocity": 82,
+        "command": 67,
+        "control": 78,
+        "movement": 73,
+        "mentality": 82,
+        "recovery": 76,
+        "clutch": 64,
+        "holdRunners": 72
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 74,
+        "power": 63,
+        "eye": 68,
+        "discipline": 65,
+        "speed": 75,
+        "baseInstinct": 65,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 66,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "SP": 77
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

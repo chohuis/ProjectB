@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05515",
+  "name": "윤도원",
+  "nameEn": "Yoon DoWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 41,
+      "primaryPosition": "3B",
+      "developmentRate": 54,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 60,
+        "velocity": 67,
+        "command": 50,
+        "control": 51,
+        "movement": 52,
+        "mentality": 57,
+        "recovery": 58,
+        "clutch": 53,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 45,
+        "power": 46,
+        "eye": 51,
+        "discipline": 43,
+        "speed": 48,
+        "baseInstinct": 45,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 46,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "3B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

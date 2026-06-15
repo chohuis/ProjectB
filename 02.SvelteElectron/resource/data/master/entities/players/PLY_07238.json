@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07238",
+  "name": "조지우",
+  "nameEn": "Jo JiWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 32,
+      "primaryPosition": "LF",
+      "developmentRate": 48,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 61,
+        "velocity": 59,
+        "command": 53,
+        "control": 55,
+        "movement": 58,
+        "mentality": 59,
+        "recovery": 55,
+        "clutch": 52,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 34,
+        "power": 29,
+        "eye": 32,
+        "discipline": 34,
+        "speed": 43,
+        "baseInstinct": 33,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 29,
+        "battingClutch": 27
+      },
+      "positionRatings": {
+        "LF": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

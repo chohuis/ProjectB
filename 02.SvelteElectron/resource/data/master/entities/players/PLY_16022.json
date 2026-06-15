@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16022",
+  "name": "에르난데스 콜",
+  "nameEn": "Hernandez Cole",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 46,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 53,
+      "primaryPosition": "SP",
+      "developmentRate": 43,
+      "potentialHidden": 70,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 63,
+        "velocity": 75,
+        "command": 62,
+        "control": 66,
+        "movement": 64,
+        "mentality": 74,
+        "recovery": 72,
+        "clutch": 72,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 67,
+        "power": 62,
+        "eye": 69,
+        "discipline": 65,
+        "speed": 75,
+        "baseInstinct": 72,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 74,
+        "arm": 62,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "SP": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

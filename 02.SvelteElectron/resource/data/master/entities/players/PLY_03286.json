@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03286",
+  "name": "황영찬",
+  "nameEn": "Hwang YoungChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 95,
+      "primaryPosition": "SP",
+      "developmentRate": 66,
+      "potentialHidden": 89,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 73,
+        "velocity": 83,
+        "command": 65,
+        "control": 72,
+        "movement": 68,
+        "mentality": 76,
+        "recovery": 72,
+        "clutch": 70,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 51,
+        "power": 51,
+        "eye": 44,
+        "discipline": 48,
+        "speed": 48,
+        "baseInstinct": 44,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 53,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "SP": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

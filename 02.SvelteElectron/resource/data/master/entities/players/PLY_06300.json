@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06300",
+  "name": "이성현",
+  "nameEn": "Lee SeongHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 91,
+      "primaryPosition": "1B",
+      "developmentRate": 55,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 54,
+        "velocity": 56,
+        "command": 47,
+        "control": 52,
+        "movement": 47,
+        "mentality": 58,
+        "recovery": 49,
+        "clutch": 50,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 32,
+        "power": 40,
+        "eye": 40,
+        "discipline": 41,
+        "speed": 39,
+        "baseInstinct": 31,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 30,
+        "battingClutch": 27
+      },
+      "positionRatings": {
+        "1B": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

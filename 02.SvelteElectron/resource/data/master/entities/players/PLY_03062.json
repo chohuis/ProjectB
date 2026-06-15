@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03062",
+  "name": "안수현",
+  "nameEn": "An SuHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 34,
+      "primaryPosition": "CF",
+      "developmentRate": 67,
+      "potentialHidden": 90,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 80,
+        "velocity": 76,
+        "command": 70,
+        "control": 76,
+        "movement": 69,
+        "mentality": 83,
+        "recovery": 76,
+        "clutch": 66,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 61,
+        "power": 62,
+        "eye": 68,
+        "discipline": 63,
+        "speed": 68,
+        "baseInstinct": 57,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 62,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "CF": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

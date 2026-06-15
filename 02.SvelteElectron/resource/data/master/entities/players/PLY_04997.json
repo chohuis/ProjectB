@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04997",
+  "name": "한혁수",
+  "nameEn": "Han HyeokSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 34,
+      "primaryPosition": "2B",
+      "developmentRate": 50,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 49,
+        "velocity": 51,
+        "command": 41,
+        "control": 44,
+        "movement": 50,
+        "mentality": 46,
+        "recovery": 44,
+        "clutch": 38,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 48,
+        "power": 48,
+        "eye": 52,
+        "discipline": 54,
+        "speed": 61,
+        "baseInstinct": 51,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 55,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "2B": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

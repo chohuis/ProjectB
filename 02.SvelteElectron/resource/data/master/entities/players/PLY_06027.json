@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06027",
+  "name": "박준찬",
+  "nameEn": "Park JunChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 95,
+      "primaryPosition": "LF",
+      "developmentRate": 51,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 61,
+        "velocity": 67,
+        "command": 53,
+        "control": 59,
+        "movement": 54,
+        "mentality": 54,
+        "recovery": 56,
+        "clutch": 50,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 56,
+        "power": 50,
+        "eye": 57,
+        "discipline": 55,
+        "speed": 60,
+        "baseInstinct": 50,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 48,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "LF": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14909",
+  "name": "루이스 데릭",
+  "nameEn": "Lewis Derek",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 45,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 43,
+      "primaryPosition": "2B",
+      "developmentRate": 57,
+      "potentialHidden": 81,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 72,
+        "velocity": 78,
+        "command": 65,
+        "control": 69,
+        "movement": 75,
+        "mentality": 73,
+        "recovery": 73,
+        "clutch": 67,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 78,
+        "power": 73,
+        "eye": 70,
+        "discipline": 67,
+        "speed": 71,
+        "baseInstinct": 72,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 77,
+        "battingClutch": 71
+      },
+      "positionRatings": {
+        "2B": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

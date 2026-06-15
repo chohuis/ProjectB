@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07380",
+  "name": "김정수",
+  "nameEn": "Kim JungSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 21,
+      "primaryPosition": "C",
+      "developmentRate": 53,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 40,
+        "velocity": 47,
+        "command": 36,
+        "control": 34,
+        "movement": 40,
+        "mentality": 47,
+        "recovery": 32,
+        "clutch": 36,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 43,
+        "power": 49,
+        "eye": 45,
+        "discipline": 50,
+        "speed": 54,
+        "baseInstinct": 41,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 44,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "C": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

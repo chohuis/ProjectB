@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16582",
+  "name": "클라크 크리스",
+  "nameEn": "Clark Chris",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 46,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 70,
+      "primaryPosition": "SP",
+      "developmentRate": 60,
+      "potentialHidden": 57,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 63,
+        "velocity": 79,
+        "command": 68,
+        "control": 69,
+        "movement": 71,
+        "mentality": 74,
+        "recovery": 72,
+        "clutch": 62,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 65,
+        "power": 72,
+        "eye": 68,
+        "discipline": 72,
+        "speed": 76,
+        "baseInstinct": 67,
+        "bunting": 65,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 61,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "SP": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15531",
+  "name": "스콧 루이스",
+  "nameEn": "Scott Luis",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 75,
+      "primaryPosition": "LF",
+      "developmentRate": 44,
+      "potentialHidden": 55,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 65,
+        "velocity": 69,
+        "command": 56,
+        "control": 61,
+        "movement": 63,
+        "mentality": 66,
+        "recovery": 57,
+        "clutch": 59,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 52,
+        "power": 59,
+        "eye": 65,
+        "discipline": 57,
+        "speed": 64,
+        "baseInstinct": 54,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 51,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "LF": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03488",
+  "name": "송기민",
+  "nameEn": "Song KiMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 18,
+      "primaryPosition": "1B",
+      "developmentRate": 59,
+      "potentialHidden": 95,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 74,
+        "velocity": 77,
+        "command": 70,
+        "control": 77,
+        "movement": 70,
+        "mentality": 71,
+        "recovery": 73,
+        "clutch": 71,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 57,
+        "power": 48,
+        "eye": 46,
+        "discipline": 44,
+        "speed": 49,
+        "baseInstinct": 47,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 45,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "1B": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

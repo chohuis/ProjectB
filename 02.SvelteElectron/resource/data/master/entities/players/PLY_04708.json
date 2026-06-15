@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04708",
+  "name": "김훈호",
+  "nameEn": "Kim HunHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 65,
+      "primaryPosition": "1B",
+      "developmentRate": 64,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 61,
+        "velocity": 66,
+        "command": 49,
+        "control": 60,
+        "movement": 52,
+        "mentality": 57,
+        "recovery": 53,
+        "clutch": 47,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 33,
+        "power": 27,
+        "eye": 33,
+        "discipline": 28,
+        "speed": 33,
+        "baseInstinct": 27,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 27,
+        "arm": 34,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "1B": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

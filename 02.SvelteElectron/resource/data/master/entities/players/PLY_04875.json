@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04875",
+  "name": "서혁욱",
+  "nameEn": "Seo HyeokWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 31,
+      "primaryPosition": "CF",
+      "developmentRate": 45,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 53,
+        "velocity": 63,
+        "command": 53,
+        "control": 52,
+        "movement": 44,
+        "mentality": 54,
+        "recovery": 46,
+        "clutch": 50,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 42,
+        "power": 34,
+        "eye": 35,
+        "discipline": 39,
+        "speed": 36,
+        "baseInstinct": 34,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 33,
+        "arm": 33,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "CF": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05898",
+  "name": "신상성",
+  "nameEn": "Shin SangSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 40,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 15,
+      "primaryPosition": "LF",
+      "developmentRate": 54,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 50,
+        "velocity": 57,
+        "command": 54,
+        "control": 54,
+        "movement": 49,
+        "mentality": 54,
+        "recovery": 47,
+        "clutch": 44,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 37,
+        "power": 32,
+        "eye": 38,
+        "discipline": 40,
+        "speed": 42,
+        "baseInstinct": 34,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 36,
+        "battingClutch": 30
+      },
+      "positionRatings": {
+        "LF": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

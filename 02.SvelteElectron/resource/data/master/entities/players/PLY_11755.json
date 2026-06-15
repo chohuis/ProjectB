@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11755",
+  "name": "킹 제이슨",
+  "nameEn": "King Jason",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 11,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 2,
+      "primaryPosition": "C",
+      "developmentRate": 78,
+      "potentialHidden": 78,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 52,
+        "velocity": 66,
+        "command": 47,
+        "control": 53,
+        "movement": 56,
+        "mentality": 54,
+        "recovery": 59,
+        "clutch": 48,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 56,
+        "power": 60,
+        "eye": 55,
+        "discipline": 54,
+        "speed": 58,
+        "baseInstinct": 48,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 58,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "C": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

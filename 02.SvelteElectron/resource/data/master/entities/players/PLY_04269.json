@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04269",
+  "name": "이정현",
+  "nameEn": "Lee JungHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 28,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 86,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 54,
+        "velocity": 57,
+        "command": 45,
+        "control": 49,
+        "movement": 44,
+        "mentality": 48,
+        "recovery": 48,
+        "clutch": 43,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 49,
+        "power": 50,
+        "eye": 48,
+        "discipline": 40,
+        "speed": 55,
+        "baseInstinct": 41,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 43,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SP": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

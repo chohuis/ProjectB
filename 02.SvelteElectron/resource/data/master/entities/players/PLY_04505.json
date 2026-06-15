@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04505",
+  "name": "정우혁",
+  "nameEn": "Jung WooHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 34,
+      "primaryPosition": "RF",
+      "developmentRate": 51,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 48,
+        "velocity": 54,
+        "command": 52,
+        "control": 47,
+        "movement": 50,
+        "mentality": 54,
+        "recovery": 45,
+        "clutch": 46,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 38,
+        "power": 37,
+        "eye": 47,
+        "discipline": 40,
+        "speed": 40,
+        "baseInstinct": 36,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 38,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "RF": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

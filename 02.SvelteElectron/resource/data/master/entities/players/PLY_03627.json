@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03627",
+  "name": "류세수",
+  "nameEn": "Ryu SeSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 65,
+      "primaryPosition": "2B",
+      "developmentRate": 54,
+      "potentialHidden": 90,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 54,
+        "velocity": 68,
+        "command": 55,
+        "control": 59,
+        "movement": 58,
+        "mentality": 61,
+        "recovery": 54,
+        "clutch": 50,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 57,
+        "power": 64,
+        "eye": 55,
+        "discipline": 54,
+        "speed": 68,
+        "baseInstinct": 54,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 62,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "2B": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

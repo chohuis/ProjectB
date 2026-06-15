@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09419",
+  "name": "조성훈",
+  "nameEn": "Jo SeongHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 35,
+      "primaryPosition": "3B",
+      "developmentRate": 55,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 37,
+        "stamina": 39,
+        "velocity": 44,
+        "command": 28,
+        "control": 28,
+        "movement": 38,
+        "mentality": 31,
+        "recovery": 35,
+        "clutch": 32,
+        "holdRunners": 22
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 43,
+        "power": 38,
+        "eye": 45,
+        "discipline": 39,
+        "speed": 50,
+        "baseInstinct": 44,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 40,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "3B": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

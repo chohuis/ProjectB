@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16014",
+  "name": "앤더슨 조던",
+  "nameEn": "Anderson Jordan",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 41,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 31,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 35,
+      "primaryPosition": "SP",
+      "developmentRate": 39,
+      "potentialHidden": 55,
+      "proServiceYears": 9,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 59,
+        "velocity": 72,
+        "command": 68,
+        "control": 65,
+        "movement": 59,
+        "mentality": 71,
+        "recovery": 68,
+        "clutch": 59,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 70,
+        "power": 65,
+        "eye": 59,
+        "discipline": 61,
+        "speed": 65,
+        "baseInstinct": 63,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 69,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "SP": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

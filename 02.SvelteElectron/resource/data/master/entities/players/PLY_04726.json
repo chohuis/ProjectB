@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04726",
+  "name": "임정진",
+  "nameEn": "Lim JungJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 78,
+      "primaryPosition": "3B",
+      "developmentRate": 46,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 55,
+        "velocity": 57,
+        "command": 44,
+        "control": 44,
+        "movement": 52,
+        "mentality": 57,
+        "recovery": 51,
+        "clutch": 48,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 44,
+        "power": 37,
+        "eye": 39,
+        "discipline": 33,
+        "speed": 48,
+        "baseInstinct": 37,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 43,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "3B": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

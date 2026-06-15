@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08093",
+  "name": "서상찬",
+  "nameEn": "Seo SangChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 84,
+      "primaryPosition": "SS",
+      "developmentRate": 57,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 50,
+        "velocity": 53,
+        "command": 50,
+        "control": 54,
+        "movement": 53,
+        "mentality": 50,
+        "recovery": 41,
+        "clutch": 50,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 49,
+        "power": 43,
+        "eye": 46,
+        "discipline": 39,
+        "speed": 54,
+        "baseInstinct": 43,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 43,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SS": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

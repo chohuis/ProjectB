@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11208",
+  "name": "홀 칼렙",
+  "nameEn": "Hall Caleb",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 32,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 90,
+      "primaryPosition": "SP",
+      "developmentRate": 66,
+      "potentialHidden": 61,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 69,
+        "velocity": 72,
+        "command": 62,
+        "control": 69,
+        "movement": 63,
+        "mentality": 61,
+        "recovery": 56,
+        "clutch": 61,
+        "holdRunners": 63
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 61,
+        "power": 68,
+        "eye": 63,
+        "discipline": 67,
+        "speed": 71,
+        "baseInstinct": 61,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 69,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "SP": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

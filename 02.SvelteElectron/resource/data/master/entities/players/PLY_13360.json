@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13360",
+  "name": "로드리게스 제이크",
+  "nameEn": "Rodriguez Jake",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 13,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 18,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 77,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 81,
+        "velocity": 76,
+        "command": 76,
+        "control": 79,
+        "movement": 76,
+        "mentality": 72,
+        "recovery": 76,
+        "clutch": 68,
+        "holdRunners": 74
+      },
+      "batting": {
+        "ovr": 78,
+        "contact": 72,
+        "power": 73,
+        "eye": 71,
+        "discipline": 79,
+        "speed": 76,
+        "baseInstinct": 68,
+        "bunting": 66,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 70,
+        "battingClutch": 75
+      },
+      "positionRatings": {
+        "SP": 78
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

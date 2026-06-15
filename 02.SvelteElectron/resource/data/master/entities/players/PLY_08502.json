@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08502",
+  "name": "김찬수",
+  "nameEn": "Kim ChanSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 5,
+      "primaryPosition": "3B",
+      "developmentRate": 52,
+      "potentialHidden": 43,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 46,
+        "velocity": 53,
+        "command": 48,
+        "control": 47,
+        "movement": 51,
+        "mentality": 49,
+        "recovery": 42,
+        "clutch": 44,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 32,
+        "power": 28,
+        "eye": 31,
+        "discipline": 33,
+        "speed": 37,
+        "baseInstinct": 30,
+        "bunting": 19,
+        "platoon": 50,
+        "fielding": 28,
+        "arm": 28,
+        "battingClutch": 25
+      },
+      "positionRatings": {
+        "3B": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

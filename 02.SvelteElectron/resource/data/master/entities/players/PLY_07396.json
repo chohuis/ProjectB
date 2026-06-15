@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07396",
+  "name": "전기진",
+  "nameEn": "Jeon KiJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 40,
+      "primaryPosition": "SS",
+      "developmentRate": 44,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 50,
+        "velocity": 56,
+        "command": 41,
+        "control": 48,
+        "movement": 42,
+        "mentality": 53,
+        "recovery": 46,
+        "clutch": 49,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 43,
+        "power": 39,
+        "eye": 46,
+        "discipline": 44,
+        "speed": 47,
+        "baseInstinct": 41,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 33,
+        "battingClutch": 30
+      },
+      "positionRatings": {
+        "SS": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

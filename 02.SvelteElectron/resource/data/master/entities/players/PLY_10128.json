@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10128",
+  "name": "루이스 코너",
+  "nameEn": "Lewis Connor",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 13,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 34,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 47,
+      "primaryPosition": "SP",
+      "developmentRate": 43,
+      "potentialHidden": 76,
+      "proServiceYears": 12,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 63,
+        "velocity": 71,
+        "command": 65,
+        "control": 69,
+        "movement": 75,
+        "mentality": 67,
+        "recovery": 68,
+        "clutch": 61,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 68,
+        "power": 71,
+        "eye": 75,
+        "discipline": 71,
+        "speed": 65,
+        "baseInstinct": 71,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 73,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "SP": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

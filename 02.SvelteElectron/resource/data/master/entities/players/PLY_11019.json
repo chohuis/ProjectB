@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11019",
+  "name": "스미스 에릭",
+  "nameEn": "Smith Eric",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 16,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 65,
+      "primaryPosition": "1B",
+      "developmentRate": 70,
+      "potentialHidden": 71,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 46,
+        "velocity": 50,
+        "command": 50,
+        "control": 50,
+        "movement": 55,
+        "mentality": 58,
+        "recovery": 53,
+        "clutch": 52,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 51,
+        "power": 54,
+        "eye": 56,
+        "discipline": 52,
+        "speed": 53,
+        "baseInstinct": 47,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 54,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "1B": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

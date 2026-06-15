@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03071",
+  "name": "박재찬",
+  "nameEn": "Park JaeChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 93,
+      "primaryPosition": "3B",
+      "developmentRate": 72,
+      "potentialHidden": 85,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 80,
+        "velocity": 83,
+        "command": 72,
+        "control": 71,
+        "movement": 79,
+        "mentality": 83,
+        "recovery": 67,
+        "clutch": 75,
+        "holdRunners": 69
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 67,
+        "power": 63,
+        "eye": 64,
+        "discipline": 73,
+        "speed": 66,
+        "baseInstinct": 62,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 72,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "3B": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

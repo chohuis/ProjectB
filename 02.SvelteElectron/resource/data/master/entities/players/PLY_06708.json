@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06708",
+  "name": "신동혁",
+  "nameEn": "Shin DongHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 15,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 82,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 56,
+        "velocity": 54,
+        "command": 45,
+        "control": 58,
+        "movement": 50,
+        "mentality": 55,
+        "recovery": 52,
+        "clutch": 48,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 38,
+        "power": 38,
+        "eye": 43,
+        "discipline": 46,
+        "speed": 47,
+        "baseInstinct": 35,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 46,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "SP": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

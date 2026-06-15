@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12777",
+  "name": "영 코너",
+  "nameEn": "Young Connor",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 12,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 41,
+      "primaryPosition": "C",
+      "developmentRate": 66,
+      "potentialHidden": 76,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 62,
+        "velocity": 70,
+        "command": 57,
+        "control": 61,
+        "movement": 70,
+        "mentality": 65,
+        "recovery": 68,
+        "clutch": 58,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 60,
+        "power": 67,
+        "eye": 72,
+        "discipline": 67,
+        "speed": 74,
+        "baseInstinct": 67,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 59,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "C": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

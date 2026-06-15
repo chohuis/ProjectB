@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05921",
+  "name": "최정기",
+  "nameEn": "Choi JungKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 54,
+      "primaryPosition": "LF",
+      "developmentRate": 49,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 43,
+        "velocity": 43,
+        "command": 33,
+        "control": 43,
+        "movement": 33,
+        "mentality": 45,
+        "recovery": 31,
+        "clutch": 28,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 56,
+        "power": 49,
+        "eye": 51,
+        "discipline": 49,
+        "speed": 50,
+        "baseInstinct": 52,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 53,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "LF": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

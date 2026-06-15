@@ -1,0 +1,73 @@
+{
+  "id": "PLY_09973",
+  "name": "로빈슨 블레이크",
+  "nameEn": "Robinson Blake",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 46,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 96,
+      "primaryPosition": "SP",
+      "developmentRate": 63,
+      "potentialHidden": 84,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 67,
+        "velocity": 83,
+        "command": 73,
+        "control": 66,
+        "movement": 75,
+        "mentality": 69,
+        "recovery": 65,
+        "clutch": 62,
+        "holdRunners": 73
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 77,
+        "power": 70,
+        "eye": 78,
+        "discipline": 70,
+        "speed": 74,
+        "baseInstinct": 72,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 76,
+        "battingClutch": 70
+      },
+      "positionRatings": {
+        "SP": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

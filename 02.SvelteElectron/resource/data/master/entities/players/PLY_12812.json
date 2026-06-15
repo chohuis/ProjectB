@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12812",
+  "name": "넬슨 그랜트",
+  "nameEn": "Nelson Grant",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 34,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 57,
+      "primaryPosition": "SP",
+      "developmentRate": 54,
+      "potentialHidden": 87,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 70,
+        "velocity": 78,
+        "command": 64,
+        "control": 64,
+        "movement": 69,
+        "mentality": 67,
+        "recovery": 61,
+        "clutch": 59,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 75,
+        "power": 67,
+        "eye": 70,
+        "discipline": 67,
+        "speed": 77,
+        "baseInstinct": 63,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 71,
+        "battingClutch": 71
+      },
+      "positionRatings": {
+        "SP": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

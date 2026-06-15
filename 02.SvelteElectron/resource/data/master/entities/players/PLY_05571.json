@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05571",
+  "name": "강상수",
+  "nameEn": "Kang SangSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 32,
+      "primaryPosition": "SP",
+      "developmentRate": 52,
+      "potentialHidden": 84,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 48,
+        "velocity": 48,
+        "command": 45,
+        "control": 40,
+        "movement": 43,
+        "mentality": 53,
+        "recovery": 49,
+        "clutch": 39,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 40,
+        "power": 46,
+        "eye": 44,
+        "discipline": 44,
+        "speed": 52,
+        "baseInstinct": 37,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 46,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "SP": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

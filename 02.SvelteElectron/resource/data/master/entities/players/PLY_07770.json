@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07770",
+  "name": "조세윤",
+  "nameEn": "Jo SeYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 13,
+      "primaryPosition": "RF",
+      "developmentRate": 57,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 45,
+        "velocity": 53,
+        "command": 36,
+        "control": 43,
+        "movement": 44,
+        "mentality": 46,
+        "recovery": 40,
+        "clutch": 42,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 38,
+        "power": 35,
+        "eye": 41,
+        "discipline": 46,
+        "speed": 41,
+        "baseInstinct": 42,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 45,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "RF": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

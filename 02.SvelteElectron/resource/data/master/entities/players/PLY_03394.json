@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03394",
+  "name": "신우훈",
+  "nameEn": "Shin WooHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 23,
+      "primaryPosition": "SP",
+      "developmentRate": 75,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 69,
+        "velocity": 78,
+        "command": 67,
+        "control": 63,
+        "movement": 61,
+        "mentality": 75,
+        "recovery": 58,
+        "clutch": 55,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 66,
+        "power": 61,
+        "eye": 66,
+        "discipline": 68,
+        "speed": 65,
+        "baseInstinct": 57,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 61,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "SP": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

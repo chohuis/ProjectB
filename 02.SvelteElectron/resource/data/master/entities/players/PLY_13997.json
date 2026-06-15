@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13997",
+  "name": "가르시아 코너",
+  "nameEn": "Garcia Connor",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 15,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 25,
+      "primaryPosition": "SS",
+      "developmentRate": 60,
+      "potentialHidden": 63,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 61,
+        "velocity": 67,
+        "command": 61,
+        "control": 68,
+        "movement": 60,
+        "mentality": 69,
+        "recovery": 58,
+        "clutch": 63,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 57,
+        "power": 62,
+        "eye": 62,
+        "discipline": 61,
+        "speed": 63,
+        "baseInstinct": 57,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 60,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "SS": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

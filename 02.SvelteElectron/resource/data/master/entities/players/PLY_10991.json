@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10991",
+  "name": "카터 재크",
+  "nameEn": "Carter Zach",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 27,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 31,
+      "primaryPosition": "3B",
+      "developmentRate": 59,
+      "potentialHidden": 88,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 70,
+        "velocity": 84,
+        "command": 64,
+        "control": 77,
+        "movement": 72,
+        "mentality": 72,
+        "recovery": 65,
+        "clutch": 70,
+        "holdRunners": 70
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 75,
+        "power": 67,
+        "eye": 69,
+        "discipline": 71,
+        "speed": 75,
+        "baseInstinct": 69,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 77,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "3B": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

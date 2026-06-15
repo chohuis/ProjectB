@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13795",
+  "name": "화이트 제이슨",
+  "nameEn": "White Jason",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 31,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 31,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 21,
+      "primaryPosition": "CF",
+      "developmentRate": 54,
+      "potentialHidden": 63,
+      "proServiceYears": 9,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 70,
+        "velocity": 69,
+        "command": 65,
+        "control": 74,
+        "movement": 64,
+        "mentality": 72,
+        "recovery": 65,
+        "clutch": 72,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 64,
+        "power": 63,
+        "eye": 64,
+        "discipline": 73,
+        "speed": 72,
+        "baseInstinct": 71,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 73,
+        "arm": 65,
+        "battingClutch": 69
+      },
+      "positionRatings": {
+        "CF": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

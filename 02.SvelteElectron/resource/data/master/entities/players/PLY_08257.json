@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08257",
+  "name": "서준호",
+  "nameEn": "Seo JunHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 78,
+      "primaryPosition": "2B",
+      "developmentRate": 63,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 46,
+        "velocity": 55,
+        "command": 48,
+        "control": 43,
+        "movement": 51,
+        "mentality": 49,
+        "recovery": 45,
+        "clutch": 42,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 38,
+        "power": 34,
+        "eye": 40,
+        "discipline": 42,
+        "speed": 40,
+        "baseInstinct": 40,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 37,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "2B": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

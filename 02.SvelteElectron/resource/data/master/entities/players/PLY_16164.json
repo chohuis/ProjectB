@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16164",
+  "name": "무어 조던",
+  "nameEn": "Moore Jordan",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 43,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 88,
+      "primaryPosition": "2B",
+      "developmentRate": 55,
+      "potentialHidden": 51,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 71,
+        "velocity": 78,
+        "command": 61,
+        "control": 67,
+        "movement": 65,
+        "mentality": 67,
+        "recovery": 60,
+        "clutch": 67,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 67,
+        "power": 65,
+        "eye": 65,
+        "discipline": 68,
+        "speed": 64,
+        "baseInstinct": 71,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 64,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "2B": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

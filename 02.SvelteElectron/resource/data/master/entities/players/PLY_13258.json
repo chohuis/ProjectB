@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13258",
+  "name": "리 브랜던",
+  "nameEn": "Lee Brandon",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 39,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 33,
+      "primaryPosition": "CF",
+      "developmentRate": 46,
+      "potentialHidden": 56,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 67,
+        "velocity": 69,
+        "command": 66,
+        "control": 66,
+        "movement": 74,
+        "mentality": 66,
+        "recovery": 69,
+        "clutch": 65,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 63,
+        "power": 62,
+        "eye": 71,
+        "discipline": 69,
+        "speed": 63,
+        "baseInstinct": 61,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 67,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "CF": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

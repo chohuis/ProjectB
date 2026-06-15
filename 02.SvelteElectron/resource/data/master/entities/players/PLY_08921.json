@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08921",
+  "name": "한우재",
+  "nameEn": "Han WooJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 39,
+      "primaryPosition": "2B",
+      "developmentRate": 46,
+      "potentialHidden": 41,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 37,
+        "velocity": 43,
+        "command": 31,
+        "control": 42,
+        "movement": 38,
+        "mentality": 46,
+        "recovery": 42,
+        "clutch": 28,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 29,
+        "power": 32,
+        "eye": 38,
+        "discipline": 29,
+        "speed": 34,
+        "baseInstinct": 32,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 26,
+        "arm": 36,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "2B": 36
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

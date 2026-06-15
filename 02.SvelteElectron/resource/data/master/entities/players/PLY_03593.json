@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03593",
+  "name": "윤영진",
+  "nameEn": "Yoon YoungJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 61,
+      "primaryPosition": "CF",
+      "developmentRate": 68,
+      "potentialHidden": 82,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 62,
+        "velocity": 63,
+        "command": 58,
+        "control": 59,
+        "movement": 58,
+        "mentality": 56,
+        "recovery": 51,
+        "clutch": 58,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 62,
+        "power": 52,
+        "eye": 62,
+        "discipline": 51,
+        "speed": 65,
+        "baseInstinct": 57,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 48,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "CF": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

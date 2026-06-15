@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08095",
+  "name": "강성우",
+  "nameEn": "Kang SeongWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 72,
+      "primaryPosition": "C",
+      "developmentRate": 44,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 50,
+        "velocity": 62,
+        "command": 45,
+        "control": 54,
+        "movement": 45,
+        "mentality": 56,
+        "recovery": 49,
+        "clutch": 39,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 48,
+        "power": 57,
+        "eye": 55,
+        "discipline": 51,
+        "speed": 50,
+        "baseInstinct": 54,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 53,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "C": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04715",
+  "name": "장세빈",
+  "nameEn": "Jang SeBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 23,
+      "primaryPosition": "2B",
+      "developmentRate": 54,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 41,
+        "stamina": 40,
+        "velocity": 48,
+        "command": 39,
+        "control": 38,
+        "movement": 41,
+        "mentality": 47,
+        "recovery": 39,
+        "clutch": 39,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 50,
+        "power": 39,
+        "eye": 42,
+        "discipline": 40,
+        "speed": 44,
+        "baseInstinct": 46,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 41,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "2B": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07275",
+  "name": "오정준",
+  "nameEn": "Oh JungJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 32,
+      "primaryPosition": "LF",
+      "developmentRate": 49,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 53,
+        "velocity": 61,
+        "command": 46,
+        "control": 54,
+        "movement": 47,
+        "mentality": 54,
+        "recovery": 41,
+        "clutch": 39,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 55,
+        "power": 49,
+        "eye": 56,
+        "discipline": 53,
+        "speed": 52,
+        "baseInstinct": 51,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 50,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "LF": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

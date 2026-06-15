@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16717",
+  "name": "로드리게스 헌터",
+  "nameEn": "Rodriguez Hunter",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 25,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 4,
+      "primaryPosition": "CF",
+      "developmentRate": 58,
+      "potentialHidden": 79,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 63,
+        "velocity": 74,
+        "command": 66,
+        "control": 65,
+        "movement": 59,
+        "mentality": 64,
+        "recovery": 64,
+        "clutch": 61,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 65,
+        "power": 57,
+        "eye": 68,
+        "discipline": 57,
+        "speed": 68,
+        "baseInstinct": 60,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 63,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "CF": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14759",
+  "name": "스미스 에릭",
+  "nameEn": "Smith Eric",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 16,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 65,
+      "primaryPosition": "1B",
+      "developmentRate": 67,
+      "potentialHidden": 66,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 41,
+        "velocity": 45,
+        "command": 45,
+        "control": 45,
+        "movement": 50,
+        "mentality": 53,
+        "recovery": 48,
+        "clutch": 47,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 46,
+        "power": 49,
+        "eye": 51,
+        "discipline": 47,
+        "speed": 48,
+        "baseInstinct": 42,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 49,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "1B": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

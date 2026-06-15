@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16220",
+  "name": "로드리게스 크리스",
+  "nameEn": "Rodriguez Chris",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 27,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 52,
+      "primaryPosition": "C",
+      "developmentRate": 57,
+      "potentialHidden": 83,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 75,
+        "velocity": 69,
+        "command": 74,
+        "control": 65,
+        "movement": 74,
+        "mentality": 77,
+        "recovery": 71,
+        "clutch": 67,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 66,
+        "power": 68,
+        "eye": 76,
+        "discipline": 72,
+        "speed": 74,
+        "baseInstinct": 64,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 71,
+        "battingClutch": 72
+      },
+      "positionRatings": {
+        "C": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

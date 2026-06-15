@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06228",
+  "name": "오동준",
+  "nameEn": "Oh DongJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 23,
+      "primaryPosition": "CF",
+      "developmentRate": 43,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 39,
+        "velocity": 52,
+        "command": 39,
+        "control": 37,
+        "movement": 40,
+        "mentality": 49,
+        "recovery": 32,
+        "clutch": 32,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 34,
+        "contact": 31,
+        "power": 25,
+        "eye": 27,
+        "discipline": 27,
+        "speed": 35,
+        "baseInstinct": 29,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 27,
+        "arm": 34,
+        "battingClutch": 27
+      },
+      "positionRatings": {
+        "CF": 34
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

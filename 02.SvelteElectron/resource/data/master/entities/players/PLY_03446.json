@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03446",
+  "name": "정찬혁",
+  "nameEn": "Jung ChanHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 10,
+      "primaryPosition": "3B",
+      "developmentRate": 68,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 69,
+        "velocity": 81,
+        "command": 66,
+        "control": 68,
+        "movement": 69,
+        "mentality": 77,
+        "recovery": 70,
+        "clutch": 61,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 56,
+        "power": 59,
+        "eye": 54,
+        "discipline": 54,
+        "speed": 60,
+        "baseInstinct": 62,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 58,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "3B": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

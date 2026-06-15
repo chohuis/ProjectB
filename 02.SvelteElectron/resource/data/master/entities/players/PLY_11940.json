@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11940",
+  "name": "그린 딜런",
+  "nameEn": "Green Dylan",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 29,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 52,
+      "primaryPosition": "2B",
+      "developmentRate": 71,
+      "potentialHidden": 80,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 53,
+        "velocity": 60,
+        "command": 42,
+        "control": 42,
+        "movement": 49,
+        "mentality": 55,
+        "recovery": 48,
+        "clutch": 45,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 52,
+        "power": 44,
+        "eye": 54,
+        "discipline": 45,
+        "speed": 44,
+        "baseInstinct": 52,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 41,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "2B": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

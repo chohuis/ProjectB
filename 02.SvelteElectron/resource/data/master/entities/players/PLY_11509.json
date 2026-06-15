@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11509",
+  "name": "브라운 케빈",
+  "nameEn": "Brown Kevin",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 38,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 91,
+      "primaryPosition": "C",
+      "developmentRate": 56,
+      "potentialHidden": 66,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 79,
+        "stamina": 72,
+        "velocity": 77,
+        "command": 77,
+        "control": 75,
+        "movement": 79,
+        "mentality": 82,
+        "recovery": 79,
+        "clutch": 75,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 79,
+        "contact": 79,
+        "power": 71,
+        "eye": 76,
+        "discipline": 72,
+        "speed": 82,
+        "baseInstinct": 73,
+        "bunting": 73,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 82,
+        "battingClutch": 73
+      },
+      "positionRatings": {
+        "C": 79
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

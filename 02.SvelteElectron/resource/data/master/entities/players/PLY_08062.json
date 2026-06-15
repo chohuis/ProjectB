@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08062",
+  "name": "김도욱",
+  "nameEn": "Kim DoWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 73,
+      "primaryPosition": "SP",
+      "developmentRate": 60,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 61,
+        "velocity": 58,
+        "command": 51,
+        "control": 60,
+        "movement": 53,
+        "mentality": 60,
+        "recovery": 58,
+        "clutch": 57,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 39,
+        "power": 28,
+        "eye": 37,
+        "discipline": 35,
+        "speed": 43,
+        "baseInstinct": 29,
+        "bunting": 18,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 29,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "SP": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

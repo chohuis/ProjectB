@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07946",
+  "name": "강훈혁",
+  "nameEn": "Kang HunHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 96,
+      "primaryPosition": "SP",
+      "developmentRate": 51,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 50,
+        "velocity": 60,
+        "command": 55,
+        "control": 52,
+        "movement": 46,
+        "mentality": 57,
+        "recovery": 55,
+        "clutch": 54,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 50,
+        "power": 51,
+        "eye": 48,
+        "discipline": 50,
+        "speed": 53,
+        "baseInstinct": 47,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 48,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "SP": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

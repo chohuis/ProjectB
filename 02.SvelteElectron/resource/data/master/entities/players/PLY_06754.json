@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06754",
+  "name": "이우진",
+  "nameEn": "Lee WooJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 94,
+      "primaryPosition": "SS",
+      "developmentRate": 59,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 67,
+        "velocity": 71,
+        "command": 65,
+        "control": 62,
+        "movement": 65,
+        "mentality": 62,
+        "recovery": 58,
+        "clutch": 55,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 43,
+        "power": 49,
+        "eye": 40,
+        "discipline": 44,
+        "speed": 47,
+        "baseInstinct": 39,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 46,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "SS": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

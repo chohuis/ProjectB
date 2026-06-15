@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08422",
+  "name": "박민우",
+  "nameEn": "Park MinWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 21,
+      "primaryPosition": "SS",
+      "developmentRate": 59,
+      "potentialHidden": 51,
+      "pitching": {
+        "ovr": 38,
+        "stamina": 39,
+        "velocity": 41,
+        "command": 33,
+        "control": 35,
+        "movement": 35,
+        "mentality": 39,
+        "recovery": 34,
+        "clutch": 35,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 52,
+        "power": 46,
+        "eye": 42,
+        "discipline": 48,
+        "speed": 44,
+        "baseInstinct": 41,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 47,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "SS": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

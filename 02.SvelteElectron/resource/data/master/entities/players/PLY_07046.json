@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07046",
+  "name": "전영환",
+  "nameEn": "Jeon YoungHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 70,
+      "primaryPosition": "SS",
+      "developmentRate": 56,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 55,
+        "velocity": 53,
+        "command": 46,
+        "control": 53,
+        "movement": 47,
+        "mentality": 57,
+        "recovery": 53,
+        "clutch": 51,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 56,
+        "power": 56,
+        "eye": 59,
+        "discipline": 55,
+        "speed": 52,
+        "baseInstinct": 47,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 56,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "SS": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

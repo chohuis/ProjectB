@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03104",
+  "name": "오세훈",
+  "nameEn": "Oh SeHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 56,
+      "primaryPosition": "CF",
+      "developmentRate": 72,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 74,
+        "velocity": 78,
+        "command": 71,
+        "control": 78,
+        "movement": 69,
+        "mentality": 80,
+        "recovery": 73,
+        "clutch": 69,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 57,
+        "power": 51,
+        "eye": 51,
+        "discipline": 56,
+        "speed": 55,
+        "baseInstinct": 47,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 56,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "CF": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04682",
+  "name": "안기찬",
+  "nameEn": "An KiChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 20,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 34,
+        "velocity": 50,
+        "command": 29,
+        "control": 32,
+        "movement": 30,
+        "mentality": 38,
+        "recovery": 28,
+        "clutch": 36,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 30,
+        "power": 33,
+        "eye": 34,
+        "discipline": 34,
+        "speed": 41,
+        "baseInstinct": 30,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 35,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "SP": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

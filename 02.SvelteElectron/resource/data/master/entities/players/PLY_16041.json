@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16041",
+  "name": "스콧 네이선",
+  "nameEn": "Scott Nathan",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 42,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 23,
+      "primaryPosition": "SP",
+      "developmentRate": 51,
+      "potentialHidden": 64,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 72,
+        "velocity": 72,
+        "command": 70,
+        "control": 71,
+        "movement": 72,
+        "mentality": 73,
+        "recovery": 62,
+        "clutch": 57,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 68,
+        "power": 71,
+        "eye": 68,
+        "discipline": 69,
+        "speed": 65,
+        "baseInstinct": 60,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 61,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "SP": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

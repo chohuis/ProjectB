@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06435",
+  "name": "안영현",
+  "nameEn": "An YoungHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 88,
+      "primaryPosition": "SS",
+      "developmentRate": 53,
+      "potentialHidden": 50,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 37,
+        "velocity": 52,
+        "command": 41,
+        "control": 39,
+        "movement": 42,
+        "mentality": 44,
+        "recovery": 38,
+        "clutch": 32,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 35,
+        "contact": 34,
+        "power": 29,
+        "eye": 38,
+        "discipline": 27,
+        "speed": 40,
+        "baseInstinct": 31,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 33,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "SS": 35
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

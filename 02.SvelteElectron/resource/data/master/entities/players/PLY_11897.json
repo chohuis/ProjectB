@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11897",
+  "name": "무어 딜런",
+  "nameEn": "Moore Dylan",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 81,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 31,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 91,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 53,
+        "velocity": 57,
+        "command": 49,
+        "control": 52,
+        "movement": 59,
+        "mentality": 60,
+        "recovery": 49,
+        "clutch": 52,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 51,
+        "power": 60,
+        "eye": 55,
+        "discipline": 54,
+        "speed": 64,
+        "baseInstinct": 51,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 59,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "SP": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

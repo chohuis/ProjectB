@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14464",
+  "name": "넬슨 마커스",
+  "nameEn": "Nelson Marcus",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 45,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 58,
+      "primaryPosition": "C",
+      "developmentRate": 53,
+      "potentialHidden": 77,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 68,
+        "velocity": 79,
+        "command": 77,
+        "control": 72,
+        "movement": 76,
+        "mentality": 68,
+        "recovery": 69,
+        "clutch": 63,
+        "holdRunners": 71
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 78,
+        "power": 73,
+        "eye": 72,
+        "discipline": 69,
+        "speed": 80,
+        "baseInstinct": 68,
+        "bunting": 66,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 72,
+        "battingClutch": 75
+      },
+      "positionRatings": {
+        "C": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

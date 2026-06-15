@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07029",
+  "name": "김영욱",
+  "nameEn": "Kim YoungWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 78,
+      "primaryPosition": "RF",
+      "developmentRate": 59,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 41,
+        "velocity": 55,
+        "command": 47,
+        "control": 39,
+        "movement": 49,
+        "mentality": 42,
+        "recovery": 45,
+        "clutch": 44,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 41,
+        "power": 43,
+        "eye": 39,
+        "discipline": 45,
+        "speed": 42,
+        "baseInstinct": 38,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 42,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "RF": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

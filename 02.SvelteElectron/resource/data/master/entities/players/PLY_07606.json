@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07606",
+  "name": "정민혁",
+  "nameEn": "Jung MinHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 52,
+      "primaryPosition": "SP",
+      "developmentRate": 46,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 63,
+        "velocity": 62,
+        "command": 54,
+        "control": 53,
+        "movement": 50,
+        "mentality": 63,
+        "recovery": 53,
+        "clutch": 51,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 45,
+        "power": 38,
+        "eye": 41,
+        "discipline": 42,
+        "speed": 40,
+        "baseInstinct": 45,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 38,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "SP": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

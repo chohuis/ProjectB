@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03283",
+  "name": "박태혁",
+  "nameEn": "Park TaeHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 42,
+      "primaryPosition": "LF",
+      "developmentRate": 66,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 68,
+        "velocity": 67,
+        "command": 62,
+        "control": 65,
+        "movement": 65,
+        "mentality": 62,
+        "recovery": 56,
+        "clutch": 56,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 64,
+        "power": 69,
+        "eye": 64,
+        "discipline": 65,
+        "speed": 72,
+        "baseInstinct": 67,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 68,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "LF": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

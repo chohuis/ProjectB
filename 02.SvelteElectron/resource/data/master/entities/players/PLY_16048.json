@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16048",
+  "name": "브라운 콜",
+  "nameEn": "Brown Cole",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 12,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 78,
+      "primaryPosition": "3B",
+      "developmentRate": 70,
+      "potentialHidden": 68,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 60,
+        "velocity": 68,
+        "command": 57,
+        "control": 61,
+        "movement": 49,
+        "mentality": 62,
+        "recovery": 59,
+        "clutch": 48,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 49,
+        "power": 47,
+        "eye": 51,
+        "discipline": 53,
+        "speed": 64,
+        "baseInstinct": 56,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 57,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "3B": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

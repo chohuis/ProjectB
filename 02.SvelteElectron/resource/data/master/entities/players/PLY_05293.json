@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05293",
+  "name": "정현환",
+  "nameEn": "Jung HyeonHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 12,
+      "primaryPosition": "1B",
+      "developmentRate": 53,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 49,
+        "velocity": 61,
+        "command": 53,
+        "control": 56,
+        "movement": 50,
+        "mentality": 54,
+        "recovery": 45,
+        "clutch": 45,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 31,
+        "power": 35,
+        "eye": 32,
+        "discipline": 32,
+        "speed": 34,
+        "baseInstinct": 35,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 40,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "1B": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

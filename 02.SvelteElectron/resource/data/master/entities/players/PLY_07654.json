@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07654",
+  "name": "이지욱",
+  "nameEn": "Lee JiWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 34,
+      "primaryPosition": "SP",
+      "developmentRate": 54,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 55,
+        "velocity": 58,
+        "command": 53,
+        "control": 60,
+        "movement": 59,
+        "mentality": 56,
+        "recovery": 56,
+        "clutch": 54,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 39,
+        "power": 37,
+        "eye": 34,
+        "discipline": 37,
+        "speed": 34,
+        "baseInstinct": 31,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 29,
+        "arm": 30,
+        "battingClutch": 26
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

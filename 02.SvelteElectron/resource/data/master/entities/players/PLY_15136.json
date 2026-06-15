@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15136",
+  "name": "윌리엄스 브랜던",
+  "nameEn": "Williams Brandon",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 35,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 83,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 69,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 71,
+        "velocity": 63,
+        "command": 67,
+        "control": 63,
+        "movement": 61,
+        "mentality": 67,
+        "recovery": 63,
+        "clutch": 56,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 66,
+        "power": 59,
+        "eye": 67,
+        "discipline": 62,
+        "speed": 65,
+        "baseInstinct": 64,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 60,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "SP": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

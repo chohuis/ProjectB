@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06176",
+  "name": "오우식",
+  "nameEn": "Oh WooSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 96,
+      "primaryPosition": "1B",
+      "developmentRate": 41,
+      "potentialHidden": 45,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 48,
+        "velocity": 57,
+        "command": 38,
+        "control": 46,
+        "movement": 42,
+        "mentality": 46,
+        "recovery": 43,
+        "clutch": 36,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 31,
+        "contact": 24,
+        "power": 31,
+        "eye": 32,
+        "discipline": 28,
+        "speed": 35,
+        "baseInstinct": 32,
+        "bunting": 11,
+        "platoon": 50,
+        "fielding": 25,
+        "arm": 31,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "1B": 31
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

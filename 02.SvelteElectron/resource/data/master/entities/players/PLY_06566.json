@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06566",
+  "name": "임세환",
+  "nameEn": "Lim SeHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 19,
+      "primaryPosition": "SP",
+      "developmentRate": 51,
+      "potentialHidden": 87,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 61,
+        "velocity": 73,
+        "command": 58,
+        "control": 64,
+        "movement": 63,
+        "mentality": 61,
+        "recovery": 55,
+        "clutch": 60,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 54,
+        "power": 47,
+        "eye": 55,
+        "discipline": 56,
+        "speed": 64,
+        "baseInstinct": 49,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 48,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "SP": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

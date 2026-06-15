@@ -1,0 +1,73 @@
+{
+  "id": "PLY_09860",
+  "name": "워커 재크",
+  "nameEn": "Walker Zach",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 29,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 28,
+      "primaryPosition": "SP",
+      "developmentRate": 75,
+      "potentialHidden": 79,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 51,
+        "velocity": 66,
+        "command": 56,
+        "control": 50,
+        "movement": 52,
+        "mentality": 56,
+        "recovery": 48,
+        "clutch": 50,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 54,
+        "power": 47,
+        "eye": 47,
+        "discipline": 48,
+        "speed": 60,
+        "baseInstinct": 56,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 55,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "SP": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

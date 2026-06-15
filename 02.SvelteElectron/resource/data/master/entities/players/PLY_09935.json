@@ -1,0 +1,73 @@
+{
+  "id": "PLY_09935",
+  "name": "테일러 트레버",
+  "nameEn": "Taylor Trevor",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 35,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 56,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 77,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 47,
+        "velocity": 57,
+        "command": 49,
+        "control": 56,
+        "movement": 46,
+        "mentality": 58,
+        "recovery": 41,
+        "clutch": 48,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 54,
+        "power": 49,
+        "eye": 56,
+        "discipline": 54,
+        "speed": 51,
+        "baseInstinct": 42,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 44,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

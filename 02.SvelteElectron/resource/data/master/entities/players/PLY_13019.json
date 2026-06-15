@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13019",
+  "name": "로드리게스 루이스",
+  "nameEn": "Rodriguez Luis",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 43,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 68,
+      "primaryPosition": "SP",
+      "developmentRate": 78,
+      "potentialHidden": 87,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 62,
+        "velocity": 68,
+        "command": 63,
+        "control": 62,
+        "movement": 56,
+        "mentality": 57,
+        "recovery": 59,
+        "clutch": 52,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 67,
+        "power": 51,
+        "eye": 64,
+        "discipline": 55,
+        "speed": 63,
+        "baseInstinct": 51,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 63,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "SP": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

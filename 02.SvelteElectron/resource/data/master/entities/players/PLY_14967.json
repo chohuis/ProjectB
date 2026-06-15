@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14967",
+  "name": "루이스 브랜던",
+  "nameEn": "Lewis Brandon",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 49,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 31,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 13,
+      "primaryPosition": "C",
+      "developmentRate": 42,
+      "potentialHidden": 48,
+      "proServiceYears": 9,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 64,
+        "velocity": 65,
+        "command": 52,
+        "control": 56,
+        "movement": 60,
+        "mentality": 61,
+        "recovery": 58,
+        "clutch": 61,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 56,
+        "power": 54,
+        "eye": 54,
+        "discipline": 63,
+        "speed": 66,
+        "baseInstinct": 58,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 63,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "C": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

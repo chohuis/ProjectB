@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13608",
+  "name": "토마스 카일",
+  "nameEn": "Thomas Kyle",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 20,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 29,
+      "primaryPosition": "1B",
+      "developmentRate": 51,
+      "potentialHidden": 67,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 75,
+        "velocity": 87,
+        "command": 74,
+        "control": 79,
+        "movement": 76,
+        "mentality": 70,
+        "recovery": 68,
+        "clutch": 70,
+        "holdRunners": 69
+      },
+      "batting": {
+        "ovr": 76,
+        "contact": 67,
+        "power": 75,
+        "eye": 78,
+        "discipline": 71,
+        "speed": 79,
+        "baseInstinct": 75,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 73,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "1B": 76
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

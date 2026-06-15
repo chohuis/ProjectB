@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04190",
+  "name": "안현기",
+  "nameEn": "An HyeonKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 84,
+      "primaryPosition": "RF",
+      "developmentRate": 71,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 60,
+        "velocity": 70,
+        "command": 57,
+        "control": 59,
+        "movement": 61,
+        "mentality": 70,
+        "recovery": 65,
+        "clutch": 56,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 49,
+        "power": 36,
+        "eye": 38,
+        "discipline": 37,
+        "speed": 51,
+        "baseInstinct": 38,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 38,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "RF": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

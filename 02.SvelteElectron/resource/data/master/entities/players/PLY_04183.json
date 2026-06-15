@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04183",
+  "name": "신기성",
+  "nameEn": "Shin KiSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 5,
+      "primaryPosition": "RF",
+      "developmentRate": 62,
+      "potentialHidden": 87,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 62,
+        "velocity": 73,
+        "command": 58,
+        "control": 56,
+        "movement": 54,
+        "mentality": 60,
+        "recovery": 57,
+        "clutch": 56,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 47,
+        "power": 40,
+        "eye": 48,
+        "discipline": 50,
+        "speed": 48,
+        "baseInstinct": 46,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 46,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "RF": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

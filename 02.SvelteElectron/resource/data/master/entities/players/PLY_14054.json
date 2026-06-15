@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14054",
+  "name": "그린 숀",
+  "nameEn": "Green Sean",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 26,
+      "primaryPosition": "SP",
+      "developmentRate": 44,
+      "potentialHidden": 57,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 76,
+        "velocity": 85,
+        "command": 68,
+        "control": 74,
+        "movement": 79,
+        "mentality": 73,
+        "recovery": 74,
+        "clutch": 64,
+        "holdRunners": 74
+      },
+      "batting": {
+        "ovr": 76,
+        "contact": 68,
+        "power": 79,
+        "eye": 76,
+        "discipline": 79,
+        "speed": 72,
+        "baseInstinct": 77,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 75,
+        "arm": 73,
+        "battingClutch": 74
+      },
+      "positionRatings": {
+        "SP": 76
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

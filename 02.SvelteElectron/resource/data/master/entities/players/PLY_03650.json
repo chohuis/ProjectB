@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03650",
+  "name": "강성훈",
+  "nameEn": "Kang SeongHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 82,
+      "primaryPosition": "C",
+      "developmentRate": 56,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 59,
+        "velocity": 67,
+        "command": 53,
+        "control": 56,
+        "movement": 55,
+        "mentality": 62,
+        "recovery": 58,
+        "clutch": 46,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 53,
+        "power": 54,
+        "eye": 49,
+        "discipline": 50,
+        "speed": 54,
+        "baseInstinct": 46,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 45,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "C": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

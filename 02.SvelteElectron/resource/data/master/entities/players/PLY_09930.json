@@ -1,0 +1,73 @@
+{
+  "id": "PLY_09930",
+  "name": "존슨 루이스",
+  "nameEn": "Johnson Luis",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 23,
+      "primaryPosition": "LF",
+      "developmentRate": 63,
+      "potentialHidden": 63,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 64,
+        "velocity": 67,
+        "command": 64,
+        "control": 56,
+        "movement": 66,
+        "mentality": 55,
+        "recovery": 60,
+        "clutch": 54,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 63,
+        "power": 52,
+        "eye": 58,
+        "discipline": 56,
+        "speed": 63,
+        "baseInstinct": 61,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 54,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "LF": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

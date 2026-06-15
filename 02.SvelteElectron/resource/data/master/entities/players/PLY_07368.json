@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07368",
+  "name": "장재재",
+  "nameEn": "Jang JaeJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 82,
+      "primaryPosition": "RF",
+      "developmentRate": 58,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 42,
+        "velocity": 47,
+        "command": 44,
+        "control": 44,
+        "movement": 45,
+        "mentality": 51,
+        "recovery": 37,
+        "clutch": 43,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 44,
+        "power": 40,
+        "eye": 44,
+        "discipline": 43,
+        "speed": 49,
+        "baseInstinct": 51,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 45,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "RF": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

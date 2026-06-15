@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13037",
+  "name": "라이트 칼렙",
+  "nameEn": "Wright Caleb",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 83,
+  "popularity": 38,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 22,
+      "primaryPosition": "CF",
+      "developmentRate": 65,
+      "potentialHidden": 84,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 59,
+        "velocity": 66,
+        "command": 59,
+        "control": 61,
+        "movement": 59,
+        "mentality": 60,
+        "recovery": 52,
+        "clutch": 52,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 53,
+        "power": 61,
+        "eye": 51,
+        "discipline": 50,
+        "speed": 58,
+        "baseInstinct": 48,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 60,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "CF": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

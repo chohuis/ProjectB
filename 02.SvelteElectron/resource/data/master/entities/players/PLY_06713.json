@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06713",
+  "name": "안태찬",
+  "nameEn": "An TaeChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 78,
+      "primaryPosition": "RF",
+      "developmentRate": 61,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 59,
+        "velocity": 65,
+        "command": 58,
+        "control": 58,
+        "movement": 60,
+        "mentality": 65,
+        "recovery": 59,
+        "clutch": 60,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 57,
+        "power": 49,
+        "eye": 52,
+        "discipline": 59,
+        "speed": 62,
+        "baseInstinct": 49,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 51,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "RF": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

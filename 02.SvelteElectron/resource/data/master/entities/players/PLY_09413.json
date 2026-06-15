@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09413",
+  "name": "권진재",
+  "nameEn": "Kwon JinJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 28,
+      "primaryPosition": "2B",
+      "developmentRate": 49,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 50,
+        "velocity": 48,
+        "command": 47,
+        "control": 43,
+        "movement": 49,
+        "mentality": 44,
+        "recovery": 38,
+        "clutch": 43,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 42,
+        "power": 28,
+        "eye": 40,
+        "discipline": 32,
+        "speed": 35,
+        "baseInstinct": 35,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 28,
+        "battingClutch": 30
+      },
+      "positionRatings": {
+        "2B": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

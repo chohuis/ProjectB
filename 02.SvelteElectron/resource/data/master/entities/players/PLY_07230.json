@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07230",
+  "name": "윤영찬",
+  "nameEn": "Yoon YoungChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 36,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 49,
+        "velocity": 52,
+        "command": 53,
+        "control": 51,
+        "movement": 49,
+        "mentality": 55,
+        "recovery": 50,
+        "clutch": 46,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 48,
+        "power": 54,
+        "eye": 48,
+        "discipline": 55,
+        "speed": 50,
+        "baseInstinct": 49,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 43,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

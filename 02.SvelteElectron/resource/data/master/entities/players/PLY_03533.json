@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03533",
+  "name": "정진윤",
+  "nameEn": "Jung JinYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 20,
+      "primaryPosition": "1B",
+      "developmentRate": 58,
+      "potentialHidden": 87,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 53,
+        "velocity": 66,
+        "command": 60,
+        "control": 63,
+        "movement": 59,
+        "mentality": 59,
+        "recovery": 56,
+        "clutch": 56,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 73,
+        "power": 65,
+        "eye": 66,
+        "discipline": 61,
+        "speed": 75,
+        "baseInstinct": 63,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 60,
+        "battingClutch": 68
+      },
+      "positionRatings": {
+        "1B": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

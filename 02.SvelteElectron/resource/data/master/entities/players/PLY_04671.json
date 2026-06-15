@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04671",
+  "name": "임지호",
+  "nameEn": "Lim JiHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 44,
+      "primaryPosition": "1B",
+      "developmentRate": 50,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 61,
+        "velocity": 63,
+        "command": 57,
+        "control": 58,
+        "movement": 58,
+        "mentality": 59,
+        "recovery": 51,
+        "clutch": 45,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 39,
+        "power": 40,
+        "eye": 43,
+        "discipline": 43,
+        "speed": 43,
+        "baseInstinct": 39,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 33,
+        "arm": 36,
+        "battingClutch": 30
+      },
+      "positionRatings": {
+        "1B": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06775",
+  "name": "조준식",
+  "nameEn": "Jo JunSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 69,
+      "primaryPosition": "3B",
+      "developmentRate": 57,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 70,
+        "velocity": 69,
+        "command": 61,
+        "control": 63,
+        "movement": 57,
+        "mentality": 63,
+        "recovery": 64,
+        "clutch": 54,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 46,
+        "power": 42,
+        "eye": 39,
+        "discipline": 40,
+        "speed": 52,
+        "baseInstinct": 39,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 45,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "3B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

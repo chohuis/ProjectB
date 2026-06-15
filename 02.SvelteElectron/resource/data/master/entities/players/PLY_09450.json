@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09450",
+  "name": "김혁준",
+  "nameEn": "Kim HyeokJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 83,
+      "primaryPosition": "C",
+      "developmentRate": 48,
+      "potentialHidden": 49,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 46,
+        "velocity": 56,
+        "command": 40,
+        "control": 46,
+        "movement": 45,
+        "mentality": 50,
+        "recovery": 47,
+        "clutch": 43,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 37,
+        "power": 34,
+        "eye": 31,
+        "discipline": 37,
+        "speed": 34,
+        "baseInstinct": 29,
+        "bunting": 20,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 38,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "C": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

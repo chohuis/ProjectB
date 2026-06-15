@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04464",
+  "name": "송태완",
+  "nameEn": "Song TaeWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 42,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 66,
+        "velocity": 70,
+        "command": 69,
+        "control": 62,
+        "movement": 62,
+        "mentality": 69,
+        "recovery": 67,
+        "clutch": 58,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 55,
+        "power": 58,
+        "eye": 54,
+        "discipline": 53,
+        "speed": 57,
+        "baseInstinct": 62,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 59,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "SP": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

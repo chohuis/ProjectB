@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04263",
+  "name": "장수현",
+  "nameEn": "Jang SuHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 35,
+      "primaryPosition": "SP",
+      "developmentRate": 54,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 60,
+        "velocity": 64,
+        "command": 56,
+        "control": 62,
+        "movement": 57,
+        "mentality": 64,
+        "recovery": 55,
+        "clutch": 49,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 65,
+        "power": 58,
+        "eye": 65,
+        "discipline": 55,
+        "speed": 70,
+        "baseInstinct": 66,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 60,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "SP": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

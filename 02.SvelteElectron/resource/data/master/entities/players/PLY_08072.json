@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08072",
+  "name": "임수진",
+  "nameEn": "Lim SuJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 83,
+      "primaryPosition": "LF",
+      "developmentRate": 50,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 53,
+        "velocity": 68,
+        "command": 61,
+        "control": 53,
+        "movement": 61,
+        "mentality": 65,
+        "recovery": 56,
+        "clutch": 47,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 45,
+        "power": 49,
+        "eye": 46,
+        "discipline": 47,
+        "speed": 51,
+        "baseInstinct": 38,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 42,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "LF": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

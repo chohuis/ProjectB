@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14316",
+  "name": "애덤스 칼렙",
+  "nameEn": "Adams Caleb",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 16,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 31,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 71,
+      "primaryPosition": "RF",
+      "developmentRate": 39,
+      "potentialHidden": 65,
+      "proServiceYears": 9,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 56,
+        "velocity": 57,
+        "command": 55,
+        "control": 51,
+        "movement": 54,
+        "mentality": 57,
+        "recovery": 52,
+        "clutch": 54,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 49,
+        "power": 47,
+        "eye": 55,
+        "discipline": 45,
+        "speed": 61,
+        "baseInstinct": 45,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 57,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "RF": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

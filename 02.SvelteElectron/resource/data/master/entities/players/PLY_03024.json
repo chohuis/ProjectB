@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03024",
+  "name": "류현민",
+  "nameEn": "Ryu HyeonMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 98,
+      "primaryPosition": "RF",
+      "developmentRate": 69,
+      "potentialHidden": 95,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 60,
+        "velocity": 63,
+        "command": 58,
+        "control": 60,
+        "movement": 58,
+        "mentality": 57,
+        "recovery": 57,
+        "clutch": 60,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 65,
+        "power": 59,
+        "eye": 64,
+        "discipline": 60,
+        "speed": 64,
+        "baseInstinct": 60,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 63,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "RF": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

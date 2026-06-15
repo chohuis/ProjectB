@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16489",
+  "name": "화이트 블레이크",
+  "nameEn": "White Blake",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 34,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 91,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 62,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 67,
+        "velocity": 77,
+        "command": 63,
+        "control": 71,
+        "movement": 69,
+        "mentality": 66,
+        "recovery": 66,
+        "clutch": 68,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 67,
+        "power": 70,
+        "eye": 69,
+        "discipline": 68,
+        "speed": 63,
+        "baseInstinct": 72,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 72,
+        "arm": 68,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "SP": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05887",
+  "name": "김찬수",
+  "nameEn": "Kim ChanSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 5,
+      "primaryPosition": "3B",
+      "developmentRate": 56,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 53,
+        "velocity": 60,
+        "command": 55,
+        "control": 54,
+        "movement": 58,
+        "mentality": 56,
+        "recovery": 49,
+        "clutch": 51,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 38,
+        "power": 34,
+        "eye": 37,
+        "discipline": 39,
+        "speed": 43,
+        "baseInstinct": 36,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 34,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "3B": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

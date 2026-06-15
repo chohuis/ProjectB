@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05533",
+  "name": "권상성",
+  "nameEn": "Kwon SangSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 73,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 57,
+        "velocity": 70,
+        "command": 56,
+        "control": 62,
+        "movement": 59,
+        "mentality": 67,
+        "recovery": 55,
+        "clutch": 62,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 45,
+        "power": 45,
+        "eye": 54,
+        "discipline": 50,
+        "speed": 52,
+        "baseInstinct": 53,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 46,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "SP": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

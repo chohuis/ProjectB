@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08653",
+  "name": "김찬훈",
+  "nameEn": "Kim ChanHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 24,
+      "primaryPosition": "SP",
+      "developmentRate": 54,
+      "potentialHidden": 42,
+      "pitching": {
+        "ovr": 39,
+        "stamina": 35,
+        "velocity": 37,
+        "command": 33,
+        "control": 37,
+        "movement": 38,
+        "mentality": 43,
+        "recovery": 32,
+        "clutch": 31,
+        "holdRunners": 23
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 49,
+        "power": 46,
+        "eye": 42,
+        "discipline": 39,
+        "speed": 40,
+        "baseInstinct": 42,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 46,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SP": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

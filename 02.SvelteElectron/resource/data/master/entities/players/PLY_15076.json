@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15076",
+  "name": "마틴 칼렙",
+  "nameEn": "Martin Caleb",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 83,
+  "popularity": 47,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 4,
+      "primaryPosition": "2B",
+      "developmentRate": 46,
+      "potentialHidden": 53,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 68,
+        "velocity": 72,
+        "command": 74,
+        "control": 66,
+        "movement": 74,
+        "mentality": 73,
+        "recovery": 70,
+        "clutch": 65,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 72,
+        "power": 73,
+        "eye": 73,
+        "discipline": 69,
+        "speed": 71,
+        "baseInstinct": 64,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 72,
+        "battingClutch": 72
+      },
+      "positionRatings": {
+        "2B": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

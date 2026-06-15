@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15953",
+  "name": "마틴 그랜트",
+  "nameEn": "Martin Grant",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 29,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 90,
+      "primaryPosition": "SS",
+      "developmentRate": 69,
+      "potentialHidden": 67,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 57,
+        "velocity": 63,
+        "command": 50,
+        "control": 47,
+        "movement": 58,
+        "mentality": 52,
+        "recovery": 49,
+        "clutch": 46,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 51,
+        "power": 44,
+        "eye": 51,
+        "discipline": 57,
+        "speed": 50,
+        "baseInstinct": 47,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 46,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "SS": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

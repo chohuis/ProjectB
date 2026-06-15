@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09495",
+  "name": "류성재",
+  "nameEn": "Ryu SeongJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 8,
+      "primaryPosition": "1B",
+      "developmentRate": 51,
+      "potentialHidden": 50,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 42,
+        "velocity": 56,
+        "command": 38,
+        "control": 49,
+        "movement": 47,
+        "mentality": 45,
+        "recovery": 42,
+        "clutch": 45,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 32,
+        "contact": 26,
+        "power": 23,
+        "eye": 30,
+        "discipline": 25,
+        "speed": 37,
+        "baseInstinct": 30,
+        "bunting": 12,
+        "platoon": 50,
+        "fielding": 23,
+        "arm": 32,
+        "battingClutch": 26
+      },
+      "positionRatings": {
+        "1B": 32
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_09924",
+  "name": "킹 라이언",
+  "nameEn": "King Ryan",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 47,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 33,
+      "primaryPosition": "LF",
+      "developmentRate": 77,
+      "potentialHidden": 64,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 58,
+        "velocity": 63,
+        "command": 59,
+        "control": 59,
+        "movement": 52,
+        "mentality": 53,
+        "recovery": 49,
+        "clutch": 59,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 61,
+        "power": 51,
+        "eye": 63,
+        "discipline": 57,
+        "speed": 65,
+        "baseInstinct": 62,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 53,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "LF": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

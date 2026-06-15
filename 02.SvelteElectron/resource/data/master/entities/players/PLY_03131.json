@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03131",
+  "name": "오세민",
+  "nameEn": "Oh SeMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 23,
+      "primaryPosition": "SP",
+      "developmentRate": 61,
+      "potentialHidden": 97,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 75,
+        "velocity": 83,
+        "command": 70,
+        "control": 68,
+        "movement": 65,
+        "mentality": 80,
+        "recovery": 70,
+        "clutch": 68,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 61,
+        "power": 55,
+        "eye": 61,
+        "discipline": 62,
+        "speed": 69,
+        "baseInstinct": 58,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 53,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SP": 74
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

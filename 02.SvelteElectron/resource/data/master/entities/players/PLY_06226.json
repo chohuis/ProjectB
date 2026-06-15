@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06226",
+  "name": "권재혁",
+  "nameEn": "Kwon JaeHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 67,
+      "primaryPosition": "SS",
+      "developmentRate": 48,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 41,
+        "velocity": 45,
+        "command": 33,
+        "control": 38,
+        "movement": 35,
+        "mentality": 43,
+        "recovery": 42,
+        "clutch": 30,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 33,
+        "power": 31,
+        "eye": 31,
+        "discipline": 29,
+        "speed": 37,
+        "baseInstinct": 28,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 32,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "SS": 36
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

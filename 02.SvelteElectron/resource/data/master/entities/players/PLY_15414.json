@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15414",
+  "name": "워커 루이스",
+  "nameEn": "Walker Luis",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 37,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 47,
+      "primaryPosition": "LF",
+      "developmentRate": 58,
+      "potentialHidden": 70,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 63,
+        "velocity": 63,
+        "command": 58,
+        "control": 65,
+        "movement": 60,
+        "mentality": 60,
+        "recovery": 52,
+        "clutch": 61,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 59,
+        "power": 53,
+        "eye": 66,
+        "discipline": 55,
+        "speed": 64,
+        "baseInstinct": 56,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 61,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "LF": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

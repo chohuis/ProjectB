@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06620",
+  "name": "강현성",
+  "nameEn": "Kang HyeonSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 41,
+      "primaryPosition": "SP",
+      "developmentRate": 54,
+      "potentialHidden": 80,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 62,
+        "velocity": 70,
+        "command": 52,
+        "control": 59,
+        "movement": 55,
+        "mentality": 58,
+        "recovery": 61,
+        "clutch": 49,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 45,
+        "power": 49,
+        "eye": 51,
+        "discipline": 51,
+        "speed": 52,
+        "baseInstinct": 43,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 48,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "SP": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06160",
+  "name": "권상우",
+  "nameEn": "Kwon SangWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 40,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 43,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 49,
+      "pitching": {
+        "ovr": 38,
+        "stamina": 31,
+        "velocity": 42,
+        "command": 30,
+        "control": 36,
+        "movement": 30,
+        "mentality": 37,
+        "recovery": 36,
+        "clutch": 34,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 35,
+        "contact": 33,
+        "power": 30,
+        "eye": 34,
+        "discipline": 30,
+        "speed": 36,
+        "baseInstinct": 31,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 31,
+        "battingClutch": 22
+      },
+      "positionRatings": {
+        "SP": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

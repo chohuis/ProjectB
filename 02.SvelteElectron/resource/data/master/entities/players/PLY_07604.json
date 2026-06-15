@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07604",
+  "name": "이훈혁",
+  "nameEn": "Lee HunHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 56,
+      "primaryPosition": "2B",
+      "developmentRate": 46,
+      "potentialHidden": 51,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 49,
+        "velocity": 55,
+        "command": 51,
+        "control": 46,
+        "movement": 47,
+        "mentality": 52,
+        "recovery": 46,
+        "clutch": 44,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 45,
+        "power": 37,
+        "eye": 48,
+        "discipline": 47,
+        "speed": 43,
+        "baseInstinct": 45,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 41,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "2B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

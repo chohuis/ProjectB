@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12124",
+  "name": "애덤스 딜런",
+  "nameEn": "Adams Dylan",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 16,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 42,
+      "primaryPosition": "2B",
+      "developmentRate": 41,
+      "potentialHidden": 73,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 53,
+        "velocity": 70,
+        "command": 57,
+        "control": 64,
+        "movement": 57,
+        "mentality": 55,
+        "recovery": 54,
+        "clutch": 58,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 54,
+        "power": 63,
+        "eye": 53,
+        "discipline": 53,
+        "speed": 58,
+        "baseInstinct": 61,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 57,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "2B": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

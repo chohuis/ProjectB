@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12285",
+  "name": "영 코디",
+  "nameEn": "Young Cody",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 41,
+      "primaryPosition": "SP",
+      "developmentRate": 68,
+      "potentialHidden": 56,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 79,
+        "velocity": 76,
+        "command": 80,
+        "control": 83,
+        "movement": 72,
+        "mentality": 82,
+        "recovery": 72,
+        "clutch": 69,
+        "holdRunners": 69
+      },
+      "batting": {
+        "ovr": 78,
+        "contact": 75,
+        "power": 78,
+        "eye": 83,
+        "discipline": 75,
+        "speed": 73,
+        "baseInstinct": 74,
+        "bunting": 63,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 70,
+        "battingClutch": 71
+      },
+      "positionRatings": {
+        "SP": 78
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04328",
+  "name": "조훈윤",
+  "nameEn": "Jo HunYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 19,
+      "primaryPosition": "CF",
+      "developmentRate": 71,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 60,
+        "velocity": 69,
+        "command": 61,
+        "control": 57,
+        "movement": 52,
+        "mentality": 64,
+        "recovery": 50,
+        "clutch": 49,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 57,
+        "power": 47,
+        "eye": 57,
+        "discipline": 59,
+        "speed": 54,
+        "baseInstinct": 58,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 56,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "CF": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

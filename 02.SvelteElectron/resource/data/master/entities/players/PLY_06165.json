@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06165",
+  "name": "김준원",
+  "nameEn": "Kim JunWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 66,
+      "primaryPosition": "3B",
+      "developmentRate": 49,
+      "potentialHidden": 48,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 55,
+        "velocity": 53,
+        "command": 48,
+        "control": 50,
+        "movement": 48,
+        "mentality": 55,
+        "recovery": 48,
+        "clutch": 49,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 49,
+        "power": 44,
+        "eye": 42,
+        "discipline": 40,
+        "speed": 48,
+        "baseInstinct": 42,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 47,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "3B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

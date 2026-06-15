@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11544",
+  "name": "앨런 로건",
+  "nameEn": "Allen Logan",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 25,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 92,
+      "primaryPosition": "2B",
+      "developmentRate": 48,
+      "potentialHidden": 75,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 68,
+        "velocity": 63,
+        "command": 63,
+        "control": 56,
+        "movement": 56,
+        "mentality": 72,
+        "recovery": 65,
+        "clutch": 58,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 66,
+        "power": 56,
+        "eye": 63,
+        "discipline": 62,
+        "speed": 69,
+        "baseInstinct": 64,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 62,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "2B": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

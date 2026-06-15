@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08646",
+  "name": "박수호",
+  "nameEn": "Park SuHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 29,
+      "primaryPosition": "C",
+      "developmentRate": 52,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 42,
+        "velocity": 50,
+        "command": 39,
+        "control": 43,
+        "movement": 33,
+        "mentality": 44,
+        "recovery": 41,
+        "clutch": 38,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 34,
+        "power": 34,
+        "eye": 31,
+        "discipline": 32,
+        "speed": 34,
+        "baseInstinct": 37,
+        "bunting": 20,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 33,
+        "battingClutch": 24
+      },
+      "positionRatings": {
+        "C": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

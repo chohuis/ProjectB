@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13805",
+  "name": "가르시아 제이크",
+  "nameEn": "Garcia Jake",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 11,
+      "primaryPosition": "1B",
+      "developmentRate": 80,
+      "potentialHidden": 93,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 62,
+        "velocity": 65,
+        "command": 52,
+        "control": 61,
+        "movement": 59,
+        "mentality": 52,
+        "recovery": 47,
+        "clutch": 52,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 50,
+        "power": 49,
+        "eye": 62,
+        "discipline": 61,
+        "speed": 52,
+        "baseInstinct": 61,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 48,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "1B": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

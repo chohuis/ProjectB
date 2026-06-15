@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14779",
+  "name": "홀 케빈",
+  "nameEn": "Hall Kevin",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 12,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 47,
+      "primaryPosition": "C",
+      "developmentRate": 60,
+      "potentialHidden": 78,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 77,
+        "velocity": 72,
+        "command": 73,
+        "control": 72,
+        "movement": 63,
+        "mentality": 75,
+        "recovery": 62,
+        "clutch": 67,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 64,
+        "power": 63,
+        "eye": 75,
+        "discipline": 75,
+        "speed": 74,
+        "baseInstinct": 65,
+        "bunting": 66,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 69,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "C": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

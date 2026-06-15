@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10644",
+  "name": "테일러 에릭",
+  "nameEn": "Taylor Eric",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 46,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 51,
+      "primaryPosition": "SP",
+      "developmentRate": 51,
+      "potentialHidden": 87,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 62,
+        "velocity": 66,
+        "command": 56,
+        "control": 68,
+        "movement": 67,
+        "mentality": 62,
+        "recovery": 61,
+        "clutch": 66,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 70,
+        "power": 61,
+        "eye": 63,
+        "discipline": 56,
+        "speed": 66,
+        "baseInstinct": 65,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 58,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "SP": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

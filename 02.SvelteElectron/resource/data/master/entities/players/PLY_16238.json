@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16238",
+  "name": "가르시아 에반",
+  "nameEn": "Garcia Evan",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 18,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 49,
+      "primaryPosition": "CF",
+      "developmentRate": 62,
+      "potentialHidden": 72,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 47,
+        "velocity": 52,
+        "command": 42,
+        "control": 53,
+        "movement": 55,
+        "mentality": 53,
+        "recovery": 51,
+        "clutch": 43,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 50,
+        "power": 50,
+        "eye": 51,
+        "discipline": 44,
+        "speed": 46,
+        "baseInstinct": 42,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 48,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "CF": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

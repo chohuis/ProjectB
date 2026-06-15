@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11971",
+  "name": "스미스 카일",
+  "nameEn": "Smith Kyle",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 11,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 56,
+      "primaryPosition": "LF",
+      "developmentRate": 51,
+      "potentialHidden": 63,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 47,
+        "velocity": 62,
+        "command": 46,
+        "control": 56,
+        "movement": 57,
+        "mentality": 56,
+        "recovery": 48,
+        "clutch": 54,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 59,
+        "power": 57,
+        "eye": 47,
+        "discipline": 48,
+        "speed": 55,
+        "baseInstinct": 47,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 49,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "LF": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

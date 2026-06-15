@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04161",
+  "name": "윤현민",
+  "nameEn": "Yoon HyeonMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 84,
+      "primaryPosition": "1B",
+      "developmentRate": 69,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 55,
+        "velocity": 64,
+        "command": 56,
+        "control": 58,
+        "movement": 59,
+        "mentality": 54,
+        "recovery": 48,
+        "clutch": 50,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 65,
+        "power": 55,
+        "eye": 65,
+        "discipline": 62,
+        "speed": 67,
+        "baseInstinct": 61,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 65,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "1B": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04313",
+  "name": "이도환",
+  "nameEn": "Lee DoHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 51,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 62,
+        "velocity": 72,
+        "command": 63,
+        "control": 63,
+        "movement": 61,
+        "mentality": 60,
+        "recovery": 56,
+        "clutch": 58,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 54,
+        "power": 43,
+        "eye": 50,
+        "discipline": 54,
+        "speed": 52,
+        "baseInstinct": 44,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 52,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "SP": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

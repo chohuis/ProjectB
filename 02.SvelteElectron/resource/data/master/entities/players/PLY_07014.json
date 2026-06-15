@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07014",
+  "name": "박훈훈",
+  "nameEn": "Park HunHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 23,
+      "primaryPosition": "SP",
+      "developmentRate": 61,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 54,
+        "velocity": 62,
+        "command": 55,
+        "control": 60,
+        "movement": 51,
+        "mentality": 58,
+        "recovery": 50,
+        "clutch": 52,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 51,
+        "power": 52,
+        "eye": 50,
+        "discipline": 52,
+        "speed": 54,
+        "baseInstinct": 54,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 59,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

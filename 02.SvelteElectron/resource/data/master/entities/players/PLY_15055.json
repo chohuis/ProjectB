@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15055",
+  "name": "로드리게스 카일",
+  "nameEn": "Rodriguez Kyle",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 24,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 24,
+      "primaryPosition": "SP",
+      "developmentRate": 47,
+      "potentialHidden": 62,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 66,
+        "velocity": 76,
+        "command": 60,
+        "control": 65,
+        "movement": 69,
+        "mentality": 62,
+        "recovery": 66,
+        "clutch": 59,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 62,
+        "power": 58,
+        "eye": 64,
+        "discipline": 62,
+        "speed": 62,
+        "baseInstinct": 59,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 67,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "SP": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04877",
+  "name": "조수진",
+  "nameEn": "Jo SuJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 54,
+      "primaryPosition": "1B",
+      "developmentRate": 64,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 51,
+        "velocity": 60,
+        "command": 49,
+        "control": 60,
+        "movement": 54,
+        "mentality": 64,
+        "recovery": 47,
+        "clutch": 47,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 48,
+        "power": 45,
+        "eye": 45,
+        "discipline": 46,
+        "speed": 53,
+        "baseInstinct": 46,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 38,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "1B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

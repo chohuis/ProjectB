@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04639",
+  "name": "정영빈",
+  "nameEn": "Jung YoungBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 43,
+      "primaryPosition": "SS",
+      "developmentRate": 50,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 37,
+        "velocity": 47,
+        "command": 33,
+        "control": 38,
+        "movement": 40,
+        "mentality": 41,
+        "recovery": 30,
+        "clutch": 34,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 45,
+        "power": 42,
+        "eye": 43,
+        "discipline": 40,
+        "speed": 45,
+        "baseInstinct": 36,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 37,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SS": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

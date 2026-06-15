@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07717",
+  "name": "황태욱",
+  "nameEn": "Hwang TaeWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 20,
+      "primaryPosition": "LF",
+      "developmentRate": 54,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 54,
+        "velocity": 60,
+        "command": 44,
+        "control": 47,
+        "movement": 41,
+        "mentality": 46,
+        "recovery": 44,
+        "clutch": 43,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 40,
+        "power": 42,
+        "eye": 46,
+        "discipline": 48,
+        "speed": 41,
+        "baseInstinct": 47,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 45,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "LF": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12873",
+  "name": "해리스 제이슨",
+  "nameEn": "Harris Jason",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 16,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 11,
+      "primaryPosition": "C",
+      "developmentRate": 77,
+      "potentialHidden": 71,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 52,
+        "velocity": 64,
+        "command": 48,
+        "control": 52,
+        "movement": 48,
+        "mentality": 51,
+        "recovery": 51,
+        "clutch": 49,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 59,
+        "power": 49,
+        "eye": 60,
+        "discipline": 51,
+        "speed": 52,
+        "baseInstinct": 57,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 46,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "C": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

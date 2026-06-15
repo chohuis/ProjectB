@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16581",
+  "name": "클라크 코너",
+  "nameEn": "Clark Connor",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 11,
+      "primaryPosition": "1B",
+      "developmentRate": 49,
+      "potentialHidden": 79,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 62,
+        "velocity": 62,
+        "command": 54,
+        "control": 62,
+        "movement": 56,
+        "mentality": 64,
+        "recovery": 55,
+        "clutch": 53,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 65,
+        "power": 55,
+        "eye": 64,
+        "discipline": 55,
+        "speed": 58,
+        "baseInstinct": 67,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 54,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "1B": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

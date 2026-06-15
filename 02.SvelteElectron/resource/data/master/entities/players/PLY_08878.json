@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08878",
+  "name": "서기현",
+  "nameEn": "Seo KiHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 38,
+      "primaryPosition": "RF",
+      "developmentRate": 47,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 48,
+        "velocity": 50,
+        "command": 38,
+        "control": 42,
+        "movement": 45,
+        "mentality": 51,
+        "recovery": 39,
+        "clutch": 35,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 31,
+        "contact": 31,
+        "power": 25,
+        "eye": 22,
+        "discipline": 27,
+        "speed": 28,
+        "baseInstinct": 25,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 22,
+        "arm": 23,
+        "battingClutch": 19
+      },
+      "positionRatings": {
+        "RF": 31
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

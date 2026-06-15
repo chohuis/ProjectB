@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13586",
+  "name": "윌리엄스 헌터",
+  "nameEn": "Williams Hunter",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 49,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 47,
+      "primaryPosition": "2B",
+      "developmentRate": 42,
+      "potentialHidden": 73,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 65,
+        "velocity": 67,
+        "command": 57,
+        "control": 60,
+        "movement": 61,
+        "mentality": 71,
+        "recovery": 61,
+        "clutch": 62,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 62,
+        "power": 58,
+        "eye": 65,
+        "discipline": 60,
+        "speed": 73,
+        "baseInstinct": 63,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 66,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "2B": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

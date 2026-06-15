@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06488",
+  "name": "류영재",
+  "nameEn": "Ryu YoungJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 77,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 62,
+        "velocity": 68,
+        "command": 54,
+        "control": 59,
+        "movement": 57,
+        "mentality": 66,
+        "recovery": 57,
+        "clutch": 54,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 66,
+        "power": 63,
+        "eye": 62,
+        "discipline": 60,
+        "speed": 59,
+        "baseInstinct": 62,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 54,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "SP": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

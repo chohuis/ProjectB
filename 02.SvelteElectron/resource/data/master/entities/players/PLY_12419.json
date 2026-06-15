@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12419",
+  "name": "앤더슨 에릭",
+  "nameEn": "Anderson Eric",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 46,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 4,
+      "primaryPosition": "CF",
+      "developmentRate": 68,
+      "potentialHidden": 65,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 51,
+        "velocity": 56,
+        "command": 49,
+        "control": 51,
+        "movement": 48,
+        "mentality": 53,
+        "recovery": 57,
+        "clutch": 48,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 63,
+        "power": 56,
+        "eye": 58,
+        "discipline": 56,
+        "speed": 54,
+        "baseInstinct": 55,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 49,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "CF": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

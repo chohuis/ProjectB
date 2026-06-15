@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16132",
+  "name": "카터 그랜트",
+  "nameEn": "Carter Grant",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 82,
+  "popularity": 37,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 19,
+      "primaryPosition": "1B",
+      "developmentRate": 60,
+      "potentialHidden": 60,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 74,
+        "velocity": 68,
+        "command": 67,
+        "control": 72,
+        "movement": 67,
+        "mentality": 66,
+        "recovery": 60,
+        "clutch": 70,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 71,
+        "power": 67,
+        "eye": 71,
+        "discipline": 60,
+        "speed": 64,
+        "baseInstinct": 72,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 61,
+        "battingClutch": 69
+      },
+      "positionRatings": {
+        "1B": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

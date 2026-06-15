@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11510",
+  "name": "화이트 숀",
+  "nameEn": "White Sean",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 31,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 11,
+      "primaryPosition": "SP",
+      "developmentRate": 75,
+      "potentialHidden": 87,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 55,
+        "velocity": 70,
+        "command": 63,
+        "control": 65,
+        "movement": 62,
+        "mentality": 61,
+        "recovery": 62,
+        "clutch": 49,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 57,
+        "power": 60,
+        "eye": 54,
+        "discipline": 59,
+        "speed": 56,
+        "baseInstinct": 52,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 62,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "SP": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03313",
+  "name": "박혁성",
+  "nameEn": "Park HyeokSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 25,
+      "primaryPosition": "SP",
+      "developmentRate": 67,
+      "potentialHidden": 97,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 61,
+        "velocity": 71,
+        "command": 59,
+        "control": 60,
+        "movement": 62,
+        "mentality": 70,
+        "recovery": 64,
+        "clutch": 55,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 62,
+        "power": 63,
+        "eye": 61,
+        "discipline": 71,
+        "speed": 72,
+        "baseInstinct": 59,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 63,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "SP": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

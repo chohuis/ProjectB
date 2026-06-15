@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03545",
+  "name": "김태훈",
+  "nameEn": "Kim TaeHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 54,
+      "primaryPosition": "SS",
+      "developmentRate": 66,
+      "potentialHidden": 86,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 67,
+        "velocity": 74,
+        "command": 71,
+        "control": 67,
+        "movement": 70,
+        "mentality": 80,
+        "recovery": 75,
+        "clutch": 65,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 63,
+        "power": 61,
+        "eye": 61,
+        "discipline": 62,
+        "speed": 67,
+        "baseInstinct": 67,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 59,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "SS": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

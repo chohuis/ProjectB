@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16290",
+  "name": "앤더슨 루이스",
+  "nameEn": "Anderson Luis",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 28,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 27,
+      "primaryPosition": "SS",
+      "developmentRate": 60,
+      "potentialHidden": 72,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 43,
+        "velocity": 48,
+        "command": 52,
+        "control": 45,
+        "movement": 50,
+        "mentality": 50,
+        "recovery": 44,
+        "clutch": 46,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 41,
+        "power": 47,
+        "eye": 45,
+        "discipline": 46,
+        "speed": 51,
+        "baseInstinct": 45,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 40,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SS": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09174",
+  "name": "강우진",
+  "nameEn": "Kang WooJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 78,
+      "primaryPosition": "SP",
+      "developmentRate": 41,
+      "potentialHidden": 48,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 36,
+        "velocity": 45,
+        "command": 36,
+        "control": 38,
+        "movement": 33,
+        "mentality": 38,
+        "recovery": 39,
+        "clutch": 33,
+        "holdRunners": 25
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 37,
+        "power": 37,
+        "eye": 38,
+        "discipline": 43,
+        "speed": 40,
+        "baseInstinct": 35,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 43,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "SP": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

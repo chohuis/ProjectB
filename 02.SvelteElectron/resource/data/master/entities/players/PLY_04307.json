@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04307",
+  "name": "강훈혁",
+  "nameEn": "Kang HunHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 40,
+      "primaryPosition": "C",
+      "developmentRate": 71,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 48,
+        "velocity": 58,
+        "command": 51,
+        "control": 42,
+        "movement": 51,
+        "mentality": 56,
+        "recovery": 50,
+        "clutch": 43,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 53,
+        "power": 54,
+        "eye": 51,
+        "discipline": 51,
+        "speed": 56,
+        "baseInstinct": 59,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 55,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "C": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

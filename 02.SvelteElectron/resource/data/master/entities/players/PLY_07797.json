@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07797",
+  "name": "최세준",
+  "nameEn": "Choi SeJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 22,
+      "primaryPosition": "SS",
+      "developmentRate": 46,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 63,
+        "velocity": 65,
+        "command": 56,
+        "control": 60,
+        "movement": 56,
+        "mentality": 57,
+        "recovery": 54,
+        "clutch": 56,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 44,
+        "power": 31,
+        "eye": 36,
+        "discipline": 36,
+        "speed": 41,
+        "baseInstinct": 37,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 41,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "SS": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03280",
+  "name": "송우준",
+  "nameEn": "Song WooJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 93,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 94,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 75,
+        "velocity": 85,
+        "command": 72,
+        "control": 77,
+        "movement": 76,
+        "mentality": 74,
+        "recovery": 74,
+        "clutch": 70,
+        "holdRunners": 68
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 59,
+        "power": 55,
+        "eye": 64,
+        "discipline": 67,
+        "speed": 61,
+        "baseInstinct": 64,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 55,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "SP": 76
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

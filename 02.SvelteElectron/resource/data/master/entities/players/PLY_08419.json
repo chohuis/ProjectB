@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08419",
+  "name": "강성현",
+  "nameEn": "Kang SeongHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 80,
+      "primaryPosition": "CF",
+      "developmentRate": 57,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 38,
+        "velocity": 40,
+        "command": 34,
+        "control": 38,
+        "movement": 44,
+        "mentality": 38,
+        "recovery": 37,
+        "clutch": 34,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 34,
+        "contact": 33,
+        "power": 27,
+        "eye": 31,
+        "discipline": 33,
+        "speed": 29,
+        "baseInstinct": 27,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 25,
+        "arm": 29,
+        "battingClutch": 23
+      },
+      "positionRatings": {
+        "CF": 34
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

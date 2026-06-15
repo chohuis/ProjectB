@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14443",
+  "name": "카터 블레이크",
+  "nameEn": "Carter Blake",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 27,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 55,
+      "primaryPosition": "1B",
+      "developmentRate": 55,
+      "potentialHidden": 58,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 54,
+        "velocity": 55,
+        "command": 55,
+        "control": 45,
+        "movement": 47,
+        "mentality": 58,
+        "recovery": 50,
+        "clutch": 46,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 54,
+        "power": 43,
+        "eye": 46,
+        "discipline": 51,
+        "speed": 52,
+        "baseInstinct": 51,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 46,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "1B": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

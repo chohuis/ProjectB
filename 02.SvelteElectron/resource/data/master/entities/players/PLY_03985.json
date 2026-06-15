@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03985",
+  "name": "김상성",
+  "nameEn": "Kim SangSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 72,
+      "primaryPosition": "LF",
+      "developmentRate": 60,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 59,
+        "velocity": 61,
+        "command": 48,
+        "control": 58,
+        "movement": 60,
+        "mentality": 57,
+        "recovery": 48,
+        "clutch": 48,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 52,
+        "power": 44,
+        "eye": 57,
+        "discipline": 55,
+        "speed": 52,
+        "baseInstinct": 47,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 52,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "LF": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

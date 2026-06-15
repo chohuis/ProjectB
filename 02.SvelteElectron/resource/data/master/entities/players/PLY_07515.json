@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07515",
+  "name": "신성진",
+  "nameEn": "Shin SeongJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 91,
+      "primaryPosition": "3B",
+      "developmentRate": 50,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 47,
+        "velocity": 58,
+        "command": 50,
+        "control": 47,
+        "movement": 43,
+        "mentality": 54,
+        "recovery": 48,
+        "clutch": 46,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 41,
+        "power": 37,
+        "eye": 40,
+        "discipline": 50,
+        "speed": 50,
+        "baseInstinct": 44,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 42,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "3B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

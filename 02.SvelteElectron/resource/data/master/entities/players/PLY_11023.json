@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11023",
+  "name": "루이스 루이스",
+  "nameEn": "Lewis Luis",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 21,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 36,
+      "primaryPosition": "SP",
+      "developmentRate": 67,
+      "potentialHidden": 72,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 72,
+        "velocity": 73,
+        "command": 63,
+        "control": 70,
+        "movement": 76,
+        "mentality": 80,
+        "recovery": 76,
+        "clutch": 66,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 74,
+        "contact": 67,
+        "power": 67,
+        "eye": 77,
+        "discipline": 66,
+        "speed": 69,
+        "baseInstinct": 64,
+        "bunting": 67,
+        "platoon": 50,
+        "fielding": 75,
+        "arm": 77,
+        "battingClutch": 73
+      },
+      "positionRatings": {
+        "SP": 74
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

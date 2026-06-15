@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13513",
+  "name": "홀 그랜트",
+  "nameEn": "Hall Grant",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 18,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 11,
+      "primaryPosition": "C",
+      "developmentRate": 75,
+      "potentialHidden": 95,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 57,
+        "velocity": 66,
+        "command": 47,
+        "control": 51,
+        "movement": 52,
+        "mentality": 58,
+        "recovery": 50,
+        "clutch": 55,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 53,
+        "power": 57,
+        "eye": 62,
+        "discipline": 60,
+        "speed": 54,
+        "baseInstinct": 47,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 54,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "C": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07109",
+  "name": "이준진",
+  "nameEn": "Lee JunJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 22,
+      "primaryPosition": "C",
+      "developmentRate": 55,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 49,
+        "velocity": 55,
+        "command": 46,
+        "control": 46,
+        "movement": 52,
+        "mentality": 51,
+        "recovery": 43,
+        "clutch": 49,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 46,
+        "power": 40,
+        "eye": 40,
+        "discipline": 47,
+        "speed": 45,
+        "baseInstinct": 39,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 40,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "C": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

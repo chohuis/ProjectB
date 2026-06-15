@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03520",
+  "name": "조찬성",
+  "nameEn": "Jo ChanSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 84,
+      "primaryPosition": "SP",
+      "developmentRate": 64,
+      "potentialHidden": 86,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 67,
+        "velocity": 75,
+        "command": 61,
+        "control": 59,
+        "movement": 67,
+        "mentality": 66,
+        "recovery": 56,
+        "clutch": 61,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 72,
+        "power": 64,
+        "eye": 67,
+        "discipline": 73,
+        "speed": 71,
+        "baseInstinct": 65,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 69,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "SP": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

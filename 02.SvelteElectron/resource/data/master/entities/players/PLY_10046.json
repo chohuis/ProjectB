@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10046",
+  "name": "토마스 마커스",
+  "nameEn": "Thomas Marcus",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 28,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 39,
+      "primaryPosition": "C",
+      "developmentRate": 55,
+      "potentialHidden": 75,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 58,
+        "velocity": 77,
+        "command": 59,
+        "control": 60,
+        "movement": 59,
+        "mentality": 72,
+        "recovery": 61,
+        "clutch": 60,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 71,
+        "power": 56,
+        "eye": 61,
+        "discipline": 65,
+        "speed": 72,
+        "baseInstinct": 63,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 63,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "C": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

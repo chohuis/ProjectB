@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07572",
+  "name": "류도빈",
+  "nameEn": "Ryu DoBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 17,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 64,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 62,
+        "velocity": 63,
+        "command": 53,
+        "control": 60,
+        "movement": 51,
+        "mentality": 57,
+        "recovery": 55,
+        "clutch": 50,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 36,
+        "power": 35,
+        "eye": 44,
+        "discipline": 34,
+        "speed": 47,
+        "baseInstinct": 34,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 33,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "SP": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

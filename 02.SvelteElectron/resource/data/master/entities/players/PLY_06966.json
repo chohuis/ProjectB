@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06966",
+  "name": "권정진",
+  "nameEn": "Kwon JungJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 89,
+      "primaryPosition": "CF",
+      "developmentRate": 62,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 69,
+        "velocity": 78,
+        "command": 67,
+        "control": 59,
+        "movement": 61,
+        "mentality": 70,
+        "recovery": 57,
+        "clutch": 55,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 41,
+        "power": 46,
+        "eye": 51,
+        "discipline": 45,
+        "speed": 55,
+        "baseInstinct": 47,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 50,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "CF": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

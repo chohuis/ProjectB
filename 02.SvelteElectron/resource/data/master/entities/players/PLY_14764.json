@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14764",
+  "name": "앤더슨 딜런",
+  "nameEn": "Anderson Dylan",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 25,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 64,
+      "primaryPosition": "2B",
+      "developmentRate": 64,
+      "potentialHidden": 59,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 55,
+        "velocity": 68,
+        "command": 60,
+        "control": 52,
+        "movement": 62,
+        "mentality": 55,
+        "recovery": 62,
+        "clutch": 49,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 59,
+        "power": 54,
+        "eye": 53,
+        "discipline": 58,
+        "speed": 59,
+        "baseInstinct": 58,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 57,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "2B": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

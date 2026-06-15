@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11571",
+  "name": "클라크 그랜트",
+  "nameEn": "Clark Grant",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 47,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 65,
+      "primaryPosition": "1B",
+      "developmentRate": 55,
+      "potentialHidden": 74,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 79,
+        "stamina": 72,
+        "velocity": 81,
+        "command": 80,
+        "control": 81,
+        "movement": 80,
+        "mentality": 85,
+        "recovery": 71,
+        "clutch": 70,
+        "holdRunners": 69
+      },
+      "batting": {
+        "ovr": 79,
+        "contact": 71,
+        "power": 69,
+        "eye": 71,
+        "discipline": 81,
+        "speed": 81,
+        "baseInstinct": 78,
+        "bunting": 72,
+        "platoon": 50,
+        "fielding": 78,
+        "arm": 74,
+        "battingClutch": 70
+      },
+      "positionRatings": {
+        "1B": 79
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

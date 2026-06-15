@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09808",
+  "name": "권찬환",
+  "nameEn": "Kwon ChanHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 55,
+      "primaryPosition": "LF",
+      "developmentRate": 56,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 47,
+        "velocity": 46,
+        "command": 35,
+        "control": 39,
+        "movement": 44,
+        "mentality": 48,
+        "recovery": 35,
+        "clutch": 31,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 33,
+        "contact": 34,
+        "power": 34,
+        "eye": 27,
+        "discipline": 32,
+        "speed": 33,
+        "baseInstinct": 29,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 23,
+        "battingClutch": 20
+      },
+      "positionRatings": {
+        "LF": 33
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

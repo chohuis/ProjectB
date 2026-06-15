@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12498",
+  "name": "톰슨 미겔",
+  "nameEn": "Thompson Miguel",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 84,
+  "popularity": 32,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 85,
+      "primaryPosition": "CF",
+      "developmentRate": 69,
+      "potentialHidden": 85,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 65,
+        "velocity": 66,
+        "command": 56,
+        "control": 64,
+        "movement": 64,
+        "mentality": 59,
+        "recovery": 64,
+        "clutch": 64,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 62,
+        "power": 58,
+        "eye": 67,
+        "discipline": 59,
+        "speed": 69,
+        "baseInstinct": 54,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 57,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "CF": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

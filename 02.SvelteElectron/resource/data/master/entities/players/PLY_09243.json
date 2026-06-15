@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09243",
+  "name": "안기혁",
+  "nameEn": "An KiHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 24,
+      "primaryPosition": "RF",
+      "developmentRate": 58,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 47,
+        "velocity": 46,
+        "command": 36,
+        "control": 37,
+        "movement": 42,
+        "mentality": 44,
+        "recovery": 41,
+        "clutch": 30,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 35,
+        "power": 29,
+        "eye": 30,
+        "discipline": 37,
+        "speed": 37,
+        "baseInstinct": 32,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 28,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "RF": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

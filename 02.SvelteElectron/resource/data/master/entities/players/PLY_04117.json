@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04117",
+  "name": "이우현",
+  "nameEn": "Lee WooHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 61,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 62,
+        "velocity": 61,
+        "command": 53,
+        "control": 58,
+        "movement": 53,
+        "mentality": 63,
+        "recovery": 51,
+        "clutch": 48,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 67,
+        "power": 62,
+        "eye": 64,
+        "discipline": 64,
+        "speed": 68,
+        "baseInstinct": 54,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 55,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "SP": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

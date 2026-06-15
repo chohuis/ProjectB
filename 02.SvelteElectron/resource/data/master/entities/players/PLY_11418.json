@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11418",
+  "name": "킹 헌터",
+  "nameEn": "King Hunter",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 12,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 4,
+      "primaryPosition": "LF",
+      "developmentRate": 52,
+      "potentialHidden": 75,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 60,
+        "velocity": 64,
+        "command": 49,
+        "control": 52,
+        "movement": 52,
+        "mentality": 56,
+        "recovery": 52,
+        "clutch": 51,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 51,
+        "power": 59,
+        "eye": 62,
+        "discipline": 56,
+        "speed": 55,
+        "baseInstinct": 52,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 54,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "LF": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

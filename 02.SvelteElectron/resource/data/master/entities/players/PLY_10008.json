@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10008",
+  "name": "스콧 크리스",
+  "nameEn": "Scott Chris",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 27,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 12,
+      "primaryPosition": "LF",
+      "developmentRate": 79,
+      "potentialHidden": 93,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 70,
+        "velocity": 65,
+        "command": 67,
+        "control": 72,
+        "movement": 67,
+        "mentality": 71,
+        "recovery": 64,
+        "clutch": 64,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 59,
+        "power": 67,
+        "eye": 66,
+        "discipline": 70,
+        "speed": 73,
+        "baseInstinct": 65,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 67,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "LF": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

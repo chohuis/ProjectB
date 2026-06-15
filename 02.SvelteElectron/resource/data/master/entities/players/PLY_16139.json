@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16139",
+  "name": "애덤스 오스틴",
+  "nameEn": "Adams Austin",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 42,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 24,
+      "primaryPosition": "SS",
+      "developmentRate": 64,
+      "potentialHidden": 77,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 62,
+        "velocity": 67,
+        "command": 62,
+        "control": 68,
+        "movement": 63,
+        "mentality": 67,
+        "recovery": 65,
+        "clutch": 54,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 69,
+        "power": 59,
+        "eye": 62,
+        "discipline": 64,
+        "speed": 60,
+        "baseInstinct": 68,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 63,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "SS": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07195",
+  "name": "안혁기",
+  "nameEn": "An HyeokKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 14,
+      "primaryPosition": "RF",
+      "developmentRate": 61,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 41,
+        "velocity": 53,
+        "command": 39,
+        "control": 43,
+        "movement": 36,
+        "mentality": 44,
+        "recovery": 42,
+        "clutch": 36,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 48,
+        "power": 38,
+        "eye": 39,
+        "discipline": 43,
+        "speed": 49,
+        "baseInstinct": 46,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 39,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "RF": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

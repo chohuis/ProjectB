@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15170",
+  "name": "스미스 재크",
+  "nameEn": "Smith Zach",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 37,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 67,
+      "primaryPosition": "3B",
+      "developmentRate": 59,
+      "potentialHidden": 69,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 57,
+        "velocity": 61,
+        "command": 59,
+        "control": 53,
+        "movement": 53,
+        "mentality": 60,
+        "recovery": 56,
+        "clutch": 57,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 53,
+        "power": 60,
+        "eye": 65,
+        "discipline": 64,
+        "speed": 66,
+        "baseInstinct": 52,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 62,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "3B": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

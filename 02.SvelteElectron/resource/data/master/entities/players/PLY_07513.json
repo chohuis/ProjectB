@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07513",
+  "name": "강민원",
+  "nameEn": "Kang MinWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 46,
+      "primaryPosition": "SS",
+      "developmentRate": 62,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 46,
+        "velocity": 59,
+        "command": 50,
+        "control": 48,
+        "movement": 41,
+        "mentality": 54,
+        "recovery": 38,
+        "clutch": 46,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 55,
+        "power": 55,
+        "eye": 51,
+        "discipline": 51,
+        "speed": 63,
+        "baseInstinct": 48,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 48,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SS": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15312",
+  "name": "윌리엄스 트레버",
+  "nameEn": "Williams Trevor",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 45,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 30,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 69,
+      "primaryPosition": "SS",
+      "developmentRate": 42,
+      "potentialHidden": 67,
+      "proServiceYears": 8,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 64,
+        "velocity": 66,
+        "command": 57,
+        "control": 62,
+        "movement": 60,
+        "mentality": 63,
+        "recovery": 52,
+        "clutch": 59,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 66,
+        "power": 56,
+        "eye": 66,
+        "discipline": 61,
+        "speed": 63,
+        "baseInstinct": 62,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 51,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "SS": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

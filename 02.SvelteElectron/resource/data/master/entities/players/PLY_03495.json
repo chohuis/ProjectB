@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03495",
+  "name": "조정준",
+  "nameEn": "Jo JungJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 45,
+      "primaryPosition": "CF",
+      "developmentRate": 62,
+      "potentialHidden": 86,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 60,
+        "velocity": 73,
+        "command": 55,
+        "control": 64,
+        "movement": 60,
+        "mentality": 63,
+        "recovery": 62,
+        "clutch": 60,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 69,
+        "power": 71,
+        "eye": 72,
+        "discipline": 64,
+        "speed": 77,
+        "baseInstinct": 62,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 69,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "CF": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

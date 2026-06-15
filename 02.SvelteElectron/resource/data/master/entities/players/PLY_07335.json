@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07335",
+  "name": "정태재",
+  "nameEn": "Jung TaeJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 86,
+      "primaryPosition": "1B",
+      "developmentRate": 52,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 48,
+        "velocity": 55,
+        "command": 39,
+        "control": 41,
+        "movement": 46,
+        "mentality": 44,
+        "recovery": 41,
+        "clutch": 43,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 53,
+        "power": 47,
+        "eye": 49,
+        "discipline": 49,
+        "speed": 50,
+        "baseInstinct": 45,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 46,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "1B": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

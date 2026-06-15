@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13458",
+  "name": "무어 코디",
+  "nameEn": "Moore Cody",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 40,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 79,
+      "primaryPosition": "LF",
+      "developmentRate": 73,
+      "potentialHidden": 82,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 58,
+        "velocity": 66,
+        "command": 59,
+        "control": 52,
+        "movement": 61,
+        "mentality": 58,
+        "recovery": 58,
+        "clutch": 51,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 49,
+        "power": 57,
+        "eye": 49,
+        "discipline": 57,
+        "speed": 52,
+        "baseInstinct": 60,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 48,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "LF": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

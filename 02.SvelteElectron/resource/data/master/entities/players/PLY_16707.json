@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16707",
+  "name": "그린 미겔",
+  "nameEn": "Green Miguel",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 35,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 47,
+      "primaryPosition": "2B",
+      "developmentRate": 69,
+      "potentialHidden": 79,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 46,
+        "velocity": 45,
+        "command": 42,
+        "control": 43,
+        "movement": 42,
+        "mentality": 48,
+        "recovery": 46,
+        "clutch": 36,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 38,
+        "power": 45,
+        "eye": 49,
+        "discipline": 38,
+        "speed": 52,
+        "baseInstinct": 40,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 39,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "2B": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

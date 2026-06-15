@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04222",
+  "name": "송찬찬",
+  "nameEn": "Song ChanChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 34,
+      "primaryPosition": "C",
+      "developmentRate": 53,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 57,
+        "velocity": 64,
+        "command": 47,
+        "control": 56,
+        "movement": 52,
+        "mentality": 53,
+        "recovery": 49,
+        "clutch": 45,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 68,
+        "power": 57,
+        "eye": 56,
+        "discipline": 63,
+        "speed": 65,
+        "baseInstinct": 55,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 54,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "C": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03276",
+  "name": "권지찬",
+  "nameEn": "Kwon JiChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 27,
+      "primaryPosition": "1B",
+      "developmentRate": 73,
+      "potentialHidden": 92,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 64,
+        "velocity": 69,
+        "command": 57,
+        "control": 56,
+        "movement": 60,
+        "mentality": 68,
+        "recovery": 56,
+        "clutch": 60,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 59,
+        "power": 55,
+        "eye": 58,
+        "discipline": 51,
+        "speed": 62,
+        "baseInstinct": 58,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 53,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "1B": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

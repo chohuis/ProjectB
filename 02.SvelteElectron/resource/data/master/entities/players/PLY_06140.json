@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06140",
+  "name": "박동기",
+  "nameEn": "Park DongKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 89,
+      "primaryPosition": "2B",
+      "developmentRate": 49,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 41,
+        "stamina": 40,
+        "velocity": 48,
+        "command": 37,
+        "control": 41,
+        "movement": 42,
+        "mentality": 40,
+        "recovery": 30,
+        "clutch": 31,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 45,
+        "power": 45,
+        "eye": 43,
+        "discipline": 49,
+        "speed": 48,
+        "baseInstinct": 36,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 40,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "2B": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

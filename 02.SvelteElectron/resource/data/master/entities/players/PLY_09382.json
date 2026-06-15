@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09382",
+  "name": "신훈준",
+  "nameEn": "Shin HunJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 12,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 41,
+        "velocity": 43,
+        "command": 37,
+        "control": 43,
+        "movement": 35,
+        "mentality": 50,
+        "recovery": 32,
+        "clutch": 33,
+        "holdRunners": 28
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 53,
+        "power": 45,
+        "eye": 50,
+        "discipline": 44,
+        "speed": 47,
+        "baseInstinct": 48,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 51,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "SP": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

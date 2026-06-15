@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11586",
+  "name": "미첼 미겔",
+  "nameEn": "Mitchell Miguel",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 42,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 31,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 94,
+      "primaryPosition": "SP",
+      "developmentRate": 37,
+      "potentialHidden": 55,
+      "proServiceYears": 9,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 55,
+        "velocity": 56,
+        "command": 50,
+        "control": 54,
+        "movement": 57,
+        "mentality": 53,
+        "recovery": 49,
+        "clutch": 45,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 56,
+        "power": 48,
+        "eye": 50,
+        "discipline": 47,
+        "speed": 60,
+        "baseInstinct": 53,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 57,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "SP": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

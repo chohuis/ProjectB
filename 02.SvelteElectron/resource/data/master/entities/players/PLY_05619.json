@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05619",
+  "name": "서지원",
+  "nameEn": "Seo JiWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 70,
+      "primaryPosition": "SS",
+      "developmentRate": 63,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 59,
+        "velocity": 56,
+        "command": 55,
+        "control": 50,
+        "movement": 55,
+        "mentality": 59,
+        "recovery": 52,
+        "clutch": 52,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 37,
+        "power": 38,
+        "eye": 43,
+        "discipline": 36,
+        "speed": 43,
+        "baseInstinct": 33,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 35,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "SS": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

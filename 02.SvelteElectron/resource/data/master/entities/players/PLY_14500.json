@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14500",
+  "name": "카터 다니엘",
+  "nameEn": "Carter Daniel",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 29,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 32,
+      "primaryPosition": "SS",
+      "developmentRate": 59,
+      "potentialHidden": 81,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 51,
+        "velocity": 51,
+        "command": 48,
+        "control": 50,
+        "movement": 43,
+        "mentality": 51,
+        "recovery": 49,
+        "clutch": 41,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 45,
+        "power": 48,
+        "eye": 46,
+        "discipline": 54,
+        "speed": 49,
+        "baseInstinct": 44,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 55,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "SS": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

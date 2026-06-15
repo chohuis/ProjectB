@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05422",
+  "name": "안지혁",
+  "nameEn": "An JiHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 32,
+      "primaryPosition": "2B",
+      "developmentRate": 61,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 45,
+        "velocity": 55,
+        "command": 49,
+        "control": 44,
+        "movement": 48,
+        "mentality": 48,
+        "recovery": 42,
+        "clutch": 44,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 35,
+        "power": 43,
+        "eye": 36,
+        "discipline": 37,
+        "speed": 39,
+        "baseInstinct": 35,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 41,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "2B": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

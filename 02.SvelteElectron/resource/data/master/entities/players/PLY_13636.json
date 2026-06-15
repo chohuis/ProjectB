@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13636",
+  "name": "워커 다니엘",
+  "nameEn": "Walker Daniel",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 15,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 65,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 82,
+        "stamina": 83,
+        "velocity": 88,
+        "command": 84,
+        "control": 81,
+        "movement": 83,
+        "mentality": 78,
+        "recovery": 83,
+        "clutch": 79,
+        "holdRunners": 79
+      },
+      "batting": {
+        "ovr": 82,
+        "contact": 82,
+        "power": 77,
+        "eye": 78,
+        "discipline": 81,
+        "speed": 77,
+        "baseInstinct": 80,
+        "bunting": 72,
+        "platoon": 50,
+        "fielding": 75,
+        "arm": 74,
+        "battingClutch": 71
+      },
+      "positionRatings": {
+        "SP": 82
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15356",
+  "name": "윌리엄스 콜",
+  "nameEn": "Williams Cole",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 21,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 74,
+      "primaryPosition": "SS",
+      "developmentRate": 63,
+      "potentialHidden": 70,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 50,
+        "velocity": 54,
+        "command": 40,
+        "control": 45,
+        "movement": 49,
+        "mentality": 48,
+        "recovery": 36,
+        "clutch": 39,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 46,
+        "power": 44,
+        "eye": 49,
+        "discipline": 45,
+        "speed": 43,
+        "baseInstinct": 40,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 35,
+        "arm": 45,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "SS": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

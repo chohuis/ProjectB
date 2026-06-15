@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15491",
+  "name": "킹 라이언",
+  "nameEn": "King Ryan",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 38,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 29,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 37,
+      "primaryPosition": "C",
+      "developmentRate": 49,
+      "potentialHidden": 46,
+      "proServiceYears": 7,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 51,
+        "velocity": 48,
+        "command": 50,
+        "control": 47,
+        "movement": 44,
+        "mentality": 50,
+        "recovery": 45,
+        "clutch": 50,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 55,
+        "power": 48,
+        "eye": 52,
+        "discipline": 42,
+        "speed": 50,
+        "baseInstinct": 53,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 45,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "C": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

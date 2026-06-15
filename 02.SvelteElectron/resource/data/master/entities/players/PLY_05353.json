@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05353",
+  "name": "황진민",
+  "nameEn": "Hwang JinMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 40,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 15,
+      "primaryPosition": "2B",
+      "developmentRate": 49,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 58,
+        "velocity": 72,
+        "command": 63,
+        "control": 57,
+        "movement": 64,
+        "mentality": 69,
+        "recovery": 56,
+        "clutch": 60,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 52,
+        "power": 46,
+        "eye": 51,
+        "discipline": 50,
+        "speed": 52,
+        "baseInstinct": 48,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 54,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "2B": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

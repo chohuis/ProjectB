@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05791",
+  "name": "전현우",
+  "nameEn": "Jeon HyeonWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 96,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 48,
+        "velocity": 51,
+        "command": 44,
+        "control": 41,
+        "movement": 38,
+        "mentality": 45,
+        "recovery": 35,
+        "clutch": 40,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 40,
+        "power": 38,
+        "eye": 31,
+        "discipline": 37,
+        "speed": 35,
+        "baseInstinct": 35,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 35,
+        "arm": 40,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "SP": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03455",
+  "name": "조동원",
+  "nameEn": "Jo DongWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 37,
+      "primaryPosition": "CF",
+      "developmentRate": 60,
+      "potentialHidden": 86,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 60,
+        "velocity": 69,
+        "command": 59,
+        "control": 62,
+        "movement": 69,
+        "mentality": 72,
+        "recovery": 66,
+        "clutch": 64,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 50,
+        "power": 47,
+        "eye": 60,
+        "discipline": 51,
+        "speed": 63,
+        "baseInstinct": 49,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 50,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "CF": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

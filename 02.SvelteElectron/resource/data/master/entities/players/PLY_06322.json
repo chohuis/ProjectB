@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06322",
+  "name": "윤민환",
+  "nameEn": "Yoon MinHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 2,
+      "primaryPosition": "2B",
+      "developmentRate": 60,
+      "potentialHidden": 49,
+      "pitching": {
+        "ovr": 37,
+        "stamina": 39,
+        "velocity": 44,
+        "command": 28,
+        "control": 39,
+        "movement": 33,
+        "mentality": 33,
+        "recovery": 25,
+        "clutch": 24,
+        "holdRunners": 27
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 45,
+        "power": 45,
+        "eye": 46,
+        "discipline": 48,
+        "speed": 48,
+        "baseInstinct": 44,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 42,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "2B": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10492",
+  "name": "스콧 데릭",
+  "nameEn": "Scott Derek",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 28,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 44,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 70,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 80,
+        "stamina": 82,
+        "velocity": 86,
+        "command": 73,
+        "control": 76,
+        "movement": 79,
+        "mentality": 77,
+        "recovery": 73,
+        "clutch": 78,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 80,
+        "contact": 84,
+        "power": 72,
+        "eye": 73,
+        "discipline": 70,
+        "speed": 74,
+        "baseInstinct": 71,
+        "bunting": 63,
+        "platoon": 50,
+        "fielding": 79,
+        "arm": 72,
+        "battingClutch": 74
+      },
+      "positionRatings": {
+        "SP": 80
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

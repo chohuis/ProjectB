@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03307",
+  "name": "황세우",
+  "nameEn": "Hwang SeWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 98,
+      "primaryPosition": "SS",
+      "developmentRate": 73,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 75,
+        "velocity": 83,
+        "command": 74,
+        "control": 68,
+        "movement": 69,
+        "mentality": 80,
+        "recovery": 67,
+        "clutch": 65,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 58,
+        "power": 56,
+        "eye": 57,
+        "discipline": 65,
+        "speed": 59,
+        "baseInstinct": 55,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 61,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "SS": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

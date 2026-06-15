@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15009",
+  "name": "영 제이슨",
+  "nameEn": "Young Jason",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 72,
+      "primaryPosition": "3B",
+      "developmentRate": 64,
+      "potentialHidden": 70,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 44,
+        "velocity": 60,
+        "command": 46,
+        "control": 51,
+        "movement": 42,
+        "mentality": 57,
+        "recovery": 43,
+        "clutch": 42,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 49,
+        "power": 50,
+        "eye": 49,
+        "discipline": 42,
+        "speed": 43,
+        "baseInstinct": 39,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 40,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "3B": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

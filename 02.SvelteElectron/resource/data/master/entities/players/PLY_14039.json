@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14039",
+  "name": "해리스 칼렙",
+  "nameEn": "Harris Caleb",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 17,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 29,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 73,
+      "primaryPosition": "3B",
+      "developmentRate": 38,
+      "potentialHidden": 53,
+      "proServiceYears": 7,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 59,
+        "velocity": 60,
+        "command": 50,
+        "control": 58,
+        "movement": 51,
+        "mentality": 62,
+        "recovery": 59,
+        "clutch": 56,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 53,
+        "power": 58,
+        "eye": 57,
+        "discipline": 55,
+        "speed": 58,
+        "baseInstinct": 59,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 55,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "3B": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

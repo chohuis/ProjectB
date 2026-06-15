@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04189",
+  "name": "전현기",
+  "nameEn": "Jeon HyeonKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 35,
+      "primaryPosition": "1B",
+      "developmentRate": 60,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 62,
+        "velocity": 58,
+        "command": 48,
+        "control": 54,
+        "movement": 59,
+        "mentality": 58,
+        "recovery": 55,
+        "clutch": 50,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 62,
+        "power": 58,
+        "eye": 65,
+        "discipline": 56,
+        "speed": 68,
+        "baseInstinct": 63,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 60,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "1B": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

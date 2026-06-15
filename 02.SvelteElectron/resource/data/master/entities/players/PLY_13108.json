@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13108",
+  "name": "윌리엄스 코너",
+  "nameEn": "Williams Connor",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 21,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 55,
+      "primaryPosition": "CF",
+      "developmentRate": 65,
+      "potentialHidden": 73,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 55,
+        "velocity": 67,
+        "command": 59,
+        "control": 62,
+        "movement": 55,
+        "mentality": 59,
+        "recovery": 54,
+        "clutch": 55,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 58,
+        "power": 49,
+        "eye": 56,
+        "discipline": 53,
+        "speed": 56,
+        "baseInstinct": 55,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 49,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "CF": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

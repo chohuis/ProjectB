@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03007",
+  "name": "박정찬",
+  "nameEn": "Park JungChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 17,
+      "primaryPosition": "SP",
+      "developmentRate": 70,
+      "potentialHidden": 81,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 69,
+        "velocity": 81,
+        "command": 69,
+        "control": 72,
+        "movement": 68,
+        "mentality": 72,
+        "recovery": 71,
+        "clutch": 73,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 56,
+        "power": 61,
+        "eye": 60,
+        "discipline": 61,
+        "speed": 62,
+        "baseInstinct": 57,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 56,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "SP": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

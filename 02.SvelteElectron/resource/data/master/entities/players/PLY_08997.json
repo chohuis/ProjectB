@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08997",
+  "name": "오동재",
+  "nameEn": "Oh DongJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 43,
+      "primaryPosition": "1B",
+      "developmentRate": 59,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 48,
+        "velocity": 52,
+        "command": 45,
+        "control": 49,
+        "movement": 48,
+        "mentality": 42,
+        "recovery": 42,
+        "clutch": 41,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 35,
+        "contact": 33,
+        "power": 32,
+        "eye": 36,
+        "discipline": 35,
+        "speed": 29,
+        "baseInstinct": 29,
+        "bunting": 14,
+        "platoon": 50,
+        "fielding": 26,
+        "arm": 28,
+        "battingClutch": 27
+      },
+      "positionRatings": {
+        "1B": 35
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

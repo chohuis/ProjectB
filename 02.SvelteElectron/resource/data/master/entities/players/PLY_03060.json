@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03060",
+  "name": "전지진",
+  "nameEn": "Jeon JiJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 4,
+      "primaryPosition": "LF",
+      "developmentRate": 72,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 75,
+        "velocity": 82,
+        "command": 65,
+        "control": 66,
+        "movement": 73,
+        "mentality": 74,
+        "recovery": 63,
+        "clutch": 62,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 62,
+        "power": 63,
+        "eye": 71,
+        "discipline": 62,
+        "speed": 69,
+        "baseInstinct": 62,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 63,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "LF": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

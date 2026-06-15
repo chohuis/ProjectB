@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15676",
+  "name": "앨런 에반",
+  "nameEn": "Allen Evan",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 19,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 80,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 67,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 55,
+        "velocity": 61,
+        "command": 55,
+        "control": 47,
+        "movement": 55,
+        "mentality": 56,
+        "recovery": 56,
+        "clutch": 56,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 59,
+        "power": 57,
+        "eye": 49,
+        "discipline": 58,
+        "speed": 50,
+        "baseInstinct": 46,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 49,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

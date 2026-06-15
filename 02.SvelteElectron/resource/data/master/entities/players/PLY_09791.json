@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09791",
+  "name": "장영호",
+  "nameEn": "Jang YoungHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 17,
+      "primaryPosition": "RF",
+      "developmentRate": 42,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 43,
+        "velocity": 57,
+        "command": 40,
+        "control": 49,
+        "movement": 45,
+        "mentality": 51,
+        "recovery": 41,
+        "clutch": 43,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 34,
+        "contact": 34,
+        "power": 28,
+        "eye": 28,
+        "discipline": 26,
+        "speed": 28,
+        "baseInstinct": 29,
+        "bunting": 16,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 31,
+        "battingClutch": 20
+      },
+      "positionRatings": {
+        "RF": 34
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

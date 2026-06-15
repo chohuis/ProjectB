@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11513",
+  "name": "잭슨 케빈",
+  "nameEn": "Jackson Kevin",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 84,
+  "popularity": 29,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 72,
+      "primaryPosition": "LF",
+      "developmentRate": 55,
+      "potentialHidden": 81,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 82,
+        "stamina": 80,
+        "velocity": 79,
+        "command": 81,
+        "control": 78,
+        "movement": 81,
+        "mentality": 86,
+        "recovery": 70,
+        "clutch": 78,
+        "holdRunners": 69
+      },
+      "batting": {
+        "ovr": 82,
+        "contact": 81,
+        "power": 71,
+        "eye": 81,
+        "discipline": 79,
+        "speed": 81,
+        "baseInstinct": 84,
+        "bunting": 74,
+        "platoon": 50,
+        "fielding": 77,
+        "arm": 79,
+        "battingClutch": 73
+      },
+      "positionRatings": {
+        "LF": 82
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

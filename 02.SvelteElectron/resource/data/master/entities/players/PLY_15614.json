@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15614",
+  "name": "데이비스 에릭",
+  "nameEn": "Davis Eric",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 87,
+      "primaryPosition": "3B",
+      "developmentRate": 53,
+      "potentialHidden": 66,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 74,
+        "velocity": 77,
+        "command": 65,
+        "control": 71,
+        "movement": 75,
+        "mentality": 77,
+        "recovery": 77,
+        "clutch": 66,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 73,
+        "power": 75,
+        "eye": 70,
+        "discipline": 65,
+        "speed": 82,
+        "baseInstinct": 64,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 77,
+        "arm": 69,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "3B": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

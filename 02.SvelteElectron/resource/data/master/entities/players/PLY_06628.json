@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06628",
+  "name": "안정식",
+  "nameEn": "An JungSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 55,
+      "primaryPosition": "2B",
+      "developmentRate": 55,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 57,
+        "velocity": 60,
+        "command": 51,
+        "control": 59,
+        "movement": 56,
+        "mentality": 60,
+        "recovery": 56,
+        "clutch": 47,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 68,
+        "power": 60,
+        "eye": 66,
+        "discipline": 61,
+        "speed": 67,
+        "baseInstinct": 59,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 62,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "2B": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

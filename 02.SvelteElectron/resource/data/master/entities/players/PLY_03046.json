@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03046",
+  "name": "김찬진",
+  "nameEn": "Kim ChanJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 84,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 85,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 62,
+        "velocity": 71,
+        "command": 69,
+        "control": 64,
+        "movement": 60,
+        "mentality": 64,
+        "recovery": 67,
+        "clutch": 65,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 61,
+        "power": 50,
+        "eye": 52,
+        "discipline": 51,
+        "speed": 57,
+        "baseInstinct": 51,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 53,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "SP": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

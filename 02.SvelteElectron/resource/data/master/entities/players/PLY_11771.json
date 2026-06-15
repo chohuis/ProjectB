@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11771",
+  "name": "워커 알렉스",
+  "nameEn": "Walker Alex",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 40,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 96,
+      "primaryPosition": "CF",
+      "developmentRate": 60,
+      "potentialHidden": 93,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 54,
+        "velocity": 57,
+        "command": 46,
+        "control": 49,
+        "movement": 48,
+        "mentality": 55,
+        "recovery": 49,
+        "clutch": 43,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 61,
+        "power": 57,
+        "eye": 55,
+        "discipline": 51,
+        "speed": 62,
+        "baseInstinct": 46,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 49,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "CF": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

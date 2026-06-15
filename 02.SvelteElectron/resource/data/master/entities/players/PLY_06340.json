@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06340",
+  "name": "정훈윤",
+  "nameEn": "Jung HunYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 11,
+      "primaryPosition": "1B",
+      "developmentRate": 60,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 36,
+        "stamina": 38,
+        "velocity": 36,
+        "command": 33,
+        "control": 36,
+        "movement": 28,
+        "mentality": 42,
+        "recovery": 30,
+        "clutch": 34,
+        "holdRunners": 26
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 44,
+        "power": 42,
+        "eye": 37,
+        "discipline": 36,
+        "speed": 46,
+        "baseInstinct": 41,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 35,
+        "arm": 45,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "1B": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

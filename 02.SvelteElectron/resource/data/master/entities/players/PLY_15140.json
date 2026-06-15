@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15140",
+  "name": "윌리엄스 숀",
+  "nameEn": "Williams Sean",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 82,
+  "popularity": 32,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 12,
+      "primaryPosition": "C",
+      "developmentRate": 66,
+      "potentialHidden": 66,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 77,
+        "velocity": 82,
+        "command": 69,
+        "control": 67,
+        "movement": 68,
+        "mentality": 67,
+        "recovery": 73,
+        "clutch": 69,
+        "holdRunners": 70
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 77,
+        "power": 70,
+        "eye": 64,
+        "discipline": 69,
+        "speed": 73,
+        "baseInstinct": 66,
+        "bunting": 63,
+        "platoon": 50,
+        "fielding": 72,
+        "arm": 75,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "C": 73
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

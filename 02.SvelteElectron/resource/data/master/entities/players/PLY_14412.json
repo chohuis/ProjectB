@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14412",
+  "name": "데이비스 헌터",
+  "nameEn": "Davis Hunter",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 85,
+  "popularity": 10,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 75,
+      "primaryPosition": "SP",
+      "developmentRate": 56,
+      "potentialHidden": 67,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 64,
+        "velocity": 81,
+        "command": 63,
+        "control": 76,
+        "movement": 63,
+        "mentality": 76,
+        "recovery": 68,
+        "clutch": 70,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 72,
+        "power": 69,
+        "eye": 75,
+        "discipline": 73,
+        "speed": 66,
+        "baseInstinct": 63,
+        "bunting": 66,
+        "platoon": 50,
+        "fielding": 72,
+        "arm": 71,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "SP": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

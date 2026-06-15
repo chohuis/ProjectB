@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13422",
+  "name": "윌리엄스 오스틴",
+  "nameEn": "Williams Austin",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 24,
+      "primaryPosition": "SP",
+      "developmentRate": 69,
+      "potentialHidden": 60,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 74,
+        "velocity": 79,
+        "command": 65,
+        "control": 71,
+        "movement": 71,
+        "mentality": 77,
+        "recovery": 69,
+        "clutch": 65,
+        "holdRunners": 68
+      },
+      "batting": {
+        "ovr": 74,
+        "contact": 68,
+        "power": 70,
+        "eye": 68,
+        "discipline": 72,
+        "speed": 74,
+        "baseInstinct": 64,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 76,
+        "arm": 66,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "SP": 74
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

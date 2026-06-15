@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14848",
+  "name": "라이트 코너",
+  "nameEn": "Wright Connor",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 19,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 34,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 20,
+      "primaryPosition": "SS",
+      "developmentRate": 48,
+      "potentialHidden": 59,
+      "proServiceYears": 12,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 54,
+        "velocity": 67,
+        "command": 62,
+        "control": 51,
+        "movement": 49,
+        "mentality": 66,
+        "recovery": 49,
+        "clutch": 52,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 59,
+        "power": 59,
+        "eye": 58,
+        "discipline": 51,
+        "speed": 60,
+        "baseInstinct": 60,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 60,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "SS": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

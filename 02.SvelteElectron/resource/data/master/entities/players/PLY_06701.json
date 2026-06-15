@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06701",
+  "name": "조동원",
+  "nameEn": "Jo DongWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 40,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 58,
+      "primaryPosition": "3B",
+      "developmentRate": 64,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 60,
+        "velocity": 64,
+        "command": 60,
+        "control": 59,
+        "movement": 64,
+        "mentality": 70,
+        "recovery": 60,
+        "clutch": 53,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 65,
+        "power": 55,
+        "eye": 59,
+        "discipline": 64,
+        "speed": 61,
+        "baseInstinct": 54,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 56,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "3B": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

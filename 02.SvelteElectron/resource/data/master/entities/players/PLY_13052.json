@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13052",
+  "name": "카터 그랜트",
+  "nameEn": "Carter Grant",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 82,
+  "popularity": 37,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 19,
+      "primaryPosition": "1B",
+      "developmentRate": 64,
+      "potentialHidden": 65,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 79,
+        "velocity": 73,
+        "command": 72,
+        "control": 77,
+        "movement": 72,
+        "mentality": 71,
+        "recovery": 65,
+        "clutch": 75,
+        "holdRunners": 69
+      },
+      "batting": {
+        "ovr": 74,
+        "contact": 76,
+        "power": 72,
+        "eye": 76,
+        "discipline": 65,
+        "speed": 69,
+        "baseInstinct": 77,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 66,
+        "battingClutch": 74
+      },
+      "positionRatings": {
+        "1B": 74
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

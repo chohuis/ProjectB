@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15957",
+  "name": "스미스 헌터",
+  "nameEn": "Smith Hunter",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 31,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 63,
+      "primaryPosition": "SP",
+      "developmentRate": 73,
+      "potentialHidden": 75,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 63,
+        "velocity": 62,
+        "command": 61,
+        "control": 66,
+        "movement": 57,
+        "mentality": 65,
+        "recovery": 56,
+        "clutch": 53,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 62,
+        "power": 57,
+        "eye": 58,
+        "discipline": 63,
+        "speed": 67,
+        "baseInstinct": 58,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 61,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SP": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

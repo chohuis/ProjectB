@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05505",
+  "name": "류태우",
+  "nameEn": "Ryu TaeWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 54,
+      "primaryPosition": "LF",
+      "developmentRate": 66,
+      "potentialHidden": 84,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 53,
+        "velocity": 54,
+        "command": 46,
+        "control": 47,
+        "movement": 46,
+        "mentality": 52,
+        "recovery": 42,
+        "clutch": 46,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 64,
+        "power": 52,
+        "eye": 58,
+        "discipline": 56,
+        "speed": 59,
+        "baseInstinct": 61,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 58,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "LF": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08346",
+  "name": "안준원",
+  "nameEn": "An JunWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 81,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 80,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 58,
+        "velocity": 60,
+        "command": 56,
+        "control": 55,
+        "movement": 53,
+        "mentality": 55,
+        "recovery": 46,
+        "clutch": 50,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 53,
+        "power": 49,
+        "eye": 49,
+        "discipline": 48,
+        "speed": 62,
+        "baseInstinct": 48,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 54,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

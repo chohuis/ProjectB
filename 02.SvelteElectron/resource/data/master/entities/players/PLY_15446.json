@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15446",
+  "name": "스미스 루이스",
+  "nameEn": "Smith Luis",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 26,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 65,
+      "primaryPosition": "CF",
+      "developmentRate": 40,
+      "potentialHidden": 53,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 46,
+        "velocity": 58,
+        "command": 45,
+        "control": 53,
+        "movement": 43,
+        "mentality": 49,
+        "recovery": 43,
+        "clutch": 39,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 44,
+        "power": 48,
+        "eye": 54,
+        "discipline": 49,
+        "speed": 58,
+        "baseInstinct": 46,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 50,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "CF": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

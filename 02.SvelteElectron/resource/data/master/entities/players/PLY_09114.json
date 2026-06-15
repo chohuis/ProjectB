@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09114",
+  "name": "류찬욱",
+  "nameEn": "Ryu ChanWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 46,
+      "primaryPosition": "C",
+      "developmentRate": 49,
+      "potentialHidden": 46,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 44,
+        "velocity": 54,
+        "command": 36,
+        "control": 43,
+        "movement": 43,
+        "mentality": 46,
+        "recovery": 45,
+        "clutch": 44,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 33,
+        "contact": 27,
+        "power": 28,
+        "eye": 33,
+        "discipline": 24,
+        "speed": 36,
+        "baseInstinct": 26,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 24,
+        "arm": 22,
+        "battingClutch": 19
+      },
+      "positionRatings": {
+        "C": 33
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03741",
+  "name": "신현민",
+  "nameEn": "Shin HyeonMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 44,
+      "primaryPosition": "1B",
+      "developmentRate": 68,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 55,
+        "velocity": 51,
+        "command": 50,
+        "control": 49,
+        "movement": 43,
+        "mentality": 52,
+        "recovery": 45,
+        "clutch": 44,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 57,
+        "power": 57,
+        "eye": 57,
+        "discipline": 58,
+        "speed": 55,
+        "baseInstinct": 58,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 50,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "1B": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

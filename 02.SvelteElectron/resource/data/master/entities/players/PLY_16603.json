@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16603",
+  "name": "마틴 재크",
+  "nameEn": "Martin Zach",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 16,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 38,
+      "primaryPosition": "3B",
+      "developmentRate": 46,
+      "potentialHidden": 58,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 65,
+        "velocity": 66,
+        "command": 59,
+        "control": 68,
+        "movement": 69,
+        "mentality": 62,
+        "recovery": 68,
+        "clutch": 59,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 63,
+        "power": 70,
+        "eye": 61,
+        "discipline": 63,
+        "speed": 63,
+        "baseInstinct": 60,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 65,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "3B": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

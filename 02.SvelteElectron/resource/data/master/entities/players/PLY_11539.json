@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11539",
+  "name": "브라운 카일",
+  "nameEn": "Brown Kyle",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 40,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 16,
+      "primaryPosition": "SP",
+      "developmentRate": 60,
+      "potentialHidden": 76,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 81,
+        "velocity": 81,
+        "command": 66,
+        "control": 82,
+        "movement": 80,
+        "mentality": 80,
+        "recovery": 74,
+        "clutch": 70,
+        "holdRunners": 74
+      },
+      "batting": {
+        "ovr": 77,
+        "contact": 76,
+        "power": 72,
+        "eye": 80,
+        "discipline": 75,
+        "speed": 73,
+        "baseInstinct": 71,
+        "bunting": 66,
+        "platoon": 50,
+        "fielding": 80,
+        "arm": 72,
+        "battingClutch": 69
+      },
+      "positionRatings": {
+        "SP": 77
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11918",
+  "name": "마르티네스 로건",
+  "nameEn": "Martinez Logan",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 39,
+      "primaryPosition": "2B",
+      "developmentRate": 76,
+      "potentialHidden": 86,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 54,
+        "velocity": 60,
+        "command": 55,
+        "control": 56,
+        "movement": 45,
+        "mentality": 47,
+        "recovery": 48,
+        "clutch": 53,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 58,
+        "power": 46,
+        "eye": 47,
+        "discipline": 51,
+        "speed": 60,
+        "baseInstinct": 43,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 48,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "2B": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

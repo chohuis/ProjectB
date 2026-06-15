@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13042",
+  "name": "테일러 재크",
+  "nameEn": "Taylor Zach",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 16,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 66,
+      "primaryPosition": "1B",
+      "developmentRate": 68,
+      "potentialHidden": 61,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 57,
+        "velocity": 58,
+        "command": 60,
+        "control": 54,
+        "movement": 62,
+        "mentality": 63,
+        "recovery": 58,
+        "clutch": 51,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 56,
+        "power": 53,
+        "eye": 52,
+        "discipline": 56,
+        "speed": 66,
+        "baseInstinct": 52,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 61,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "1B": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

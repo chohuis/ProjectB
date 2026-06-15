@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03614",
+  "name": "조민기",
+  "nameEn": "Jo MinKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 45,
+      "primaryPosition": "LF",
+      "developmentRate": 64,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 50,
+        "velocity": 66,
+        "command": 54,
+        "control": 58,
+        "movement": 56,
+        "mentality": 52,
+        "recovery": 57,
+        "clutch": 44,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 59,
+        "power": 59,
+        "eye": 61,
+        "discipline": 61,
+        "speed": 65,
+        "baseInstinct": 53,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 55,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "LF": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

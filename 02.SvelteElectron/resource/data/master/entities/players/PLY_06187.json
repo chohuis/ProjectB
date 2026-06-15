@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06187",
+  "name": "서혁찬",
+  "nameEn": "Seo HyeokChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 60,
+      "primaryPosition": "CF",
+      "developmentRate": 53,
+      "potentialHidden": 49,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 43,
+        "velocity": 58,
+        "command": 39,
+        "control": 41,
+        "movement": 47,
+        "mentality": 53,
+        "recovery": 48,
+        "clutch": 36,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 33,
+        "contact": 37,
+        "power": 23,
+        "eye": 31,
+        "discipline": 26,
+        "speed": 38,
+        "baseInstinct": 32,
+        "bunting": 13,
+        "platoon": 50,
+        "fielding": 33,
+        "arm": 29,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "CF": 33
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

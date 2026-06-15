@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06317",
+  "name": "이재준",
+  "nameEn": "Lee JaeJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 97,
+      "primaryPosition": "3B",
+      "developmentRate": 57,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 36,
+        "stamina": 33,
+        "velocity": 37,
+        "command": 35,
+        "control": 31,
+        "movement": 34,
+        "mentality": 35,
+        "recovery": 30,
+        "clutch": 27,
+        "holdRunners": 28
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 46,
+        "power": 40,
+        "eye": 43,
+        "discipline": 41,
+        "speed": 49,
+        "baseInstinct": 39,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 39,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "3B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03246",
+  "name": "박성성",
+  "nameEn": "Park SeongSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 4,
+      "primaryPosition": "SS",
+      "developmentRate": 59,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 68,
+        "velocity": 79,
+        "command": 61,
+        "control": 62,
+        "movement": 64,
+        "mentality": 67,
+        "recovery": 65,
+        "clutch": 61,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 75,
+        "power": 71,
+        "eye": 68,
+        "discipline": 71,
+        "speed": 68,
+        "baseInstinct": 69,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 69,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "SS": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03403",
+  "name": "서영우",
+  "nameEn": "Seo YoungWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 79,
+      "primaryPosition": "C",
+      "developmentRate": 59,
+      "potentialHidden": 98,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 67,
+        "velocity": 74,
+        "command": 70,
+        "control": 65,
+        "movement": 66,
+        "mentality": 74,
+        "recovery": 71,
+        "clutch": 65,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 70,
+        "power": 67,
+        "eye": 69,
+        "discipline": 64,
+        "speed": 66,
+        "baseInstinct": 58,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 62,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "C": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

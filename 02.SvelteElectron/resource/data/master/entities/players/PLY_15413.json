@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15413",
+  "name": "클라크 데릭",
+  "nameEn": "Clark Derek",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 40,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 31,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 79,
+      "primaryPosition": "LF",
+      "developmentRate": 51,
+      "potentialHidden": 47,
+      "proServiceYears": 9,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 61,
+        "velocity": 60,
+        "command": 51,
+        "control": 58,
+        "movement": 48,
+        "mentality": 60,
+        "recovery": 51,
+        "clutch": 46,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 59,
+        "power": 55,
+        "eye": 53,
+        "discipline": 58,
+        "speed": 62,
+        "baseInstinct": 56,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 45,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "LF": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16500",
+  "name": "데이비스 조던",
+  "nameEn": "Davis Jordan",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 20,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 94,
+      "primaryPosition": "C",
+      "developmentRate": 65,
+      "potentialHidden": 64,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 78,
+        "velocity": 76,
+        "command": 76,
+        "control": 72,
+        "movement": 66,
+        "mentality": 81,
+        "recovery": 67,
+        "clutch": 70,
+        "holdRunners": 70
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 68,
+        "power": 76,
+        "eye": 76,
+        "discipline": 75,
+        "speed": 73,
+        "baseInstinct": 65,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 69,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "C": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

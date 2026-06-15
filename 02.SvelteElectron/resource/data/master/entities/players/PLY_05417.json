@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05417",
+  "name": "강진현",
+  "nameEn": "Kang JinHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 89,
+      "primaryPosition": "2B",
+      "developmentRate": 48,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 55,
+        "velocity": 60,
+        "command": 52,
+        "control": 50,
+        "movement": 48,
+        "mentality": 59,
+        "recovery": 50,
+        "clutch": 47,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 49,
+        "power": 51,
+        "eye": 51,
+        "discipline": 51,
+        "speed": 51,
+        "baseInstinct": 47,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 48,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "2B": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

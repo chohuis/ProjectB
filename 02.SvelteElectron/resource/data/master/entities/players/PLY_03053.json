@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03053",
+  "name": "임수완",
+  "nameEn": "Lim SuWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 72,
+      "primaryPosition": "RF",
+      "developmentRate": 59,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 53,
+        "velocity": 69,
+        "command": 51,
+        "control": 58,
+        "movement": 53,
+        "mentality": 55,
+        "recovery": 53,
+        "clutch": 53,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 66,
+        "power": 56,
+        "eye": 57,
+        "discipline": 57,
+        "speed": 62,
+        "baseInstinct": 54,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 57,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "RF": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

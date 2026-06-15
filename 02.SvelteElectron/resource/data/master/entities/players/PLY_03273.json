@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03273",
+  "name": "김영혁",
+  "nameEn": "Kim YoungHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 60,
+      "primaryPosition": "SP",
+      "developmentRate": 73,
+      "potentialHidden": 85,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 54,
+        "velocity": 58,
+        "command": 51,
+        "control": 52,
+        "movement": 49,
+        "mentality": 53,
+        "recovery": 51,
+        "clutch": 47,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 60,
+        "power": 55,
+        "eye": 61,
+        "discipline": 61,
+        "speed": 70,
+        "baseInstinct": 61,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 59,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

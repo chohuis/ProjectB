@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10637",
+  "name": "마틴 루이스",
+  "nameEn": "Martin Luis",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 84,
+  "popularity": 43,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 26,
+      "primaryPosition": "1B",
+      "developmentRate": 76,
+      "potentialHidden": 61,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 52,
+        "velocity": 63,
+        "command": 58,
+        "control": 59,
+        "movement": 60,
+        "mentality": 56,
+        "recovery": 49,
+        "clutch": 56,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 62,
+        "power": 57,
+        "eye": 56,
+        "discipline": 59,
+        "speed": 61,
+        "baseInstinct": 54,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 50,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "1B": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

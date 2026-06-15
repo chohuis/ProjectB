@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15044",
+  "name": "브라운 카를로스",
+  "nameEn": "Brown Carlos",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 45,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 62,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 83,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 64,
+        "velocity": 73,
+        "command": 62,
+        "control": 67,
+        "movement": 74,
+        "mentality": 69,
+        "recovery": 71,
+        "clutch": 65,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 68,
+        "power": 72,
+        "eye": 76,
+        "discipline": 72,
+        "speed": 74,
+        "baseInstinct": 66,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 64,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "SP": 73
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

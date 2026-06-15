@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15745",
+  "name": "클라크 마커스",
+  "nameEn": "Clark Marcus",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 14,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 34,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 83,
+      "primaryPosition": "2B",
+      "developmentRate": 49,
+      "potentialHidden": 46,
+      "proServiceYears": 12,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 51,
+        "velocity": 58,
+        "command": 53,
+        "control": 59,
+        "movement": 57,
+        "mentality": 62,
+        "recovery": 48,
+        "clutch": 50,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 56,
+        "power": 58,
+        "eye": 58,
+        "discipline": 59,
+        "speed": 53,
+        "baseInstinct": 55,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 47,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "2B": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

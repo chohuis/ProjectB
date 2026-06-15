@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03774",
+  "name": "박재기",
+  "nameEn": "Park JaeKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 17,
+      "primaryPosition": "3B",
+      "developmentRate": 53,
+      "potentialHidden": 82,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 45,
+        "velocity": 60,
+        "command": 49,
+        "control": 50,
+        "movement": 47,
+        "mentality": 56,
+        "recovery": 49,
+        "clutch": 37,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 61,
+        "power": 56,
+        "eye": 63,
+        "discipline": 59,
+        "speed": 66,
+        "baseInstinct": 58,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 51,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "3B": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

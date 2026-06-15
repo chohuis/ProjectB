@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09402",
+  "name": "이우준",
+  "nameEn": "Lee WooJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 77,
+      "primaryPosition": "SP",
+      "developmentRate": 46,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 47,
+        "velocity": 48,
+        "command": 36,
+        "control": 36,
+        "movement": 43,
+        "mentality": 38,
+        "recovery": 41,
+        "clutch": 40,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 37,
+        "power": 30,
+        "eye": 28,
+        "discipline": 39,
+        "speed": 35,
+        "baseInstinct": 36,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 34,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "SP": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

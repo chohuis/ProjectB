@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10907",
+  "name": "마르티네스 헌터",
+  "nameEn": "Martinez Hunter",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 81,
+  "popularity": 10,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 34,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 94,
+      "primaryPosition": "2B",
+      "developmentRate": 43,
+      "potentialHidden": 67,
+      "proServiceYears": 12,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 54,
+        "velocity": 60,
+        "command": 56,
+        "control": 53,
+        "movement": 58,
+        "mentality": 54,
+        "recovery": 53,
+        "clutch": 55,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 60,
+        "power": 50,
+        "eye": 51,
+        "discipline": 49,
+        "speed": 52,
+        "baseInstinct": 48,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 48,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "2B": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

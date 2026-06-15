@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06130",
+  "name": "황상현",
+  "nameEn": "Hwang SangHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 47,
+      "primaryPosition": "1B",
+      "developmentRate": 43,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 52,
+        "velocity": 57,
+        "command": 49,
+        "control": 45,
+        "movement": 51,
+        "mentality": 56,
+        "recovery": 42,
+        "clutch": 49,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 39,
+        "power": 32,
+        "eye": 33,
+        "discipline": 35,
+        "speed": 46,
+        "baseInstinct": 35,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 35,
+        "arm": 37,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "1B": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

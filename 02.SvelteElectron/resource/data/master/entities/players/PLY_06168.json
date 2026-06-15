@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06168",
+  "name": "황지현",
+  "nameEn": "Hwang JiHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 67,
+      "primaryPosition": "SP",
+      "developmentRate": 41,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 51,
+        "velocity": 57,
+        "command": 41,
+        "control": 42,
+        "movement": 50,
+        "mentality": 45,
+        "recovery": 48,
+        "clutch": 42,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 44,
+        "power": 30,
+        "eye": 33,
+        "discipline": 37,
+        "speed": 35,
+        "baseInstinct": 36,
+        "bunting": 20,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 34,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "SP": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

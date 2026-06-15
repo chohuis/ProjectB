@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15371",
+  "name": "앤더슨 블레이크",
+  "nameEn": "Anderson Blake",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 1,
+      "primaryPosition": "SP",
+      "developmentRate": 66,
+      "potentialHidden": 73,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 47,
+        "velocity": 63,
+        "command": 46,
+        "control": 46,
+        "movement": 49,
+        "mentality": 50,
+        "recovery": 48,
+        "clutch": 50,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 47,
+        "power": 44,
+        "eye": 49,
+        "discipline": 58,
+        "speed": 54,
+        "baseInstinct": 51,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 53,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SP": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14371",
+  "name": "미첼 크리스",
+  "nameEn": "Mitchell Chris",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 46,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 87,
+      "primaryPosition": "LF",
+      "developmentRate": 68,
+      "potentialHidden": 62,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 59,
+        "velocity": 54,
+        "command": 46,
+        "control": 51,
+        "movement": 51,
+        "mentality": 56,
+        "recovery": 57,
+        "clutch": 49,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 53,
+        "power": 47,
+        "eye": 52,
+        "discipline": 46,
+        "speed": 58,
+        "baseInstinct": 47,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 55,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "LF": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

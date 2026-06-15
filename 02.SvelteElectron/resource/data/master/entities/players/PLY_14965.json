@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14965",
+  "name": "스미스 제이슨",
+  "nameEn": "Smith Jason",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 16,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 90,
+      "primaryPosition": "1B",
+      "developmentRate": 53,
+      "potentialHidden": 62,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 78,
+        "velocity": 82,
+        "command": 65,
+        "control": 77,
+        "movement": 68,
+        "mentality": 82,
+        "recovery": 69,
+        "clutch": 76,
+        "holdRunners": 70
+      },
+      "batting": {
+        "ovr": 76,
+        "contact": 70,
+        "power": 67,
+        "eye": 67,
+        "discipline": 70,
+        "speed": 76,
+        "baseInstinct": 69,
+        "bunting": 67,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 77,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "1B": 76
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

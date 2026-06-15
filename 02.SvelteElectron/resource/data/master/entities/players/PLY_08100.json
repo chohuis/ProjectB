@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08100",
+  "name": "박지윤",
+  "nameEn": "Park JiYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 43,
+      "primaryPosition": "SP",
+      "developmentRate": 63,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 54,
+        "velocity": 57,
+        "command": 51,
+        "control": 58,
+        "movement": 51,
+        "mentality": 60,
+        "recovery": 58,
+        "clutch": 56,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 32,
+        "power": 28,
+        "eye": 37,
+        "discipline": 36,
+        "speed": 39,
+        "baseInstinct": 34,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 35,
+        "arm": 34,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13104",
+  "name": "워커 미겔",
+  "nameEn": "Walker Miguel",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 48,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 91,
+      "primaryPosition": "2B",
+      "developmentRate": 68,
+      "potentialHidden": 72,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 60,
+        "velocity": 70,
+        "command": 58,
+        "control": 68,
+        "movement": 71,
+        "mentality": 72,
+        "recovery": 58,
+        "clutch": 59,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 63,
+        "power": 58,
+        "eye": 64,
+        "discipline": 60,
+        "speed": 72,
+        "baseInstinct": 70,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 56,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "2B": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

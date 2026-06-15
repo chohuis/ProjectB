@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15012",
+  "name": "킹 케빈",
+  "nameEn": "King Kevin",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 50,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 29,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 22,
+      "primaryPosition": "SP",
+      "developmentRate": 52,
+      "potentialHidden": 50,
+      "proServiceYears": 7,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 49,
+        "velocity": 62,
+        "command": 55,
+        "control": 60,
+        "movement": 56,
+        "mentality": 54,
+        "recovery": 50,
+        "clutch": 49,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 56,
+        "power": 47,
+        "eye": 60,
+        "discipline": 53,
+        "speed": 52,
+        "baseInstinct": 53,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 55,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

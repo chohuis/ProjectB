@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10990",
+  "name": "잭슨 알렉스",
+  "nameEn": "Jackson Alex",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 28,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 24,
+      "primaryPosition": "LF",
+      "developmentRate": 57,
+      "potentialHidden": 87,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 65,
+        "velocity": 81,
+        "command": 65,
+        "control": 70,
+        "movement": 78,
+        "mentality": 69,
+        "recovery": 63,
+        "clutch": 68,
+        "holdRunners": 71
+      },
+      "batting": {
+        "ovr": 74,
+        "contact": 66,
+        "power": 75,
+        "eye": 70,
+        "discipline": 70,
+        "speed": 70,
+        "baseInstinct": 68,
+        "bunting": 63,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 67,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "LF": 74
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

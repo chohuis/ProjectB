@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03065",
+  "name": "이혁수",
+  "nameEn": "Lee HyeokSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 46,
+      "primaryPosition": "3B",
+      "developmentRate": 75,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 67,
+        "velocity": 71,
+        "command": 71,
+        "control": 69,
+        "movement": 72,
+        "mentality": 77,
+        "recovery": 72,
+        "clutch": 64,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 65,
+        "power": 64,
+        "eye": 64,
+        "discipline": 63,
+        "speed": 66,
+        "baseInstinct": 61,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 62,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "3B": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

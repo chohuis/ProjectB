@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11132",
+  "name": "영 타일러",
+  "nameEn": "Young Tyler",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 38,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 7,
+      "primaryPosition": "1B",
+      "developmentRate": 61,
+      "potentialHidden": 75,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 71,
+        "velocity": 79,
+        "command": 70,
+        "control": 76,
+        "movement": 67,
+        "mentality": 79,
+        "recovery": 64,
+        "clutch": 73,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 75,
+        "power": 71,
+        "eye": 73,
+        "discipline": 71,
+        "speed": 67,
+        "baseInstinct": 71,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 74,
+        "battingClutch": 72
+      },
+      "positionRatings": {
+        "1B": 73
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

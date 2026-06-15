@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14837",
+  "name": "윌리엄스 제이슨",
+  "nameEn": "Williams Jason",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 81,
+  "popularity": 33,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 30,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 84,
+      "primaryPosition": "RF",
+      "developmentRate": 33,
+      "potentialHidden": 68,
+      "proServiceYears": 8,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 57,
+        "velocity": 55,
+        "command": 49,
+        "control": 53,
+        "movement": 52,
+        "mentality": 55,
+        "recovery": 48,
+        "clutch": 57,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 56,
+        "power": 56,
+        "eye": 54,
+        "discipline": 61,
+        "speed": 57,
+        "baseInstinct": 46,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 54,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "RF": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

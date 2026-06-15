@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14470",
+  "name": "홀 제이슨",
+  "nameEn": "Hall Jason",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 19,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 77,
+      "primaryPosition": "SP",
+      "developmentRate": 35,
+      "potentialHidden": 52,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 64,
+        "velocity": 68,
+        "command": 57,
+        "control": 60,
+        "movement": 69,
+        "mentality": 61,
+        "recovery": 62,
+        "clutch": 62,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 71,
+        "power": 60,
+        "eye": 71,
+        "discipline": 64,
+        "speed": 72,
+        "baseInstinct": 60,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 63,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "SP": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

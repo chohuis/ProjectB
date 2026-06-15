@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10429",
+  "name": "토마스 칼렙",
+  "nameEn": "Thomas Caleb",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 27,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 10,
+      "primaryPosition": "SS",
+      "developmentRate": 49,
+      "potentialHidden": 56,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 64,
+        "velocity": 72,
+        "command": 64,
+        "control": 62,
+        "movement": 63,
+        "mentality": 68,
+        "recovery": 67,
+        "clutch": 62,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 65,
+        "power": 70,
+        "eye": 65,
+        "discipline": 59,
+        "speed": 61,
+        "baseInstinct": 58,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 62,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "SS": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

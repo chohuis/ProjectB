@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13994",
+  "name": "토마스 알렉스",
+  "nameEn": "Thomas Alex",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 36,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 30,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 6,
+      "primaryPosition": "CF",
+      "developmentRate": 43,
+      "potentialHidden": 51,
+      "proServiceYears": 8,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 64,
+        "velocity": 79,
+        "command": 59,
+        "control": 62,
+        "movement": 60,
+        "mentality": 75,
+        "recovery": 68,
+        "clutch": 57,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 72,
+        "power": 64,
+        "eye": 69,
+        "discipline": 67,
+        "speed": 68,
+        "baseInstinct": 60,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 70,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "CF": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

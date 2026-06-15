@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05695",
+  "name": "신민식",
+  "nameEn": "Shin MinSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 68,
+      "primaryPosition": "CF",
+      "developmentRate": 64,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 51,
+        "velocity": 49,
+        "command": 39,
+        "control": 39,
+        "movement": 38,
+        "mentality": 53,
+        "recovery": 47,
+        "clutch": 37,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 52,
+        "power": 50,
+        "eye": 52,
+        "discipline": 48,
+        "speed": 46,
+        "baseInstinct": 52,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 46,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "CF": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

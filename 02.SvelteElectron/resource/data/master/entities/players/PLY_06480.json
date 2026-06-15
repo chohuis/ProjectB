@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06480",
+  "name": "오우현",
+  "nameEn": "Oh WooHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 6,
+      "primaryPosition": "SP",
+      "developmentRate": 64,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 65,
+        "velocity": 69,
+        "command": 70,
+        "control": 71,
+        "movement": 68,
+        "mentality": 64,
+        "recovery": 60,
+        "clutch": 67,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 48,
+        "power": 54,
+        "eye": 50,
+        "discipline": 53,
+        "speed": 58,
+        "baseInstinct": 53,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 44,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SP": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

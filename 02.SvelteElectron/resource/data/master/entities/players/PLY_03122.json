@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03122",
+  "name": "정혁윤",
+  "nameEn": "Jung HyeokYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 5,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 86,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 67,
+        "velocity": 65,
+        "command": 59,
+        "control": 63,
+        "movement": 60,
+        "mentality": 67,
+        "recovery": 55,
+        "clutch": 56,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 56,
+        "power": 49,
+        "eye": 52,
+        "discipline": 50,
+        "speed": 58,
+        "baseInstinct": 54,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 48,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "SP": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

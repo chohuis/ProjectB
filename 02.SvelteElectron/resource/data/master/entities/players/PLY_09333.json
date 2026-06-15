@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09333",
+  "name": "박민원",
+  "nameEn": "Park MinWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 96,
+      "primaryPosition": "SP",
+      "developmentRate": 42,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 47,
+        "velocity": 59,
+        "command": 43,
+        "control": 47,
+        "movement": 44,
+        "mentality": 52,
+        "recovery": 42,
+        "clutch": 41,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 51,
+        "power": 40,
+        "eye": 50,
+        "discipline": 41,
+        "speed": 50,
+        "baseInstinct": 41,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 49,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "SP": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

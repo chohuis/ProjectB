@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06932",
+  "name": "전기호",
+  "nameEn": "Jeon KiHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 82,
+      "primaryPosition": "C",
+      "developmentRate": 64,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 63,
+        "velocity": 68,
+        "command": 52,
+        "control": 57,
+        "movement": 59,
+        "mentality": 59,
+        "recovery": 58,
+        "clutch": 52,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 50,
+        "power": 43,
+        "eye": 50,
+        "discipline": 48,
+        "speed": 54,
+        "baseInstinct": 39,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 48,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "C": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

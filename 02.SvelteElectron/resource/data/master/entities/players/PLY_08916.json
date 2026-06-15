@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08916",
+  "name": "장정빈",
+  "nameEn": "Jang JungBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 98,
+      "primaryPosition": "SS",
+      "developmentRate": 56,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 38,
+        "stamina": 42,
+        "velocity": 46,
+        "command": 33,
+        "control": 30,
+        "movement": 35,
+        "mentality": 35,
+        "recovery": 34,
+        "clutch": 30,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 40,
+        "power": 42,
+        "eye": 38,
+        "discipline": 41,
+        "speed": 46,
+        "baseInstinct": 42,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 35,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "SS": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

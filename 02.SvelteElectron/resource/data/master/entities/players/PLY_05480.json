@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05480",
+  "name": "김동윤",
+  "nameEn": "Kim DongYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 48,
+      "primaryPosition": "RF",
+      "developmentRate": 65,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 55,
+        "velocity": 65,
+        "command": 60,
+        "control": 57,
+        "movement": 61,
+        "mentality": 62,
+        "recovery": 57,
+        "clutch": 53,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 48,
+        "power": 48,
+        "eye": 54,
+        "discipline": 53,
+        "speed": 59,
+        "baseInstinct": 43,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 42,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "RF": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

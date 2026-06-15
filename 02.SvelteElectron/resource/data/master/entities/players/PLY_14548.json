@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14548",
+  "name": "영 칼렙",
+  "nameEn": "Young Caleb",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 28,
+  "militaryStatus": "군필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 98,
+      "primaryPosition": "2B",
+      "developmentRate": 70,
+      "potentialHidden": 89,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 54,
+        "velocity": 60,
+        "command": 55,
+        "control": 54,
+        "movement": 50,
+        "mentality": 53,
+        "recovery": 48,
+        "clutch": 52,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 56,
+        "power": 51,
+        "eye": 55,
+        "discipline": 48,
+        "speed": 60,
+        "baseInstinct": 55,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 44,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "2B": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10250",
+  "name": "테일러 라이언",
+  "nameEn": "Taylor Ryan",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 17,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 87,
+      "primaryPosition": "2B",
+      "developmentRate": 52,
+      "potentialHidden": 81,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 68,
+        "velocity": 78,
+        "command": 73,
+        "control": 70,
+        "movement": 71,
+        "mentality": 74,
+        "recovery": 66,
+        "clutch": 67,
+        "holdRunners": 75
+      },
+      "batting": {
+        "ovr": 76,
+        "contact": 73,
+        "power": 72,
+        "eye": 78,
+        "discipline": 68,
+        "speed": 80,
+        "baseInstinct": 75,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 72,
+        "arm": 75,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "2B": 76
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

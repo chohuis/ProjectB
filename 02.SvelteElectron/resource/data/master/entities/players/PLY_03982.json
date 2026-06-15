@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03982",
+  "name": "이영욱",
+  "nameEn": "Lee YoungWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 5,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 12,
+      "primaryPosition": "3B",
+      "developmentRate": 54,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 68,
+        "velocity": 67,
+        "command": 59,
+        "control": 65,
+        "movement": 59,
+        "mentality": 67,
+        "recovery": 61,
+        "clutch": 64,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 63,
+        "power": 60,
+        "eye": 52,
+        "discipline": 50,
+        "speed": 55,
+        "baseInstinct": 60,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 54,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "3B": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

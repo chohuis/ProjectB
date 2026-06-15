@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03681",
+  "name": "조재욱",
+  "nameEn": "Jo JaeWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 17,
+      "primaryPosition": "1B",
+      "developmentRate": 52,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 48,
+        "velocity": 50,
+        "command": 48,
+        "control": 44,
+        "movement": 48,
+        "mentality": 55,
+        "recovery": 49,
+        "clutch": 42,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 53,
+        "power": 44,
+        "eye": 47,
+        "discipline": 41,
+        "speed": 55,
+        "baseInstinct": 43,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 47,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "1B": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11591",
+  "name": "홀 타일러",
+  "nameEn": "Hall Tyler",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 13,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 72,
+      "primaryPosition": "SP",
+      "developmentRate": 47,
+      "potentialHidden": 68,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 72,
+        "velocity": 79,
+        "command": 66,
+        "control": 65,
+        "movement": 71,
+        "mentality": 67,
+        "recovery": 70,
+        "clutch": 60,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 69,
+        "power": 73,
+        "eye": 71,
+        "discipline": 72,
+        "speed": 68,
+        "baseInstinct": 60,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 69,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "SP": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

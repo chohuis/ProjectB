@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13697",
+  "name": "그린 크리스",
+  "nameEn": "Green Chris",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 41,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 21,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 93,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 52,
+        "velocity": 61,
+        "command": 52,
+        "control": 57,
+        "movement": 52,
+        "mentality": 52,
+        "recovery": 56,
+        "clutch": 55,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 49,
+        "power": 56,
+        "eye": 46,
+        "discipline": 49,
+        "speed": 58,
+        "baseInstinct": 45,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 48,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08742",
+  "name": "윤민기",
+  "nameEn": "Yoon MinKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 59,
+      "primaryPosition": "RF",
+      "developmentRate": 57,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 48,
+        "velocity": 50,
+        "command": 41,
+        "control": 40,
+        "movement": 40,
+        "mentality": 43,
+        "recovery": 36,
+        "clutch": 38,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 42,
+        "power": 35,
+        "eye": 31,
+        "discipline": 38,
+        "speed": 35,
+        "baseInstinct": 38,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 33,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "RF": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

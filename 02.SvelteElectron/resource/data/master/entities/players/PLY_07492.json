@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07492",
+  "name": "한동식",
+  "nameEn": "Han DongSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 93,
+      "primaryPosition": "C",
+      "developmentRate": 60,
+      "potentialHidden": 51,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 43,
+        "velocity": 53,
+        "command": 49,
+        "control": 41,
+        "movement": 40,
+        "mentality": 47,
+        "recovery": 50,
+        "clutch": 44,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 53,
+        "power": 49,
+        "eye": 44,
+        "discipline": 52,
+        "speed": 51,
+        "baseInstinct": 53,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 53,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "C": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

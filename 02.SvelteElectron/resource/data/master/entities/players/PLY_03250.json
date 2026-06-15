@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03250",
+  "name": "윤성성",
+  "nameEn": "Yoon SeongSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 44,
+      "primaryPosition": "2B",
+      "developmentRate": 60,
+      "potentialHidden": 91,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 57,
+        "velocity": 67,
+        "command": 63,
+        "control": 64,
+        "movement": 56,
+        "mentality": 65,
+        "recovery": 62,
+        "clutch": 58,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 55,
+        "power": 58,
+        "eye": 52,
+        "discipline": 53,
+        "speed": 56,
+        "baseInstinct": 56,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 52,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "2B": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

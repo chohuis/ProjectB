@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12241",
+  "name": "카터 루이스",
+  "nameEn": "Carter Luis",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 13,
+      "primaryPosition": "SP",
+      "developmentRate": 67,
+      "potentialHidden": 71,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 72,
+        "velocity": 73,
+        "command": 66,
+        "control": 74,
+        "movement": 65,
+        "mentality": 70,
+        "recovery": 70,
+        "clutch": 62,
+        "holdRunners": 70
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 77,
+        "power": 73,
+        "eye": 63,
+        "discipline": 76,
+        "speed": 77,
+        "baseInstinct": 64,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 61,
+        "battingClutch": 71
+      },
+      "positionRatings": {
+        "SP": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

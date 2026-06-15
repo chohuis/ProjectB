@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06614",
+  "name": "박기훈",
+  "nameEn": "Park KiHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 14,
+      "primaryPosition": "2B",
+      "developmentRate": 63,
+      "potentialHidden": 81,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 55,
+        "velocity": 53,
+        "command": 47,
+        "control": 54,
+        "movement": 43,
+        "mentality": 51,
+        "recovery": 50,
+        "clutch": 39,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 45,
+        "power": 42,
+        "eye": 51,
+        "discipline": 52,
+        "speed": 50,
+        "baseInstinct": 43,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 46,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "2B": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

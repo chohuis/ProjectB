@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10881",
+  "name": "앨런 카를로스",
+  "nameEn": "Allen Carlos",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 12,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 26,
+      "primaryPosition": "SP",
+      "developmentRate": 69,
+      "potentialHidden": 89,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 50,
+        "velocity": 50,
+        "command": 47,
+        "control": 55,
+        "movement": 52,
+        "mentality": 55,
+        "recovery": 54,
+        "clutch": 47,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 52,
+        "power": 50,
+        "eye": 57,
+        "discipline": 44,
+        "speed": 51,
+        "baseInstinct": 42,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 49,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

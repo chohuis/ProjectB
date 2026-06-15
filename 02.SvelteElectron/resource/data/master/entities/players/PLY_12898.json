@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12898",
+  "name": "넬슨 에반",
+  "nameEn": "Nelson Evan",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 11,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 57,
+      "primaryPosition": "SS",
+      "developmentRate": 56,
+      "potentialHidden": 76,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 70,
+        "velocity": 69,
+        "command": 65,
+        "control": 65,
+        "movement": 61,
+        "mentality": 62,
+        "recovery": 59,
+        "clutch": 56,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 72,
+        "power": 70,
+        "eye": 73,
+        "discipline": 69,
+        "speed": 62,
+        "baseInstinct": 69,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 61,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "SS": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

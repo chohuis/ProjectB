@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09139",
+  "name": "이훈훈",
+  "nameEn": "Lee HunHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 1,
+      "primaryPosition": "1B",
+      "developmentRate": 43,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 35,
+        "stamina": 32,
+        "velocity": 45,
+        "command": 36,
+        "control": 34,
+        "movement": 37,
+        "mentality": 32,
+        "recovery": 26,
+        "clutch": 33,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 35,
+        "contact": 31,
+        "power": 30,
+        "eye": 31,
+        "discipline": 29,
+        "speed": 32,
+        "baseInstinct": 28,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 26,
+        "arm": 27,
+        "battingClutch": 24
+      },
+      "positionRatings": {
+        "1B": 35
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

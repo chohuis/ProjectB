@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16621",
+  "name": "카터 트레버",
+  "nameEn": "Carter Trevor",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 13,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 2,
+      "primaryPosition": "CF",
+      "developmentRate": 63,
+      "potentialHidden": 70,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 62,
+        "velocity": 57,
+        "command": 58,
+        "control": 60,
+        "movement": 54,
+        "mentality": 67,
+        "recovery": 56,
+        "clutch": 61,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 62,
+        "power": 52,
+        "eye": 65,
+        "discipline": 50,
+        "speed": 66,
+        "baseInstinct": 55,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 57,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "CF": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

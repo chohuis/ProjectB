@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11624",
+  "name": "존스 데릭",
+  "nameEn": "Jones Derek",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 36,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 92,
+      "primaryPosition": "RF",
+      "developmentRate": 67,
+      "potentialHidden": 68,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 56,
+        "velocity": 74,
+        "command": 61,
+        "control": 64,
+        "movement": 67,
+        "mentality": 66,
+        "recovery": 57,
+        "clutch": 56,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 56,
+        "power": 60,
+        "eye": 55,
+        "discipline": 67,
+        "speed": 65,
+        "baseInstinct": 62,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 62,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "RF": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

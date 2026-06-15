@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03201",
+  "name": "황정원",
+  "nameEn": "Hwang JungWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 53,
+      "primaryPosition": "SP",
+      "developmentRate": 61,
+      "potentialHidden": 97,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 58,
+        "velocity": 70,
+        "command": 53,
+        "control": 61,
+        "movement": 56,
+        "mentality": 66,
+        "recovery": 63,
+        "clutch": 59,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 55,
+        "power": 57,
+        "eye": 57,
+        "discipline": 56,
+        "speed": 66,
+        "baseInstinct": 60,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 54,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "SP": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

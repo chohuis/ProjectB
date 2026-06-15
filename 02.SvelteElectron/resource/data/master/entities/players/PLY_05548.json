@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05548",
+  "name": "황동윤",
+  "nameEn": "Hwang DongYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 46,
+      "primaryPosition": "3B",
+      "developmentRate": 54,
+      "potentialHidden": 80,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 65,
+        "velocity": 72,
+        "command": 59,
+        "control": 63,
+        "movement": 57,
+        "mentality": 62,
+        "recovery": 54,
+        "clutch": 53,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 45,
+        "power": 45,
+        "eye": 46,
+        "discipline": 51,
+        "speed": 52,
+        "baseInstinct": 48,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 50,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "3B": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

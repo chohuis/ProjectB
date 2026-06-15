@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12206",
+  "name": "해리스 마커스",
+  "nameEn": "Harris Marcus",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 43,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 1,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 92,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 49,
+        "velocity": 64,
+        "command": 55,
+        "control": 60,
+        "movement": 48,
+        "mentality": 54,
+        "recovery": 55,
+        "clutch": 45,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 57,
+        "power": 48,
+        "eye": 49,
+        "discipline": 55,
+        "speed": 61,
+        "baseInstinct": 45,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 48,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

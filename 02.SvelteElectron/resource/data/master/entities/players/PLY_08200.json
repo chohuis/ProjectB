@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08200",
+  "name": "황도성",
+  "nameEn": "Hwang DoSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 93,
+      "primaryPosition": "SP",
+      "developmentRate": 64,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 47,
+        "velocity": 61,
+        "command": 43,
+        "control": 48,
+        "movement": 52,
+        "mentality": 53,
+        "recovery": 41,
+        "clutch": 39,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 40,
+        "power": 36,
+        "eye": 38,
+        "discipline": 30,
+        "speed": 43,
+        "baseInstinct": 36,
+        "bunting": 18,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 38,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "SP": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

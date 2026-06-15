@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15716",
+  "name": "앨런 타일러",
+  "nameEn": "Allen Tyler",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 29,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 32,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 78,
+      "primaryPosition": "RF",
+      "developmentRate": 38,
+      "potentialHidden": 52,
+      "proServiceYears": 10,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 54,
+        "velocity": 67,
+        "command": 48,
+        "control": 49,
+        "movement": 59,
+        "mentality": 62,
+        "recovery": 50,
+        "clutch": 47,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 60,
+        "power": 54,
+        "eye": 53,
+        "discipline": 49,
+        "speed": 62,
+        "baseInstinct": 52,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 52,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "RF": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

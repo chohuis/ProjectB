@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06179",
+  "name": "조훈환",
+  "nameEn": "Jo HunHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 17,
+      "primaryPosition": "C",
+      "developmentRate": 44,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 33,
+        "velocity": 43,
+        "command": 35,
+        "control": 38,
+        "movement": 33,
+        "mentality": 35,
+        "recovery": 35,
+        "clutch": 33,
+        "holdRunners": 27
+      },
+      "batting": {
+        "ovr": 35,
+        "contact": 29,
+        "power": 27,
+        "eye": 36,
+        "discipline": 35,
+        "speed": 40,
+        "baseInstinct": 25,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 34,
+        "battingClutch": 25
+      },
+      "positionRatings": {
+        "C": 35
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

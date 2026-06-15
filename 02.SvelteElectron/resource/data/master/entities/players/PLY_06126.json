@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06126",
+  "name": "임훈완",
+  "nameEn": "Lim HunWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 89,
+      "primaryPosition": "SP",
+      "developmentRate": 54,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 41,
+        "velocity": 42,
+        "command": 37,
+        "control": 38,
+        "movement": 39,
+        "mentality": 43,
+        "recovery": 38,
+        "clutch": 38,
+        "holdRunners": 25
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 42,
+        "power": 49,
+        "eye": 41,
+        "discipline": 44,
+        "speed": 44,
+        "baseInstinct": 50,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 49,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SP": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

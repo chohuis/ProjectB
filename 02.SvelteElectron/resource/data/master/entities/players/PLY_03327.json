@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03327",
+  "name": "김기식",
+  "nameEn": "Kim KiSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 81,
+      "primaryPosition": "RF",
+      "developmentRate": 62,
+      "potentialHidden": 81,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 56,
+        "velocity": 64,
+        "command": 55,
+        "control": 56,
+        "movement": 64,
+        "mentality": 67,
+        "recovery": 56,
+        "clutch": 60,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 54,
+        "power": 51,
+        "eye": 56,
+        "discipline": 56,
+        "speed": 56,
+        "baseInstinct": 52,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 53,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "RF": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

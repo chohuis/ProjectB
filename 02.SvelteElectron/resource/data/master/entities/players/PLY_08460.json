@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08460",
+  "name": "황성준",
+  "nameEn": "Hwang SeongJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 24,
+      "primaryPosition": "RF",
+      "developmentRate": 59,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 41,
+        "stamina": 40,
+        "velocity": 50,
+        "command": 31,
+        "control": 41,
+        "movement": 37,
+        "mentality": 46,
+        "recovery": 37,
+        "clutch": 36,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 33,
+        "contact": 32,
+        "power": 29,
+        "eye": 34,
+        "discipline": 26,
+        "speed": 32,
+        "baseInstinct": 23,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 27,
+        "arm": 29,
+        "battingClutch": 26
+      },
+      "positionRatings": {
+        "RF": 33
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

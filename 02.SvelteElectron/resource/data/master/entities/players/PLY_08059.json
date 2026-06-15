@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08059",
+  "name": "신태환",
+  "nameEn": "Shin TaeHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 9,
+      "primaryPosition": "RF",
+      "developmentRate": 57,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 46,
+        "velocity": 54,
+        "command": 40,
+        "control": 46,
+        "movement": 40,
+        "mentality": 52,
+        "recovery": 38,
+        "clutch": 37,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 41,
+        "power": 42,
+        "eye": 39,
+        "discipline": 35,
+        "speed": 43,
+        "baseInstinct": 39,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 44,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "RF": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

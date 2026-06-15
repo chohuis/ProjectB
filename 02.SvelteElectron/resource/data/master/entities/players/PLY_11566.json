@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11566",
+  "name": "클라크 숀",
+  "nameEn": "Clark Sean",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 16,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 14,
+      "primaryPosition": "SP",
+      "developmentRate": 63,
+      "potentialHidden": 88,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 53,
+        "velocity": 52,
+        "command": 43,
+        "control": 46,
+        "movement": 44,
+        "mentality": 48,
+        "recovery": 41,
+        "clutch": 44,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 52,
+        "power": 43,
+        "eye": 51,
+        "discipline": 44,
+        "speed": 55,
+        "baseInstinct": 45,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 45,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "SP": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

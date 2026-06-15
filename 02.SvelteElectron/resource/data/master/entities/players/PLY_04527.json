@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04527",
+  "name": "박동혁",
+  "nameEn": "Park DongHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 10,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 59,
+        "velocity": 65,
+        "command": 50,
+        "control": 59,
+        "movement": 52,
+        "mentality": 63,
+        "recovery": 55,
+        "clutch": 53,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 54,
+        "power": 51,
+        "eye": 58,
+        "discipline": 52,
+        "speed": 59,
+        "baseInstinct": 49,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 46,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

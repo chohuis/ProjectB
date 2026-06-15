@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08714",
+  "name": "박태우",
+  "nameEn": "Park TaeWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 24,
+      "primaryPosition": "LF",
+      "developmentRate": 44,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 38,
+        "stamina": 38,
+        "velocity": 46,
+        "command": 33,
+        "control": 41,
+        "movement": 33,
+        "mentality": 39,
+        "recovery": 36,
+        "clutch": 35,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 34,
+        "contact": 30,
+        "power": 35,
+        "eye": 36,
+        "discipline": 30,
+        "speed": 34,
+        "baseInstinct": 33,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 24,
+        "arm": 23,
+        "battingClutch": 25
+      },
+      "positionRatings": {
+        "LF": 34
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

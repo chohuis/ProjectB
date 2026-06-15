@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09099",
+  "name": "송현환",
+  "nameEn": "Song HyeonHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 76,
+      "primaryPosition": "RF",
+      "developmentRate": 45,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 38,
+        "stamina": 38,
+        "velocity": 36,
+        "command": 36,
+        "control": 39,
+        "movement": 33,
+        "mentality": 42,
+        "recovery": 27,
+        "clutch": 25,
+        "holdRunners": 25
+      },
+      "batting": {
+        "ovr": 32,
+        "contact": 25,
+        "power": 23,
+        "eye": 34,
+        "discipline": 22,
+        "speed": 27,
+        "baseInstinct": 26,
+        "bunting": 17,
+        "platoon": 50,
+        "fielding": 29,
+        "arm": 29,
+        "battingClutch": 24
+      },
+      "positionRatings": {
+        "RF": 32
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

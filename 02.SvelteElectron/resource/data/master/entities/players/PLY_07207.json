@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07207",
+  "name": "임현진",
+  "nameEn": "Lim HyeonJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 82,
+      "primaryPosition": "1B",
+      "developmentRate": 59,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 43,
+        "velocity": 51,
+        "command": 42,
+        "control": 36,
+        "movement": 37,
+        "mentality": 47,
+        "recovery": 35,
+        "clutch": 36,
+        "holdRunners": 29
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 44,
+        "power": 38,
+        "eye": 38,
+        "discipline": 37,
+        "speed": 46,
+        "baseInstinct": 35,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 44,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "1B": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

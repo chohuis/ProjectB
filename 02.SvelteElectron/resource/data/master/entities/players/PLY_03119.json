@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03119",
+  "name": "한우욱",
+  "nameEn": "Han WooWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 36,
+      "primaryPosition": "LF",
+      "developmentRate": 75,
+      "potentialHidden": 80,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 65,
+        "velocity": 68,
+        "command": 57,
+        "control": 58,
+        "movement": 60,
+        "mentality": 63,
+        "recovery": 63,
+        "clutch": 57,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 67,
+        "power": 57,
+        "eye": 60,
+        "discipline": 56,
+        "speed": 62,
+        "baseInstinct": 56,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 66,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "LF": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

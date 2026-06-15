@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07432",
+  "name": "전성현",
+  "nameEn": "Jeon SeongHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 5,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 68,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 61,
+        "velocity": 63,
+        "command": 55,
+        "control": 60,
+        "movement": 60,
+        "mentality": 52,
+        "recovery": 47,
+        "clutch": 51,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 51,
+        "power": 42,
+        "eye": 54,
+        "discipline": 44,
+        "speed": 48,
+        "baseInstinct": 51,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 41,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03179",
+  "name": "장상현",
+  "nameEn": "Jang SangHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 64,
+      "primaryPosition": "SS",
+      "developmentRate": 60,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 62,
+        "velocity": 66,
+        "command": 59,
+        "control": 57,
+        "movement": 59,
+        "mentality": 64,
+        "recovery": 48,
+        "clutch": 52,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 61,
+        "power": 64,
+        "eye": 63,
+        "discipline": 64,
+        "speed": 73,
+        "baseInstinct": 66,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 67,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "SS": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

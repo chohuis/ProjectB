@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07414",
+  "name": "전수찬",
+  "nameEn": "Jeon SuChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 46,
+      "primaryPosition": "SP",
+      "developmentRate": 51,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 45,
+        "velocity": 44,
+        "command": 41,
+        "control": 41,
+        "movement": 37,
+        "mentality": 45,
+        "recovery": 43,
+        "clutch": 31,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 43,
+        "power": 41,
+        "eye": 48,
+        "discipline": 45,
+        "speed": 48,
+        "baseInstinct": 40,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 48,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "SP": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

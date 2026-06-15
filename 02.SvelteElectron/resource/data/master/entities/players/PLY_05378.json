@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05378",
+  "name": "안우진",
+  "nameEn": "An WooJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 67,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 52,
+        "velocity": 56,
+        "command": 39,
+        "control": 42,
+        "movement": 46,
+        "mentality": 48,
+        "recovery": 41,
+        "clutch": 39,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 53,
+        "power": 57,
+        "eye": 56,
+        "discipline": 62,
+        "speed": 62,
+        "baseInstinct": 52,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 53,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SP": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

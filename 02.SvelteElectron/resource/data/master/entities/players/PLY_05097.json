@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05097",
+  "name": "강세성",
+  "nameEn": "Kang SeSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 70,
+      "primaryPosition": "SP",
+      "developmentRate": 63,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 41,
+        "stamina": 40,
+        "velocity": 45,
+        "command": 31,
+        "control": 41,
+        "movement": 31,
+        "mentality": 37,
+        "recovery": 38,
+        "clutch": 31,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 31,
+        "power": 34,
+        "eye": 32,
+        "discipline": 39,
+        "speed": 36,
+        "baseInstinct": 27,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 28,
+        "battingClutch": 25
+      },
+      "positionRatings": {
+        "SP": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

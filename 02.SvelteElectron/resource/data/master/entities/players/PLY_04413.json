@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04413",
+  "name": "정영완",
+  "nameEn": "Jung YoungWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 67,
+      "primaryPosition": "C",
+      "developmentRate": 67,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 52,
+        "velocity": 53,
+        "command": 51,
+        "control": 47,
+        "movement": 51,
+        "mentality": 52,
+        "recovery": 52,
+        "clutch": 50,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 58,
+        "power": 60,
+        "eye": 56,
+        "discipline": 52,
+        "speed": 62,
+        "baseInstinct": 62,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 58,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "C": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

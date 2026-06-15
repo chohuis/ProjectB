@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09409",
+  "name": "권현현",
+  "nameEn": "Kwon HyeonHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 28,
+      "primaryPosition": "2B",
+      "developmentRate": 46,
+      "potentialHidden": 41,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 37,
+        "velocity": 41,
+        "command": 30,
+        "control": 37,
+        "movement": 30,
+        "mentality": 36,
+        "recovery": 30,
+        "clutch": 35,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 43,
+        "power": 39,
+        "eye": 40,
+        "discipline": 38,
+        "speed": 39,
+        "baseInstinct": 37,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 40,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "2B": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

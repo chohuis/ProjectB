@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03479",
+  "name": "김민윤",
+  "nameEn": "Kim MinYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 72,
+      "primaryPosition": "LF",
+      "developmentRate": 64,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 56,
+        "velocity": 62,
+        "command": 58,
+        "control": 52,
+        "movement": 54,
+        "mentality": 60,
+        "recovery": 56,
+        "clutch": 45,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 60,
+        "power": 55,
+        "eye": 54,
+        "discipline": 55,
+        "speed": 57,
+        "baseInstinct": 55,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 56,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "LF": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

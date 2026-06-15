@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14162",
+  "name": "리 카를로스",
+  "nameEn": "Lee Carlos",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 34,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 59,
+      "primaryPosition": "SP",
+      "developmentRate": 50,
+      "potentialHidden": 66,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 72,
+        "velocity": 81,
+        "command": 62,
+        "control": 75,
+        "movement": 72,
+        "mentality": 78,
+        "recovery": 73,
+        "clutch": 65,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 68,
+        "power": 70,
+        "eye": 73,
+        "discipline": 66,
+        "speed": 68,
+        "baseInstinct": 69,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 69,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "SP": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

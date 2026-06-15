@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08701",
+  "name": "한기욱",
+  "nameEn": "Han KiWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 38,
+      "primaryPosition": "CF",
+      "developmentRate": 41,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 39,
+        "stamina": 31,
+        "velocity": 40,
+        "command": 38,
+        "control": 35,
+        "movement": 34,
+        "mentality": 34,
+        "recovery": 27,
+        "clutch": 33,
+        "holdRunners": 28
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 35,
+        "power": 37,
+        "eye": 34,
+        "discipline": 39,
+        "speed": 39,
+        "baseInstinct": 34,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 43,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "CF": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

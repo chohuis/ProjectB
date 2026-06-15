@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12623",
+  "name": "마르티네스 케빈",
+  "nameEn": "Martinez Kevin",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 45,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 80,
+      "primaryPosition": "C",
+      "developmentRate": 64,
+      "potentialHidden": 74,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 76,
+        "velocity": 83,
+        "command": 75,
+        "control": 64,
+        "movement": 69,
+        "mentality": 74,
+        "recovery": 72,
+        "clutch": 63,
+        "holdRunners": 69
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 67,
+        "power": 71,
+        "eye": 73,
+        "discipline": 75,
+        "speed": 75,
+        "baseInstinct": 62,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 72,
+        "arm": 72,
+        "battingClutch": 69
+      },
+      "positionRatings": {
+        "C": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

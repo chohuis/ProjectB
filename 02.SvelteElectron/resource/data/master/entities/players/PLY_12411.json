@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12411",
+  "name": "마르티네스 제이슨",
+  "nameEn": "Martinez Jason",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 25,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 34,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 68,
+      "primaryPosition": "SP",
+      "developmentRate": 44,
+      "potentialHidden": 73,
+      "proServiceYears": 12,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 62,
+        "velocity": 71,
+        "command": 62,
+        "control": 62,
+        "movement": 53,
+        "mentality": 62,
+        "recovery": 48,
+        "clutch": 57,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 52,
+        "power": 51,
+        "eye": 54,
+        "discipline": 60,
+        "speed": 55,
+        "baseInstinct": 53,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 53,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "SP": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

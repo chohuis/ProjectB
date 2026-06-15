@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11390",
+  "name": "마틴 마커스",
+  "nameEn": "Martin Marcus",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 25,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 80,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 81,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 80,
+        "velocity": 85,
+        "command": 68,
+        "control": 73,
+        "movement": 75,
+        "mentality": 84,
+        "recovery": 70,
+        "clutch": 72,
+        "holdRunners": 72
+      },
+      "batting": {
+        "ovr": 78,
+        "contact": 83,
+        "power": 67,
+        "eye": 79,
+        "discipline": 72,
+        "speed": 83,
+        "baseInstinct": 70,
+        "bunting": 70,
+        "platoon": 50,
+        "fielding": 74,
+        "arm": 80,
+        "battingClutch": 71
+      },
+      "positionRatings": {
+        "SP": 78
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09185",
+  "name": "정지준",
+  "nameEn": "Jung JiJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 23,
+      "primaryPosition": "LF",
+      "developmentRate": 52,
+      "potentialHidden": 40,
+      "pitching": {
+        "ovr": 36,
+        "stamina": 34,
+        "velocity": 45,
+        "command": 25,
+        "control": 37,
+        "movement": 31,
+        "mentality": 34,
+        "recovery": 28,
+        "clutch": 24,
+        "holdRunners": 24
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 46,
+        "power": 42,
+        "eye": 48,
+        "discipline": 37,
+        "speed": 50,
+        "baseInstinct": 47,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 39,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "LF": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

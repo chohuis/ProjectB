@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03652",
+  "name": "오준수",
+  "nameEn": "Oh JunSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 86,
+      "primaryPosition": "3B",
+      "developmentRate": 71,
+      "potentialHidden": 86,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 58,
+        "velocity": 69,
+        "command": 58,
+        "control": 57,
+        "movement": 59,
+        "mentality": 69,
+        "recovery": 57,
+        "clutch": 49,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 56,
+        "power": 44,
+        "eye": 54,
+        "discipline": 51,
+        "speed": 57,
+        "baseInstinct": 44,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 47,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "3B": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

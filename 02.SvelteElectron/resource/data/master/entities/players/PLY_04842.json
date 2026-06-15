@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04842",
+  "name": "오영빈",
+  "nameEn": "Oh YoungBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 68,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 41,
+        "velocity": 52,
+        "command": 42,
+        "control": 36,
+        "movement": 39,
+        "mentality": 42,
+        "recovery": 40,
+        "clutch": 42,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 34,
+        "power": 33,
+        "eye": 33,
+        "discipline": 28,
+        "speed": 36,
+        "baseInstinct": 36,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 33,
+        "arm": 31,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "SP": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

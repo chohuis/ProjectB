@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15363",
+  "name": "데이비스 제이크",
+  "nameEn": "Davis Jake",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 83,
+  "popularity": 43,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 73,
+      "primaryPosition": "SP",
+      "developmentRate": 41,
+      "potentialHidden": 49,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 47,
+        "velocity": 52,
+        "command": 56,
+        "control": 52,
+        "movement": 55,
+        "mentality": 57,
+        "recovery": 54,
+        "clutch": 48,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 55,
+        "power": 54,
+        "eye": 54,
+        "discipline": 51,
+        "speed": 60,
+        "baseInstinct": 49,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 44,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SP": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

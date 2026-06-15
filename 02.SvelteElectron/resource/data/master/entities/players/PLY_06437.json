@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06437",
+  "name": "서세식",
+  "nameEn": "Seo SeSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 5,
+      "primaryPosition": "RF",
+      "developmentRate": 60,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 41,
+        "stamina": 41,
+        "velocity": 40,
+        "command": 33,
+        "control": 36,
+        "movement": 42,
+        "mentality": 40,
+        "recovery": 35,
+        "clutch": 37,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 34,
+        "contact": 36,
+        "power": 28,
+        "eye": 27,
+        "discipline": 33,
+        "speed": 32,
+        "baseInstinct": 29,
+        "bunting": 15,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 30,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "RF": 34
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

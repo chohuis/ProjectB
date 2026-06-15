@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16239",
+  "name": "에르난데스 미겔",
+  "nameEn": "Hernandez Miguel",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 17,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 12,
+      "primaryPosition": "SP",
+      "developmentRate": 54,
+      "potentialHidden": 75,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 62,
+        "velocity": 69,
+        "command": 66,
+        "control": 66,
+        "movement": 61,
+        "mentality": 69,
+        "recovery": 69,
+        "clutch": 65,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 68,
+        "power": 59,
+        "eye": 64,
+        "discipline": 67,
+        "speed": 73,
+        "baseInstinct": 61,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 70,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "SP": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

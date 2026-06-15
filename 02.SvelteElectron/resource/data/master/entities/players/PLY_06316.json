@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06316",
+  "name": "서찬찬",
+  "nameEn": "Seo ChanChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 65,
+      "primaryPosition": "3B",
+      "developmentRate": 50,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 35,
+        "stamina": 36,
+        "velocity": 39,
+        "command": 26,
+        "control": 28,
+        "movement": 31,
+        "mentality": 31,
+        "recovery": 33,
+        "clutch": 24,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 31,
+        "power": 39,
+        "eye": 39,
+        "discipline": 31,
+        "speed": 37,
+        "baseInstinct": 36,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 36,
+        "battingClutch": 26
+      },
+      "positionRatings": {
+        "3B": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

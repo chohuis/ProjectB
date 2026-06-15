@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13905",
+  "name": "미첼 카를로스",
+  "nameEn": "Mitchell Carlos",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 47,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 86,
+      "primaryPosition": "SP",
+      "developmentRate": 36,
+      "potentialHidden": 70,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 64,
+        "velocity": 74,
+        "command": 71,
+        "control": 65,
+        "movement": 66,
+        "mentality": 67,
+        "recovery": 63,
+        "clutch": 63,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 65,
+        "power": 74,
+        "eye": 76,
+        "discipline": 63,
+        "speed": 77,
+        "baseInstinct": 65,
+        "bunting": 63,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 66,
+        "battingClutch": 68
+      },
+      "positionRatings": {
+        "SP": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

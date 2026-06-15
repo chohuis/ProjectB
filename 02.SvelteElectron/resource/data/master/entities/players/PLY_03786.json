@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03786",
+  "name": "박지재",
+  "nameEn": "Park JiJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 35,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 10,
+      "primaryPosition": "SP",
+      "developmentRate": 54,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 50,
+        "velocity": 49,
+        "command": 49,
+        "control": 45,
+        "movement": 48,
+        "mentality": 55,
+        "recovery": 47,
+        "clutch": 40,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 63,
+        "power": 58,
+        "eye": 55,
+        "discipline": 58,
+        "speed": 68,
+        "baseInstinct": 53,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 60,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "SP": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

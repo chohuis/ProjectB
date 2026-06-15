@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10646",
+  "name": "화이트 알렉스",
+  "nameEn": "White Alex",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 13,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 34,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 49,
+      "primaryPosition": "SP",
+      "developmentRate": 51,
+      "potentialHidden": 78,
+      "proServiceYears": 12,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 55,
+        "velocity": 61,
+        "command": 58,
+        "control": 57,
+        "movement": 54,
+        "mentality": 53,
+        "recovery": 55,
+        "clutch": 47,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 57,
+        "power": 51,
+        "eye": 50,
+        "discipline": 53,
+        "speed": 60,
+        "baseInstinct": 58,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 49,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "SP": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

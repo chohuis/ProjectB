@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04174",
+  "name": "오정훈",
+  "nameEn": "Oh JungHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 46,
+      "primaryPosition": "SP",
+      "developmentRate": 70,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 60,
+        "velocity": 58,
+        "command": 57,
+        "control": 49,
+        "movement": 51,
+        "mentality": 56,
+        "recovery": 55,
+        "clutch": 52,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 53,
+        "power": 48,
+        "eye": 46,
+        "discipline": 41,
+        "speed": 54,
+        "baseInstinct": 43,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 48,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

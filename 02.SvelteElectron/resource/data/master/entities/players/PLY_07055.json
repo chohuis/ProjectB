@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07055",
+  "name": "신동수",
+  "nameEn": "Shin DongSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 56,
+      "primaryPosition": "SS",
+      "developmentRate": 63,
+      "potentialHidden": 50,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 51,
+        "velocity": 61,
+        "command": 52,
+        "control": 53,
+        "movement": 54,
+        "mentality": 61,
+        "recovery": 52,
+        "clutch": 47,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 48,
+        "power": 57,
+        "eye": 49,
+        "discipline": 51,
+        "speed": 54,
+        "baseInstinct": 57,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 55,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "SS": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11429",
+  "name": "스미스 제이크",
+  "nameEn": "Smith Jake",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 43,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 46,
+      "primaryPosition": "1B",
+      "developmentRate": 61,
+      "potentialHidden": 68,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 55,
+        "velocity": 72,
+        "command": 57,
+        "control": 66,
+        "movement": 65,
+        "mentality": 62,
+        "recovery": 52,
+        "clutch": 55,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 60,
+        "power": 57,
+        "eye": 54,
+        "discipline": 60,
+        "speed": 66,
+        "baseInstinct": 55,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 61,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "1B": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

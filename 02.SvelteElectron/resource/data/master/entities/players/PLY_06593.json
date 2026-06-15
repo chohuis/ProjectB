@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06593",
+  "name": "김성성",
+  "nameEn": "Kim SeongSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 35,
+      "primaryPosition": "LF",
+      "developmentRate": 51,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 72,
+        "velocity": 76,
+        "command": 61,
+        "control": 63,
+        "movement": 64,
+        "mentality": 71,
+        "recovery": 67,
+        "clutch": 59,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 50,
+        "power": 46,
+        "eye": 54,
+        "discipline": 50,
+        "speed": 54,
+        "baseInstinct": 46,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 43,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "LF": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

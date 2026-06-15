@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04872",
+  "name": "신민식",
+  "nameEn": "Shin MinSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 68,
+      "primaryPosition": "CF",
+      "developmentRate": 60,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 45,
+        "velocity": 43,
+        "command": 33,
+        "control": 33,
+        "movement": 32,
+        "mentality": 47,
+        "recovery": 41,
+        "clutch": 31,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 46,
+        "power": 44,
+        "eye": 46,
+        "discipline": 42,
+        "speed": 40,
+        "baseInstinct": 46,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 40,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "CF": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

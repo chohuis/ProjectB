@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08163",
+  "name": "강상원",
+  "nameEn": "Kang SangWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 38,
+      "primaryPosition": "2B",
+      "developmentRate": 57,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 45,
+        "velocity": 52,
+        "command": 45,
+        "control": 44,
+        "movement": 44,
+        "mentality": 48,
+        "recovery": 38,
+        "clutch": 39,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 49,
+        "power": 39,
+        "eye": 46,
+        "discipline": 41,
+        "speed": 44,
+        "baseInstinct": 38,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 36,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "2B": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

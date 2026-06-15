@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12593",
+  "name": "홀 콜",
+  "nameEn": "Hall Cole",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 31,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 62,
+      "primaryPosition": "C",
+      "developmentRate": 45,
+      "potentialHidden": 59,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 64,
+        "velocity": 80,
+        "command": 61,
+        "control": 77,
+        "movement": 65,
+        "mentality": 70,
+        "recovery": 68,
+        "clutch": 73,
+        "holdRunners": 69
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 66,
+        "power": 72,
+        "eye": 75,
+        "discipline": 63,
+        "speed": 71,
+        "baseInstinct": 61,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 72,
+        "arm": 65,
+        "battingClutch": 68
+      },
+      "positionRatings": {
+        "C": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

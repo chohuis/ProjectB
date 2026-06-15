@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07172",
+  "name": "강성재",
+  "nameEn": "Kang SeongJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 67,
+      "primaryPosition": "RF",
+      "developmentRate": 62,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 43,
+        "velocity": 50,
+        "command": 51,
+        "control": 47,
+        "movement": 46,
+        "mentality": 49,
+        "recovery": 50,
+        "clutch": 38,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 49,
+        "power": 49,
+        "eye": 40,
+        "discipline": 49,
+        "speed": 51,
+        "baseInstinct": 42,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 47,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "RF": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

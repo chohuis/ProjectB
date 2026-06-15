@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06229",
+  "name": "장찬민",
+  "nameEn": "Jang ChanMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 51,
+      "primaryPosition": "SS",
+      "developmentRate": 44,
+      "potentialHidden": 48,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 48,
+        "velocity": 58,
+        "command": 40,
+        "control": 45,
+        "movement": 44,
+        "mentality": 48,
+        "recovery": 45,
+        "clutch": 36,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 34,
+        "power": 36,
+        "eye": 39,
+        "discipline": 34,
+        "speed": 32,
+        "baseInstinct": 26,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 27,
+        "battingClutch": 23
+      },
+      "positionRatings": {
+        "SS": 36
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

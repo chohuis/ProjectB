@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13245",
+  "name": "애덤스 라이언",
+  "nameEn": "Adams Ryan",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 82,
+  "popularity": 33,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 63,
+      "primaryPosition": "3B",
+      "developmentRate": 58,
+      "potentialHidden": 62,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 55,
+        "velocity": 51,
+        "command": 46,
+        "control": 57,
+        "movement": 45,
+        "mentality": 55,
+        "recovery": 42,
+        "clutch": 50,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 52,
+        "power": 42,
+        "eye": 54,
+        "discipline": 53,
+        "speed": 51,
+        "baseInstinct": 42,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 46,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "3B": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

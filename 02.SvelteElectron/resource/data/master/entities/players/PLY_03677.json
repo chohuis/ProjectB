@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03677",
+  "name": "강훈원",
+  "nameEn": "Kang HunWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 74,
+      "primaryPosition": "CF",
+      "developmentRate": 57,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 49,
+        "velocity": 62,
+        "command": 45,
+        "control": 54,
+        "movement": 52,
+        "mentality": 59,
+        "recovery": 51,
+        "clutch": 52,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 59,
+        "power": 57,
+        "eye": 63,
+        "discipline": 54,
+        "speed": 63,
+        "baseInstinct": 56,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 62,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "CF": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

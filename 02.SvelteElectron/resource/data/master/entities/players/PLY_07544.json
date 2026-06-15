@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07544",
+  "name": "박도우",
+  "nameEn": "Park DoWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 49,
+      "primaryPosition": "2B",
+      "developmentRate": 57,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 62,
+        "velocity": 61,
+        "command": 52,
+        "control": 57,
+        "movement": 59,
+        "mentality": 66,
+        "recovery": 55,
+        "clutch": 53,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 36,
+        "power": 32,
+        "eye": 31,
+        "discipline": 35,
+        "speed": 44,
+        "baseInstinct": 36,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 37,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "2B": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08754",
+  "name": "오상성",
+  "nameEn": "Oh SangSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 91,
+      "primaryPosition": "3B",
+      "developmentRate": 50,
+      "potentialHidden": 42,
+      "pitching": {
+        "ovr": 38,
+        "stamina": 37,
+        "velocity": 47,
+        "command": 32,
+        "control": 35,
+        "movement": 36,
+        "mentality": 37,
+        "recovery": 35,
+        "clutch": 32,
+        "holdRunners": 26
+      },
+      "batting": {
+        "ovr": 35,
+        "contact": 38,
+        "power": 26,
+        "eye": 32,
+        "discipline": 31,
+        "speed": 39,
+        "baseInstinct": 26,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 26,
+        "arm": 26,
+        "battingClutch": 22
+      },
+      "positionRatings": {
+        "3B": 35
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

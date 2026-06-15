@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14269",
+  "name": "루이스 카를로스",
+  "nameEn": "Lewis Carlos",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 14,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 30,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 71,
+      "primaryPosition": "C",
+      "developmentRate": 36,
+      "potentialHidden": 51,
+      "proServiceYears": 8,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 62,
+        "velocity": 66,
+        "command": 57,
+        "control": 72,
+        "movement": 66,
+        "mentality": 60,
+        "recovery": 64,
+        "clutch": 58,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 66,
+        "power": 69,
+        "eye": 67,
+        "discipline": 70,
+        "speed": 66,
+        "baseInstinct": 62,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 58,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "C": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

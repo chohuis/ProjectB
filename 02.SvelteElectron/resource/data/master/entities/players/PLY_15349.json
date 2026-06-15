@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15349",
+  "name": "가르시아 트레버",
+  "nameEn": "Garcia Trevor",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 32,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 56,
+      "primaryPosition": "SP",
+      "developmentRate": 46,
+      "potentialHidden": 72,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 69,
+        "velocity": 81,
+        "command": 72,
+        "control": 64,
+        "movement": 71,
+        "mentality": 71,
+        "recovery": 59,
+        "clutch": 60,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 73,
+        "power": 61,
+        "eye": 74,
+        "discipline": 67,
+        "speed": 72,
+        "baseInstinct": 62,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 72,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "SP": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

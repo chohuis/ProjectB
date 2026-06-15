@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12457",
+  "name": "토마스 블레이크",
+  "nameEn": "Thomas Blake",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 84,
+  "popularity": 39,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 79,
+      "primaryPosition": "SP",
+      "developmentRate": 69,
+      "potentialHidden": 74,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 76,
+        "velocity": 82,
+        "command": 68,
+        "control": 82,
+        "movement": 79,
+        "mentality": 71,
+        "recovery": 69,
+        "clutch": 76,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 78,
+        "contact": 76,
+        "power": 68,
+        "eye": 81,
+        "discipline": 81,
+        "speed": 74,
+        "baseInstinct": 67,
+        "bunting": 73,
+        "platoon": 50,
+        "fielding": 72,
+        "arm": 75,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "SP": 78
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

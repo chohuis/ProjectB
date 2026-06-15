@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14911",
+  "name": "테일러 로건",
+  "nameEn": "Taylor Logan",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 39,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 35,
+      "primaryPosition": "3B",
+      "developmentRate": 34,
+      "potentialHidden": 68,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 46,
+        "velocity": 50,
+        "command": 46,
+        "control": 52,
+        "movement": 50,
+        "mentality": 50,
+        "recovery": 44,
+        "clutch": 47,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 51,
+        "power": 44,
+        "eye": 48,
+        "discipline": 47,
+        "speed": 52,
+        "baseInstinct": 43,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 43,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "3B": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

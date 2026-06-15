@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06702",
+  "name": "신재기",
+  "nameEn": "Shin JaeKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 51,
+      "primaryPosition": "SS",
+      "developmentRate": 55,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 66,
+        "velocity": 69,
+        "command": 67,
+        "control": 69,
+        "movement": 68,
+        "mentality": 69,
+        "recovery": 59,
+        "clutch": 64,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 55,
+        "power": 54,
+        "eye": 53,
+        "discipline": 47,
+        "speed": 58,
+        "baseInstinct": 49,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 54,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "SS": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

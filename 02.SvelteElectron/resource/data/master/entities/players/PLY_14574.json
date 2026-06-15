@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14574",
+  "name": "브라운 크리스",
+  "nameEn": "Brown Chris",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 40,
+  "militaryStatus": "군필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 77,
+      "primaryPosition": "LF",
+      "developmentRate": 61,
+      "potentialHidden": 73,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 73,
+        "velocity": 79,
+        "command": 66,
+        "control": 79,
+        "movement": 71,
+        "mentality": 69,
+        "recovery": 75,
+        "clutch": 74,
+        "holdRunners": 69
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 71,
+        "power": 67,
+        "eye": 70,
+        "discipline": 77,
+        "speed": 80,
+        "baseInstinct": 72,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 74,
+        "arm": 77,
+        "battingClutch": 75
+      },
+      "positionRatings": {
+        "LF": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

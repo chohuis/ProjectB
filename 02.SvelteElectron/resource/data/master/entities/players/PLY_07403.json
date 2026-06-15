@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07403",
+  "name": "최기재",
+  "nameEn": "Choi KiJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 77,
+      "primaryPosition": "SP",
+      "developmentRate": 52,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 37,
+        "velocity": 49,
+        "command": 35,
+        "control": 44,
+        "movement": 39,
+        "mentality": 43,
+        "recovery": 36,
+        "clutch": 38,
+        "holdRunners": 29
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 37,
+        "power": 40,
+        "eye": 32,
+        "discipline": 34,
+        "speed": 42,
+        "baseInstinct": 36,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 38,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "SP": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09607",
+  "name": "송훈호",
+  "nameEn": "Song HunHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 8,
+      "primaryPosition": "SS",
+      "developmentRate": 57,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 37,
+        "velocity": 51,
+        "command": 38,
+        "control": 35,
+        "movement": 45,
+        "mentality": 42,
+        "recovery": 38,
+        "clutch": 31,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 41,
+        "power": 36,
+        "eye": 32,
+        "discipline": 31,
+        "speed": 34,
+        "baseInstinct": 30,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 34,
+        "battingClutch": 27
+      },
+      "positionRatings": {
+        "SS": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

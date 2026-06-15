@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03754",
+  "name": "류기준",
+  "nameEn": "Ryu KiJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 63,
+      "primaryPosition": "2B",
+      "developmentRate": 57,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 68,
+        "velocity": 68,
+        "command": 61,
+        "control": 72,
+        "movement": 71,
+        "mentality": 65,
+        "recovery": 66,
+        "clutch": 61,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 58,
+        "power": 56,
+        "eye": 59,
+        "discipline": 63,
+        "speed": 63,
+        "baseInstinct": 65,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 60,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "2B": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

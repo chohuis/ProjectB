@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10383",
+  "name": "데이비스 타일러",
+  "nameEn": "Davis Tyler",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 35,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 59,
+      "primaryPosition": "SP",
+      "developmentRate": 71,
+      "potentialHidden": 91,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 48,
+        "velocity": 53,
+        "command": 48,
+        "control": 46,
+        "movement": 43,
+        "mentality": 52,
+        "recovery": 53,
+        "clutch": 51,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 44,
+        "power": 51,
+        "eye": 55,
+        "discipline": 44,
+        "speed": 56,
+        "baseInstinct": 41,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 49,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -117,7 +117,7 @@ declare global {
       npcApplyDraft:                (p: string) => Promise<string>;
       npcDetermineProtagonistDraft: (p: string) => Promise<string>;
       npcAdvanceProtagonistGrade:   (p: string) => Promise<string>;
-      npcCalcMonthlyGrowth:         (p: string) => Promise<string>;
+      npcCalcWeeklyGrowth:          (p: string) => Promise<string>;
       // ── NPC 경기 기록 ──────────────────────────────────────────
       npcBulkInsertGameLogs:        (p: string) => Promise<string>;
       npcTrimGameLogs:              (p: string) => Promise<string>;
@@ -204,7 +204,7 @@ declare global {
       updatePlayerLoyaltyNative(p: string): Promise<string>;
       // ── 마스터 데이터 (Electron 패키징 환경용 fallback) ──────
       masterFetch: (relPath: string) => Promise<unknown>;
-      masterLoadEntities: (leagueId: string) => Promise<unknown[]>;
+      masterLoadEntities: (leagueId: string, seasonYear?: number) => Promise<unknown[]>;
       masterUpsertEntity: (entity: unknown) => Promise<{ ok: boolean; error?: string }>;
       masterDeleteEntity: (payload: { id: string; leagueId?: string }) => Promise<{ ok: boolean; error?: string }>;
       masterSave: (payload: { relPath: string; data: unknown; backup?: boolean }) => Promise<{

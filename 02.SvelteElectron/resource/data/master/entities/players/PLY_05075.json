@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05075",
+  "name": "박영기",
+  "nameEn": "Park YoungKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 90,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 41,
+        "velocity": 56,
+        "command": 45,
+        "control": 46,
+        "movement": 45,
+        "mentality": 47,
+        "recovery": 45,
+        "clutch": 42,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 52,
+        "power": 49,
+        "eye": 53,
+        "discipline": 49,
+        "speed": 51,
+        "baseInstinct": 43,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 48,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "SP": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

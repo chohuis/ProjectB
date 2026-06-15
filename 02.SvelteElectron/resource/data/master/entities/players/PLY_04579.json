@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04579",
+  "name": "한우수",
+  "nameEn": "Han WooSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 3,
+      "primaryPosition": "SP",
+      "developmentRate": 64,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 55,
+        "velocity": 59,
+        "command": 52,
+        "control": 46,
+        "movement": 52,
+        "mentality": 56,
+        "recovery": 46,
+        "clutch": 42,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 52,
+        "power": 42,
+        "eye": 44,
+        "discipline": 47,
+        "speed": 48,
+        "baseInstinct": 41,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 45,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SP": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

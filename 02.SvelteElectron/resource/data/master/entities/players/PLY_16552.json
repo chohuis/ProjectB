@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16552",
+  "name": "윌리엄스 블레이크",
+  "nameEn": "Williams Blake",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 20,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 62,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 65,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 67,
+        "velocity": 73,
+        "command": 55,
+        "control": 64,
+        "movement": 61,
+        "mentality": 69,
+        "recovery": 57,
+        "clutch": 55,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 68,
+        "power": 62,
+        "eye": 57,
+        "discipline": 57,
+        "speed": 63,
+        "baseInstinct": 65,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 54,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "SP": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

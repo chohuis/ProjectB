@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03611",
+  "name": "황지현",
+  "nameEn": "Hwang JiHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 67,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 90,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 66,
+        "velocity": 72,
+        "command": 56,
+        "control": 57,
+        "movement": 65,
+        "mentality": 60,
+        "recovery": 63,
+        "clutch": 57,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 59,
+        "power": 45,
+        "eye": 48,
+        "discipline": 52,
+        "speed": 50,
+        "baseInstinct": 51,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 49,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "SP": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

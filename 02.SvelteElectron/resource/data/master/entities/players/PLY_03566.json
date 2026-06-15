@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03566",
+  "name": "서태현",
+  "nameEn": "Seo TaeHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 63,
+      "primaryPosition": "SP",
+      "developmentRate": 56,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 53,
+        "velocity": 62,
+        "command": 58,
+        "control": 52,
+        "movement": 62,
+        "mentality": 61,
+        "recovery": 52,
+        "clutch": 56,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 42,
+        "power": 37,
+        "eye": 46,
+        "discipline": 40,
+        "speed": 52,
+        "baseInstinct": 41,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 35,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "SP": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07961",
+  "name": "전혁호",
+  "nameEn": "Jeon HyeokHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 5,
+      "primaryPosition": "CF",
+      "developmentRate": 57,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 60,
+        "velocity": 61,
+        "command": 53,
+        "control": 60,
+        "movement": 60,
+        "mentality": 53,
+        "recovery": 51,
+        "clutch": 56,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 39,
+        "power": 42,
+        "eye": 46,
+        "discipline": 48,
+        "speed": 47,
+        "baseInstinct": 41,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 39,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "CF": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

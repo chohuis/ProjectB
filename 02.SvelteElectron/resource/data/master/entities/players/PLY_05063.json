@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05063",
+  "name": "서기현",
+  "nameEn": "Seo KiHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 38,
+      "primaryPosition": "RF",
+      "developmentRate": 51,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 55,
+        "velocity": 57,
+        "command": 45,
+        "control": 49,
+        "movement": 52,
+        "mentality": 58,
+        "recovery": 46,
+        "clutch": 42,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 37,
+        "power": 31,
+        "eye": 28,
+        "discipline": 33,
+        "speed": 34,
+        "baseInstinct": 31,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 28,
+        "arm": 29,
+        "battingClutch": 25
+      },
+      "positionRatings": {
+        "RF": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

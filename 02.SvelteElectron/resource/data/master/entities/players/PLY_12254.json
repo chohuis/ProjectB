@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12254",
+  "name": "넬슨 카일",
+  "nameEn": "Nelson Kyle",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 48,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 60,
+      "primaryPosition": "SP",
+      "developmentRate": 74,
+      "potentialHidden": 68,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 49,
+        "velocity": 53,
+        "command": 55,
+        "control": 56,
+        "movement": 47,
+        "mentality": 51,
+        "recovery": 45,
+        "clutch": 53,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 48,
+        "power": 52,
+        "eye": 48,
+        "discipline": 55,
+        "speed": 53,
+        "baseInstinct": 49,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 48,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SP": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

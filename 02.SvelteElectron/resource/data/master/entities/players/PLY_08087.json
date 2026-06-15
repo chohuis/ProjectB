@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08087",
+  "name": "권민민",
+  "nameEn": "Kwon MinMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 21,
+      "primaryPosition": "1B",
+      "developmentRate": 49,
+      "potentialHidden": 82,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 58,
+        "velocity": 65,
+        "command": 46,
+        "control": 54,
+        "movement": 49,
+        "mentality": 56,
+        "recovery": 49,
+        "clutch": 47,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 35,
+        "power": 33,
+        "eye": 36,
+        "discipline": 37,
+        "speed": 40,
+        "baseInstinct": 32,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 42,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "1B": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

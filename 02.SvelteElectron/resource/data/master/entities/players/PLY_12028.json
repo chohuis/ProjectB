@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12028",
+  "name": "테일러 딜런",
+  "nameEn": "Taylor Dylan",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 73,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 68,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 52,
+        "velocity": 67,
+        "command": 55,
+        "control": 63,
+        "movement": 58,
+        "mentality": 64,
+        "recovery": 50,
+        "clutch": 51,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 51,
+        "power": 60,
+        "eye": 63,
+        "discipline": 54,
+        "speed": 64,
+        "baseInstinct": 49,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 54,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SP": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

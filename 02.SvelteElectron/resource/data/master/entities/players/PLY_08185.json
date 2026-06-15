@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08185",
+  "name": "한도재",
+  "nameEn": "Han DoJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 97,
+      "primaryPosition": "RF",
+      "developmentRate": 53,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 57,
+        "velocity": 62,
+        "command": 50,
+        "control": 54,
+        "movement": 47,
+        "mentality": 58,
+        "recovery": 44,
+        "clutch": 42,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 56,
+        "power": 45,
+        "eye": 57,
+        "discipline": 55,
+        "speed": 49,
+        "baseInstinct": 48,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 48,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "RF": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

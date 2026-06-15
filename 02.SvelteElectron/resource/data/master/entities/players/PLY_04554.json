@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04554",
+  "name": "장준민",
+  "nameEn": "Jang JunMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 35,
+      "primaryPosition": "SS",
+      "developmentRate": 61,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 48,
+        "velocity": 55,
+        "command": 49,
+        "control": 49,
+        "movement": 56,
+        "mentality": 51,
+        "recovery": 54,
+        "clutch": 46,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 42,
+        "power": 37,
+        "eye": 42,
+        "discipline": 42,
+        "speed": 49,
+        "baseInstinct": 41,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 39,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "SS": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

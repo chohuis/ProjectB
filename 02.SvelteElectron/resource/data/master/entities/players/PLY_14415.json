@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14415",
+  "name": "테일러 브랜던",
+  "nameEn": "Taylor Brandon",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 18,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 32,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 72,
+      "primaryPosition": "SP",
+      "developmentRate": 46,
+      "potentialHidden": 70,
+      "proServiceYears": 10,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 55,
+        "velocity": 69,
+        "command": 57,
+        "control": 64,
+        "movement": 58,
+        "mentality": 60,
+        "recovery": 60,
+        "clutch": 54,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 61,
+        "power": 54,
+        "eye": 65,
+        "discipline": 56,
+        "speed": 63,
+        "baseInstinct": 60,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 53,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "SP": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

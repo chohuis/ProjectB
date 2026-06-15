@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13419",
+  "name": "미첼 트레버",
+  "nameEn": "Mitchell Trevor",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 84,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 20,
+      "primaryPosition": "3B",
+      "developmentRate": 60,
+      "potentialHidden": 61,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 80,
+        "stamina": 76,
+        "velocity": 86,
+        "command": 82,
+        "control": 73,
+        "movement": 82,
+        "mentality": 85,
+        "recovery": 71,
+        "clutch": 69,
+        "holdRunners": 75
+      },
+      "batting": {
+        "ovr": 80,
+        "contact": 81,
+        "power": 70,
+        "eye": 85,
+        "discipline": 81,
+        "speed": 76,
+        "baseInstinct": 72,
+        "bunting": 65,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 78,
+        "battingClutch": 79
+      },
+      "positionRatings": {
+        "3B": 80
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

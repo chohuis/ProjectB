@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10095",
+  "name": "클라크 칼렙",
+  "nameEn": "Clark Caleb",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 46,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 77,
+      "primaryPosition": "SP",
+      "developmentRate": 64,
+      "potentialHidden": 74,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 62,
+        "velocity": 66,
+        "command": 57,
+        "control": 57,
+        "movement": 63,
+        "mentality": 67,
+        "recovery": 62,
+        "clutch": 51,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 60,
+        "power": 61,
+        "eye": 56,
+        "discipline": 62,
+        "speed": 64,
+        "baseInstinct": 62,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 50,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "SP": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

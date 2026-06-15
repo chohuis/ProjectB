@@ -26,7 +26,7 @@ contextBridge.exposeInMainWorld("projectB", {
 
   // ── 마스터 데이터 ────────────────────────────────────────────────────────
   masterFetch: (relPath)       => ipcRenderer.invoke("master:fetch",        relPath),
-  masterLoadEntities: (leagueId) => ipcRenderer.invoke("master:loadEntities", leagueId),
+  masterLoadEntities: (leagueId, seasonYear) => ipcRenderer.invoke("master:loadEntities", leagueId, seasonYear),
   masterUpsertEntity: (entity) => ipcRenderer.invoke("master:upsertEntity", entity),
   masterDeleteEntity: (payload) => ipcRenderer.invoke("master:deleteEntity", payload),
 

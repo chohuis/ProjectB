@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05869",
+  "name": "최영욱",
+  "nameEn": "Choi YoungWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 65,
+      "primaryPosition": "LF",
+      "developmentRate": 45,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 50,
+        "velocity": 47,
+        "command": 47,
+        "control": 43,
+        "movement": 38,
+        "mentality": 52,
+        "recovery": 39,
+        "clutch": 38,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 45,
+        "power": 35,
+        "eye": 44,
+        "discipline": 38,
+        "speed": 48,
+        "baseInstinct": 38,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 34,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "LF": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

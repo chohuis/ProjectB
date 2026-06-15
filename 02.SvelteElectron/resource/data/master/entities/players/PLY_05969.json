@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05969",
+  "name": "신기기",
+  "nameEn": "Shin KiKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 40,
+      "primaryPosition": "SP",
+      "developmentRate": 64,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 58,
+        "velocity": 58,
+        "command": 49,
+        "control": 52,
+        "movement": 58,
+        "mentality": 57,
+        "recovery": 54,
+        "clutch": 50,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 46,
+        "power": 37,
+        "eye": 38,
+        "discipline": 39,
+        "speed": 48,
+        "baseInstinct": 40,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 41,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "SP": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

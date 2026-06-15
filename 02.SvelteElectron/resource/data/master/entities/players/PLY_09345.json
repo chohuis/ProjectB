@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09345",
+  "name": "신지호",
+  "nameEn": "Shin JiHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 74,
+      "primaryPosition": "CF",
+      "developmentRate": 46,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 45,
+        "velocity": 47,
+        "command": 41,
+        "control": 38,
+        "movement": 41,
+        "mentality": 51,
+        "recovery": 44,
+        "clutch": 39,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 46,
+        "power": 40,
+        "eye": 37,
+        "discipline": 36,
+        "speed": 49,
+        "baseInstinct": 44,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 40,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "CF": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

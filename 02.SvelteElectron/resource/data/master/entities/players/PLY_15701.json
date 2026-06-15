@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15701",
+  "name": "토마스 브랜던",
+  "nameEn": "Thomas Brandon",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 37,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 4,
+      "primaryPosition": "SP",
+      "developmentRate": 44,
+      "potentialHidden": 51,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 66,
+        "velocity": 60,
+        "command": 56,
+        "control": 57,
+        "movement": 60,
+        "mentality": 68,
+        "recovery": 57,
+        "clutch": 61,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 66,
+        "power": 61,
+        "eye": 63,
+        "discipline": 63,
+        "speed": 59,
+        "baseInstinct": 58,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 57,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "SP": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

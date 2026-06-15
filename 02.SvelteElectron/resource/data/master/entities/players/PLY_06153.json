@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06153",
+  "name": "송기빈",
+  "nameEn": "Song KiBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 81,
+      "primaryPosition": "2B",
+      "developmentRate": 46,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 38,
+        "stamina": 40,
+        "velocity": 40,
+        "command": 28,
+        "control": 40,
+        "movement": 30,
+        "mentality": 36,
+        "recovery": 30,
+        "clutch": 28,
+        "holdRunners": 29
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 41,
+        "power": 44,
+        "eye": 36,
+        "discipline": 40,
+        "speed": 40,
+        "baseInstinct": 44,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 34,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "2B": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

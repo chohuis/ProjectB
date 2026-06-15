@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06756",
+  "name": "황기빈",
+  "nameEn": "Hwang KiBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 23,
+      "primaryPosition": "3B",
+      "developmentRate": 50,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 51,
+        "velocity": 57,
+        "command": 43,
+        "control": 46,
+        "movement": 46,
+        "mentality": 55,
+        "recovery": 44,
+        "clutch": 38,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 57,
+        "power": 51,
+        "eye": 52,
+        "discipline": 51,
+        "speed": 60,
+        "baseInstinct": 60,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 59,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "3B": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

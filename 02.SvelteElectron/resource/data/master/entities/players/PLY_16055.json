@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16055",
+  "name": "스콧 딜런",
+  "nameEn": "Scott Dylan",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 38,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 50,
+      "primaryPosition": "1B",
+      "developmentRate": 63,
+      "potentialHidden": 67,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 60,
+        "velocity": 71,
+        "command": 54,
+        "control": 62,
+        "movement": 56,
+        "mentality": 59,
+        "recovery": 56,
+        "clutch": 58,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 55,
+        "power": 58,
+        "eye": 59,
+        "discipline": 63,
+        "speed": 66,
+        "baseInstinct": 61,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 60,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "1B": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

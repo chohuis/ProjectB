@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05334",
+  "name": "송상현",
+  "nameEn": "Song SangHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 54,
+      "primaryPosition": "LF",
+      "developmentRate": 68,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 55,
+        "velocity": 68,
+        "command": 50,
+        "control": 58,
+        "movement": 50,
+        "mentality": 60,
+        "recovery": 49,
+        "clutch": 51,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 45,
+        "power": 40,
+        "eye": 39,
+        "discipline": 39,
+        "speed": 47,
+        "baseInstinct": 39,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 36,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "LF": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

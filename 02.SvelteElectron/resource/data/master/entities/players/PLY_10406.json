@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10406",
+  "name": "스미스 라이언",
+  "nameEn": "Smith Ryan",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 32,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 55,
+      "primaryPosition": "2B",
+      "developmentRate": 70,
+      "potentialHidden": 70,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 55,
+        "velocity": 66,
+        "command": 52,
+        "control": 55,
+        "movement": 55,
+        "mentality": 61,
+        "recovery": 58,
+        "clutch": 58,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 56,
+        "power": 50,
+        "eye": 54,
+        "discipline": 58,
+        "speed": 60,
+        "baseInstinct": 59,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 58,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "2B": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

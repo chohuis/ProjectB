@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04138",
+  "name": "신민준",
+  "nameEn": "Shin MinJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 33,
+      "primaryPosition": "C",
+      "developmentRate": 62,
+      "potentialHidden": 90,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 65,
+        "velocity": 71,
+        "command": 54,
+        "control": 57,
+        "movement": 63,
+        "mentality": 69,
+        "recovery": 55,
+        "clutch": 55,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 56,
+        "power": 50,
+        "eye": 56,
+        "discipline": 54,
+        "speed": 65,
+        "baseInstinct": 61,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 58,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "C": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

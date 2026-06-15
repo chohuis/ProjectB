@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07023",
+  "name": "한상혁",
+  "nameEn": "Han SangHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 98,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 42,
+        "velocity": 48,
+        "command": 45,
+        "control": 46,
+        "movement": 48,
+        "mentality": 52,
+        "recovery": 47,
+        "clutch": 34,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 44,
+        "power": 46,
+        "eye": 49,
+        "discipline": 41,
+        "speed": 48,
+        "baseInstinct": 39,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 36,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "SP": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

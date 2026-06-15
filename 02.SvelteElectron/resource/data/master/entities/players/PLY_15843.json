@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15843",
+  "name": "화이트 딜런",
+  "nameEn": "White Dylan",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 43,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 86,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 78,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 73,
+        "velocity": 75,
+        "command": 70,
+        "control": 74,
+        "movement": 66,
+        "mentality": 74,
+        "recovery": 62,
+        "clutch": 64,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 64,
+        "power": 61,
+        "eye": 63,
+        "discipline": 68,
+        "speed": 64,
+        "baseInstinct": 66,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 66,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "SP": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

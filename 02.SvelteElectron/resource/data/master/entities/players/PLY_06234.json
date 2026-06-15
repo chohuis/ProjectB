@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06234",
+  "name": "박영진",
+  "nameEn": "Park YoungJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 31,
+      "primaryPosition": "SP",
+      "developmentRate": 47,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 51,
+        "velocity": 55,
+        "command": 38,
+        "control": 41,
+        "movement": 40,
+        "mentality": 47,
+        "recovery": 36,
+        "clutch": 37,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 43,
+        "power": 40,
+        "eye": 44,
+        "discipline": 35,
+        "speed": 47,
+        "baseInstinct": 36,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 33,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "SP": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

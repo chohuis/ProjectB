@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05239",
+  "name": "윤찬현",
+  "nameEn": "Yoon ChanHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 95,
+      "primaryPosition": "3B",
+      "developmentRate": 59,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 52,
+        "velocity": 57,
+        "command": 42,
+        "control": 46,
+        "movement": 49,
+        "mentality": 50,
+        "recovery": 41,
+        "clutch": 35,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 41,
+        "power": 37,
+        "eye": 40,
+        "discipline": 40,
+        "speed": 46,
+        "baseInstinct": 39,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 40,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "3B": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

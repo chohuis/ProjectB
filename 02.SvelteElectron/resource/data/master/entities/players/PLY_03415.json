@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03415",
+  "name": "권영현",
+  "nameEn": "Kwon YoungHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 5,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 71,
+      "primaryPosition": "LF",
+      "developmentRate": 64,
+      "potentialHidden": 99,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 74,
+        "velocity": 75,
+        "command": 63,
+        "control": 73,
+        "movement": 65,
+        "mentality": 78,
+        "recovery": 67,
+        "clutch": 71,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 71,
+        "power": 69,
+        "eye": 70,
+        "discipline": 59,
+        "speed": 72,
+        "baseInstinct": 59,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 58,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "LF": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16084",
+  "name": "영 마커스",
+  "nameEn": "Young Marcus",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 40,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 49,
+      "primaryPosition": "2B",
+      "developmentRate": 66,
+      "potentialHidden": 76,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 56,
+        "velocity": 61,
+        "command": 58,
+        "control": 60,
+        "movement": 59,
+        "mentality": 64,
+        "recovery": 59,
+        "clutch": 64,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 58,
+        "power": 55,
+        "eye": 65,
+        "discipline": 54,
+        "speed": 67,
+        "baseInstinct": 54,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 60,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "2B": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08454",
+  "name": "윤재수",
+  "nameEn": "Yoon JaeSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 40,
+      "primaryPosition": "SP",
+      "developmentRate": 42,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 37,
+        "stamina": 39,
+        "velocity": 37,
+        "command": 29,
+        "control": 37,
+        "movement": 34,
+        "mentality": 37,
+        "recovery": 32,
+        "clutch": 25,
+        "holdRunners": 23
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 50,
+        "power": 41,
+        "eye": 44,
+        "discipline": 47,
+        "speed": 52,
+        "baseInstinct": 45,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 45,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "SP": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

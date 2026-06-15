@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08637",
+  "name": "한도원",
+  "nameEn": "Han DoWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 21,
+      "primaryPosition": "3B",
+      "developmentRate": 47,
+      "potentialHidden": 46,
+      "pitching": {
+        "ovr": 37,
+        "stamina": 30,
+        "velocity": 47,
+        "command": 33,
+        "control": 35,
+        "movement": 33,
+        "mentality": 37,
+        "recovery": 27,
+        "clutch": 24,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 40,
+        "power": 42,
+        "eye": 44,
+        "discipline": 46,
+        "speed": 41,
+        "baseInstinct": 39,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 42,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "3B": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

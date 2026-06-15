@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14397",
+  "name": "홀 카를로스",
+  "nameEn": "Hall Carlos",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 11,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 72,
+      "primaryPosition": "3B",
+      "developmentRate": 51,
+      "potentialHidden": 66,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 60,
+        "velocity": 61,
+        "command": 50,
+        "control": 51,
+        "movement": 49,
+        "mentality": 63,
+        "recovery": 48,
+        "clutch": 45,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 52,
+        "power": 51,
+        "eye": 50,
+        "discipline": 59,
+        "speed": 51,
+        "baseInstinct": 54,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 60,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "3B": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

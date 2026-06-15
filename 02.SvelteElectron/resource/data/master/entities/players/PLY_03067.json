@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03067",
+  "name": "서수호",
+  "nameEn": "Seo SuHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 64,
+      "primaryPosition": "3B",
+      "developmentRate": 72,
+      "potentialHidden": 97,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 80,
+        "velocity": 79,
+        "command": 76,
+        "control": 71,
+        "movement": 77,
+        "mentality": 73,
+        "recovery": 70,
+        "clutch": 69,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 67,
+        "power": 63,
+        "eye": 67,
+        "discipline": 63,
+        "speed": 71,
+        "baseInstinct": 60,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 58,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "3B": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15612",
+  "name": "에르난데스 알렉스",
+  "nameEn": "Hernandez Alex",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 29,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 49,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 53,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 65,
+        "velocity": 64,
+        "command": 66,
+        "control": 63,
+        "movement": 56,
+        "mentality": 65,
+        "recovery": 53,
+        "clutch": 53,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 56,
+        "power": 54,
+        "eye": 63,
+        "discipline": 60,
+        "speed": 62,
+        "baseInstinct": 56,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 60,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "SP": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

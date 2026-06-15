@@ -1,0 +1,73 @@
+{
+  "id": "PLY_09857",
+  "name": "에르난데스 재크",
+  "nameEn": "Hernandez Zach",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 18,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 5,
+      "primaryPosition": "SP",
+      "developmentRate": 52,
+      "potentialHidden": 56,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 80,
+        "velocity": 86,
+        "command": 77,
+        "control": 72,
+        "movement": 72,
+        "mentality": 81,
+        "recovery": 77,
+        "clutch": 75,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 76,
+        "contact": 74,
+        "power": 70,
+        "eye": 77,
+        "discipline": 78,
+        "speed": 80,
+        "baseInstinct": 70,
+        "bunting": 67,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 68,
+        "battingClutch": 76
+      },
+      "positionRatings": {
+        "SP": 76
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

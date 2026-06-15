@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04474",
+  "name": "장정우",
+  "nameEn": "Jang JungWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 75,
+      "primaryPosition": "CF",
+      "developmentRate": 63,
+      "potentialHidden": 89,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 63,
+        "velocity": 70,
+        "command": 61,
+        "control": 58,
+        "movement": 60,
+        "mentality": 66,
+        "recovery": 56,
+        "clutch": 53,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 54,
+        "power": 50,
+        "eye": 56,
+        "discipline": 52,
+        "speed": 56,
+        "baseInstinct": 55,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 45,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "CF": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

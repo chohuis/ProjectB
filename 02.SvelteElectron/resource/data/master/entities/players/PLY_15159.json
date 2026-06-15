@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15159",
+  "name": "로빈슨 오스틴",
+  "nameEn": "Robinson Austin",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 43,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 80,
+      "primaryPosition": "3B",
+      "developmentRate": 56,
+      "potentialHidden": 87,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 55,
+        "velocity": 61,
+        "command": 53,
+        "control": 54,
+        "movement": 56,
+        "mentality": 68,
+        "recovery": 57,
+        "clutch": 57,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 58,
+        "power": 58,
+        "eye": 65,
+        "discipline": 61,
+        "speed": 58,
+        "baseInstinct": 64,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 52,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "3B": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

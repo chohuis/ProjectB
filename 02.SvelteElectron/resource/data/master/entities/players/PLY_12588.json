@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12588",
+  "name": "무어 카일",
+  "nameEn": "Moore Kyle",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 13,
+      "primaryPosition": "SP",
+      "developmentRate": 68,
+      "potentialHidden": 63,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 61,
+        "velocity": 74,
+        "command": 67,
+        "control": 67,
+        "movement": 69,
+        "mentality": 60,
+        "recovery": 61,
+        "clutch": 53,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 69,
+        "power": 63,
+        "eye": 62,
+        "discipline": 59,
+        "speed": 71,
+        "baseInstinct": 60,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 55,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "SP": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

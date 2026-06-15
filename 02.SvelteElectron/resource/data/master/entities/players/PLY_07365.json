@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07365",
+  "name": "강현민",
+  "nameEn": "Kang HyeonMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 79,
+      "primaryPosition": "SP",
+      "developmentRate": 61,
+      "potentialHidden": 50,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 52,
+        "velocity": 54,
+        "command": 53,
+        "control": 50,
+        "movement": 51,
+        "mentality": 54,
+        "recovery": 44,
+        "clutch": 43,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 43,
+        "power": 38,
+        "eye": 43,
+        "discipline": 44,
+        "speed": 41,
+        "baseInstinct": 40,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 41,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SP": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

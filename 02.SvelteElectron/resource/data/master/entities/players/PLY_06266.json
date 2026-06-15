@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06266",
+  "name": "조지찬",
+  "nameEn": "Jo JiChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 68,
+      "primaryPosition": "SP",
+      "developmentRate": 45,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 51,
+        "velocity": 48,
+        "command": 47,
+        "control": 50,
+        "movement": 41,
+        "mentality": 46,
+        "recovery": 45,
+        "clutch": 37,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 48,
+        "power": 42,
+        "eye": 42,
+        "discipline": 43,
+        "speed": 51,
+        "baseInstinct": 37,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 46,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SP": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

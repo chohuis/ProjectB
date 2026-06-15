@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10018",
+  "name": "라이트 라이언",
+  "nameEn": "Wright Ryan",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 14,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 34,
+      "primaryPosition": "CF",
+      "developmentRate": 58,
+      "potentialHidden": 55,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 64,
+        "velocity": 70,
+        "command": 61,
+        "control": 70,
+        "movement": 65,
+        "mentality": 64,
+        "recovery": 65,
+        "clutch": 55,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 57,
+        "power": 61,
+        "eye": 62,
+        "discipline": 58,
+        "speed": 67,
+        "baseInstinct": 68,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 56,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "CF": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

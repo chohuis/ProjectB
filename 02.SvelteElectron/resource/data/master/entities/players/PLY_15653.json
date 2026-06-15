@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15653",
+  "name": "미첼 블레이크",
+  "nameEn": "Mitchell Blake",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 46,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 31,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 34,
+      "primaryPosition": "SP",
+      "developmentRate": 36,
+      "potentialHidden": 69,
+      "proServiceYears": 9,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 51,
+        "velocity": 60,
+        "command": 47,
+        "control": 53,
+        "movement": 49,
+        "mentality": 56,
+        "recovery": 49,
+        "clutch": 44,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 59,
+        "power": 49,
+        "eye": 55,
+        "discipline": 51,
+        "speed": 50,
+        "baseInstinct": 50,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 50,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "SP": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

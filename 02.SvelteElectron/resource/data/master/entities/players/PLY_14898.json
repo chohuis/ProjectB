@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14898",
+  "name": "로빈슨 데릭",
+  "nameEn": "Robinson Derek",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 38,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 13,
+      "primaryPosition": "2B",
+      "developmentRate": 49,
+      "potentialHidden": 77,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 71,
+        "velocity": 73,
+        "command": 70,
+        "control": 70,
+        "movement": 68,
+        "mentality": 70,
+        "recovery": 65,
+        "clutch": 59,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 65,
+        "power": 61,
+        "eye": 72,
+        "discipline": 62,
+        "speed": 73,
+        "baseInstinct": 70,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 73,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "2B": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

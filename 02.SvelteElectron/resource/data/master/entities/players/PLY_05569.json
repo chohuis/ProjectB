@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05569",
+  "name": "오현빈",
+  "nameEn": "Oh HyeonBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 64,
+      "primaryPosition": "2B",
+      "developmentRate": 64,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 47,
+        "velocity": 53,
+        "command": 37,
+        "control": 44,
+        "movement": 43,
+        "mentality": 42,
+        "recovery": 43,
+        "clutch": 37,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 59,
+        "power": 51,
+        "eye": 61,
+        "discipline": 57,
+        "speed": 58,
+        "baseInstinct": 55,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 58,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "2B": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

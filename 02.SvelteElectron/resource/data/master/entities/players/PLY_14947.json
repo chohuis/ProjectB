@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14947",
+  "name": "로빈슨 라이언",
+  "nameEn": "Robinson Ryan",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 47,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 94,
+      "primaryPosition": "SP",
+      "developmentRate": 63,
+      "potentialHidden": 72,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 63,
+        "velocity": 70,
+        "command": 63,
+        "control": 57,
+        "movement": 67,
+        "mentality": 71,
+        "recovery": 55,
+        "clutch": 62,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 69,
+        "power": 65,
+        "eye": 65,
+        "discipline": 59,
+        "speed": 63,
+        "baseInstinct": 67,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 56,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "SP": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

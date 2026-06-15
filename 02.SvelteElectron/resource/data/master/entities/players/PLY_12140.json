@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12140",
+  "name": "라이트 크리스",
+  "nameEn": "Wright Chris",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 11,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 80,
+      "primaryPosition": "SS",
+      "developmentRate": 46,
+      "potentialHidden": 72,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 78,
+        "velocity": 87,
+        "command": 72,
+        "control": 78,
+        "movement": 74,
+        "mentality": 79,
+        "recovery": 77,
+        "clutch": 75,
+        "holdRunners": 72
+      },
+      "batting": {
+        "ovr": 78,
+        "contact": 76,
+        "power": 77,
+        "eye": 83,
+        "discipline": 73,
+        "speed": 75,
+        "baseInstinct": 80,
+        "bunting": 72,
+        "platoon": 50,
+        "fielding": 74,
+        "arm": 78,
+        "battingClutch": 71
+      },
+      "positionRatings": {
+        "SS": 78
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

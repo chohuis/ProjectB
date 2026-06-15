@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15280",
+  "name": "스미스 카일",
+  "nameEn": "Smith Kyle",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 36,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 18,
+      "primaryPosition": "SP",
+      "developmentRate": 50,
+      "potentialHidden": 64,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 66,
+        "velocity": 79,
+        "command": 69,
+        "control": 63,
+        "movement": 63,
+        "mentality": 64,
+        "recovery": 60,
+        "clutch": 67,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 68,
+        "power": 70,
+        "eye": 63,
+        "discipline": 64,
+        "speed": 73,
+        "baseInstinct": 58,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 60,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "SP": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

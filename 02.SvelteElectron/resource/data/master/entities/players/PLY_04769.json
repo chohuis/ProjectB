@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04769",
+  "name": "전준성",
+  "nameEn": "Jeon JunSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 17,
+      "primaryPosition": "CF",
+      "developmentRate": 62,
+      "potentialHidden": 51,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 40,
+        "velocity": 47,
+        "command": 33,
+        "control": 38,
+        "movement": 37,
+        "mentality": 44,
+        "recovery": 35,
+        "clutch": 29,
+        "holdRunners": 27
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 36,
+        "power": 34,
+        "eye": 38,
+        "discipline": 33,
+        "speed": 35,
+        "baseInstinct": 27,
+        "bunting": 19,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 30,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "CF": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

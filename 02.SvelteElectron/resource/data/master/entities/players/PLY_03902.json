@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03902",
+  "name": "황준민",
+  "nameEn": "Hwang JunMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 28,
+      "primaryPosition": "SP",
+      "developmentRate": 70,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 54,
+        "velocity": 57,
+        "command": 45,
+        "control": 56,
+        "movement": 53,
+        "mentality": 57,
+        "recovery": 51,
+        "clutch": 47,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 49,
+        "power": 51,
+        "eye": 48,
+        "discipline": 47,
+        "speed": 48,
+        "baseInstinct": 47,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 43,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SP": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

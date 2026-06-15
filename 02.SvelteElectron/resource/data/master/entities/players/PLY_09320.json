@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09320",
+  "name": "조우현",
+  "nameEn": "Jo WooHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 23,
+      "primaryPosition": "RF",
+      "developmentRate": 46,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 37,
+        "stamina": 30,
+        "velocity": 45,
+        "command": 38,
+        "control": 33,
+        "movement": 29,
+        "mentality": 41,
+        "recovery": 37,
+        "clutch": 26,
+        "holdRunners": 23
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 47,
+        "power": 46,
+        "eye": 48,
+        "discipline": 39,
+        "speed": 44,
+        "baseInstinct": 46,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 46,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "RF": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

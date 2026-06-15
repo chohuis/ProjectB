@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07427",
+  "name": "황준현",
+  "nameEn": "Hwang JunHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 66,
+      "primaryPosition": "C",
+      "developmentRate": 63,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 51,
+        "velocity": 65,
+        "command": 50,
+        "control": 60,
+        "movement": 49,
+        "mentality": 59,
+        "recovery": 55,
+        "clutch": 46,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 39,
+        "power": 28,
+        "eye": 39,
+        "discipline": 35,
+        "speed": 36,
+        "baseInstinct": 28,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 38,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "C": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

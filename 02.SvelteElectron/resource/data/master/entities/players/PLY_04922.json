@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04922",
+  "name": "조혁민",
+  "nameEn": "Jo HyeokMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 53,
+      "primaryPosition": "SS",
+      "developmentRate": 60,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 47,
+        "velocity": 46,
+        "command": 46,
+        "control": 40,
+        "movement": 44,
+        "mentality": 43,
+        "recovery": 42,
+        "clutch": 41,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 53,
+        "power": 47,
+        "eye": 47,
+        "discipline": 48,
+        "speed": 57,
+        "baseInstinct": 52,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 52,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "SS": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

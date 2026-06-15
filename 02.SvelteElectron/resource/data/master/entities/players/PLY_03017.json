@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03017",
+  "name": "이수우",
+  "nameEn": "Lee SuWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 74,
+      "primaryPosition": "C",
+      "developmentRate": 62,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 71,
+        "velocity": 78,
+        "command": 63,
+        "control": 75,
+        "movement": 75,
+        "mentality": 73,
+        "recovery": 67,
+        "clutch": 68,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 61,
+        "power": 69,
+        "eye": 68,
+        "discipline": 69,
+        "speed": 67,
+        "baseInstinct": 62,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 63,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "C": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

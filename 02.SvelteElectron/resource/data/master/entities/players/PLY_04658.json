@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04658",
+  "name": "신동민",
+  "nameEn": "Shin DongMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 87,
+      "primaryPosition": "CF",
+      "developmentRate": 55,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 53,
+        "velocity": 66,
+        "command": 59,
+        "control": 52,
+        "movement": 53,
+        "mentality": 54,
+        "recovery": 49,
+        "clutch": 56,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 51,
+        "power": 55,
+        "eye": 46,
+        "discipline": 49,
+        "speed": 49,
+        "baseInstinct": 52,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 49,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "CF": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

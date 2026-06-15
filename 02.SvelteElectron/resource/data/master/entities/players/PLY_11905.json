@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11905",
+  "name": "라이트 에릭",
+  "nameEn": "Wright Eric",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 42,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 12,
+      "primaryPosition": "1B",
+      "developmentRate": 58,
+      "potentialHidden": 75,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 63,
+        "velocity": 72,
+        "command": 67,
+        "control": 62,
+        "movement": 71,
+        "mentality": 64,
+        "recovery": 60,
+        "clutch": 56,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 65,
+        "power": 60,
+        "eye": 63,
+        "discipline": 69,
+        "speed": 65,
+        "baseInstinct": 58,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 69,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "1B": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

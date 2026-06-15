@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15442",
+  "name": "로드리게스 그랜트",
+  "nameEn": "Rodriguez Grant",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 38,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 14,
+      "primaryPosition": "1B",
+      "developmentRate": 43,
+      "potentialHidden": 79,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 57,
+        "velocity": 63,
+        "command": 53,
+        "control": 57,
+        "movement": 56,
+        "mentality": 67,
+        "recovery": 54,
+        "clutch": 59,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 65,
+        "power": 56,
+        "eye": 58,
+        "discipline": 55,
+        "speed": 66,
+        "baseInstinct": 61,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 55,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "1B": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

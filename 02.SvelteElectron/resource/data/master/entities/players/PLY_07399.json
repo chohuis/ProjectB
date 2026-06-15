@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07399",
+  "name": "권도욱",
+  "nameEn": "Kwon DoWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 14,
+      "primaryPosition": "LF",
+      "developmentRate": 45,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 47,
+        "velocity": 59,
+        "command": 44,
+        "control": 49,
+        "movement": 52,
+        "mentality": 52,
+        "recovery": 51,
+        "clutch": 47,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 38,
+        "power": 31,
+        "eye": 41,
+        "discipline": 31,
+        "speed": 45,
+        "baseInstinct": 31,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 39,
+        "battingClutch": 27
+      },
+      "positionRatings": {
+        "LF": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

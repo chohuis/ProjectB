@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05333",
+  "name": "이재민",
+  "nameEn": "Lee JaeMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 59,
+      "primaryPosition": "LF",
+      "developmentRate": 53,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 51,
+        "velocity": 64,
+        "command": 52,
+        "control": 52,
+        "movement": 47,
+        "mentality": 61,
+        "recovery": 55,
+        "clutch": 54,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 58,
+        "power": 47,
+        "eye": 51,
+        "discipline": 49,
+        "speed": 51,
+        "baseInstinct": 48,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 52,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "LF": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

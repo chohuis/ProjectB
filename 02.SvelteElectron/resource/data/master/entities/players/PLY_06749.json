@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06749",
+  "name": "권훈성",
+  "nameEn": "Kwon HunSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 28,
+      "primaryPosition": "CF",
+      "developmentRate": 57,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 68,
+        "velocity": 65,
+        "command": 58,
+        "control": 57,
+        "movement": 60,
+        "mentality": 60,
+        "recovery": 61,
+        "clutch": 62,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 44,
+        "power": 44,
+        "eye": 48,
+        "discipline": 44,
+        "speed": 43,
+        "baseInstinct": 37,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 44,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "CF": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

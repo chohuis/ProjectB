@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09363",
+  "name": "박우혁",
+  "nameEn": "Park WooHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 35,
+      "primaryPosition": "LF",
+      "developmentRate": 49,
+      "potentialHidden": 49,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 36,
+        "velocity": 41,
+        "command": 32,
+        "control": 36,
+        "movement": 37,
+        "mentality": 45,
+        "recovery": 37,
+        "clutch": 27,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 53,
+        "power": 43,
+        "eye": 41,
+        "discipline": 47,
+        "speed": 52,
+        "baseInstinct": 43,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 46,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "LF": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

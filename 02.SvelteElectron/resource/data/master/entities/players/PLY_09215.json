@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09215",
+  "name": "서기진",
+  "nameEn": "Seo KiJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 23,
+      "primaryPosition": "RF",
+      "developmentRate": 56,
+      "potentialHidden": 46,
+      "pitching": {
+        "ovr": 37,
+        "stamina": 33,
+        "velocity": 36,
+        "command": 31,
+        "control": 39,
+        "movement": 36,
+        "mentality": 40,
+        "recovery": 26,
+        "clutch": 30,
+        "holdRunners": 22
+      },
+      "batting": {
+        "ovr": 35,
+        "contact": 29,
+        "power": 25,
+        "eye": 34,
+        "discipline": 32,
+        "speed": 31,
+        "baseInstinct": 34,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 33,
+        "battingClutch": 23
+      },
+      "positionRatings": {
+        "RF": 35
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

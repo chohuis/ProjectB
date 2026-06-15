@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09370",
+  "name": "신성재",
+  "nameEn": "Shin SeongJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 82,
+      "primaryPosition": "SP",
+      "developmentRate": 41,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 42,
+        "velocity": 52,
+        "command": 43,
+        "control": 47,
+        "movement": 49,
+        "mentality": 48,
+        "recovery": 48,
+        "clutch": 45,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 36,
+        "power": 40,
+        "eye": 39,
+        "discipline": 36,
+        "speed": 35,
+        "baseInstinct": 35,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 32,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "SP": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

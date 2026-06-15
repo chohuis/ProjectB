@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11843",
+  "name": "에르난데스 로건",
+  "nameEn": "Hernandez Logan",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 27,
+      "primaryPosition": "C",
+      "developmentRate": 50,
+      "potentialHidden": 78,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 79,
+        "stamina": 79,
+        "velocity": 80,
+        "command": 77,
+        "control": 72,
+        "movement": 81,
+        "mentality": 76,
+        "recovery": 76,
+        "clutch": 73,
+        "holdRunners": 74
+      },
+      "batting": {
+        "ovr": 79,
+        "contact": 82,
+        "power": 71,
+        "eye": 83,
+        "discipline": 77,
+        "speed": 80,
+        "baseInstinct": 71,
+        "bunting": 70,
+        "platoon": 50,
+        "fielding": 82,
+        "arm": 73,
+        "battingClutch": 68
+      },
+      "positionRatings": {
+        "C": 79
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

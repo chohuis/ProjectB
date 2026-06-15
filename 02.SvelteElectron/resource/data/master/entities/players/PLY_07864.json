@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07864",
+  "name": "신수식",
+  "nameEn": "Shin SuSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 20,
+      "primaryPosition": "LF",
+      "developmentRate": 56,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 52,
+        "velocity": 49,
+        "command": 43,
+        "control": 42,
+        "movement": 47,
+        "mentality": 52,
+        "recovery": 49,
+        "clutch": 42,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 56,
+        "power": 45,
+        "eye": 55,
+        "discipline": 54,
+        "speed": 47,
+        "baseInstinct": 53,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 43,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "LF": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

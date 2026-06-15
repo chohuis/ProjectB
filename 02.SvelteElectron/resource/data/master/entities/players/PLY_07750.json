@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07750",
+  "name": "권진재",
+  "nameEn": "Kwon JinJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 14,
+      "primaryPosition": "2B",
+      "developmentRate": 53,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 39,
+        "velocity": 48,
+        "command": 39,
+        "control": 41,
+        "movement": 46,
+        "mentality": 42,
+        "recovery": 39,
+        "clutch": 42,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 41,
+        "power": 39,
+        "eye": 50,
+        "discipline": 46,
+        "speed": 54,
+        "baseInstinct": 49,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 43,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "2B": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

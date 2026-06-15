@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05382",
+  "name": "장기재",
+  "nameEn": "Jang KiJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 34,
+      "primaryPosition": "2B",
+      "developmentRate": 60,
+      "potentialHidden": 82,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 41,
+        "velocity": 56,
+        "command": 41,
+        "control": 51,
+        "movement": 41,
+        "mentality": 47,
+        "recovery": 47,
+        "clutch": 40,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 41,
+        "power": 38,
+        "eye": 40,
+        "discipline": 40,
+        "speed": 45,
+        "baseInstinct": 39,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 41,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "2B": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

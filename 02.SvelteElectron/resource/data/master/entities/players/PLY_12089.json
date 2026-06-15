@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12089",
+  "name": "윌리엄스 타일러",
+  "nameEn": "Williams Tyler",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 36,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 97,
+      "primaryPosition": "SP",
+      "developmentRate": 46,
+      "potentialHidden": 59,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 72,
+        "velocity": 77,
+        "command": 68,
+        "control": 68,
+        "movement": 71,
+        "mentality": 73,
+        "recovery": 67,
+        "clutch": 66,
+        "holdRunners": 68
+      },
+      "batting": {
+        "ovr": 77,
+        "contact": 72,
+        "power": 76,
+        "eye": 71,
+        "discipline": 72,
+        "speed": 78,
+        "baseInstinct": 76,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 80,
+        "arm": 68,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "SP": 77
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

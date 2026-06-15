@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14404",
+  "name": "잭슨 타일러",
+  "nameEn": "Jackson Tyler",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 24,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 59,
+      "primaryPosition": "CF",
+      "developmentRate": 53,
+      "potentialHidden": 72,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 55,
+        "velocity": 64,
+        "command": 51,
+        "control": 56,
+        "movement": 54,
+        "mentality": 62,
+        "recovery": 60,
+        "clutch": 58,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 64,
+        "power": 58,
+        "eye": 55,
+        "discipline": 61,
+        "speed": 59,
+        "baseInstinct": 55,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 55,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "CF": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

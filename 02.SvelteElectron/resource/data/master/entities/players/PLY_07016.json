@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07016",
+  "name": "오진원",
+  "nameEn": "Oh JinWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 89,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 53,
+        "velocity": 59,
+        "command": 52,
+        "control": 57,
+        "movement": 54,
+        "mentality": 50,
+        "recovery": 45,
+        "clutch": 46,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 40,
+        "power": 35,
+        "eye": 38,
+        "discipline": 40,
+        "speed": 47,
+        "baseInstinct": 36,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 34,
+        "battingClutch": 30
+      },
+      "positionRatings": {
+        "SP": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

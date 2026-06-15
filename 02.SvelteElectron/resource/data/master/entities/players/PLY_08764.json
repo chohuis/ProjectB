@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08764",
+  "name": "이성기",
+  "nameEn": "Lee SeongKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 5,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 72,
+      "primaryPosition": "RF",
+      "developmentRate": 55,
+      "potentialHidden": 43,
+      "pitching": {
+        "ovr": 38,
+        "stamina": 30,
+        "velocity": 45,
+        "command": 28,
+        "control": 30,
+        "movement": 37,
+        "mentality": 41,
+        "recovery": 29,
+        "clutch": 33,
+        "holdRunners": 23
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 47,
+        "power": 42,
+        "eye": 44,
+        "discipline": 42,
+        "speed": 44,
+        "baseInstinct": 48,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 47,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "RF": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

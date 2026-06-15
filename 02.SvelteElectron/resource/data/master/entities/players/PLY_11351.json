@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11351",
+  "name": "스미스 에반",
+  "nameEn": "Smith Evan",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 37,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 85,
+      "primaryPosition": "C",
+      "developmentRate": 61,
+      "potentialHidden": 86,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 49,
+        "velocity": 56,
+        "command": 57,
+        "control": 52,
+        "movement": 59,
+        "mentality": 64,
+        "recovery": 49,
+        "clutch": 52,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 52,
+        "power": 52,
+        "eye": 59,
+        "discipline": 54,
+        "speed": 58,
+        "baseInstinct": 55,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 51,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "C": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

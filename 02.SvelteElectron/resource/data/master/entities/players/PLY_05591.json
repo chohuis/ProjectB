@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05591",
+  "name": "한혁혁",
+  "nameEn": "Han HyeokHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 46,
+      "primaryPosition": "SP",
+      "developmentRate": 63,
+      "potentialHidden": 82,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 63,
+        "velocity": 62,
+        "command": 57,
+        "control": 58,
+        "movement": 56,
+        "mentality": 68,
+        "recovery": 53,
+        "clutch": 56,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 46,
+        "power": 44,
+        "eye": 51,
+        "discipline": 55,
+        "speed": 57,
+        "baseInstinct": 53,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 52,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SP": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

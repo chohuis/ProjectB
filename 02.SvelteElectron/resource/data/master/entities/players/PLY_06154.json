@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06154",
+  "name": "임혁준",
+  "nameEn": "Lim HyeokJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 42,
+      "primaryPosition": "RF",
+      "developmentRate": 52,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 51,
+        "velocity": 58,
+        "command": 47,
+        "control": 41,
+        "movement": 41,
+        "mentality": 47,
+        "recovery": 42,
+        "clutch": 37,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 35,
+        "power": 38,
+        "eye": 34,
+        "discipline": 40,
+        "speed": 46,
+        "baseInstinct": 31,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 31,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "RF": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

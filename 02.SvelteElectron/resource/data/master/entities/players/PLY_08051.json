@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08051",
+  "name": "강준식",
+  "nameEn": "Kang JunSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 22,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 47,
+        "velocity": 44,
+        "command": 38,
+        "control": 46,
+        "movement": 39,
+        "mentality": 39,
+        "recovery": 42,
+        "clutch": 33,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 61,
+        "power": 55,
+        "eye": 52,
+        "discipline": 55,
+        "speed": 57,
+        "baseInstinct": 57,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 57,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "SP": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

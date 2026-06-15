@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04079",
+  "name": "최혁기",
+  "nameEn": "Choi HyeokKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 40,
+  "popularity": 5,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 20,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 48,
+        "velocity": 60,
+        "command": 47,
+        "control": 53,
+        "movement": 51,
+        "mentality": 49,
+        "recovery": 48,
+        "clutch": 48,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 64,
+        "power": 53,
+        "eye": 60,
+        "discipline": 60,
+        "speed": 54,
+        "baseInstinct": 53,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 57,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

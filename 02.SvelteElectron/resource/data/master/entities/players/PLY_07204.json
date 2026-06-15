@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07204",
+  "name": "장상훈",
+  "nameEn": "Jang SangHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 73,
+      "primaryPosition": "C",
+      "developmentRate": 56,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 59,
+        "velocity": 67,
+        "command": 49,
+        "control": 59,
+        "movement": 52,
+        "mentality": 56,
+        "recovery": 57,
+        "clutch": 55,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 40,
+        "power": 44,
+        "eye": 40,
+        "discipline": 40,
+        "speed": 46,
+        "baseInstinct": 45,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 43,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "C": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

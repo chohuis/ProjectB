@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16107",
+  "name": "윌리엄스 케빈",
+  "nameEn": "Williams Kevin",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 13,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 48,
+      "primaryPosition": "3B",
+      "developmentRate": 59,
+      "potentialHidden": 59,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 65,
+        "velocity": 63,
+        "command": 53,
+        "control": 64,
+        "movement": 67,
+        "mentality": 69,
+        "recovery": 61,
+        "clutch": 51,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 56,
+        "power": 67,
+        "eye": 59,
+        "discipline": 64,
+        "speed": 62,
+        "baseInstinct": 58,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 54,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "3B": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

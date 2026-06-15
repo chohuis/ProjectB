@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08118",
+  "name": "최혁성",
+  "nameEn": "Choi HyeokSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 35,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 96,
+      "primaryPosition": "SP",
+      "developmentRate": 61,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 58,
+        "velocity": 63,
+        "command": 53,
+        "control": 54,
+        "movement": 58,
+        "mentality": 53,
+        "recovery": 57,
+        "clutch": 50,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 50,
+        "power": 51,
+        "eye": 51,
+        "discipline": 49,
+        "speed": 55,
+        "baseInstinct": 47,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 45,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

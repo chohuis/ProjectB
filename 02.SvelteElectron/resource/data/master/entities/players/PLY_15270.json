@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15270",
+  "name": "무어 트레버",
+  "nameEn": "Moore Trevor",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 29,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 52,
+      "primaryPosition": "LF",
+      "developmentRate": 73,
+      "potentialHidden": 61,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 50,
+        "velocity": 53,
+        "command": 45,
+        "control": 44,
+        "movement": 42,
+        "mentality": 46,
+        "recovery": 37,
+        "clutch": 45,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 44,
+        "power": 37,
+        "eye": 48,
+        "discipline": 43,
+        "speed": 47,
+        "baseInstinct": 43,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 41,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "LF": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

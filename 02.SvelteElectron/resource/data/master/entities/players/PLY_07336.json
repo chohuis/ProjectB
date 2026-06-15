@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07336",
+  "name": "한상민",
+  "nameEn": "Han SangMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 78,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 43,
+        "velocity": 52,
+        "command": 35,
+        "control": 39,
+        "movement": 42,
+        "mentality": 43,
+        "recovery": 44,
+        "clutch": 41,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 35,
+        "power": 39,
+        "eye": 36,
+        "discipline": 39,
+        "speed": 43,
+        "baseInstinct": 31,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 31,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "SP": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

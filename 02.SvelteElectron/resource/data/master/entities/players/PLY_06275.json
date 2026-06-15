@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06275",
+  "name": "조영민",
+  "nameEn": "Jo YoungMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 62,
+      "primaryPosition": "SS",
+      "developmentRate": 55,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 45,
+        "velocity": 49,
+        "command": 35,
+        "control": 46,
+        "movement": 46,
+        "mentality": 41,
+        "recovery": 36,
+        "clutch": 37,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 41,
+        "power": 38,
+        "eye": 35,
+        "discipline": 38,
+        "speed": 45,
+        "baseInstinct": 38,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 34,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "SS": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

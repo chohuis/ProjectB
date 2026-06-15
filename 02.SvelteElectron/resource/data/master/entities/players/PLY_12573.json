@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12573",
+  "name": "영 라이언",
+  "nameEn": "Young Ryan",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 24,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 32,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 72,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 75,
+        "velocity": 78,
+        "command": 65,
+        "control": 74,
+        "movement": 75,
+        "mentality": 82,
+        "recovery": 71,
+        "clutch": 69,
+        "holdRunners": 72
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 78,
+        "power": 75,
+        "eye": 76,
+        "discipline": 66,
+        "speed": 73,
+        "baseInstinct": 71,
+        "bunting": 65,
+        "platoon": 50,
+        "fielding": 76,
+        "arm": 70,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "SP": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

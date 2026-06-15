@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10632",
+  "name": "마틴 라이언",
+  "nameEn": "Martin Ryan",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 47,
+      "primaryPosition": "2B",
+      "developmentRate": 66,
+      "potentialHidden": 76,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 61,
+        "velocity": 66,
+        "command": 57,
+        "control": 71,
+        "movement": 70,
+        "mentality": 63,
+        "recovery": 67,
+        "clutch": 60,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 59,
+        "power": 57,
+        "eye": 57,
+        "discipline": 62,
+        "speed": 65,
+        "baseInstinct": 62,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 62,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "2B": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

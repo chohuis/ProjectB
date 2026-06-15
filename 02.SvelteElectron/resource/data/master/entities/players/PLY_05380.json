@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05380",
+  "name": "신준훈",
+  "nameEn": "Shin JunHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 70,
+      "primaryPosition": "LF",
+      "developmentRate": 66,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 52,
+        "velocity": 56,
+        "command": 54,
+        "control": 54,
+        "movement": 49,
+        "mentality": 52,
+        "recovery": 44,
+        "clutch": 50,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 60,
+        "power": 48,
+        "eye": 61,
+        "discipline": 50,
+        "speed": 60,
+        "baseInstinct": 54,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 57,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "LF": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

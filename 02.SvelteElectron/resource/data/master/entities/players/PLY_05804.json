@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05804",
+  "name": "조상현",
+  "nameEn": "Jo SangHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 37,
+      "primaryPosition": "SS",
+      "developmentRate": 61,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 36,
+        "velocity": 52,
+        "command": 39,
+        "control": 41,
+        "movement": 41,
+        "mentality": 45,
+        "recovery": 37,
+        "clutch": 37,
+        "holdRunners": 28
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 32,
+        "power": 37,
+        "eye": 37,
+        "discipline": 34,
+        "speed": 31,
+        "baseInstinct": 27,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 26,
+        "battingClutch": 30
+      },
+      "positionRatings": {
+        "SS": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

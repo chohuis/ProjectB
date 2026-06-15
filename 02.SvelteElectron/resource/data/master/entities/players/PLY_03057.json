@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03057",
+  "name": "최세재",
+  "nameEn": "Choi SeJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 91,
+      "primaryPosition": "2B",
+      "developmentRate": 67,
+      "potentialHidden": 87,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 60,
+        "velocity": 75,
+        "command": 56,
+        "control": 61,
+        "movement": 60,
+        "mentality": 60,
+        "recovery": 60,
+        "clutch": 63,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 72,
+        "power": 61,
+        "eye": 68,
+        "discipline": 62,
+        "speed": 71,
+        "baseInstinct": 70,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 62,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "2B": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07937",
+  "name": "한기민",
+  "nameEn": "Han KiMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 51,
+      "primaryPosition": "CF",
+      "developmentRate": 52,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 38,
+        "velocity": 46,
+        "command": 40,
+        "control": 46,
+        "movement": 39,
+        "mentality": 48,
+        "recovery": 33,
+        "clutch": 32,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 39,
+        "power": 42,
+        "eye": 43,
+        "discipline": 46,
+        "speed": 41,
+        "baseInstinct": 38,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 39,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "CF": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

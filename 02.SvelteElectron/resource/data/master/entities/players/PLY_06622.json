@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06622",
+  "name": "류재현",
+  "nameEn": "Ryu JaeHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 53,
+      "primaryPosition": "SP",
+      "developmentRate": 52,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 55,
+        "velocity": 62,
+        "command": 44,
+        "control": 47,
+        "movement": 44,
+        "mentality": 55,
+        "recovery": 51,
+        "clutch": 42,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 65,
+        "power": 58,
+        "eye": 67,
+        "discipline": 57,
+        "speed": 65,
+        "baseInstinct": 55,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 60,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "SP": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05942",
+  "name": "박기재",
+  "nameEn": "Park KiJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 40,
+      "primaryPosition": "SP",
+      "developmentRate": 56,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 63,
+        "velocity": 65,
+        "command": 52,
+        "control": 62,
+        "movement": 55,
+        "mentality": 55,
+        "recovery": 55,
+        "clutch": 49,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 35,
+        "power": 35,
+        "eye": 40,
+        "discipline": 30,
+        "speed": 34,
+        "baseInstinct": 33,
+        "bunting": 18,
+        "platoon": 50,
+        "fielding": 33,
+        "arm": 31,
+        "battingClutch": 27
+      },
+      "positionRatings": {
+        "SP": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

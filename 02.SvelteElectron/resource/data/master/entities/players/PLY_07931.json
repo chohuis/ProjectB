@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07931",
+  "name": "강현재",
+  "nameEn": "Kang HyeonJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 26,
+      "primaryPosition": "SP",
+      "developmentRate": 54,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 46,
+        "velocity": 53,
+        "command": 40,
+        "control": 53,
+        "movement": 44,
+        "mentality": 50,
+        "recovery": 48,
+        "clutch": 47,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 33,
+        "power": 40,
+        "eye": 37,
+        "discipline": 32,
+        "speed": 45,
+        "baseInstinct": 36,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 33,
+        "battingClutch": 27
+      },
+      "positionRatings": {
+        "SP": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

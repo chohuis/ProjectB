@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15607",
+  "name": "라이트 헌터",
+  "nameEn": "Wright Hunter",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 23,
+      "primaryPosition": "LF",
+      "developmentRate": 70,
+      "potentialHidden": 61,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 55,
+        "velocity": 50,
+        "command": 49,
+        "control": 43,
+        "movement": 44,
+        "mentality": 56,
+        "recovery": 45,
+        "clutch": 42,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 47,
+        "power": 49,
+        "eye": 52,
+        "discipline": 51,
+        "speed": 51,
+        "baseInstinct": 49,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 53,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "LF": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

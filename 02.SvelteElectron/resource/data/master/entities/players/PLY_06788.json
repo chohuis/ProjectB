@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06788",
+  "name": "송정찬",
+  "nameEn": "Song JungChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 39,
+      "primaryPosition": "SP",
+      "developmentRate": 60,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 56,
+        "velocity": 64,
+        "command": 49,
+        "control": 46,
+        "movement": 50,
+        "mentality": 52,
+        "recovery": 51,
+        "clutch": 48,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 63,
+        "power": 54,
+        "eye": 62,
+        "discipline": 65,
+        "speed": 68,
+        "baseInstinct": 63,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 62,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

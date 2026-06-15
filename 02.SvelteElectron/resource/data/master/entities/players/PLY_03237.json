@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03237",
+  "name": "오진원",
+  "nameEn": "Oh JinWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 18,
+      "primaryPosition": "2B",
+      "developmentRate": 73,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 76,
+        "velocity": 79,
+        "command": 72,
+        "control": 71,
+        "movement": 70,
+        "mentality": 70,
+        "recovery": 69,
+        "clutch": 60,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 58,
+        "power": 56,
+        "eye": 50,
+        "discipline": 48,
+        "speed": 53,
+        "baseInstinct": 46,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 53,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "2B": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

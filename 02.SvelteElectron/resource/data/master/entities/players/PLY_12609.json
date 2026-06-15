@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12609",
+  "name": "윌리엄스 라이언",
+  "nameEn": "Williams Ryan",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 16,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 71,
+      "primaryPosition": "RF",
+      "developmentRate": 52,
+      "potentialHidden": 58,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 60,
+        "velocity": 74,
+        "command": 65,
+        "control": 68,
+        "movement": 71,
+        "mentality": 72,
+        "recovery": 59,
+        "clutch": 66,
+        "holdRunners": 68
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 73,
+        "power": 72,
+        "eye": 70,
+        "discipline": 72,
+        "speed": 69,
+        "baseInstinct": 63,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 66,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "RF": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

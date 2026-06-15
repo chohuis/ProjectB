@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08853",
+  "name": "장준찬",
+  "nameEn": "Jang JunChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 35,
+      "primaryPosition": "CF",
+      "developmentRate": 57,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 50,
+        "velocity": 58,
+        "command": 42,
+        "control": 52,
+        "movement": 43,
+        "mentality": 46,
+        "recovery": 47,
+        "clutch": 40,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 41,
+        "power": 32,
+        "eye": 35,
+        "discipline": 38,
+        "speed": 42,
+        "baseInstinct": 32,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 38,
+        "battingClutch": 27
+      },
+      "positionRatings": {
+        "CF": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

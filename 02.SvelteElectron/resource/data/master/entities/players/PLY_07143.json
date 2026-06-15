@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07143",
+  "name": "황찬준",
+  "nameEn": "Hwang ChanJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 91,
+      "primaryPosition": "SP",
+      "developmentRate": 48,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 53,
+        "velocity": 64,
+        "command": 51,
+        "control": 56,
+        "movement": 47,
+        "mentality": 52,
+        "recovery": 46,
+        "clutch": 48,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 49,
+        "power": 52,
+        "eye": 57,
+        "discipline": 47,
+        "speed": 56,
+        "baseInstinct": 53,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 49,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "SP": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

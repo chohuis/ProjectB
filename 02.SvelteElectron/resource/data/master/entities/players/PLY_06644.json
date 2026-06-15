@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06644",
+  "name": "전성수",
+  "nameEn": "Jeon SeongSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 34,
+      "primaryPosition": "3B",
+      "developmentRate": 59,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 54,
+        "velocity": 58,
+        "command": 46,
+        "control": 56,
+        "movement": 48,
+        "mentality": 57,
+        "recovery": 52,
+        "clutch": 40,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 54,
+        "power": 48,
+        "eye": 60,
+        "discipline": 55,
+        "speed": 59,
+        "baseInstinct": 49,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 51,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "3B": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

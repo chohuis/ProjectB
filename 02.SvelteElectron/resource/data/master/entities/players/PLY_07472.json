@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07472",
+  "name": "박기욱",
+  "nameEn": "Park KiWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 59,
+      "primaryPosition": "LF",
+      "developmentRate": 51,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 51,
+        "velocity": 55,
+        "command": 51,
+        "control": 45,
+        "movement": 54,
+        "mentality": 55,
+        "recovery": 44,
+        "clutch": 50,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 38,
+        "power": 34,
+        "eye": 38,
+        "discipline": 39,
+        "speed": 47,
+        "baseInstinct": 41,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 45,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "LF": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

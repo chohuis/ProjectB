@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15517",
+  "name": "클라크 오스틴",
+  "nameEn": "Clark Austin",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 46,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 90,
+      "primaryPosition": "3B",
+      "developmentRate": 42,
+      "potentialHidden": 61,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 71,
+        "velocity": 76,
+        "command": 66,
+        "control": 70,
+        "movement": 62,
+        "mentality": 76,
+        "recovery": 62,
+        "clutch": 70,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 75,
+        "power": 65,
+        "eye": 63,
+        "discipline": 73,
+        "speed": 73,
+        "baseInstinct": 69,
+        "bunting": 63,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 61,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "3B": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06996",
+  "name": "권동환",
+  "nameEn": "Kwon DongHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 56,
+      "primaryPosition": "C",
+      "developmentRate": 70,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 54,
+        "velocity": 54,
+        "command": 45,
+        "control": 51,
+        "movement": 55,
+        "mentality": 51,
+        "recovery": 49,
+        "clutch": 48,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 49,
+        "power": 50,
+        "eye": 48,
+        "discipline": 49,
+        "speed": 50,
+        "baseInstinct": 50,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 57,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "C": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

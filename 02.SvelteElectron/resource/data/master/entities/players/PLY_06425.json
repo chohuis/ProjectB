@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06425",
+  "name": "최도혁",
+  "nameEn": "Choi DoHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 73,
+      "primaryPosition": "2B",
+      "developmentRate": 41,
+      "potentialHidden": 50,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 50,
+        "velocity": 61,
+        "command": 52,
+        "control": 52,
+        "movement": 46,
+        "mentality": 51,
+        "recovery": 53,
+        "clutch": 40,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 46,
+        "power": 40,
+        "eye": 42,
+        "discipline": 46,
+        "speed": 50,
+        "baseInstinct": 48,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 41,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "2B": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

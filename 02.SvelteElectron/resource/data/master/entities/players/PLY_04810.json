@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04810",
+  "name": "정민기",
+  "nameEn": "Jung MinKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 48,
+      "primaryPosition": "2B",
+      "developmentRate": 53,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 45,
+        "velocity": 55,
+        "command": 37,
+        "control": 46,
+        "movement": 46,
+        "mentality": 47,
+        "recovery": 37,
+        "clutch": 46,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 50,
+        "power": 48,
+        "eye": 48,
+        "discipline": 49,
+        "speed": 51,
+        "baseInstinct": 48,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 41,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "2B": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

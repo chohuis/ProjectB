@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03066",
+  "name": "신동진",
+  "nameEn": "Shin DongJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 68,
+      "primaryPosition": "CF",
+      "developmentRate": 73,
+      "potentialHidden": 89,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 64,
+        "velocity": 64,
+        "command": 52,
+        "control": 63,
+        "movement": 64,
+        "mentality": 59,
+        "recovery": 62,
+        "clutch": 61,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 61,
+        "power": 56,
+        "eye": 49,
+        "discipline": 48,
+        "speed": 56,
+        "baseInstinct": 56,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 48,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "CF": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

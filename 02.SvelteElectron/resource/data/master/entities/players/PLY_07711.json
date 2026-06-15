@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07711",
+  "name": "최혁식",
+  "nameEn": "Choi HyeokSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 53,
+      "primaryPosition": "3B",
+      "developmentRate": 61,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 49,
+        "velocity": 63,
+        "command": 54,
+        "control": 51,
+        "movement": 58,
+        "mentality": 61,
+        "recovery": 54,
+        "clutch": 46,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 50,
+        "power": 49,
+        "eye": 47,
+        "discipline": 41,
+        "speed": 51,
+        "baseInstinct": 42,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 39,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "3B": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

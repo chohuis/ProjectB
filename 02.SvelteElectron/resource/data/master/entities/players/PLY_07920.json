@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07920",
+  "name": "이태빈",
+  "nameEn": "Lee TaeBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 27,
+      "primaryPosition": "SP",
+      "developmentRate": 45,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 62,
+        "velocity": 57,
+        "command": 59,
+        "control": 60,
+        "movement": 49,
+        "mentality": 64,
+        "recovery": 49,
+        "clutch": 57,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 42,
+        "power": 34,
+        "eye": 35,
+        "discipline": 34,
+        "speed": 41,
+        "baseInstinct": 30,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 41,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "SP": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

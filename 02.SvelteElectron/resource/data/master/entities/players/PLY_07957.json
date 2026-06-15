@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07957",
+  "name": "윤기원",
+  "nameEn": "Yoon KiWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 10,
+      "primaryPosition": "LF",
+      "developmentRate": 44,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 49,
+        "velocity": 65,
+        "command": 49,
+        "control": 56,
+        "movement": 55,
+        "mentality": 56,
+        "recovery": 45,
+        "clutch": 46,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 48,
+        "power": 48,
+        "eye": 52,
+        "discipline": 47,
+        "speed": 54,
+        "baseInstinct": 45,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 43,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "LF": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

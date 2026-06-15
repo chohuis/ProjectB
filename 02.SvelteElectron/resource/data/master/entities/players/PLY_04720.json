@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04720",
+  "name": "권상성",
+  "nameEn": "Kwon SangSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 73,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 51,
+        "velocity": 64,
+        "command": 50,
+        "control": 56,
+        "movement": 53,
+        "mentality": 61,
+        "recovery": 49,
+        "clutch": 56,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 39,
+        "power": 39,
+        "eye": 48,
+        "discipline": 44,
+        "speed": 46,
+        "baseInstinct": 47,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 40,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03300",
+  "name": "송도혁",
+  "nameEn": "Song DoHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 16,
+      "primaryPosition": "RF",
+      "developmentRate": 66,
+      "potentialHidden": 90,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 59,
+        "velocity": 62,
+        "command": 49,
+        "control": 55,
+        "movement": 60,
+        "mentality": 63,
+        "recovery": 56,
+        "clutch": 55,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 66,
+        "power": 52,
+        "eye": 64,
+        "discipline": 58,
+        "speed": 67,
+        "baseInstinct": 52,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 52,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "RF": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

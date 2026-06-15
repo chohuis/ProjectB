@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08239",
+  "name": "임수기",
+  "nameEn": "Lim SuKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 64,
+      "primaryPosition": "2B",
+      "developmentRate": 48,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 60,
+        "velocity": 67,
+        "command": 54,
+        "control": 55,
+        "movement": 56,
+        "mentality": 62,
+        "recovery": 50,
+        "clutch": 50,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 44,
+        "power": 40,
+        "eye": 43,
+        "discipline": 42,
+        "speed": 47,
+        "baseInstinct": 47,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 46,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "2B": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

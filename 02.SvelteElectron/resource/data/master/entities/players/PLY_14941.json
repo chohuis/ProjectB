@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14941",
+  "name": "영 데릭",
+  "nameEn": "Young Derek",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 18,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 83,
+      "primaryPosition": "RF",
+      "developmentRate": 76,
+      "potentialHidden": 70,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 59,
+        "velocity": 64,
+        "command": 58,
+        "control": 58,
+        "movement": 55,
+        "mentality": 51,
+        "recovery": 54,
+        "clutch": 56,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 60,
+        "power": 49,
+        "eye": 50,
+        "discipline": 48,
+        "speed": 60,
+        "baseInstinct": 54,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 59,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "RF": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

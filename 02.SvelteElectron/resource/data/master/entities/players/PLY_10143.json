@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10143",
+  "name": "넬슨 재크",
+  "nameEn": "Nelson Zach",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 40,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 31,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 26,
+      "primaryPosition": "1B",
+      "developmentRate": 38,
+      "potentialHidden": 69,
+      "proServiceYears": 9,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 52,
+        "velocity": 65,
+        "command": 55,
+        "control": 55,
+        "movement": 48,
+        "mentality": 62,
+        "recovery": 52,
+        "clutch": 49,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 59,
+        "power": 55,
+        "eye": 61,
+        "discipline": 52,
+        "speed": 62,
+        "baseInstinct": 47,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 53,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "1B": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

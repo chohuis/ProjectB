@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15738",
+  "name": "킹 네이선",
+  "nameEn": "King Nathan",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 38,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 37,
+      "primaryPosition": "1B",
+      "developmentRate": 66,
+      "potentialHidden": 89,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 45,
+        "velocity": 45,
+        "command": 39,
+        "control": 40,
+        "movement": 40,
+        "mentality": 50,
+        "recovery": 45,
+        "clutch": 43,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 45,
+        "power": 45,
+        "eye": 50,
+        "discipline": 45,
+        "speed": 47,
+        "baseInstinct": 45,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 41,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "1B": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

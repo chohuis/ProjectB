@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11452",
+  "name": "리 카를로스",
+  "nameEn": "Lee Carlos",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 48,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 32,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 93,
+      "primaryPosition": "LF",
+      "developmentRate": 37,
+      "potentialHidden": 52,
+      "proServiceYears": 10,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 68,
+        "velocity": 73,
+        "command": 62,
+        "control": 69,
+        "movement": 56,
+        "mentality": 67,
+        "recovery": 56,
+        "clutch": 59,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 60,
+        "power": 59,
+        "eye": 69,
+        "discipline": 60,
+        "speed": 60,
+        "baseInstinct": 67,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 57,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "LF": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

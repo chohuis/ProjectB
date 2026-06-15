@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04032",
+  "name": "정태빈",
+  "nameEn": "Jung TaeBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 76,
+      "primaryPosition": "2B",
+      "developmentRate": 65,
+      "potentialHidden": 83,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 65,
+        "velocity": 75,
+        "command": 64,
+        "control": 65,
+        "movement": 66,
+        "mentality": 70,
+        "recovery": 65,
+        "clutch": 55,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 66,
+        "power": 58,
+        "eye": 61,
+        "discipline": 54,
+        "speed": 59,
+        "baseInstinct": 56,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 60,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "2B": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

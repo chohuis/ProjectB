@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10068",
+  "name": "홀 오스틴",
+  "nameEn": "Hall Austin",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 49,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 29,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 35,
+      "primaryPosition": "RF",
+      "developmentRate": 50,
+      "potentialHidden": 59,
+      "proServiceYears": 7,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 63,
+        "velocity": 74,
+        "command": 65,
+        "control": 69,
+        "movement": 71,
+        "mentality": 69,
+        "recovery": 64,
+        "clutch": 63,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 67,
+        "power": 59,
+        "eye": 74,
+        "discipline": 73,
+        "speed": 73,
+        "baseInstinct": 59,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 65,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "RF": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

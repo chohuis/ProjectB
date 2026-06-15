@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06963",
+  "name": "서지기",
+  "nameEn": "Seo JiKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 35,
+      "primaryPosition": "SP",
+      "developmentRate": 70,
+      "potentialHidden": 87,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 61,
+        "velocity": 68,
+        "command": 54,
+        "control": 53,
+        "movement": 56,
+        "mentality": 61,
+        "recovery": 57,
+        "clutch": 54,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 60,
+        "power": 57,
+        "eye": 59,
+        "discipline": 53,
+        "speed": 67,
+        "baseInstinct": 56,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 56,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "SP": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

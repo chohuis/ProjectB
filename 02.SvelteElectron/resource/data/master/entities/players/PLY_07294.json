@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07294",
+  "name": "서지빈",
+  "nameEn": "Seo JiBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 74,
+      "primaryPosition": "SP",
+      "developmentRate": 63,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 54,
+        "velocity": 59,
+        "command": 60,
+        "control": 61,
+        "movement": 57,
+        "mentality": 59,
+        "recovery": 53,
+        "clutch": 58,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 55,
+        "power": 55,
+        "eye": 54,
+        "discipline": 50,
+        "speed": 59,
+        "baseInstinct": 45,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 51,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "SP": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

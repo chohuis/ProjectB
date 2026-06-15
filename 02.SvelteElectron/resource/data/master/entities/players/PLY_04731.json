@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04731",
+  "name": "강민우",
+  "nameEn": "Kang MinWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 25,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 46,
+        "velocity": 62,
+        "command": 43,
+        "control": 46,
+        "movement": 45,
+        "mentality": 54,
+        "recovery": 53,
+        "clutch": 41,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 41,
+        "power": 33,
+        "eye": 39,
+        "discipline": 33,
+        "speed": 44,
+        "baseInstinct": 32,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 38,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "SP": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

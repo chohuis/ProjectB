@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10980",
+  "name": "무어 그랜트",
+  "nameEn": "Moore Grant",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 34,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 72,
+      "primaryPosition": "SP",
+      "developmentRate": 71,
+      "potentialHidden": 66,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 53,
+        "velocity": 57,
+        "command": 61,
+        "control": 61,
+        "movement": 61,
+        "mentality": 56,
+        "recovery": 49,
+        "clutch": 50,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 60,
+        "power": 57,
+        "eye": 59,
+        "discipline": 58,
+        "speed": 61,
+        "baseInstinct": 54,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 60,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "SP": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

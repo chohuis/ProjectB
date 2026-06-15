@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05669",
+  "name": "임혁진",
+  "nameEn": "Lim HyeokJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 51,
+      "primaryPosition": "SP",
+      "developmentRate": 51,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 56,
+        "velocity": 66,
+        "command": 55,
+        "control": 55,
+        "movement": 48,
+        "mentality": 61,
+        "recovery": 52,
+        "clutch": 52,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 51,
+        "power": 47,
+        "eye": 49,
+        "discipline": 41,
+        "speed": 53,
+        "baseInstinct": 46,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 46,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "SP": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

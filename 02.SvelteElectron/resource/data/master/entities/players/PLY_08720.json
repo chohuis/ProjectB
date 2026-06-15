@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08720",
+  "name": "박기빈",
+  "nameEn": "Park KiBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 66,
+      "primaryPosition": "3B",
+      "developmentRate": 55,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 40,
+        "velocity": 46,
+        "command": 38,
+        "control": 43,
+        "movement": 35,
+        "mentality": 48,
+        "recovery": 33,
+        "clutch": 36,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 34,
+        "contact": 31,
+        "power": 33,
+        "eye": 28,
+        "discipline": 32,
+        "speed": 36,
+        "baseInstinct": 27,
+        "bunting": 16,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 26,
+        "battingClutch": 25
+      },
+      "positionRatings": {
+        "3B": 34
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

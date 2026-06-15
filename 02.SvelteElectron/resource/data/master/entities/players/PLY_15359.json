@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15359",
+  "name": "윌리엄스 다니엘",
+  "nameEn": "Williams Daniel",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 85,
+      "primaryPosition": "SP",
+      "developmentRate": 74,
+      "potentialHidden": 71,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 59,
+        "velocity": 70,
+        "command": 59,
+        "control": 53,
+        "movement": 59,
+        "mentality": 61,
+        "recovery": 63,
+        "clutch": 50,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 61,
+        "power": 63,
+        "eye": 66,
+        "discipline": 64,
+        "speed": 64,
+        "baseInstinct": 54,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 65,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "SP": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11328",
+  "name": "넬슨 네이선",
+  "nameEn": "Nelson Nathan",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 41,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 44,
+      "primaryPosition": "SP",
+      "developmentRate": 48,
+      "potentialHidden": 61,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 74,
+        "velocity": 75,
+        "command": 77,
+        "control": 66,
+        "movement": 74,
+        "mentality": 69,
+        "recovery": 75,
+        "clutch": 72,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 74,
+        "contact": 70,
+        "power": 77,
+        "eye": 68,
+        "discipline": 66,
+        "speed": 70,
+        "baseInstinct": 64,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 77,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "SP": 74
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

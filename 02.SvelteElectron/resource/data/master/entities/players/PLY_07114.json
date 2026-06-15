@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07114",
+  "name": "서진완",
+  "nameEn": "Seo JinWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 45,
+      "primaryPosition": "LF",
+      "developmentRate": 52,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 55,
+        "velocity": 55,
+        "command": 56,
+        "control": 52,
+        "movement": 50,
+        "mentality": 59,
+        "recovery": 50,
+        "clutch": 45,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 55,
+        "power": 46,
+        "eye": 55,
+        "discipline": 52,
+        "speed": 53,
+        "baseInstinct": 53,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 52,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "LF": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

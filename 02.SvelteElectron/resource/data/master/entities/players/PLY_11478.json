@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11478",
+  "name": "그린 라이언",
+  "nameEn": "Green Ryan",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 10,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 5,
+      "primaryPosition": "2B",
+      "developmentRate": 75,
+      "potentialHidden": 75,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 55,
+        "velocity": 65,
+        "command": 61,
+        "control": 57,
+        "movement": 56,
+        "mentality": 55,
+        "recovery": 58,
+        "clutch": 58,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 50,
+        "power": 55,
+        "eye": 60,
+        "discipline": 59,
+        "speed": 56,
+        "baseInstinct": 61,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 58,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "2B": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

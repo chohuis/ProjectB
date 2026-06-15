@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12067",
+  "name": "영 딜런",
+  "nameEn": "Young Dylan",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 32,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 75,
+      "primaryPosition": "SS",
+      "developmentRate": 79,
+      "potentialHidden": 77,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 52,
+        "velocity": 62,
+        "command": 54,
+        "control": 44,
+        "movement": 44,
+        "mentality": 54,
+        "recovery": 53,
+        "clutch": 49,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 54,
+        "power": 46,
+        "eye": 46,
+        "discipline": 47,
+        "speed": 55,
+        "baseInstinct": 50,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 52,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SS": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

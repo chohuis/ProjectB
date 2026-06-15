@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12336",
+  "name": "브라운 브랜던",
+  "nameEn": "Brown Brandon",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 17,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 65,
+      "primaryPosition": "SS",
+      "developmentRate": 59,
+      "potentialHidden": 75,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 62,
+        "velocity": 68,
+        "command": 66,
+        "control": 67,
+        "movement": 69,
+        "mentality": 62,
+        "recovery": 69,
+        "clutch": 60,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 70,
+        "power": 65,
+        "eye": 62,
+        "discipline": 70,
+        "speed": 67,
+        "baseInstinct": 67,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 58,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "SS": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

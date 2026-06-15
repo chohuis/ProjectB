@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14517",
+  "name": "리 라이언",
+  "nameEn": "Lee Ryan",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 40,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 58,
+      "primaryPosition": "RF",
+      "developmentRate": 52,
+      "potentialHidden": 63,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 70,
+        "velocity": 78,
+        "command": 64,
+        "control": 63,
+        "movement": 58,
+        "mentality": 64,
+        "recovery": 67,
+        "clutch": 62,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 68,
+        "power": 68,
+        "eye": 58,
+        "discipline": 59,
+        "speed": 61,
+        "baseInstinct": 70,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 69,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "RF": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14566",
+  "name": "워커 로건",
+  "nameEn": "Walker Logan",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 10,
+  "militaryStatus": "군필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 29,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 34,
+      "primaryPosition": "3B",
+      "developmentRate": 34,
+      "potentialHidden": 54,
+      "proServiceYears": 7,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 49,
+        "velocity": 61,
+        "command": 44,
+        "control": 55,
+        "movement": 41,
+        "mentality": 55,
+        "recovery": 45,
+        "clutch": 49,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 54,
+        "power": 51,
+        "eye": 43,
+        "discipline": 46,
+        "speed": 45,
+        "baseInstinct": 50,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 40,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "3B": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

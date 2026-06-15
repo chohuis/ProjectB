@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09106",
+  "name": "조혁윤",
+  "nameEn": "Jo HyeokYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 36,
+      "primaryPosition": "C",
+      "developmentRate": 52,
+      "potentialHidden": 39,
+      "pitching": {
+        "ovr": 36,
+        "stamina": 29,
+        "velocity": 43,
+        "command": 33,
+        "control": 29,
+        "movement": 29,
+        "mentality": 32,
+        "recovery": 28,
+        "clutch": 25,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 40,
+        "power": 38,
+        "eye": 44,
+        "discipline": 35,
+        "speed": 42,
+        "baseInstinct": 38,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 36,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "C": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

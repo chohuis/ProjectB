@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04437",
+  "name": "황동성",
+  "nameEn": "Hwang DongSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 27,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 53,
+        "velocity": 61,
+        "command": 52,
+        "control": 49,
+        "movement": 56,
+        "mentality": 59,
+        "recovery": 57,
+        "clutch": 45,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 58,
+        "power": 52,
+        "eye": 50,
+        "discipline": 56,
+        "speed": 55,
+        "baseInstinct": 50,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 50,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

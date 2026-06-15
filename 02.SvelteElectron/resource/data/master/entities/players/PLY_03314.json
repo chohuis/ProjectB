@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03314",
+  "name": "박지원",
+  "nameEn": "Park JiWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 47,
+      "primaryPosition": "CF",
+      "developmentRate": 68,
+      "potentialHidden": 97,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 59,
+        "velocity": 62,
+        "command": 56,
+        "control": 65,
+        "movement": 59,
+        "mentality": 62,
+        "recovery": 52,
+        "clutch": 58,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 59,
+        "power": 59,
+        "eye": 57,
+        "discipline": 64,
+        "speed": 61,
+        "baseInstinct": 61,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 60,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "CF": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

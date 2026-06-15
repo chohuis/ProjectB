@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14287",
+  "name": "가르시아 콜",
+  "nameEn": "Garcia Cole",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 41,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 62,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 89,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 47,
+        "velocity": 55,
+        "command": 40,
+        "control": 52,
+        "movement": 50,
+        "mentality": 43,
+        "recovery": 37,
+        "clutch": 40,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 51,
+        "power": 47,
+        "eye": 51,
+        "discipline": 48,
+        "speed": 50,
+        "baseInstinct": 46,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 41,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SP": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

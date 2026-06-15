@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09446",
+  "name": "오상욱",
+  "nameEn": "Oh SangWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 72,
+      "primaryPosition": "LF",
+      "developmentRate": 50,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 46,
+        "velocity": 52,
+        "command": 51,
+        "control": 45,
+        "movement": 47,
+        "mentality": 49,
+        "recovery": 50,
+        "clutch": 50,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 38,
+        "power": 43,
+        "eye": 39,
+        "discipline": 34,
+        "speed": 44,
+        "baseInstinct": 42,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 36,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "LF": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

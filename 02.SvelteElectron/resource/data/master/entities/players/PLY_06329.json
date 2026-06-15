@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06329",
+  "name": "박태빈",
+  "nameEn": "Park TaeBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 48,
+      "primaryPosition": "RF",
+      "developmentRate": 52,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 41,
+        "velocity": 51,
+        "command": 47,
+        "control": 44,
+        "movement": 44,
+        "mentality": 45,
+        "recovery": 38,
+        "clutch": 42,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 36,
+        "power": 34,
+        "eye": 34,
+        "discipline": 38,
+        "speed": 40,
+        "baseInstinct": 31,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 36,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "RF": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

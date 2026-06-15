@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09654",
+  "name": "임현식",
+  "nameEn": "Lim HyeonSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 21,
+      "primaryPosition": "1B",
+      "developmentRate": 53,
+      "potentialHidden": 50,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 47,
+        "velocity": 50,
+        "command": 51,
+        "control": 44,
+        "movement": 48,
+        "mentality": 46,
+        "recovery": 40,
+        "clutch": 44,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 36,
+        "power": 36,
+        "eye": 31,
+        "discipline": 37,
+        "speed": 39,
+        "baseInstinct": 31,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 28,
+        "battingClutch": 26
+      },
+      "positionRatings": {
+        "1B": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

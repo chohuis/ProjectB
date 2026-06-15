@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03334",
+  "name": "장동성",
+  "nameEn": "Jang DongSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 40,
+      "primaryPosition": "SP",
+      "developmentRate": 61,
+      "potentialHidden": 90,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 65,
+        "velocity": 76,
+        "command": 67,
+        "control": 61,
+        "movement": 68,
+        "mentality": 65,
+        "recovery": 62,
+        "clutch": 64,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 71,
+        "power": 63,
+        "eye": 73,
+        "discipline": 73,
+        "speed": 73,
+        "baseInstinct": 71,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 71,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "SP": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

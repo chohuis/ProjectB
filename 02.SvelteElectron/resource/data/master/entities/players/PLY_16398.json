@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16398",
+  "name": "로빈슨 제이크",
+  "nameEn": "Robinson Jake",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 77,
+      "primaryPosition": "RF",
+      "developmentRate": 52,
+      "potentialHidden": 55,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 65,
+        "velocity": 73,
+        "command": 63,
+        "control": 75,
+        "movement": 72,
+        "mentality": 77,
+        "recovery": 61,
+        "clutch": 63,
+        "holdRunners": 70
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 73,
+        "power": 63,
+        "eye": 69,
+        "discipline": 73,
+        "speed": 72,
+        "baseInstinct": 74,
+        "bunting": 66,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 65,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "RF": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

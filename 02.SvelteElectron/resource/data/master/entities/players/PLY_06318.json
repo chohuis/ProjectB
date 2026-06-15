@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06318",
+  "name": "황지욱",
+  "nameEn": "Hwang JiWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 43,
+      "primaryPosition": "RF",
+      "developmentRate": 52,
+      "potentialHidden": 50,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 39,
+        "velocity": 48,
+        "command": 41,
+        "control": 40,
+        "movement": 35,
+        "mentality": 40,
+        "recovery": 36,
+        "clutch": 31,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 43,
+        "power": 35,
+        "eye": 39,
+        "discipline": 41,
+        "speed": 44,
+        "baseInstinct": 41,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 37,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "RF": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

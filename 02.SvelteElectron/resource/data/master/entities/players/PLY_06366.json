@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06366",
+  "name": "윤혁현",
+  "nameEn": "Yoon HyeokHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 89,
+      "primaryPosition": "SP",
+      "developmentRate": 50,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 52,
+        "velocity": 61,
+        "command": 45,
+        "control": 51,
+        "movement": 49,
+        "mentality": 54,
+        "recovery": 48,
+        "clutch": 47,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 30,
+        "power": 33,
+        "eye": 38,
+        "discipline": 26,
+        "speed": 40,
+        "baseInstinct": 33,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 28,
+        "arm": 35,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "SP": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

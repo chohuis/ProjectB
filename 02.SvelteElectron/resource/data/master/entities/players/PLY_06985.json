@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06985",
+  "name": "이진완",
+  "nameEn": "Lee JinWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 5,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 25,
+      "primaryPosition": "C",
+      "developmentRate": 59,
+      "potentialHidden": 85,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 61,
+        "velocity": 74,
+        "command": 60,
+        "control": 60,
+        "movement": 54,
+        "mentality": 60,
+        "recovery": 59,
+        "clutch": 59,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 51,
+        "power": 40,
+        "eye": 41,
+        "discipline": 41,
+        "speed": 50,
+        "baseInstinct": 45,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 44,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "C": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13874",
+  "name": "화이트 라이언",
+  "nameEn": "White Ryan",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 17,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 72,
+      "primaryPosition": "1B",
+      "developmentRate": 63,
+      "potentialHidden": 74,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 77,
+        "velocity": 73,
+        "command": 75,
+        "control": 65,
+        "movement": 63,
+        "mentality": 79,
+        "recovery": 62,
+        "clutch": 73,
+        "holdRunners": 63
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 71,
+        "power": 69,
+        "eye": 74,
+        "discipline": 70,
+        "speed": 76,
+        "baseInstinct": 67,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 72,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "1B": 73
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

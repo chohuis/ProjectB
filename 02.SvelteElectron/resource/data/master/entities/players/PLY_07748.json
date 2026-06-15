@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07748",
+  "name": "한기혁",
+  "nameEn": "Han KiHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 89,
+      "primaryPosition": "SP",
+      "developmentRate": 44,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 55,
+        "velocity": 64,
+        "command": 49,
+        "control": 52,
+        "movement": 57,
+        "mentality": 56,
+        "recovery": 57,
+        "clutch": 50,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 46,
+        "power": 37,
+        "eye": 46,
+        "discipline": 42,
+        "speed": 46,
+        "baseInstinct": 37,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 42,
+        "battingClutch": 30
+      },
+      "positionRatings": {
+        "SP": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15886",
+  "name": "마틴 헌터",
+  "nameEn": "Martin Hunter",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 21,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 70,
+      "primaryPosition": "SP",
+      "developmentRate": 75,
+      "potentialHidden": 61,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 39,
+        "velocity": 58,
+        "command": 46,
+        "control": 45,
+        "movement": 41,
+        "mentality": 44,
+        "recovery": 43,
+        "clutch": 46,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 41,
+        "power": 43,
+        "eye": 49,
+        "discipline": 42,
+        "speed": 53,
+        "baseInstinct": 46,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 45,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "SP": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

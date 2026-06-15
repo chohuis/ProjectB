@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03760",
+  "name": "전태재",
+  "nameEn": "Jeon TaeJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 70,
+      "primaryPosition": "2B",
+      "developmentRate": 54,
+      "potentialHidden": 84,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 49,
+        "velocity": 55,
+        "command": 53,
+        "control": 52,
+        "movement": 53,
+        "mentality": 55,
+        "recovery": 47,
+        "clutch": 46,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 45,
+        "power": 42,
+        "eye": 48,
+        "discipline": 47,
+        "speed": 47,
+        "baseInstinct": 41,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 49,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "2B": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15544",
+  "name": "브라운 알렉스",
+  "nameEn": "Brown Alex",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 34,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 54,
+      "primaryPosition": "1B",
+      "developmentRate": 53,
+      "potentialHidden": 55,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 55,
+        "velocity": 68,
+        "command": 65,
+        "control": 58,
+        "movement": 60,
+        "mentality": 59,
+        "recovery": 53,
+        "clutch": 51,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 58,
+        "power": 56,
+        "eye": 66,
+        "discipline": 61,
+        "speed": 61,
+        "baseInstinct": 51,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 58,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "1B": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

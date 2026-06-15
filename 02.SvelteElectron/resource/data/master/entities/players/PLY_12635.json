@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12635",
+  "name": "마르티네스 그랜트",
+  "nameEn": "Martinez Grant",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 32,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 61,
+      "primaryPosition": "LF",
+      "developmentRate": 48,
+      "potentialHidden": 83,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 74,
+        "velocity": 76,
+        "command": 80,
+        "control": 77,
+        "movement": 70,
+        "mentality": 81,
+        "recovery": 74,
+        "clutch": 73,
+        "holdRunners": 73
+      },
+      "batting": {
+        "ovr": 78,
+        "contact": 75,
+        "power": 73,
+        "eye": 76,
+        "discipline": 81,
+        "speed": 73,
+        "baseInstinct": 73,
+        "bunting": 72,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 77,
+        "battingClutch": 70
+      },
+      "positionRatings": {
+        "LF": 78
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

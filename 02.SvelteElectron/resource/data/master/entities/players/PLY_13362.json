@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13362",
+  "name": "화이트 미겔",
+  "nameEn": "White Miguel",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 27,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 22,
+      "primaryPosition": "CF",
+      "developmentRate": 69,
+      "potentialHidden": 84,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 78,
+        "velocity": 84,
+        "command": 77,
+        "control": 76,
+        "movement": 68,
+        "mentality": 73,
+        "recovery": 67,
+        "clutch": 73,
+        "holdRunners": 71
+      },
+      "batting": {
+        "ovr": 76,
+        "contact": 71,
+        "power": 71,
+        "eye": 69,
+        "discipline": 68,
+        "speed": 75,
+        "baseInstinct": 72,
+        "bunting": 65,
+        "platoon": 50,
+        "fielding": 75,
+        "arm": 67,
+        "battingClutch": 69
+      },
+      "positionRatings": {
+        "CF": 76
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

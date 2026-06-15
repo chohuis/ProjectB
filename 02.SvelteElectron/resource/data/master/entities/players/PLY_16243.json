@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16243",
+  "name": "라이트 딜런",
+  "nameEn": "Wright Dylan",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 42,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 20,
+      "primaryPosition": "LF",
+      "developmentRate": 57,
+      "potentialHidden": 83,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 76,
+        "velocity": 80,
+        "command": 62,
+        "control": 72,
+        "movement": 69,
+        "mentality": 80,
+        "recovery": 68,
+        "clutch": 66,
+        "holdRunners": 63
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 73,
+        "power": 66,
+        "eye": 66,
+        "discipline": 75,
+        "speed": 73,
+        "baseInstinct": 69,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 67,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "LF": 73
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

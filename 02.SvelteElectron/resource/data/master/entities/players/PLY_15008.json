@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15008",
+  "name": "톰슨 알렉스",
+  "nameEn": "Thompson Alex",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 14,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 30,
+      "primaryPosition": "C",
+      "developmentRate": 63,
+      "potentialHidden": 57,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 54,
+        "velocity": 62,
+        "command": 59,
+        "control": 50,
+        "movement": 51,
+        "mentality": 60,
+        "recovery": 51,
+        "clutch": 50,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 57,
+        "power": 59,
+        "eye": 55,
+        "discipline": 51,
+        "speed": 56,
+        "baseInstinct": 52,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 48,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "C": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

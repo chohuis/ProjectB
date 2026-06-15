@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12466",
+  "name": "화이트 오스틴",
+  "nameEn": "White Austin",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 21,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 80,
+      "primaryPosition": "1B",
+      "developmentRate": 53,
+      "potentialHidden": 56,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 75,
+        "velocity": 74,
+        "command": 67,
+        "control": 68,
+        "movement": 69,
+        "mentality": 79,
+        "recovery": 77,
+        "clutch": 66,
+        "holdRunners": 70
+      },
+      "batting": {
+        "ovr": 76,
+        "contact": 75,
+        "power": 67,
+        "eye": 76,
+        "discipline": 75,
+        "speed": 75,
+        "baseInstinct": 78,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 77,
+        "arm": 67,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "1B": 76
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11676",
+  "name": "영 헌터",
+  "nameEn": "Young Hunter",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 42,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 70,
+      "primaryPosition": "SS",
+      "developmentRate": 67,
+      "potentialHidden": 58,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 69,
+        "velocity": 78,
+        "command": 72,
+        "control": 65,
+        "movement": 63,
+        "mentality": 73,
+        "recovery": 58,
+        "clutch": 61,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 67,
+        "power": 60,
+        "eye": 67,
+        "discipline": 71,
+        "speed": 67,
+        "baseInstinct": 64,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 69,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "SS": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

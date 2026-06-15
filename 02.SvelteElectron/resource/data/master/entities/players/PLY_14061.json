@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14061",
+  "name": "데이비스 마커스",
+  "nameEn": "Davis Marcus",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 81,
+  "popularity": 10,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 21,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 70,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 60,
+        "velocity": 79,
+        "command": 63,
+        "control": 73,
+        "movement": 66,
+        "mentality": 71,
+        "recovery": 65,
+        "clutch": 59,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 72,
+        "power": 62,
+        "eye": 68,
+        "discipline": 64,
+        "speed": 66,
+        "baseInstinct": 58,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 60,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "SP": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

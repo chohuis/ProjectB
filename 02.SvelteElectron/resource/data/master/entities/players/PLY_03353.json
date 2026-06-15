@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03353",
+  "name": "안세기",
+  "nameEn": "An SeKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 4,
+      "primaryPosition": "LF",
+      "developmentRate": 73,
+      "potentialHidden": 98,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 60,
+        "velocity": 63,
+        "command": 60,
+        "control": 56,
+        "movement": 57,
+        "mentality": 63,
+        "recovery": 60,
+        "clutch": 57,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 66,
+        "power": 65,
+        "eye": 71,
+        "discipline": 62,
+        "speed": 66,
+        "baseInstinct": 65,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 61,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "LF": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

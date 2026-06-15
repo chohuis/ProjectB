@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14635",
+  "name": "카터 케빈",
+  "nameEn": "Carter Kevin",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 42,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 47,
+      "primaryPosition": "LF",
+      "developmentRate": 56,
+      "potentialHidden": 73,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 69,
+        "velocity": 77,
+        "command": 69,
+        "control": 78,
+        "movement": 73,
+        "mentality": 81,
+        "recovery": 77,
+        "clutch": 66,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 76,
+        "contact": 78,
+        "power": 67,
+        "eye": 80,
+        "discipline": 69,
+        "speed": 83,
+        "baseInstinct": 67,
+        "bunting": 69,
+        "platoon": 50,
+        "fielding": 76,
+        "arm": 74,
+        "battingClutch": 76
+      },
+      "positionRatings": {
+        "LF": 76
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

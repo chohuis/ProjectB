@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07343",
+  "name": "강동수",
+  "nameEn": "Kang DongSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 59,
+      "primaryPosition": "1B",
+      "developmentRate": 57,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 61,
+        "velocity": 59,
+        "command": 50,
+        "control": 51,
+        "movement": 52,
+        "mentality": 61,
+        "recovery": 53,
+        "clutch": 45,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 45,
+        "power": 42,
+        "eye": 44,
+        "discipline": 46,
+        "speed": 52,
+        "baseInstinct": 45,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 43,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "1B": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

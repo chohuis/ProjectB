@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09416",
+  "name": "송우수",
+  "nameEn": "Song WooSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 29,
+      "primaryPosition": "2B",
+      "developmentRate": 55,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 44,
+        "velocity": 55,
+        "command": 49,
+        "control": 49,
+        "movement": 45,
+        "mentality": 48,
+        "recovery": 44,
+        "clutch": 47,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 37,
+        "power": 38,
+        "eye": 42,
+        "discipline": 35,
+        "speed": 46,
+        "baseInstinct": 43,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 37,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "2B": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04539",
+  "name": "안찬민",
+  "nameEn": "An ChanMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 28,
+      "primaryPosition": "3B",
+      "developmentRate": 62,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 52,
+        "velocity": 53,
+        "command": 39,
+        "control": 51,
+        "movement": 43,
+        "mentality": 49,
+        "recovery": 41,
+        "clutch": 40,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 45,
+        "power": 41,
+        "eye": 49,
+        "discipline": 48,
+        "speed": 50,
+        "baseInstinct": 48,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 36,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "3B": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

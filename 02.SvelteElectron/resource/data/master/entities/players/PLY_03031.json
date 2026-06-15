@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03031",
+  "name": "임혁윤",
+  "nameEn": "Lim HyeokYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 40,
+      "primaryPosition": "CF",
+      "developmentRate": 71,
+      "potentialHidden": 95,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 67,
+        "velocity": 72,
+        "command": 60,
+        "control": 67,
+        "movement": 65,
+        "mentality": 63,
+        "recovery": 59,
+        "clutch": 64,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 64,
+        "power": 66,
+        "eye": 69,
+        "discipline": 67,
+        "speed": 70,
+        "baseInstinct": 63,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 70,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "CF": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03991",
+  "name": "최수훈",
+  "nameEn": "Choi SuHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 17,
+      "primaryPosition": "2B",
+      "developmentRate": 55,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 64,
+        "velocity": 79,
+        "command": 62,
+        "control": 60,
+        "movement": 68,
+        "mentality": 69,
+        "recovery": 58,
+        "clutch": 62,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 57,
+        "power": 55,
+        "eye": 48,
+        "discipline": 53,
+        "speed": 57,
+        "baseInstinct": 53,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 46,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "2B": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

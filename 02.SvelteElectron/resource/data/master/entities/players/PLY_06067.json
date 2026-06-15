@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06067",
+  "name": "강찬원",
+  "nameEn": "Kang ChanWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 44,
+      "primaryPosition": "SP",
+      "developmentRate": 50,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 49,
+        "velocity": 54,
+        "command": 46,
+        "control": 49,
+        "movement": 46,
+        "mentality": 59,
+        "recovery": 47,
+        "clutch": 44,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 34,
+        "power": 31,
+        "eye": 30,
+        "discipline": 36,
+        "speed": 33,
+        "baseInstinct": 27,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 32,
+        "battingClutch": 23
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

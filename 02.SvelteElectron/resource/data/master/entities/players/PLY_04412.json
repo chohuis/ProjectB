@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04412",
+  "name": "임훈준",
+  "nameEn": "Lim HunJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 28,
+      "primaryPosition": "2B",
+      "developmentRate": 55,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 63,
+        "velocity": 63,
+        "command": 58,
+        "control": 64,
+        "movement": 57,
+        "mentality": 66,
+        "recovery": 51,
+        "clutch": 56,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 50,
+        "power": 44,
+        "eye": 45,
+        "discipline": 47,
+        "speed": 52,
+        "baseInstinct": 37,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 40,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "2B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

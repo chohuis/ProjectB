@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03534",
+  "name": "이도환",
+  "nameEn": "Lee DoHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 97,
+      "primaryPosition": "LF",
+      "developmentRate": 67,
+      "potentialHidden": 86,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 58,
+        "velocity": 60,
+        "command": 58,
+        "control": 58,
+        "movement": 50,
+        "mentality": 58,
+        "recovery": 47,
+        "clutch": 51,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 52,
+        "power": 51,
+        "eye": 58,
+        "discipline": 48,
+        "speed": 57,
+        "baseInstinct": 51,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 54,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "LF": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08271",
+  "name": "이도욱",
+  "nameEn": "Lee DoWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 93,
+      "primaryPosition": "CF",
+      "developmentRate": 48,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 45,
+        "velocity": 50,
+        "command": 37,
+        "control": 48,
+        "movement": 48,
+        "mentality": 51,
+        "recovery": 45,
+        "clutch": 41,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 54,
+        "power": 50,
+        "eye": 52,
+        "discipline": 47,
+        "speed": 55,
+        "baseInstinct": 49,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 55,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "CF": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

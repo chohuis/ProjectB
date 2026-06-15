@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09254",
+  "name": "장훈수",
+  "nameEn": "Jang HunSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 40,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 67,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 38,
+        "stamina": 33,
+        "velocity": 41,
+        "command": 36,
+        "control": 40,
+        "movement": 28,
+        "mentality": 36,
+        "recovery": 32,
+        "clutch": 24,
+        "holdRunners": 26
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 44,
+        "power": 35,
+        "eye": 38,
+        "discipline": 47,
+        "speed": 51,
+        "baseInstinct": 36,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 43,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "SP": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

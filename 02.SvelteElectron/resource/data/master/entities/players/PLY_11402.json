@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11402",
+  "name": "루이스 조던",
+  "nameEn": "Lewis Jordan",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 21,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 34,
+      "primaryPosition": "SP",
+      "developmentRate": 56,
+      "potentialHidden": 59,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 74,
+        "velocity": 77,
+        "command": 71,
+        "control": 72,
+        "movement": 74,
+        "mentality": 65,
+        "recovery": 63,
+        "clutch": 61,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 76,
+        "power": 66,
+        "eye": 76,
+        "discipline": 69,
+        "speed": 69,
+        "baseInstinct": 71,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 61,
+        "battingClutch": 68
+      },
+      "positionRatings": {
+        "SP": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

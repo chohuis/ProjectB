@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04134",
+  "name": "이수성",
+  "nameEn": "Lee SuSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 68,
+      "primaryPosition": "RF",
+      "developmentRate": 57,
+      "potentialHidden": 86,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 67,
+        "velocity": 78,
+        "command": 66,
+        "control": 61,
+        "movement": 69,
+        "mentality": 72,
+        "recovery": 61,
+        "clutch": 60,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 46,
+        "power": 45,
+        "eye": 48,
+        "discipline": 47,
+        "speed": 53,
+        "baseInstinct": 50,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 41,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "RF": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

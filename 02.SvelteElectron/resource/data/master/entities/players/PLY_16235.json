@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16235",
+  "name": "앤더슨 코디",
+  "nameEn": "Anderson Cody",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 36,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 19,
+      "primaryPosition": "SP",
+      "developmentRate": 54,
+      "potentialHidden": 57,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 57,
+        "velocity": 68,
+        "command": 66,
+        "control": 57,
+        "movement": 60,
+        "mentality": 66,
+        "recovery": 59,
+        "clutch": 62,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 60,
+        "power": 59,
+        "eye": 68,
+        "discipline": 56,
+        "speed": 66,
+        "baseInstinct": 63,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 59,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "SP": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

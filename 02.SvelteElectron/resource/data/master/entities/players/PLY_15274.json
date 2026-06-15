@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15274",
+  "name": "화이트 조던",
+  "nameEn": "White Jordan",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 48,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 30,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 34,
+      "primaryPosition": "SP",
+      "developmentRate": 35,
+      "potentialHidden": 71,
+      "proServiceYears": 8,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 62,
+        "velocity": 80,
+        "command": 61,
+        "control": 61,
+        "movement": 68,
+        "mentality": 65,
+        "recovery": 70,
+        "clutch": 64,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 65,
+        "power": 65,
+        "eye": 64,
+        "discipline": 63,
+        "speed": 76,
+        "baseInstinct": 63,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 68,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "SP": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

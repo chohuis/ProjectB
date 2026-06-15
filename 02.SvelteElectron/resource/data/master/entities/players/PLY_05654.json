@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05654",
+  "name": "안혁성",
+  "nameEn": "An HyeokSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 68,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 63,
+        "velocity": 64,
+        "command": 59,
+        "control": 65,
+        "movement": 58,
+        "mentality": 63,
+        "recovery": 60,
+        "clutch": 56,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 51,
+        "power": 48,
+        "eye": 58,
+        "discipline": 57,
+        "speed": 55,
+        "baseInstinct": 56,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 57,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "SP": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

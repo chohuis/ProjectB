@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05597",
+  "name": "류혁재",
+  "nameEn": "Ryu HyeokJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 96,
+      "primaryPosition": "1B",
+      "developmentRate": 60,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 51,
+        "velocity": 66,
+        "command": 52,
+        "control": 50,
+        "movement": 59,
+        "mentality": 52,
+        "recovery": 50,
+        "clutch": 47,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 36,
+        "power": 44,
+        "eye": 35,
+        "discipline": 37,
+        "speed": 43,
+        "baseInstinct": 35,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 34,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "1B": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

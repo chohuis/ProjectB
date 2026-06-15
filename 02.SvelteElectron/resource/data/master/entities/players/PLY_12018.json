@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12018",
+  "name": "로빈슨 데릭",
+  "nameEn": "Robinson Derek",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 15,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 31,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 18,
+      "primaryPosition": "2B",
+      "developmentRate": 50,
+      "potentialHidden": 53,
+      "proServiceYears": 9,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 60,
+        "velocity": 68,
+        "command": 62,
+        "control": 61,
+        "movement": 70,
+        "mentality": 66,
+        "recovery": 62,
+        "clutch": 62,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 70,
+        "power": 70,
+        "eye": 70,
+        "discipline": 68,
+        "speed": 64,
+        "baseInstinct": 64,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 67,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "2B": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

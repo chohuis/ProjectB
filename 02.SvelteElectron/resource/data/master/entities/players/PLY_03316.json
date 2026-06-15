@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03316",
+  "name": "류정준",
+  "nameEn": "Ryu JungJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 6,
+      "primaryPosition": "3B",
+      "developmentRate": 68,
+      "potentialHidden": 97,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 73,
+        "velocity": 83,
+        "command": 67,
+        "control": 75,
+        "movement": 70,
+        "mentality": 72,
+        "recovery": 62,
+        "clutch": 70,
+        "holdRunners": 68
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 67,
+        "power": 68,
+        "eye": 71,
+        "discipline": 68,
+        "speed": 69,
+        "baseInstinct": 69,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 69,
+        "battingClutch": 68
+      },
+      "positionRatings": {
+        "3B": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

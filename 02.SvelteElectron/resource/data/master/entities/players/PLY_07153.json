@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07153",
+  "name": "서정준",
+  "nameEn": "Seo JungJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 72,
+      "primaryPosition": "LF",
+      "developmentRate": 58,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 62,
+        "velocity": 61,
+        "command": 59,
+        "control": 62,
+        "movement": 60,
+        "mentality": 65,
+        "recovery": 59,
+        "clutch": 50,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 48,
+        "power": 44,
+        "eye": 56,
+        "discipline": 44,
+        "speed": 51,
+        "baseInstinct": 46,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 44,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "LF": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03194",
+  "name": "최지재",
+  "nameEn": "Choi JiJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 61,
+      "primaryPosition": "1B",
+      "developmentRate": 75,
+      "potentialHidden": 99,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 58,
+        "velocity": 58,
+        "command": 60,
+        "control": 53,
+        "movement": 60,
+        "mentality": 64,
+        "recovery": 59,
+        "clutch": 53,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 50,
+        "power": 55,
+        "eye": 53,
+        "discipline": 49,
+        "speed": 56,
+        "baseInstinct": 49,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 50,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "1B": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

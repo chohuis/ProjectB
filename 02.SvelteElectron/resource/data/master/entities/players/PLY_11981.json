@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11981",
+  "name": "존슨 코너",
+  "nameEn": "Johnson Connor",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 34,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 24,
+      "primaryPosition": "SP",
+      "developmentRate": 61,
+      "potentialHidden": 77,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 75,
+        "velocity": 69,
+        "command": 72,
+        "control": 65,
+        "movement": 73,
+        "mentality": 66,
+        "recovery": 69,
+        "clutch": 59,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 69,
+        "power": 61,
+        "eye": 69,
+        "discipline": 75,
+        "speed": 77,
+        "baseInstinct": 71,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 66,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "SP": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

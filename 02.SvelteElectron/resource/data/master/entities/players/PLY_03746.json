@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03746",
+  "name": "임우완",
+  "nameEn": "Lim WooWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 56,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 49,
+        "velocity": 57,
+        "command": 49,
+        "control": 57,
+        "movement": 48,
+        "mentality": 58,
+        "recovery": 44,
+        "clutch": 42,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 64,
+        "power": 62,
+        "eye": 59,
+        "discipline": 65,
+        "speed": 64,
+        "baseInstinct": 57,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 58,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "SP": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03416",
+  "name": "송성수",
+  "nameEn": "Song SeongSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 50,
+      "primaryPosition": "1B",
+      "developmentRate": 60,
+      "potentialHidden": 94,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 68,
+        "velocity": 72,
+        "command": 72,
+        "control": 68,
+        "movement": 71,
+        "mentality": 78,
+        "recovery": 70,
+        "clutch": 67,
+        "holdRunners": 70
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 67,
+        "power": 65,
+        "eye": 66,
+        "discipline": 60,
+        "speed": 67,
+        "baseInstinct": 67,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 57,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "1B": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

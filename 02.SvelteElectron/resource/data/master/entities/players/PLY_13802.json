@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13802",
+  "name": "카터 헌터",
+  "nameEn": "Carter Hunter",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 47,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 28,
+      "primaryPosition": "3B",
+      "developmentRate": 57,
+      "potentialHidden": 63,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 60,
+        "velocity": 55,
+        "command": 48,
+        "control": 57,
+        "movement": 53,
+        "mentality": 62,
+        "recovery": 44,
+        "clutch": 44,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 54,
+        "power": 50,
+        "eye": 55,
+        "discipline": 57,
+        "speed": 58,
+        "baseInstinct": 54,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 54,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "3B": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

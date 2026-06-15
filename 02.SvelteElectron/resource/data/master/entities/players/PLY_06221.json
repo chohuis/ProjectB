@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06221",
+  "name": "최성현",
+  "nameEn": "Choi SeongHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 96,
+      "primaryPosition": "SP",
+      "developmentRate": 50,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 48,
+        "velocity": 52,
+        "command": 40,
+        "control": 49,
+        "movement": 41,
+        "mentality": 53,
+        "recovery": 46,
+        "clutch": 34,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 39,
+        "power": 36,
+        "eye": 39,
+        "discipline": 41,
+        "speed": 47,
+        "baseInstinct": 43,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 43,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "SP": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

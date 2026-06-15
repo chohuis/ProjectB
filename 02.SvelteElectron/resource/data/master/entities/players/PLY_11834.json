@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11834",
+  "name": "브라운 제이슨",
+  "nameEn": "Brown Jason",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 15,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 10,
+      "primaryPosition": "C",
+      "developmentRate": 48,
+      "potentialHidden": 67,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 80,
+        "stamina": 72,
+        "velocity": 81,
+        "command": 70,
+        "control": 82,
+        "movement": 76,
+        "mentality": 85,
+        "recovery": 78,
+        "clutch": 75,
+        "holdRunners": 78
+      },
+      "batting": {
+        "ovr": 80,
+        "contact": 76,
+        "power": 72,
+        "eye": 75,
+        "discipline": 72,
+        "speed": 84,
+        "baseInstinct": 77,
+        "bunting": 66,
+        "platoon": 50,
+        "fielding": 72,
+        "arm": 79,
+        "battingClutch": 80
+      },
+      "positionRatings": {
+        "C": 80
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

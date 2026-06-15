@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14234",
+  "name": "카터 코너",
+  "nameEn": "Carter Connor",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 24,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 30,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 11,
+      "primaryPosition": "C",
+      "developmentRate": 43,
+      "potentialHidden": 57,
+      "proServiceYears": 8,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 61,
+        "velocity": 67,
+        "command": 59,
+        "control": 58,
+        "movement": 58,
+        "mentality": 61,
+        "recovery": 56,
+        "clutch": 58,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 61,
+        "power": 57,
+        "eye": 70,
+        "discipline": 68,
+        "speed": 61,
+        "baseInstinct": 66,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 58,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "C": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

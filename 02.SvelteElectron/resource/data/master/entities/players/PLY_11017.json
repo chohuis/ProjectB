@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11017",
+  "name": "잭슨 제이크",
+  "nameEn": "Jackson Jake",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 40,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 5,
+      "primaryPosition": "LF",
+      "developmentRate": 62,
+      "potentialHidden": 59,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 79,
+        "stamina": 83,
+        "velocity": 80,
+        "command": 71,
+        "control": 79,
+        "movement": 80,
+        "mentality": 75,
+        "recovery": 67,
+        "clutch": 67,
+        "holdRunners": 77
+      },
+      "batting": {
+        "ovr": 79,
+        "contact": 75,
+        "power": 74,
+        "eye": 79,
+        "discipline": 75,
+        "speed": 76,
+        "baseInstinct": 78,
+        "bunting": 65,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 81,
+        "battingClutch": 70
+      },
+      "positionRatings": {
+        "LF": 79
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

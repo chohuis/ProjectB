@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07284",
+  "name": "한세수",
+  "nameEn": "Han SeSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 16,
+      "primaryPosition": "3B",
+      "developmentRate": 46,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 57,
+        "velocity": 70,
+        "command": 57,
+        "control": 63,
+        "movement": 57,
+        "mentality": 57,
+        "recovery": 60,
+        "clutch": 52,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 39,
+        "power": 30,
+        "eye": 41,
+        "discipline": 31,
+        "speed": 39,
+        "baseInstinct": 41,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 32,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "3B": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10312",
+  "name": "애덤스 칼렙",
+  "nameEn": "Adams Caleb",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 84,
+  "popularity": 39,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 72,
+      "primaryPosition": "SP",
+      "developmentRate": 68,
+      "potentialHidden": 85,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 80,
+        "velocity": 76,
+        "command": 77,
+        "control": 73,
+        "movement": 77,
+        "mentality": 74,
+        "recovery": 75,
+        "clutch": 74,
+        "holdRunners": 69
+      },
+      "batting": {
+        "ovr": 77,
+        "contact": 75,
+        "power": 76,
+        "eye": 75,
+        "discipline": 75,
+        "speed": 79,
+        "baseInstinct": 70,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 72,
+        "arm": 67,
+        "battingClutch": 68
+      },
+      "positionRatings": {
+        "SP": 77
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

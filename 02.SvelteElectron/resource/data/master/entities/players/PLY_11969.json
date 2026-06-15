@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11969",
+  "name": "미첼 알렉스",
+  "nameEn": "Mitchell Alex",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 16,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 71,
+      "primaryPosition": "SS",
+      "developmentRate": 62,
+      "potentialHidden": 77,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 55,
+        "velocity": 54,
+        "command": 58,
+        "control": 48,
+        "movement": 56,
+        "mentality": 51,
+        "recovery": 45,
+        "clutch": 57,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 50,
+        "power": 53,
+        "eye": 57,
+        "discipline": 48,
+        "speed": 59,
+        "baseInstinct": 56,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 58,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "SS": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

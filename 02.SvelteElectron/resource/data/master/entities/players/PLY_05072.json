@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05072",
+  "name": "박민환",
+  "nameEn": "Park MinHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 92,
+      "primaryPosition": "2B",
+      "developmentRate": 53,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 56,
+        "velocity": 54,
+        "command": 50,
+        "control": 50,
+        "movement": 46,
+        "mentality": 55,
+        "recovery": 50,
+        "clutch": 40,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 40,
+        "power": 41,
+        "eye": 43,
+        "discipline": 37,
+        "speed": 43,
+        "baseInstinct": 38,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 45,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "2B": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

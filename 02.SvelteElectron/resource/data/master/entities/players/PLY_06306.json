@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06306",
+  "name": "오지우",
+  "nameEn": "Oh JiWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 40,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 71,
+      "primaryPosition": "SS",
+      "developmentRate": 52,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 52,
+        "velocity": 56,
+        "command": 49,
+        "control": 46,
+        "movement": 42,
+        "mentality": 53,
+        "recovery": 49,
+        "clutch": 48,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 40,
+        "power": 38,
+        "eye": 46,
+        "discipline": 40,
+        "speed": 47,
+        "baseInstinct": 37,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 45,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "SS": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

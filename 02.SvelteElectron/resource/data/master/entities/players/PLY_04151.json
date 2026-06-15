@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04151",
+  "name": "박혁빈",
+  "nameEn": "Park HyeokBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 40,
+      "primaryPosition": "3B",
+      "developmentRate": 55,
+      "potentialHidden": 86,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 62,
+        "velocity": 69,
+        "command": 68,
+        "control": 66,
+        "movement": 60,
+        "mentality": 73,
+        "recovery": 65,
+        "clutch": 57,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 60,
+        "power": 48,
+        "eye": 53,
+        "discipline": 58,
+        "speed": 58,
+        "baseInstinct": 57,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 49,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "3B": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

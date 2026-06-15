@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04728",
+  "name": "임훈재",
+  "nameEn": "Lim HunJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 1,
+      "primaryPosition": "1B",
+      "developmentRate": 53,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 49,
+        "velocity": 63,
+        "command": 48,
+        "control": 50,
+        "movement": 48,
+        "mentality": 59,
+        "recovery": 50,
+        "clutch": 50,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 47,
+        "power": 44,
+        "eye": 45,
+        "discipline": 53,
+        "speed": 56,
+        "baseInstinct": 54,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 52,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "1B": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04573",
+  "name": "김지빈",
+  "nameEn": "Kim JiBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 77,
+      "primaryPosition": "SS",
+      "developmentRate": 46,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 46,
+        "velocity": 53,
+        "command": 40,
+        "control": 47,
+        "movement": 46,
+        "mentality": 51,
+        "recovery": 47,
+        "clutch": 40,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 52,
+        "power": 51,
+        "eye": 47,
+        "discipline": 57,
+        "speed": 56,
+        "baseInstinct": 45,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 55,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "SS": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

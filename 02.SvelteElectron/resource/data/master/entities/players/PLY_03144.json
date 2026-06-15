@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03144",
+  "name": "최정우",
+  "nameEn": "Choi JungWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 42,
+      "primaryPosition": "RF",
+      "developmentRate": 58,
+      "potentialHidden": 94,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 69,
+        "velocity": 72,
+        "command": 61,
+        "control": 71,
+        "movement": 67,
+        "mentality": 69,
+        "recovery": 68,
+        "clutch": 61,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 59,
+        "power": 55,
+        "eye": 56,
+        "discipline": 53,
+        "speed": 52,
+        "baseInstinct": 48,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 53,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "RF": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

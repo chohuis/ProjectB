@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16427",
+  "name": "스미스 딜런",
+  "nameEn": "Smith Dylan",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 85,
+  "popularity": 43,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 9,
+      "primaryPosition": "1B",
+      "developmentRate": 64,
+      "potentialHidden": 74,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 70,
+        "velocity": 74,
+        "command": 72,
+        "control": 73,
+        "movement": 60,
+        "mentality": 72,
+        "recovery": 61,
+        "clutch": 68,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 65,
+        "power": 64,
+        "eye": 73,
+        "discipline": 68,
+        "speed": 64,
+        "baseInstinct": 61,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 64,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "1B": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07149",
+  "name": "임태기",
+  "nameEn": "Lim TaeKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 67,
+      "primaryPosition": "3B",
+      "developmentRate": 55,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 40,
+        "velocity": 50,
+        "command": 39,
+        "control": 38,
+        "movement": 45,
+        "mentality": 51,
+        "recovery": 43,
+        "clutch": 38,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 38,
+        "power": 39,
+        "eye": 32,
+        "discipline": 31,
+        "speed": 38,
+        "baseInstinct": 41,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 40,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "3B": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

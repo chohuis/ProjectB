@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04865",
+  "name": "강태민",
+  "nameEn": "Kang TaeMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 87,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 39,
+        "velocity": 42,
+        "command": 42,
+        "control": 41,
+        "movement": 37,
+        "mentality": 46,
+        "recovery": 32,
+        "clutch": 30,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 58,
+        "power": 49,
+        "eye": 47,
+        "discipline": 50,
+        "speed": 49,
+        "baseInstinct": 51,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 44,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SP": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

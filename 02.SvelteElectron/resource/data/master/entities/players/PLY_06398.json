@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06398",
+  "name": "오태수",
+  "nameEn": "Oh TaeSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 19,
+      "primaryPosition": "SS",
+      "developmentRate": 58,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 35,
+        "velocity": 50,
+        "command": 42,
+        "control": 33,
+        "movement": 37,
+        "mentality": 44,
+        "recovery": 41,
+        "clutch": 34,
+        "holdRunners": 28
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 42,
+        "power": 42,
+        "eye": 37,
+        "discipline": 41,
+        "speed": 45,
+        "baseInstinct": 34,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 35,
+        "arm": 43,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "SS": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

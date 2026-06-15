@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04590",
+  "name": "조준빈",
+  "nameEn": "Jo JunBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 82,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 55,
+        "velocity": 60,
+        "command": 52,
+        "control": 53,
+        "movement": 50,
+        "mentality": 57,
+        "recovery": 52,
+        "clutch": 44,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 36,
+        "power": 29,
+        "eye": 35,
+        "discipline": 37,
+        "speed": 37,
+        "baseInstinct": 28,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 33,
+        "arm": 31,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "SP": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

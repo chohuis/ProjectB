@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06949",
+  "name": "박찬원",
+  "nameEn": "Park ChanWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 45,
+      "primaryPosition": "CF",
+      "developmentRate": 54,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 60,
+        "velocity": 74,
+        "command": 64,
+        "control": 64,
+        "movement": 66,
+        "mentality": 61,
+        "recovery": 55,
+        "clutch": 59,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 50,
+        "power": 43,
+        "eye": 46,
+        "discipline": 43,
+        "speed": 47,
+        "baseInstinct": 40,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 43,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "CF": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

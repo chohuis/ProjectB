@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09291",
+  "name": "황준욱",
+  "nameEn": "Hwang JunWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 65,
+      "primaryPosition": "SP",
+      "developmentRate": 44,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 37,
+        "stamina": 38,
+        "velocity": 37,
+        "command": 27,
+        "control": 36,
+        "movement": 27,
+        "mentality": 35,
+        "recovery": 27,
+        "clutch": 35,
+        "holdRunners": 26
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 41,
+        "power": 42,
+        "eye": 47,
+        "discipline": 40,
+        "speed": 48,
+        "baseInstinct": 39,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 36,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SP": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

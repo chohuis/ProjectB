@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07279",
+  "name": "전정원",
+  "nameEn": "Jeon JungWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 66,
+      "primaryPosition": "RF",
+      "developmentRate": 60,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 60,
+        "velocity": 61,
+        "command": 51,
+        "control": 58,
+        "movement": 58,
+        "mentality": 56,
+        "recovery": 44,
+        "clutch": 50,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 53,
+        "power": 44,
+        "eye": 51,
+        "discipline": 47,
+        "speed": 47,
+        "baseInstinct": 47,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 42,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "RF": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

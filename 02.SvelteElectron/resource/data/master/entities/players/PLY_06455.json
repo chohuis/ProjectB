@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06455",
+  "name": "김수욱",
+  "nameEn": "Kim SuWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 72,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 50,
+        "velocity": 61,
+        "command": 47,
+        "control": 55,
+        "movement": 54,
+        "mentality": 54,
+        "recovery": 50,
+        "clutch": 46,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 54,
+        "power": 48,
+        "eye": 50,
+        "discipline": 42,
+        "speed": 53,
+        "baseInstinct": 49,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 45,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

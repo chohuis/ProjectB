@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04254",
+  "name": "안도빈",
+  "nameEn": "An DoBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 94,
+      "primaryPosition": "SP",
+      "developmentRate": 71,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 65,
+        "velocity": 66,
+        "command": 61,
+        "control": 66,
+        "movement": 65,
+        "mentality": 68,
+        "recovery": 60,
+        "clutch": 64,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 62,
+        "power": 59,
+        "eye": 63,
+        "discipline": 56,
+        "speed": 55,
+        "baseInstinct": 57,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 58,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "SP": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

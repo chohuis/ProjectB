@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13180",
+  "name": "영 그랜트",
+  "nameEn": "Young Grant",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 36,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 40,
+      "primaryPosition": "CF",
+      "developmentRate": 80,
+      "potentialHidden": 92,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 63,
+        "velocity": 68,
+        "command": 54,
+        "control": 63,
+        "movement": 58,
+        "mentality": 67,
+        "recovery": 57,
+        "clutch": 56,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 54,
+        "power": 54,
+        "eye": 59,
+        "discipline": 62,
+        "speed": 68,
+        "baseInstinct": 59,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 50,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "CF": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

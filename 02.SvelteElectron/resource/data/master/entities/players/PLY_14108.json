@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14108",
+  "name": "가르시아 데릭",
+  "nameEn": "Garcia Derek",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 85,
+  "popularity": 36,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 32,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 87,
+      "primaryPosition": "SP",
+      "developmentRate": 42,
+      "potentialHidden": 45,
+      "proServiceYears": 10,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 47,
+        "velocity": 49,
+        "command": 44,
+        "control": 44,
+        "movement": 46,
+        "mentality": 54,
+        "recovery": 52,
+        "clutch": 51,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 46,
+        "power": 45,
+        "eye": 56,
+        "discipline": 47,
+        "speed": 53,
+        "baseInstinct": 50,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 47,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SP": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

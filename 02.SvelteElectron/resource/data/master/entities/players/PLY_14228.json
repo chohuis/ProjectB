@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14228",
+  "name": "로드리게스 칼렙",
+  "nameEn": "Rodriguez Caleb",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 16,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 34,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 93,
+      "primaryPosition": "3B",
+      "developmentRate": 45,
+      "potentialHidden": 56,
+      "proServiceYears": 12,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 47,
+        "velocity": 59,
+        "command": 54,
+        "control": 55,
+        "movement": 45,
+        "mentality": 56,
+        "recovery": 49,
+        "clutch": 49,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 52,
+        "power": 44,
+        "eye": 49,
+        "discipline": 52,
+        "speed": 58,
+        "baseInstinct": 53,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 49,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "3B": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

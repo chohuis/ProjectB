@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12249",
+  "name": "해리스 딜런",
+  "nameEn": "Harris Dylan",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 13,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 39,
+      "primaryPosition": "SS",
+      "developmentRate": 77,
+      "potentialHidden": 93,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 51,
+        "velocity": 52,
+        "command": 45,
+        "control": 55,
+        "movement": 49,
+        "mentality": 57,
+        "recovery": 51,
+        "clutch": 41,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 51,
+        "power": 52,
+        "eye": 44,
+        "discipline": 50,
+        "speed": 50,
+        "baseInstinct": 44,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 41,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SS": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

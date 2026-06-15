@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10738",
+  "name": "가르시아 네이선",
+  "nameEn": "Garcia Nathan",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 40,
+      "primaryPosition": "C",
+      "developmentRate": 69,
+      "potentialHidden": 64,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 82,
+        "stamina": 81,
+        "velocity": 86,
+        "command": 75,
+        "control": 80,
+        "movement": 74,
+        "mentality": 77,
+        "recovery": 72,
+        "clutch": 71,
+        "holdRunners": 79
+      },
+      "batting": {
+        "ovr": 82,
+        "contact": 75,
+        "power": 76,
+        "eye": 80,
+        "discipline": 84,
+        "speed": 86,
+        "baseInstinct": 72,
+        "bunting": 74,
+        "platoon": 50,
+        "fielding": 74,
+        "arm": 80,
+        "battingClutch": 75
+      },
+      "positionRatings": {
+        "C": 82
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

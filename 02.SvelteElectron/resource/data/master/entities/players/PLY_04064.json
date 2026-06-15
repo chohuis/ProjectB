@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04064",
+  "name": "최우식",
+  "nameEn": "Choi WooSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 3,
+      "primaryPosition": "SP",
+      "developmentRate": 71,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 52,
+        "velocity": 55,
+        "command": 48,
+        "control": 49,
+        "movement": 52,
+        "mentality": 52,
+        "recovery": 52,
+        "clutch": 50,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 47,
+        "power": 47,
+        "eye": 43,
+        "discipline": 48,
+        "speed": 49,
+        "baseInstinct": 41,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 42,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13499",
+  "name": "스콧 루이스",
+  "nameEn": "Scott Luis",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 28,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 63,
+      "primaryPosition": "2B",
+      "developmentRate": 52,
+      "potentialHidden": 62,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 68,
+        "velocity": 81,
+        "command": 69,
+        "control": 69,
+        "movement": 69,
+        "mentality": 79,
+        "recovery": 69,
+        "clutch": 63,
+        "holdRunners": 63
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 70,
+        "power": 67,
+        "eye": 76,
+        "discipline": 63,
+        "speed": 77,
+        "baseInstinct": 72,
+        "bunting": 65,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 75,
+        "battingClutch": 68
+      },
+      "positionRatings": {
+        "2B": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

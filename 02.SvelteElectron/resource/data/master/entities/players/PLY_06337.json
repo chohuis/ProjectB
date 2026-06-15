@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06337",
+  "name": "권준진",
+  "nameEn": "Kwon JunJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 10,
+      "primaryPosition": "1B",
+      "developmentRate": 41,
+      "potentialHidden": 50,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 49,
+        "velocity": 52,
+        "command": 50,
+        "control": 49,
+        "movement": 48,
+        "mentality": 48,
+        "recovery": 43,
+        "clutch": 43,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 34,
+        "contact": 28,
+        "power": 24,
+        "eye": 31,
+        "discipline": 28,
+        "speed": 30,
+        "baseInstinct": 27,
+        "bunting": 15,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 32,
+        "battingClutch": 30
+      },
+      "positionRatings": {
+        "1B": 34
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

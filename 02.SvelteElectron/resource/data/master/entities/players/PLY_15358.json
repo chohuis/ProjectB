@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15358",
+  "name": "베이커 네이선",
+  "nameEn": "Baker Nathan",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 81,
+  "popularity": 25,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 23,
+      "primaryPosition": "2B",
+      "developmentRate": 58,
+      "potentialHidden": 86,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 46,
+        "velocity": 53,
+        "command": 44,
+        "control": 51,
+        "movement": 48,
+        "mentality": 42,
+        "recovery": 47,
+        "clutch": 36,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 51,
+        "power": 38,
+        "eye": 40,
+        "discipline": 38,
+        "speed": 51,
+        "baseInstinct": 38,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 51,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "2B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05542",
+  "name": "임훈재",
+  "nameEn": "Lim HunJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 1,
+      "primaryPosition": "1B",
+      "developmentRate": 57,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 55,
+        "velocity": 69,
+        "command": 54,
+        "control": 56,
+        "movement": 54,
+        "mentality": 65,
+        "recovery": 56,
+        "clutch": 56,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 53,
+        "power": 50,
+        "eye": 51,
+        "discipline": 59,
+        "speed": 62,
+        "baseInstinct": 60,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 58,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "1B": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

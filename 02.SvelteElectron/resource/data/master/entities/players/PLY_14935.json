@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14935",
+  "name": "로빈슨 그랜트",
+  "nameEn": "Robinson Grant",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 85,
+  "popularity": 16,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 81,
+      "primaryPosition": "SP",
+      "developmentRate": 43,
+      "potentialHidden": 57,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 60,
+        "velocity": 64,
+        "command": 69,
+        "control": 63,
+        "movement": 58,
+        "mentality": 63,
+        "recovery": 57,
+        "clutch": 65,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 61,
+        "power": 68,
+        "eye": 60,
+        "discipline": 58,
+        "speed": 65,
+        "baseInstinct": 66,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 60,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "SP": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

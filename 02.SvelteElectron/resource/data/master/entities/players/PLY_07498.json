@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07498",
+  "name": "윤동민",
+  "nameEn": "Yoon DongMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 4,
+      "primaryPosition": "RF",
+      "developmentRate": 46,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 44,
+        "velocity": 46,
+        "command": 44,
+        "control": 46,
+        "movement": 40,
+        "mentality": 44,
+        "recovery": 45,
+        "clutch": 42,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 49,
+        "power": 46,
+        "eye": 51,
+        "discipline": 53,
+        "speed": 48,
+        "baseInstinct": 53,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 50,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "RF": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

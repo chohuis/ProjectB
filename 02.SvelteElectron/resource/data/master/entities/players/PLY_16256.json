@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16256",
+  "name": "홀 조던",
+  "nameEn": "Hall Jordan",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 84,
+  "popularity": 49,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 23,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 68,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 61,
+        "velocity": 73,
+        "command": 54,
+        "control": 58,
+        "movement": 57,
+        "mentality": 66,
+        "recovery": 60,
+        "clutch": 53,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 61,
+        "power": 53,
+        "eye": 67,
+        "discipline": 60,
+        "speed": 70,
+        "baseInstinct": 58,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 54,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "SP": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

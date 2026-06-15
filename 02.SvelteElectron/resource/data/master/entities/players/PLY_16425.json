@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16425",
+  "name": "클라크 트레버",
+  "nameEn": "Clark Trevor",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 20,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 29,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 87,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 52,
+        "velocity": 48,
+        "command": 39,
+        "control": 51,
+        "movement": 42,
+        "mentality": 49,
+        "recovery": 49,
+        "clutch": 47,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 49,
+        "power": 43,
+        "eye": 51,
+        "discipline": 41,
+        "speed": 45,
+        "baseInstinct": 42,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 40,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "SP": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

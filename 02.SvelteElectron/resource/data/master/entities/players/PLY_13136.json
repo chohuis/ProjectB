@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13136",
+  "name": "워커 조던",
+  "nameEn": "Walker Jordan",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 77,
+      "primaryPosition": "SP",
+      "developmentRate": 56,
+      "potentialHidden": 67,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 52,
+        "velocity": 53,
+        "command": 45,
+        "control": 57,
+        "movement": 49,
+        "mentality": 47,
+        "recovery": 51,
+        "clutch": 50,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 47,
+        "power": 44,
+        "eye": 49,
+        "discipline": 51,
+        "speed": 53,
+        "baseInstinct": 55,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 46,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "SP": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

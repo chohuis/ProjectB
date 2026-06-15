@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06815",
+  "name": "이훈우",
+  "nameEn": "Lee HunWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 28,
+      "primaryPosition": "CF",
+      "developmentRate": 51,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 67,
+        "velocity": 78,
+        "command": 60,
+        "control": 67,
+        "movement": 60,
+        "mentality": 70,
+        "recovery": 67,
+        "clutch": 67,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 57,
+        "power": 50,
+        "eye": 50,
+        "discipline": 56,
+        "speed": 59,
+        "baseInstinct": 57,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 53,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "CF": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

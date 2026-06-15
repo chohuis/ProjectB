@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14433",
+  "name": "마틴 제이슨",
+  "nameEn": "Martin Jason",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 36,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 69,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 54,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 57,
+        "velocity": 74,
+        "command": 64,
+        "control": 68,
+        "movement": 61,
+        "mentality": 68,
+        "recovery": 60,
+        "clutch": 55,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 62,
+        "power": 54,
+        "eye": 67,
+        "discipline": 60,
+        "speed": 60,
+        "baseInstinct": 63,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 55,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "SP": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

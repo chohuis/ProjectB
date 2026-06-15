@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03874",
+  "name": "조현욱",
+  "nameEn": "Jo HyeonWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 22,
+      "primaryPosition": "C",
+      "developmentRate": 56,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 49,
+        "velocity": 65,
+        "command": 56,
+        "control": 54,
+        "movement": 55,
+        "mentality": 55,
+        "recovery": 46,
+        "clutch": 44,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 62,
+        "power": 55,
+        "eye": 57,
+        "discipline": 48,
+        "speed": 58,
+        "baseInstinct": 59,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 50,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "C": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

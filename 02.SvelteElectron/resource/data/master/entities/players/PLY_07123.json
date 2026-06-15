@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07123",
+  "name": "권준빈",
+  "nameEn": "Kwon JunBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 85,
+      "primaryPosition": "SS",
+      "developmentRate": 57,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 52,
+        "velocity": 52,
+        "command": 51,
+        "control": 46,
+        "movement": 49,
+        "mentality": 45,
+        "recovery": 40,
+        "clutch": 46,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 46,
+        "power": 37,
+        "eye": 35,
+        "discipline": 35,
+        "speed": 40,
+        "baseInstinct": 37,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 38,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "SS": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

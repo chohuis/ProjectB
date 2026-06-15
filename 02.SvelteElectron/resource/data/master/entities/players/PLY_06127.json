@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06127",
+  "name": "박준혁",
+  "nameEn": "Park JunHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 38,
+      "primaryPosition": "SP",
+      "developmentRate": 41,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 46,
+        "velocity": 48,
+        "command": 34,
+        "control": 41,
+        "movement": 45,
+        "mentality": 40,
+        "recovery": 38,
+        "clutch": 37,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 32,
+        "power": 32,
+        "eye": 39,
+        "discipline": 37,
+        "speed": 38,
+        "baseInstinct": 26,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 33,
+        "arm": 33,
+        "battingClutch": 27
+      },
+      "positionRatings": {
+        "SP": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

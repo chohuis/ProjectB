@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04552",
+  "name": "박수윤",
+  "nameEn": "Park SuYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 52,
+      "primaryPosition": "C",
+      "developmentRate": 54,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 52,
+        "velocity": 54,
+        "command": 44,
+        "control": 50,
+        "movement": 51,
+        "mentality": 54,
+        "recovery": 42,
+        "clutch": 40,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 42,
+        "power": 40,
+        "eye": 35,
+        "discipline": 36,
+        "speed": 46,
+        "baseInstinct": 35,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 37,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "C": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

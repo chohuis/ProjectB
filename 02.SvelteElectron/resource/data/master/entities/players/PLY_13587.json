@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13587",
+  "name": "스미스 알렉스",
+  "nameEn": "Smith Alex",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 36,
+      "primaryPosition": "1B",
+      "developmentRate": 76,
+      "potentialHidden": 84,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 59,
+        "velocity": 64,
+        "command": 65,
+        "control": 69,
+        "movement": 65,
+        "mentality": 69,
+        "recovery": 64,
+        "clutch": 59,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 59,
+        "power": 63,
+        "eye": 66,
+        "discipline": 69,
+        "speed": 70,
+        "baseInstinct": 65,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 65,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "1B": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

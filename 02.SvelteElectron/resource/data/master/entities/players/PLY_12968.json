@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12968",
+  "name": "화이트 제이크",
+  "nameEn": "White Jake",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 18,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 90,
+      "primaryPosition": "SP",
+      "developmentRate": 72,
+      "potentialHidden": 92,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 54,
+        "velocity": 67,
+        "command": 53,
+        "control": 51,
+        "movement": 61,
+        "mentality": 57,
+        "recovery": 47,
+        "clutch": 48,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 62,
+        "power": 50,
+        "eye": 49,
+        "discipline": 53,
+        "speed": 54,
+        "baseInstinct": 49,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 48,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

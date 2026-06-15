@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14424",
+  "name": "에르난데스 딜런",
+  "nameEn": "Hernandez Dylan",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 82,
+  "popularity": 48,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 94,
+      "primaryPosition": "C",
+      "developmentRate": 45,
+      "potentialHidden": 57,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 64,
+        "velocity": 71,
+        "command": 62,
+        "control": 58,
+        "movement": 58,
+        "mentality": 55,
+        "recovery": 59,
+        "clutch": 58,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 60,
+        "power": 62,
+        "eye": 60,
+        "discipline": 59,
+        "speed": 64,
+        "baseInstinct": 51,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 53,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "C": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

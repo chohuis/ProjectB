@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16689",
+  "name": "가르시아 알렉스",
+  "nameEn": "Garcia Alex",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 38,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 30,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 92,
+      "primaryPosition": "SP",
+      "developmentRate": 37,
+      "potentialHidden": 66,
+      "proServiceYears": 8,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 49,
+        "velocity": 48,
+        "command": 46,
+        "control": 54,
+        "movement": 42,
+        "mentality": 55,
+        "recovery": 50,
+        "clutch": 49,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 51,
+        "power": 50,
+        "eye": 54,
+        "discipline": 53,
+        "speed": 50,
+        "baseInstinct": 49,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 44,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SP": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

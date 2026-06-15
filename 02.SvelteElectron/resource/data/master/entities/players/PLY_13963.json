@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13963",
+  "name": "윌리엄스 숀",
+  "nameEn": "Williams Sean",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 32,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 30,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 41,
+      "primaryPosition": "SP",
+      "developmentRate": 43,
+      "potentialHidden": 68,
+      "proServiceYears": 8,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 53,
+        "velocity": 65,
+        "command": 54,
+        "control": 60,
+        "movement": 56,
+        "mentality": 60,
+        "recovery": 58,
+        "clutch": 47,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 60,
+        "power": 59,
+        "eye": 59,
+        "discipline": 48,
+        "speed": 61,
+        "baseInstinct": 56,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 57,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "SP": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

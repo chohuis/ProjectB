@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07619",
+  "name": "박지식",
+  "nameEn": "Park JiSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 35,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 69,
+      "primaryPosition": "RF",
+      "developmentRate": 53,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 55,
+        "velocity": 59,
+        "command": 49,
+        "control": 48,
+        "movement": 45,
+        "mentality": 58,
+        "recovery": 46,
+        "clutch": 43,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 46,
+        "power": 50,
+        "eye": 56,
+        "discipline": 50,
+        "speed": 50,
+        "baseInstinct": 52,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 52,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "RF": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

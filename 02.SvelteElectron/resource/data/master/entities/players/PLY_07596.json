@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07596",
+  "name": "신영진",
+  "nameEn": "Shin YoungJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 40,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 27,
+      "primaryPosition": "LF",
+      "developmentRate": 59,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 50,
+        "velocity": 52,
+        "command": 48,
+        "control": 44,
+        "movement": 46,
+        "mentality": 46,
+        "recovery": 41,
+        "clutch": 38,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 39,
+        "power": 37,
+        "eye": 40,
+        "discipline": 37,
+        "speed": 51,
+        "baseInstinct": 41,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 37,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "LF": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

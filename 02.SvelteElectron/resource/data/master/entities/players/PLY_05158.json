@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05158",
+  "name": "조현우",
+  "nameEn": "Jo HyeonWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 93,
+      "primaryPosition": "LF",
+      "developmentRate": 56,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 44,
+        "velocity": 46,
+        "command": 41,
+        "control": 45,
+        "movement": 38,
+        "mentality": 49,
+        "recovery": 42,
+        "clutch": 41,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 42,
+        "power": 34,
+        "eye": 37,
+        "discipline": 34,
+        "speed": 48,
+        "baseInstinct": 36,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 33,
+        "arm": 34,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "LF": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

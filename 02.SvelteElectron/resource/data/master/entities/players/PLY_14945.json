@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14945",
+  "name": "마르티네스 딜런",
+  "nameEn": "Martinez Dylan",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 43,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 86,
+      "primaryPosition": "LF",
+      "developmentRate": 60,
+      "potentialHidden": 57,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 56,
+        "velocity": 67,
+        "command": 61,
+        "control": 65,
+        "movement": 64,
+        "mentality": 68,
+        "recovery": 60,
+        "clutch": 56,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 57,
+        "power": 59,
+        "eye": 62,
+        "discipline": 56,
+        "speed": 61,
+        "baseInstinct": 62,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 57,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "LF": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

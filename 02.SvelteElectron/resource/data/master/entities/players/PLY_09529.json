@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09529",
+  "name": "전지찬",
+  "nameEn": "Jeon JiChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 80,
+      "primaryPosition": "SS",
+      "developmentRate": 59,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 37,
+        "stamina": 36,
+        "velocity": 35,
+        "command": 32,
+        "control": 38,
+        "movement": 36,
+        "mentality": 39,
+        "recovery": 27,
+        "clutch": 33,
+        "holdRunners": 23
+      },
+      "batting": {
+        "ovr": 31,
+        "contact": 34,
+        "power": 30,
+        "eye": 26,
+        "discipline": 21,
+        "speed": 34,
+        "baseInstinct": 30,
+        "bunting": 11,
+        "platoon": 50,
+        "fielding": 29,
+        "arm": 20,
+        "battingClutch": 25
+      },
+      "positionRatings": {
+        "SS": 31
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

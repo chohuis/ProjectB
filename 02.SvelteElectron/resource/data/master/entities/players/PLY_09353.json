@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09353",
+  "name": "박성성",
+  "nameEn": "Park SeongSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 8,
+      "primaryPosition": "SS",
+      "developmentRate": 53,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 39,
+        "stamina": 34,
+        "velocity": 37,
+        "command": 36,
+        "control": 35,
+        "movement": 30,
+        "mentality": 35,
+        "recovery": 31,
+        "clutch": 27,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 46,
+        "power": 45,
+        "eye": 44,
+        "discipline": 47,
+        "speed": 49,
+        "baseInstinct": 41,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 40,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "SS": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

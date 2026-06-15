@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03422",
+  "name": "오찬찬",
+  "nameEn": "Oh ChanChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 30,
+      "primaryPosition": "2B",
+      "developmentRate": 63,
+      "potentialHidden": 81,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 71,
+        "velocity": 77,
+        "command": 63,
+        "control": 68,
+        "movement": 68,
+        "mentality": 71,
+        "recovery": 68,
+        "clutch": 62,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 59,
+        "power": 51,
+        "eye": 56,
+        "discipline": 59,
+        "speed": 61,
+        "baseInstinct": 58,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 54,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "2B": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

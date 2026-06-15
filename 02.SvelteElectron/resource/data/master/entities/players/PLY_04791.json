@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04791",
+  "name": "오동원",
+  "nameEn": "Oh DongWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 88,
+      "primaryPosition": "CF",
+      "developmentRate": 45,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 56,
+        "velocity": 56,
+        "command": 48,
+        "control": 54,
+        "movement": 47,
+        "mentality": 54,
+        "recovery": 51,
+        "clutch": 51,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 46,
+        "power": 43,
+        "eye": 41,
+        "discipline": 38,
+        "speed": 45,
+        "baseInstinct": 37,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 46,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "CF": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

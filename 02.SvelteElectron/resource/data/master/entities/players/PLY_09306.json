@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09306",
+  "name": "안민진",
+  "nameEn": "An MinJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 47,
+      "primaryPosition": "2B",
+      "developmentRate": 56,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 42,
+        "velocity": 60,
+        "command": 41,
+        "control": 45,
+        "movement": 43,
+        "mentality": 51,
+        "recovery": 39,
+        "clutch": 46,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 32,
+        "contact": 29,
+        "power": 24,
+        "eye": 31,
+        "discipline": 30,
+        "speed": 29,
+        "baseInstinct": 29,
+        "bunting": 16,
+        "platoon": 50,
+        "fielding": 28,
+        "arm": 23,
+        "battingClutch": 26
+      },
+      "positionRatings": {
+        "2B": 32
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

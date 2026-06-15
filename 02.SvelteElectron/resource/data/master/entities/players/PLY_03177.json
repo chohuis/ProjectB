@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03177",
+  "name": "류태혁",
+  "nameEn": "Ryu TaeHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 26,
+      "primaryPosition": "RF",
+      "developmentRate": 59,
+      "potentialHidden": 88,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 74,
+        "velocity": 81,
+        "command": 72,
+        "control": 69,
+        "movement": 71,
+        "mentality": 78,
+        "recovery": 68,
+        "clutch": 62,
+        "holdRunners": 63
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 54,
+        "power": 48,
+        "eye": 50,
+        "discipline": 45,
+        "speed": 51,
+        "baseInstinct": 48,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 45,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "RF": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

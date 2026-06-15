@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04093",
+  "name": "최재욱",
+  "nameEn": "Choi JaeWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 10,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 63,
+        "velocity": 74,
+        "command": 55,
+        "control": 68,
+        "movement": 59,
+        "mentality": 66,
+        "recovery": 59,
+        "clutch": 55,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 51,
+        "power": 41,
+        "eye": 43,
+        "discipline": 50,
+        "speed": 51,
+        "baseInstinct": 46,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 46,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "SP": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

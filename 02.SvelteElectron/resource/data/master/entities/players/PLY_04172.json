@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04172",
+  "name": "오훈호",
+  "nameEn": "Oh HunHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 43,
+      "primaryPosition": "RF",
+      "developmentRate": 53,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 50,
+        "velocity": 57,
+        "command": 53,
+        "control": 55,
+        "movement": 48,
+        "mentality": 57,
+        "recovery": 54,
+        "clutch": 52,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 55,
+        "power": 59,
+        "eye": 59,
+        "discipline": 56,
+        "speed": 61,
+        "baseInstinct": 54,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 58,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "RF": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

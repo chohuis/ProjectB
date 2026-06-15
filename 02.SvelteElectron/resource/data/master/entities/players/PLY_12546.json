@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12546",
+  "name": "리 콜",
+  "nameEn": "Lee Cole",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 14,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 66,
+      "primaryPosition": "SS",
+      "developmentRate": 51,
+      "potentialHidden": 75,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 63,
+        "velocity": 77,
+        "command": 62,
+        "control": 68,
+        "movement": 71,
+        "mentality": 72,
+        "recovery": 64,
+        "clutch": 64,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 69,
+        "power": 59,
+        "eye": 64,
+        "discipline": 67,
+        "speed": 62,
+        "baseInstinct": 60,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 61,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "SS": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

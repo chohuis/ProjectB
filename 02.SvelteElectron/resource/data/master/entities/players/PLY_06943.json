@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06943",
+  "name": "김상식",
+  "nameEn": "Kim SangSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 54,
+      "primaryPosition": "1B",
+      "developmentRate": 52,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 64,
+        "velocity": 68,
+        "command": 60,
+        "control": 62,
+        "movement": 63,
+        "mentality": 68,
+        "recovery": 61,
+        "clutch": 54,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 43,
+        "power": 42,
+        "eye": 46,
+        "discipline": 49,
+        "speed": 46,
+        "baseInstinct": 45,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 45,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "1B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

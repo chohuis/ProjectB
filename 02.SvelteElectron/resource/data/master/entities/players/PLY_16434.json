@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16434",
+  "name": "무어 제이크",
+  "nameEn": "Moore Jake",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 37,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 30,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 45,
+      "primaryPosition": "SP",
+      "developmentRate": 48,
+      "potentialHidden": 54,
+      "proServiceYears": 8,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 67,
+        "velocity": 76,
+        "command": 56,
+        "control": 65,
+        "movement": 58,
+        "mentality": 68,
+        "recovery": 56,
+        "clutch": 56,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 66,
+        "power": 56,
+        "eye": 63,
+        "discipline": 68,
+        "speed": 71,
+        "baseInstinct": 59,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 66,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "SP": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

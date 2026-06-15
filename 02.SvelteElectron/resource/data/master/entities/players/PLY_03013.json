@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03013",
+  "name": "송도우",
+  "nameEn": "Song DoWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 40,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 27,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 85,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 54,
+        "velocity": 61,
+        "command": 58,
+        "control": 57,
+        "movement": 49,
+        "mentality": 58,
+        "recovery": 55,
+        "clutch": 56,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 66,
+        "power": 70,
+        "eye": 70,
+        "discipline": 71,
+        "speed": 74,
+        "baseInstinct": 68,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 68,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "SP": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

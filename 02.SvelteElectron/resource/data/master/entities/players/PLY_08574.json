@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08574",
+  "name": "류성우",
+  "nameEn": "Ryu SeongWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 83,
+      "primaryPosition": "2B",
+      "developmentRate": 44,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 53,
+        "velocity": 50,
+        "command": 48,
+        "control": 42,
+        "movement": 51,
+        "mentality": 48,
+        "recovery": 39,
+        "clutch": 45,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 34,
+        "power": 31,
+        "eye": 36,
+        "discipline": 37,
+        "speed": 45,
+        "baseInstinct": 36,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 34,
+        "battingClutch": 30
+      },
+      "positionRatings": {
+        "2B": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09663",
+  "name": "김혁민",
+  "nameEn": "Kim HyeokMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 6,
+      "primaryPosition": "1B",
+      "developmentRate": 54,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 39,
+        "stamina": 35,
+        "velocity": 42,
+        "command": 31,
+        "control": 39,
+        "movement": 35,
+        "mentality": 35,
+        "recovery": 33,
+        "clutch": 37,
+        "holdRunners": 26
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 44,
+        "power": 48,
+        "eye": 42,
+        "discipline": 39,
+        "speed": 53,
+        "baseInstinct": 42,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 41,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "1B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

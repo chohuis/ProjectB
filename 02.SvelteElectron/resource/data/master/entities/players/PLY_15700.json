@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15700",
+  "name": "톰슨 에반",
+  "nameEn": "Thompson Evan",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 18,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 74,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 65,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 72,
+        "velocity": 76,
+        "command": 68,
+        "control": 62,
+        "movement": 59,
+        "mentality": 64,
+        "recovery": 58,
+        "clutch": 58,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 68,
+        "power": 62,
+        "eye": 60,
+        "discipline": 71,
+        "speed": 62,
+        "baseInstinct": 70,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 57,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "SP": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

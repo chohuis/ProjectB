@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04717",
+  "name": "장수식",
+  "nameEn": "Jang SuSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 18,
+      "primaryPosition": "3B",
+      "developmentRate": 45,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 57,
+        "velocity": 64,
+        "command": 60,
+        "control": 52,
+        "movement": 50,
+        "mentality": 60,
+        "recovery": 55,
+        "clutch": 50,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 47,
+        "power": 48,
+        "eye": 40,
+        "discipline": 38,
+        "speed": 42,
+        "baseInstinct": 42,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 39,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "3B": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

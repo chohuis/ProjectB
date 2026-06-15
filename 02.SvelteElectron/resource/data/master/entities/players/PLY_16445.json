@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16445",
+  "name": "잭슨 블레이크",
+  "nameEn": "Jackson Blake",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 50,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 20,
+      "primaryPosition": "3B",
+      "developmentRate": 59,
+      "potentialHidden": 86,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 53,
+        "velocity": 60,
+        "command": 57,
+        "control": 55,
+        "movement": 51,
+        "mentality": 62,
+        "recovery": 54,
+        "clutch": 55,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 52,
+        "power": 49,
+        "eye": 49,
+        "discipline": 51,
+        "speed": 60,
+        "baseInstinct": 59,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 50,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "3B": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

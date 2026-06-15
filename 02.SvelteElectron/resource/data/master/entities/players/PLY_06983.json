@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06983",
+  "name": "류상환",
+  "nameEn": "Ryu SangHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 45,
+      "primaryPosition": "RF",
+      "developmentRate": 63,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 68,
+        "velocity": 72,
+        "command": 59,
+        "control": 62,
+        "movement": 65,
+        "mentality": 74,
+        "recovery": 68,
+        "clutch": 57,
+        "holdRunners": 63
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 42,
+        "power": 45,
+        "eye": 39,
+        "discipline": 44,
+        "speed": 44,
+        "baseInstinct": 36,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 45,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "RF": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

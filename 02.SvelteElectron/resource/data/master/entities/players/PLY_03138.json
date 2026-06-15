@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03138",
+  "name": "김태혁",
+  "nameEn": "Kim TaeHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 83,
+      "primaryPosition": "RF",
+      "developmentRate": 67,
+      "potentialHidden": 87,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 65,
+        "velocity": 70,
+        "command": 65,
+        "control": 70,
+        "movement": 67,
+        "mentality": 68,
+        "recovery": 66,
+        "clutch": 55,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 52,
+        "power": 52,
+        "eye": 54,
+        "discipline": 54,
+        "speed": 57,
+        "baseInstinct": 52,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 53,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "RF": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

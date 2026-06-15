@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07699",
+  "name": "한재기",
+  "nameEn": "Han JaeKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 47,
+      "primaryPosition": "SP",
+      "developmentRate": 60,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 44,
+        "velocity": 50,
+        "command": 42,
+        "control": 43,
+        "movement": 42,
+        "mentality": 48,
+        "recovery": 48,
+        "clutch": 41,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 51,
+        "power": 43,
+        "eye": 44,
+        "discipline": 53,
+        "speed": 53,
+        "baseInstinct": 47,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 44,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SP": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

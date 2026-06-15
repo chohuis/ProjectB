@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14803",
+  "name": "브라운 조던",
+  "nameEn": "Brown Jordan",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 33,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 54,
+      "primaryPosition": "CF",
+      "developmentRate": 38,
+      "potentialHidden": 47,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 66,
+        "velocity": 58,
+        "command": 55,
+        "control": 61,
+        "movement": 64,
+        "mentality": 59,
+        "recovery": 51,
+        "clutch": 60,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 62,
+        "power": 54,
+        "eye": 56,
+        "discipline": 53,
+        "speed": 59,
+        "baseInstinct": 56,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 62,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "CF": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

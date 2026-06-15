@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05104",
+  "name": "송혁찬",
+  "nameEn": "Song HyeokChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 70,
+      "primaryPosition": "C",
+      "developmentRate": 48,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 47,
+        "velocity": 57,
+        "command": 50,
+        "control": 55,
+        "movement": 43,
+        "mentality": 51,
+        "recovery": 52,
+        "clutch": 39,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 48,
+        "power": 49,
+        "eye": 49,
+        "discipline": 48,
+        "speed": 55,
+        "baseInstinct": 50,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 41,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "C": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

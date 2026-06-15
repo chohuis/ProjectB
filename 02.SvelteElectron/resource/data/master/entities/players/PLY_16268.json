@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16268",
+  "name": "킹 숀",
+  "nameEn": "King Sean",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 94,
+      "primaryPosition": "SP",
+      "developmentRate": 68,
+      "potentialHidden": 62,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 53,
+        "velocity": 66,
+        "command": 55,
+        "control": 53,
+        "movement": 60,
+        "mentality": 63,
+        "recovery": 59,
+        "clutch": 52,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 64,
+        "power": 58,
+        "eye": 60,
+        "discipline": 53,
+        "speed": 59,
+        "baseInstinct": 51,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 49,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "SP": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

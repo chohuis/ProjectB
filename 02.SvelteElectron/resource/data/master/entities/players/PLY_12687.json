@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12687",
+  "name": "카터 코디",
+  "nameEn": "Carter Cody",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 11,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 90,
+      "primaryPosition": "SS",
+      "developmentRate": 58,
+      "potentialHidden": 62,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 70,
+        "velocity": 71,
+        "command": 71,
+        "control": 65,
+        "movement": 72,
+        "mentality": 78,
+        "recovery": 68,
+        "clutch": 65,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 64,
+        "power": 74,
+        "eye": 64,
+        "discipline": 69,
+        "speed": 67,
+        "baseInstinct": 74,
+        "bunting": 66,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 73,
+        "battingClutch": 69
+      },
+      "positionRatings": {
+        "SS": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

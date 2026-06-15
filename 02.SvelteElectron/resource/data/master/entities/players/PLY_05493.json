@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05493",
+  "name": "안기찬",
+  "nameEn": "An KiChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 20,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 40,
+        "velocity": 56,
+        "command": 35,
+        "control": 38,
+        "movement": 36,
+        "mentality": 44,
+        "recovery": 34,
+        "clutch": 42,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 36,
+        "power": 39,
+        "eye": 40,
+        "discipline": 40,
+        "speed": 47,
+        "baseInstinct": 36,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 41,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "SP": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

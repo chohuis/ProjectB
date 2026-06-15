@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03789",
+  "name": "서기찬",
+  "nameEn": "Seo KiChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 63,
+      "primaryPosition": "RF",
+      "developmentRate": 59,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 50,
+        "velocity": 55,
+        "command": 48,
+        "control": 46,
+        "movement": 46,
+        "mentality": 50,
+        "recovery": 52,
+        "clutch": 42,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 57,
+        "power": 51,
+        "eye": 52,
+        "discipline": 47,
+        "speed": 58,
+        "baseInstinct": 57,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 54,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "RF": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

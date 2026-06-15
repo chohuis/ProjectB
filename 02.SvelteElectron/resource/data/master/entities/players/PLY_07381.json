@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07381",
+  "name": "권현준",
+  "nameEn": "Kwon HyeonJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 21,
+      "primaryPosition": "CF",
+      "developmentRate": 50,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 61,
+        "velocity": 69,
+        "command": 54,
+        "control": 56,
+        "movement": 57,
+        "mentality": 61,
+        "recovery": 58,
+        "clutch": 56,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 40,
+        "power": 30,
+        "eye": 36,
+        "discipline": 31,
+        "speed": 42,
+        "baseInstinct": 33,
+        "bunting": 20,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 33,
+        "battingClutch": 30
+      },
+      "positionRatings": {
+        "CF": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

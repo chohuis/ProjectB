@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14619",
+  "name": "톰슨 헌터",
+  "nameEn": "Thompson Hunter",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 38,
+  "militaryStatus": "군필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 68,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 69,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 68,
+        "velocity": 82,
+        "command": 77,
+        "control": 75,
+        "movement": 74,
+        "mentality": 74,
+        "recovery": 78,
+        "clutch": 65,
+        "holdRunners": 74
+      },
+      "batting": {
+        "ovr": 76,
+        "contact": 69,
+        "power": 67,
+        "eye": 74,
+        "discipline": 69,
+        "speed": 72,
+        "baseInstinct": 75,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 69,
+        "battingClutch": 73
+      },
+      "positionRatings": {
+        "SP": 76
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

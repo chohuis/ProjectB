@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08327",
+  "name": "오진빈",
+  "nameEn": "Oh JinBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 5,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 69,
+      "primaryPosition": "C",
+      "developmentRate": 52,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 57,
+        "velocity": 57,
+        "command": 48,
+        "control": 52,
+        "movement": 54,
+        "mentality": 57,
+        "recovery": 50,
+        "clutch": 44,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 51,
+        "power": 55,
+        "eye": 52,
+        "discipline": 49,
+        "speed": 56,
+        "baseInstinct": 51,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 57,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "C": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

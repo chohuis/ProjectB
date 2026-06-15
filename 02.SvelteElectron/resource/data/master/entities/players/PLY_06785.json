@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06785",
+  "name": "조재수",
+  "nameEn": "Jo JaeSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 47,
+      "primaryPosition": "SP",
+      "developmentRate": 66,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 71,
+        "velocity": 77,
+        "command": 61,
+        "control": 65,
+        "movement": 63,
+        "mentality": 72,
+        "recovery": 57,
+        "clutch": 58,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 49,
+        "power": 41,
+        "eye": 41,
+        "discipline": 47,
+        "speed": 43,
+        "baseInstinct": 44,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 41,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "SP": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

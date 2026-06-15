@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08275",
+  "name": "장찬원",
+  "nameEn": "Jang ChanWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 54,
+      "primaryPosition": "RF",
+      "developmentRate": 53,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 48,
+        "velocity": 54,
+        "command": 51,
+        "control": 46,
+        "movement": 46,
+        "mentality": 47,
+        "recovery": 40,
+        "clutch": 39,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 48,
+        "power": 51,
+        "eye": 47,
+        "discipline": 53,
+        "speed": 58,
+        "baseInstinct": 48,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 47,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "RF": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

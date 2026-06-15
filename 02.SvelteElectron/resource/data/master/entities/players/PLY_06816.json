@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06816",
+  "name": "서도원",
+  "nameEn": "Seo DoWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 88,
+      "primaryPosition": "RF",
+      "developmentRate": 55,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 51,
+        "velocity": 59,
+        "command": 51,
+        "control": 49,
+        "movement": 47,
+        "mentality": 48,
+        "recovery": 50,
+        "clutch": 48,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 59,
+        "power": 61,
+        "eye": 61,
+        "discipline": 58,
+        "speed": 69,
+        "baseInstinct": 61,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 65,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "RF": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

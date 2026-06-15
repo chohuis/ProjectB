@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06297",
+  "name": "강상진",
+  "nameEn": "Kang SangJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 9,
+      "primaryPosition": "LF",
+      "developmentRate": 59,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 35,
+        "stamina": 30,
+        "velocity": 37,
+        "command": 28,
+        "control": 32,
+        "movement": 28,
+        "mentality": 31,
+        "recovery": 30,
+        "clutch": 23,
+        "holdRunners": 23
+      },
+      "batting": {
+        "ovr": 31,
+        "contact": 34,
+        "power": 32,
+        "eye": 32,
+        "discipline": 25,
+        "speed": 33,
+        "baseInstinct": 21,
+        "bunting": 12,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 23,
+        "battingClutch": 19
+      },
+      "positionRatings": {
+        "LF": 31
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06953",
+  "name": "정진준",
+  "nameEn": "Jung JinJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 5,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 39,
+      "primaryPosition": "C",
+      "developmentRate": 59,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 49,
+        "velocity": 53,
+        "command": 53,
+        "control": 43,
+        "movement": 46,
+        "mentality": 51,
+        "recovery": 52,
+        "clutch": 48,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 61,
+        "power": 56,
+        "eye": 67,
+        "discipline": 58,
+        "speed": 60,
+        "baseInstinct": 59,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 55,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "C": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14170",
+  "name": "라이트 조던",
+  "nameEn": "Wright Jordan",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 20,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 4,
+      "primaryPosition": "SP",
+      "developmentRate": 61,
+      "potentialHidden": 83,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 67,
+        "velocity": 76,
+        "command": 56,
+        "control": 64,
+        "movement": 67,
+        "mentality": 69,
+        "recovery": 60,
+        "clutch": 63,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 62,
+        "power": 58,
+        "eye": 61,
+        "discipline": 67,
+        "speed": 62,
+        "baseInstinct": 59,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 59,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "SP": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

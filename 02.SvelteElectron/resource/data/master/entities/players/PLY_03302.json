@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03302",
+  "name": "송지준",
+  "nameEn": "Song JiJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 47,
+      "primaryPosition": "CF",
+      "developmentRate": 63,
+      "potentialHidden": 93,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 71,
+        "velocity": 83,
+        "command": 69,
+        "control": 75,
+        "movement": 72,
+        "mentality": 79,
+        "recovery": 74,
+        "clutch": 74,
+        "holdRunners": 69
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 53,
+        "power": 53,
+        "eye": 51,
+        "discipline": 50,
+        "speed": 58,
+        "baseInstinct": 51,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 48,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "CF": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

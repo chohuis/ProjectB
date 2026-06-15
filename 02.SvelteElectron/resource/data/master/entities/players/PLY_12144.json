@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12144",
+  "name": "브라운 데릭",
+  "nameEn": "Brown Derek",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 32,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 40,
+      "primaryPosition": "2B",
+      "developmentRate": 70,
+      "potentialHidden": 80,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 55,
+        "velocity": 55,
+        "command": 55,
+        "control": 46,
+        "movement": 46,
+        "mentality": 56,
+        "recovery": 49,
+        "clutch": 42,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 48,
+        "power": 43,
+        "eye": 46,
+        "discipline": 43,
+        "speed": 60,
+        "baseInstinct": 53,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 48,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "2B": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

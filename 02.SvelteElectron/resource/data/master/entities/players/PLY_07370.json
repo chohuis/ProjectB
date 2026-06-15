@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07370",
+  "name": "전민식",
+  "nameEn": "Jeon MinSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 38,
+      "primaryPosition": "SP",
+      "developmentRate": 51,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 57,
+        "velocity": 60,
+        "command": 53,
+        "control": 59,
+        "movement": 54,
+        "mentality": 55,
+        "recovery": 51,
+        "clutch": 44,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 51,
+        "power": 43,
+        "eye": 48,
+        "discipline": 52,
+        "speed": 48,
+        "baseInstinct": 48,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 45,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SP": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10486",
+  "name": "베이커 에릭",
+  "nameEn": "Baker Eric",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 32,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 34,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 35,
+      "primaryPosition": "CF",
+      "developmentRate": 53,
+      "potentialHidden": 66,
+      "proServiceYears": 12,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 57,
+        "velocity": 54,
+        "command": 55,
+        "control": 60,
+        "movement": 59,
+        "mentality": 61,
+        "recovery": 55,
+        "clutch": 44,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 49,
+        "power": 55,
+        "eye": 51,
+        "discipline": 53,
+        "speed": 52,
+        "baseInstinct": 51,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 46,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "CF": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

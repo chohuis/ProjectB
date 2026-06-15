@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08576",
+  "name": "강상우",
+  "nameEn": "Kang SangWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 50,
+      "primaryPosition": "SP",
+      "developmentRate": 60,
+      "potentialHidden": 44,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 46,
+        "velocity": 44,
+        "command": 44,
+        "control": 35,
+        "movement": 37,
+        "mentality": 44,
+        "recovery": 41,
+        "clutch": 34,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 29,
+        "power": 27,
+        "eye": 27,
+        "discipline": 35,
+        "speed": 32,
+        "baseInstinct": 27,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 33,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "SP": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

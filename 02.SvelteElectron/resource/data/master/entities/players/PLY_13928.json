@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13928",
+  "name": "로드리게스 오스틴",
+  "nameEn": "Rodriguez Austin",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 16,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 62,
+      "primaryPosition": "LF",
+      "developmentRate": 71,
+      "potentialHidden": 73,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 61,
+        "velocity": 71,
+        "command": 64,
+        "control": 66,
+        "movement": 54,
+        "mentality": 61,
+        "recovery": 61,
+        "clutch": 54,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 57,
+        "power": 64,
+        "eye": 66,
+        "discipline": 53,
+        "speed": 57,
+        "baseInstinct": 60,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 63,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "LF": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16126",
+  "name": "클라크 카를로스",
+  "nameEn": "Clark Carlos",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 50,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 31,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 23,
+      "primaryPosition": "1B",
+      "developmentRate": 44,
+      "potentialHidden": 61,
+      "proServiceYears": 9,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 69,
+        "velocity": 79,
+        "command": 61,
+        "control": 65,
+        "movement": 64,
+        "mentality": 72,
+        "recovery": 60,
+        "clutch": 69,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 68,
+        "power": 59,
+        "eye": 66,
+        "discipline": 62,
+        "speed": 74,
+        "baseInstinct": 60,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 61,
+        "battingClutch": 68
+      },
+      "positionRatings": {
+        "1B": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

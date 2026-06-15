@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06525",
+  "name": "전지찬",
+  "nameEn": "Jeon JiChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 80,
+      "primaryPosition": "SS",
+      "developmentRate": 69,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 53,
+        "velocity": 52,
+        "command": 49,
+        "control": 55,
+        "movement": 53,
+        "mentality": 56,
+        "recovery": 44,
+        "clutch": 50,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 49,
+        "power": 45,
+        "eye": 41,
+        "discipline": 36,
+        "speed": 49,
+        "baseInstinct": 45,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 35,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "SS": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07127",
+  "name": "류정훈",
+  "nameEn": "Ryu JungHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 58,
+      "primaryPosition": "SP",
+      "developmentRate": 52,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 48,
+        "velocity": 46,
+        "command": 41,
+        "control": 39,
+        "movement": 39,
+        "mentality": 46,
+        "recovery": 36,
+        "clutch": 40,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 59,
+        "power": 48,
+        "eye": 48,
+        "discipline": 47,
+        "speed": 54,
+        "baseInstinct": 55,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 46,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SP": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

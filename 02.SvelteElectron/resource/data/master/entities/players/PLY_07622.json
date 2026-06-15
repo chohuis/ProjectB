@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07622",
+  "name": "정찬식",
+  "nameEn": "Jung ChanSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 55,
+      "primaryPosition": "RF",
+      "developmentRate": 58,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 59,
+        "velocity": 61,
+        "command": 58,
+        "control": 64,
+        "movement": 53,
+        "mentality": 59,
+        "recovery": 55,
+        "clutch": 57,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 46,
+        "power": 50,
+        "eye": 51,
+        "discipline": 48,
+        "speed": 55,
+        "baseInstinct": 48,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 42,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "RF": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

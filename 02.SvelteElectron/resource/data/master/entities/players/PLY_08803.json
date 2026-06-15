@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08803",
+  "name": "류혁준",
+  "nameEn": "Ryu HyeokJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 39,
+      "primaryPosition": "CF",
+      "developmentRate": 44,
+      "potentialHidden": 42,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 45,
+        "velocity": 55,
+        "command": 45,
+        "control": 50,
+        "movement": 42,
+        "mentality": 46,
+        "recovery": 42,
+        "clutch": 40,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 42,
+        "power": 37,
+        "eye": 45,
+        "discipline": 43,
+        "speed": 44,
+        "baseInstinct": 39,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 33,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "CF": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06475",
+  "name": "오지식",
+  "nameEn": "Oh JiSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 98,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 83,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 66,
+        "velocity": 77,
+        "command": 63,
+        "control": 68,
+        "movement": 64,
+        "mentality": 68,
+        "recovery": 69,
+        "clutch": 59,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 48,
+        "power": 38,
+        "eye": 48,
+        "discipline": 41,
+        "speed": 50,
+        "baseInstinct": 46,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 41,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "SP": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

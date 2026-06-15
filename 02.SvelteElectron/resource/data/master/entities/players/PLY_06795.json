@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06795",
+  "name": "정재수",
+  "nameEn": "Jung JaeSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 82,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 46,
+        "velocity": 57,
+        "command": 44,
+        "control": 50,
+        "movement": 48,
+        "mentality": 51,
+        "recovery": 45,
+        "clutch": 38,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 52,
+        "power": 47,
+        "eye": 56,
+        "discipline": 58,
+        "speed": 56,
+        "baseInstinct": 53,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 55,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "SP": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

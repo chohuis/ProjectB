@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07273",
+  "name": "권수준",
+  "nameEn": "Kwon SuJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 1,
+      "primaryPosition": "SS",
+      "developmentRate": 61,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 53,
+        "velocity": 54,
+        "command": 46,
+        "control": 55,
+        "movement": 53,
+        "mentality": 54,
+        "recovery": 48,
+        "clutch": 49,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 60,
+        "power": 56,
+        "eye": 48,
+        "discipline": 51,
+        "speed": 57,
+        "baseInstinct": 53,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 49,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "SS": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

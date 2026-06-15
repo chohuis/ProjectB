@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08148",
+  "name": "서준민",
+  "nameEn": "Seo JunMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 57,
+      "primaryPosition": "RF",
+      "developmentRate": 56,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 48,
+        "velocity": 59,
+        "command": 48,
+        "control": 46,
+        "movement": 56,
+        "mentality": 57,
+        "recovery": 44,
+        "clutch": 51,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 33,
+        "power": 37,
+        "eye": 35,
+        "discipline": 39,
+        "speed": 45,
+        "baseInstinct": 28,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 39,
+        "battingClutch": 27
+      },
+      "positionRatings": {
+        "RF": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

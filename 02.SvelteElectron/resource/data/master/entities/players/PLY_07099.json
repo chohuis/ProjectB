@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07099",
+  "name": "강정성",
+  "nameEn": "Kang JungSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 41,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 44,
+        "velocity": 48,
+        "command": 40,
+        "control": 34,
+        "movement": 39,
+        "mentality": 36,
+        "recovery": 38,
+        "clutch": 37,
+        "holdRunners": 29
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 34,
+        "power": 37,
+        "eye": 35,
+        "discipline": 41,
+        "speed": 39,
+        "baseInstinct": 36,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 40,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "SP": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07232",
+  "name": "조혁혁",
+  "nameEn": "Jo HyeokHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 39,
+      "primaryPosition": "3B",
+      "developmentRate": 50,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 54,
+        "velocity": 60,
+        "command": 46,
+        "control": 52,
+        "movement": 52,
+        "mentality": 63,
+        "recovery": 48,
+        "clutch": 45,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 38,
+        "power": 36,
+        "eye": 43,
+        "discipline": 40,
+        "speed": 47,
+        "baseInstinct": 42,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 44,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "3B": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

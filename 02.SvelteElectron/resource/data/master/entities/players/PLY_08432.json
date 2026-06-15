@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08432",
+  "name": "전훈성",
+  "nameEn": "Jeon HunSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 22,
+      "primaryPosition": "CF",
+      "developmentRate": 42,
+      "potentialHidden": 48,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 51,
+        "velocity": 58,
+        "command": 50,
+        "control": 44,
+        "movement": 49,
+        "mentality": 53,
+        "recovery": 50,
+        "clutch": 38,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 37,
+        "power": 36,
+        "eye": 36,
+        "discipline": 35,
+        "speed": 39,
+        "baseInstinct": 33,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 34,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "CF": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

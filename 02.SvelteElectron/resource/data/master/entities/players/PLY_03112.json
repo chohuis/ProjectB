@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03112",
+  "name": "최기훈",
+  "nameEn": "Choi KiHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 68,
+      "primaryPosition": "LF",
+      "developmentRate": 63,
+      "potentialHidden": 91,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 59,
+        "velocity": 61,
+        "command": 53,
+        "control": 52,
+        "movement": 54,
+        "mentality": 62,
+        "recovery": 55,
+        "clutch": 50,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 61,
+        "power": 67,
+        "eye": 70,
+        "discipline": 62,
+        "speed": 69,
+        "baseInstinct": 69,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 63,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "LF": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

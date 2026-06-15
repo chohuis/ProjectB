@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06728",
+  "name": "이수빈",
+  "nameEn": "Lee SuBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 44,
+      "primaryPosition": "1B",
+      "developmentRate": 61,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 61,
+        "velocity": 75,
+        "command": 56,
+        "control": 68,
+        "movement": 66,
+        "mentality": 73,
+        "recovery": 64,
+        "clutch": 61,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 45,
+        "power": 40,
+        "eye": 50,
+        "discipline": 46,
+        "speed": 51,
+        "baseInstinct": 47,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 37,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "1B": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

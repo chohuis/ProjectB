@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07784",
+  "name": "류지기",
+  "nameEn": "Ryu JiKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 52,
+      "primaryPosition": "SS",
+      "developmentRate": 49,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 58,
+        "velocity": 62,
+        "command": 56,
+        "control": 61,
+        "movement": 56,
+        "mentality": 56,
+        "recovery": 50,
+        "clutch": 50,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 54,
+        "power": 46,
+        "eye": 49,
+        "discipline": 45,
+        "speed": 55,
+        "baseInstinct": 50,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 47,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "SS": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

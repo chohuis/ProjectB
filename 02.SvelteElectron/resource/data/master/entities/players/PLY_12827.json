@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12827",
+  "name": "해리스 그랜트",
+  "nameEn": "Harris Grant",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 18,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 42,
+      "primaryPosition": "RF",
+      "developmentRate": 69,
+      "potentialHidden": 57,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 66,
+        "velocity": 70,
+        "command": 62,
+        "control": 58,
+        "movement": 62,
+        "mentality": 65,
+        "recovery": 65,
+        "clutch": 63,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 62,
+        "power": 56,
+        "eye": 65,
+        "discipline": 61,
+        "speed": 59,
+        "baseInstinct": 57,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 68,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "RF": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

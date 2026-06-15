@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06110",
+  "name": "조민준",
+  "nameEn": "Jo MinJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 78,
+      "primaryPosition": "RF",
+      "developmentRate": 56,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 46,
+        "velocity": 60,
+        "command": 47,
+        "control": 42,
+        "movement": 44,
+        "mentality": 48,
+        "recovery": 43,
+        "clutch": 38,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 41,
+        "power": 40,
+        "eye": 46,
+        "discipline": 37,
+        "speed": 49,
+        "baseInstinct": 41,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 42,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "RF": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

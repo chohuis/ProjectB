@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10407",
+  "name": "스미스 타일러",
+  "nameEn": "Smith Tyler",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 28,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 15,
+      "primaryPosition": "SP",
+      "developmentRate": 80,
+      "potentialHidden": 69,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 50,
+        "velocity": 62,
+        "command": 58,
+        "control": 55,
+        "movement": 57,
+        "mentality": 55,
+        "recovery": 57,
+        "clutch": 51,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 55,
+        "power": 57,
+        "eye": 56,
+        "discipline": 53,
+        "speed": 53,
+        "baseInstinct": 60,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 49,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

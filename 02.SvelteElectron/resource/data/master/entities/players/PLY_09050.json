@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09050",
+  "name": "윤성윤",
+  "nameEn": "Yoon SeongYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 21,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 51,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 48,
+        "velocity": 54,
+        "command": 46,
+        "control": 46,
+        "movement": 41,
+        "mentality": 50,
+        "recovery": 34,
+        "clutch": 35,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 47,
+        "power": 37,
+        "eye": 44,
+        "discipline": 38,
+        "speed": 42,
+        "baseInstinct": 47,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 42,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "SP": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

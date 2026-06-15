@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10274",
+  "name": "클라크 다니엘",
+  "nameEn": "Clark Daniel",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 54,
+      "primaryPosition": "CF",
+      "developmentRate": 58,
+      "potentialHidden": 70,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 66,
+        "velocity": 67,
+        "command": 61,
+        "control": 68,
+        "movement": 65,
+        "mentality": 64,
+        "recovery": 55,
+        "clutch": 57,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 65,
+        "power": 57,
+        "eye": 60,
+        "discipline": 60,
+        "speed": 65,
+        "baseInstinct": 66,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 63,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "CF": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

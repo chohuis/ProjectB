@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08939",
+  "name": "박도원",
+  "nameEn": "Park DoWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 98,
+      "primaryPosition": "SP",
+      "developmentRate": 47,
+      "potentialHidden": 41,
+      "pitching": {
+        "ovr": 39,
+        "stamina": 36,
+        "velocity": 40,
+        "command": 39,
+        "control": 37,
+        "movement": 41,
+        "mentality": 38,
+        "recovery": 36,
+        "clutch": 29,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 34,
+        "power": 33,
+        "eye": 33,
+        "discipline": 39,
+        "speed": 40,
+        "baseInstinct": 30,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 29,
+        "battingClutch": 25
+      },
+      "positionRatings": {
+        "SP": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

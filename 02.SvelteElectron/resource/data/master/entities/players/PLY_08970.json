@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08970",
+  "name": "전수윤",
+  "nameEn": "Jeon SuYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 83,
+      "primaryPosition": "1B",
+      "developmentRate": 56,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 37,
+        "stamina": 39,
+        "velocity": 36,
+        "command": 37,
+        "control": 34,
+        "movement": 33,
+        "mentality": 43,
+        "recovery": 25,
+        "clutch": 30,
+        "holdRunners": 27
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 48,
+        "power": 39,
+        "eye": 40,
+        "discipline": 45,
+        "speed": 52,
+        "baseInstinct": 41,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 47,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "1B": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

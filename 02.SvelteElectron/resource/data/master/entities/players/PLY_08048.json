@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08048",
+  "name": "안우환",
+  "nameEn": "An WooHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 62,
+      "primaryPosition": "1B",
+      "developmentRate": 50,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 42,
+        "velocity": 54,
+        "command": 38,
+        "control": 39,
+        "movement": 43,
+        "mentality": 47,
+        "recovery": 45,
+        "clutch": 39,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 55,
+        "power": 47,
+        "eye": 46,
+        "discipline": 47,
+        "speed": 53,
+        "baseInstinct": 52,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 44,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "1B": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

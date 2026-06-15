@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05347",
+  "name": "서현준",
+  "nameEn": "Seo HyeonJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 8,
+      "primaryPosition": "SP",
+      "developmentRate": 52,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 67,
+        "velocity": 70,
+        "command": 62,
+        "control": 66,
+        "movement": 66,
+        "mentality": 62,
+        "recovery": 63,
+        "clutch": 60,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 49,
+        "power": 44,
+        "eye": 44,
+        "discipline": 47,
+        "speed": 48,
+        "baseInstinct": 45,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 44,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SP": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

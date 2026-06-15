@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09043",
+  "name": "윤찬현",
+  "nameEn": "Yoon ChanHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 95,
+      "primaryPosition": "3B",
+      "developmentRate": 55,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 45,
+        "velocity": 50,
+        "command": 35,
+        "control": 39,
+        "movement": 42,
+        "mentality": 43,
+        "recovery": 34,
+        "clutch": 28,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 35,
+        "power": 31,
+        "eye": 34,
+        "discipline": 34,
+        "speed": 40,
+        "baseInstinct": 33,
+        "bunting": 19,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 34,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "3B": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

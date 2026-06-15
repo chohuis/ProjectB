@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14095",
+  "name": "카터 숀",
+  "nameEn": "Carter Sean",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 13,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 34,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 36,
+      "primaryPosition": "LF",
+      "developmentRate": 47,
+      "potentialHidden": 69,
+      "proServiceYears": 12,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 49,
+        "velocity": 58,
+        "command": 48,
+        "control": 53,
+        "movement": 53,
+        "mentality": 51,
+        "recovery": 44,
+        "clutch": 49,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 50,
+        "power": 44,
+        "eye": 51,
+        "discipline": 57,
+        "speed": 60,
+        "baseInstinct": 42,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 43,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "LF": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

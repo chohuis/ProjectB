@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16692",
+  "name": "윌리엄스 타일러",
+  "nameEn": "Williams Tyler",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 35,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 7,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 60,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 70,
+        "velocity": 67,
+        "command": 60,
+        "control": 66,
+        "movement": 65,
+        "mentality": 66,
+        "recovery": 61,
+        "clutch": 60,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 60,
+        "power": 67,
+        "eye": 65,
+        "discipline": 64,
+        "speed": 61,
+        "baseInstinct": 66,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 69,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "SP": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04809",
+  "name": "강동재",
+  "nameEn": "Kang DongJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 35,
+      "primaryPosition": "3B",
+      "developmentRate": 59,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 49,
+        "velocity": 55,
+        "command": 43,
+        "control": 51,
+        "movement": 53,
+        "mentality": 56,
+        "recovery": 50,
+        "clutch": 46,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 50,
+        "power": 46,
+        "eye": 48,
+        "discipline": 44,
+        "speed": 50,
+        "baseInstinct": 46,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 40,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "3B": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

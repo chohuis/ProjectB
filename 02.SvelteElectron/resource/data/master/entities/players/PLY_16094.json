@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16094",
+  "name": "잭슨 루이스",
+  "nameEn": "Jackson Luis",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 46,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 74,
+      "primaryPosition": "3B",
+      "developmentRate": 43,
+      "potentialHidden": 74,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 72,
+        "velocity": 69,
+        "command": 73,
+        "control": 71,
+        "movement": 62,
+        "mentality": 73,
+        "recovery": 70,
+        "clutch": 66,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 74,
+        "power": 59,
+        "eye": 64,
+        "discipline": 69,
+        "speed": 76,
+        "baseInstinct": 72,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 69,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "3B": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

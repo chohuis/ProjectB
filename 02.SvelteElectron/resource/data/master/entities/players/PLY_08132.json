@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08132",
+  "name": "장찬찬",
+  "nameEn": "Jang ChanChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 77,
+      "primaryPosition": "RF",
+      "developmentRate": 61,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 41,
+        "velocity": 52,
+        "command": 40,
+        "control": 46,
+        "movement": 47,
+        "mentality": 51,
+        "recovery": 42,
+        "clutch": 44,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 58,
+        "power": 56,
+        "eye": 54,
+        "discipline": 55,
+        "speed": 53,
+        "baseInstinct": 47,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 47,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "RF": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

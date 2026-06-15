@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05405",
+  "name": "한동빈",
+  "nameEn": "Han DongBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 82,
+      "primaryPosition": "CF",
+      "developmentRate": 55,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 57,
+        "velocity": 61,
+        "command": 50,
+        "control": 51,
+        "movement": 55,
+        "mentality": 62,
+        "recovery": 49,
+        "clutch": 51,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 60,
+        "power": 57,
+        "eye": 53,
+        "discipline": 52,
+        "speed": 66,
+        "baseInstinct": 53,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 61,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "CF": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

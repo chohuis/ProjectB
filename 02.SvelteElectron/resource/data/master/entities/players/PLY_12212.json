@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12212",
+  "name": "존스 케빈",
+  "nameEn": "Jones Kevin",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 11,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 41,
+      "primaryPosition": "2B",
+      "developmentRate": 69,
+      "potentialHidden": 84,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 72,
+        "velocity": 79,
+        "command": 68,
+        "control": 77,
+        "movement": 64,
+        "mentality": 71,
+        "recovery": 75,
+        "clutch": 69,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 74,
+        "contact": 73,
+        "power": 71,
+        "eye": 69,
+        "discipline": 65,
+        "speed": 76,
+        "baseInstinct": 69,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 74,
+        "arm": 64,
+        "battingClutch": 72
+      },
+      "positionRatings": {
+        "2B": 74
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

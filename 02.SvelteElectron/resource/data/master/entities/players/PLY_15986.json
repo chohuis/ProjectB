@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15986",
+  "name": "홀 그랜트",
+  "nameEn": "Hall Grant",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 13,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 89,
+      "primaryPosition": "LF",
+      "developmentRate": 47,
+      "potentialHidden": 54,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 54,
+        "velocity": 60,
+        "command": 43,
+        "control": 53,
+        "movement": 44,
+        "mentality": 54,
+        "recovery": 45,
+        "clutch": 43,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 53,
+        "power": 44,
+        "eye": 56,
+        "discipline": 56,
+        "speed": 54,
+        "baseInstinct": 46,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 52,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "LF": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

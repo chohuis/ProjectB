@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03964",
+  "name": "박준욱",
+  "nameEn": "Park JunWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 4,
+      "primaryPosition": "RF",
+      "developmentRate": 69,
+      "potentialHidden": 64,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 62,
+        "velocity": 67,
+        "command": 63,
+        "control": 59,
+        "movement": 61,
+        "mentality": 67,
+        "recovery": 52,
+        "clutch": 55,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 49,
+        "power": 44,
+        "eye": 37,
+        "discipline": 44,
+        "speed": 44,
+        "baseInstinct": 41,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 37,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "RF": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

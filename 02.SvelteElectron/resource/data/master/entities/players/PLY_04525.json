@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04525",
+  "name": "박재훈",
+  "nameEn": "Park JaeHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 21,
+      "primaryPosition": "CF",
+      "developmentRate": 52,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 41,
+        "stamina": 35,
+        "velocity": 50,
+        "command": 34,
+        "control": 37,
+        "movement": 32,
+        "mentality": 44,
+        "recovery": 32,
+        "clutch": 28,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 47,
+        "power": 35,
+        "eye": 41,
+        "discipline": 43,
+        "speed": 47,
+        "baseInstinct": 45,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 41,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "CF": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

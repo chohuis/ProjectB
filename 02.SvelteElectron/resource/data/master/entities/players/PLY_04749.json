@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04749",
+  "name": "류도훈",
+  "nameEn": "Ryu DoHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 64,
+      "primaryPosition": "CF",
+      "developmentRate": 55,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 51,
+        "velocity": 60,
+        "command": 45,
+        "control": 53,
+        "movement": 46,
+        "mentality": 52,
+        "recovery": 51,
+        "clutch": 43,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 43,
+        "power": 49,
+        "eye": 43,
+        "discipline": 50,
+        "speed": 49,
+        "baseInstinct": 38,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 42,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "CF": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

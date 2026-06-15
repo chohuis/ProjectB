@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10872",
+  "name": "워커 에반",
+  "nameEn": "Walker Evan",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 37,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 97,
+      "primaryPosition": "C",
+      "developmentRate": 50,
+      "potentialHidden": 87,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 58,
+        "velocity": 75,
+        "command": 64,
+        "control": 61,
+        "movement": 71,
+        "mentality": 68,
+        "recovery": 66,
+        "clutch": 61,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 61,
+        "power": 63,
+        "eye": 71,
+        "discipline": 58,
+        "speed": 67,
+        "baseInstinct": 63,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 64,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "C": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

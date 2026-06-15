@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05715",
+  "name": "윤세빈",
+  "nameEn": "Yoon SeBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 19,
+      "primaryPosition": "1B",
+      "developmentRate": 67,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 53,
+        "velocity": 69,
+        "command": 57,
+        "control": 53,
+        "movement": 54,
+        "mentality": 55,
+        "recovery": 54,
+        "clutch": 46,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 57,
+        "power": 53,
+        "eye": 56,
+        "discipline": 51,
+        "speed": 59,
+        "baseInstinct": 56,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 51,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "1B": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

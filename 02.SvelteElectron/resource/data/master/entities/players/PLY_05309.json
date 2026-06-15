@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05309",
+  "name": "장상기",
+  "nameEn": "Jang SangKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 93,
+      "primaryPosition": "2B",
+      "developmentRate": 54,
+      "potentialHidden": 84,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 55,
+        "velocity": 60,
+        "command": 49,
+        "control": 55,
+        "movement": 54,
+        "mentality": 54,
+        "recovery": 45,
+        "clutch": 52,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 48,
+        "power": 39,
+        "eye": 44,
+        "discipline": 43,
+        "speed": 52,
+        "baseInstinct": 40,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 41,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "2B": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

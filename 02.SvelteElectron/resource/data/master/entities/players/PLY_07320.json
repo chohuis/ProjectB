@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07320",
+  "name": "안현준",
+  "nameEn": "An HyeonJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 22,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 55,
+        "velocity": 56,
+        "command": 45,
+        "control": 49,
+        "movement": 54,
+        "mentality": 55,
+        "recovery": 51,
+        "clutch": 45,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 46,
+        "power": 52,
+        "eye": 49,
+        "discipline": 53,
+        "speed": 52,
+        "baseInstinct": 47,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 49,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

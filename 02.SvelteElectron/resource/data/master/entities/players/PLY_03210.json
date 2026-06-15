@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03210",
+  "name": "송혁재",
+  "nameEn": "Song HyeokJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 71,
+      "primaryPosition": "RF",
+      "developmentRate": 65,
+      "potentialHidden": 92,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 59,
+        "velocity": 69,
+        "command": 59,
+        "control": 53,
+        "movement": 61,
+        "mentality": 56,
+        "recovery": 51,
+        "clutch": 50,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 57,
+        "power": 47,
+        "eye": 57,
+        "discipline": 49,
+        "speed": 53,
+        "baseInstinct": 50,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 57,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "RF": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

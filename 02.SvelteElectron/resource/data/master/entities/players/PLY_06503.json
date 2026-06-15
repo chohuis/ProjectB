@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06503",
+  "name": "이성기",
+  "nameEn": "Lee SeongKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 5,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 72,
+      "primaryPosition": "RF",
+      "developmentRate": 65,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 47,
+        "velocity": 62,
+        "command": 45,
+        "control": 47,
+        "movement": 54,
+        "mentality": 58,
+        "recovery": 46,
+        "clutch": 50,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 62,
+        "power": 57,
+        "eye": 59,
+        "discipline": 57,
+        "speed": 59,
+        "baseInstinct": 63,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 62,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "RF": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

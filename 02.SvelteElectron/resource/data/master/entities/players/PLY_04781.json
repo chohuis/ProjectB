@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04781",
+  "name": "이재환",
+  "nameEn": "Lee JaeHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 56,
+      "primaryPosition": "RF",
+      "developmentRate": 55,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 47,
+        "velocity": 51,
+        "command": 41,
+        "control": 50,
+        "movement": 50,
+        "mentality": 53,
+        "recovery": 41,
+        "clutch": 45,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 38,
+        "power": 38,
+        "eye": 40,
+        "discipline": 37,
+        "speed": 44,
+        "baseInstinct": 38,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 38,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "RF": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

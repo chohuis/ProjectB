@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08486",
+  "name": "이준기",
+  "nameEn": "Lee JunKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 50,
+      "primaryPosition": "3B",
+      "developmentRate": 58,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 38,
+        "stamina": 34,
+        "velocity": 36,
+        "command": 27,
+        "control": 39,
+        "movement": 35,
+        "mentality": 43,
+        "recovery": 30,
+        "clutch": 33,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 39,
+        "power": 33,
+        "eye": 32,
+        "discipline": 30,
+        "speed": 37,
+        "baseInstinct": 34,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 38,
+        "battingClutch": 27
+      },
+      "positionRatings": {
+        "3B": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

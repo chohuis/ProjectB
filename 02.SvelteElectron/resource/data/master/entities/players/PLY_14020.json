@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14020",
+  "name": "루이스 크리스",
+  "nameEn": "Lewis Chris",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 10,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 51,
+      "primaryPosition": "C",
+      "developmentRate": 50,
+      "potentialHidden": 52,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 60,
+        "velocity": 70,
+        "command": 60,
+        "control": 56,
+        "movement": 53,
+        "mentality": 64,
+        "recovery": 59,
+        "clutch": 56,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 61,
+        "power": 51,
+        "eye": 64,
+        "discipline": 55,
+        "speed": 55,
+        "baseInstinct": 61,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 56,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "C": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

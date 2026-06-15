@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07689",
+  "name": "오민준",
+  "nameEn": "Oh MinJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 59,
+      "primaryPosition": "2B",
+      "developmentRate": 54,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 44,
+        "velocity": 53,
+        "command": 43,
+        "control": 42,
+        "movement": 36,
+        "mentality": 39,
+        "recovery": 40,
+        "clutch": 34,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 38,
+        "power": 37,
+        "eye": 35,
+        "discipline": 37,
+        "speed": 42,
+        "baseInstinct": 35,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 42,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "2B": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

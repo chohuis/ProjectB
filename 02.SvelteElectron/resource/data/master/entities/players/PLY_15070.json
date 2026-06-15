@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15070",
+  "name": "베이커 콜",
+  "nameEn": "Baker Cole",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 20,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 29,
+      "primaryPosition": "RF",
+      "developmentRate": 70,
+      "potentialHidden": 68,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 58,
+        "velocity": 61,
+        "command": 54,
+        "control": 59,
+        "movement": 56,
+        "mentality": 55,
+        "recovery": 58,
+        "clutch": 45,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 60,
+        "power": 57,
+        "eye": 59,
+        "discipline": 54,
+        "speed": 50,
+        "baseInstinct": 59,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 49,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "RF": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

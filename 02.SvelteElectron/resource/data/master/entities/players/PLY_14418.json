@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14418",
+  "name": "토마스 마커스",
+  "nameEn": "Thomas Marcus",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 33,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 58,
+      "primaryPosition": "SS",
+      "developmentRate": 72,
+      "potentialHidden": 87,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 52,
+        "velocity": 55,
+        "command": 51,
+        "control": 50,
+        "movement": 55,
+        "mentality": 52,
+        "recovery": 47,
+        "clutch": 54,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 47,
+        "power": 44,
+        "eye": 54,
+        "discipline": 53,
+        "speed": 49,
+        "baseInstinct": 50,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 48,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "SS": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

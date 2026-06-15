@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15417",
+  "name": "워커 코너",
+  "nameEn": "Walker Connor",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 32,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 9,
+      "primaryPosition": "2B",
+      "developmentRate": 47,
+      "potentialHidden": 48,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 54,
+        "velocity": 67,
+        "command": 56,
+        "control": 53,
+        "movement": 58,
+        "mentality": 65,
+        "recovery": 56,
+        "clutch": 60,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 61,
+        "power": 52,
+        "eye": 58,
+        "discipline": 54,
+        "speed": 64,
+        "baseInstinct": 58,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 59,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "2B": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

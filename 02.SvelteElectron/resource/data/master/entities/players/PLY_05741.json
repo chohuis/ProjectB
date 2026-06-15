@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05741",
+  "name": "박현호",
+  "nameEn": "Park HyeonHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 40,
+      "primaryPosition": "SS",
+      "developmentRate": 47,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 41,
+        "stamina": 44,
+        "velocity": 46,
+        "command": 34,
+        "control": 38,
+        "movement": 35,
+        "mentality": 46,
+        "recovery": 34,
+        "clutch": 28,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 54,
+        "power": 49,
+        "eye": 54,
+        "discipline": 55,
+        "speed": 51,
+        "baseInstinct": 46,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 49,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SS": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

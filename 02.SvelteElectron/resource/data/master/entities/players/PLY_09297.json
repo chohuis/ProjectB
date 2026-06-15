@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09297",
+  "name": "황재호",
+  "nameEn": "Hwang JaeHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 52,
+      "primaryPosition": "1B",
+      "developmentRate": 49,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 43,
+        "velocity": 46,
+        "command": 33,
+        "control": 42,
+        "movement": 40,
+        "mentality": 43,
+        "recovery": 34,
+        "clutch": 31,
+        "holdRunners": 28
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 37,
+        "power": 36,
+        "eye": 45,
+        "discipline": 37,
+        "speed": 43,
+        "baseInstinct": 36,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 37,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "1B": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

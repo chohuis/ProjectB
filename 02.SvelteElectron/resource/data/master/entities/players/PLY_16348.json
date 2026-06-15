@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16348",
+  "name": "넬슨 타일러",
+  "nameEn": "Nelson Tyler",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 9,
+      "primaryPosition": "1B",
+      "developmentRate": 49,
+      "potentialHidden": 71,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 78,
+        "velocity": 77,
+        "command": 73,
+        "control": 68,
+        "movement": 75,
+        "mentality": 74,
+        "recovery": 71,
+        "clutch": 66,
+        "holdRunners": 72
+      },
+      "batting": {
+        "ovr": 74,
+        "contact": 72,
+        "power": 66,
+        "eye": 72,
+        "discipline": 69,
+        "speed": 81,
+        "baseInstinct": 73,
+        "bunting": 69,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 75,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "1B": 74
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

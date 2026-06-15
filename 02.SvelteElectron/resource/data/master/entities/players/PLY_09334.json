@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09334",
+  "name": "송재현",
+  "nameEn": "Song JaeHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 97,
+      "primaryPosition": "C",
+      "developmentRate": 45,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 34,
+        "velocity": 43,
+        "command": 38,
+        "control": 42,
+        "movement": 38,
+        "mentality": 39,
+        "recovery": 39,
+        "clutch": 26,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 40,
+        "power": 34,
+        "eye": 43,
+        "discipline": 37,
+        "speed": 37,
+        "baseInstinct": 33,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 32,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "C": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

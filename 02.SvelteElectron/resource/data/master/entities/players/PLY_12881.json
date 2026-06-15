@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12881",
+  "name": "앨런 칼렙",
+  "nameEn": "Allen Caleb",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 31,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 67,
+      "primaryPosition": "LF",
+      "developmentRate": 51,
+      "potentialHidden": 76,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 80,
+        "stamina": 80,
+        "velocity": 80,
+        "command": 75,
+        "control": 76,
+        "movement": 71,
+        "mentality": 87,
+        "recovery": 69,
+        "clutch": 71,
+        "holdRunners": 68
+      },
+      "batting": {
+        "ovr": 80,
+        "contact": 71,
+        "power": 71,
+        "eye": 80,
+        "discipline": 81,
+        "speed": 87,
+        "baseInstinct": 71,
+        "bunting": 65,
+        "platoon": 50,
+        "fielding": 79,
+        "arm": 76,
+        "battingClutch": 73
+      },
+      "positionRatings": {
+        "LF": 80
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

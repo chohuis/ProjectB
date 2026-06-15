@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07402",
+  "name": "송수완",
+  "nameEn": "Song SuWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 30,
+      "primaryPosition": "CF",
+      "developmentRate": 53,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 43,
+        "velocity": 54,
+        "command": 47,
+        "control": 46,
+        "movement": 41,
+        "mentality": 44,
+        "recovery": 36,
+        "clutch": 38,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 43,
+        "power": 40,
+        "eye": 42,
+        "discipline": 51,
+        "speed": 48,
+        "baseInstinct": 41,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 44,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "CF": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

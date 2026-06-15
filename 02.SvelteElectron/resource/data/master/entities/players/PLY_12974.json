@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12974",
+  "name": "라이트 콜",
+  "nameEn": "Wright Cole",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 46,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 66,
+      "primaryPosition": "SP",
+      "developmentRate": 66,
+      "potentialHidden": 59,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 77,
+        "velocity": 79,
+        "command": 72,
+        "control": 77,
+        "movement": 74,
+        "mentality": 75,
+        "recovery": 68,
+        "clutch": 68,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 77,
+        "contact": 73,
+        "power": 73,
+        "eye": 81,
+        "discipline": 80,
+        "speed": 71,
+        "baseInstinct": 70,
+        "bunting": 70,
+        "platoon": 50,
+        "fielding": 73,
+        "arm": 78,
+        "battingClutch": 78
+      },
+      "positionRatings": {
+        "SP": 77
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

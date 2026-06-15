@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13372",
+  "name": "윌리엄스 브랜던",
+  "nameEn": "Williams Brandon",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 27,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 55,
+      "primaryPosition": "LF",
+      "developmentRate": 38,
+      "potentialHidden": 74,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 75,
+        "velocity": 72,
+        "command": 75,
+        "control": 67,
+        "movement": 70,
+        "mentality": 77,
+        "recovery": 68,
+        "clutch": 64,
+        "holdRunners": 70
+      },
+      "batting": {
+        "ovr": 74,
+        "contact": 66,
+        "power": 76,
+        "eye": 71,
+        "discipline": 64,
+        "speed": 77,
+        "baseInstinct": 66,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 72,
+        "arm": 63,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "LF": 74
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11995",
+  "name": "마틴 다니엘",
+  "nameEn": "Martin Daniel",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 77,
+      "primaryPosition": "SP",
+      "developmentRate": 40,
+      "potentialHidden": 76,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 65,
+        "velocity": 74,
+        "command": 63,
+        "control": 59,
+        "movement": 63,
+        "mentality": 66,
+        "recovery": 58,
+        "clutch": 63,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 72,
+        "power": 62,
+        "eye": 69,
+        "discipline": 63,
+        "speed": 70,
+        "baseInstinct": 59,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 66,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "SP": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

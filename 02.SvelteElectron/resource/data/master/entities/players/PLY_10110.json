@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10110",
+  "name": "톰슨 크리스",
+  "nameEn": "Thompson Chris",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 46,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 94,
+      "primaryPosition": "SP",
+      "developmentRate": 57,
+      "potentialHidden": 61,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 69,
+        "velocity": 72,
+        "command": 56,
+        "control": 67,
+        "movement": 58,
+        "mentality": 67,
+        "recovery": 59,
+        "clutch": 63,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 62,
+        "power": 67,
+        "eye": 67,
+        "discipline": 60,
+        "speed": 62,
+        "baseInstinct": 56,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 57,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "SP": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05688",
+  "name": "권도성",
+  "nameEn": "Kwon DoSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 11,
+      "primaryPosition": "2B",
+      "developmentRate": 57,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 50,
+        "velocity": 61,
+        "command": 52,
+        "control": 55,
+        "movement": 55,
+        "mentality": 57,
+        "recovery": 48,
+        "clutch": 51,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 43,
+        "power": 46,
+        "eye": 49,
+        "discipline": 45,
+        "speed": 53,
+        "baseInstinct": 41,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 47,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "2B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

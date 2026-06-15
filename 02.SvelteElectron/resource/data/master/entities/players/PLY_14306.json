@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14306",
+  "name": "클라크 콜",
+  "nameEn": "Clark Cole",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 87,
+      "primaryPosition": "SP",
+      "developmentRate": 52,
+      "potentialHidden": 64,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 66,
+        "velocity": 65,
+        "command": 66,
+        "control": 68,
+        "movement": 62,
+        "mentality": 67,
+        "recovery": 63,
+        "clutch": 59,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 56,
+        "power": 59,
+        "eye": 70,
+        "discipline": 59,
+        "speed": 58,
+        "baseInstinct": 67,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 66,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "SP": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

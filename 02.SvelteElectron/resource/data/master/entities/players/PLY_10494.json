@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10494",
+  "name": "잭슨 칼렙",
+  "nameEn": "Jackson Caleb",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 75,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 94,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 61,
+        "velocity": 71,
+        "command": 53,
+        "control": 60,
+        "movement": 56,
+        "mentality": 62,
+        "recovery": 59,
+        "clutch": 63,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 67,
+        "power": 52,
+        "eye": 56,
+        "discipline": 65,
+        "speed": 68,
+        "baseInstinct": 63,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 56,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "SP": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

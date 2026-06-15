@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07980",
+  "name": "서성훈",
+  "nameEn": "Seo SeongHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 88,
+      "primaryPosition": "1B",
+      "developmentRate": 52,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 43,
+        "velocity": 40,
+        "command": 36,
+        "control": 43,
+        "movement": 34,
+        "mentality": 44,
+        "recovery": 34,
+        "clutch": 30,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 44,
+        "power": 36,
+        "eye": 36,
+        "discipline": 32,
+        "speed": 38,
+        "baseInstinct": 33,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 33,
+        "arm": 32,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "1B": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04998",
+  "name": "권준욱",
+  "nameEn": "Kwon JunWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 71,
+      "primaryPosition": "SS",
+      "developmentRate": 52,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 47,
+        "velocity": 57,
+        "command": 50,
+        "control": 47,
+        "movement": 48,
+        "mentality": 54,
+        "recovery": 47,
+        "clutch": 48,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 46,
+        "power": 43,
+        "eye": 37,
+        "discipline": 41,
+        "speed": 39,
+        "baseInstinct": 41,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 37,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "SS": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

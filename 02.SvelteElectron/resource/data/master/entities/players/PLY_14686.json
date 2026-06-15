@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14686",
+  "name": "화이트 제이크",
+  "nameEn": "White Jake",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 18,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 58,
+      "primaryPosition": "C",
+      "developmentRate": 71,
+      "potentialHidden": 68,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 48,
+        "velocity": 52,
+        "command": 49,
+        "control": 44,
+        "movement": 38,
+        "mentality": 46,
+        "recovery": 42,
+        "clutch": 34,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 42,
+        "power": 45,
+        "eye": 47,
+        "discipline": 43,
+        "speed": 45,
+        "baseInstinct": 45,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 42,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "C": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03348",
+  "name": "류지진",
+  "nameEn": "Ryu JiJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 89,
+      "primaryPosition": "RF",
+      "developmentRate": 67,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 59,
+        "velocity": 65,
+        "command": 52,
+        "control": 60,
+        "movement": 59,
+        "mentality": 56,
+        "recovery": 60,
+        "clutch": 55,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 75,
+        "power": 70,
+        "eye": 65,
+        "discipline": 68,
+        "speed": 70,
+        "baseInstinct": 65,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 70,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "RF": 73
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

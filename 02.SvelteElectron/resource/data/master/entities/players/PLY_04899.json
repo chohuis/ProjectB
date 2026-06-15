@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04899",
+  "name": "서지훈",
+  "nameEn": "Seo JiHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 77,
+      "primaryPosition": "SP",
+      "developmentRate": 46,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 53,
+        "velocity": 59,
+        "command": 52,
+        "control": 53,
+        "movement": 42,
+        "mentality": 48,
+        "recovery": 46,
+        "clutch": 38,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 51,
+        "power": 40,
+        "eye": 47,
+        "discipline": 42,
+        "speed": 55,
+        "baseInstinct": 45,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 47,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "SP": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

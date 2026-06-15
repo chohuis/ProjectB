@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06096",
+  "name": "김민윤",
+  "nameEn": "Kim MinYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 16,
+      "primaryPosition": "RF",
+      "developmentRate": 60,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 56,
+        "velocity": 61,
+        "command": 54,
+        "control": 58,
+        "movement": 53,
+        "mentality": 60,
+        "recovery": 55,
+        "clutch": 41,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 47,
+        "power": 51,
+        "eye": 47,
+        "discipline": 44,
+        "speed": 52,
+        "baseInstinct": 50,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 51,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "RF": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

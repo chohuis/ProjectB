@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07888",
+  "name": "권동욱",
+  "nameEn": "Kwon DongWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 69,
+      "primaryPosition": "CF",
+      "developmentRate": 48,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 38,
+        "velocity": 42,
+        "command": 35,
+        "control": 37,
+        "movement": 38,
+        "mentality": 40,
+        "recovery": 43,
+        "clutch": 35,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 49,
+        "power": 48,
+        "eye": 55,
+        "discipline": 51,
+        "speed": 50,
+        "baseInstinct": 47,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 52,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "CF": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

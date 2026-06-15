@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09554",
+  "name": "윤도준",
+  "nameEn": "Yoon DoJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 35,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 2,
+      "primaryPosition": "2B",
+      "developmentRate": 46,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 44,
+        "velocity": 52,
+        "command": 40,
+        "control": 36,
+        "movement": 42,
+        "mentality": 45,
+        "recovery": 33,
+        "clutch": 35,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 34,
+        "contact": 33,
+        "power": 32,
+        "eye": 26,
+        "discipline": 31,
+        "speed": 33,
+        "baseInstinct": 28,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 28,
+        "arm": 23,
+        "battingClutch": 22
+      },
+      "positionRatings": {
+        "2B": 34
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

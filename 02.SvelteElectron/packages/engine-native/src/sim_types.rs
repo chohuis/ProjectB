@@ -88,6 +88,8 @@ pub struct NpcSaveState {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub batting: Option<NpcBattingAttrs>,
     pub development_rate: i32,
+    #[serde(default = "default_potential")]
+    pub potential_hidden: f64,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pro_service_years: Option<i32>,
     pub career_history: Vec<NpcCareerEntry>,
@@ -311,6 +313,7 @@ pub struct DraftBoardResult {
 
 fn default_stamina_cap() -> f64 { 60.0 }
 fn default_one() -> i32 { 1 }
+fn default_potential() -> f64 { 75.0 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]

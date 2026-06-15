@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07772",
+  "name": "조태혁",
+  "nameEn": "Jo TaeHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 65,
+      "primaryPosition": "CF",
+      "developmentRate": 57,
+      "potentialHidden": 51,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 50,
+        "velocity": 52,
+        "command": 46,
+        "control": 51,
+        "movement": 49,
+        "mentality": 47,
+        "recovery": 43,
+        "clutch": 48,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 44,
+        "power": 49,
+        "eye": 49,
+        "discipline": 42,
+        "speed": 51,
+        "baseInstinct": 48,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 41,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "CF": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

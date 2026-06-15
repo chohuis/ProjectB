@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03952",
+  "name": "장도우",
+  "nameEn": "Jang DoWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 48,
+      "primaryPosition": "LF",
+      "developmentRate": 68,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 55,
+        "velocity": 60,
+        "command": 50,
+        "control": 60,
+        "movement": 54,
+        "mentality": 61,
+        "recovery": 52,
+        "clutch": 53,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 47,
+        "power": 42,
+        "eye": 50,
+        "discipline": 52,
+        "speed": 47,
+        "baseInstinct": 50,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 43,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "LF": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

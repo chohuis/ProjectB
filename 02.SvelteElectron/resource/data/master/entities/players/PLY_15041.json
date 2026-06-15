@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15041",
+  "name": "마르티네스 마커스",
+  "nameEn": "Martinez Marcus",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 47,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 48,
+      "primaryPosition": "RF",
+      "developmentRate": 72,
+      "potentialHidden": 62,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 60,
+        "velocity": 55,
+        "command": 48,
+        "control": 51,
+        "movement": 48,
+        "mentality": 57,
+        "recovery": 55,
+        "clutch": 56,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 56,
+        "power": 55,
+        "eye": 55,
+        "discipline": 51,
+        "speed": 60,
+        "baseInstinct": 56,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 49,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "RF": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

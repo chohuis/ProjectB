@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15587",
+  "name": "워커 마커스",
+  "nameEn": "Walker Marcus",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 12,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 76,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 59,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 55,
+        "velocity": 67,
+        "command": 62,
+        "control": 65,
+        "movement": 59,
+        "mentality": 55,
+        "recovery": 61,
+        "clutch": 56,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 54,
+        "power": 60,
+        "eye": 57,
+        "discipline": 59,
+        "speed": 54,
+        "baseInstinct": 57,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 62,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SP": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15673",
+  "name": "베이커 데릭",
+  "nameEn": "Baker Derek",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 16,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 16,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 79,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 50,
+        "velocity": 51,
+        "command": 39,
+        "control": 50,
+        "movement": 49,
+        "mentality": 49,
+        "recovery": 35,
+        "clutch": 45,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 51,
+        "power": 47,
+        "eye": 45,
+        "discipline": 49,
+        "speed": 45,
+        "baseInstinct": 42,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 48,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SP": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

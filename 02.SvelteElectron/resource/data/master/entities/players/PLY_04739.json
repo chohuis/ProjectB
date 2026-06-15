@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04739",
+  "name": "장진기",
+  "nameEn": "Jang JinKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 43,
+      "primaryPosition": "CF",
+      "developmentRate": 59,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 48,
+        "velocity": 60,
+        "command": 44,
+        "control": 53,
+        "movement": 48,
+        "mentality": 57,
+        "recovery": 44,
+        "clutch": 47,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 38,
+        "power": 35,
+        "eye": 33,
+        "discipline": 31,
+        "speed": 39,
+        "baseInstinct": 35,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 36,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "CF": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06276",
+  "name": "박동호",
+  "nameEn": "Park DongHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 5,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 55,
+      "primaryPosition": "SS",
+      "developmentRate": 49,
+      "potentialHidden": 44,
+      "pitching": {
+        "ovr": 38,
+        "stamina": 37,
+        "velocity": 37,
+        "command": 33,
+        "control": 32,
+        "movement": 33,
+        "mentality": 35,
+        "recovery": 30,
+        "clutch": 25,
+        "holdRunners": 27
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 34,
+        "power": 33,
+        "eye": 42,
+        "discipline": 34,
+        "speed": 43,
+        "baseInstinct": 36,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 33,
+        "arm": 38,
+        "battingClutch": 27
+      },
+      "positionRatings": {
+        "SS": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

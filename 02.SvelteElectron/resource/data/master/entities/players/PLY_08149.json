@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08149",
+  "name": "전혁빈",
+  "nameEn": "Jeon HyeokBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 34,
+      "primaryPosition": "3B",
+      "developmentRate": 61,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 56,
+        "velocity": 68,
+        "command": 50,
+        "control": 56,
+        "movement": 59,
+        "mentality": 63,
+        "recovery": 58,
+        "clutch": 49,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 39,
+        "power": 34,
+        "eye": 37,
+        "discipline": 41,
+        "speed": 39,
+        "baseInstinct": 34,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 39,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "3B": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

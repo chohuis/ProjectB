@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07836",
+  "name": "정태식",
+  "nameEn": "Jung TaeSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 87,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 51,
+        "velocity": 57,
+        "command": 54,
+        "control": 56,
+        "movement": 57,
+        "mentality": 59,
+        "recovery": 55,
+        "clutch": 44,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 38,
+        "power": 32,
+        "eye": 35,
+        "discipline": 38,
+        "speed": 39,
+        "baseInstinct": 29,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 34,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "SP": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

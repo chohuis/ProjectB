@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04371",
+  "name": "윤우찬",
+  "nameEn": "Yoon WooChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 15,
+      "primaryPosition": "SS",
+      "developmentRate": 60,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 56,
+        "velocity": 66,
+        "command": 54,
+        "control": 59,
+        "movement": 62,
+        "mentality": 67,
+        "recovery": 59,
+        "clutch": 56,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 44,
+        "power": 44,
+        "eye": 51,
+        "discipline": 49,
+        "speed": 55,
+        "baseInstinct": 42,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 43,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "SS": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

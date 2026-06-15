@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08494",
+  "name": "최진기",
+  "nameEn": "Choi JinKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 76,
+      "primaryPosition": "C",
+      "developmentRate": 46,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 51,
+        "velocity": 52,
+        "command": 51,
+        "control": 48,
+        "movement": 53,
+        "mentality": 48,
+        "recovery": 47,
+        "clutch": 40,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 30,
+        "contact": 24,
+        "power": 29,
+        "eye": 27,
+        "discipline": 31,
+        "speed": 28,
+        "baseInstinct": 27,
+        "bunting": 19,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 21,
+        "battingClutch": 20
+      },
+      "positionRatings": {
+        "C": 30
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

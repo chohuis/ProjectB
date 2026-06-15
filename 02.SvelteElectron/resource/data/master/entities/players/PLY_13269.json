@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13269",
+  "name": "토마스 그랜트",
+  "nameEn": "Thomas Grant",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 14,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 52,
+      "primaryPosition": "C",
+      "developmentRate": 67,
+      "potentialHidden": 69,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 64,
+        "velocity": 70,
+        "command": 62,
+        "control": 62,
+        "movement": 58,
+        "mentality": 61,
+        "recovery": 56,
+        "clutch": 59,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 59,
+        "power": 54,
+        "eye": 58,
+        "discipline": 66,
+        "speed": 62,
+        "baseInstinct": 55,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 61,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "C": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

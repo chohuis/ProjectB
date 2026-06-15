@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11346",
+  "name": "앤더슨 트레버",
+  "nameEn": "Anderson Trevor",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 71,
+      "primaryPosition": "SP",
+      "developmentRate": 69,
+      "potentialHidden": 85,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 55,
+        "velocity": 54,
+        "command": 50,
+        "control": 56,
+        "movement": 48,
+        "mentality": 53,
+        "recovery": 51,
+        "clutch": 49,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 49,
+        "power": 49,
+        "eye": 59,
+        "discipline": 48,
+        "speed": 49,
+        "baseInstinct": 51,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 47,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "SP": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

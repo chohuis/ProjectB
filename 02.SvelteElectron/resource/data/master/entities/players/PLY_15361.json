@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15361",
+  "name": "그린 마커스",
+  "nameEn": "Green Marcus",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 40,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 34,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 57,
+      "primaryPosition": "SP",
+      "developmentRate": 36,
+      "potentialHidden": 43,
+      "proServiceYears": 12,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 61,
+        "velocity": 68,
+        "command": 68,
+        "control": 63,
+        "movement": 64,
+        "mentality": 68,
+        "recovery": 55,
+        "clutch": 59,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 64,
+        "power": 60,
+        "eye": 69,
+        "discipline": 58,
+        "speed": 72,
+        "baseInstinct": 57,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 66,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "SP": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

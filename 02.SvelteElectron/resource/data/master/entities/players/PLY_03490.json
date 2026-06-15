@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03490",
+  "name": "한훈재",
+  "nameEn": "Han HunJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 35,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 63,
+      "primaryPosition": "3B",
+      "developmentRate": 65,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 74,
+        "velocity": 74,
+        "command": 63,
+        "control": 65,
+        "movement": 74,
+        "mentality": 74,
+        "recovery": 68,
+        "clutch": 64,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 68,
+        "power": 68,
+        "eye": 74,
+        "discipline": 69,
+        "speed": 73,
+        "baseInstinct": 67,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 66,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "3B": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

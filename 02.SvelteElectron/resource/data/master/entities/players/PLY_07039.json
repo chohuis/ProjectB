@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07039",
+  "name": "강도기",
+  "nameEn": "Kang DoKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 27,
+      "primaryPosition": "SP",
+      "developmentRate": 52,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 47,
+        "velocity": 57,
+        "command": 41,
+        "control": 51,
+        "movement": 45,
+        "mentality": 56,
+        "recovery": 46,
+        "clutch": 49,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 34,
+        "power": 35,
+        "eye": 38,
+        "discipline": 40,
+        "speed": 44,
+        "baseInstinct": 34,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 31,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

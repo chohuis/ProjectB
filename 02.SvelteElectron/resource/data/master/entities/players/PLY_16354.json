@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16354",
+  "name": "해리스 미겔",
+  "nameEn": "Harris Miguel",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 24,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 33,
+      "primaryPosition": "SP",
+      "developmentRate": 64,
+      "potentialHidden": 56,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 57,
+        "velocity": 65,
+        "command": 54,
+        "control": 58,
+        "movement": 61,
+        "mentality": 65,
+        "recovery": 64,
+        "clutch": 52,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 56,
+        "power": 60,
+        "eye": 56,
+        "discipline": 59,
+        "speed": 57,
+        "baseInstinct": 53,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 60,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "SP": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

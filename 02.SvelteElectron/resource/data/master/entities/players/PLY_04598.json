@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04598",
+  "name": "이태현",
+  "nameEn": "Lee TaeHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 6,
+      "primaryPosition": "CF",
+      "developmentRate": 60,
+      "potentialHidden": 80,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 46,
+        "velocity": 49,
+        "command": 44,
+        "control": 44,
+        "movement": 47,
+        "mentality": 41,
+        "recovery": 37,
+        "clutch": 40,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 43,
+        "power": 41,
+        "eye": 43,
+        "discipline": 48,
+        "speed": 55,
+        "baseInstinct": 43,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 48,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "CF": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

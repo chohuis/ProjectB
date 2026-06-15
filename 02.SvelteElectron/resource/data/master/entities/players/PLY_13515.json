@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13515",
+  "name": "존슨 미겔",
+  "nameEn": "Johnson Miguel",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 27,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 5,
+      "primaryPosition": "2B",
+      "developmentRate": 69,
+      "potentialHidden": 90,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 68,
+        "velocity": 73,
+        "command": 65,
+        "control": 66,
+        "movement": 62,
+        "mentality": 66,
+        "recovery": 65,
+        "clutch": 62,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 69,
+        "power": 65,
+        "eye": 58,
+        "discipline": 58,
+        "speed": 66,
+        "baseInstinct": 59,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 59,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "2B": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

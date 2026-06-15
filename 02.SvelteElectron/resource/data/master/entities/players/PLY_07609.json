@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07609",
+  "name": "류도욱",
+  "nameEn": "Ryu DoWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 40,
+      "primaryPosition": "3B",
+      "developmentRate": 46,
+      "potentialHidden": 50,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 51,
+        "velocity": 51,
+        "command": 51,
+        "control": 49,
+        "movement": 52,
+        "mentality": 48,
+        "recovery": 45,
+        "clutch": 44,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 48,
+        "power": 45,
+        "eye": 51,
+        "discipline": 42,
+        "speed": 52,
+        "baseInstinct": 41,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 41,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "3B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

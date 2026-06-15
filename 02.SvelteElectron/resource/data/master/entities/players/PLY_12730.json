@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12730",
+  "name": "애덤스 헌터",
+  "nameEn": "Adams Hunter",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 19,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 32,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 84,
+      "primaryPosition": "1B",
+      "developmentRate": 51,
+      "potentialHidden": 54,
+      "proServiceYears": 10,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 56,
+        "velocity": 57,
+        "command": 61,
+        "control": 58,
+        "movement": 51,
+        "mentality": 61,
+        "recovery": 50,
+        "clutch": 54,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 61,
+        "power": 55,
+        "eye": 58,
+        "discipline": 63,
+        "speed": 53,
+        "baseInstinct": 53,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 62,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "1B": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

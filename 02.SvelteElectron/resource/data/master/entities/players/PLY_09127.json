@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09127",
+  "name": "류우윤",
+  "nameEn": "Ryu WooYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 37,
+      "primaryPosition": "2B",
+      "developmentRate": 56,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 54,
+        "velocity": 52,
+        "command": 48,
+        "control": 53,
+        "movement": 50,
+        "mentality": 50,
+        "recovery": 43,
+        "clutch": 38,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 35,
+        "contact": 27,
+        "power": 36,
+        "eye": 33,
+        "discipline": 32,
+        "speed": 40,
+        "baseInstinct": 29,
+        "bunting": 15,
+        "platoon": 50,
+        "fielding": 25,
+        "arm": 25,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "2B": 35
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

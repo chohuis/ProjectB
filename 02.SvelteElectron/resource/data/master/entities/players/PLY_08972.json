@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08972",
+  "name": "윤지우",
+  "nameEn": "Yoon JiWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 35,
+      "primaryPosition": "RF",
+      "developmentRate": 42,
+      "potentialHidden": 42,
+      "pitching": {
+        "ovr": 38,
+        "stamina": 31,
+        "velocity": 40,
+        "command": 37,
+        "control": 29,
+        "movement": 31,
+        "mentality": 36,
+        "recovery": 27,
+        "clutch": 35,
+        "holdRunners": 28
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 41,
+        "power": 36,
+        "eye": 40,
+        "discipline": 35,
+        "speed": 38,
+        "baseInstinct": 33,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 29,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "RF": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

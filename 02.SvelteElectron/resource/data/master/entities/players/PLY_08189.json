@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08189",
+  "name": "송정재",
+  "nameEn": "Song JungJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 7,
+      "primaryPosition": "3B",
+      "developmentRate": 47,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 49,
+        "velocity": 62,
+        "command": 53,
+        "control": 56,
+        "movement": 51,
+        "mentality": 53,
+        "recovery": 48,
+        "clutch": 43,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 37,
+        "power": 37,
+        "eye": 31,
+        "discipline": 40,
+        "speed": 36,
+        "baseInstinct": 40,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 40,
+        "battingClutch": 27
+      },
+      "positionRatings": {
+        "3B": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

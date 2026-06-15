@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12026",
+  "name": "로빈슨 딜런",
+  "nameEn": "Robinson Dylan",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 21,
+      "primaryPosition": "CF",
+      "developmentRate": 60,
+      "potentialHidden": 87,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 79,
+        "stamina": 80,
+        "velocity": 83,
+        "command": 80,
+        "control": 80,
+        "movement": 71,
+        "mentality": 78,
+        "recovery": 80,
+        "clutch": 77,
+        "holdRunners": 71
+      },
+      "batting": {
+        "ovr": 79,
+        "contact": 72,
+        "power": 72,
+        "eye": 71,
+        "discipline": 75,
+        "speed": 77,
+        "baseInstinct": 71,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 72,
+        "arm": 74,
+        "battingClutch": 71
+      },
+      "positionRatings": {
+        "CF": 79
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

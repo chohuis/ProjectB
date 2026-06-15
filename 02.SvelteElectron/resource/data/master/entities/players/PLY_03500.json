@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03500",
+  "name": "정영빈",
+  "nameEn": "Jung YoungBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 38,
+      "primaryPosition": "LF",
+      "developmentRate": 72,
+      "potentialHidden": 87,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 80,
+        "velocity": 77,
+        "command": 67,
+        "control": 71,
+        "movement": 76,
+        "mentality": 79,
+        "recovery": 75,
+        "clutch": 68,
+        "holdRunners": 72
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 50,
+        "power": 44,
+        "eye": 51,
+        "discipline": 56,
+        "speed": 50,
+        "baseInstinct": 54,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 53,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "LF": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05600",
+  "name": "황현준",
+  "nameEn": "Hwang HyeonJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 64,
+      "primaryPosition": "SS",
+      "developmentRate": 55,
+      "potentialHidden": 82,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 56,
+        "velocity": 67,
+        "command": 60,
+        "control": 61,
+        "movement": 60,
+        "mentality": 61,
+        "recovery": 57,
+        "clutch": 51,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 62,
+        "power": 57,
+        "eye": 59,
+        "discipline": 54,
+        "speed": 54,
+        "baseInstinct": 60,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 58,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "SS": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

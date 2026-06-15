@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07219",
+  "name": "신태호",
+  "nameEn": "Shin TaeHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 21,
+      "primaryPosition": "CF",
+      "developmentRate": 59,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 46,
+        "velocity": 42,
+        "command": 34,
+        "control": 43,
+        "movement": 34,
+        "mentality": 39,
+        "recovery": 33,
+        "clutch": 40,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 56,
+        "power": 51,
+        "eye": 46,
+        "discipline": 49,
+        "speed": 59,
+        "baseInstinct": 46,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 49,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "CF": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

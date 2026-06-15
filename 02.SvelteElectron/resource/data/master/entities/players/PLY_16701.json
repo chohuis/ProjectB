@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16701",
+  "name": "앨런 헌터",
+  "nameEn": "Allen Hunter",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 81,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 17,
+      "primaryPosition": "SP",
+      "developmentRate": 50,
+      "potentialHidden": 73,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 68,
+        "velocity": 77,
+        "command": 62,
+        "control": 73,
+        "movement": 72,
+        "mentality": 73,
+        "recovery": 62,
+        "clutch": 63,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 64,
+        "power": 65,
+        "eye": 63,
+        "discipline": 68,
+        "speed": 65,
+        "baseInstinct": 58,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 68,
+        "battingClutch": 68
+      },
+      "positionRatings": {
+        "SP": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

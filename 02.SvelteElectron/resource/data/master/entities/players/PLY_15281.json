@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15281",
+  "name": "홀 에반",
+  "nameEn": "Hall Evan",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 42,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 78,
+      "primaryPosition": "2B",
+      "developmentRate": 63,
+      "potentialHidden": 67,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 70,
+        "velocity": 69,
+        "command": 60,
+        "control": 58,
+        "movement": 57,
+        "mentality": 71,
+        "recovery": 61,
+        "clutch": 62,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 67,
+        "power": 62,
+        "eye": 59,
+        "discipline": 69,
+        "speed": 62,
+        "baseInstinct": 56,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 66,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "2B": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

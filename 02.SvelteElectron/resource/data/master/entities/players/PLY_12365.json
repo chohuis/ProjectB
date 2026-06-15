@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12365",
+  "name": "그린 제이슨",
+  "nameEn": "Green Jason",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 48,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 78,
+      "primaryPosition": "SP",
+      "developmentRate": 57,
+      "potentialHidden": 65,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 70,
+        "velocity": 76,
+        "command": 62,
+        "control": 65,
+        "movement": 60,
+        "mentality": 59,
+        "recovery": 58,
+        "clutch": 56,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 68,
+        "power": 62,
+        "eye": 69,
+        "discipline": 60,
+        "speed": 61,
+        "baseInstinct": 62,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 65,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "SP": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03309",
+  "name": "안준식",
+  "nameEn": "An JunSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 84,
+      "primaryPosition": "RF",
+      "developmentRate": 75,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 65,
+        "velocity": 72,
+        "command": 64,
+        "control": 68,
+        "movement": 67,
+        "mentality": 67,
+        "recovery": 63,
+        "clutch": 59,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 46,
+        "power": 44,
+        "eye": 55,
+        "discipline": 54,
+        "speed": 48,
+        "baseInstinct": 44,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 48,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "RF": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

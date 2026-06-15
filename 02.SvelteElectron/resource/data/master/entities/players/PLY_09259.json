@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09259",
+  "name": "정민빈",
+  "nameEn": "Jung MinBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 34,
+      "primaryPosition": "C",
+      "developmentRate": 51,
+      "potentialHidden": 46,
+      "pitching": {
+        "ovr": 38,
+        "stamina": 39,
+        "velocity": 37,
+        "command": 35,
+        "control": 34,
+        "movement": 33,
+        "mentality": 36,
+        "recovery": 36,
+        "clutch": 33,
+        "holdRunners": 26
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 29,
+        "power": 29,
+        "eye": 38,
+        "discipline": 28,
+        "speed": 35,
+        "baseInstinct": 36,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 26,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "C": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

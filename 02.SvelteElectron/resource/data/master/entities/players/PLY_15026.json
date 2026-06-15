@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15026",
+  "name": "그린 타일러",
+  "nameEn": "Green Tyler",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 26,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 56,
+      "primaryPosition": "1B",
+      "developmentRate": 58,
+      "potentialHidden": 87,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 66,
+        "velocity": 70,
+        "command": 52,
+        "control": 55,
+        "movement": 59,
+        "mentality": 66,
+        "recovery": 57,
+        "clutch": 54,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 60,
+        "power": 58,
+        "eye": 65,
+        "discipline": 58,
+        "speed": 69,
+        "baseInstinct": 58,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 56,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "1B": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

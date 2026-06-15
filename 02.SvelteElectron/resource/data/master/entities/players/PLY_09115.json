@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09115",
+  "name": "임수원",
+  "nameEn": "Lim SuWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 5,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 33,
+      "primaryPosition": "CF",
+      "developmentRate": 56,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 46,
+        "velocity": 44,
+        "command": 33,
+        "control": 37,
+        "movement": 39,
+        "mentality": 45,
+        "recovery": 38,
+        "clutch": 31,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 40,
+        "power": 38,
+        "eye": 38,
+        "discipline": 32,
+        "speed": 41,
+        "baseInstinct": 39,
+        "bunting": 19,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 30,
+        "battingClutch": 30
+      },
+      "positionRatings": {
+        "CF": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

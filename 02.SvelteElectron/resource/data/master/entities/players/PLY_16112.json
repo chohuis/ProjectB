@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16112",
+  "name": "데이비스 라이언",
+  "nameEn": "Davis Ryan",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 31,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 33,
+      "primaryPosition": "SP",
+      "developmentRate": 57,
+      "potentialHidden": 80,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 49,
+        "velocity": 51,
+        "command": 48,
+        "control": 50,
+        "movement": 46,
+        "mentality": 57,
+        "recovery": 40,
+        "clutch": 44,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 46,
+        "power": 40,
+        "eye": 49,
+        "discipline": 52,
+        "speed": 48,
+        "baseInstinct": 48,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 53,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SP": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

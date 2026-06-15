@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07791",
+  "name": "이우욱",
+  "nameEn": "Lee WooWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 1,
+      "primaryPosition": "SP",
+      "developmentRate": 51,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 53,
+        "velocity": 61,
+        "command": 49,
+        "control": 55,
+        "movement": 56,
+        "mentality": 57,
+        "recovery": 49,
+        "clutch": 47,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 55,
+        "power": 46,
+        "eye": 51,
+        "discipline": 54,
+        "speed": 60,
+        "baseInstinct": 46,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 51,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "SP": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

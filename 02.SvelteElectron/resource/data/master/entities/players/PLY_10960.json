@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10960",
+  "name": "영 마커스",
+  "nameEn": "Young Marcus",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 43,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 95,
+      "primaryPosition": "CF",
+      "developmentRate": 47,
+      "potentialHidden": 67,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 80,
+        "stamina": 84,
+        "velocity": 84,
+        "command": 81,
+        "control": 83,
+        "movement": 81,
+        "mentality": 83,
+        "recovery": 76,
+        "clutch": 68,
+        "holdRunners": 73
+      },
+      "batting": {
+        "ovr": 80,
+        "contact": 78,
+        "power": 80,
+        "eye": 74,
+        "discipline": 74,
+        "speed": 81,
+        "baseInstinct": 76,
+        "bunting": 73,
+        "platoon": 50,
+        "fielding": 80,
+        "arm": 82,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "CF": 80
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

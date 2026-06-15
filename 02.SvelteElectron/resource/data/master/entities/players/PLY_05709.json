@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05709",
+  "name": "송재찬",
+  "nameEn": "Song JaeChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 57,
+      "primaryPosition": "LF",
+      "developmentRate": 51,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 51,
+        "velocity": 58,
+        "command": 52,
+        "control": 51,
+        "movement": 51,
+        "mentality": 62,
+        "recovery": 53,
+        "clutch": 53,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 49,
+        "power": 51,
+        "eye": 54,
+        "discipline": 51,
+        "speed": 57,
+        "baseInstinct": 57,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 55,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "LF": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

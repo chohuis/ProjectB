@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10059",
+  "name": "로드리게스 카를로스",
+  "nameEn": "Rodriguez Carlos",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 13,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 34,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 45,
+      "primaryPosition": "SP",
+      "developmentRate": 44,
+      "potentialHidden": 70,
+      "proServiceYears": 12,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 57,
+        "velocity": 61,
+        "command": 59,
+        "control": 67,
+        "movement": 55,
+        "mentality": 61,
+        "recovery": 59,
+        "clutch": 56,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 65,
+        "power": 57,
+        "eye": 65,
+        "discipline": 68,
+        "speed": 68,
+        "baseInstinct": 58,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 56,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "SP": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

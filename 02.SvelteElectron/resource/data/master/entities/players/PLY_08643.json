@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08643",
+  "name": "강수완",
+  "nameEn": "Kang SuWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 38,
+      "primaryPosition": "SP",
+      "developmentRate": 51,
+      "potentialHidden": 47,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 40,
+        "velocity": 55,
+        "command": 39,
+        "control": 41,
+        "movement": 40,
+        "mentality": 46,
+        "recovery": 42,
+        "clutch": 35,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 32,
+        "power": 34,
+        "eye": 35,
+        "discipline": 40,
+        "speed": 42,
+        "baseInstinct": 29,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 33,
+        "battingClutch": 26
+      },
+      "positionRatings": {
+        "SP": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

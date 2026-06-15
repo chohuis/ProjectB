@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03468",
+  "name": "정성식",
+  "nameEn": "Jung SeongSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 46,
+      "primaryPosition": "CF",
+      "developmentRate": 64,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 55,
+        "velocity": 67,
+        "command": 57,
+        "control": 60,
+        "movement": 61,
+        "mentality": 62,
+        "recovery": 52,
+        "clutch": 50,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 56,
+        "power": 51,
+        "eye": 56,
+        "discipline": 53,
+        "speed": 55,
+        "baseInstinct": 55,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 52,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "CF": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

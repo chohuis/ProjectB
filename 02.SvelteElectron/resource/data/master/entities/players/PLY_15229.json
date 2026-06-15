@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15229",
+  "name": "마르티네스 라이언",
+  "nameEn": "Martinez Ryan",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 21,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 76,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 59,
+        "velocity": 64,
+        "command": 62,
+        "control": 69,
+        "movement": 60,
+        "mentality": 71,
+        "recovery": 62,
+        "clutch": 68,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 63,
+        "power": 63,
+        "eye": 62,
+        "discipline": 58,
+        "speed": 70,
+        "baseInstinct": 61,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 68,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "SP": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

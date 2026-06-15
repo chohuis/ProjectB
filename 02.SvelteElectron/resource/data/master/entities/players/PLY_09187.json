@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09187",
+  "name": "서훈준",
+  "nameEn": "Seo HunJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 46,
+      "primaryPosition": "SS",
+      "developmentRate": 45,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 43,
+        "velocity": 44,
+        "command": 41,
+        "control": 32,
+        "movement": 40,
+        "mentality": 35,
+        "recovery": 40,
+        "clutch": 31,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 39,
+        "power": 33,
+        "eye": 33,
+        "discipline": 38,
+        "speed": 39,
+        "baseInstinct": 29,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 29,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "SS": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

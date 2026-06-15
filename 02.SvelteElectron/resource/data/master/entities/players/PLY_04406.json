@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04406",
+  "name": "권혁찬",
+  "nameEn": "Kwon HyeokChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 97,
+      "primaryPosition": "SP",
+      "developmentRate": 67,
+      "potentialHidden": 80,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 51,
+        "velocity": 64,
+        "command": 55,
+        "control": 54,
+        "movement": 52,
+        "mentality": 54,
+        "recovery": 45,
+        "clutch": 43,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 57,
+        "power": 51,
+        "eye": 59,
+        "discipline": 57,
+        "speed": 52,
+        "baseInstinct": 51,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 49,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "SP": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

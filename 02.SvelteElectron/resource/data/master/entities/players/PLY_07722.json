@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07722",
+  "name": "윤민윤",
+  "nameEn": "Yoon MinYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 37,
+      "primaryPosition": "SP",
+      "developmentRate": 50,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 39,
+        "velocity": 51,
+        "command": 46,
+        "control": 42,
+        "movement": 46,
+        "mentality": 50,
+        "recovery": 37,
+        "clutch": 37,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 38,
+        "power": 36,
+        "eye": 36,
+        "discipline": 34,
+        "speed": 45,
+        "baseInstinct": 39,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 42,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SP": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

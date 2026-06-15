@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07675",
+  "name": "안정혁",
+  "nameEn": "An JungHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 85,
+      "primaryPosition": "3B",
+      "developmentRate": 45,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 38,
+        "velocity": 47,
+        "command": 37,
+        "control": 47,
+        "movement": 35,
+        "mentality": 39,
+        "recovery": 41,
+        "clutch": 37,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 42,
+        "power": 38,
+        "eye": 43,
+        "discipline": 41,
+        "speed": 47,
+        "baseInstinct": 48,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 41,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "3B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

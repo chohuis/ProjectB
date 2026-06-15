@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09060",
+  "name": "조민기",
+  "nameEn": "Jo MinKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 31,
+      "primaryPosition": "3B",
+      "developmentRate": 41,
+      "potentialHidden": 64,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 36,
+        "velocity": 43,
+        "command": 40,
+        "control": 38,
+        "movement": 36,
+        "mentality": 40,
+        "recovery": 37,
+        "clutch": 27,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 50,
+        "power": 46,
+        "eye": 42,
+        "discipline": 47,
+        "speed": 45,
+        "baseInstinct": 45,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 41,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "3B": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

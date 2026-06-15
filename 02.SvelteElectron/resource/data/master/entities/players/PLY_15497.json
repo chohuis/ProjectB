@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15497",
+  "name": "로빈슨 네이선",
+  "nameEn": "Robinson Nathan",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 24,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 52,
+      "primaryPosition": "SP",
+      "developmentRate": 51,
+      "potentialHidden": 54,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 61,
+        "velocity": 69,
+        "command": 63,
+        "control": 60,
+        "movement": 59,
+        "mentality": 62,
+        "recovery": 63,
+        "clutch": 64,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 66,
+        "power": 58,
+        "eye": 59,
+        "discipline": 62,
+        "speed": 64,
+        "baseInstinct": 59,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 66,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "SP": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04906",
+  "name": "김준식",
+  "nameEn": "Kim JunSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 24,
+      "primaryPosition": "SP",
+      "developmentRate": 50,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 43,
+        "velocity": 53,
+        "command": 44,
+        "control": 51,
+        "movement": 47,
+        "mentality": 56,
+        "recovery": 47,
+        "clutch": 41,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 49,
+        "power": 47,
+        "eye": 46,
+        "discipline": 49,
+        "speed": 50,
+        "baseInstinct": 37,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 41,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "SP": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

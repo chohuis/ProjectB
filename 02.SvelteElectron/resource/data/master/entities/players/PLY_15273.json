@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15273",
+  "name": "넬슨 크리스",
+  "nameEn": "Nelson Chris",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 33,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 66,
+      "primaryPosition": "CF",
+      "developmentRate": 49,
+      "potentialHidden": 53,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 61,
+        "velocity": 70,
+        "command": 66,
+        "control": 59,
+        "movement": 64,
+        "mentality": 66,
+        "recovery": 65,
+        "clutch": 61,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 58,
+        "power": 62,
+        "eye": 64,
+        "discipline": 62,
+        "speed": 60,
+        "baseInstinct": 67,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 62,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "CF": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

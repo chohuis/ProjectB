@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08784",
+  "name": "임찬혁",
+  "nameEn": "Lim ChanHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 87,
+      "primaryPosition": "SS",
+      "developmentRate": 42,
+      "potentialHidden": 45,
+      "pitching": {
+        "ovr": 33,
+        "stamina": 35,
+        "velocity": 43,
+        "command": 32,
+        "control": 29,
+        "movement": 33,
+        "mentality": 28,
+        "recovery": 32,
+        "clutch": 20,
+        "holdRunners": 19
+      },
+      "batting": {
+        "ovr": 31,
+        "contact": 24,
+        "power": 24,
+        "eye": 24,
+        "discipline": 24,
+        "speed": 29,
+        "baseInstinct": 31,
+        "bunting": 18,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 29,
+        "battingClutch": 17
+      },
+      "positionRatings": {
+        "SS": 31
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

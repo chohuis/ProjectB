@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06774",
+  "name": "안동기",
+  "nameEn": "An DongKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 75,
+      "primaryPosition": "C",
+      "developmentRate": 69,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 57,
+        "velocity": 63,
+        "command": 43,
+        "control": 53,
+        "movement": 53,
+        "mentality": 53,
+        "recovery": 48,
+        "clutch": 41,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 47,
+        "power": 42,
+        "eye": 40,
+        "discipline": 51,
+        "speed": 44,
+        "baseInstinct": 50,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 45,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "C": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

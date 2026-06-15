@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07376",
+  "name": "송동빈",
+  "nameEn": "Song DongBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 26,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 57,
+        "velocity": 66,
+        "command": 62,
+        "control": 64,
+        "movement": 57,
+        "mentality": 56,
+        "recovery": 54,
+        "clutch": 58,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 40,
+        "power": 40,
+        "eye": 40,
+        "discipline": 43,
+        "speed": 49,
+        "baseInstinct": 42,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 35,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "SP": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

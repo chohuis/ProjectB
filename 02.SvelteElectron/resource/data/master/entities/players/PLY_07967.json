@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07967",
+  "name": "신도기",
+  "nameEn": "Shin DoKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 51,
+      "primaryPosition": "CF",
+      "developmentRate": 56,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 46,
+        "velocity": 59,
+        "command": 47,
+        "control": 45,
+        "movement": 50,
+        "mentality": 58,
+        "recovery": 44,
+        "clutch": 45,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 44,
+        "power": 50,
+        "eye": 44,
+        "discipline": 47,
+        "speed": 47,
+        "baseInstinct": 41,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 42,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "CF": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

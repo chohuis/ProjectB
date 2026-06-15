@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13563",
+  "name": "그린 브랜던",
+  "nameEn": "Green Brandon",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 33,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 71,
+      "primaryPosition": "CF",
+      "developmentRate": 68,
+      "potentialHidden": 69,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 61,
+        "velocity": 59,
+        "command": 53,
+        "control": 51,
+        "movement": 62,
+        "mentality": 56,
+        "recovery": 55,
+        "clutch": 52,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 56,
+        "power": 59,
+        "eye": 55,
+        "discipline": 56,
+        "speed": 58,
+        "baseInstinct": 50,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 62,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "CF": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09137",
+  "name": "안기식",
+  "nameEn": "An KiSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 78,
+      "primaryPosition": "2B",
+      "developmentRate": 49,
+      "potentialHidden": 48,
+      "pitching": {
+        "ovr": 35,
+        "stamina": 33,
+        "velocity": 34,
+        "command": 34,
+        "control": 27,
+        "movement": 27,
+        "mentality": 35,
+        "recovery": 27,
+        "clutch": 28,
+        "holdRunners": 28
+      },
+      "batting": {
+        "ovr": 33,
+        "contact": 32,
+        "power": 31,
+        "eye": 25,
+        "discipline": 28,
+        "speed": 36,
+        "baseInstinct": 30,
+        "bunting": 14,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 24,
+        "battingClutch": 30
+      },
+      "positionRatings": {
+        "2B": 33
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

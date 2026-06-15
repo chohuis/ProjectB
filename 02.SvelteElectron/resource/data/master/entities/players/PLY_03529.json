@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03529",
+  "name": "권도환",
+  "nameEn": "Kwon DoHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 80,
+      "primaryPosition": "2B",
+      "developmentRate": 70,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 66,
+        "velocity": 77,
+        "command": 69,
+        "control": 63,
+        "movement": 64,
+        "mentality": 68,
+        "recovery": 59,
+        "clutch": 60,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 71,
+        "power": 62,
+        "eye": 61,
+        "discipline": 59,
+        "speed": 72,
+        "baseInstinct": 62,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 69,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "2B": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

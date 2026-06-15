@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05554",
+  "name": "신우원",
+  "nameEn": "Shin WooWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 75,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 48,
+        "velocity": 57,
+        "command": 40,
+        "control": 45,
+        "movement": 42,
+        "mentality": 45,
+        "recovery": 48,
+        "clutch": 35,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 42,
+        "power": 43,
+        "eye": 51,
+        "discipline": 49,
+        "speed": 50,
+        "baseInstinct": 51,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 49,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SP": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

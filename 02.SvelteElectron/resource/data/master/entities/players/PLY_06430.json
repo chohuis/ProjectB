@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06430",
+  "name": "조세기",
+  "nameEn": "Jo SeKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 30,
+      "primaryPosition": "SP",
+      "developmentRate": 43,
+      "potentialHidden": 51,
+      "pitching": {
+        "ovr": 37,
+        "stamina": 40,
+        "velocity": 43,
+        "command": 32,
+        "control": 34,
+        "movement": 34,
+        "mentality": 32,
+        "recovery": 28,
+        "clutch": 29,
+        "holdRunners": 23
+      },
+      "batting": {
+        "ovr": 35,
+        "contact": 36,
+        "power": 28,
+        "eye": 37,
+        "discipline": 27,
+        "speed": 39,
+        "baseInstinct": 35,
+        "bunting": 18,
+        "platoon": 50,
+        "fielding": 24,
+        "arm": 30,
+        "battingClutch": 22
+      },
+      "positionRatings": {
+        "SP": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

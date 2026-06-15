@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12413",
+  "name": "존슨 카일",
+  "nameEn": "Johnson Kyle",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 29,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 30,
+      "primaryPosition": "SP",
+      "developmentRate": 46,
+      "potentialHidden": 77,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 81,
+        "stamina": 80,
+        "velocity": 78,
+        "command": 71,
+        "control": 85,
+        "movement": 77,
+        "mentality": 83,
+        "recovery": 80,
+        "clutch": 68,
+        "holdRunners": 68
+      },
+      "batting": {
+        "ovr": 81,
+        "contact": 78,
+        "power": 71,
+        "eye": 75,
+        "discipline": 74,
+        "speed": 83,
+        "baseInstinct": 83,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 81,
+        "arm": 72,
+        "battingClutch": 75
+      },
+      "positionRatings": {
+        "SP": 81
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15064",
+  "name": "킹 카일",
+  "nameEn": "King Kyle",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 45,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 45,
+      "primaryPosition": "2B",
+      "developmentRate": 64,
+      "potentialHidden": 78,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 50,
+        "velocity": 56,
+        "command": 55,
+        "control": 49,
+        "movement": 52,
+        "mentality": 55,
+        "recovery": 45,
+        "clutch": 56,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 58,
+        "power": 53,
+        "eye": 53,
+        "discipline": 55,
+        "speed": 62,
+        "baseInstinct": 55,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 56,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "2B": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

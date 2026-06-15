@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10762",
+  "name": "테일러 데릭",
+  "nameEn": "Taylor Derek",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 17,
+  "militaryStatus": "군필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 48,
+      "primaryPosition": "C",
+      "developmentRate": 69,
+      "potentialHidden": 81,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 55,
+        "velocity": 66,
+        "command": 51,
+        "control": 59,
+        "movement": 51,
+        "mentality": 65,
+        "recovery": 60,
+        "clutch": 58,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 57,
+        "power": 59,
+        "eye": 52,
+        "discipline": 59,
+        "speed": 61,
+        "baseInstinct": 57,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 55,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "C": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09427",
+  "name": "송세훈",
+  "nameEn": "Song SeHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 32,
+      "primaryPosition": "SS",
+      "developmentRate": 45,
+      "potentialHidden": 41,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 46,
+        "velocity": 46,
+        "command": 41,
+        "control": 48,
+        "movement": 39,
+        "mentality": 42,
+        "recovery": 34,
+        "clutch": 41,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 45,
+        "power": 39,
+        "eye": 38,
+        "discipline": 33,
+        "speed": 37,
+        "baseInstinct": 39,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 41,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "SS": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

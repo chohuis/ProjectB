@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03992",
+  "name": "황기민",
+  "nameEn": "Hwang KiMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 13,
+      "primaryPosition": "CF",
+      "developmentRate": 67,
+      "potentialHidden": 90,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 51,
+        "velocity": 63,
+        "command": 56,
+        "control": 61,
+        "movement": 52,
+        "mentality": 63,
+        "recovery": 54,
+        "clutch": 49,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 62,
+        "power": 62,
+        "eye": 55,
+        "discipline": 58,
+        "speed": 57,
+        "baseInstinct": 58,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 55,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "CF": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

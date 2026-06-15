@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07522",
+  "name": "임재혁",
+  "nameEn": "Lim JaeHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 82,
+      "primaryPosition": "C",
+      "developmentRate": 58,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 53,
+        "velocity": 65,
+        "command": 58,
+        "control": 61,
+        "movement": 57,
+        "mentality": 63,
+        "recovery": 54,
+        "clutch": 50,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 38,
+        "power": 46,
+        "eye": 45,
+        "discipline": 44,
+        "speed": 39,
+        "baseInstinct": 35,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 34,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "C": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

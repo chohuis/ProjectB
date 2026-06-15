@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14042",
+  "name": "앤더슨 콜",
+  "nameEn": "Anderson Cole",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 43,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 55,
+      "primaryPosition": "SP",
+      "developmentRate": 67,
+      "potentialHidden": 79,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 61,
+        "velocity": 61,
+        "command": 62,
+        "control": 59,
+        "movement": 56,
+        "mentality": 60,
+        "recovery": 52,
+        "clutch": 61,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 60,
+        "power": 55,
+        "eye": 62,
+        "discipline": 61,
+        "speed": 61,
+        "baseInstinct": 63,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 62,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "SP": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

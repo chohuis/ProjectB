@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04354",
+  "name": "정우수",
+  "nameEn": "Jung WooSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 26,
+      "primaryPosition": "RF",
+      "developmentRate": 55,
+      "potentialHidden": 90,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 62,
+        "velocity": 69,
+        "command": 57,
+        "control": 55,
+        "movement": 53,
+        "mentality": 65,
+        "recovery": 60,
+        "clutch": 57,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 49,
+        "power": 49,
+        "eye": 47,
+        "discipline": 48,
+        "speed": 56,
+        "baseInstinct": 54,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 54,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "RF": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

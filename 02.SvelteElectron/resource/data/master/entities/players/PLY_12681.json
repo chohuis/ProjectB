@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12681",
+  "name": "토마스 코디",
+  "nameEn": "Thomas Cody",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 77,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 72,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 48,
+        "velocity": 52,
+        "command": 46,
+        "control": 51,
+        "movement": 59,
+        "mentality": 49,
+        "recovery": 57,
+        "clutch": 51,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 52,
+        "power": 51,
+        "eye": 58,
+        "discipline": 57,
+        "speed": 58,
+        "baseInstinct": 56,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 54,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

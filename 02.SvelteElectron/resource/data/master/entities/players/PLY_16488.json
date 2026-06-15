@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16488",
+  "name": "앤더슨 숀",
+  "nameEn": "Anderson Sean",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 18,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 19,
+      "primaryPosition": "RF",
+      "developmentRate": 67,
+      "potentialHidden": 87,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 62,
+        "velocity": 68,
+        "command": 54,
+        "control": 57,
+        "movement": 55,
+        "mentality": 55,
+        "recovery": 54,
+        "clutch": 58,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 60,
+        "power": 55,
+        "eye": 59,
+        "discipline": 56,
+        "speed": 59,
+        "baseInstinct": 53,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 61,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "RF": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

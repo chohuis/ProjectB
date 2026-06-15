@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04194",
+  "name": "한훈환",
+  "nameEn": "Han HunHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 77,
+      "primaryPosition": "SP",
+      "developmentRate": 68,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 52,
+        "velocity": 62,
+        "command": 46,
+        "control": 51,
+        "movement": 49,
+        "mentality": 53,
+        "recovery": 53,
+        "clutch": 53,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 65,
+        "power": 64,
+        "eye": 61,
+        "discipline": 65,
+        "speed": 66,
+        "baseInstinct": 64,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 59,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SP": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

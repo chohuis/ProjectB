@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13109",
+  "name": "그린 트레버",
+  "nameEn": "Green Trevor",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 82,
+  "popularity": 28,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 62,
+      "primaryPosition": "SP",
+      "developmentRate": 48,
+      "potentialHidden": 80,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 81,
+        "stamina": 77,
+        "velocity": 85,
+        "command": 81,
+        "control": 75,
+        "movement": 84,
+        "mentality": 75,
+        "recovery": 77,
+        "clutch": 73,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 81,
+        "contact": 76,
+        "power": 83,
+        "eye": 86,
+        "discipline": 72,
+        "speed": 81,
+        "baseInstinct": 78,
+        "bunting": 68,
+        "platoon": 50,
+        "fielding": 84,
+        "arm": 79,
+        "battingClutch": 73
+      },
+      "positionRatings": {
+        "SP": 81
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05578",
+  "name": "정영혁",
+  "nameEn": "Jung YoungHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 86,
+      "primaryPosition": "3B",
+      "developmentRate": 55,
+      "potentialHidden": 84,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 60,
+        "velocity": 67,
+        "command": 57,
+        "control": 62,
+        "movement": 56,
+        "mentality": 60,
+        "recovery": 54,
+        "clutch": 61,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 54,
+        "power": 45,
+        "eye": 46,
+        "discipline": 51,
+        "speed": 50,
+        "baseInstinct": 41,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 50,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "3B": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

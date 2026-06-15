@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12146",
+  "name": "베이커 재크",
+  "nameEn": "Baker Zach",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 29,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 63,
+      "primaryPosition": "CF",
+      "developmentRate": 67,
+      "potentialHidden": 77,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 81,
+        "velocity": 77,
+        "command": 70,
+        "control": 78,
+        "movement": 68,
+        "mentality": 73,
+        "recovery": 65,
+        "clutch": 73,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 77,
+        "contact": 72,
+        "power": 68,
+        "eye": 76,
+        "discipline": 79,
+        "speed": 74,
+        "baseInstinct": 78,
+        "bunting": 65,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 66,
+        "battingClutch": 73
+      },
+      "positionRatings": {
+        "CF": 77
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

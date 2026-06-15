@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05435",
+  "name": "전진현",
+  "nameEn": "Jeon JinHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 52,
+      "primaryPosition": "SS",
+      "developmentRate": 59,
+      "potentialHidden": 81,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 61,
+        "velocity": 64,
+        "command": 62,
+        "control": 57,
+        "movement": 63,
+        "mentality": 57,
+        "recovery": 57,
+        "clutch": 49,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 50,
+        "power": 39,
+        "eye": 47,
+        "discipline": 43,
+        "speed": 45,
+        "baseInstinct": 40,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 43,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "SS": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

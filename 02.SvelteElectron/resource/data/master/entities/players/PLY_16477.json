@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16477",
+  "name": "테일러 에반",
+  "nameEn": "Taylor Evan",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 13,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 6,
+      "primaryPosition": "SP",
+      "developmentRate": 56,
+      "potentialHidden": 53,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 72,
+        "velocity": 79,
+        "command": 66,
+        "control": 79,
+        "movement": 75,
+        "mentality": 79,
+        "recovery": 66,
+        "clutch": 73,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 80,
+        "power": 70,
+        "eye": 67,
+        "discipline": 77,
+        "speed": 80,
+        "baseInstinct": 73,
+        "bunting": 67,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 74,
+        "battingClutch": 73
+      },
+      "positionRatings": {
+        "SP": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

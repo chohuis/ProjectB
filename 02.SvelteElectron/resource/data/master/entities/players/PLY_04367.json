@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04367",
+  "name": "한준현",
+  "nameEn": "Han JunHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 34,
+      "primaryPosition": "2B",
+      "developmentRate": 68,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 56,
+        "velocity": 62,
+        "command": 53,
+        "control": 58,
+        "movement": 47,
+        "mentality": 62,
+        "recovery": 51,
+        "clutch": 46,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 42,
+        "power": 38,
+        "eye": 42,
+        "discipline": 44,
+        "speed": 52,
+        "baseInstinct": 46,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 40,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "2B": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

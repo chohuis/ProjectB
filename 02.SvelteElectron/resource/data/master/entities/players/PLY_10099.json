@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10099",
+  "name": "스미스 로건",
+  "nameEn": "Smith Logan",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 40,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 34,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 77,
+      "primaryPosition": "LF",
+      "developmentRate": 53,
+      "potentialHidden": 71,
+      "proServiceYears": 12,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 68,
+        "velocity": 72,
+        "command": 75,
+        "control": 74,
+        "movement": 71,
+        "mentality": 79,
+        "recovery": 64,
+        "clutch": 70,
+        "holdRunners": 69
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 69,
+        "power": 74,
+        "eye": 73,
+        "discipline": 74,
+        "speed": 68,
+        "baseInstinct": 68,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 76,
+        "arm": 69,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "LF": 73
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

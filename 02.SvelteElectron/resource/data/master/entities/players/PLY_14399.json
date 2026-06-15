@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14399",
+  "name": "영 미겔",
+  "nameEn": "Young Miguel",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 34,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 77,
+      "primaryPosition": "3B",
+      "developmentRate": 57,
+      "potentialHidden": 68,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 65,
+        "velocity": 68,
+        "command": 60,
+        "control": 53,
+        "movement": 59,
+        "mentality": 67,
+        "recovery": 50,
+        "clutch": 59,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 55,
+        "power": 53,
+        "eye": 63,
+        "discipline": 64,
+        "speed": 63,
+        "baseInstinct": 60,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 54,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "3B": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

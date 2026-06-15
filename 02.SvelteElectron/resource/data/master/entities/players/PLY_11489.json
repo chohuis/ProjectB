@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11489",
+  "name": "넬슨 라이언",
+  "nameEn": "Nelson Ryan",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 33,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 84,
+      "primaryPosition": "SP",
+      "developmentRate": 68,
+      "potentialHidden": 64,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 64,
+        "velocity": 65,
+        "command": 61,
+        "control": 63,
+        "movement": 58,
+        "mentality": 72,
+        "recovery": 57,
+        "clutch": 65,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 67,
+        "power": 68,
+        "eye": 60,
+        "discipline": 69,
+        "speed": 66,
+        "baseInstinct": 57,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 66,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "SP": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

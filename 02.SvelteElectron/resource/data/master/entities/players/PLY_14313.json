@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14313",
+  "name": "존스 오스틴",
+  "nameEn": "Jones Austin",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 50,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 67,
+      "primaryPosition": "C",
+      "developmentRate": 53,
+      "potentialHidden": 61,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 55,
+        "velocity": 66,
+        "command": 60,
+        "control": 59,
+        "movement": 65,
+        "mentality": 60,
+        "recovery": 56,
+        "clutch": 56,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 58,
+        "power": 61,
+        "eye": 60,
+        "discipline": 61,
+        "speed": 65,
+        "baseInstinct": 61,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 54,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "C": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

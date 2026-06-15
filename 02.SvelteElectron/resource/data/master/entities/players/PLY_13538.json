@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13538",
+  "name": "앨런 코너",
+  "nameEn": "Allen Connor",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 12,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 88,
+      "primaryPosition": "LF",
+      "developmentRate": 74,
+      "potentialHidden": 95,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 55,
+        "velocity": 65,
+        "command": 46,
+        "control": 54,
+        "movement": 57,
+        "mentality": 51,
+        "recovery": 53,
+        "clutch": 45,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 52,
+        "power": 57,
+        "eye": 51,
+        "discipline": 52,
+        "speed": 49,
+        "baseInstinct": 51,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 52,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "LF": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

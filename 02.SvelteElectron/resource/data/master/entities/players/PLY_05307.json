@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05307",
+  "name": "신재성",
+  "nameEn": "Shin JaeSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 43,
+      "primaryPosition": "C",
+      "developmentRate": 56,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 43,
+        "velocity": 54,
+        "command": 45,
+        "control": 39,
+        "movement": 48,
+        "mentality": 47,
+        "recovery": 46,
+        "clutch": 36,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 37,
+        "power": 45,
+        "eye": 37,
+        "discipline": 41,
+        "speed": 39,
+        "baseInstinct": 44,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 41,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "C": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

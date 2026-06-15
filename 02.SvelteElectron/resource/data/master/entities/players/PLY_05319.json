@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05319",
+  "name": "신수수",
+  "nameEn": "Shin SuSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 87,
+      "primaryPosition": "SP",
+      "developmentRate": 52,
+      "potentialHidden": 80,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 60,
+        "velocity": 65,
+        "command": 58,
+        "control": 62,
+        "movement": 66,
+        "mentality": 70,
+        "recovery": 54,
+        "clutch": 55,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 38,
+        "power": 35,
+        "eye": 40,
+        "discipline": 43,
+        "speed": 44,
+        "baseInstinct": 41,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 35,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "SP": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03041",
+  "name": "한진민",
+  "nameEn": "Han JinMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 35,
+      "primaryPosition": "LF",
+      "developmentRate": 62,
+      "potentialHidden": 90,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 60,
+        "velocity": 70,
+        "command": 51,
+        "control": 54,
+        "movement": 57,
+        "mentality": 56,
+        "recovery": 50,
+        "clutch": 57,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 73,
+        "power": 63,
+        "eye": 67,
+        "discipline": 71,
+        "speed": 77,
+        "baseInstinct": 72,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 71,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "LF": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

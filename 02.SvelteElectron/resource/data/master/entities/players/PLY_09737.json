@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09737",
+  "name": "조수호",
+  "nameEn": "Jo SuHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 59,
+      "primaryPosition": "RF",
+      "developmentRate": 42,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 36,
+        "velocity": 52,
+        "command": 39,
+        "control": 42,
+        "movement": 38,
+        "mentality": 45,
+        "recovery": 36,
+        "clutch": 38,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 42,
+        "power": 40,
+        "eye": 35,
+        "discipline": 44,
+        "speed": 38,
+        "baseInstinct": 38,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 37,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "RF": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

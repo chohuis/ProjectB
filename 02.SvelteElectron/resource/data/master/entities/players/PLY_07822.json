@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07822",
+  "name": "임지기",
+  "nameEn": "Lim JiKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 92,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 63,
+        "velocity": 64,
+        "command": 55,
+        "control": 58,
+        "movement": 56,
+        "mentality": 61,
+        "recovery": 56,
+        "clutch": 50,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 49,
+        "power": 44,
+        "eye": 48,
+        "discipline": 46,
+        "speed": 46,
+        "baseInstinct": 45,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 46,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SP": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

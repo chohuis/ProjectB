@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04113",
+  "name": "안정식",
+  "nameEn": "An JungSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 53,
+      "primaryPosition": "CF",
+      "developmentRate": 66,
+      "potentialHidden": 84,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 70,
+        "velocity": 75,
+        "command": 62,
+        "control": 64,
+        "movement": 69,
+        "mentality": 63,
+        "recovery": 63,
+        "clutch": 55,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 53,
+        "power": 45,
+        "eye": 43,
+        "discipline": 50,
+        "speed": 54,
+        "baseInstinct": 42,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 47,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "CF": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

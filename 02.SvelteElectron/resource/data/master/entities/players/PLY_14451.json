@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14451",
+  "name": "잭슨 그랜트",
+  "nameEn": "Jackson Grant",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 17,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 29,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 61,
+      "primaryPosition": "SS",
+      "developmentRate": 48,
+      "potentialHidden": 72,
+      "proServiceYears": 7,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 52,
+        "velocity": 66,
+        "command": 54,
+        "control": 57,
+        "movement": 59,
+        "mentality": 60,
+        "recovery": 59,
+        "clutch": 57,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 65,
+        "power": 58,
+        "eye": 54,
+        "discipline": 62,
+        "speed": 65,
+        "baseInstinct": 63,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 63,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "SS": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

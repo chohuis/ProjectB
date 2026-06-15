@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06131",
+  "name": "권진빈",
+  "nameEn": "Kwon JinBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 82,
+      "primaryPosition": "LF",
+      "developmentRate": 57,
+      "potentialHidden": 41,
+      "pitching": {
+        "ovr": 36,
+        "stamina": 36,
+        "velocity": 44,
+        "command": 37,
+        "control": 30,
+        "movement": 32,
+        "mentality": 35,
+        "recovery": 32,
+        "clutch": 29,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 41,
+        "power": 35,
+        "eye": 40,
+        "discipline": 36,
+        "speed": 40,
+        "baseInstinct": 34,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 40,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "LF": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

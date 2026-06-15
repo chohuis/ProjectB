@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04132",
+  "name": "이상환",
+  "nameEn": "Lee SangHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 59,
+      "primaryPosition": "SS",
+      "developmentRate": 64,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 43,
+        "velocity": 60,
+        "command": 49,
+        "control": 47,
+        "movement": 46,
+        "mentality": 47,
+        "recovery": 42,
+        "clutch": 45,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 52,
+        "power": 53,
+        "eye": 54,
+        "discipline": 59,
+        "speed": 54,
+        "baseInstinct": 49,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 57,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "SS": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

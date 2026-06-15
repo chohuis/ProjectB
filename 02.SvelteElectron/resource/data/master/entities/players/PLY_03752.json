@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03752",
+  "name": "김정윤",
+  "nameEn": "Kim JungYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 59,
+      "primaryPosition": "2B",
+      "developmentRate": 63,
+      "potentialHidden": 89,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 62,
+        "velocity": 69,
+        "command": 54,
+        "control": 61,
+        "movement": 63,
+        "mentality": 58,
+        "recovery": 52,
+        "clutch": 54,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 44,
+        "power": 42,
+        "eye": 44,
+        "discipline": 36,
+        "speed": 47,
+        "baseInstinct": 35,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 35,
+        "arm": 42,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "2B": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

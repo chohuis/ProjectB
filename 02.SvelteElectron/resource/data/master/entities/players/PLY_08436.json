@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08436",
+  "name": "강동완",
+  "nameEn": "Kang DongWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 44,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 39,
+        "velocity": 44,
+        "command": 38,
+        "control": 38,
+        "movement": 42,
+        "mentality": 46,
+        "recovery": 40,
+        "clutch": 39,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 42,
+        "power": 42,
+        "eye": 42,
+        "discipline": 39,
+        "speed": 48,
+        "baseInstinct": 41,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 43,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "SP": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

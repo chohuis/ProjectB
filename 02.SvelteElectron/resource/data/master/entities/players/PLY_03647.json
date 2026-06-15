@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03647",
+  "name": "정성원",
+  "nameEn": "Jung SeongWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 52,
+      "primaryPosition": "SS",
+      "developmentRate": 53,
+      "potentialHidden": 64,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 49,
+        "velocity": 56,
+        "command": 48,
+        "control": 44,
+        "movement": 43,
+        "mentality": 53,
+        "recovery": 39,
+        "clutch": 37,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 47,
+        "power": 48,
+        "eye": 41,
+        "discipline": 47,
+        "speed": 53,
+        "baseInstinct": 46,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 46,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "SS": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

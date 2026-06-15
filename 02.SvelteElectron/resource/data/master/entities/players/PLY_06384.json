@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06384",
+  "name": "박영찬",
+  "nameEn": "Park YoungChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 35,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 56,
+      "primaryPosition": "LF",
+      "developmentRate": 48,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 36,
+        "velocity": 53,
+        "command": 33,
+        "control": 44,
+        "movement": 35,
+        "mentality": 40,
+        "recovery": 36,
+        "clutch": 35,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 40,
+        "power": 38,
+        "eye": 48,
+        "discipline": 37,
+        "speed": 45,
+        "baseInstinct": 47,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 45,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "LF": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

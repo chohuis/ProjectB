@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11495",
+  "name": "마틴 트레버",
+  "nameEn": "Martin Trevor",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 31,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 55,
+      "primaryPosition": "LF",
+      "developmentRate": 74,
+      "potentialHidden": 82,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 57,
+        "velocity": 68,
+        "command": 52,
+        "control": 60,
+        "movement": 59,
+        "mentality": 57,
+        "recovery": 55,
+        "clutch": 57,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 56,
+        "power": 51,
+        "eye": 61,
+        "discipline": 54,
+        "speed": 58,
+        "baseInstinct": 48,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 55,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "LF": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

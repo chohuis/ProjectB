@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04789",
+  "name": "황훈윤",
+  "nameEn": "Hwang HunYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 7,
+      "primaryPosition": "RF",
+      "developmentRate": 60,
+      "potentialHidden": 51,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 52,
+        "velocity": 59,
+        "command": 51,
+        "control": 53,
+        "movement": 58,
+        "mentality": 57,
+        "recovery": 46,
+        "clutch": 52,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 37,
+        "power": 38,
+        "eye": 32,
+        "discipline": 31,
+        "speed": 39,
+        "baseInstinct": 39,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 38,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "RF": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

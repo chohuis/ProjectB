@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14211",
+  "name": "넬슨 에반",
+  "nameEn": "Nelson Evan",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 46,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 27,
+      "primaryPosition": "LF",
+      "developmentRate": 63,
+      "potentialHidden": 58,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 53,
+        "velocity": 68,
+        "command": 51,
+        "control": 67,
+        "movement": 64,
+        "mentality": 57,
+        "recovery": 59,
+        "clutch": 52,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 60,
+        "power": 61,
+        "eye": 66,
+        "discipline": 56,
+        "speed": 64,
+        "baseInstinct": 54,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 58,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "LF": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

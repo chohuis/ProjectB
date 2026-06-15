@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15211",
+  "name": "존스 브랜던",
+  "nameEn": "Jones Brandon",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 14,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 71,
+      "primaryPosition": "SS",
+      "developmentRate": 54,
+      "potentialHidden": 81,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 49,
+        "velocity": 59,
+        "command": 49,
+        "control": 55,
+        "movement": 45,
+        "mentality": 56,
+        "recovery": 48,
+        "clutch": 39,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 54,
+        "power": 44,
+        "eye": 51,
+        "discipline": 49,
+        "speed": 54,
+        "baseInstinct": 48,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 50,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "SS": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13307",
+  "name": "가르시아 블레이크",
+  "nameEn": "Garcia Blake",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 37,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 12,
+      "primaryPosition": "SP",
+      "developmentRate": 68,
+      "potentialHidden": 89,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 68,
+        "velocity": 60,
+        "command": 62,
+        "control": 67,
+        "movement": 59,
+        "mentality": 66,
+        "recovery": 63,
+        "clutch": 62,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 61,
+        "power": 62,
+        "eye": 62,
+        "discipline": 54,
+        "speed": 69,
+        "baseInstinct": 62,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 61,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "SP": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

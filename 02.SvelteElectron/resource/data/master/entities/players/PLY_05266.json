@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05266",
+  "name": "오지진",
+  "nameEn": "Oh JiJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 54,
+      "primaryPosition": "3B",
+      "developmentRate": 60,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 45,
+        "velocity": 45,
+        "command": 36,
+        "control": 42,
+        "movement": 44,
+        "mentality": 45,
+        "recovery": 39,
+        "clutch": 43,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 33,
+        "power": 35,
+        "eye": 31,
+        "discipline": 28,
+        "speed": 34,
+        "baseInstinct": 31,
+        "bunting": 18,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 37,
+        "battingClutch": 27
+      },
+      "positionRatings": {
+        "3B": 36
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

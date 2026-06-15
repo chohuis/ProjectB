@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06347",
+  "name": "조현욱",
+  "nameEn": "Jo HyeonWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 22,
+      "primaryPosition": "C",
+      "developmentRate": 44,
+      "potentialHidden": 46,
+      "pitching": {
+        "ovr": 41,
+        "stamina": 34,
+        "velocity": 50,
+        "command": 41,
+        "control": 39,
+        "movement": 40,
+        "mentality": 40,
+        "recovery": 31,
+        "clutch": 29,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 47,
+        "power": 40,
+        "eye": 42,
+        "discipline": 33,
+        "speed": 43,
+        "baseInstinct": 44,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 35,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "C": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

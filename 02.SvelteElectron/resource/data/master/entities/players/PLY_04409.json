@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04409",
+  "name": "서정준",
+  "nameEn": "Seo JungJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 98,
+      "primaryPosition": "SP",
+      "developmentRate": 63,
+      "potentialHidden": 84,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 70,
+        "velocity": 68,
+        "command": 61,
+        "control": 72,
+        "movement": 64,
+        "mentality": 69,
+        "recovery": 64,
+        "clutch": 56,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 50,
+        "power": 45,
+        "eye": 48,
+        "discipline": 47,
+        "speed": 51,
+        "baseInstinct": 47,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 48,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "SP": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

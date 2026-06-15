@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09281",
+  "name": "강현준",
+  "nameEn": "Kang HyeonJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 64,
+      "primaryPosition": "SS",
+      "developmentRate": 47,
+      "potentialHidden": 44,
+      "pitching": {
+        "ovr": 38,
+        "stamina": 39,
+        "velocity": 40,
+        "command": 36,
+        "control": 38,
+        "movement": 34,
+        "mentality": 39,
+        "recovery": 33,
+        "clutch": 31,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 48,
+        "power": 47,
+        "eye": 47,
+        "discipline": 41,
+        "speed": 49,
+        "baseInstinct": 42,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 46,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SS": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10862",
+  "name": "베이커 타일러",
+  "nameEn": "Baker Tyler",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 24,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 93,
+      "primaryPosition": "SP",
+      "developmentRate": 54,
+      "potentialHidden": 76,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 72,
+        "velocity": 77,
+        "command": 76,
+        "control": 76,
+        "movement": 70,
+        "mentality": 77,
+        "recovery": 70,
+        "clutch": 68,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 74,
+        "contact": 70,
+        "power": 73,
+        "eye": 78,
+        "discipline": 78,
+        "speed": 77,
+        "baseInstinct": 75,
+        "bunting": 67,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 76,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "SP": 74
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

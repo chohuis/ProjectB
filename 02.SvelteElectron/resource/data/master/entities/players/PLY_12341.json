@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12341",
+  "name": "무어 루이스",
+  "nameEn": "Moore Luis",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 46,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 24,
+      "primaryPosition": "2B",
+      "developmentRate": 79,
+      "potentialHidden": 71,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 59,
+        "velocity": 65,
+        "command": 48,
+        "control": 55,
+        "movement": 54,
+        "mentality": 62,
+        "recovery": 51,
+        "clutch": 53,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 58,
+        "power": 53,
+        "eye": 51,
+        "discipline": 47,
+        "speed": 54,
+        "baseInstinct": 56,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 55,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "2B": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

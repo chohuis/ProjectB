@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07917",
+  "name": "오찬현",
+  "nameEn": "Oh ChanHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 52,
+      "primaryPosition": "C",
+      "developmentRate": 47,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 55,
+        "velocity": 58,
+        "command": 44,
+        "control": 52,
+        "movement": 48,
+        "mentality": 51,
+        "recovery": 51,
+        "clutch": 46,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 39,
+        "power": 40,
+        "eye": 40,
+        "discipline": 36,
+        "speed": 46,
+        "baseInstinct": 32,
+        "bunting": 20,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 39,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "C": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

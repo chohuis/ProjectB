@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03409",
+  "name": "황현찬",
+  "nameEn": "Hwang HyeonChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 64,
+      "primaryPosition": "LF",
+      "developmentRate": 62,
+      "potentialHidden": 94,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 66,
+        "velocity": 63,
+        "command": 53,
+        "control": 63,
+        "movement": 62,
+        "mentality": 60,
+        "recovery": 57,
+        "clutch": 58,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 50,
+        "power": 55,
+        "eye": 51,
+        "discipline": 55,
+        "speed": 54,
+        "baseInstinct": 52,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 47,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "LF": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

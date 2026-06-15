@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07563",
+  "name": "김현진",
+  "nameEn": "Kim HyeonJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 54,
+      "primaryPosition": "RF",
+      "developmentRate": 48,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 46,
+        "velocity": 57,
+        "command": 38,
+        "control": 42,
+        "movement": 42,
+        "mentality": 45,
+        "recovery": 46,
+        "clutch": 37,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 45,
+        "power": 38,
+        "eye": 42,
+        "discipline": 41,
+        "speed": 53,
+        "baseInstinct": 48,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 43,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "RF": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

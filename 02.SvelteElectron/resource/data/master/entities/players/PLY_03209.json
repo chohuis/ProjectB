@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03209",
+  "name": "신수호",
+  "nameEn": "Shin SuHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 62,
+      "primaryPosition": "SS",
+      "developmentRate": 62,
+      "potentialHidden": 99,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 73,
+        "velocity": 84,
+        "command": 68,
+        "control": 70,
+        "movement": 66,
+        "mentality": 77,
+        "recovery": 64,
+        "clutch": 65,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 67,
+        "power": 69,
+        "eye": 68,
+        "discipline": 69,
+        "speed": 73,
+        "baseInstinct": 59,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 59,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "SS": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

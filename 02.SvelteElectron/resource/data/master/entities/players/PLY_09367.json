@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09367",
+  "name": "황준찬",
+  "nameEn": "Hwang JunChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 98,
+      "primaryPosition": "1B",
+      "developmentRate": 47,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 39,
+        "stamina": 40,
+        "velocity": 44,
+        "command": 35,
+        "control": 32,
+        "movement": 41,
+        "mentality": 40,
+        "recovery": 37,
+        "clutch": 33,
+        "holdRunners": 28
+      },
+      "batting": {
+        "ovr": 32,
+        "contact": 25,
+        "power": 22,
+        "eye": 24,
+        "discipline": 31,
+        "speed": 27,
+        "baseInstinct": 33,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 28,
+        "arm": 32,
+        "battingClutch": 25
+      },
+      "positionRatings": {
+        "1B": 32
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

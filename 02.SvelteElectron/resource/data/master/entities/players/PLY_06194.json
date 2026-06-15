@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06194",
+  "name": "김세환",
+  "nameEn": "Kim SeHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 13,
+      "primaryPosition": "SP",
+      "developmentRate": 44,
+      "potentialHidden": 50,
+      "pitching": {
+        "ovr": 37,
+        "stamina": 34,
+        "velocity": 44,
+        "command": 37,
+        "control": 38,
+        "movement": 36,
+        "mentality": 41,
+        "recovery": 31,
+        "clutch": 33,
+        "holdRunners": 25
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 42,
+        "power": 34,
+        "eye": 35,
+        "discipline": 34,
+        "speed": 45,
+        "baseInstinct": 33,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 42,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "SP": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

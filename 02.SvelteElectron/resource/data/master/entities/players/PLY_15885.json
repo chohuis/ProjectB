@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15885",
+  "name": "마르티네스 트레버",
+  "nameEn": "Martinez Trevor",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 50,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 69,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 49,
+        "velocity": 49,
+        "command": 51,
+        "control": 48,
+        "movement": 53,
+        "mentality": 53,
+        "recovery": 53,
+        "clutch": 48,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 48,
+        "power": 45,
+        "eye": 56,
+        "discipline": 50,
+        "speed": 53,
+        "baseInstinct": 50,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 54,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

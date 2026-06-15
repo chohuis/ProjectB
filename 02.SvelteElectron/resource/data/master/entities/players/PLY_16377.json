@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16377",
+  "name": "가르시아 크리스",
+  "nameEn": "Garcia Chris",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 33,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 43,
+      "primaryPosition": "RF",
+      "developmentRate": 57,
+      "potentialHidden": 69,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 60,
+        "velocity": 68,
+        "command": 61,
+        "control": 61,
+        "movement": 67,
+        "mentality": 65,
+        "recovery": 69,
+        "clutch": 63,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 68,
+        "power": 65,
+        "eye": 73,
+        "discipline": 65,
+        "speed": 66,
+        "baseInstinct": 70,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 60,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "RF": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10524",
+  "name": "존슨 헌터",
+  "nameEn": "Johnson Hunter",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 18,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 88,
+      "primaryPosition": "C",
+      "developmentRate": 67,
+      "potentialHidden": 59,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 81,
+        "velocity": 80,
+        "command": 75,
+        "control": 80,
+        "movement": 76,
+        "mentality": 73,
+        "recovery": 69,
+        "clutch": 66,
+        "holdRunners": 71
+      },
+      "batting": {
+        "ovr": 76,
+        "contact": 70,
+        "power": 69,
+        "eye": 77,
+        "discipline": 67,
+        "speed": 80,
+        "baseInstinct": 66,
+        "bunting": 67,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 77,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "C": 76
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

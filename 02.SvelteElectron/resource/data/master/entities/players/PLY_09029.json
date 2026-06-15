@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09029",
+  "name": "박찬욱",
+  "nameEn": "Park ChanWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 34,
+      "primaryPosition": "C",
+      "developmentRate": 58,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 47,
+        "velocity": 60,
+        "command": 40,
+        "control": 49,
+        "movement": 48,
+        "mentality": 48,
+        "recovery": 45,
+        "clutch": 40,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 32,
+        "power": 38,
+        "eye": 31,
+        "discipline": 34,
+        "speed": 37,
+        "baseInstinct": 38,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 31,
+        "battingClutch": 30
+      },
+      "positionRatings": {
+        "C": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

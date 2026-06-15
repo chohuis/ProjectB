@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16440",
+  "name": "로빈슨 조던",
+  "nameEn": "Robinson Jordan",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 81,
+  "popularity": 13,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 45,
+      "primaryPosition": "LF",
+      "developmentRate": 56,
+      "potentialHidden": 69,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 68,
+        "velocity": 68,
+        "command": 59,
+        "control": 67,
+        "movement": 62,
+        "mentality": 66,
+        "recovery": 68,
+        "clutch": 69,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 72,
+        "power": 70,
+        "eye": 66,
+        "discipline": 70,
+        "speed": 68,
+        "baseInstinct": 66,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 64,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "LF": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

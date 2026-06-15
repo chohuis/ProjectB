@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13975",
+  "name": "스콧 라이언",
+  "nameEn": "Scott Ryan",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 13,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 61,
+      "primaryPosition": "LF",
+      "developmentRate": 64,
+      "potentialHidden": 60,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 79,
+        "velocity": 82,
+        "command": 77,
+        "control": 78,
+        "movement": 68,
+        "mentality": 77,
+        "recovery": 65,
+        "clutch": 75,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 76,
+        "contact": 67,
+        "power": 69,
+        "eye": 80,
+        "discipline": 68,
+        "speed": 82,
+        "baseInstinct": 77,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 76,
+        "arm": 68,
+        "battingClutch": 70
+      },
+      "positionRatings": {
+        "LF": 76
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

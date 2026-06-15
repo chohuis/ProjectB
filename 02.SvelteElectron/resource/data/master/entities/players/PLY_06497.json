@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06497",
+  "name": "서세기",
+  "nameEn": "Seo SeKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 12,
+      "primaryPosition": "CF",
+      "developmentRate": 62,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 61,
+        "velocity": 64,
+        "command": 54,
+        "control": 55,
+        "movement": 57,
+        "mentality": 60,
+        "recovery": 57,
+        "clutch": 58,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 48,
+        "power": 46,
+        "eye": 45,
+        "discipline": 54,
+        "speed": 57,
+        "baseInstinct": 52,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 46,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "CF": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

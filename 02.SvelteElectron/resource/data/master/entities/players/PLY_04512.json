@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04512",
+  "name": "강혁민",
+  "nameEn": "Kang HyeokMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 97,
+      "primaryPosition": "CF",
+      "developmentRate": 49,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 40,
+        "velocity": 48,
+        "command": 39,
+        "control": 41,
+        "movement": 43,
+        "mentality": 49,
+        "recovery": 39,
+        "clutch": 40,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 44,
+        "power": 42,
+        "eye": 47,
+        "discipline": 48,
+        "speed": 49,
+        "baseInstinct": 47,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 44,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "CF": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

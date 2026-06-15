@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07321",
+  "name": "안수기",
+  "nameEn": "An SuKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 70,
+      "primaryPosition": "SS",
+      "developmentRate": 45,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 61,
+        "velocity": 60,
+        "command": 58,
+        "control": 60,
+        "movement": 61,
+        "mentality": 61,
+        "recovery": 49,
+        "clutch": 47,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 40,
+        "power": 35,
+        "eye": 33,
+        "discipline": 33,
+        "speed": 41,
+        "baseInstinct": 31,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 32,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "SS": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

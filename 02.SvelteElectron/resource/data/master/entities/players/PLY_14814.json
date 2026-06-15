@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14814",
+  "name": "그린 그랜트",
+  "nameEn": "Green Grant",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 15,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 47,
+      "primaryPosition": "SP",
+      "developmentRate": 68,
+      "potentialHidden": 61,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 55,
+        "velocity": 50,
+        "command": 45,
+        "control": 51,
+        "movement": 47,
+        "mentality": 49,
+        "recovery": 41,
+        "clutch": 39,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 50,
+        "power": 52,
+        "eye": 53,
+        "discipline": 51,
+        "speed": 55,
+        "baseInstinct": 46,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 40,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "SP": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

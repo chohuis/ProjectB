@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04695",
+  "name": "한성준",
+  "nameEn": "Han SeongJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 86,
+      "primaryPosition": "SP",
+      "developmentRate": 61,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 53,
+        "velocity": 56,
+        "command": 56,
+        "control": 57,
+        "movement": 49,
+        "mentality": 57,
+        "recovery": 49,
+        "clutch": 51,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 42,
+        "power": 35,
+        "eye": 46,
+        "discipline": 37,
+        "speed": 39,
+        "baseInstinct": 44,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 36,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "SP": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

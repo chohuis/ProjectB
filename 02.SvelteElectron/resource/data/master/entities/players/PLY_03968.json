@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03968",
+  "name": "오도성",
+  "nameEn": "Oh DoSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 47,
+      "primaryPosition": "SP",
+      "developmentRate": 57,
+      "potentialHidden": 86,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 68,
+        "velocity": 75,
+        "command": 70,
+        "control": 65,
+        "movement": 69,
+        "mentality": 75,
+        "recovery": 69,
+        "clutch": 62,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 62,
+        "power": 55,
+        "eye": 53,
+        "discipline": 62,
+        "speed": 60,
+        "baseInstinct": 53,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 55,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "SP": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

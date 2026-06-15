@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10329",
+  "name": "넬슨 브랜던",
+  "nameEn": "Nelson Brandon",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 24,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 87,
+      "primaryPosition": "C",
+      "developmentRate": 59,
+      "potentialHidden": 83,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 55,
+        "velocity": 71,
+        "command": 59,
+        "control": 61,
+        "movement": 62,
+        "mentality": 61,
+        "recovery": 50,
+        "clutch": 61,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 54,
+        "power": 51,
+        "eye": 64,
+        "discipline": 64,
+        "speed": 64,
+        "baseInstinct": 55,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 56,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "C": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

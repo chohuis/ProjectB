@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16600",
+  "name": "무어 에반",
+  "nameEn": "Moore Evan",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 81,
+  "popularity": 14,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 54,
+      "primaryPosition": "SS",
+      "developmentRate": 50,
+      "potentialHidden": 83,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 68,
+        "velocity": 71,
+        "command": 72,
+        "control": 76,
+        "movement": 68,
+        "mentality": 75,
+        "recovery": 70,
+        "clutch": 66,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 72,
+        "power": 64,
+        "eye": 69,
+        "discipline": 72,
+        "speed": 79,
+        "baseInstinct": 67,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 74,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "SS": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

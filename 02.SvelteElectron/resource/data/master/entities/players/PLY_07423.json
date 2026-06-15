@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07423",
+  "name": "윤도윤",
+  "nameEn": "Yoon DoYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 64,
+      "primaryPosition": "1B",
+      "developmentRate": 50,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 56,
+        "velocity": 69,
+        "command": 57,
+        "control": 56,
+        "movement": 51,
+        "mentality": 61,
+        "recovery": 49,
+        "clutch": 57,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 57,
+        "power": 52,
+        "eye": 54,
+        "discipline": 57,
+        "speed": 52,
+        "baseInstinct": 48,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 52,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "1B": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

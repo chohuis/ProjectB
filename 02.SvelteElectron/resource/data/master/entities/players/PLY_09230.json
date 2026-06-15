@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09230",
+  "name": "박동찬",
+  "nameEn": "Park DongChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 20,
+      "primaryPosition": "SP",
+      "developmentRate": 54,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 43,
+        "velocity": 53,
+        "command": 41,
+        "control": 43,
+        "movement": 47,
+        "mentality": 43,
+        "recovery": 43,
+        "clutch": 39,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 30,
+        "contact": 34,
+        "power": 28,
+        "eye": 32,
+        "discipline": 30,
+        "speed": 33,
+        "baseInstinct": 25,
+        "bunting": 13,
+        "platoon": 50,
+        "fielding": 29,
+        "arm": 27,
+        "battingClutch": 26
+      },
+      "positionRatings": {
+        "SP": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09217",
+  "name": "오태혁",
+  "nameEn": "Oh TaeHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 87,
+      "primaryPosition": "C",
+      "developmentRate": 53,
+      "potentialHidden": 44,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 48,
+        "velocity": 60,
+        "command": 44,
+        "control": 51,
+        "movement": 52,
+        "mentality": 53,
+        "recovery": 45,
+        "clutch": 50,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 36,
+        "power": 38,
+        "eye": 35,
+        "discipline": 42,
+        "speed": 41,
+        "baseInstinct": 36,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 32,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "C": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

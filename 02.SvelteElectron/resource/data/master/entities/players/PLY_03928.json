@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03928",
+  "name": "윤찬기",
+  "nameEn": "Yoon ChanKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 63,
+      "primaryPosition": "3B",
+      "developmentRate": 54,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 56,
+        "velocity": 56,
+        "command": 47,
+        "control": 55,
+        "movement": 47,
+        "mentality": 52,
+        "recovery": 47,
+        "clutch": 45,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 63,
+        "power": 60,
+        "eye": 65,
+        "discipline": 55,
+        "speed": 66,
+        "baseInstinct": 56,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 63,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "3B": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

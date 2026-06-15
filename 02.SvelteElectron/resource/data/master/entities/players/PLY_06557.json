@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06557",
+  "name": "이태훈",
+  "nameEn": "Lee TaeHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 83,
+      "primaryPosition": "3B",
+      "developmentRate": 55,
+      "potentialHidden": 86,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 66,
+        "velocity": 70,
+        "command": 67,
+        "control": 61,
+        "movement": 62,
+        "mentality": 72,
+        "recovery": 65,
+        "clutch": 58,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 61,
+        "power": 54,
+        "eye": 57,
+        "discipline": 55,
+        "speed": 59,
+        "baseInstinct": 55,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 58,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "3B": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06339",
+  "name": "오세윤",
+  "nameEn": "Oh SeYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 81,
+      "primaryPosition": "C",
+      "developmentRate": 50,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 47,
+        "velocity": 50,
+        "command": 50,
+        "control": 49,
+        "movement": 48,
+        "mentality": 51,
+        "recovery": 47,
+        "clutch": 40,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 47,
+        "power": 43,
+        "eye": 47,
+        "discipline": 47,
+        "speed": 46,
+        "baseInstinct": 42,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 44,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "C": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

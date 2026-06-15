@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10563",
+  "name": "마틴 딜런",
+  "nameEn": "Martin Dylan",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 15,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 11,
+      "primaryPosition": "SP",
+      "developmentRate": 69,
+      "potentialHidden": 59,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 80,
+        "stamina": 82,
+        "velocity": 86,
+        "command": 82,
+        "control": 75,
+        "movement": 78,
+        "mentality": 85,
+        "recovery": 74,
+        "clutch": 80,
+        "holdRunners": 72
+      },
+      "batting": {
+        "ovr": 80,
+        "contact": 85,
+        "power": 72,
+        "eye": 78,
+        "discipline": 70,
+        "speed": 77,
+        "baseInstinct": 78,
+        "bunting": 69,
+        "platoon": 50,
+        "fielding": 73,
+        "arm": 79,
+        "battingClutch": 80
+      },
+      "positionRatings": {
+        "SP": 80
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

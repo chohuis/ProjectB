@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03025",
+  "name": "신혁환",
+  "nameEn": "Shin HyeokHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 33,
+      "primaryPosition": "1B",
+      "developmentRate": 59,
+      "potentialHidden": 98,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 60,
+        "velocity": 63,
+        "command": 51,
+        "control": 53,
+        "movement": 57,
+        "mentality": 56,
+        "recovery": 53,
+        "clutch": 52,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 63,
+        "power": 62,
+        "eye": 62,
+        "discipline": 64,
+        "speed": 71,
+        "baseInstinct": 61,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 68,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "1B": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

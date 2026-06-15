@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09317",
+  "name": "정준혁",
+  "nameEn": "Jung JunHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 9,
+      "primaryPosition": "RF",
+      "developmentRate": 49,
+      "potentialHidden": 48,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 52,
+        "velocity": 58,
+        "command": 49,
+        "control": 45,
+        "movement": 47,
+        "mentality": 46,
+        "recovery": 44,
+        "clutch": 45,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 32,
+        "contact": 29,
+        "power": 24,
+        "eye": 23,
+        "discipline": 30,
+        "speed": 29,
+        "baseInstinct": 28,
+        "bunting": 16,
+        "platoon": 50,
+        "fielding": 25,
+        "arm": 22,
+        "battingClutch": 21
+      },
+      "positionRatings": {
+        "RF": 32
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

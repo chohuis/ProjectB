@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09555",
+  "name": "오동호",
+  "nameEn": "Oh DongHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 41,
+      "primaryPosition": "RF",
+      "developmentRate": 43,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 33,
+        "stamina": 26,
+        "velocity": 32,
+        "command": 25,
+        "control": 32,
+        "movement": 29,
+        "mentality": 34,
+        "recovery": 30,
+        "clutch": 30,
+        "holdRunners": 18
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 33,
+        "power": 36,
+        "eye": 31,
+        "discipline": 31,
+        "speed": 38,
+        "baseInstinct": 27,
+        "bunting": 19,
+        "platoon": 50,
+        "fielding": 26,
+        "arm": 37,
+        "battingClutch": 27
+      },
+      "positionRatings": {
+        "RF": 36
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

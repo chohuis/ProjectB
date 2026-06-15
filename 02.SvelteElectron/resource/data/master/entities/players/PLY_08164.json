@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08164",
+  "name": "정동완",
+  "nameEn": "Jung DongWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 98,
+      "primaryPosition": "SS",
+      "developmentRate": 47,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 42,
+        "velocity": 46,
+        "command": 38,
+        "control": 39,
+        "movement": 46,
+        "mentality": 45,
+        "recovery": 45,
+        "clutch": 37,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 39,
+        "power": 42,
+        "eye": 39,
+        "discipline": 44,
+        "speed": 40,
+        "baseInstinct": 39,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 41,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "SS": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16642",
+  "name": "베이커 오스틴",
+  "nameEn": "Baker Austin",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 42,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 26,
+      "primaryPosition": "3B",
+      "developmentRate": 57,
+      "potentialHidden": 56,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 54,
+        "velocity": 56,
+        "command": 46,
+        "control": 57,
+        "movement": 57,
+        "mentality": 48,
+        "recovery": 51,
+        "clutch": 50,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 50,
+        "power": 51,
+        "eye": 52,
+        "discipline": 58,
+        "speed": 55,
+        "baseInstinct": 47,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 57,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "3B": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

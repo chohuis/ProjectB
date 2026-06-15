@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07595",
+  "name": "조기수",
+  "nameEn": "Jo KiSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 13,
+      "primaryPosition": "CF",
+      "developmentRate": 46,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 54,
+        "velocity": 55,
+        "command": 52,
+        "control": 51,
+        "movement": 52,
+        "mentality": 60,
+        "recovery": 50,
+        "clutch": 45,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 47,
+        "power": 46,
+        "eye": 46,
+        "discipline": 54,
+        "speed": 55,
+        "baseInstinct": 47,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 48,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "CF": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

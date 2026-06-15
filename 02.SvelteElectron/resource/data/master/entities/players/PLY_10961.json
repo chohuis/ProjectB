@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10961",
+  "name": "카터 라이언",
+  "nameEn": "Carter Ryan",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 33,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 31,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 31,
+      "primaryPosition": "RF",
+      "developmentRate": 44,
+      "potentialHidden": 65,
+      "proServiceYears": 9,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 69,
+        "velocity": 72,
+        "command": 60,
+        "control": 63,
+        "movement": 65,
+        "mentality": 70,
+        "recovery": 54,
+        "clutch": 60,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 59,
+        "power": 55,
+        "eye": 65,
+        "discipline": 69,
+        "speed": 66,
+        "baseInstinct": 68,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 55,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "RF": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

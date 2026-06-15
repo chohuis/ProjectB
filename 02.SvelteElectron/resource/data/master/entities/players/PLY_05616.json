@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05616",
+  "name": "한태윤",
+  "nameEn": "Han TaeYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 45,
+      "primaryPosition": "RF",
+      "developmentRate": 63,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 44,
+        "velocity": 48,
+        "command": 39,
+        "control": 48,
+        "movement": 46,
+        "mentality": 53,
+        "recovery": 43,
+        "clutch": 45,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 42,
+        "power": 42,
+        "eye": 49,
+        "discipline": 49,
+        "speed": 46,
+        "baseInstinct": 41,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 46,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "RF": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

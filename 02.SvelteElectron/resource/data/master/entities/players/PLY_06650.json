@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06650",
+  "name": "송지성",
+  "nameEn": "Song JiSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 97,
+      "primaryPosition": "2B",
+      "developmentRate": 53,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 63,
+        "velocity": 63,
+        "command": 58,
+        "control": 54,
+        "movement": 49,
+        "mentality": 59,
+        "recovery": 49,
+        "clutch": 47,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 59,
+        "power": 54,
+        "eye": 59,
+        "discipline": 56,
+        "speed": 60,
+        "baseInstinct": 59,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 61,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "2B": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

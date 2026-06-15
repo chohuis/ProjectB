@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07418",
+  "name": "권수훈",
+  "nameEn": "Kwon SuHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 55,
+      "primaryPosition": "RF",
+      "developmentRate": 60,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 54,
+        "velocity": 64,
+        "command": 56,
+        "control": 58,
+        "movement": 58,
+        "mentality": 58,
+        "recovery": 47,
+        "clutch": 54,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 56,
+        "power": 51,
+        "eye": 54,
+        "discipline": 48,
+        "speed": 54,
+        "baseInstinct": 51,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 48,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "RF": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

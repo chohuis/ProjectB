@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07234",
+  "name": "송진진",
+  "nameEn": "Song JinJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 85,
+      "primaryPosition": "SS",
+      "developmentRate": 59,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 45,
+        "velocity": 61,
+        "command": 41,
+        "control": 53,
+        "movement": 52,
+        "mentality": 50,
+        "recovery": 43,
+        "clutch": 40,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 51,
+        "power": 47,
+        "eye": 45,
+        "discipline": 49,
+        "speed": 52,
+        "baseInstinct": 49,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 41,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "SS": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

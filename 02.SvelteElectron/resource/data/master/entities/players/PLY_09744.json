@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09744",
+  "name": "안민민",
+  "nameEn": "An MinMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 30,
+      "primaryPosition": "1B",
+      "developmentRate": 50,
+      "potentialHidden": 42,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 49,
+        "velocity": 49,
+        "command": 42,
+        "control": 48,
+        "movement": 40,
+        "mentality": 55,
+        "recovery": 48,
+        "clutch": 42,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 33,
+        "contact": 30,
+        "power": 25,
+        "eye": 25,
+        "discipline": 30,
+        "speed": 27,
+        "baseInstinct": 32,
+        "bunting": 18,
+        "platoon": 50,
+        "fielding": 25,
+        "arm": 29,
+        "battingClutch": 25
+      },
+      "positionRatings": {
+        "1B": 33
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

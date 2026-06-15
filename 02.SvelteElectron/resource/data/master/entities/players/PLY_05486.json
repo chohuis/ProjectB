@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05486",
+  "name": "장태혁",
+  "nameEn": "Jang TaeHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 31,
+      "primaryPosition": "SP",
+      "developmentRate": 52,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 63,
+        "velocity": 65,
+        "command": 61,
+        "control": 57,
+        "movement": 58,
+        "mentality": 69,
+        "recovery": 55,
+        "clutch": 62,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 47,
+        "power": 46,
+        "eye": 47,
+        "discipline": 54,
+        "speed": 54,
+        "baseInstinct": 53,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 46,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "SP": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

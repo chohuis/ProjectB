@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06830",
+  "name": "황재우",
+  "nameEn": "Hwang JaeWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 2,
+      "primaryPosition": "LF",
+      "developmentRate": 52,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 61,
+        "velocity": 70,
+        "command": 59,
+        "control": 61,
+        "movement": 59,
+        "mentality": 66,
+        "recovery": 61,
+        "clutch": 64,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 55,
+        "power": 47,
+        "eye": 52,
+        "discipline": 55,
+        "speed": 56,
+        "baseInstinct": 52,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 56,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "LF": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07362",
+  "name": "조찬호",
+  "nameEn": "Jo ChanHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 11,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 41,
+        "velocity": 55,
+        "command": 48,
+        "control": 42,
+        "movement": 46,
+        "mentality": 46,
+        "recovery": 38,
+        "clutch": 45,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 37,
+        "power": 34,
+        "eye": 37,
+        "discipline": 30,
+        "speed": 40,
+        "baseInstinct": 28,
+        "bunting": 20,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 38,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "SP": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

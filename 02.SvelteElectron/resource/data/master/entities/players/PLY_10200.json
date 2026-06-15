@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10200",
+  "name": "마틴 코너",
+  "nameEn": "Martin Connor",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 29,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 21,
+      "primaryPosition": "LF",
+      "developmentRate": 69,
+      "potentialHidden": 56,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 81,
+        "stamina": 85,
+        "velocity": 91,
+        "command": 77,
+        "control": 75,
+        "movement": 74,
+        "mentality": 81,
+        "recovery": 74,
+        "clutch": 80,
+        "holdRunners": 73
+      },
+      "batting": {
+        "ovr": 81,
+        "contact": 76,
+        "power": 72,
+        "eye": 86,
+        "discipline": 72,
+        "speed": 75,
+        "baseInstinct": 78,
+        "bunting": 67,
+        "platoon": 50,
+        "fielding": 82,
+        "arm": 72,
+        "battingClutch": 73
+      },
+      "positionRatings": {
+        "LF": 81
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

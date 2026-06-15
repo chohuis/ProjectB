@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14498",
+  "name": "영 로건",
+  "nameEn": "Young Logan",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 29,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 34,
+      "primaryPosition": "1B",
+      "developmentRate": 71,
+      "potentialHidden": 76,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 53,
+        "velocity": 58,
+        "command": 52,
+        "control": 59,
+        "movement": 56,
+        "mentality": 66,
+        "recovery": 61,
+        "clutch": 60,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 63,
+        "power": 56,
+        "eye": 63,
+        "discipline": 55,
+        "speed": 65,
+        "baseInstinct": 50,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 49,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "1B": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

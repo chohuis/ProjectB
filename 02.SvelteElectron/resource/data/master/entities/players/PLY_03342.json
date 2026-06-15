@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03342",
+  "name": "한동재",
+  "nameEn": "Han DongJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 38,
+      "primaryPosition": "1B",
+      "developmentRate": 72,
+      "potentialHidden": 92,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 76,
+        "velocity": 85,
+        "command": 71,
+        "control": 68,
+        "movement": 71,
+        "mentality": 73,
+        "recovery": 73,
+        "clutch": 71,
+        "holdRunners": 63
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 47,
+        "power": 52,
+        "eye": 46,
+        "discipline": 47,
+        "speed": 49,
+        "baseInstinct": 46,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 48,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "1B": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

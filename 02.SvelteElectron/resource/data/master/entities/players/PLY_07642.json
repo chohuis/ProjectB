@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07642",
+  "name": "오우성",
+  "nameEn": "Oh WooSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 97,
+      "primaryPosition": "RF",
+      "developmentRate": 54,
+      "potentialHidden": 64,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 55,
+        "velocity": 59,
+        "command": 51,
+        "control": 54,
+        "movement": 52,
+        "mentality": 65,
+        "recovery": 49,
+        "clutch": 52,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 52,
+        "power": 41,
+        "eye": 49,
+        "discipline": 39,
+        "speed": 43,
+        "baseInstinct": 48,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 38,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "RF": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

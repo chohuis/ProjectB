@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10807",
+  "name": "해리스 알렉스",
+  "nameEn": "Harris Alex",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 20,
+  "militaryStatus": "군필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 26,
+      "primaryPosition": "3B",
+      "developmentRate": 63,
+      "potentialHidden": 94,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 56,
+        "velocity": 62,
+        "command": 48,
+        "control": 60,
+        "movement": 53,
+        "mentality": 61,
+        "recovery": 54,
+        "clutch": 53,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 46,
+        "power": 53,
+        "eye": 47,
+        "discipline": 50,
+        "speed": 54,
+        "baseInstinct": 54,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 52,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "3B": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

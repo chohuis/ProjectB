@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09189",
+  "name": "강현수",
+  "nameEn": "Kang HyeonSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 91,
+      "primaryPosition": "1B",
+      "developmentRate": 50,
+      "potentialHidden": 38,
+      "pitching": {
+        "ovr": 38,
+        "stamina": 41,
+        "velocity": 46,
+        "command": 36,
+        "control": 37,
+        "movement": 31,
+        "mentality": 37,
+        "recovery": 29,
+        "clutch": 29,
+        "holdRunners": 25
+      },
+      "batting": {
+        "ovr": 32,
+        "contact": 25,
+        "power": 29,
+        "eye": 30,
+        "discipline": 32,
+        "speed": 32,
+        "baseInstinct": 33,
+        "bunting": 17,
+        "platoon": 50,
+        "fielding": 23,
+        "arm": 33,
+        "battingClutch": 22
+      },
+      "positionRatings": {
+        "1B": 32
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

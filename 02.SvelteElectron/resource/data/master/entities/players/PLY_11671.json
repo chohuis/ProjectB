@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11671",
+  "name": "로빈슨 마커스",
+  "nameEn": "Robinson Marcus",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 11,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 54,
+      "primaryPosition": "SP",
+      "developmentRate": 51,
+      "potentialHidden": 75,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 71,
+        "velocity": 80,
+        "command": 65,
+        "control": 69,
+        "movement": 72,
+        "mentality": 74,
+        "recovery": 67,
+        "clutch": 62,
+        "holdRunners": 71
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 68,
+        "power": 65,
+        "eye": 73,
+        "discipline": 74,
+        "speed": 76,
+        "baseInstinct": 76,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 71,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "SP": 73
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

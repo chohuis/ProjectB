@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15786",
+  "name": "앨런 루이스",
+  "nameEn": "Allen Luis",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 29,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 59,
+      "primaryPosition": "RF",
+      "developmentRate": 46,
+      "potentialHidden": 63,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 69,
+        "velocity": 75,
+        "command": 71,
+        "control": 68,
+        "movement": 66,
+        "mentality": 74,
+        "recovery": 60,
+        "clutch": 61,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 61,
+        "power": 70,
+        "eye": 71,
+        "discipline": 64,
+        "speed": 71,
+        "baseInstinct": 65,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 59,
+        "battingClutch": 69
+      },
+      "positionRatings": {
+        "RF": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

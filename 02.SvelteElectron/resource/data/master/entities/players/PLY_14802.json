@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14802",
+  "name": "마틴 블레이크",
+  "nameEn": "Martin Blake",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 81,
+  "popularity": 11,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 79,
+      "primaryPosition": "SS",
+      "developmentRate": 48,
+      "potentialHidden": 44,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 70,
+        "velocity": 69,
+        "command": 67,
+        "control": 73,
+        "movement": 64,
+        "mentality": 67,
+        "recovery": 62,
+        "clutch": 66,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 72,
+        "power": 63,
+        "eye": 71,
+        "discipline": 62,
+        "speed": 67,
+        "baseInstinct": 69,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 61,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "SS": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

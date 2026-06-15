@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06089",
+  "name": "최찬재",
+  "nameEn": "Choi ChanJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 12,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 42,
+        "velocity": 50,
+        "command": 39,
+        "control": 44,
+        "movement": 48,
+        "mentality": 48,
+        "recovery": 38,
+        "clutch": 46,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 42,
+        "power": 43,
+        "eye": 46,
+        "discipline": 36,
+        "speed": 41,
+        "baseInstinct": 40,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 44,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "SP": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

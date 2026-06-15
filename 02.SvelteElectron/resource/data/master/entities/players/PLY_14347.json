@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14347",
+  "name": "워커 제이슨",
+  "nameEn": "Walker Jason",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 26,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 65,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 74,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 71,
+        "velocity": 82,
+        "command": 76,
+        "control": 72,
+        "movement": 66,
+        "mentality": 79,
+        "recovery": 69,
+        "clutch": 72,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 74,
+        "contact": 72,
+        "power": 70,
+        "eye": 68,
+        "discipline": 69,
+        "speed": 74,
+        "baseInstinct": 64,
+        "bunting": 65,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 71,
+        "battingClutch": 71
+      },
+      "positionRatings": {
+        "SP": 74
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

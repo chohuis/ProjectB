@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06904",
+  "name": "황민욱",
+  "nameEn": "Hwang MinWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 21,
+      "primaryPosition": "RF",
+      "developmentRate": 61,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 65,
+        "velocity": 73,
+        "command": 59,
+        "control": 68,
+        "movement": 70,
+        "mentality": 63,
+        "recovery": 58,
+        "clutch": 60,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 52,
+        "power": 48,
+        "eye": 55,
+        "discipline": 48,
+        "speed": 55,
+        "baseInstinct": 49,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 46,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "RF": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

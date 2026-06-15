@@ -1,0 +1,73 @@
+{
+  "id": "PLY_09968",
+  "name": "영 숀",
+  "nameEn": "Young Sean",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 18,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 94,
+      "primaryPosition": "LF",
+      "developmentRate": 50,
+      "potentialHidden": 78,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 75,
+        "velocity": 74,
+        "command": 61,
+        "control": 72,
+        "movement": 73,
+        "mentality": 72,
+        "recovery": 65,
+        "clutch": 67,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 67,
+        "power": 69,
+        "eye": 73,
+        "discipline": 66,
+        "speed": 66,
+        "baseInstinct": 66,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 71,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "LF": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

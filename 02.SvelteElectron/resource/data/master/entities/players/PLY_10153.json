@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10153",
+  "name": "톰슨 에릭",
+  "nameEn": "Thompson Eric",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 37,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 4,
+      "primaryPosition": "C",
+      "developmentRate": 60,
+      "potentialHidden": 82,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 78,
+        "velocity": 74,
+        "command": 72,
+        "control": 77,
+        "movement": 80,
+        "mentality": 84,
+        "recovery": 69,
+        "clutch": 68,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 77,
+        "contact": 72,
+        "power": 67,
+        "eye": 75,
+        "discipline": 79,
+        "speed": 81,
+        "baseInstinct": 71,
+        "bunting": 65,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 78,
+        "battingClutch": 69
+      },
+      "positionRatings": {
+        "C": 77
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

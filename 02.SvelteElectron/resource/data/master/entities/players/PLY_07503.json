@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07503",
+  "name": "권성찬",
+  "nameEn": "Kwon SeongChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 25,
+      "primaryPosition": "LF",
+      "developmentRate": 61,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 49,
+        "velocity": 48,
+        "command": 43,
+        "control": 46,
+        "movement": 38,
+        "mentality": 51,
+        "recovery": 40,
+        "clutch": 33,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 57,
+        "power": 46,
+        "eye": 45,
+        "discipline": 54,
+        "speed": 49,
+        "baseInstinct": 50,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 45,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "LF": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

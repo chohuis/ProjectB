@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05918",
+  "name": "신진기",
+  "nameEn": "Shin JinKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 74,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 58,
+        "velocity": 59,
+        "command": 58,
+        "control": 49,
+        "movement": 54,
+        "mentality": 59,
+        "recovery": 56,
+        "clutch": 48,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 49,
+        "power": 48,
+        "eye": 53,
+        "discipline": 55,
+        "speed": 55,
+        "baseInstinct": 51,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 50,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

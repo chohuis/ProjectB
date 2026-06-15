@@ -1,0 +1,19 @@
+{
+  "id": "SCHOOL_HS_YEOSU_SHORE",
+  "name": "여수 쇼어 고등학교",
+  "shortName": "여수 쇼어",
+  "region": "여수",
+  "tier": "B",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "gradeLevels": 3,
+  "annualRosterSize": 18,
+  "namedNpcPerYear": 0,
+  "template": {
+    "pitching": { "ovrMin": 42, "ovrMax": 62 },
+    "batting": { "ovrMin": 38, "ovrMax": 58 },
+    "developmentRate": { "min": 44, "max": 64 },
+    "potentialHidden": { "min": 50, "max": 80 }
+  },
+  "color": "#0288D1",
+  "notes": "남해안 전통 야구 학교. 투수 운용에 강점이 있는 팀."
+}

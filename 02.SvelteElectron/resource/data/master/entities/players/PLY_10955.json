@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10955",
+  "name": "워커 숀",
+  "nameEn": "Walker Sean",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 21,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 29,
+      "primaryPosition": "C",
+      "developmentRate": 58,
+      "potentialHidden": 78,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 71,
+        "velocity": 70,
+        "command": 57,
+        "control": 68,
+        "movement": 67,
+        "mentality": 68,
+        "recovery": 60,
+        "clutch": 64,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 59,
+        "power": 59,
+        "eye": 71,
+        "discipline": 70,
+        "speed": 68,
+        "baseInstinct": 70,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 61,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "C": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

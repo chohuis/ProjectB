@@ -1,0 +1,19 @@
+{
+  "id": "SCHOOL_HS_GOYANG_ARROW",
+  "name": "고양 애로우 고등학교",
+  "shortName": "고양 애로우",
+  "region": "고양",
+  "tier": "A",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "gradeLevels": 3,
+  "annualRosterSize": 22,
+  "namedNpcPerYear": 0,
+  "template": {
+    "pitching": { "ovrMin": 50, "ovrMax": 70 },
+    "batting": { "ovrMin": 45, "ovrMax": 65 },
+    "developmentRate": { "min": 50, "max": 70 },
+    "potentialHidden": { "min": 58, "max": 88 }
+  },
+  "color": "#2E7D32",
+  "notes": "수도권 A급 야구 명문. 타격 중심의 공격적 야구 스타일."
+}

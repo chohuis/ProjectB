@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04706",
+  "name": "송성윤",
+  "nameEn": "Song SeongYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 16,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 41,
+        "velocity": 49,
+        "command": 38,
+        "control": 45,
+        "movement": 47,
+        "mentality": 50,
+        "recovery": 39,
+        "clutch": 46,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 37,
+        "power": 33,
+        "eye": 44,
+        "discipline": 39,
+        "speed": 48,
+        "baseInstinct": 38,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 33,
+        "arm": 31,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "SP": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

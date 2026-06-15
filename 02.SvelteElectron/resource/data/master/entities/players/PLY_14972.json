@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14972",
+  "name": "해리스 타일러",
+  "nameEn": "Harris Tyler",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 43,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 29,
+      "primaryPosition": "1B",
+      "developmentRate": 56,
+      "potentialHidden": 55,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 54,
+        "velocity": 59,
+        "command": 52,
+        "control": 57,
+        "movement": 58,
+        "mentality": 58,
+        "recovery": 59,
+        "clutch": 49,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 61,
+        "power": 51,
+        "eye": 59,
+        "discipline": 55,
+        "speed": 56,
+        "baseInstinct": 55,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 53,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "1B": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

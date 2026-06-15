@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11556",
+  "name": "미첼 코너",
+  "nameEn": "Mitchell Connor",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 48,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 34,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 52,
+      "primaryPosition": "SP",
+      "developmentRate": 42,
+      "potentialHidden": 59,
+      "proServiceYears": 12,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 51,
+        "velocity": 56,
+        "command": 57,
+        "control": 54,
+        "movement": 54,
+        "mentality": 57,
+        "recovery": 57,
+        "clutch": 54,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 58,
+        "power": 46,
+        "eye": 59,
+        "discipline": 58,
+        "speed": 55,
+        "baseInstinct": 52,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 58,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

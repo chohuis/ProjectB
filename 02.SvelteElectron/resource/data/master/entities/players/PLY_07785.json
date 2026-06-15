@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07785",
+  "name": "최정기",
+  "nameEn": "Choi JungKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 95,
+      "primaryPosition": "3B",
+      "developmentRate": 44,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 46,
+        "velocity": 61,
+        "command": 52,
+        "control": 52,
+        "movement": 53,
+        "mentality": 55,
+        "recovery": 52,
+        "clutch": 43,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 37,
+        "power": 35,
+        "eye": 44,
+        "discipline": 34,
+        "speed": 43,
+        "baseInstinct": 40,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 41,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "3B": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

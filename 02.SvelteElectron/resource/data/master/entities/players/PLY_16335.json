@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16335",
+  "name": "영 알렉스",
+  "nameEn": "Young Alex",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 24,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 83,
+      "primaryPosition": "CF",
+      "developmentRate": 67,
+      "potentialHidden": 57,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 52,
+        "velocity": 68,
+        "command": 57,
+        "control": 53,
+        "movement": 60,
+        "mentality": 54,
+        "recovery": 49,
+        "clutch": 51,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 55,
+        "power": 62,
+        "eye": 64,
+        "discipline": 56,
+        "speed": 63,
+        "baseInstinct": 60,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 60,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "CF": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

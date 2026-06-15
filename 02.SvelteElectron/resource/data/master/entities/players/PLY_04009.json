@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04009",
+  "name": "박동성",
+  "nameEn": "Park DongSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 35,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 3,
+      "primaryPosition": "C",
+      "developmentRate": 61,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 46,
+        "velocity": 56,
+        "command": 46,
+        "control": 47,
+        "movement": 48,
+        "mentality": 56,
+        "recovery": 41,
+        "clutch": 42,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 58,
+        "power": 51,
+        "eye": 47,
+        "discipline": 52,
+        "speed": 56,
+        "baseInstinct": 50,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 43,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "C": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

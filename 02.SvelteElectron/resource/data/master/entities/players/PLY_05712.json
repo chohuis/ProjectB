@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05712",
+  "name": "김재재",
+  "nameEn": "Kim JaeJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 64,
+      "primaryPosition": "C",
+      "developmentRate": 67,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 55,
+        "velocity": 65,
+        "command": 56,
+        "control": 55,
+        "movement": 59,
+        "mentality": 54,
+        "recovery": 59,
+        "clutch": 46,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 42,
+        "power": 38,
+        "eye": 40,
+        "discipline": 36,
+        "speed": 37,
+        "baseInstinct": 34,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 41,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "C": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08142",
+  "name": "송기완",
+  "nameEn": "Song KiWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 66,
+      "primaryPosition": "2B",
+      "developmentRate": 58,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 54,
+        "velocity": 54,
+        "command": 51,
+        "control": 53,
+        "movement": 53,
+        "mentality": 60,
+        "recovery": 51,
+        "clutch": 47,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 45,
+        "power": 44,
+        "eye": 46,
+        "discipline": 47,
+        "speed": 52,
+        "baseInstinct": 41,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 43,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "2B": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

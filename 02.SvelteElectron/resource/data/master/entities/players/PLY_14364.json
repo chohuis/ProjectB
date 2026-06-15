@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14364",
+  "name": "베이커 에릭",
+  "nameEn": "Baker Eric",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 81,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 37,
+      "primaryPosition": "SP",
+      "developmentRate": 75,
+      "potentialHidden": 75,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 52,
+        "velocity": 60,
+        "command": 63,
+        "control": 64,
+        "movement": 52,
+        "mentality": 56,
+        "recovery": 49,
+        "clutch": 52,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 58,
+        "power": 60,
+        "eye": 53,
+        "discipline": 53,
+        "speed": 65,
+        "baseInstinct": 61,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 50,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SP": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09130",
+  "name": "임성식",
+  "nameEn": "Lim SeongSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 61,
+      "primaryPosition": "SS",
+      "developmentRate": 45,
+      "potentialHidden": 40,
+      "pitching": {
+        "ovr": 37,
+        "stamina": 33,
+        "velocity": 38,
+        "command": 31,
+        "control": 39,
+        "movement": 38,
+        "mentality": 41,
+        "recovery": 25,
+        "clutch": 29,
+        "holdRunners": 22
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 41,
+        "power": 33,
+        "eye": 37,
+        "discipline": 44,
+        "speed": 40,
+        "baseInstinct": 40,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 36,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "SS": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

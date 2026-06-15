@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09010",
+  "name": "조기진",
+  "nameEn": "Jo KiJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 48,
+      "primaryPosition": "3B",
+      "developmentRate": 53,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 44,
+        "velocity": 62,
+        "command": 46,
+        "control": 54,
+        "movement": 52,
+        "mentality": 52,
+        "recovery": 43,
+        "clutch": 46,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 34,
+        "contact": 32,
+        "power": 28,
+        "eye": 26,
+        "discipline": 28,
+        "speed": 35,
+        "baseInstinct": 25,
+        "bunting": 20,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 26,
+        "battingClutch": 24
+      },
+      "positionRatings": {
+        "3B": 34
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

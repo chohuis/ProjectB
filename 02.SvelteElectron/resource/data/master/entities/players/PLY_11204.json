@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11204",
+  "name": "그린 오스틴",
+  "nameEn": "Green Austin",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 16,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 18,
+      "primaryPosition": "RF",
+      "developmentRate": 65,
+      "potentialHidden": 64,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 54,
+        "velocity": 64,
+        "command": 51,
+        "control": 53,
+        "movement": 50,
+        "mentality": 59,
+        "recovery": 59,
+        "clutch": 58,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 61,
+        "power": 50,
+        "eye": 60,
+        "discipline": 57,
+        "speed": 53,
+        "baseInstinct": 49,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 49,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "RF": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

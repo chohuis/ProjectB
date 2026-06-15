@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09144",
+  "name": "송훈기",
+  "nameEn": "Song HunKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 2,
+      "primaryPosition": "1B",
+      "developmentRate": 43,
+      "potentialHidden": 43,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 50,
+        "velocity": 49,
+        "command": 40,
+        "control": 41,
+        "movement": 40,
+        "mentality": 48,
+        "recovery": 46,
+        "clutch": 44,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 41,
+        "power": 30,
+        "eye": 37,
+        "discipline": 39,
+        "speed": 37,
+        "baseInstinct": 30,
+        "bunting": 18,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 35,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "1B": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

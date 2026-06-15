@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04211",
+  "name": "전현수",
+  "nameEn": "Jeon HyeonSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 28,
+      "primaryPosition": "SP",
+      "developmentRate": 54,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 64,
+        "velocity": 59,
+        "command": 50,
+        "control": 61,
+        "movement": 60,
+        "mentality": 56,
+        "recovery": 50,
+        "clutch": 50,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 50,
+        "power": 48,
+        "eye": 57,
+        "discipline": 49,
+        "speed": 63,
+        "baseInstinct": 52,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 57,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "SP": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

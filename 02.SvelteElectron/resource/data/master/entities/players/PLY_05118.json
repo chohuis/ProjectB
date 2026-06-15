@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05118",
+  "name": "송성현",
+  "nameEn": "Song SeongHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 92,
+      "primaryPosition": "SS",
+      "developmentRate": 53,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 51,
+        "velocity": 49,
+        "command": 40,
+        "control": 47,
+        "movement": 42,
+        "mentality": 55,
+        "recovery": 43,
+        "clutch": 39,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 35,
+        "power": 28,
+        "eye": 29,
+        "discipline": 38,
+        "speed": 33,
+        "baseInstinct": 32,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 35,
+        "battingClutch": 24
+      },
+      "positionRatings": {
+        "SS": 36
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

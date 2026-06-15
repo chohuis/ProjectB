@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09415",
+  "name": "권상기",
+  "nameEn": "Kwon SangKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 97,
+      "primaryPosition": "1B",
+      "developmentRate": 42,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 40,
+        "velocity": 55,
+        "command": 49,
+        "control": 40,
+        "movement": 49,
+        "mentality": 50,
+        "recovery": 40,
+        "clutch": 40,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 31,
+        "contact": 26,
+        "power": 24,
+        "eye": 27,
+        "discipline": 23,
+        "speed": 28,
+        "baseInstinct": 26,
+        "bunting": 12,
+        "platoon": 50,
+        "fielding": 28,
+        "arm": 26,
+        "battingClutch": 23
+      },
+      "positionRatings": {
+        "1B": 31
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

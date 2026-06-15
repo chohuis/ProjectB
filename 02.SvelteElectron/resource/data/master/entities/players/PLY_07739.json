@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07739",
+  "name": "신준현",
+  "nameEn": "Shin JunHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 28,
+      "primaryPosition": "1B",
+      "developmentRate": 51,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 47,
+        "velocity": 54,
+        "command": 38,
+        "control": 39,
+        "movement": 42,
+        "mentality": 41,
+        "recovery": 38,
+        "clutch": 36,
+        "holdRunners": 29
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 61,
+        "power": 49,
+        "eye": 52,
+        "discipline": 57,
+        "speed": 54,
+        "baseInstinct": 57,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 49,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "1B": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

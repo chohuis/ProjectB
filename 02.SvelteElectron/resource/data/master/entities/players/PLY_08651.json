@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08651",
+  "name": "오상환",
+  "nameEn": "Oh SangHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 77,
+      "primaryPosition": "SP",
+      "developmentRate": 45,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 39,
+        "stamina": 37,
+        "velocity": 38,
+        "command": 33,
+        "control": 31,
+        "movement": 34,
+        "mentality": 38,
+        "recovery": 34,
+        "clutch": 32,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 39,
+        "power": 34,
+        "eye": 44,
+        "discipline": 38,
+        "speed": 47,
+        "baseInstinct": 40,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 36,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SP": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10144",
+  "name": "그린 브랜던",
+  "nameEn": "Green Brandon",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 21,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 67,
+      "primaryPosition": "C",
+      "developmentRate": 71,
+      "potentialHidden": 75,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 49,
+        "velocity": 64,
+        "command": 52,
+        "control": 52,
+        "movement": 44,
+        "mentality": 51,
+        "recovery": 44,
+        "clutch": 43,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 49,
+        "power": 54,
+        "eye": 56,
+        "discipline": 51,
+        "speed": 60,
+        "baseInstinct": 44,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 53,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "C": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

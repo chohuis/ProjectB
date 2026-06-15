@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05023",
+  "name": "황민우",
+  "nameEn": "Hwang MinWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 88,
+      "primaryPosition": "2B",
+      "developmentRate": 45,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 45,
+        "velocity": 57,
+        "command": 48,
+        "control": 47,
+        "movement": 42,
+        "mentality": 57,
+        "recovery": 44,
+        "clutch": 46,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 45,
+        "power": 38,
+        "eye": 41,
+        "discipline": 40,
+        "speed": 51,
+        "baseInstinct": 41,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 37,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "2B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

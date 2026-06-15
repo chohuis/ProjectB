@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07341",
+  "name": "오찬호",
+  "nameEn": "Oh ChanHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 59,
+      "primaryPosition": "SP",
+      "developmentRate": 56,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 44,
+        "velocity": 52,
+        "command": 45,
+        "control": 44,
+        "movement": 41,
+        "mentality": 55,
+        "recovery": 48,
+        "clutch": 41,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 50,
+        "power": 58,
+        "eye": 52,
+        "discipline": 49,
+        "speed": 58,
+        "baseInstinct": 54,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 57,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "SP": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

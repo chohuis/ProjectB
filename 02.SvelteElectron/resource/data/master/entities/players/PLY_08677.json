@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08677",
+  "name": "장진수",
+  "nameEn": "Jang JinSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 98,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 46,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 49,
+        "velocity": 51,
+        "command": 39,
+        "control": 47,
+        "movement": 51,
+        "mentality": 53,
+        "recovery": 48,
+        "clutch": 43,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 31,
+        "power": 36,
+        "eye": 35,
+        "discipline": 37,
+        "speed": 39,
+        "baseInstinct": 25,
+        "bunting": 18,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 26,
+        "battingClutch": 26
+      },
+      "positionRatings": {
+        "SP": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

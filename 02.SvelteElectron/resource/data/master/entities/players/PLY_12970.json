@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12970",
+  "name": "존스 타일러",
+  "nameEn": "Jones Tyler",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 10,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 65,
+      "primaryPosition": "C",
+      "developmentRate": 73,
+      "potentialHidden": 65,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 52,
+        "velocity": 63,
+        "command": 43,
+        "control": 46,
+        "movement": 49,
+        "mentality": 54,
+        "recovery": 50,
+        "clutch": 46,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 49,
+        "power": 54,
+        "eye": 55,
+        "discipline": 47,
+        "speed": 50,
+        "baseInstinct": 55,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 49,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "C": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

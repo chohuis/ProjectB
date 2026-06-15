@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16018",
+  "name": "미첼 에릭",
+  "nameEn": "Mitchell Eric",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 24,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 60,
+      "primaryPosition": "SP",
+      "developmentRate": 64,
+      "potentialHidden": 78,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 71,
+        "velocity": 79,
+        "command": 75,
+        "control": 70,
+        "movement": 74,
+        "mentality": 69,
+        "recovery": 69,
+        "clutch": 63,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 74,
+        "contact": 67,
+        "power": 69,
+        "eye": 70,
+        "discipline": 69,
+        "speed": 71,
+        "baseInstinct": 64,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 75,
+        "arm": 68,
+        "battingClutch": 69
+      },
+      "positionRatings": {
+        "SP": 74
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

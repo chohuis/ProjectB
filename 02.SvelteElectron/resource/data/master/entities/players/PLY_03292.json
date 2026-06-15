@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03292",
+  "name": "서동현",
+  "nameEn": "Seo DongHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 48,
+      "primaryPosition": "RF",
+      "developmentRate": 58,
+      "potentialHidden": 96,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 58,
+        "velocity": 64,
+        "command": 61,
+        "control": 66,
+        "movement": 61,
+        "mentality": 61,
+        "recovery": 56,
+        "clutch": 52,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 60,
+        "power": 56,
+        "eye": 57,
+        "discipline": 59,
+        "speed": 58,
+        "baseInstinct": 60,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 50,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "RF": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

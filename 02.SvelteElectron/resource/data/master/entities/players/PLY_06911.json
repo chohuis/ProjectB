@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06911",
+  "name": "서진우",
+  "nameEn": "Seo JinWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 26,
+      "primaryPosition": "SP",
+      "developmentRate": 64,
+      "potentialHidden": 84,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 53,
+        "velocity": 49,
+        "command": 43,
+        "control": 43,
+        "movement": 43,
+        "mentality": 56,
+        "recovery": 45,
+        "clutch": 45,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 57,
+        "power": 60,
+        "eye": 59,
+        "discipline": 62,
+        "speed": 59,
+        "baseInstinct": 59,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 59,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "SP": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

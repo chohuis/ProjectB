@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15849",
+  "name": "그린 코디",
+  "nameEn": "Green Cody",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 84,
+      "primaryPosition": "3B",
+      "developmentRate": 59,
+      "potentialHidden": 65,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 59,
+        "velocity": 64,
+        "command": 55,
+        "control": 53,
+        "movement": 53,
+        "mentality": 68,
+        "recovery": 61,
+        "clutch": 62,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 53,
+        "power": 53,
+        "eye": 58,
+        "discipline": 53,
+        "speed": 67,
+        "baseInstinct": 64,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 62,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "3B": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

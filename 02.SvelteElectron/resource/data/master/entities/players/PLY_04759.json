@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04759",
+  "name": "장기원",
+  "nameEn": "Jang KiWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 75,
+      "primaryPosition": "RF",
+      "developmentRate": 46,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 39,
+        "velocity": 49,
+        "command": 33,
+        "control": 36,
+        "movement": 44,
+        "mentality": 47,
+        "recovery": 39,
+        "clutch": 38,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 49,
+        "power": 49,
+        "eye": 53,
+        "discipline": 53,
+        "speed": 60,
+        "baseInstinct": 47,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 52,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "RF": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

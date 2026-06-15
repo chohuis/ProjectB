@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13872",
+  "name": "스미스 크리스",
+  "nameEn": "Smith Chris",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 17,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 32,
+      "primaryPosition": "SP",
+      "developmentRate": 78,
+      "potentialHidden": 88,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 57,
+        "velocity": 68,
+        "command": 48,
+        "control": 56,
+        "movement": 50,
+        "mentality": 64,
+        "recovery": 50,
+        "clutch": 51,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 61,
+        "power": 59,
+        "eye": 54,
+        "discipline": 54,
+        "speed": 54,
+        "baseInstinct": 56,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 50,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04963",
+  "name": "송민민",
+  "nameEn": "Song MinMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 83,
+      "primaryPosition": "RF",
+      "developmentRate": 45,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 45,
+        "velocity": 52,
+        "command": 37,
+        "control": 39,
+        "movement": 36,
+        "mentality": 43,
+        "recovery": 36,
+        "clutch": 37,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 42,
+        "power": 42,
+        "eye": 45,
+        "discipline": 44,
+        "speed": 45,
+        "baseInstinct": 34,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 36,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "RF": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

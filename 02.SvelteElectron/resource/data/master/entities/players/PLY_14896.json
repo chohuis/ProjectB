@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14896",
+  "name": "토마스 루이스",
+  "nameEn": "Thomas Luis",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 43,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 88,
+      "primaryPosition": "SP",
+      "developmentRate": 45,
+      "potentialHidden": 50,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 60,
+        "velocity": 73,
+        "command": 64,
+        "control": 58,
+        "movement": 59,
+        "mentality": 64,
+        "recovery": 61,
+        "clutch": 54,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 56,
+        "power": 57,
+        "eye": 60,
+        "discipline": 57,
+        "speed": 62,
+        "baseInstinct": 58,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 60,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "SP": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

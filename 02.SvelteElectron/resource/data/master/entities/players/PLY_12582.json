@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12582",
+  "name": "해리스 케빈",
+  "nameEn": "Harris Kevin",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 3,
+      "primaryPosition": "1B",
+      "developmentRate": 37,
+      "potentialHidden": 54,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 73,
+        "velocity": 79,
+        "command": 65,
+        "control": 72,
+        "movement": 75,
+        "mentality": 68,
+        "recovery": 75,
+        "clutch": 66,
+        "holdRunners": 71
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 80,
+        "power": 71,
+        "eye": 69,
+        "discipline": 75,
+        "speed": 80,
+        "baseInstinct": 73,
+        "bunting": 70,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 75,
+        "battingClutch": 73
+      },
+      "positionRatings": {
+        "1B": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07254",
+  "name": "오민현",
+  "nameEn": "Oh MinHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 25,
+      "primaryPosition": "SS",
+      "developmentRate": 45,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 48,
+        "velocity": 53,
+        "command": 43,
+        "control": 44,
+        "movement": 41,
+        "mentality": 46,
+        "recovery": 41,
+        "clutch": 32,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 52,
+        "power": 47,
+        "eye": 58,
+        "discipline": 51,
+        "speed": 58,
+        "baseInstinct": 55,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 49,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "SS": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

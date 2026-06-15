@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14869",
+  "name": "리 조던",
+  "nameEn": "Lee Jordan",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 20,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 72,
+      "primaryPosition": "1B",
+      "developmentRate": 45,
+      "potentialHidden": 60,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 65,
+        "velocity": 81,
+        "command": 72,
+        "control": 72,
+        "movement": 70,
+        "mentality": 69,
+        "recovery": 71,
+        "clutch": 72,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 72,
+        "power": 75,
+        "eye": 68,
+        "discipline": 76,
+        "speed": 69,
+        "baseInstinct": 65,
+        "bunting": 66,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 76,
+        "battingClutch": 73
+      },
+      "positionRatings": {
+        "1B": 73
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

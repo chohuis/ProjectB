@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12871",
+  "name": "에르난데스 조던",
+  "nameEn": "Hernandez Jordan",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 78,
+      "primaryPosition": "1B",
+      "developmentRate": 56,
+      "potentialHidden": 78,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 64,
+        "velocity": 60,
+        "command": 54,
+        "control": 55,
+        "movement": 53,
+        "mentality": 63,
+        "recovery": 52,
+        "clutch": 54,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 56,
+        "power": 56,
+        "eye": 57,
+        "discipline": 61,
+        "speed": 57,
+        "baseInstinct": 54,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 53,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "1B": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

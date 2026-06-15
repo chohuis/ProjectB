@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12156",
+  "name": "애덤스 카일",
+  "nameEn": "Adams Kyle",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 81,
+  "popularity": 40,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 72,
+      "primaryPosition": "SP",
+      "developmentRate": 72,
+      "potentialHidden": 69,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 63,
+        "velocity": 70,
+        "command": 59,
+        "control": 66,
+        "movement": 58,
+        "mentality": 70,
+        "recovery": 58,
+        "clutch": 58,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 64,
+        "power": 66,
+        "eye": 61,
+        "discipline": 60,
+        "speed": 62,
+        "baseInstinct": 61,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 66,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "SP": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

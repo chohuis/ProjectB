@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05352",
+  "name": "황진원",
+  "nameEn": "Hwang JinWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 35,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 41,
+      "primaryPosition": "CF",
+      "developmentRate": 53,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 65,
+        "velocity": 72,
+        "command": 59,
+        "control": 60,
+        "movement": 64,
+        "mentality": 67,
+        "recovery": 63,
+        "clutch": 62,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 46,
+        "power": 53,
+        "eye": 48,
+        "discipline": 54,
+        "speed": 56,
+        "baseInstinct": 54,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 44,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "CF": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

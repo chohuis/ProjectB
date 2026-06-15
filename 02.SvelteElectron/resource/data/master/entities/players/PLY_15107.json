@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15107",
+  "name": "브라운 그랜트",
+  "nameEn": "Brown Grant",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 82,
+  "popularity": 20,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 63,
+      "primaryPosition": "SP",
+      "developmentRate": 54,
+      "potentialHidden": 73,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 62,
+        "velocity": 75,
+        "command": 69,
+        "control": 70,
+        "movement": 61,
+        "mentality": 66,
+        "recovery": 56,
+        "clutch": 57,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 63,
+        "power": 60,
+        "eye": 61,
+        "discipline": 68,
+        "speed": 69,
+        "baseInstinct": 68,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 63,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "SP": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

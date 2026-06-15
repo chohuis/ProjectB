@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09398",
+  "name": "권정찬",
+  "nameEn": "Kwon JungChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 1,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 43,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 51,
+        "velocity": 53,
+        "command": 44,
+        "control": 47,
+        "movement": 44,
+        "mentality": 46,
+        "recovery": 37,
+        "clutch": 40,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 41,
+        "power": 37,
+        "eye": 45,
+        "discipline": 44,
+        "speed": 39,
+        "baseInstinct": 37,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 35,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "SP": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

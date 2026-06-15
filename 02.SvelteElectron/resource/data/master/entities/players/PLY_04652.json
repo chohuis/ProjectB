@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04652",
+  "name": "류지윤",
+  "nameEn": "Ryu JiYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 6,
+      "primaryPosition": "SP",
+      "developmentRate": 46,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 38,
+        "velocity": 50,
+        "command": 33,
+        "control": 45,
+        "movement": 44,
+        "mentality": 37,
+        "recovery": 31,
+        "clutch": 38,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 38,
+        "power": 31,
+        "eye": 36,
+        "discipline": 36,
+        "speed": 38,
+        "baseInstinct": 31,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 29,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "SP": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

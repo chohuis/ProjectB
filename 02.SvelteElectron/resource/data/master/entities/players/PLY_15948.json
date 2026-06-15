@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15948",
+  "name": "톰슨 조던",
+  "nameEn": "Thompson Jordan",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 41,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 30,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 31,
+      "primaryPosition": "SP",
+      "developmentRate": 34,
+      "potentialHidden": 73,
+      "proServiceYears": 8,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 71,
+        "velocity": 65,
+        "command": 64,
+        "control": 62,
+        "movement": 62,
+        "mentality": 71,
+        "recovery": 59,
+        "clutch": 65,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 66,
+        "power": 63,
+        "eye": 60,
+        "discipline": 64,
+        "speed": 63,
+        "baseInstinct": 65,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 61,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "SP": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

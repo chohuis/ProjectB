@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06084",
+  "name": "조기환",
+  "nameEn": "Jo KiHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 52,
+      "primaryPosition": "SP",
+      "developmentRate": 47,
+      "potentialHidden": 51,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 51,
+        "velocity": 61,
+        "command": 46,
+        "control": 56,
+        "movement": 51,
+        "mentality": 56,
+        "recovery": 49,
+        "clutch": 45,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 56,
+        "power": 49,
+        "eye": 49,
+        "discipline": 49,
+        "speed": 53,
+        "baseInstinct": 50,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 52,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "SP": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

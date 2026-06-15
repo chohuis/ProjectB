@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03339",
+  "name": "이우현",
+  "nameEn": "Lee WooHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 94,
+      "primaryPosition": "SP",
+      "developmentRate": 63,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 62,
+        "velocity": 69,
+        "command": 60,
+        "control": 65,
+        "movement": 61,
+        "mentality": 74,
+        "recovery": 61,
+        "clutch": 55,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 52,
+        "power": 45,
+        "eye": 56,
+        "discipline": 48,
+        "speed": 58,
+        "baseInstinct": 54,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 48,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "SP": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

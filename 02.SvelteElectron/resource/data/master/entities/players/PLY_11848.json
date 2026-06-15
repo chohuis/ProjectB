@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11848",
+  "name": "토마스 트레버",
+  "nameEn": "Thomas Trevor",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 35,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 45,
+      "primaryPosition": "3B",
+      "developmentRate": 59,
+      "potentialHidden": 64,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 57,
+        "velocity": 72,
+        "command": 61,
+        "control": 67,
+        "movement": 68,
+        "mentality": 70,
+        "recovery": 58,
+        "clutch": 56,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 70,
+        "power": 60,
+        "eye": 64,
+        "discipline": 61,
+        "speed": 59,
+        "baseInstinct": 66,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 55,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "3B": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

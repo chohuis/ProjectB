@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09352",
+  "name": "오정현",
+  "nameEn": "Oh JungHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 61,
+      "primaryPosition": "CF",
+      "developmentRate": 50,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 36,
+        "stamina": 38,
+        "velocity": 34,
+        "command": 27,
+        "control": 31,
+        "movement": 35,
+        "mentality": 32,
+        "recovery": 33,
+        "clutch": 32,
+        "holdRunners": 21
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 43,
+        "power": 39,
+        "eye": 35,
+        "discipline": 37,
+        "speed": 41,
+        "baseInstinct": 40,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 28,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "CF": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

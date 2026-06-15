@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06387",
+  "name": "장도빈",
+  "nameEn": "Jang DoBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 74,
+      "primaryPosition": "C",
+      "developmentRate": 59,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 51,
+        "velocity": 50,
+        "command": 42,
+        "control": 42,
+        "movement": 45,
+        "mentality": 47,
+        "recovery": 42,
+        "clutch": 40,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 41,
+        "power": 42,
+        "eye": 46,
+        "discipline": 47,
+        "speed": 43,
+        "baseInstinct": 41,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 43,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "C": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

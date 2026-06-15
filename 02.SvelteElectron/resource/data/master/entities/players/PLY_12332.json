@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12332",
+  "name": "홀 로건",
+  "nameEn": "Hall Logan",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 35,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 86,
+      "primaryPosition": "SP",
+      "developmentRate": 72,
+      "potentialHidden": 79,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 49,
+        "velocity": 50,
+        "command": 52,
+        "control": 45,
+        "movement": 44,
+        "mentality": 49,
+        "recovery": 50,
+        "clutch": 43,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 57,
+        "power": 51,
+        "eye": 54,
+        "discipline": 44,
+        "speed": 52,
+        "baseInstinct": 54,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 54,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03054",
+  "name": "오혁빈",
+  "nameEn": "Oh HyeokBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 96,
+      "primaryPosition": "1B",
+      "developmentRate": 64,
+      "potentialHidden": 98,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 66,
+        "velocity": 66,
+        "command": 68,
+        "control": 69,
+        "movement": 58,
+        "mentality": 67,
+        "recovery": 60,
+        "clutch": 64,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 72,
+        "power": 64,
+        "eye": 65,
+        "discipline": 62,
+        "speed": 68,
+        "baseInstinct": 62,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 65,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "1B": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

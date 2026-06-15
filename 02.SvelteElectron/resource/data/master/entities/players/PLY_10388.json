@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10388",
+  "name": "가르시아 케빈",
+  "nameEn": "Garcia Kevin",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 14,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 45,
+      "primaryPosition": "1B",
+      "developmentRate": 69,
+      "potentialHidden": 75,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 50,
+        "velocity": 56,
+        "command": 59,
+        "control": 59,
+        "movement": 53,
+        "mentality": 57,
+        "recovery": 54,
+        "clutch": 54,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 51,
+        "power": 49,
+        "eye": 62,
+        "discipline": 55,
+        "speed": 62,
+        "baseInstinct": 48,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 55,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "1B": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

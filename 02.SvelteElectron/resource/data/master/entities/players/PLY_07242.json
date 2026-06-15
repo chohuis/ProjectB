@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07242",
+  "name": "조혁윤",
+  "nameEn": "Jo HyeokYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 38,
+      "primaryPosition": "SS",
+      "developmentRate": 46,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 56,
+        "velocity": 65,
+        "command": 52,
+        "control": 53,
+        "movement": 62,
+        "mentality": 64,
+        "recovery": 54,
+        "clutch": 49,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 45,
+        "power": 46,
+        "eye": 43,
+        "discipline": 36,
+        "speed": 42,
+        "baseInstinct": 43,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 41,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SS": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

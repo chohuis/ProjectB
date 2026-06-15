@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05602",
+  "name": "류도혁",
+  "nameEn": "Ryu DoHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 83,
+      "primaryPosition": "1B",
+      "developmentRate": 57,
+      "potentialHidden": 83,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 46,
+        "velocity": 47,
+        "command": 43,
+        "control": 44,
+        "movement": 46,
+        "mentality": 48,
+        "recovery": 35,
+        "clutch": 37,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 47,
+        "power": 43,
+        "eye": 42,
+        "discipline": 47,
+        "speed": 52,
+        "baseInstinct": 42,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 38,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "1B": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

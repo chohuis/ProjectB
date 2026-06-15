@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03439",
+  "name": "최민완",
+  "nameEn": "Choi MinWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 20,
+      "primaryPosition": "SP",
+      "developmentRate": 75,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 63,
+        "velocity": 74,
+        "command": 67,
+        "control": 61,
+        "movement": 63,
+        "mentality": 71,
+        "recovery": 59,
+        "clutch": 57,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 70,
+        "power": 67,
+        "eye": 70,
+        "discipline": 63,
+        "speed": 77,
+        "baseInstinct": 64,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 69,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "SP": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

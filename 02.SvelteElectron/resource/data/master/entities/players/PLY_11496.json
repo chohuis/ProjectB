@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11496",
+  "name": "스미스 코너",
+  "nameEn": "Smith Connor",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 19,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 76,
+      "primaryPosition": "SP",
+      "developmentRate": 60,
+      "potentialHidden": 84,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 72,
+        "velocity": 74,
+        "command": 64,
+        "control": 75,
+        "movement": 78,
+        "mentality": 74,
+        "recovery": 73,
+        "clutch": 62,
+        "holdRunners": 72
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 79,
+        "power": 64,
+        "eye": 66,
+        "discipline": 65,
+        "speed": 68,
+        "baseInstinct": 68,
+        "bunting": 65,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 69,
+        "battingClutch": 71
+      },
+      "positionRatings": {
+        "SP": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

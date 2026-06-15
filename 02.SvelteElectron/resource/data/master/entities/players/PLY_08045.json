@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08045",
+  "name": "윤찬진",
+  "nameEn": "Yoon ChanJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 4,
+      "primaryPosition": "C",
+      "developmentRate": 50,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 55,
+        "velocity": 56,
+        "command": 51,
+        "control": 59,
+        "movement": 56,
+        "mentality": 59,
+        "recovery": 55,
+        "clutch": 55,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 50,
+        "power": 41,
+        "eye": 43,
+        "discipline": 47,
+        "speed": 48,
+        "baseInstinct": 42,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 45,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "C": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

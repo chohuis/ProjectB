@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09293",
+  "name": "강도환",
+  "nameEn": "Kang DoHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 38,
+      "primaryPosition": "SP",
+      "developmentRate": 43,
+      "potentialHidden": 40,
+      "pitching": {
+        "ovr": 41,
+        "stamina": 37,
+        "velocity": 50,
+        "command": 34,
+        "control": 34,
+        "movement": 42,
+        "mentality": 46,
+        "recovery": 37,
+        "clutch": 38,
+        "holdRunners": 27
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 49,
+        "power": 45,
+        "eye": 46,
+        "discipline": 46,
+        "speed": 54,
+        "baseInstinct": 47,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 44,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SP": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

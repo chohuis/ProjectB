@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11334",
+  "name": "잭슨 라이언",
+  "nameEn": "Jackson Ryan",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 17,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 86,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 93,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 70,
+        "velocity": 71,
+        "command": 68,
+        "control": 69,
+        "movement": 72,
+        "mentality": 74,
+        "recovery": 61,
+        "clutch": 62,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 66,
+        "power": 59,
+        "eye": 61,
+        "discipline": 60,
+        "speed": 73,
+        "baseInstinct": 66,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 62,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "SP": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

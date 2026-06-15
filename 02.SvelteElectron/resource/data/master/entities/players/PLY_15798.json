@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15798",
+  "name": "마르티네스 코디",
+  "nameEn": "Martinez Cody",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 19,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 23,
+      "primaryPosition": "3B",
+      "developmentRate": 51,
+      "potentialHidden": 81,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 70,
+        "velocity": 74,
+        "command": 67,
+        "control": 73,
+        "movement": 77,
+        "mentality": 76,
+        "recovery": 75,
+        "clutch": 65,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 69,
+        "power": 67,
+        "eye": 68,
+        "discipline": 69,
+        "speed": 69,
+        "baseInstinct": 69,
+        "bunting": 63,
+        "platoon": 50,
+        "fielding": 77,
+        "arm": 66,
+        "battingClutch": 74
+      },
+      "positionRatings": {
+        "3B": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

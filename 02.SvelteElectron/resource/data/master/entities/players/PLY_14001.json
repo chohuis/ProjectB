@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14001",
+  "name": "넬슨 코디",
+  "nameEn": "Nelson Cody",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 17,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 81,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 78,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 62,
+        "velocity": 77,
+        "command": 62,
+        "control": 69,
+        "movement": 65,
+        "mentality": 73,
+        "recovery": 67,
+        "clutch": 65,
+        "holdRunners": 63
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 64,
+        "power": 65,
+        "eye": 65,
+        "discipline": 70,
+        "speed": 66,
+        "baseInstinct": 63,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 67,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "SP": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

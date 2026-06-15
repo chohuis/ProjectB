@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15704",
+  "name": "루이스 제이크",
+  "nameEn": "Lewis Jake",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 11,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 65,
+      "primaryPosition": "CF",
+      "developmentRate": 56,
+      "potentialHidden": 66,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 49,
+        "velocity": 51,
+        "command": 50,
+        "control": 55,
+        "movement": 46,
+        "mentality": 50,
+        "recovery": 40,
+        "clutch": 43,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 49,
+        "power": 47,
+        "eye": 51,
+        "discipline": 53,
+        "speed": 53,
+        "baseInstinct": 42,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 48,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "CF": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

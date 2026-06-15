@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03519",
+  "name": "윤태훈",
+  "nameEn": "Yoon TaeHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 98,
+      "primaryPosition": "LF",
+      "developmentRate": 76,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 56,
+        "velocity": 66,
+        "command": 61,
+        "control": 64,
+        "movement": 52,
+        "mentality": 65,
+        "recovery": 61,
+        "clutch": 52,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 65,
+        "power": 63,
+        "eye": 57,
+        "discipline": 62,
+        "speed": 68,
+        "baseInstinct": 63,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 64,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "LF": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04795",
+  "name": "권수우",
+  "nameEn": "Kwon SuWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 82,
+      "primaryPosition": "1B",
+      "developmentRate": 60,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 39,
+        "velocity": 43,
+        "command": 35,
+        "control": 41,
+        "movement": 42,
+        "mentality": 44,
+        "recovery": 33,
+        "clutch": 33,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 38,
+        "power": 29,
+        "eye": 33,
+        "discipline": 29,
+        "speed": 35,
+        "baseInstinct": 31,
+        "bunting": 20,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 35,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "1B": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

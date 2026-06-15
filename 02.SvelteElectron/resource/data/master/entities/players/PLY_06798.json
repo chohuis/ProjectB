@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06798",
+  "name": "최찬우",
+  "nameEn": "Choi ChanWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 37,
+      "primaryPosition": "2B",
+      "developmentRate": 70,
+      "potentialHidden": 85,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 69,
+        "velocity": 70,
+        "command": 57,
+        "control": 64,
+        "movement": 67,
+        "mentality": 65,
+        "recovery": 56,
+        "clutch": 57,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 55,
+        "power": 49,
+        "eye": 52,
+        "discipline": 59,
+        "speed": 63,
+        "baseInstinct": 51,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 48,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "2B": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

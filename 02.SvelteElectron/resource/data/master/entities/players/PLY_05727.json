@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05727",
+  "name": "조영원",
+  "nameEn": "Jo YoungWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 18,
+      "primaryPosition": "RF",
+      "developmentRate": 62,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 49,
+        "velocity": 54,
+        "command": 52,
+        "control": 52,
+        "movement": 55,
+        "mentality": 51,
+        "recovery": 49,
+        "clutch": 44,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 45,
+        "power": 47,
+        "eye": 44,
+        "discipline": 49,
+        "speed": 48,
+        "baseInstinct": 44,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 41,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "RF": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

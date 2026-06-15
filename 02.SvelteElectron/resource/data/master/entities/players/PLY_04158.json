@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04158",
+  "name": "장현호",
+  "nameEn": "Jang HyeonHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 24,
+      "primaryPosition": "CF",
+      "developmentRate": 69,
+      "potentialHidden": 85,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 44,
+        "velocity": 59,
+        "command": 48,
+        "control": 50,
+        "movement": 52,
+        "mentality": 47,
+        "recovery": 41,
+        "clutch": 45,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 48,
+        "power": 45,
+        "eye": 43,
+        "discipline": 49,
+        "speed": 48,
+        "baseInstinct": 40,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 48,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "CF": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

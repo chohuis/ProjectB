@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06805",
+  "name": "송준환",
+  "nameEn": "Song JunHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 31,
+      "primaryPosition": "LF",
+      "developmentRate": 52,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 54,
+        "velocity": 57,
+        "command": 50,
+        "control": 45,
+        "movement": 51,
+        "mentality": 49,
+        "recovery": 41,
+        "clutch": 46,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 51,
+        "power": 48,
+        "eye": 55,
+        "discipline": 57,
+        "speed": 57,
+        "baseInstinct": 56,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 48,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "LF": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

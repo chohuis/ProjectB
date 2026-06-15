@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09305",
+  "name": "송정민",
+  "nameEn": "Song JungMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 98,
+      "primaryPosition": "SP",
+      "developmentRate": 48,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 34,
+        "stamina": 26,
+        "velocity": 35,
+        "command": 26,
+        "control": 34,
+        "movement": 32,
+        "mentality": 33,
+        "recovery": 25,
+        "clutch": 25,
+        "holdRunners": 27
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 40,
+        "power": 41,
+        "eye": 37,
+        "discipline": 40,
+        "speed": 44,
+        "baseInstinct": 43,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 35,
+        "arm": 36,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SP": 34
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

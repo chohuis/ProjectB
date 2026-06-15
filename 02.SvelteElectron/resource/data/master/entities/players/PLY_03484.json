@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03484",
+  "name": "송세훈",
+  "nameEn": "Song SeHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 6,
+      "primaryPosition": "3B",
+      "developmentRate": 71,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 71,
+        "velocity": 81,
+        "command": 69,
+        "control": 77,
+        "movement": 74,
+        "mentality": 69,
+        "recovery": 64,
+        "clutch": 60,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 66,
+        "power": 55,
+        "eye": 59,
+        "discipline": 59,
+        "speed": 64,
+        "baseInstinct": 62,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 57,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "3B": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

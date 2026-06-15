@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04685",
+  "name": "한상혁",
+  "nameEn": "Han SangHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 63,
+      "primaryPosition": "1B",
+      "developmentRate": 52,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 44,
+        "velocity": 46,
+        "command": 37,
+        "control": 35,
+        "movement": 39,
+        "mentality": 46,
+        "recovery": 32,
+        "clutch": 36,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 36,
+        "power": 31,
+        "eye": 29,
+        "discipline": 28,
+        "speed": 42,
+        "baseInstinct": 28,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 27,
+        "arm": 31,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "1B": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

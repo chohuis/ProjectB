@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07146",
+  "name": "정영훈",
+  "nameEn": "Jung YoungHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 70,
+      "primaryPosition": "C",
+      "developmentRate": 55,
+      "potentialHidden": 50,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 50,
+        "velocity": 50,
+        "command": 46,
+        "control": 50,
+        "movement": 48,
+        "mentality": 44,
+        "recovery": 44,
+        "clutch": 40,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 43,
+        "power": 32,
+        "eye": 44,
+        "discipline": 39,
+        "speed": 46,
+        "baseInstinct": 37,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 33,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "C": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

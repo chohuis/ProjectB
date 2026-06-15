@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11695",
+  "name": "루이스 카일",
+  "nameEn": "Lewis Kyle",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 18,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 18,
+      "primaryPosition": "C",
+      "developmentRate": 68,
+      "potentialHidden": 73,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 62,
+        "velocity": 71,
+        "command": 58,
+        "control": 54,
+        "movement": 59,
+        "mentality": 68,
+        "recovery": 64,
+        "clutch": 50,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 66,
+        "power": 52,
+        "eye": 64,
+        "discipline": 53,
+        "speed": 65,
+        "baseInstinct": 62,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 56,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "C": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

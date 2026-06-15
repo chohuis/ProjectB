@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05965",
+  "name": "강태기",
+  "nameEn": "Kang TaeKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 36,
+      "primaryPosition": "2B",
+      "developmentRate": 48,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 38,
+        "velocity": 52,
+        "command": 42,
+        "control": 49,
+        "movement": 47,
+        "mentality": 46,
+        "recovery": 37,
+        "clutch": 32,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 42,
+        "power": 41,
+        "eye": 43,
+        "discipline": 42,
+        "speed": 43,
+        "baseInstinct": 35,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 39,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "2B": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

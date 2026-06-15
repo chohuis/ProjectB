@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14158",
+  "name": "킹 칼렙",
+  "nameEn": "King Caleb",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 21,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 84,
+      "primaryPosition": "1B",
+      "developmentRate": 64,
+      "potentialHidden": 77,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 53,
+        "velocity": 64,
+        "command": 52,
+        "control": 56,
+        "movement": 62,
+        "mentality": 57,
+        "recovery": 53,
+        "clutch": 52,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 52,
+        "power": 54,
+        "eye": 61,
+        "discipline": 51,
+        "speed": 62,
+        "baseInstinct": 50,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 59,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "1B": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

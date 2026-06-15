@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15077",
+  "name": "리 마커스",
+  "nameEn": "Lee Marcus",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 24,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 65,
+      "primaryPosition": "SP",
+      "developmentRate": 60,
+      "potentialHidden": 61,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 40,
+        "velocity": 46,
+        "command": 39,
+        "control": 45,
+        "movement": 51,
+        "mentality": 53,
+        "recovery": 42,
+        "clutch": 39,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 42,
+        "power": 38,
+        "eye": 45,
+        "discipline": 43,
+        "speed": 45,
+        "baseInstinct": 49,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 37,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "SP": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

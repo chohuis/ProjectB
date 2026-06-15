@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10911",
+  "name": "앤더슨 제이슨",
+  "nameEn": "Anderson Jason",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 27,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 40,
+      "primaryPosition": "SP",
+      "developmentRate": 74,
+      "potentialHidden": 86,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 67,
+        "velocity": 68,
+        "command": 68,
+        "control": 64,
+        "movement": 58,
+        "mentality": 71,
+        "recovery": 62,
+        "clutch": 53,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 65,
+        "power": 58,
+        "eye": 64,
+        "discipline": 61,
+        "speed": 64,
+        "baseInstinct": 62,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 59,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "SP": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

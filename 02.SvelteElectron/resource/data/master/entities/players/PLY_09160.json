@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09160",
+  "name": "한민찬",
+  "nameEn": "Han MinChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 62,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 37,
+        "velocity": 46,
+        "command": 37,
+        "control": 38,
+        "movement": 38,
+        "mentality": 48,
+        "recovery": 36,
+        "clutch": 29,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 30,
+        "contact": 23,
+        "power": 19,
+        "eye": 27,
+        "discipline": 27,
+        "speed": 28,
+        "baseInstinct": 24,
+        "bunting": 12,
+        "platoon": 50,
+        "fielding": 23,
+        "arm": 23,
+        "battingClutch": 26
+      },
+      "positionRatings": {
+        "SP": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

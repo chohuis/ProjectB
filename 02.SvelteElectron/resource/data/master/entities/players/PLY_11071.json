@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11071",
+  "name": "윌리엄스 칼렙",
+  "nameEn": "Williams Caleb",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 32,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 84,
+      "primaryPosition": "C",
+      "developmentRate": 66,
+      "potentialHidden": 80,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 82,
+        "velocity": 77,
+        "command": 75,
+        "control": 79,
+        "movement": 79,
+        "mentality": 78,
+        "recovery": 70,
+        "clutch": 73,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 77,
+        "contact": 75,
+        "power": 78,
+        "eye": 81,
+        "discipline": 75,
+        "speed": 74,
+        "baseInstinct": 73,
+        "bunting": 66,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 66,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "C": 77
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

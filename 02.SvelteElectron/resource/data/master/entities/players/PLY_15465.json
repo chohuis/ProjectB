@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15465",
+  "name": "영 다니엘",
+  "nameEn": "Young Daniel",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 38,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 13,
+      "primaryPosition": "CF",
+      "developmentRate": 51,
+      "potentialHidden": 73,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 72,
+        "velocity": 77,
+        "command": 72,
+        "control": 78,
+        "movement": 76,
+        "mentality": 70,
+        "recovery": 71,
+        "clutch": 76,
+        "holdRunners": 71
+      },
+      "batting": {
+        "ovr": 76,
+        "contact": 69,
+        "power": 70,
+        "eye": 70,
+        "discipline": 77,
+        "speed": 77,
+        "baseInstinct": 72,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 77,
+        "arm": 78,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "CF": 76
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

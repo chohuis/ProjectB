@@ -155,7 +155,7 @@ fn get_program(id: &str) -> Option<ProgramConfig> {
         "TRN_MENTAL_B"  => Some(ProgramConfig { gains_pitching: &[("mentality", 1.0)],  gains_batting: &[("battingClutch", 0.6)],                     base_xp: 2.8, fatigue_cost: 2.5, condition_cost: 2.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
         // ── 공용 ───────────────────────────────────────────────────
         "TRN_PITCH_DEV" => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[], base_xp: 0.0, fatigue_cost: 4.0,  condition_cost: 2.0,  is_recovery: false, is_pitch_dev: true,  progress_per_week: 17.0 }),
-        "TRN_RECOVERY"  => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[], base_xp: 0.0, fatigue_cost: -5.0, condition_cost: -6.0, is_recovery: true,  is_pitch_dev: false, progress_per_week: 0.0  }),
+        "TRN_RECOVERY"  => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[], base_xp: 0.0, fatigue_cost: -10.0, condition_cost: -16.0, is_recovery: true,  is_pitch_dev: false, progress_per_week: 0.0  }),
         // ── 구버전 호환 ────────────────────────────────────────────
         "TRN_CMD_BASE"  => Some(ProgramConfig { gains_pitching: &[("command", 1.0), ("control", 0.3)],    gains_batting: &[], base_xp: 3.0, fatigue_cost: 3.0, condition_cost: 3.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
         "TRN_VEL_POWER" => Some(ProgramConfig { gains_pitching: &[("velocity", 1.0), ("stamina", 0.3)],   gains_batting: &[], base_xp: 4.0, fatigue_cost: 5.5, condition_cost: 6.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),

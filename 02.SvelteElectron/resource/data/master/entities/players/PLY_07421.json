@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07421",
+  "name": "오도원",
+  "nameEn": "Oh DoWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 61,
+      "primaryPosition": "C",
+      "developmentRate": 45,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 57,
+        "velocity": 56,
+        "command": 56,
+        "control": 56,
+        "movement": 52,
+        "mentality": 60,
+        "recovery": 56,
+        "clutch": 50,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 52,
+        "power": 44,
+        "eye": 54,
+        "discipline": 52,
+        "speed": 53,
+        "baseInstinct": 47,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 41,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "C": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

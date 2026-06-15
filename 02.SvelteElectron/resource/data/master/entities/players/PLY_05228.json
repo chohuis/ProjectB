@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05228",
+  "name": "서성현",
+  "nameEn": "Seo SeongHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 86,
+      "primaryPosition": "3B",
+      "developmentRate": 48,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 37,
+        "velocity": 43,
+        "command": 43,
+        "control": 44,
+        "movement": 46,
+        "mentality": 44,
+        "recovery": 37,
+        "clutch": 35,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 38,
+        "power": 41,
+        "eye": 41,
+        "discipline": 44,
+        "speed": 42,
+        "baseInstinct": 35,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 42,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "3B": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

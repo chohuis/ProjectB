@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05477",
+  "name": "권찬진",
+  "nameEn": "Kwon ChanJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 86,
+      "primaryPosition": "SP",
+      "developmentRate": 60,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 46,
+        "velocity": 53,
+        "command": 43,
+        "control": 47,
+        "movement": 43,
+        "mentality": 47,
+        "recovery": 41,
+        "clutch": 43,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 41,
+        "power": 45,
+        "eye": 44,
+        "discipline": 36,
+        "speed": 46,
+        "baseInstinct": 41,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 41,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SP": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

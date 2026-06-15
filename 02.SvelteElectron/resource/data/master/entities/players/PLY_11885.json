@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11885",
+  "name": "베이커 카를로스",
+  "nameEn": "Baker Carlos",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 35,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 83,
+      "primaryPosition": "RF",
+      "developmentRate": 56,
+      "potentialHidden": 62,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 80,
+        "velocity": 76,
+        "command": 77,
+        "control": 79,
+        "movement": 72,
+        "mentality": 80,
+        "recovery": 69,
+        "clutch": 67,
+        "holdRunners": 74
+      },
+      "batting": {
+        "ovr": 77,
+        "contact": 79,
+        "power": 76,
+        "eye": 71,
+        "discipline": 72,
+        "speed": 80,
+        "baseInstinct": 79,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 77,
+        "battingClutch": 72
+      },
+      "positionRatings": {
+        "RF": 77
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

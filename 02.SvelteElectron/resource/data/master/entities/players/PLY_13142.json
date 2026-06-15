@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13142",
+  "name": "마르티네스 네이선",
+  "nameEn": "Martinez Nathan",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 42,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 83,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 74,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 75,
+        "velocity": 76,
+        "command": 69,
+        "control": 74,
+        "movement": 70,
+        "mentality": 79,
+        "recovery": 64,
+        "clutch": 63,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 70,
+        "power": 73,
+        "eye": 75,
+        "discipline": 74,
+        "speed": 78,
+        "baseInstinct": 68,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 73,
+        "arm": 63,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "SP": 73
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

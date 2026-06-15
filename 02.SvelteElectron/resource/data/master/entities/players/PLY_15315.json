@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15315",
+  "name": "앨런 네이선",
+  "nameEn": "Allen Nathan",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 85,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 78,
+      "primaryPosition": "RF",
+      "developmentRate": 50,
+      "potentialHidden": 61,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 73,
+        "velocity": 69,
+        "command": 72,
+        "control": 64,
+        "movement": 70,
+        "mentality": 74,
+        "recovery": 61,
+        "clutch": 65,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 72,
+        "power": 73,
+        "eye": 69,
+        "discipline": 62,
+        "speed": 72,
+        "baseInstinct": 71,
+        "bunting": 66,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 74,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "RF": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

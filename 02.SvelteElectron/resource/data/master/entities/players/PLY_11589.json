@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11589",
+  "name": "루이스 콜",
+  "nameEn": "Lewis Cole",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 25,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 60,
+      "primaryPosition": "3B",
+      "developmentRate": 59,
+      "potentialHidden": 86,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 76,
+        "velocity": 70,
+        "command": 66,
+        "control": 65,
+        "movement": 74,
+        "mentality": 72,
+        "recovery": 74,
+        "clutch": 63,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 67,
+        "power": 75,
+        "eye": 64,
+        "discipline": 75,
+        "speed": 70,
+        "baseInstinct": 68,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 69,
+        "battingClutch": 71
+      },
+      "positionRatings": {
+        "3B": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

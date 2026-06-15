@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03776",
+  "name": "최수성",
+  "nameEn": "Choi SuSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 19,
+      "primaryPosition": "RF",
+      "developmentRate": 59,
+      "potentialHidden": 64,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 57,
+        "velocity": 61,
+        "command": 52,
+        "control": 59,
+        "movement": 61,
+        "mentality": 54,
+        "recovery": 59,
+        "clutch": 56,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 55,
+        "power": 58,
+        "eye": 60,
+        "discipline": 60,
+        "speed": 65,
+        "baseInstinct": 61,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 55,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "RF": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

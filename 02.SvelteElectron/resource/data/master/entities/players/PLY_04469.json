@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04469",
+  "name": "신상진",
+  "nameEn": "Shin SangJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 5,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 75,
+      "primaryPosition": "1B",
+      "developmentRate": 52,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 60,
+        "velocity": 69,
+        "command": 57,
+        "control": 63,
+        "movement": 58,
+        "mentality": 66,
+        "recovery": 55,
+        "clutch": 58,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 58,
+        "power": 51,
+        "eye": 60,
+        "discipline": 60,
+        "speed": 61,
+        "baseInstinct": 57,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 58,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "1B": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

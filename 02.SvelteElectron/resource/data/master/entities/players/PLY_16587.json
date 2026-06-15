@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16587",
+  "name": "킹 재크",
+  "nameEn": "King Zach",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 28,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 7,
+      "primaryPosition": "C",
+      "developmentRate": 66,
+      "potentialHidden": 59,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 44,
+        "velocity": 58,
+        "command": 48,
+        "control": 42,
+        "movement": 47,
+        "mentality": 51,
+        "recovery": 37,
+        "clutch": 41,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 42,
+        "power": 46,
+        "eye": 52,
+        "discipline": 42,
+        "speed": 51,
+        "baseInstinct": 50,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 43,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "C": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

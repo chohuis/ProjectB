@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03204",
+  "name": "오기성",
+  "nameEn": "Oh KiSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 25,
+      "primaryPosition": "LF",
+      "developmentRate": 66,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 72,
+        "velocity": 79,
+        "command": 74,
+        "control": 76,
+        "movement": 76,
+        "mentality": 80,
+        "recovery": 75,
+        "clutch": 66,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 63,
+        "power": 63,
+        "eye": 69,
+        "discipline": 62,
+        "speed": 69,
+        "baseInstinct": 57,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 62,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "LF": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

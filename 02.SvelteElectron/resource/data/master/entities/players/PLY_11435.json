@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11435",
+  "name": "해리스 다니엘",
+  "nameEn": "Harris Daniel",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 28,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 63,
+      "primaryPosition": "SS",
+      "developmentRate": 65,
+      "potentialHidden": 58,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 75,
+        "velocity": 78,
+        "command": 64,
+        "control": 74,
+        "movement": 74,
+        "mentality": 74,
+        "recovery": 75,
+        "clutch": 65,
+        "holdRunners": 72
+      },
+      "batting": {
+        "ovr": 74,
+        "contact": 70,
+        "power": 76,
+        "eye": 69,
+        "discipline": 73,
+        "speed": 75,
+        "baseInstinct": 67,
+        "bunting": 68,
+        "platoon": 50,
+        "fielding": 75,
+        "arm": 71,
+        "battingClutch": 69
+      },
+      "positionRatings": {
+        "SS": 74
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

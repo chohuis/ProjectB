@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15805",
+  "name": "앨런 트레버",
+  "nameEn": "Allen Trevor",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 49,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 58,
+      "primaryPosition": "1B",
+      "developmentRate": 52,
+      "potentialHidden": 69,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 57,
+        "velocity": 67,
+        "command": 62,
+        "control": 62,
+        "movement": 66,
+        "mentality": 67,
+        "recovery": 52,
+        "clutch": 54,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 67,
+        "power": 63,
+        "eye": 65,
+        "discipline": 59,
+        "speed": 62,
+        "baseInstinct": 54,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 53,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "1B": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

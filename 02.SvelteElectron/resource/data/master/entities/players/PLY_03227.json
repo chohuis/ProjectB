@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03227",
+  "name": "김동환",
+  "nameEn": "Kim DongHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 69,
+      "primaryPosition": "LF",
+      "developmentRate": 68,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 76,
+        "velocity": 76,
+        "command": 65,
+        "control": 67,
+        "movement": 71,
+        "mentality": 76,
+        "recovery": 65,
+        "clutch": 70,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 66,
+        "power": 67,
+        "eye": 73,
+        "discipline": 68,
+        "speed": 76,
+        "baseInstinct": 63,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 68,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "LF": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

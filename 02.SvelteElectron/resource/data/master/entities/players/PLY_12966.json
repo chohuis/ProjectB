@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12966",
+  "name": "애덤스 데릭",
+  "nameEn": "Adams Derek",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 12,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 46,
+      "primaryPosition": "2B",
+      "developmentRate": 72,
+      "potentialHidden": 87,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 57,
+        "velocity": 65,
+        "command": 59,
+        "control": 53,
+        "movement": 58,
+        "mentality": 61,
+        "recovery": 54,
+        "clutch": 53,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 61,
+        "power": 57,
+        "eye": 55,
+        "discipline": 55,
+        "speed": 59,
+        "baseInstinct": 65,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 56,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "2B": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

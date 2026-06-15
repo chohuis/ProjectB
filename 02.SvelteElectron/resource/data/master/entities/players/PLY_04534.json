@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04534",
+  "name": "강훈현",
+  "nameEn": "Kang HunHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 18,
+      "primaryPosition": "SP",
+      "developmentRate": 60,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 42,
+        "velocity": 51,
+        "command": 42,
+        "control": 43,
+        "movement": 37,
+        "mentality": 45,
+        "recovery": 37,
+        "clutch": 31,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 56,
+        "power": 49,
+        "eye": 56,
+        "discipline": 49,
+        "speed": 57,
+        "baseInstinct": 50,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 52,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "SP": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

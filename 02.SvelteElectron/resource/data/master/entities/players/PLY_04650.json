@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04650",
+  "name": "윤기빈",
+  "nameEn": "Yoon KiBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 40,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 13,
+      "primaryPosition": "2B",
+      "developmentRate": 54,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 48,
+        "velocity": 60,
+        "command": 49,
+        "control": 54,
+        "movement": 52,
+        "mentality": 56,
+        "recovery": 48,
+        "clutch": 47,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 49,
+        "power": 50,
+        "eye": 51,
+        "discipline": 53,
+        "speed": 60,
+        "baseInstinct": 52,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 48,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "2B": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

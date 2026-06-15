@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03296",
+  "name": "강현빈",
+  "nameEn": "Kang HyeonBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 1,
+      "primaryPosition": "1B",
+      "developmentRate": 75,
+      "potentialHidden": 87,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 67,
+        "velocity": 65,
+        "command": 59,
+        "control": 61,
+        "movement": 54,
+        "mentality": 60,
+        "recovery": 52,
+        "clutch": 58,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 57,
+        "power": 53,
+        "eye": 62,
+        "discipline": 55,
+        "speed": 63,
+        "baseInstinct": 50,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 56,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "1B": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

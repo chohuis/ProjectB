@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03735",
+  "name": "오재혁",
+  "nameEn": "Oh JaeHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 40,
+  "popularity": 35,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 61,
+      "primaryPosition": "CF",
+      "developmentRate": 67,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 49,
+        "velocity": 52,
+        "command": 50,
+        "control": 49,
+        "movement": 48,
+        "mentality": 48,
+        "recovery": 45,
+        "clutch": 42,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 57,
+        "power": 53,
+        "eye": 65,
+        "discipline": 63,
+        "speed": 62,
+        "baseInstinct": 53,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 53,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "CF": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

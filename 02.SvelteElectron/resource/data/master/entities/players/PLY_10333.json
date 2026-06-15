@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10333",
+  "name": "루이스 크리스",
+  "nameEn": "Lewis Chris",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 14,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 75,
+      "primaryPosition": "LF",
+      "developmentRate": 58,
+      "potentialHidden": 73,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 53,
+        "velocity": 56,
+        "command": 47,
+        "control": 52,
+        "movement": 50,
+        "mentality": 59,
+        "recovery": 48,
+        "clutch": 54,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 46,
+        "power": 47,
+        "eye": 51,
+        "discipline": 56,
+        "speed": 56,
+        "baseInstinct": 45,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 52,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "LF": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

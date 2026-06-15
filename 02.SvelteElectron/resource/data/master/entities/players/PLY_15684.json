@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15684",
+  "name": "에르난데스 에릭",
+  "nameEn": "Hernandez Eric",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 18,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 32,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 67,
+      "primaryPosition": "RF",
+      "developmentRate": 37,
+      "potentialHidden": 43,
+      "proServiceYears": 10,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 53,
+        "velocity": 60,
+        "command": 53,
+        "control": 57,
+        "movement": 57,
+        "mentality": 53,
+        "recovery": 49,
+        "clutch": 56,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 54,
+        "power": 54,
+        "eye": 61,
+        "discipline": 51,
+        "speed": 61,
+        "baseInstinct": 61,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 54,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "RF": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

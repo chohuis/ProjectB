@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10233",
+  "name": "미첼 코디",
+  "nameEn": "Mitchell Cody",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 18,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 56,
+      "primaryPosition": "C",
+      "developmentRate": 69,
+      "potentialHidden": 78,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 64,
+        "velocity": 69,
+        "command": 69,
+        "control": 63,
+        "movement": 63,
+        "mentality": 64,
+        "recovery": 71,
+        "clutch": 68,
+        "holdRunners": 68
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 61,
+        "power": 68,
+        "eye": 66,
+        "discipline": 72,
+        "speed": 76,
+        "baseInstinct": 65,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 66,
+        "battingClutch": 69
+      },
+      "positionRatings": {
+        "C": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07518",
+  "name": "최영기",
+  "nameEn": "Choi YoungKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 4,
+      "primaryPosition": "C",
+      "developmentRate": 64,
+      "potentialHidden": 80,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 42,
+        "velocity": 57,
+        "command": 49,
+        "control": 48,
+        "movement": 40,
+        "mentality": 44,
+        "recovery": 43,
+        "clutch": 40,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 50,
+        "power": 44,
+        "eye": 44,
+        "discipline": 50,
+        "speed": 46,
+        "baseInstinct": 41,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 47,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "C": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

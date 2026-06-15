@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15703",
+  "name": "베이커 블레이크",
+  "nameEn": "Baker Blake",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 21,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 16,
+      "primaryPosition": "LF",
+      "developmentRate": 44,
+      "potentialHidden": 52,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 54,
+        "velocity": 66,
+        "command": 51,
+        "control": 53,
+        "movement": 60,
+        "mentality": 67,
+        "recovery": 51,
+        "clutch": 57,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 63,
+        "power": 55,
+        "eye": 55,
+        "discipline": 60,
+        "speed": 63,
+        "baseInstinct": 55,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 54,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "LF": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

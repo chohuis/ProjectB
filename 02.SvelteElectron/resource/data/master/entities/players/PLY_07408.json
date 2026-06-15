@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07408",
+  "name": "최세빈",
+  "nameEn": "Choi SeBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 72,
+      "primaryPosition": "LF",
+      "developmentRate": 47,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 49,
+        "velocity": 58,
+        "command": 49,
+        "control": 49,
+        "movement": 53,
+        "mentality": 49,
+        "recovery": 45,
+        "clutch": 50,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 41,
+        "power": 44,
+        "eye": 35,
+        "discipline": 46,
+        "speed": 39,
+        "baseInstinct": 41,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 41,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "LF": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

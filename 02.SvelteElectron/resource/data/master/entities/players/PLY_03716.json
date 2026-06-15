@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03716",
+  "name": "황정진",
+  "nameEn": "Hwang JungJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 85,
+      "primaryPosition": "3B",
+      "developmentRate": 72,
+      "potentialHidden": 81,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 51,
+        "velocity": 61,
+        "command": 57,
+        "control": 60,
+        "movement": 60,
+        "mentality": 64,
+        "recovery": 58,
+        "clutch": 50,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 62,
+        "power": 57,
+        "eye": 54,
+        "discipline": 55,
+        "speed": 64,
+        "baseInstinct": 55,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 53,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "3B": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

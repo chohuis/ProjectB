@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03414",
+  "name": "황지완",
+  "nameEn": "Hwang JiWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 31,
+      "primaryPosition": "CF",
+      "developmentRate": 61,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 65,
+        "velocity": 74,
+        "command": 67,
+        "control": 65,
+        "movement": 64,
+        "mentality": 62,
+        "recovery": 57,
+        "clutch": 56,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 65,
+        "power": 68,
+        "eye": 69,
+        "discipline": 67,
+        "speed": 65,
+        "baseInstinct": 66,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 64,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "CF": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

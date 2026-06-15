@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05795",
+  "name": "조우민",
+  "nameEn": "Jo WooMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 47,
+      "primaryPosition": "SP",
+      "developmentRate": 48,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 45,
+        "velocity": 56,
+        "command": 51,
+        "control": 44,
+        "movement": 45,
+        "mentality": 56,
+        "recovery": 43,
+        "clutch": 42,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 41,
+        "power": 42,
+        "eye": 39,
+        "discipline": 47,
+        "speed": 43,
+        "baseInstinct": 38,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 46,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "SP": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10734",
+  "name": "토마스 재크",
+  "nameEn": "Thomas Zach",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 38,
+      "primaryPosition": "CF",
+      "developmentRate": 45,
+      "potentialHidden": 86,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 72,
+        "velocity": 86,
+        "command": 71,
+        "control": 77,
+        "movement": 74,
+        "mentality": 78,
+        "recovery": 66,
+        "clutch": 77,
+        "holdRunners": 77
+      },
+      "batting": {
+        "ovr": 78,
+        "contact": 79,
+        "power": 76,
+        "eye": 82,
+        "discipline": 70,
+        "speed": 78,
+        "baseInstinct": 76,
+        "bunting": 66,
+        "platoon": 50,
+        "fielding": 74,
+        "arm": 81,
+        "battingClutch": 77
+      },
+      "positionRatings": {
+        "CF": 78
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

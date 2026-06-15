@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14028",
+  "name": "앨런 제이슨",
+  "nameEn": "Allen Jason",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 18,
+      "primaryPosition": "RF",
+      "developmentRate": 54,
+      "potentialHidden": 72,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 69,
+        "velocity": 75,
+        "command": 74,
+        "control": 70,
+        "movement": 65,
+        "mentality": 76,
+        "recovery": 69,
+        "clutch": 71,
+        "holdRunners": 72
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 66,
+        "power": 76,
+        "eye": 76,
+        "discipline": 75,
+        "speed": 75,
+        "baseInstinct": 68,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 72,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "RF": 73
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

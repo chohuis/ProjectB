@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03571",
+  "name": "박동기",
+  "nameEn": "Park DongKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 89,
+      "primaryPosition": "2B",
+      "developmentRate": 61,
+      "potentialHidden": 81,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 55,
+        "velocity": 63,
+        "command": 52,
+        "control": 56,
+        "movement": 57,
+        "mentality": 55,
+        "recovery": 45,
+        "clutch": 46,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 60,
+        "power": 60,
+        "eye": 58,
+        "discipline": 64,
+        "speed": 63,
+        "baseInstinct": 51,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 55,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "2B": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

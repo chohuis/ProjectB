@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07447",
+  "name": "김상현",
+  "nameEn": "Kim SangHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 40,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 98,
+      "primaryPosition": "1B",
+      "developmentRate": 50,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 47,
+        "velocity": 51,
+        "command": 51,
+        "control": 47,
+        "movement": 41,
+        "mentality": 52,
+        "recovery": 42,
+        "clutch": 37,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 48,
+        "power": 48,
+        "eye": 47,
+        "discipline": 51,
+        "speed": 59,
+        "baseInstinct": 44,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 49,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "1B": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

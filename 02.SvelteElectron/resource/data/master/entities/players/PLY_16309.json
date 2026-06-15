@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16309",
+  "name": "베이커 로건",
+  "nameEn": "Baker Logan",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 34,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 47,
+      "primaryPosition": "2B",
+      "developmentRate": 53,
+      "potentialHidden": 77,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 66,
+        "velocity": 69,
+        "command": 61,
+        "control": 66,
+        "movement": 62,
+        "mentality": 74,
+        "recovery": 65,
+        "clutch": 58,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 64,
+        "power": 63,
+        "eye": 62,
+        "discipline": 68,
+        "speed": 70,
+        "baseInstinct": 66,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 65,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "2B": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

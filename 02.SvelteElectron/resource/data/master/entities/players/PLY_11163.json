@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11163",
+  "name": "존슨 제이슨",
+  "nameEn": "Johnson Jason",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 11,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 77,
+      "primaryPosition": "2B",
+      "developmentRate": 70,
+      "potentialHidden": 94,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 58,
+        "velocity": 71,
+        "command": 60,
+        "control": 62,
+        "movement": 54,
+        "mentality": 70,
+        "recovery": 64,
+        "clutch": 54,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 55,
+        "power": 64,
+        "eye": 64,
+        "discipline": 55,
+        "speed": 60,
+        "baseInstinct": 64,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 60,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "2B": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

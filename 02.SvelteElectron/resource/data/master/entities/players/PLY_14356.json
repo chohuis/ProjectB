@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14356",
+  "name": "홀 딜런",
+  "nameEn": "Hall Dylan",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 82,
+      "primaryPosition": "SP",
+      "developmentRate": 44,
+      "potentialHidden": 54,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 61,
+        "velocity": 69,
+        "command": 63,
+        "control": 66,
+        "movement": 61,
+        "mentality": 66,
+        "recovery": 60,
+        "clutch": 63,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 62,
+        "power": 58,
+        "eye": 59,
+        "discipline": 58,
+        "speed": 64,
+        "baseInstinct": 60,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 60,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "SP": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

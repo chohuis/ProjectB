@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08022",
+  "name": "장수혁",
+  "nameEn": "Jang SuHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 3,
+      "primaryPosition": "1B",
+      "developmentRate": 59,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 51,
+        "velocity": 47,
+        "command": 45,
+        "control": 43,
+        "movement": 48,
+        "mentality": 49,
+        "recovery": 43,
+        "clutch": 41,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 56,
+        "power": 49,
+        "eye": 48,
+        "discipline": 46,
+        "speed": 58,
+        "baseInstinct": 54,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 55,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "1B": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

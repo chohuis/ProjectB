@@ -1,0 +1,73 @@
+{
+  "id": "PLY_09995",
+  "name": "홀 루이스",
+  "nameEn": "Hall Luis",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 50,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 19,
+      "primaryPosition": "C",
+      "developmentRate": 53,
+      "potentialHidden": 60,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 72,
+        "velocity": 85,
+        "command": 72,
+        "control": 74,
+        "movement": 80,
+        "mentality": 75,
+        "recovery": 78,
+        "clutch": 72,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 78,
+        "contact": 70,
+        "power": 78,
+        "eye": 70,
+        "discipline": 75,
+        "speed": 78,
+        "baseInstinct": 73,
+        "bunting": 65,
+        "platoon": 50,
+        "fielding": 78,
+        "arm": 80,
+        "battingClutch": 73
+      },
+      "positionRatings": {
+        "C": 78
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

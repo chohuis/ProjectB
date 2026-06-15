@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15518",
+  "name": "스콧 미겔",
+  "nameEn": "Scott Miguel",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 16,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 32,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 24,
+      "primaryPosition": "SP",
+      "developmentRate": 43,
+      "potentialHidden": 73,
+      "proServiceYears": 10,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 61,
+        "velocity": 63,
+        "command": 49,
+        "control": 51,
+        "movement": 52,
+        "mentality": 59,
+        "recovery": 57,
+        "clutch": 54,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 49,
+        "power": 52,
+        "eye": 52,
+        "discipline": 53,
+        "speed": 52,
+        "baseInstinct": 53,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 51,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "SP": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

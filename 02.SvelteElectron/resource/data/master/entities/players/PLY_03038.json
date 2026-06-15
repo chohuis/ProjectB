@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03038",
+  "name": "황기민",
+  "nameEn": "Hwang KiMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 6,
+      "primaryPosition": "2B",
+      "developmentRate": 59,
+      "potentialHidden": 95,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 62,
+        "velocity": 73,
+        "command": 69,
+        "control": 61,
+        "movement": 64,
+        "mentality": 70,
+        "recovery": 69,
+        "clutch": 67,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 61,
+        "power": 57,
+        "eye": 59,
+        "discipline": 65,
+        "speed": 63,
+        "baseInstinct": 58,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 56,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "2B": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

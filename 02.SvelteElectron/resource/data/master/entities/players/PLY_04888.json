@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04888",
+  "name": "김재재",
+  "nameEn": "Kim JaeJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 64,
+      "primaryPosition": "C",
+      "developmentRate": 63,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 49,
+        "velocity": 59,
+        "command": 50,
+        "control": 49,
+        "movement": 53,
+        "mentality": 48,
+        "recovery": 53,
+        "clutch": 40,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 36,
+        "power": 32,
+        "eye": 34,
+        "discipline": 30,
+        "speed": 31,
+        "baseInstinct": 28,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 26,
+        "arm": 35,
+        "battingClutch": 23
+      },
+      "positionRatings": {
+        "C": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

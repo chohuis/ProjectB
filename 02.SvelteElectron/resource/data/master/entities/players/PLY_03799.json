@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03799",
+  "name": "송성재",
+  "nameEn": "Song SeongJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 96,
+      "primaryPosition": "3B",
+      "developmentRate": 61,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 52,
+        "velocity": 57,
+        "command": 46,
+        "control": 44,
+        "movement": 44,
+        "mentality": 47,
+        "recovery": 39,
+        "clutch": 41,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 50,
+        "power": 51,
+        "eye": 45,
+        "discipline": 48,
+        "speed": 58,
+        "baseInstinct": 47,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 47,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "3B": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09454",
+  "name": "박기진",
+  "nameEn": "Park KiJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 14,
+      "primaryPosition": "1B",
+      "developmentRate": 52,
+      "potentialHidden": 44,
+      "pitching": {
+        "ovr": 41,
+        "stamina": 35,
+        "velocity": 46,
+        "command": 30,
+        "control": 32,
+        "movement": 36,
+        "mentality": 39,
+        "recovery": 30,
+        "clutch": 32,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 45,
+        "power": 41,
+        "eye": 45,
+        "discipline": 43,
+        "speed": 46,
+        "baseInstinct": 38,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 41,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "1B": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03186",
+  "name": "류도성",
+  "nameEn": "Ryu DoSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 87,
+      "primaryPosition": "1B",
+      "developmentRate": 63,
+      "potentialHidden": 95,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 54,
+        "velocity": 65,
+        "command": 55,
+        "control": 55,
+        "movement": 61,
+        "mentality": 56,
+        "recovery": 60,
+        "clutch": 57,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 61,
+        "power": 60,
+        "eye": 61,
+        "discipline": 59,
+        "speed": 65,
+        "baseInstinct": 58,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 55,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "1B": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

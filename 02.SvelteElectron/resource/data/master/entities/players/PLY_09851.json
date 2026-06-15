@@ -1,0 +1,73 @@
+{
+  "id": "PLY_09851",
+  "name": "토마스 마커스",
+  "nameEn": "Thomas Marcus",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 25,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 70,
+      "primaryPosition": "RF",
+      "developmentRate": 62,
+      "potentialHidden": 60,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 62,
+        "velocity": 74,
+        "command": 62,
+        "control": 63,
+        "movement": 61,
+        "mentality": 64,
+        "recovery": 55,
+        "clutch": 65,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 62,
+        "power": 60,
+        "eye": 59,
+        "discipline": 60,
+        "speed": 59,
+        "baseInstinct": 67,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 67,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "RF": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

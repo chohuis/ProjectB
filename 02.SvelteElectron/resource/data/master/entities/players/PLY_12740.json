@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12740",
+  "name": "홀 알렉스",
+  "nameEn": "Hall Alex",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 12,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 60,
+      "primaryPosition": "2B",
+      "developmentRate": 57,
+      "potentialHidden": 72,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 67,
+        "velocity": 66,
+        "command": 62,
+        "control": 69,
+        "movement": 64,
+        "mentality": 71,
+        "recovery": 55,
+        "clutch": 58,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 59,
+        "power": 68,
+        "eye": 57,
+        "discipline": 68,
+        "speed": 67,
+        "baseInstinct": 59,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 60,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "2B": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12312",
+  "name": "클라크 콜",
+  "nameEn": "Clark Cole",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 32,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 20,
+      "primaryPosition": "2B",
+      "developmentRate": 45,
+      "potentialHidden": 78,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 65,
+        "velocity": 78,
+        "command": 67,
+        "control": 74,
+        "movement": 72,
+        "mentality": 76,
+        "recovery": 63,
+        "clutch": 66,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 74,
+        "power": 73,
+        "eye": 63,
+        "discipline": 66,
+        "speed": 64,
+        "baseInstinct": 61,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 71,
+        "battingClutch": 68
+      },
+      "positionRatings": {
+        "2B": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

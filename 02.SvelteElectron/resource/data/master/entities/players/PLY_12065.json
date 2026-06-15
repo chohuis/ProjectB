@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12065",
+  "name": "워커 카일",
+  "nameEn": "Walker Kyle",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 81,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 1,
+      "primaryPosition": "SP",
+      "developmentRate": 54,
+      "potentialHidden": 54,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 48,
+        "velocity": 67,
+        "command": 51,
+        "control": 52,
+        "movement": 50,
+        "mentality": 62,
+        "recovery": 58,
+        "clutch": 45,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 57,
+        "power": 52,
+        "eye": 60,
+        "discipline": 58,
+        "speed": 53,
+        "baseInstinct": 48,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 50,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "SP": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

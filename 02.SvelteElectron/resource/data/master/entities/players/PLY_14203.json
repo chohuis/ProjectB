@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14203",
+  "name": "그린 헌터",
+  "nameEn": "Green Hunter",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 11,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 76,
+      "primaryPosition": "C",
+      "developmentRate": 55,
+      "potentialHidden": 75,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 73,
+        "velocity": 83,
+        "command": 72,
+        "control": 66,
+        "movement": 76,
+        "mentality": 78,
+        "recovery": 72,
+        "clutch": 61,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 66,
+        "power": 64,
+        "eye": 70,
+        "discipline": 66,
+        "speed": 70,
+        "baseInstinct": 65,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 73,
+        "arm": 67,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "C": 73
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10764",
+  "name": "해리스 카일",
+  "nameEn": "Harris Kyle",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 25,
+  "militaryStatus": "군필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 62,
+      "primaryPosition": "1B",
+      "developmentRate": 77,
+      "potentialHidden": 72,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 53,
+        "velocity": 64,
+        "command": 52,
+        "control": 55,
+        "movement": 55,
+        "mentality": 56,
+        "recovery": 45,
+        "clutch": 51,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 57,
+        "power": 47,
+        "eye": 61,
+        "discipline": 58,
+        "speed": 60,
+        "baseInstinct": 50,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 60,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "1B": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

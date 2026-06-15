@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06663",
+  "name": "이태민",
+  "nameEn": "Lee TaeMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 17,
+      "primaryPosition": "LF",
+      "developmentRate": 67,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 61,
+        "velocity": 62,
+        "command": 50,
+        "control": 57,
+        "movement": 54,
+        "mentality": 53,
+        "recovery": 52,
+        "clutch": 52,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 62,
+        "power": 57,
+        "eye": 63,
+        "discipline": 55,
+        "speed": 67,
+        "baseInstinct": 63,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 55,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "LF": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

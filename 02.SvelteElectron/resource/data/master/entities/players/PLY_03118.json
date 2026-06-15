@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03118",
+  "name": "장세준",
+  "nameEn": "Jang SeJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 76,
+      "primaryPosition": "SP",
+      "developmentRate": 70,
+      "potentialHidden": 99,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 54,
+        "velocity": 60,
+        "command": 53,
+        "control": 59,
+        "movement": 57,
+        "mentality": 60,
+        "recovery": 57,
+        "clutch": 53,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 70,
+        "power": 64,
+        "eye": 65,
+        "discipline": 64,
+        "speed": 65,
+        "baseInstinct": 55,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 58,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "SP": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

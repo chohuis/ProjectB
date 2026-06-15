@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03263",
+  "name": "조성호",
+  "nameEn": "Jo SeongHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 70,
+      "primaryPosition": "SP",
+      "developmentRate": 60,
+      "potentialHidden": 87,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 74,
+        "velocity": 72,
+        "command": 60,
+        "control": 67,
+        "movement": 60,
+        "mentality": 70,
+        "recovery": 64,
+        "clutch": 56,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 68,
+        "power": 67,
+        "eye": 73,
+        "discipline": 66,
+        "speed": 67,
+        "baseInstinct": 71,
+        "bunting": 63,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 73,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "SP": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

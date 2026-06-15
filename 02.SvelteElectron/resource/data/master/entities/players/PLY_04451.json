@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04451",
+  "name": "강태우",
+  "nameEn": "Kang TaeWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 9,
+      "primaryPosition": "SP",
+      "developmentRate": 57,
+      "potentialHidden": 84,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 68,
+        "velocity": 69,
+        "command": 63,
+        "control": 68,
+        "movement": 62,
+        "mentality": 61,
+        "recovery": 56,
+        "clutch": 55,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 48,
+        "power": 39,
+        "eye": 44,
+        "discipline": 42,
+        "speed": 54,
+        "baseInstinct": 42,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 46,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "SP": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

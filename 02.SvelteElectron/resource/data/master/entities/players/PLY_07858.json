@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07858",
+  "name": "오찬욱",
+  "nameEn": "Oh ChanWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 5,
+      "primaryPosition": "2B",
+      "developmentRate": 54,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 52,
+        "velocity": 65,
+        "command": 58,
+        "control": 58,
+        "movement": 53,
+        "mentality": 57,
+        "recovery": 47,
+        "clutch": 51,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 34,
+        "power": 31,
+        "eye": 42,
+        "discipline": 40,
+        "speed": 44,
+        "baseInstinct": 39,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 35,
+        "arm": 41,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "2B": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

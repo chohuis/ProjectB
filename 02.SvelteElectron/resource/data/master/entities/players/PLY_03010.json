@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03010",
+  "name": "송지재",
+  "nameEn": "Song JiJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 3,
+      "primaryPosition": "SS",
+      "developmentRate": 74,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 67,
+        "velocity": 78,
+        "command": 64,
+        "control": 68,
+        "movement": 73,
+        "mentality": 78,
+        "recovery": 67,
+        "clutch": 62,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 73,
+        "power": 65,
+        "eye": 70,
+        "discipline": 70,
+        "speed": 73,
+        "baseInstinct": 66,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 64,
+        "battingClutch": 69
+      },
+      "positionRatings": {
+        "SS": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

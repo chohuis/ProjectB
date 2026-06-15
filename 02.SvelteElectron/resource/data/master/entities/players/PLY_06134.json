@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06134",
+  "name": "장기현",
+  "nameEn": "Jang KiHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 78,
+      "primaryPosition": "RF",
+      "developmentRate": 50,
+      "potentialHidden": 43,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 44,
+        "velocity": 48,
+        "command": 46,
+        "control": 40,
+        "movement": 49,
+        "mentality": 53,
+        "recovery": 47,
+        "clutch": 42,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 31,
+        "power": 33,
+        "eye": 32,
+        "discipline": 36,
+        "speed": 36,
+        "baseInstinct": 29,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 28,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "RF": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

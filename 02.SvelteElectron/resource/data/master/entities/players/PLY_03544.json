@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03544",
+  "name": "강세빈",
+  "nameEn": "Kang SeBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 1,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 94,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 70,
+        "velocity": 82,
+        "command": 71,
+        "control": 76,
+        "movement": 68,
+        "mentality": 80,
+        "recovery": 73,
+        "clutch": 72,
+        "holdRunners": 70
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 57,
+        "power": 54,
+        "eye": 58,
+        "discipline": 62,
+        "speed": 66,
+        "baseInstinct": 53,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 64,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "SP": 76
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

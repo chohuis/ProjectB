@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09318",
+  "name": "임수호",
+  "nameEn": "Lim SuHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 40,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 18,
+      "primaryPosition": "2B",
+      "developmentRate": 55,
+      "potentialHidden": 41,
+      "pitching": {
+        "ovr": 38,
+        "stamina": 40,
+        "velocity": 37,
+        "command": 37,
+        "control": 39,
+        "movement": 29,
+        "mentality": 33,
+        "recovery": 33,
+        "clutch": 26,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 39,
+        "power": 33,
+        "eye": 38,
+        "discipline": 40,
+        "speed": 41,
+        "baseInstinct": 37,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 39,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "2B": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

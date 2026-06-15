@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16665",
+  "name": "애덤스 카를로스",
+  "nameEn": "Adams Carlos",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 81,
+  "popularity": 19,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 37,
+      "primaryPosition": "SP",
+      "developmentRate": 75,
+      "potentialHidden": 64,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 55,
+        "velocity": 64,
+        "command": 47,
+        "control": 52,
+        "movement": 47,
+        "mentality": 62,
+        "recovery": 52,
+        "clutch": 44,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 49,
+        "power": 51,
+        "eye": 51,
+        "discipline": 56,
+        "speed": 57,
+        "baseInstinct": 45,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 47,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

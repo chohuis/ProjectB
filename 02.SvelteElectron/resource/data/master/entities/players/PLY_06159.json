@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06159",
+  "name": "오영진",
+  "nameEn": "Oh YoungJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 9,
+      "primaryPosition": "1B",
+      "developmentRate": 45,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 45,
+        "velocity": 44,
+        "command": 40,
+        "control": 46,
+        "movement": 47,
+        "mentality": 45,
+        "recovery": 42,
+        "clutch": 42,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 38,
+        "power": 36,
+        "eye": 35,
+        "discipline": 39,
+        "speed": 36,
+        "baseInstinct": 34,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 30,
+        "battingClutch": 30
+      },
+      "positionRatings": {
+        "1B": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

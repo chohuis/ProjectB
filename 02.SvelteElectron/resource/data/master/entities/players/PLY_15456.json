@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15456",
+  "name": "해리스 네이선",
+  "nameEn": "Harris Nathan",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 45,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 42,
+      "primaryPosition": "CF",
+      "developmentRate": 37,
+      "potentialHidden": 64,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 57,
+        "velocity": 66,
+        "command": 62,
+        "control": 67,
+        "movement": 52,
+        "mentality": 57,
+        "recovery": 54,
+        "clutch": 53,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 66,
+        "power": 64,
+        "eye": 65,
+        "discipline": 62,
+        "speed": 65,
+        "baseInstinct": 51,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 59,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "CF": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

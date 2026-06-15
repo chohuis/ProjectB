@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05315",
+  "name": "권준기",
+  "nameEn": "Kwon JunKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 11,
+      "primaryPosition": "RF",
+      "developmentRate": 53,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 57,
+        "velocity": 61,
+        "command": 43,
+        "control": 48,
+        "movement": 53,
+        "mentality": 55,
+        "recovery": 43,
+        "clutch": 52,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 48,
+        "power": 53,
+        "eye": 55,
+        "discipline": 51,
+        "speed": 61,
+        "baseInstinct": 49,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 53,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "RF": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

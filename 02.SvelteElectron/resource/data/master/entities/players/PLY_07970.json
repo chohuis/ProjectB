@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07970",
+  "name": "이영우",
+  "nameEn": "Lee YoungWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 68,
+      "primaryPosition": "SP",
+      "developmentRate": 51,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 50,
+        "velocity": 50,
+        "command": 38,
+        "control": 44,
+        "movement": 48,
+        "mentality": 48,
+        "recovery": 46,
+        "clutch": 39,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 40,
+        "power": 38,
+        "eye": 35,
+        "discipline": 34,
+        "speed": 33,
+        "baseInstinct": 36,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 35,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "SP": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

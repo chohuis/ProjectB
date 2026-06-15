@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07400",
+  "name": "정혁민",
+  "nameEn": "Jung HyeokMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 46,
+      "primaryPosition": "SS",
+      "developmentRate": 59,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 44,
+        "velocity": 52,
+        "command": 42,
+        "control": 45,
+        "movement": 46,
+        "mentality": 42,
+        "recovery": 46,
+        "clutch": 44,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 42,
+        "power": 42,
+        "eye": 38,
+        "discipline": 40,
+        "speed": 42,
+        "baseInstinct": 42,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 33,
+        "arm": 42,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "SS": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

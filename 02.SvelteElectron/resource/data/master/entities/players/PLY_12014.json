@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12014",
+  "name": "토마스 딜런",
+  "nameEn": "Thomas Dylan",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 47,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 55,
+      "primaryPosition": "SP",
+      "developmentRate": 46,
+      "potentialHidden": 62,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 73,
+        "velocity": 78,
+        "command": 72,
+        "control": 69,
+        "movement": 77,
+        "mentality": 76,
+        "recovery": 73,
+        "clutch": 63,
+        "holdRunners": 71
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 76,
+        "power": 64,
+        "eye": 76,
+        "discipline": 70,
+        "speed": 78,
+        "baseInstinct": 70,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 72,
+        "arm": 69,
+        "battingClutch": 68
+      },
+      "positionRatings": {
+        "SP": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

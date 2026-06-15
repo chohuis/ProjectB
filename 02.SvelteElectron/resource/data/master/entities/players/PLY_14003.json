@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14003",
+  "name": "테일러 루이스",
+  "nameEn": "Taylor Luis",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 10,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 15,
+      "primaryPosition": "SP",
+      "developmentRate": 75,
+      "potentialHidden": 65,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 59,
+        "velocity": 66,
+        "command": 49,
+        "control": 59,
+        "movement": 56,
+        "mentality": 59,
+        "recovery": 58,
+        "clutch": 56,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 58,
+        "power": 49,
+        "eye": 64,
+        "discipline": 57,
+        "speed": 59,
+        "baseInstinct": 50,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 51,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "SP": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

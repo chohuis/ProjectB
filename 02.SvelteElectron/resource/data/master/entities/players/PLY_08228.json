@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08228",
+  "name": "정동윤",
+  "nameEn": "Jung DongYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 84,
+      "primaryPosition": "3B",
+      "developmentRate": 61,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 47,
+        "velocity": 46,
+        "command": 41,
+        "control": 42,
+        "movement": 42,
+        "mentality": 46,
+        "recovery": 37,
+        "clutch": 41,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 45,
+        "power": 37,
+        "eye": 48,
+        "discipline": 40,
+        "speed": 44,
+        "baseInstinct": 38,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 43,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "3B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

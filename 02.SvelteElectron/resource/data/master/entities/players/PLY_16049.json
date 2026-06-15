@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16049",
+  "name": "영 콜",
+  "nameEn": "Young Cole",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 70,
+      "primaryPosition": "SP",
+      "developmentRate": 45,
+      "potentialHidden": 60,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 56,
+        "velocity": 62,
+        "command": 51,
+        "control": 59,
+        "movement": 61,
+        "mentality": 65,
+        "recovery": 53,
+        "clutch": 47,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 52,
+        "power": 59,
+        "eye": 53,
+        "discipline": 56,
+        "speed": 60,
+        "baseInstinct": 63,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 56,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "SP": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

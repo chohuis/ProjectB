@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11001",
+  "name": "앤더슨 케빈",
+  "nameEn": "Anderson Kevin",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 45,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 88,
+      "primaryPosition": "SP",
+      "developmentRate": 68,
+      "potentialHidden": 62,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 66,
+        "velocity": 71,
+        "command": 57,
+        "control": 69,
+        "movement": 57,
+        "mentality": 58,
+        "recovery": 55,
+        "clutch": 62,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 69,
+        "power": 59,
+        "eye": 57,
+        "discipline": 64,
+        "speed": 60,
+        "baseInstinct": 65,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 60,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "SP": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

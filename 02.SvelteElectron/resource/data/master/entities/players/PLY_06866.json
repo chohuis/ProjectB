@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06866",
+  "name": "오수윤",
+  "nameEn": "Oh SuYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 78,
+      "primaryPosition": "2B",
+      "developmentRate": 54,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 51,
+        "velocity": 57,
+        "command": 44,
+        "control": 42,
+        "movement": 51,
+        "mentality": 47,
+        "recovery": 45,
+        "clutch": 47,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 49,
+        "power": 51,
+        "eye": 54,
+        "discipline": 53,
+        "speed": 55,
+        "baseInstinct": 45,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 47,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "2B": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

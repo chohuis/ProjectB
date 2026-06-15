@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16404",
+  "name": "애덤스 숀",
+  "nameEn": "Adams Sean",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 29,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 7,
+      "primaryPosition": "CF",
+      "developmentRate": 52,
+      "potentialHidden": 57,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 54,
+        "velocity": 60,
+        "command": 65,
+        "control": 53,
+        "movement": 59,
+        "mentality": 55,
+        "recovery": 60,
+        "clutch": 61,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 57,
+        "power": 59,
+        "eye": 65,
+        "discipline": 54,
+        "speed": 63,
+        "baseInstinct": 57,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 60,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "CF": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

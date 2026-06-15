@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06104",
+  "name": "전현빈",
+  "nameEn": "Jeon HyeonBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 43,
+      "primaryPosition": "SP",
+      "developmentRate": 47,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 52,
+        "velocity": 56,
+        "command": 42,
+        "control": 46,
+        "movement": 47,
+        "mentality": 52,
+        "recovery": 43,
+        "clutch": 40,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 46,
+        "power": 38,
+        "eye": 47,
+        "discipline": 47,
+        "speed": 39,
+        "baseInstinct": 46,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 43,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

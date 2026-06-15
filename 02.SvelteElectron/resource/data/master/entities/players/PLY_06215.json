@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06215",
+  "name": "박혁빈",
+  "nameEn": "Park HyeokBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 40,
+      "primaryPosition": "3B",
+      "developmentRate": 43,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 47,
+        "velocity": 54,
+        "command": 53,
+        "control": 51,
+        "movement": 45,
+        "mentality": 58,
+        "recovery": 50,
+        "clutch": 42,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 45,
+        "power": 33,
+        "eye": 38,
+        "discipline": 43,
+        "speed": 43,
+        "baseInstinct": 42,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 34,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "3B": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

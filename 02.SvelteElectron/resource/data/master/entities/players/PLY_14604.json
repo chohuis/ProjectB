@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14604",
+  "name": "존스 코너",
+  "nameEn": "Jones Connor",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 18,
+  "militaryStatus": "군필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 90,
+      "primaryPosition": "SP",
+      "developmentRate": 61,
+      "potentialHidden": 71,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 76,
+        "velocity": 77,
+        "command": 71,
+        "control": 72,
+        "movement": 62,
+        "mentality": 76,
+        "recovery": 72,
+        "clutch": 60,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 68,
+        "power": 63,
+        "eye": 67,
+        "discipline": 64,
+        "speed": 74,
+        "baseInstinct": 65,
+        "bunting": 63,
+        "platoon": 50,
+        "fielding": 72,
+        "arm": 63,
+        "battingClutch": 68
+      },
+      "positionRatings": {
+        "SP": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

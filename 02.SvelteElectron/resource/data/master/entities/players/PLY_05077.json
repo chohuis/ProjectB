@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05077",
+  "name": "황상수",
+  "nameEn": "Hwang SangSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 95,
+      "primaryPosition": "SP",
+      "developmentRate": 51,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 51,
+        "velocity": 62,
+        "command": 45,
+        "control": 52,
+        "movement": 43,
+        "mentality": 51,
+        "recovery": 48,
+        "clutch": 50,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 46,
+        "power": 34,
+        "eye": 45,
+        "discipline": 33,
+        "speed": 38,
+        "baseInstinct": 34,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 40,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "SP": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

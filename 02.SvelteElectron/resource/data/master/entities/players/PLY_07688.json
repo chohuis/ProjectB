@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07688",
+  "name": "정진민",
+  "nameEn": "Jung JinMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 79,
+      "primaryPosition": "RF",
+      "developmentRate": 56,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 51,
+        "velocity": 47,
+        "command": 39,
+        "control": 44,
+        "movement": 49,
+        "mentality": 50,
+        "recovery": 43,
+        "clutch": 42,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 41,
+        "power": 36,
+        "eye": 33,
+        "discipline": 40,
+        "speed": 42,
+        "baseInstinct": 35,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 33,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "RF": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

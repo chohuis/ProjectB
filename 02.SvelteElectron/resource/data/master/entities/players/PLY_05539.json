@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05539",
+  "name": "강재기",
+  "nameEn": "Kang JaeKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 35,
+      "primaryPosition": "SS",
+      "developmentRate": 61,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 43,
+        "velocity": 46,
+        "command": 41,
+        "control": 49,
+        "movement": 43,
+        "mentality": 43,
+        "recovery": 36,
+        "clutch": 34,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 56,
+        "power": 50,
+        "eye": 55,
+        "discipline": 54,
+        "speed": 65,
+        "baseInstinct": 60,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 60,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SS": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

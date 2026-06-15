@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03369",
+  "name": "장재환",
+  "nameEn": "Jang JaeHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 23,
+      "primaryPosition": "RF",
+      "developmentRate": 70,
+      "potentialHidden": 92,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 67,
+        "velocity": 79,
+        "command": 66,
+        "control": 66,
+        "movement": 65,
+        "mentality": 74,
+        "recovery": 61,
+        "clutch": 62,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 63,
+        "power": 60,
+        "eye": 61,
+        "discipline": 58,
+        "speed": 60,
+        "baseInstinct": 63,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 65,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "RF": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07135",
+  "name": "윤찬호",
+  "nameEn": "Yoon ChanHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 28,
+      "primaryPosition": "LF",
+      "developmentRate": 64,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 50,
+        "velocity": 45,
+        "command": 38,
+        "control": 45,
+        "movement": 48,
+        "mentality": 46,
+        "recovery": 39,
+        "clutch": 39,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 45,
+        "power": 44,
+        "eye": 51,
+        "discipline": 51,
+        "speed": 50,
+        "baseInstinct": 51,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 50,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "LF": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07268",
+  "name": "박찬빈",
+  "nameEn": "Park ChanBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 7,
+      "primaryPosition": "LF",
+      "developmentRate": 59,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 48,
+        "velocity": 53,
+        "command": 41,
+        "control": 42,
+        "movement": 42,
+        "mentality": 48,
+        "recovery": 46,
+        "clutch": 39,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 44,
+        "power": 33,
+        "eye": 44,
+        "discipline": 36,
+        "speed": 45,
+        "baseInstinct": 32,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 33,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "LF": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07708",
+  "name": "류지원",
+  "nameEn": "Ryu JiWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 94,
+      "primaryPosition": "2B",
+      "developmentRate": 57,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 55,
+        "velocity": 54,
+        "command": 47,
+        "control": 58,
+        "movement": 53,
+        "mentality": 58,
+        "recovery": 51,
+        "clutch": 49,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 36,
+        "power": 32,
+        "eye": 40,
+        "discipline": 38,
+        "speed": 38,
+        "baseInstinct": 36,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 31,
+        "battingClutch": 25
+      },
+      "positionRatings": {
+        "2B": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

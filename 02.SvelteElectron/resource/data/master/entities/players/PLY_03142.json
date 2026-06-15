@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03142",
+  "name": "윤동혁",
+  "nameEn": "Yoon DongHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 61,
+      "primaryPosition": "SS",
+      "developmentRate": 76,
+      "potentialHidden": 93,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 70,
+        "velocity": 83,
+        "command": 72,
+        "control": 76,
+        "movement": 72,
+        "mentality": 69,
+        "recovery": 68,
+        "clutch": 69,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 58,
+        "power": 63,
+        "eye": 58,
+        "discipline": 56,
+        "speed": 68,
+        "baseInstinct": 59,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 59,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "SS": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

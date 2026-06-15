@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07569",
+  "name": "장동우",
+  "nameEn": "Jang DongWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 10,
+      "primaryPosition": "3B",
+      "developmentRate": 49,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 49,
+        "velocity": 49,
+        "command": 39,
+        "control": 51,
+        "movement": 42,
+        "mentality": 46,
+        "recovery": 46,
+        "clutch": 35,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 49,
+        "power": 55,
+        "eye": 47,
+        "discipline": 55,
+        "speed": 58,
+        "baseInstinct": 49,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 52,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "3B": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

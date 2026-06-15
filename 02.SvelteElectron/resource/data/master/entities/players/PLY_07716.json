@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07716",
+  "name": "황기호",
+  "nameEn": "Hwang KiHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 15,
+      "primaryPosition": "SP",
+      "developmentRate": 47,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 47,
+        "velocity": 57,
+        "command": 43,
+        "control": 47,
+        "movement": 43,
+        "mentality": 47,
+        "recovery": 43,
+        "clutch": 47,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 51,
+        "power": 51,
+        "eye": 52,
+        "discipline": 45,
+        "speed": 54,
+        "baseInstinct": 46,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 40,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05666",
+  "name": "오세찬",
+  "nameEn": "Oh SeChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 67,
+      "primaryPosition": "SP",
+      "developmentRate": 60,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 44,
+        "velocity": 56,
+        "command": 38,
+        "control": 50,
+        "movement": 46,
+        "mentality": 48,
+        "recovery": 43,
+        "clutch": 34,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 46,
+        "power": 38,
+        "eye": 40,
+        "discipline": 47,
+        "speed": 45,
+        "baseInstinct": 46,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 40,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SP": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

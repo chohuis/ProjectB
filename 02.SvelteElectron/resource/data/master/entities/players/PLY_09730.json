@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09730",
+  "name": "강현혁",
+  "nameEn": "Kang HyeonHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 83,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 49,
+        "velocity": 44,
+        "command": 44,
+        "control": 43,
+        "movement": 41,
+        "mentality": 50,
+        "recovery": 34,
+        "clutch": 35,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 48,
+        "power": 47,
+        "eye": 49,
+        "discipline": 47,
+        "speed": 52,
+        "baseInstinct": 41,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 44,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SP": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

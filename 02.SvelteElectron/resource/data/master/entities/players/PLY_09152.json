@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09152",
+  "name": "박수완",
+  "nameEn": "Park SuWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 94,
+      "primaryPosition": "CF",
+      "developmentRate": 45,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 35,
+        "stamina": 29,
+        "velocity": 38,
+        "command": 32,
+        "control": 28,
+        "movement": 27,
+        "mentality": 37,
+        "recovery": 24,
+        "clutch": 24,
+        "holdRunners": 19
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 47,
+        "power": 48,
+        "eye": 48,
+        "discipline": 42,
+        "speed": 45,
+        "baseInstinct": 47,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 39,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "CF": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

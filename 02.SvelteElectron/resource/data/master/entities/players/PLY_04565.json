@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04565",
+  "name": "서우완",
+  "nameEn": "Seo WooWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 14,
+      "primaryPosition": "SS",
+      "developmentRate": 46,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 50,
+        "velocity": 49,
+        "command": 44,
+        "control": 48,
+        "movement": 49,
+        "mentality": 51,
+        "recovery": 44,
+        "clutch": 42,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 37,
+        "power": 34,
+        "eye": 30,
+        "discipline": 32,
+        "speed": 34,
+        "baseInstinct": 38,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 29,
+        "arm": 27,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "SS": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

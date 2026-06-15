@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14060",
+  "name": "테일러 트레버",
+  "nameEn": "Taylor Trevor",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 35,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 56,
+      "primaryPosition": "SP",
+      "developmentRate": 56,
+      "potentialHidden": 72,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 42,
+        "velocity": 52,
+        "command": 44,
+        "control": 51,
+        "movement": 41,
+        "mentality": 53,
+        "recovery": 36,
+        "clutch": 43,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 49,
+        "power": 44,
+        "eye": 51,
+        "discipline": 49,
+        "speed": 46,
+        "baseInstinct": 37,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 39,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "SP": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

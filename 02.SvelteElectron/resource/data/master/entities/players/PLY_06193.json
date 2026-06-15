@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06193",
+  "name": "신현식",
+  "nameEn": "Shin HyeonSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 65,
+      "primaryPosition": "LF",
+      "developmentRate": 56,
+      "potentialHidden": 43,
+      "pitching": {
+        "ovr": 36,
+        "stamina": 36,
+        "velocity": 45,
+        "command": 29,
+        "control": 31,
+        "movement": 27,
+        "mentality": 41,
+        "recovery": 31,
+        "clutch": 29,
+        "holdRunners": 27
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 45,
+        "power": 37,
+        "eye": 43,
+        "discipline": 44,
+        "speed": 47,
+        "baseInstinct": 34,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 33,
+        "arm": 39,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "LF": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

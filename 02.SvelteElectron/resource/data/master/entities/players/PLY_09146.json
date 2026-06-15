@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09146",
+  "name": "조상재",
+  "nameEn": "Jo SangJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 29,
+      "primaryPosition": "SS",
+      "developmentRate": 49,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 51,
+        "velocity": 49,
+        "command": 49,
+        "control": 47,
+        "movement": 51,
+        "mentality": 57,
+        "recovery": 47,
+        "clutch": 45,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 31,
+        "contact": 31,
+        "power": 31,
+        "eye": 33,
+        "discipline": 21,
+        "speed": 27,
+        "baseInstinct": 29,
+        "bunting": 14,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 26,
+        "battingClutch": 19
+      },
+      "positionRatings": {
+        "SS": 31
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

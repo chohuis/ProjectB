@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09197",
+  "name": "이지기",
+  "nameEn": "Lee JiKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 75,
+      "primaryPosition": "C",
+      "developmentRate": 57,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 41,
+        "stamina": 34,
+        "velocity": 45,
+        "command": 32,
+        "control": 36,
+        "movement": 40,
+        "mentality": 37,
+        "recovery": 34,
+        "clutch": 37,
+        "holdRunners": 25
+      },
+      "batting": {
+        "ovr": 34,
+        "contact": 38,
+        "power": 32,
+        "eye": 36,
+        "discipline": 25,
+        "speed": 34,
+        "baseInstinct": 35,
+        "bunting": 16,
+        "platoon": 50,
+        "fielding": 35,
+        "arm": 26,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "C": 34
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

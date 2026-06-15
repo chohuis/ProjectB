@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06484",
+  "name": "임동욱",
+  "nameEn": "Lim DongWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 6,
+      "primaryPosition": "C",
+      "developmentRate": 57,
+      "potentialHidden": 86,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 62,
+        "velocity": 73,
+        "command": 69,
+        "control": 61,
+        "movement": 68,
+        "mentality": 65,
+        "recovery": 60,
+        "clutch": 60,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 55,
+        "power": 50,
+        "eye": 60,
+        "discipline": 55,
+        "speed": 64,
+        "baseInstinct": 52,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 57,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "C": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

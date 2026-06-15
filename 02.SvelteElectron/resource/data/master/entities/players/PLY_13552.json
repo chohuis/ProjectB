@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13552",
+  "name": "화이트 트레버",
+  "nameEn": "White Trevor",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 14,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 56,
+      "primaryPosition": "RF",
+      "developmentRate": 70,
+      "potentialHidden": 90,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 50,
+        "velocity": 58,
+        "command": 43,
+        "control": 52,
+        "movement": 42,
+        "mentality": 44,
+        "recovery": 41,
+        "clutch": 43,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 44,
+        "power": 45,
+        "eye": 51,
+        "discipline": 43,
+        "speed": 47,
+        "baseInstinct": 46,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 45,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "RF": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06518",
+  "name": "조태성",
+  "nameEn": "Jo TaeSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 20,
+      "primaryPosition": "LF",
+      "developmentRate": 50,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 49,
+        "velocity": 60,
+        "command": 41,
+        "control": 53,
+        "movement": 48,
+        "mentality": 49,
+        "recovery": 40,
+        "clutch": 40,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 59,
+        "power": 46,
+        "eye": 51,
+        "discipline": 56,
+        "speed": 59,
+        "baseInstinct": 54,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 51,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "LF": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

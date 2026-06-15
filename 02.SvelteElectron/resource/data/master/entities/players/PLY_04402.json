@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04402",
+  "name": "조지윤",
+  "nameEn": "Jo JiYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 75,
+      "primaryPosition": "SS",
+      "developmentRate": 58,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 65,
+        "velocity": 69,
+        "command": 52,
+        "control": 65,
+        "movement": 54,
+        "mentality": 68,
+        "recovery": 62,
+        "clutch": 58,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 48,
+        "power": 49,
+        "eye": 56,
+        "discipline": 49,
+        "speed": 50,
+        "baseInstinct": 53,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 52,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "SS": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

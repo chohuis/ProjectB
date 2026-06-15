@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04115",
+  "name": "황진훈",
+  "nameEn": "Hwang JinHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 33,
+      "primaryPosition": "2B",
+      "developmentRate": 63,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 62,
+        "velocity": 71,
+        "command": 59,
+        "control": 63,
+        "movement": 66,
+        "mentality": 74,
+        "recovery": 68,
+        "clutch": 57,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 56,
+        "power": 51,
+        "eye": 51,
+        "discipline": 48,
+        "speed": 52,
+        "baseInstinct": 50,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 42,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "2B": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

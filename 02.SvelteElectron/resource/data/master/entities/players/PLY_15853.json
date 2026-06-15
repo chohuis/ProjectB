@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15853",
+  "name": "루이스 에반",
+  "nameEn": "Lewis Evan",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 49,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 4,
+      "primaryPosition": "SP",
+      "developmentRate": 45,
+      "potentialHidden": 59,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 62,
+        "velocity": 78,
+        "command": 62,
+        "control": 65,
+        "movement": 67,
+        "mentality": 68,
+        "recovery": 66,
+        "clutch": 67,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 73,
+        "power": 60,
+        "eye": 67,
+        "discipline": 62,
+        "speed": 68,
+        "baseInstinct": 68,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 58,
+        "battingClutch": 68
+      },
+      "positionRatings": {
+        "SP": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

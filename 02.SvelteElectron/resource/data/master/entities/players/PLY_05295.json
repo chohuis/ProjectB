@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05295",
+  "name": "신재현",
+  "nameEn": "Shin JaeHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 79,
+      "primaryPosition": "1B",
+      "developmentRate": 55,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 52,
+        "velocity": 60,
+        "command": 42,
+        "control": 45,
+        "movement": 43,
+        "mentality": 48,
+        "recovery": 43,
+        "clutch": 48,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 50,
+        "power": 49,
+        "eye": 40,
+        "discipline": 50,
+        "speed": 45,
+        "baseInstinct": 42,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 45,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "1B": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

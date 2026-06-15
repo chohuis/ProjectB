@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15679",
+  "name": "테일러 미겔",
+  "nameEn": "Taylor Miguel",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 12,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 9,
+      "primaryPosition": "SP",
+      "developmentRate": 51,
+      "potentialHidden": 64,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 62,
+        "velocity": 71,
+        "command": 63,
+        "control": 61,
+        "movement": 60,
+        "mentality": 68,
+        "recovery": 60,
+        "clutch": 53,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 66,
+        "power": 60,
+        "eye": 55,
+        "discipline": 57,
+        "speed": 60,
+        "baseInstinct": 56,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 60,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "SP": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05336",
+  "name": "강훈현",
+  "nameEn": "Kang HunHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 18,
+      "primaryPosition": "SP",
+      "developmentRate": 64,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 48,
+        "velocity": 57,
+        "command": 48,
+        "control": 49,
+        "movement": 43,
+        "mentality": 51,
+        "recovery": 43,
+        "clutch": 37,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 62,
+        "power": 55,
+        "eye": 62,
+        "discipline": 55,
+        "speed": 63,
+        "baseInstinct": 56,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 58,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "SP": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

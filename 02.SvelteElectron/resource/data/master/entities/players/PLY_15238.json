@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15238",
+  "name": "스미스 다니엘",
+  "nameEn": "Smith Daniel",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 35,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 46,
+      "primaryPosition": "1B",
+      "developmentRate": 51,
+      "potentialHidden": 55,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 64,
+        "velocity": 70,
+        "command": 62,
+        "control": 60,
+        "movement": 63,
+        "mentality": 68,
+        "recovery": 54,
+        "clutch": 58,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 70,
+        "power": 66,
+        "eye": 69,
+        "discipline": 62,
+        "speed": 70,
+        "baseInstinct": 60,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 57,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "1B": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

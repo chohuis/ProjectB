@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08669",
+  "name": "서영현",
+  "nameEn": "Seo YoungHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 20,
+      "primaryPosition": "SS",
+      "developmentRate": 45,
+      "potentialHidden": 46,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 49,
+        "velocity": 49,
+        "command": 46,
+        "control": 38,
+        "movement": 43,
+        "mentality": 44,
+        "recovery": 39,
+        "clutch": 42,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 35,
+        "power": 28,
+        "eye": 33,
+        "discipline": 31,
+        "speed": 40,
+        "baseInstinct": 36,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 36,
+        "battingClutch": 25
+      },
+      "positionRatings": {
+        "SS": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

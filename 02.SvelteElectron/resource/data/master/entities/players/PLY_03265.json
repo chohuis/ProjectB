@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03265",
+  "name": "윤훈식",
+  "nameEn": "Yoon HunSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 34,
+      "primaryPosition": "SP",
+      "developmentRate": 66,
+      "potentialHidden": 93,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 70,
+        "velocity": 83,
+        "command": 67,
+        "control": 78,
+        "movement": 71,
+        "mentality": 78,
+        "recovery": 74,
+        "clutch": 66,
+        "holdRunners": 68
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 71,
+        "power": 73,
+        "eye": 69,
+        "discipline": 64,
+        "speed": 68,
+        "baseInstinct": 64,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 71,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "SP": 76
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

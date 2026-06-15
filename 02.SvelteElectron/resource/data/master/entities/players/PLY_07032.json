@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07032",
+  "name": "윤우환",
+  "nameEn": "Yoon WooHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 13,
+      "primaryPosition": "LF",
+      "developmentRate": 46,
+      "potentialHidden": 80,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 58,
+        "velocity": 63,
+        "command": 47,
+        "control": 49,
+        "movement": 49,
+        "mentality": 54,
+        "recovery": 51,
+        "clutch": 46,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 46,
+        "power": 42,
+        "eye": 48,
+        "discipline": 48,
+        "speed": 48,
+        "baseInstinct": 39,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 43,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "LF": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

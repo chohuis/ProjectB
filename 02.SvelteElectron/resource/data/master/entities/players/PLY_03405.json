@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03405",
+  "name": "조혁완",
+  "nameEn": "Jo HyeokWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 34,
+      "primaryPosition": "SS",
+      "developmentRate": 59,
+      "potentialHidden": 98,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 67,
+        "velocity": 67,
+        "command": 59,
+        "control": 66,
+        "movement": 61,
+        "mentality": 71,
+        "recovery": 64,
+        "clutch": 62,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 64,
+        "power": 61,
+        "eye": 72,
+        "discipline": 64,
+        "speed": 68,
+        "baseInstinct": 72,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 70,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "SS": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

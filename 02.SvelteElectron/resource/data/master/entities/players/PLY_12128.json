@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12128",
+  "name": "마틴 콜",
+  "nameEn": "Martin Cole",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 27,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 34,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 65,
+      "primaryPosition": "CF",
+      "developmentRate": 50,
+      "potentialHidden": 78,
+      "proServiceYears": 12,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 49,
+        "velocity": 65,
+        "command": 56,
+        "control": 55,
+        "movement": 54,
+        "mentality": 51,
+        "recovery": 44,
+        "clutch": 54,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 48,
+        "power": 46,
+        "eye": 48,
+        "discipline": 54,
+        "speed": 50,
+        "baseInstinct": 53,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 57,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "CF": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

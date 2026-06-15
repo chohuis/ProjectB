@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16075",
+  "name": "가르시아 로건",
+  "nameEn": "Garcia Logan",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 43,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 58,
+      "primaryPosition": "SS",
+      "developmentRate": 46,
+      "potentialHidden": 64,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 51,
+        "velocity": 65,
+        "command": 53,
+        "control": 57,
+        "movement": 54,
+        "mentality": 61,
+        "recovery": 60,
+        "clutch": 60,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 54,
+        "power": 62,
+        "eye": 64,
+        "discipline": 55,
+        "speed": 64,
+        "baseInstinct": 51,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 57,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "SS": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

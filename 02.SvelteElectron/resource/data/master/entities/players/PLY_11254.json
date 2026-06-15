@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11254",
+  "name": "넬슨 조던",
+  "nameEn": "Nelson Jordan",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 15,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 12,
+      "primaryPosition": "RF",
+      "developmentRate": 72,
+      "potentialHidden": 78,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 61,
+        "velocity": 71,
+        "command": 64,
+        "control": 64,
+        "movement": 57,
+        "mentality": 58,
+        "recovery": 57,
+        "clutch": 63,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 57,
+        "power": 65,
+        "eye": 58,
+        "discipline": 66,
+        "speed": 63,
+        "baseInstinct": 53,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 57,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "RF": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

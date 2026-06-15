@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15286",
+  "name": "에르난데스 타일러",
+  "nameEn": "Hernandez Tyler",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 41,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 34,
+      "primaryPosition": "SP",
+      "developmentRate": 63,
+      "potentialHidden": 84,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 66,
+        "velocity": 63,
+        "command": 57,
+        "control": 60,
+        "movement": 58,
+        "mentality": 61,
+        "recovery": 53,
+        "clutch": 53,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 63,
+        "power": 65,
+        "eye": 54,
+        "discipline": 56,
+        "speed": 68,
+        "baseInstinct": 54,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 62,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SP": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

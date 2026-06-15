@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14988",
+  "name": "화이트 네이선",
+  "nameEn": "White Nathan",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 13,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 5,
+      "primaryPosition": "2B",
+      "developmentRate": 61,
+      "potentialHidden": 54,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 69,
+        "velocity": 79,
+        "command": 68,
+        "control": 68,
+        "movement": 65,
+        "mentality": 74,
+        "recovery": 61,
+        "clutch": 65,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 72,
+        "power": 60,
+        "eye": 64,
+        "discipline": 73,
+        "speed": 71,
+        "baseInstinct": 67,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 65,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "2B": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

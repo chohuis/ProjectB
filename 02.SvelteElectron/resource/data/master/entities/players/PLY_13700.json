@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13700",
+  "name": "미첼 케빈",
+  "nameEn": "Mitchell Kevin",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 18,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 32,
+      "primaryPosition": "2B",
+      "developmentRate": 55,
+      "potentialHidden": 67,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 62,
+        "velocity": 62,
+        "command": 54,
+        "control": 62,
+        "movement": 62,
+        "mentality": 56,
+        "recovery": 59,
+        "clutch": 51,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 60,
+        "power": 53,
+        "eye": 66,
+        "discipline": 57,
+        "speed": 55,
+        "baseInstinct": 56,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 61,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "2B": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

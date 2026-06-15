@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12386",
+  "name": "카터 칼렙",
+  "nameEn": "Carter Caleb",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 31,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 58,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 84,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 79,
+        "stamina": 81,
+        "velocity": 88,
+        "command": 76,
+        "control": 76,
+        "movement": 76,
+        "mentality": 86,
+        "recovery": 72,
+        "clutch": 79,
+        "holdRunners": 78
+      },
+      "batting": {
+        "ovr": 79,
+        "contact": 83,
+        "power": 81,
+        "eye": 72,
+        "discipline": 75,
+        "speed": 78,
+        "baseInstinct": 82,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 77,
+        "arm": 73,
+        "battingClutch": 71
+      },
+      "positionRatings": {
+        "SP": 79
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

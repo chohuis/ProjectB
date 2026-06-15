@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05050",
+  "name": "정영찬",
+  "nameEn": "Jung YoungChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 55,
+      "primaryPosition": "2B",
+      "developmentRate": 46,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 41,
+        "velocity": 47,
+        "command": 46,
+        "control": 42,
+        "movement": 47,
+        "mentality": 48,
+        "recovery": 40,
+        "clutch": 36,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 43,
+        "power": 34,
+        "eye": 42,
+        "discipline": 40,
+        "speed": 44,
+        "baseInstinct": 40,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 36,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "2B": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

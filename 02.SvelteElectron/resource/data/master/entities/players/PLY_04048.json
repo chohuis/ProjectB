@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04048",
+  "name": "서훈훈",
+  "nameEn": "Seo HunHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 91,
+      "primaryPosition": "SS",
+      "developmentRate": 65,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 56,
+        "velocity": 62,
+        "command": 47,
+        "control": 55,
+        "movement": 51,
+        "mentality": 55,
+        "recovery": 48,
+        "clutch": 47,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 59,
+        "power": 53,
+        "eye": 61,
+        "discipline": 66,
+        "speed": 58,
+        "baseInstinct": 58,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 54,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "SS": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

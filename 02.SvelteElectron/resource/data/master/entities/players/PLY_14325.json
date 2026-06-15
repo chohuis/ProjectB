@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14325",
+  "name": "리 딜런",
+  "nameEn": "Lee Dylan",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 28,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 29,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 50,
+      "primaryPosition": "CF",
+      "developmentRate": 34,
+      "potentialHidden": 51,
+      "proServiceYears": 7,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 64,
+        "velocity": 68,
+        "command": 63,
+        "control": 65,
+        "movement": 71,
+        "mentality": 67,
+        "recovery": 67,
+        "clutch": 57,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 60,
+        "power": 65,
+        "eye": 62,
+        "discipline": 69,
+        "speed": 62,
+        "baseInstinct": 66,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 59,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "CF": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

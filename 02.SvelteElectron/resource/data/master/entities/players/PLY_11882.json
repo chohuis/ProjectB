@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11882",
+  "name": "루이스 숀",
+  "nameEn": "Lewis Sean",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 18,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 31,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 20,
+      "primaryPosition": "SP",
+      "developmentRate": 40,
+      "potentialHidden": 68,
+      "proServiceYears": 9,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 69,
+        "velocity": 72,
+        "command": 69,
+        "control": 66,
+        "movement": 70,
+        "mentality": 73,
+        "recovery": 67,
+        "clutch": 66,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 63,
+        "power": 58,
+        "eye": 73,
+        "discipline": 72,
+        "speed": 71,
+        "baseInstinct": 61,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 66,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "SP": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

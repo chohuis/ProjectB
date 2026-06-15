@@ -1,0 +1,73 @@
+{
+  "id": "PLY_09891",
+  "name": "애덤스 재크",
+  "nameEn": "Adams Zach",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 25,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 29,
+      "primaryPosition": "2B",
+      "developmentRate": 69,
+      "potentialHidden": 78,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 60,
+        "velocity": 69,
+        "command": 61,
+        "control": 69,
+        "movement": 56,
+        "mentality": 60,
+        "recovery": 60,
+        "clutch": 56,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 69,
+        "power": 57,
+        "eye": 55,
+        "discipline": 56,
+        "speed": 60,
+        "baseInstinct": 63,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 57,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "2B": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

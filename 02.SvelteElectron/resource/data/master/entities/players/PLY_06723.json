@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06723",
+  "name": "권도현",
+  "nameEn": "Kwon DoHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 6,
+      "primaryPosition": "LF",
+      "developmentRate": 54,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 69,
+        "velocity": 65,
+        "command": 63,
+        "control": 64,
+        "movement": 59,
+        "mentality": 70,
+        "recovery": 56,
+        "clutch": 54,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 61,
+        "power": 58,
+        "eye": 58,
+        "discipline": 52,
+        "speed": 64,
+        "baseInstinct": 60,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 52,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "LF": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

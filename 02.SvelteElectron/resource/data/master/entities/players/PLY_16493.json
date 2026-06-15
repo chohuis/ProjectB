@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16493",
+  "name": "클라크 블레이크",
+  "nameEn": "Clark Blake",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 45,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 6,
+      "primaryPosition": "SP",
+      "developmentRate": 60,
+      "potentialHidden": 64,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 68,
+        "velocity": 75,
+        "command": 62,
+        "control": 72,
+        "movement": 66,
+        "mentality": 65,
+        "recovery": 72,
+        "clutch": 67,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 72,
+        "power": 71,
+        "eye": 70,
+        "discipline": 63,
+        "speed": 68,
+        "baseInstinct": 63,
+        "bunting": 63,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 66,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "SP": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

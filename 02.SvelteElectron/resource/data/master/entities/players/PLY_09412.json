@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09412",
+  "name": "강수호",
+  "nameEn": "Kang SuHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 71,
+      "primaryPosition": "CF",
+      "developmentRate": 55,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 35,
+        "stamina": 28,
+        "velocity": 35,
+        "command": 29,
+        "control": 28,
+        "movement": 35,
+        "mentality": 38,
+        "recovery": 32,
+        "clutch": 32,
+        "holdRunners": 20
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 35,
+        "power": 35,
+        "eye": 39,
+        "discipline": 39,
+        "speed": 47,
+        "baseInstinct": 32,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 32,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "CF": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

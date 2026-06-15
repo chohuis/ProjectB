@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09172",
+  "name": "신수빈",
+  "nameEn": "Shin SuBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 47,
+      "primaryPosition": "1B",
+      "developmentRate": 49,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 43,
+        "velocity": 55,
+        "command": 41,
+        "control": 45,
+        "movement": 40,
+        "mentality": 43,
+        "recovery": 43,
+        "clutch": 40,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 47,
+        "power": 35,
+        "eye": 46,
+        "discipline": 46,
+        "speed": 41,
+        "baseInstinct": 36,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 47,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "1B": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06740",
+  "name": "임찬현",
+  "nameEn": "Lim ChanHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 60,
+      "primaryPosition": "RF",
+      "developmentRate": 65,
+      "potentialHidden": 84,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 47,
+        "velocity": 57,
+        "command": 44,
+        "control": 50,
+        "movement": 44,
+        "mentality": 58,
+        "recovery": 43,
+        "clutch": 45,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 65,
+        "power": 55,
+        "eye": 54,
+        "discipline": 62,
+        "speed": 61,
+        "baseInstinct": 57,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 61,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "RF": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

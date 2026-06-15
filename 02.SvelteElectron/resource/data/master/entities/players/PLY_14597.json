@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14597",
+  "name": "넬슨 콜",
+  "nameEn": "Nelson Cole",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 15,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 56,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 79,
+        "velocity": 84,
+        "command": 70,
+        "control": 71,
+        "movement": 71,
+        "mentality": 72,
+        "recovery": 76,
+        "clutch": 74,
+        "holdRunners": 69
+      },
+      "batting": {
+        "ovr": 76,
+        "contact": 78,
+        "power": 67,
+        "eye": 79,
+        "discipline": 67,
+        "speed": 70,
+        "baseInstinct": 78,
+        "bunting": 65,
+        "platoon": 50,
+        "fielding": 76,
+        "arm": 78,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "SP": 76
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

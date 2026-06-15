@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14754",
+  "name": "윌리엄스 라이언",
+  "nameEn": "Williams Ryan",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 49,
+      "primaryPosition": "CF",
+      "developmentRate": 58,
+      "potentialHidden": 59,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 48,
+        "velocity": 57,
+        "command": 51,
+        "control": 42,
+        "movement": 52,
+        "mentality": 54,
+        "recovery": 48,
+        "clutch": 50,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 49,
+        "power": 39,
+        "eye": 53,
+        "discipline": 43,
+        "speed": 53,
+        "baseInstinct": 48,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 40,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "CF": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

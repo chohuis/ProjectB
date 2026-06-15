@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10078",
+  "name": "리 데릭",
+  "nameEn": "Lee Derek",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 11,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 29,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 12,
+      "primaryPosition": "CF",
+      "developmentRate": 52,
+      "potentialHidden": 71,
+      "proServiceYears": 7,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 67,
+        "velocity": 74,
+        "command": 65,
+        "control": 74,
+        "movement": 73,
+        "mentality": 70,
+        "recovery": 63,
+        "clutch": 64,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 74,
+        "power": 74,
+        "eye": 73,
+        "discipline": 72,
+        "speed": 69,
+        "baseInstinct": 72,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 74,
+        "arm": 70,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "CF": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

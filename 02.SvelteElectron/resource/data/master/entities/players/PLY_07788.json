@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07788",
+  "name": "서찬진",
+  "nameEn": "Seo ChanJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 78,
+      "primaryPosition": "1B",
+      "developmentRate": 57,
+      "potentialHidden": 64,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 46,
+        "velocity": 59,
+        "command": 52,
+        "control": 55,
+        "movement": 55,
+        "mentality": 56,
+        "recovery": 49,
+        "clutch": 42,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 49,
+        "power": 46,
+        "eye": 45,
+        "discipline": 42,
+        "speed": 47,
+        "baseInstinct": 48,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 43,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "1B": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

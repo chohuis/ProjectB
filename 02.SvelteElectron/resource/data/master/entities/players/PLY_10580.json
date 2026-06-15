@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10580",
+  "name": "애덤스 코디",
+  "nameEn": "Adams Cody",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 34,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 49,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 56,
+      "proServiceYears": 12,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 55,
+        "velocity": 63,
+        "command": 54,
+        "control": 57,
+        "movement": 60,
+        "mentality": 67,
+        "recovery": 56,
+        "clutch": 52,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 55,
+        "power": 54,
+        "eye": 65,
+        "discipline": 52,
+        "speed": 58,
+        "baseInstinct": 59,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 54,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "SP": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

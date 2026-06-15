@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07197",
+  "name": "황수우",
+  "nameEn": "Hwang SuWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 98,
+      "primaryPosition": "1B",
+      "developmentRate": 48,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 45,
+        "velocity": 48,
+        "command": 38,
+        "control": 44,
+        "movement": 44,
+        "mentality": 38,
+        "recovery": 43,
+        "clutch": 35,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 61,
+        "power": 54,
+        "eye": 60,
+        "discipline": 52,
+        "speed": 52,
+        "baseInstinct": 55,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 57,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "1B": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

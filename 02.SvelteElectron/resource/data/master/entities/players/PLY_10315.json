@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10315",
+  "name": "영 다니엘",
+  "nameEn": "Young Daniel",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 34,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 24,
+      "primaryPosition": "SP",
+      "developmentRate": 57,
+      "potentialHidden": 64,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 58,
+        "velocity": 66,
+        "command": 61,
+        "control": 60,
+        "movement": 56,
+        "mentality": 63,
+        "recovery": 64,
+        "clutch": 65,
+        "holdRunners": 63
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 60,
+        "power": 68,
+        "eye": 66,
+        "discipline": 65,
+        "speed": 62,
+        "baseInstinct": 63,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 57,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "SP": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

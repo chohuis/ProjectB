@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04101",
+  "name": "윤훈훈",
+  "nameEn": "Yoon HunHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 38,
+      "primaryPosition": "SS",
+      "developmentRate": 67,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 50,
+        "velocity": 56,
+        "command": 44,
+        "control": 47,
+        "movement": 47,
+        "mentality": 50,
+        "recovery": 48,
+        "clutch": 42,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 53,
+        "power": 46,
+        "eye": 53,
+        "discipline": 57,
+        "speed": 60,
+        "baseInstinct": 57,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 49,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "SS": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

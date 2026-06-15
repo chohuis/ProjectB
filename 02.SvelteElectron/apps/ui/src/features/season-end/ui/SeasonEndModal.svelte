@@ -2,8 +2,7 @@
   import { gameStore } from "../../../shared/stores/game";
   import { seasonStore, currentStandings } from "../../../shared/stores/season";
   import { masterStore, teamMap } from "../../../shared/stores/master";
-  import type { EntityRow } from "../../../shared/stores/master";
-  import type { HighSchoolMaster, NamedNpcMeta, PitcherSeasonStats, BatterSeasonStats, SchoolScenario, CareerAward } from "../../../shared/types/save";
+  import type { PitcherSeasonStats, BatterSeasonStats, CareerAward } from "../../../shared/types/save";
   import type { PitcherGameLine } from "../../../shared/types/season";
 
   export let onExit: () => void;
@@ -162,32 +161,6 @@
   }
 
   // ── 새 시즌 처리 ────────────────────────────────────────────────
-  async function loadHighschoolContext(schoolId: string): Promise<{
-    school: HighSchoolMaster;
-    scenario: SchoolScenario;
-    namedRegistry: NamedNpcMeta[];
-    entities: EntityRow[];
-  } | null> {
-    if (!window.projectB?.masterFetch) return null;
-    try {
-      const [school, scenario, namedWrap, entityIndex] = await Promise.all([
-        window.projectB.masterFetch(`schools/highschool/${schoolId}.json`) as Promise<HighSchoolMaster | null>,
-        window.projectB.masterFetch(`schools/highschool/school_scenarios/${schoolId}_scenario.json`) as Promise<SchoolScenario | null>,
-        window.projectB.masterFetch("schools/highschool/named_npc_registry.json") as Promise<{ list?: NamedNpcMeta[] } | NamedNpcMeta[] | null>,
-        window.projectB.masterFetch("entities/players/_index.json") as Promise<{ byLeague?: Record<string, string[]> } | null>,
-      ]);
-      if (!school || !scenario || !entityIndex?.byLeague) return null;
-      const namedRegistry = Array.isArray(namedWrap) ? namedWrap : (namedWrap?.list ?? []);
-      const ids  = entityIndex.byLeague.LEAGUE_HIGHSCHOOL ?? [];
-      const rows = (await Promise.all(
-        ids.map((id) => window.projectB!.masterFetch!("entities/players/" + id + ".json") as Promise<EntityRow | null>),
-      )).filter((r): r is EntityRow => !!r);
-      return { school, scenario, namedRegistry, entities: rows };
-    } catch {
-      return null;
-    }
-  }
-
   async function handleNewSeason() {
     if (isProcessing) return;
     isProcessing = true;
@@ -302,21 +275,18 @@
 
     let progressedByHighschoolSync = false;
     if (p.careerStage === "highschool" && p.schoolId) {
-      const ctx = await loadHighschoolContext(p.schoolId);
-      if (ctx) {
-        await gameStore.processSeasonEnd(now, ctx.school, ctx.namedRegistry, ctx.entities, now * 100);
-        progressedByHighschoolSync = true;
-        gameStore.addMessage({
-          id: `msg-season-hs-sync-${Date.now()}`,
-          category: "news",
-          sender: "연감",
-          subject: `${now} 시즌 졸업/승급 반영`,
-          preview: "고교 선수 학년 승급과 졸업 대상 정리가 반영되었습니다.",
-          body: ["고교 시즌 종료 동기화가 완료되었습니다.", "NPC 학년 승급과 졸업 처리가 반영되었습니다.", "졸업 대상은 드래프트/진로 처리 풀로 이관되었습니다."].join("\n"),
-          createdAt: `Y${now}`,
-          readAt: null,
-        });
-      }
+      await gameStore.processSeasonEnd(now);
+      progressedByHighschoolSync = true;
+      gameStore.addMessage({
+        id: `msg-season-hs-sync-${Date.now()}`,
+        category: "news",
+        sender: "연감",
+        subject: `${now} 시즌 졸업/승급 반영`,
+        preview: "고교 선수 학년 승급과 졸업 대상 정리가 반영되었습니다.",
+        body: ["고교 시즌 종료 동기화가 완료되었습니다.", "NPC 학년 승급과 졸업 처리가 반영되었습니다.", "졸업 대상은 드래프트/진로 처리 풀로 이관되었습니다."].join("\n"),
+        createdAt: `Y${now}`,
+        readAt: null,
+      });
     }
 
     const leagueStats: Record<string, Record<string, import("../../../shared/types/save").PlayerSeasonStats>> = {};

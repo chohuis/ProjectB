@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06998",
+  "name": "서훈진",
+  "nameEn": "Seo HunJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 50,
+      "primaryPosition": "RF",
+      "developmentRate": 52,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 60,
+        "velocity": 76,
+        "command": 63,
+        "control": 65,
+        "movement": 64,
+        "mentality": 69,
+        "recovery": 62,
+        "clutch": 56,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 64,
+        "power": 65,
+        "eye": 58,
+        "discipline": 62,
+        "speed": 67,
+        "baseInstinct": 65,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 59,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "RF": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

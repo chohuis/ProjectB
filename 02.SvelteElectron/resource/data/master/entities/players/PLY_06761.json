@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06761",
+  "name": "전상수",
+  "nameEn": "Jeon SangSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 76,
+      "primaryPosition": "CF",
+      "developmentRate": 60,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 54,
+        "velocity": 55,
+        "command": 47,
+        "control": 51,
+        "movement": 51,
+        "mentality": 56,
+        "recovery": 52,
+        "clutch": 44,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 56,
+        "power": 56,
+        "eye": 52,
+        "discipline": 61,
+        "speed": 54,
+        "baseInstinct": 51,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 60,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "CF": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12707",
+  "name": "에르난데스 브랜던",
+  "nameEn": "Hernandez Brandon",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 37,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 41,
+      "primaryPosition": "SS",
+      "developmentRate": 55,
+      "potentialHidden": 79,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 79,
+        "stamina": 71,
+        "velocity": 86,
+        "command": 76,
+        "control": 79,
+        "movement": 82,
+        "mentality": 73,
+        "recovery": 67,
+        "clutch": 73,
+        "holdRunners": 77
+      },
+      "batting": {
+        "ovr": 79,
+        "contact": 81,
+        "power": 75,
+        "eye": 82,
+        "discipline": 83,
+        "speed": 81,
+        "baseInstinct": 73,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 75,
+        "arm": 78,
+        "battingClutch": 69
+      },
+      "positionRatings": {
+        "SS": 79
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

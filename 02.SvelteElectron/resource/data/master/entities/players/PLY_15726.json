@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15726",
+  "name": "화이트 제이슨",
+  "nameEn": "White Jason",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 47,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 62,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 80,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 57,
+        "velocity": 55,
+        "command": 48,
+        "control": 54,
+        "movement": 52,
+        "mentality": 52,
+        "recovery": 47,
+        "clutch": 47,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 53,
+        "power": 54,
+        "eye": 58,
+        "discipline": 48,
+        "speed": 60,
+        "baseInstinct": 51,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 51,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SP": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

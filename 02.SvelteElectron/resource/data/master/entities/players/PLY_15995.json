@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15995",
+  "name": "앨런 미겔",
+  "nameEn": "Allen Miguel",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 11,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 98,
+      "primaryPosition": "1B",
+      "developmentRate": 72,
+      "potentialHidden": 59,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 48,
+        "velocity": 57,
+        "command": 49,
+        "control": 52,
+        "movement": 51,
+        "mentality": 58,
+        "recovery": 54,
+        "clutch": 55,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 50,
+        "power": 48,
+        "eye": 53,
+        "discipline": 54,
+        "speed": 49,
+        "baseInstinct": 49,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 49,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "1B": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

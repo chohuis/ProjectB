@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04381",
+  "name": "안기민",
+  "nameEn": "An KiMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 31,
+      "primaryPosition": "SS",
+      "developmentRate": 66,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 56,
+        "velocity": 61,
+        "command": 53,
+        "control": 58,
+        "movement": 49,
+        "mentality": 57,
+        "recovery": 57,
+        "clutch": 46,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 47,
+        "power": 47,
+        "eye": 46,
+        "discipline": 48,
+        "speed": 54,
+        "baseInstinct": 53,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 54,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SS": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

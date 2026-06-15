@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15938",
+  "name": "카터 네이선",
+  "nameEn": "Carter Nathan",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 31,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 68,
+      "primaryPosition": "CF",
+      "developmentRate": 56,
+      "potentialHidden": 68,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 59,
+        "velocity": 66,
+        "command": 66,
+        "control": 60,
+        "movement": 59,
+        "mentality": 71,
+        "recovery": 61,
+        "clutch": 63,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 62,
+        "power": 65,
+        "eye": 66,
+        "discipline": 63,
+        "speed": 71,
+        "baseInstinct": 60,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 67,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "CF": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

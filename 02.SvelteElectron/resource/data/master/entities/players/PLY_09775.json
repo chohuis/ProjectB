@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09775",
+  "name": "조수민",
+  "nameEn": "Jo SuMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 76,
+      "primaryPosition": "1B",
+      "developmentRate": 41,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 44,
+        "velocity": 44,
+        "command": 44,
+        "control": 44,
+        "movement": 38,
+        "mentality": 49,
+        "recovery": 42,
+        "clutch": 33,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 33,
+        "power": 34,
+        "eye": 38,
+        "discipline": 39,
+        "speed": 33,
+        "baseInstinct": 38,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 27,
+        "arm": 32,
+        "battingClutch": 25
+      },
+      "positionRatings": {
+        "1B": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

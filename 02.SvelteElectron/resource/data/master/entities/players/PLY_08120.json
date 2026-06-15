@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08120",
+  "name": "윤태수",
+  "nameEn": "Yoon TaeSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 3,
+      "primaryPosition": "SP",
+      "developmentRate": 54,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 46,
+        "velocity": 42,
+        "command": 33,
+        "control": 40,
+        "movement": 43,
+        "mentality": 45,
+        "recovery": 39,
+        "clutch": 34,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 33,
+        "power": 29,
+        "eye": 33,
+        "discipline": 31,
+        "speed": 39,
+        "baseInstinct": 35,
+        "bunting": 17,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 30,
+        "battingClutch": 26
+      },
+      "positionRatings": {
+        "SP": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

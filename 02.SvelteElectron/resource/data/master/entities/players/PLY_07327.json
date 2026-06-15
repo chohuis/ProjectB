@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07327",
+  "name": "권영우",
+  "nameEn": "Kwon YoungWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 38,
+      "primaryPosition": "SP",
+      "developmentRate": 63,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 44,
+        "velocity": 46,
+        "command": 37,
+        "control": 40,
+        "movement": 34,
+        "mentality": 43,
+        "recovery": 31,
+        "clutch": 29,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 52,
+        "power": 48,
+        "eye": 52,
+        "discipline": 48,
+        "speed": 56,
+        "baseInstinct": 50,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 46,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SP": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

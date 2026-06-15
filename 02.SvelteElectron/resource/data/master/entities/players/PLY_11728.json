@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11728",
+  "name": "토마스 숀",
+  "nameEn": "Thomas Sean",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 35,
+      "primaryPosition": "CF",
+      "developmentRate": 66,
+      "potentialHidden": 79,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 49,
+        "velocity": 55,
+        "command": 41,
+        "control": 48,
+        "movement": 54,
+        "mentality": 48,
+        "recovery": 44,
+        "clutch": 40,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 49,
+        "power": 44,
+        "eye": 48,
+        "discipline": 51,
+        "speed": 49,
+        "baseInstinct": 53,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 49,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "CF": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

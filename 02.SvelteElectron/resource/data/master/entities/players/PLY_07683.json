@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07683",
+  "name": "박찬기",
+  "nameEn": "Park ChanKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 16,
+      "primaryPosition": "3B",
+      "developmentRate": 57,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 62,
+        "velocity": 69,
+        "command": 59,
+        "control": 62,
+        "movement": 56,
+        "mentality": 64,
+        "recovery": 48,
+        "clutch": 47,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 50,
+        "power": 43,
+        "eye": 42,
+        "discipline": 49,
+        "speed": 51,
+        "baseInstinct": 41,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 45,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "3B": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

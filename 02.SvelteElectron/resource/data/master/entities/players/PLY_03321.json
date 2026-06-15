@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03321",
+  "name": "김찬재",
+  "nameEn": "Kim ChanJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 96,
+      "primaryPosition": "C",
+      "developmentRate": 75,
+      "potentialHidden": 81,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 65,
+        "velocity": 65,
+        "command": 61,
+        "control": 62,
+        "movement": 62,
+        "mentality": 67,
+        "recovery": 59,
+        "clutch": 53,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 71,
+        "power": 70,
+        "eye": 75,
+        "discipline": 63,
+        "speed": 72,
+        "baseInstinct": 69,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 65,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "C": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

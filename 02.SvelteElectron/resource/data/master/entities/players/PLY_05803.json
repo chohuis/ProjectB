@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05803",
+  "name": "신찬원",
+  "nameEn": "Shin ChanWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 71,
+      "primaryPosition": "3B",
+      "developmentRate": 50,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 58,
+        "velocity": 59,
+        "command": 54,
+        "control": 53,
+        "movement": 48,
+        "mentality": 58,
+        "recovery": 49,
+        "clutch": 51,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 32,
+        "power": 37,
+        "eye": 33,
+        "discipline": 35,
+        "speed": 37,
+        "baseInstinct": 34,
+        "bunting": 16,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 31,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "3B": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

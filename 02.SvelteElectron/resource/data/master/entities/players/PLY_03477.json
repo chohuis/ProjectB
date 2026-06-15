@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03477",
+  "name": "안기원",
+  "nameEn": "An KiWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 40,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 11,
+      "primaryPosition": "CF",
+      "developmentRate": 60,
+      "potentialHidden": 81,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 67,
+        "velocity": 66,
+        "command": 55,
+        "control": 62,
+        "movement": 59,
+        "mentality": 69,
+        "recovery": 62,
+        "clutch": 58,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 68,
+        "power": 61,
+        "eye": 60,
+        "discipline": 66,
+        "speed": 71,
+        "baseInstinct": 62,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 56,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "CF": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

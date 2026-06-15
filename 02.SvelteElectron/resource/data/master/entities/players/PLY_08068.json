@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08068",
+  "name": "신현기",
+  "nameEn": "Shin HyeonKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 38,
+      "primaryPosition": "1B",
+      "developmentRate": 50,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 49,
+        "velocity": 57,
+        "command": 46,
+        "control": 41,
+        "movement": 42,
+        "mentality": 45,
+        "recovery": 42,
+        "clutch": 39,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 33,
+        "power": 37,
+        "eye": 35,
+        "discipline": 35,
+        "speed": 40,
+        "baseInstinct": 38,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 35,
+        "arm": 30,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "1B": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

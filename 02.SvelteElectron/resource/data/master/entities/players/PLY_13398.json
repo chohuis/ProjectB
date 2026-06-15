@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13398",
+  "name": "홀 카일",
+  "nameEn": "Hall Kyle",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 33,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 64,
+      "primaryPosition": "2B",
+      "developmentRate": 63,
+      "potentialHidden": 66,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 52,
+        "velocity": 61,
+        "command": 46,
+        "control": 52,
+        "movement": 50,
+        "mentality": 51,
+        "recovery": 48,
+        "clutch": 43,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 55,
+        "power": 54,
+        "eye": 55,
+        "discipline": 53,
+        "speed": 51,
+        "baseInstinct": 53,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 53,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "2B": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

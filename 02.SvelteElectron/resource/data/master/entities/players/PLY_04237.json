@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04237",
+  "name": "정동준",
+  "nameEn": "Jung DongJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 23,
+      "primaryPosition": "RF",
+      "developmentRate": 62,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 60,
+        "velocity": 71,
+        "command": 62,
+        "control": 62,
+        "movement": 64,
+        "mentality": 63,
+        "recovery": 58,
+        "clutch": 55,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 61,
+        "power": 65,
+        "eye": 57,
+        "discipline": 60,
+        "speed": 63,
+        "baseInstinct": 59,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 57,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "RF": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

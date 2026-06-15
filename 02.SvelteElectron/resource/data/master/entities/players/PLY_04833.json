@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04833",
+  "name": "전혁환",
+  "nameEn": "Jeon HyeokHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 7,
+      "primaryPosition": "3B",
+      "developmentRate": 48,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 55,
+        "velocity": 60,
+        "command": 50,
+        "control": 52,
+        "movement": 51,
+        "mentality": 54,
+        "recovery": 45,
+        "clutch": 45,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 48,
+        "power": 48,
+        "eye": 56,
+        "discipline": 49,
+        "speed": 52,
+        "baseInstinct": 48,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 46,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "3B": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

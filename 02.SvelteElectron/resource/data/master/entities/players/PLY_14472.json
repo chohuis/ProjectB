@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14472",
+  "name": "무어 코너",
+  "nameEn": "Moore Connor",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 41,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 19,
+      "primaryPosition": "1B",
+      "developmentRate": 44,
+      "potentialHidden": 73,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 73,
+        "velocity": 79,
+        "command": 73,
+        "control": 70,
+        "movement": 62,
+        "mentality": 66,
+        "recovery": 68,
+        "clutch": 58,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 62,
+        "power": 66,
+        "eye": 73,
+        "discipline": 67,
+        "speed": 67,
+        "baseInstinct": 64,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 72,
+        "arm": 71,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "1B": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

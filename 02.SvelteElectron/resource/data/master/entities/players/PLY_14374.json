@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14374",
+  "name": "애덤스 코너",
+  "nameEn": "Adams Connor",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 84,
+  "popularity": 36,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 76,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 77,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 58,
+        "velocity": 70,
+        "command": 63,
+        "control": 61,
+        "movement": 62,
+        "mentality": 68,
+        "recovery": 64,
+        "clutch": 52,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 61,
+        "power": 66,
+        "eye": 64,
+        "discipline": 60,
+        "speed": 60,
+        "baseInstinct": 62,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 63,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "SP": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

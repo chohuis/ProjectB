@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05880",
+  "name": "서재준",
+  "nameEn": "Seo JaeJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 10,
+      "primaryPosition": "1B",
+      "developmentRate": 60,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 48,
+        "velocity": 51,
+        "command": 42,
+        "control": 42,
+        "movement": 38,
+        "mentality": 49,
+        "recovery": 45,
+        "clutch": 39,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 58,
+        "power": 45,
+        "eye": 56,
+        "discipline": 48,
+        "speed": 53,
+        "baseInstinct": 56,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 56,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "1B": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

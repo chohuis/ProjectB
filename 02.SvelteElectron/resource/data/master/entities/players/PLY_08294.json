@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08294",
+  "name": "박민재",
+  "nameEn": "Park MinJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 45,
+      "primaryPosition": "RF",
+      "developmentRate": 64,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 46,
+        "velocity": 50,
+        "command": 44,
+        "control": 49,
+        "movement": 37,
+        "mentality": 43,
+        "recovery": 39,
+        "clutch": 34,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 58,
+        "power": 51,
+        "eye": 51,
+        "discipline": 54,
+        "speed": 53,
+        "baseInstinct": 54,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 51,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "RF": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15399",
+  "name": "클라크 에릭",
+  "nameEn": "Clark Eric",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 27,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 95,
+      "primaryPosition": "SS",
+      "developmentRate": 34,
+      "potentialHidden": 48,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 55,
+        "velocity": 58,
+        "command": 46,
+        "control": 52,
+        "movement": 54,
+        "mentality": 57,
+        "recovery": 53,
+        "clutch": 44,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 48,
+        "power": 47,
+        "eye": 59,
+        "discipline": 51,
+        "speed": 59,
+        "baseInstinct": 55,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 49,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SS": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

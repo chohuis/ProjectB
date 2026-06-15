@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03487",
+  "name": "최현진",
+  "nameEn": "Choi HyeonJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 3,
+      "primaryPosition": "CF",
+      "developmentRate": 69,
+      "potentialHidden": 83,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 66,
+        "velocity": 65,
+        "command": 56,
+        "control": 66,
+        "movement": 63,
+        "mentality": 59,
+        "recovery": 58,
+        "clutch": 54,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 50,
+        "power": 56,
+        "eye": 56,
+        "discipline": 52,
+        "speed": 63,
+        "baseInstinct": 49,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 58,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "CF": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

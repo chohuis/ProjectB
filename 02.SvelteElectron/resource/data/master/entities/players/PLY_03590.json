@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03590",
+  "name": "송기빈",
+  "nameEn": "Song KiBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 81,
+      "primaryPosition": "2B",
+      "developmentRate": 58,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 55,
+        "velocity": 55,
+        "command": 43,
+        "control": 55,
+        "movement": 45,
+        "mentality": 51,
+        "recovery": 45,
+        "clutch": 43,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 56,
+        "power": 59,
+        "eye": 51,
+        "discipline": 55,
+        "speed": 55,
+        "baseInstinct": 59,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 49,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "2B": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

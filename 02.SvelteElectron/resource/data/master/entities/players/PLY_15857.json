@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15857",
+  "name": "넬슨 알렉스",
+  "nameEn": "Nelson Alex",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 14,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 53,
+      "primaryPosition": "SP",
+      "developmentRate": 61,
+      "potentialHidden": 81,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 59,
+        "velocity": 66,
+        "command": 61,
+        "control": 63,
+        "movement": 56,
+        "mentality": 67,
+        "recovery": 55,
+        "clutch": 60,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 61,
+        "power": 55,
+        "eye": 61,
+        "discipline": 65,
+        "speed": 60,
+        "baseInstinct": 59,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 59,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "SP": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

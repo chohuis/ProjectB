@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05404",
+  "name": "이태현",
+  "nameEn": "Lee TaeHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 6,
+      "primaryPosition": "CF",
+      "developmentRate": 64,
+      "potentialHidden": 86,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 52,
+        "velocity": 55,
+        "command": 50,
+        "control": 50,
+        "movement": 53,
+        "mentality": 47,
+        "recovery": 43,
+        "clutch": 46,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 49,
+        "power": 47,
+        "eye": 49,
+        "discipline": 54,
+        "speed": 61,
+        "baseInstinct": 49,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 54,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "CF": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

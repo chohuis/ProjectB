@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07026",
+  "name": "이세수",
+  "nameEn": "Lee SeSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 53,
+      "primaryPosition": "CF",
+      "developmentRate": 60,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 47,
+        "velocity": 50,
+        "command": 42,
+        "control": 35,
+        "movement": 35,
+        "mentality": 39,
+        "recovery": 33,
+        "clutch": 33,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 47,
+        "power": 47,
+        "eye": 49,
+        "discipline": 49,
+        "speed": 49,
+        "baseInstinct": 42,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 40,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "CF": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

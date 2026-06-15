@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13203",
+  "name": "존스 칼렙",
+  "nameEn": "Jones Caleb",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 18,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 30,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 78,
+      "primaryPosition": "RF",
+      "developmentRate": 47,
+      "potentialHidden": 69,
+      "proServiceYears": 8,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 76,
+        "velocity": 80,
+        "command": 75,
+        "control": 65,
+        "movement": 76,
+        "mentality": 78,
+        "recovery": 75,
+        "clutch": 73,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 65,
+        "power": 69,
+        "eye": 75,
+        "discipline": 75,
+        "speed": 69,
+        "baseInstinct": 71,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 75,
+        "battingClutch": 69
+      },
+      "positionRatings": {
+        "RF": 73
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

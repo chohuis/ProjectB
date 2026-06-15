@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07786",
+  "name": "강성혁",
+  "nameEn": "Kang SeongHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 13,
+      "primaryPosition": "RF",
+      "developmentRate": 56,
+      "potentialHidden": 50,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 38,
+        "velocity": 44,
+        "command": 38,
+        "control": 43,
+        "movement": 44,
+        "mentality": 50,
+        "recovery": 41,
+        "clutch": 36,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 55,
+        "power": 45,
+        "eye": 57,
+        "discipline": 47,
+        "speed": 50,
+        "baseInstinct": 45,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 46,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "RF": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

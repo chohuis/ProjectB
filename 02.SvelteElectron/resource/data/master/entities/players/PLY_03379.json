@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03379",
+  "name": "이태성",
+  "nameEn": "Lee TaeSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 10,
+      "primaryPosition": "SP",
+      "developmentRate": 60,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 78,
+        "velocity": 78,
+        "command": 65,
+        "control": 78,
+        "movement": 76,
+        "mentality": 69,
+        "recovery": 67,
+        "clutch": 66,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 53,
+        "power": 50,
+        "eye": 56,
+        "discipline": 46,
+        "speed": 54,
+        "baseInstinct": 48,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 55,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SP": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

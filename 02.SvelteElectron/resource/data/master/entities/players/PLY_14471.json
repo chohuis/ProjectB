@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14471",
+  "name": "무어 카를로스",
+  "nameEn": "Moore Carlos",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 26,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 37,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 79,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 47,
+        "velocity": 63,
+        "command": 48,
+        "control": 56,
+        "movement": 42,
+        "mentality": 50,
+        "recovery": 41,
+        "clutch": 51,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 50,
+        "power": 49,
+        "eye": 52,
+        "discipline": 55,
+        "speed": 49,
+        "baseInstinct": 51,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 50,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

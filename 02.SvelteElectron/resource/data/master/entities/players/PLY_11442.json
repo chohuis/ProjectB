@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11442",
+  "name": "홀 트레버",
+  "nameEn": "Hall Trevor",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 37,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 86,
+      "primaryPosition": "CF",
+      "developmentRate": 71,
+      "potentialHidden": 88,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 62,
+        "velocity": 67,
+        "command": 52,
+        "control": 57,
+        "movement": 52,
+        "mentality": 53,
+        "recovery": 46,
+        "clutch": 53,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 53,
+        "power": 51,
+        "eye": 52,
+        "discipline": 60,
+        "speed": 62,
+        "baseInstinct": 55,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 56,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "CF": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

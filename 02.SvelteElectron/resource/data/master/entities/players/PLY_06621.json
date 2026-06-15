@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06621",
+  "name": "권민호",
+  "nameEn": "Kwon MinHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 11,
+      "primaryPosition": "SP",
+      "developmentRate": 67,
+      "potentialHidden": 85,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 52,
+        "velocity": 60,
+        "command": 50,
+        "control": 46,
+        "movement": 42,
+        "mentality": 47,
+        "recovery": 52,
+        "clutch": 49,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 50,
+        "power": 48,
+        "eye": 57,
+        "discipline": 45,
+        "speed": 50,
+        "baseInstinct": 55,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 50,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

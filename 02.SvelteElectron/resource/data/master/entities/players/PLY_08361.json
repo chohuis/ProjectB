@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08361",
+  "name": "신수기",
+  "nameEn": "Shin SuKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 89,
+      "primaryPosition": "C",
+      "developmentRate": 49,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 41,
+        "velocity": 51,
+        "command": 42,
+        "control": 50,
+        "movement": 44,
+        "mentality": 48,
+        "recovery": 38,
+        "clutch": 39,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 48,
+        "power": 36,
+        "eye": 40,
+        "discipline": 45,
+        "speed": 42,
+        "baseInstinct": 43,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 35,
+        "arm": 46,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "C": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

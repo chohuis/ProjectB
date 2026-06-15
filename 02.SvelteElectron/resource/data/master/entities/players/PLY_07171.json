@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07171",
+  "name": "황기민",
+  "nameEn": "Hwang KiMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 89,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 62,
+        "velocity": 67,
+        "command": 52,
+        "control": 57,
+        "movement": 60,
+        "mentality": 63,
+        "recovery": 51,
+        "clutch": 49,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 54,
+        "power": 50,
+        "eye": 46,
+        "discipline": 53,
+        "speed": 54,
+        "baseInstinct": 50,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 47,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

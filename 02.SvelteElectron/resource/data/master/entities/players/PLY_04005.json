@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04005",
+  "name": "전동원",
+  "nameEn": "Jeon DongWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 92,
+      "primaryPosition": "1B",
+      "developmentRate": 54,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 56,
+        "velocity": 64,
+        "command": 50,
+        "control": 54,
+        "movement": 46,
+        "mentality": 57,
+        "recovery": 48,
+        "clutch": 47,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 52,
+        "power": 43,
+        "eye": 52,
+        "discipline": 54,
+        "speed": 51,
+        "baseInstinct": 49,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 42,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "1B": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

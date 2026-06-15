@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13936",
+  "name": "마르티네스 코너",
+  "nameEn": "Martinez Connor",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 27,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 42,
+      "primaryPosition": "1B",
+      "developmentRate": 69,
+      "potentialHidden": 61,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 51,
+        "velocity": 63,
+        "command": 48,
+        "control": 50,
+        "movement": 54,
+        "mentality": 50,
+        "recovery": 46,
+        "clutch": 44,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 47,
+        "power": 44,
+        "eye": 56,
+        "discipline": 53,
+        "speed": 48,
+        "baseInstinct": 48,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 45,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "1B": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

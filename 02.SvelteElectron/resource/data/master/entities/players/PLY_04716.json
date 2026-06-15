@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04716",
+  "name": "권재완",
+  "nameEn": "Kwon JaeWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 22,
+      "primaryPosition": "SP",
+      "developmentRate": 57,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 59,
+        "velocity": 58,
+        "command": 50,
+        "control": 47,
+        "movement": 51,
+        "mentality": 58,
+        "recovery": 45,
+        "clutch": 49,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 49,
+        "power": 53,
+        "eye": 54,
+        "discipline": 49,
+        "speed": 53,
+        "baseInstinct": 54,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 51,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "SP": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03758",
+  "name": "장혁성",
+  "nameEn": "Jang HyeokSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 36,
+      "primaryPosition": "SP",
+      "developmentRate": 64,
+      "potentialHidden": 89,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 67,
+        "velocity": 70,
+        "command": 63,
+        "control": 63,
+        "movement": 57,
+        "mentality": 61,
+        "recovery": 66,
+        "clutch": 53,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 58,
+        "power": 55,
+        "eye": 59,
+        "discipline": 57,
+        "speed": 64,
+        "baseInstinct": 58,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 58,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "SP": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

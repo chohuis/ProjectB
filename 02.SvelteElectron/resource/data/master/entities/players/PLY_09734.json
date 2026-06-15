@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09734",
+  "name": "송혁준",
+  "nameEn": "Song HyeokJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 40,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 64,
+      "primaryPosition": "SP",
+      "developmentRate": 57,
+      "potentialHidden": 44,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 41,
+        "velocity": 43,
+        "command": 43,
+        "control": 35,
+        "movement": 45,
+        "mentality": 44,
+        "recovery": 35,
+        "clutch": 33,
+        "holdRunners": 29
+      },
+      "batting": {
+        "ovr": 31,
+        "contact": 33,
+        "power": 29,
+        "eye": 31,
+        "discipline": 23,
+        "speed": 28,
+        "baseInstinct": 23,
+        "bunting": 11,
+        "platoon": 50,
+        "fielding": 27,
+        "arm": 28,
+        "battingClutch": 18
+      },
+      "positionRatings": {
+        "SP": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

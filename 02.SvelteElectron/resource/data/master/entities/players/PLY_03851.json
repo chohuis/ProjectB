@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03851",
+  "name": "최현식",
+  "nameEn": "Choi HyeonSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 24,
+      "primaryPosition": "2B",
+      "developmentRate": 53,
+      "potentialHidden": 81,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 52,
+        "velocity": 57,
+        "command": 52,
+        "control": 50,
+        "movement": 44,
+        "mentality": 58,
+        "recovery": 53,
+        "clutch": 41,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 53,
+        "power": 43,
+        "eye": 47,
+        "discipline": 48,
+        "speed": 55,
+        "baseInstinct": 40,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 46,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "2B": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

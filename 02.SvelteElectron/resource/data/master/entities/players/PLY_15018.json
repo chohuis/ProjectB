@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15018",
+  "name": "존슨 알렉스",
+  "nameEn": "Johnson Alex",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 13,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 15,
+      "primaryPosition": "CF",
+      "developmentRate": 46,
+      "potentialHidden": 48,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 61,
+        "velocity": 65,
+        "command": 49,
+        "control": 50,
+        "movement": 58,
+        "mentality": 58,
+        "recovery": 57,
+        "clutch": 59,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 50,
+        "power": 58,
+        "eye": 55,
+        "discipline": 59,
+        "speed": 62,
+        "baseInstinct": 58,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 59,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "CF": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

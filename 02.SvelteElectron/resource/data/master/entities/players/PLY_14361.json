@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14361",
+  "name": "넬슨 제이슨",
+  "nameEn": "Nelson Jason",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 16,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 6,
+      "primaryPosition": "LF",
+      "developmentRate": 64,
+      "potentialHidden": 74,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 46,
+        "velocity": 44,
+        "command": 37,
+        "control": 51,
+        "movement": 50,
+        "mentality": 44,
+        "recovery": 46,
+        "clutch": 34,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 49,
+        "power": 39,
+        "eye": 42,
+        "discipline": 40,
+        "speed": 43,
+        "baseInstinct": 40,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 37,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "LF": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

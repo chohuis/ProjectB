@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06217",
+  "name": "한도기",
+  "nameEn": "Han DoKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 67,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 37,
+        "stamina": 39,
+        "velocity": 38,
+        "command": 36,
+        "control": 35,
+        "movement": 32,
+        "mentality": 39,
+        "recovery": 32,
+        "clutch": 30,
+        "holdRunners": 22
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 37,
+        "power": 37,
+        "eye": 31,
+        "discipline": 37,
+        "speed": 38,
+        "baseInstinct": 29,
+        "bunting": 18,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 27,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "SP": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

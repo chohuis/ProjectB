@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04521",
+  "name": "안현준",
+  "nameEn": "An HyeonJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 7,
+      "primaryPosition": "LF",
+      "developmentRate": 48,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 56,
+        "velocity": 59,
+        "command": 51,
+        "control": 45,
+        "movement": 45,
+        "mentality": 55,
+        "recovery": 42,
+        "clutch": 43,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 41,
+        "power": 39,
+        "eye": 41,
+        "discipline": 36,
+        "speed": 36,
+        "baseInstinct": 34,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 31,
+        "battingClutch": 30
+      },
+      "positionRatings": {
+        "LF": 41
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

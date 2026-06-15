@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15902",
+  "name": "킹 조던",
+  "nameEn": "King Jordan",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 21,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 19,
+      "primaryPosition": "3B",
+      "developmentRate": 54,
+      "potentialHidden": 70,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 49,
+        "velocity": 53,
+        "command": 48,
+        "control": 56,
+        "movement": 49,
+        "mentality": 50,
+        "recovery": 41,
+        "clutch": 44,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 57,
+        "power": 51,
+        "eye": 51,
+        "discipline": 50,
+        "speed": 48,
+        "baseInstinct": 43,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 45,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "3B": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

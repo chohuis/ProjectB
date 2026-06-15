@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14254",
+  "name": "무어 코디",
+  "nameEn": "Moore Cody",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 46,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 39,
+      "primaryPosition": "SS",
+      "developmentRate": 62,
+      "potentialHidden": 76,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 56,
+        "velocity": 63,
+        "command": 46,
+        "control": 58,
+        "movement": 52,
+        "mentality": 57,
+        "recovery": 50,
+        "clutch": 47,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 48,
+        "power": 48,
+        "eye": 55,
+        "discipline": 50,
+        "speed": 55,
+        "baseInstinct": 48,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 45,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "SS": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

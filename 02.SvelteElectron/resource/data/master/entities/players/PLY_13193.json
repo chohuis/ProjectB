@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13193",
+  "name": "베이커 루이스",
+  "nameEn": "Baker Luis",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 57,
+      "primaryPosition": "SS",
+      "developmentRate": 69,
+      "potentialHidden": 64,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 80,
+        "stamina": 72,
+        "velocity": 82,
+        "command": 82,
+        "control": 82,
+        "movement": 72,
+        "mentality": 86,
+        "recovery": 80,
+        "clutch": 69,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 80,
+        "contact": 80,
+        "power": 82,
+        "eye": 78,
+        "discipline": 72,
+        "speed": 76,
+        "baseInstinct": 71,
+        "bunting": 63,
+        "platoon": 50,
+        "fielding": 77,
+        "arm": 81,
+        "battingClutch": 71
+      },
+      "positionRatings": {
+        "SS": 80
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04771",
+  "name": "최진혁",
+  "nameEn": "Choi JinHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 58,
+      "primaryPosition": "3B",
+      "developmentRate": 45,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 59,
+        "velocity": 62,
+        "command": 52,
+        "control": 57,
+        "movement": 48,
+        "mentality": 51,
+        "recovery": 52,
+        "clutch": 54,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 37,
+        "power": 35,
+        "eye": 40,
+        "discipline": 42,
+        "speed": 41,
+        "baseInstinct": 37,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 40,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "3B": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

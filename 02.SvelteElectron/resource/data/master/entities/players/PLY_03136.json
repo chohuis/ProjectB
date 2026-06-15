@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03136",
+  "name": "신태찬",
+  "nameEn": "Shin TaeChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 98,
+      "primaryPosition": "C",
+      "developmentRate": 60,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 69,
+        "velocity": 80,
+        "command": 64,
+        "control": 75,
+        "movement": 69,
+        "mentality": 71,
+        "recovery": 67,
+        "clutch": 64,
+        "holdRunners": 63
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 63,
+        "power": 59,
+        "eye": 60,
+        "discipline": 64,
+        "speed": 74,
+        "baseInstinct": 58,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 63,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "C": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14241",
+  "name": "앨런 코디",
+  "nameEn": "Allen Cody",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 12,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 32,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 67,
+      "primaryPosition": "1B",
+      "developmentRate": 35,
+      "potentialHidden": 73,
+      "proServiceYears": 10,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 67,
+        "velocity": 75,
+        "command": 57,
+        "control": 65,
+        "movement": 61,
+        "mentality": 74,
+        "recovery": 61,
+        "clutch": 69,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 62,
+        "power": 63,
+        "eye": 72,
+        "discipline": 70,
+        "speed": 73,
+        "baseInstinct": 62,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 60,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "1B": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

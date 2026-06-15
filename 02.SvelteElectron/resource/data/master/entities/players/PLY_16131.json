@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16131",
+  "name": "그린 데릭",
+  "nameEn": "Green Derek",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 24,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 48,
+      "primaryPosition": "CF",
+      "developmentRate": 45,
+      "potentialHidden": 67,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 67,
+        "velocity": 76,
+        "command": 65,
+        "control": 62,
+        "movement": 61,
+        "mentality": 72,
+        "recovery": 56,
+        "clutch": 66,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 66,
+        "power": 58,
+        "eye": 60,
+        "discipline": 58,
+        "speed": 62,
+        "baseInstinct": 64,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 65,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "CF": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

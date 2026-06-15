@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07974",
+  "name": "신진수",
+  "nameEn": "Shin JinSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 35,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 58,
+      "primaryPosition": "SP",
+      "developmentRate": 54,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 37,
+        "velocity": 45,
+        "command": 37,
+        "control": 33,
+        "movement": 41,
+        "mentality": 42,
+        "recovery": 38,
+        "clutch": 34,
+        "holdRunners": 26
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 50,
+        "power": 36,
+        "eye": 47,
+        "discipline": 48,
+        "speed": 52,
+        "baseInstinct": 37,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 47,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "SP": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

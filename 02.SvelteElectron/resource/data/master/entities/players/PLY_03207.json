@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03207",
+  "name": "권민현",
+  "nameEn": "Kwon MinHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 21,
+      "primaryPosition": "RF",
+      "developmentRate": 72,
+      "potentialHidden": 99,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 58,
+        "velocity": 63,
+        "command": 58,
+        "control": 56,
+        "movement": 56,
+        "mentality": 60,
+        "recovery": 55,
+        "clutch": 59,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 64,
+        "power": 64,
+        "eye": 67,
+        "discipline": 63,
+        "speed": 72,
+        "baseInstinct": 61,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 62,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "RF": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

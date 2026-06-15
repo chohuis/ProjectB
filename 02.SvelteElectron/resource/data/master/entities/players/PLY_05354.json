@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05354",
+  "name": "최성찬",
+  "nameEn": "Choi SeongChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 72,
+      "primaryPosition": "LF",
+      "developmentRate": 59,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 46,
+        "velocity": 51,
+        "command": 48,
+        "control": 46,
+        "movement": 53,
+        "mentality": 50,
+        "recovery": 52,
+        "clutch": 40,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 53,
+        "power": 43,
+        "eye": 55,
+        "discipline": 48,
+        "speed": 53,
+        "baseInstinct": 47,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 44,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "LF": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

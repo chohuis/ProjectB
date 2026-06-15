@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04953",
+  "name": "권세환",
+  "nameEn": "Kwon SeHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 93,
+      "primaryPosition": "SP",
+      "developmentRate": 61,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 52,
+        "velocity": 57,
+        "command": 46,
+        "control": 57,
+        "movement": 56,
+        "mentality": 53,
+        "recovery": 51,
+        "clutch": 51,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 49,
+        "power": 43,
+        "eye": 41,
+        "discipline": 46,
+        "speed": 48,
+        "baseInstinct": 43,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 46,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SP": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

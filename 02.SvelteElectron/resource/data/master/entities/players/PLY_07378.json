@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07378",
+  "name": "전세식",
+  "nameEn": "Jeon SeSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 13,
+      "primaryPosition": "CF",
+      "developmentRate": 57,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 51,
+        "velocity": 62,
+        "command": 54,
+        "control": 58,
+        "movement": 55,
+        "mentality": 56,
+        "recovery": 47,
+        "clutch": 50,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 42,
+        "power": 33,
+        "eye": 35,
+        "discipline": 32,
+        "speed": 36,
+        "baseInstinct": 40,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 39,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "CF": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06601",
+  "name": "윤재성",
+  "nameEn": "Yoon JaeSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 53,
+      "primaryPosition": "1B",
+      "developmentRate": 55,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 56,
+        "velocity": 61,
+        "command": 51,
+        "control": 46,
+        "movement": 49,
+        "mentality": 49,
+        "recovery": 49,
+        "clutch": 46,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 44,
+        "power": 40,
+        "eye": 48,
+        "discipline": 51,
+        "speed": 50,
+        "baseInstinct": 39,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 43,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "1B": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

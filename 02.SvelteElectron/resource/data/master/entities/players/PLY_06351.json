@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06351",
+  "name": "류지원",
+  "nameEn": "Ryu JiWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 69,
+      "primaryPosition": "2B",
+      "developmentRate": 58,
+      "potentialHidden": 42,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 43,
+        "velocity": 53,
+        "command": 40,
+        "control": 40,
+        "movement": 42,
+        "mentality": 47,
+        "recovery": 36,
+        "clutch": 33,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 33,
+        "power": 34,
+        "eye": 35,
+        "discipline": 37,
+        "speed": 42,
+        "baseInstinct": 33,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 38,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "2B": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

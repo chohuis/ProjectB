@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04509",
+  "name": "장상기",
+  "nameEn": "Jang SangKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 93,
+      "primaryPosition": "2B",
+      "developmentRate": 50,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 49,
+        "velocity": 54,
+        "command": 43,
+        "control": 49,
+        "movement": 48,
+        "mentality": 48,
+        "recovery": 39,
+        "clutch": 46,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 42,
+        "power": 33,
+        "eye": 38,
+        "discipline": 37,
+        "speed": 46,
+        "baseInstinct": 34,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 35,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "2B": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

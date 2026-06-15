@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03665",
+  "name": "신태식",
+  "nameEn": "Shin TaeSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 10,
+      "primaryPosition": "LF",
+      "developmentRate": 68,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 56,
+        "velocity": 65,
+        "command": 57,
+        "control": 55,
+        "movement": 59,
+        "mentality": 62,
+        "recovery": 60,
+        "clutch": 53,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 58,
+        "power": 57,
+        "eye": 64,
+        "discipline": 53,
+        "speed": 66,
+        "baseInstinct": 53,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 61,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "LF": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04017",
+  "name": "한기혁",
+  "nameEn": "Han KiHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 24,
+      "primaryPosition": "SP",
+      "developmentRate": 69,
+      "potentialHidden": 81,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 60,
+        "velocity": 69,
+        "command": 55,
+        "control": 63,
+        "movement": 59,
+        "mentality": 66,
+        "recovery": 58,
+        "clutch": 63,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 56,
+        "power": 61,
+        "eye": 53,
+        "discipline": 63,
+        "speed": 61,
+        "baseInstinct": 60,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 56,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "SP": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

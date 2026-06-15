@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10118",
+  "name": "카터 타일러",
+  "nameEn": "Carter Tyler",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 12,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 75,
+      "primaryPosition": "SP",
+      "developmentRate": 46,
+      "potentialHidden": 86,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 73,
+        "velocity": 68,
+        "command": 61,
+        "control": 66,
+        "movement": 60,
+        "mentality": 67,
+        "recovery": 68,
+        "clutch": 63,
+        "holdRunners": 63
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 63,
+        "power": 72,
+        "eye": 67,
+        "discipline": 67,
+        "speed": 73,
+        "baseInstinct": 67,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 69,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "SP": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

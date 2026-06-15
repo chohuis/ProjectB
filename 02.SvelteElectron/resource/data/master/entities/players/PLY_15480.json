@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15480",
+  "name": "로빈슨 재크",
+  "nameEn": "Robinson Zach",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 84,
+  "popularity": 36,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 29,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 39,
+      "primaryPosition": "SP",
+      "developmentRate": 37,
+      "potentialHidden": 52,
+      "proServiceYears": 7,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 65,
+        "velocity": 77,
+        "command": 59,
+        "control": 65,
+        "movement": 58,
+        "mentality": 67,
+        "recovery": 69,
+        "clutch": 65,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 69,
+        "power": 68,
+        "eye": 66,
+        "discipline": 65,
+        "speed": 72,
+        "baseInstinct": 62,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 63,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "SP": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

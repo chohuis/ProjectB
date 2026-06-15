@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13799",
+  "name": "브라운 딜런",
+  "nameEn": "Brown Dylan",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 21,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 53,
+      "primaryPosition": "2B",
+      "developmentRate": 53,
+      "potentialHidden": 75,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 71,
+        "velocity": 80,
+        "command": 74,
+        "control": 76,
+        "movement": 73,
+        "mentality": 75,
+        "recovery": 71,
+        "clutch": 69,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 71,
+        "power": 70,
+        "eye": 69,
+        "discipline": 67,
+        "speed": 72,
+        "baseInstinct": 77,
+        "bunting": 68,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 73,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "2B": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

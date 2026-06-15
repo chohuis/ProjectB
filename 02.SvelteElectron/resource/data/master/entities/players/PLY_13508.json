@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13508",
+  "name": "톰슨 칼렙",
+  "nameEn": "Thompson Caleb",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 43,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 32,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 26,
+      "primaryPosition": "1B",
+      "developmentRate": 41,
+      "potentialHidden": 60,
+      "proServiceYears": 10,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 64,
+        "velocity": 61,
+        "command": 57,
+        "control": 56,
+        "movement": 62,
+        "mentality": 65,
+        "recovery": 61,
+        "clutch": 53,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 55,
+        "power": 56,
+        "eye": 68,
+        "discipline": 67,
+        "speed": 61,
+        "baseInstinct": 63,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 62,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "1B": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

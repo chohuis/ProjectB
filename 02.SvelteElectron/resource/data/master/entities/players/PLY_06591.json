@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06591",
+  "name": "안찬혁",
+  "nameEn": "An ChanHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 7,
+      "primaryPosition": "LF",
+      "developmentRate": 56,
+      "potentialHidden": 86,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 61,
+        "velocity": 63,
+        "command": 59,
+        "control": 59,
+        "movement": 55,
+        "mentality": 59,
+        "recovery": 52,
+        "clutch": 48,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 65,
+        "power": 56,
+        "eye": 66,
+        "discipline": 56,
+        "speed": 69,
+        "baseInstinct": 62,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 56,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "LF": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

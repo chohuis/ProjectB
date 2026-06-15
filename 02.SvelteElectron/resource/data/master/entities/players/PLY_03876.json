@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03876",
+  "name": "최기식",
+  "nameEn": "Choi KiSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 53,
+      "primaryPosition": "RF",
+      "developmentRate": 66,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 63,
+        "velocity": 68,
+        "command": 59,
+        "control": 55,
+        "movement": 54,
+        "mentality": 57,
+        "recovery": 59,
+        "clutch": 52,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 61,
+        "power": 53,
+        "eye": 56,
+        "discipline": 54,
+        "speed": 60,
+        "baseInstinct": 54,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 60,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "RF": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

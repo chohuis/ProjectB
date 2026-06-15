@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15143",
+  "name": "베이커 타일러",
+  "nameEn": "Baker Tyler",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 38,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 55,
+      "primaryPosition": "RF",
+      "developmentRate": 53,
+      "potentialHidden": 70,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 63,
+        "velocity": 72,
+        "command": 55,
+        "control": 57,
+        "movement": 63,
+        "mentality": 69,
+        "recovery": 54,
+        "clutch": 56,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 58,
+        "power": 60,
+        "eye": 66,
+        "discipline": 60,
+        "speed": 70,
+        "baseInstinct": 54,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 64,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "RF": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

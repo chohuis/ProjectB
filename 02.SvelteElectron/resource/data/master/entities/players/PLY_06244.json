@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06244",
+  "name": "황동기",
+  "nameEn": "Hwang DongKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 36,
+      "primaryPosition": "CF",
+      "developmentRate": 42,
+      "potentialHidden": 47,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 52,
+        "velocity": 53,
+        "command": 49,
+        "control": 51,
+        "movement": 52,
+        "mentality": 54,
+        "recovery": 46,
+        "clutch": 45,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 31,
+        "power": 30,
+        "eye": 31,
+        "discipline": 34,
+        "speed": 43,
+        "baseInstinct": 35,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 40,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "CF": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

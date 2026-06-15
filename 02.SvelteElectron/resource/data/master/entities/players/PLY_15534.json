@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15534",
+  "name": "미첼 카일",
+  "nameEn": "Mitchell Kyle",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 27,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 23,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 74,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 59,
+        "velocity": 66,
+        "command": 60,
+        "control": 56,
+        "movement": 60,
+        "mentality": 57,
+        "recovery": 52,
+        "clutch": 60,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 59,
+        "power": 54,
+        "eye": 54,
+        "discipline": 63,
+        "speed": 60,
+        "baseInstinct": 57,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 59,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "SP": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03440",
+  "name": "송지윤",
+  "nameEn": "Song JiYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 56,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 84,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 65,
+        "velocity": 70,
+        "command": 64,
+        "control": 66,
+        "movement": 63,
+        "mentality": 72,
+        "recovery": 62,
+        "clutch": 56,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 58,
+        "power": 49,
+        "eye": 56,
+        "discipline": 59,
+        "speed": 63,
+        "baseInstinct": 50,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 58,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "SP": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

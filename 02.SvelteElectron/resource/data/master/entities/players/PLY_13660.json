@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13660",
+  "name": "로빈슨 네이선",
+  "nameEn": "Robinson Nathan",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 21,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 62,
+      "primaryPosition": "1B",
+      "developmentRate": 58,
+      "potentialHidden": 71,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 70,
+        "velocity": 70,
+        "command": 67,
+        "control": 62,
+        "movement": 69,
+        "mentality": 68,
+        "recovery": 61,
+        "clutch": 59,
+        "holdRunners": 63
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 61,
+        "power": 65,
+        "eye": 59,
+        "discipline": 66,
+        "speed": 72,
+        "baseInstinct": 69,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 59,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "1B": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05523",
+  "name": "장동준",
+  "nameEn": "Jang DongJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 37,
+      "primaryPosition": "SS",
+      "developmentRate": 52,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 55,
+        "velocity": 61,
+        "command": 55,
+        "control": 55,
+        "movement": 53,
+        "mentality": 65,
+        "recovery": 51,
+        "clutch": 54,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 48,
+        "power": 49,
+        "eye": 51,
+        "discipline": 44,
+        "speed": 49,
+        "baseInstinct": 43,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 51,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SS": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

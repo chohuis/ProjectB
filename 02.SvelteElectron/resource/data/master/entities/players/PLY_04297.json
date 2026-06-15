@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04297",
+  "name": "권수성",
+  "nameEn": "Kwon SuSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 31,
+      "primaryPosition": "LF",
+      "developmentRate": 63,
+      "potentialHidden": 87,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 57,
+        "velocity": 62,
+        "command": 43,
+        "control": 50,
+        "movement": 54,
+        "mentality": 59,
+        "recovery": 42,
+        "clutch": 49,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 56,
+        "power": 53,
+        "eye": 54,
+        "discipline": 61,
+        "speed": 56,
+        "baseInstinct": 63,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 56,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "LF": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

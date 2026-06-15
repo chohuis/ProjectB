@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13080",
+  "name": "해리스 라이언",
+  "nameEn": "Harris Ryan",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 20,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 94,
+      "primaryPosition": "RF",
+      "developmentRate": 60,
+      "potentialHidden": 82,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 60,
+        "velocity": 62,
+        "command": 61,
+        "control": 66,
+        "movement": 63,
+        "mentality": 69,
+        "recovery": 59,
+        "clutch": 55,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 64,
+        "power": 64,
+        "eye": 65,
+        "discipline": 66,
+        "speed": 65,
+        "baseInstinct": 56,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 55,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "RF": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

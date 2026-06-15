@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07070",
+  "name": "이혁현",
+  "nameEn": "Lee HyeokHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 43,
+      "primaryPosition": "2B",
+      "developmentRate": 50,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 58,
+        "velocity": 60,
+        "command": 51,
+        "control": 54,
+        "movement": 53,
+        "mentality": 56,
+        "recovery": 52,
+        "clutch": 50,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 42,
+        "power": 47,
+        "eye": 49,
+        "discipline": 42,
+        "speed": 46,
+        "baseInstinct": 41,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 38,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "2B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

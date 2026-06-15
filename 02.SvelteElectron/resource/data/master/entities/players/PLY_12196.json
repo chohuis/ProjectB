@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12196",
+  "name": "베이커 코디",
+  "nameEn": "Baker Cody",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 48,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 29,
+      "primaryPosition": "3B",
+      "developmentRate": 72,
+      "potentialHidden": 75,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 68,
+        "velocity": 64,
+        "command": 56,
+        "control": 60,
+        "movement": 64,
+        "mentality": 69,
+        "recovery": 59,
+        "clutch": 59,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 59,
+        "power": 61,
+        "eye": 64,
+        "discipline": 65,
+        "speed": 64,
+        "baseInstinct": 57,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 59,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "3B": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

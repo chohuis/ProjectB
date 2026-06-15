@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16050",
+  "name": "리 카일",
+  "nameEn": "Lee Kyle",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 20,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 2,
+      "primaryPosition": "SS",
+      "developmentRate": 63,
+      "potentialHidden": 56,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 55,
+        "velocity": 69,
+        "command": 61,
+        "control": 53,
+        "movement": 55,
+        "mentality": 65,
+        "recovery": 54,
+        "clutch": 61,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 60,
+        "power": 51,
+        "eye": 59,
+        "discipline": 56,
+        "speed": 55,
+        "baseInstinct": 51,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 60,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "SS": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

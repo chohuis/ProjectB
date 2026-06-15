@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09440",
+  "name": "권성우",
+  "nameEn": "Kwon SeongWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 23,
+      "primaryPosition": "SS",
+      "developmentRate": 51,
+      "potentialHidden": 42,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 38,
+        "velocity": 53,
+        "command": 44,
+        "control": 42,
+        "movement": 37,
+        "mentality": 49,
+        "recovery": 42,
+        "clutch": 32,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 38,
+        "power": 27,
+        "eye": 29,
+        "discipline": 34,
+        "speed": 40,
+        "baseInstinct": 27,
+        "bunting": 19,
+        "platoon": 50,
+        "fielding": 26,
+        "arm": 33,
+        "battingClutch": 27
+      },
+      "positionRatings": {
+        "SS": 36
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

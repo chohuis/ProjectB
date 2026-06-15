@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13291",
+  "name": "앨런 코디",
+  "nameEn": "Allen Cody",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 19,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 34,
+      "primaryPosition": "SP",
+      "developmentRate": 69,
+      "potentialHidden": 68,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 66,
+        "velocity": 73,
+        "command": 68,
+        "control": 69,
+        "movement": 61,
+        "mentality": 74,
+        "recovery": 67,
+        "clutch": 60,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 65,
+        "power": 59,
+        "eye": 65,
+        "discipline": 61,
+        "speed": 75,
+        "baseInstinct": 70,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 62,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "SP": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

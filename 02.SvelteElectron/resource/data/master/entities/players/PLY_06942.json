@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06942",
+  "name": "윤준혁",
+  "nameEn": "Yoon JunHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 28,
+      "primaryPosition": "1B",
+      "developmentRate": 62,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 54,
+        "velocity": 59,
+        "command": 55,
+        "control": 53,
+        "movement": 57,
+        "mentality": 53,
+        "recovery": 52,
+        "clutch": 53,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 49,
+        "power": 52,
+        "eye": 50,
+        "discipline": 43,
+        "speed": 55,
+        "baseInstinct": 47,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 51,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "1B": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

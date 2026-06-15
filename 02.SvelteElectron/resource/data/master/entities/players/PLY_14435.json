@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14435",
+  "name": "토마스 제이크",
+  "nameEn": "Thomas Jake",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 28,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 54,
+      "primaryPosition": "SP",
+      "developmentRate": 57,
+      "potentialHidden": 68,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 61,
+        "velocity": 67,
+        "command": 66,
+        "control": 58,
+        "movement": 62,
+        "mentality": 65,
+        "recovery": 66,
+        "clutch": 62,
+        "holdRunners": 63
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 63,
+        "power": 63,
+        "eye": 58,
+        "discipline": 61,
+        "speed": 71,
+        "baseInstinct": 54,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 59,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "SP": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

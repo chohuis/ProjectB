@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06175",
+  "name": "최재욱",
+  "nameEn": "Choi JaeWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 10,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 43,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 48,
+        "velocity": 59,
+        "command": 40,
+        "control": 53,
+        "movement": 44,
+        "mentality": 51,
+        "recovery": 44,
+        "clutch": 40,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 35,
+        "contact": 36,
+        "power": 26,
+        "eye": 28,
+        "discipline": 35,
+        "speed": 36,
+        "baseInstinct": 31,
+        "bunting": 18,
+        "platoon": 50,
+        "fielding": 28,
+        "arm": 31,
+        "battingClutch": 25
+      },
+      "positionRatings": {
+        "SP": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

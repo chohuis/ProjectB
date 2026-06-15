@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05687",
+  "name": "강태민",
+  "nameEn": "Kang TaeMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 87,
+      "primaryPosition": "SP",
+      "developmentRate": 63,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 45,
+        "velocity": 48,
+        "command": 48,
+        "control": 47,
+        "movement": 43,
+        "mentality": 52,
+        "recovery": 38,
+        "clutch": 36,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 64,
+        "power": 55,
+        "eye": 53,
+        "discipline": 56,
+        "speed": 55,
+        "baseInstinct": 57,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 50,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "SP": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

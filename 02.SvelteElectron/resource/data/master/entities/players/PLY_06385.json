@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06385",
+  "name": "오훈완",
+  "nameEn": "Oh HunWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 90,
+      "primaryPosition": "CF",
+      "developmentRate": 51,
+      "potentialHidden": 42,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 48,
+        "velocity": 56,
+        "command": 43,
+        "control": 43,
+        "movement": 50,
+        "mentality": 47,
+        "recovery": 42,
+        "clutch": 36,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 41,
+        "power": 35,
+        "eye": 38,
+        "discipline": 41,
+        "speed": 34,
+        "baseInstinct": 33,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 37,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "CF": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

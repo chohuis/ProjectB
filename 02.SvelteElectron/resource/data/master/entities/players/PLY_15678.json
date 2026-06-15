@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15678",
+  "name": "해리스 크리스",
+  "nameEn": "Harris Chris",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 24,
+      "primaryPosition": "C",
+      "developmentRate": 46,
+      "potentialHidden": 63,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 73,
+        "velocity": 70,
+        "command": 58,
+        "control": 64,
+        "movement": 64,
+        "mentality": 75,
+        "recovery": 66,
+        "clutch": 61,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 73,
+        "power": 60,
+        "eye": 67,
+        "discipline": 70,
+        "speed": 72,
+        "baseInstinct": 68,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 69,
+        "battingClutch": 68
+      },
+      "positionRatings": {
+        "C": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

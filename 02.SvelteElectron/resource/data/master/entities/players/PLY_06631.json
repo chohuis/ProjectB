@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06631",
+  "name": "강기완",
+  "nameEn": "Kang KiWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 16,
+      "primaryPosition": "3B",
+      "developmentRate": 63,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 61,
+        "velocity": 71,
+        "command": 54,
+        "control": 61,
+        "movement": 56,
+        "mentality": 61,
+        "recovery": 62,
+        "clutch": 54,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 53,
+        "power": 51,
+        "eye": 59,
+        "discipline": 61,
+        "speed": 56,
+        "baseInstinct": 50,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 52,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "3B": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

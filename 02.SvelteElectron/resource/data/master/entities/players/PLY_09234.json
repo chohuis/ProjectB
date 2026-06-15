@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09234",
+  "name": "오재호",
+  "nameEn": "Oh JaeHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 15,
+      "primaryPosition": "CF",
+      "developmentRate": 55,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 42,
+        "velocity": 43,
+        "command": 43,
+        "control": 46,
+        "movement": 37,
+        "mentality": 50,
+        "recovery": 36,
+        "clutch": 38,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 53,
+        "power": 45,
+        "eye": 43,
+        "discipline": 44,
+        "speed": 53,
+        "baseInstinct": 49,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 47,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "CF": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

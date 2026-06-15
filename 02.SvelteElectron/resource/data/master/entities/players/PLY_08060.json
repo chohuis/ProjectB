@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08060",
+  "name": "신혁욱",
+  "nameEn": "Shin HyeokWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 15,
+      "primaryPosition": "SS",
+      "developmentRate": 62,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 49,
+        "velocity": 55,
+        "command": 53,
+        "control": 50,
+        "movement": 45,
+        "mentality": 49,
+        "recovery": 51,
+        "clutch": 49,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 40,
+        "power": 35,
+        "eye": 41,
+        "discipline": 42,
+        "speed": 40,
+        "baseInstinct": 44,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 39,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "SS": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

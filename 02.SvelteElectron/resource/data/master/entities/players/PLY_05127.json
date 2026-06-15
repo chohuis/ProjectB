@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05127",
+  "name": "전상수",
+  "nameEn": "Jeon SangSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 76,
+      "primaryPosition": "CF",
+      "developmentRate": 54,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 44,
+        "velocity": 45,
+        "command": 37,
+        "control": 41,
+        "movement": 41,
+        "mentality": 46,
+        "recovery": 42,
+        "clutch": 34,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 47,
+        "power": 47,
+        "eye": 43,
+        "discipline": 52,
+        "speed": 45,
+        "baseInstinct": 42,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 51,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "CF": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

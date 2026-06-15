@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09618",
+  "name": "전혁욱",
+  "nameEn": "Jeon HyeokWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 8,
+      "primaryPosition": "RF",
+      "developmentRate": 55,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 38,
+        "velocity": 45,
+        "command": 41,
+        "control": 44,
+        "movement": 39,
+        "mentality": 43,
+        "recovery": 34,
+        "clutch": 41,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 44,
+        "power": 42,
+        "eye": 47,
+        "discipline": 43,
+        "speed": 52,
+        "baseInstinct": 40,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 39,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "RF": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

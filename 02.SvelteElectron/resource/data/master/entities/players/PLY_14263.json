@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14263",
+  "name": "톰슨 타일러",
+  "nameEn": "Thompson Tyler",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 37,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 56,
+      "primaryPosition": "3B",
+      "developmentRate": 67,
+      "potentialHidden": 80,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 51,
+        "velocity": 54,
+        "command": 51,
+        "control": 54,
+        "movement": 51,
+        "mentality": 52,
+        "recovery": 42,
+        "clutch": 51,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 47,
+        "power": 44,
+        "eye": 55,
+        "discipline": 53,
+        "speed": 54,
+        "baseInstinct": 47,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 46,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "3B": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

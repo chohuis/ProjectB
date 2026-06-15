@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14649",
+  "name": "무어 에릭",
+  "nameEn": "Moore Eric",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 13,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 18,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 62,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 54,
+        "velocity": 59,
+        "command": 58,
+        "control": 60,
+        "movement": 56,
+        "mentality": 59,
+        "recovery": 58,
+        "clutch": 54,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 62,
+        "power": 53,
+        "eye": 52,
+        "discipline": 57,
+        "speed": 63,
+        "baseInstinct": 64,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 64,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "SP": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

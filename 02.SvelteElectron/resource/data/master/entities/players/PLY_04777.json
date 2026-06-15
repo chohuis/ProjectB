@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04777",
+  "name": "신혁윤",
+  "nameEn": "Shin HyeokYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 42,
+      "primaryPosition": "SP",
+      "developmentRate": 46,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 53,
+        "velocity": 59,
+        "command": 55,
+        "control": 51,
+        "movement": 50,
+        "mentality": 54,
+        "recovery": 53,
+        "clutch": 54,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 44,
+        "power": 39,
+        "eye": 44,
+        "discipline": 46,
+        "speed": 46,
+        "baseInstinct": 42,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 36,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

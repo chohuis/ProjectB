@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04775",
+  "name": "임우호",
+  "nameEn": "Lim WooHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 90,
+      "primaryPosition": "CF",
+      "developmentRate": 60,
+      "potentialHidden": 50,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 43,
+        "velocity": 53,
+        "command": 45,
+        "control": 43,
+        "movement": 47,
+        "mentality": 42,
+        "recovery": 36,
+        "clutch": 42,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 49,
+        "power": 42,
+        "eye": 51,
+        "discipline": 44,
+        "speed": 53,
+        "baseInstinct": 45,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 39,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "CF": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

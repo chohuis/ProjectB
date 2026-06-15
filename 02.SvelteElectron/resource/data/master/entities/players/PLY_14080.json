@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14080",
+  "name": "해리스 재크",
+  "nameEn": "Harris Zach",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 17,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 48,
+      "primaryPosition": "CF",
+      "developmentRate": 53,
+      "potentialHidden": 56,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 48,
+        "velocity": 54,
+        "command": 42,
+        "control": 47,
+        "movement": 39,
+        "mentality": 52,
+        "recovery": 47,
+        "clutch": 35,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 47,
+        "power": 45,
+        "eye": 38,
+        "discipline": 50,
+        "speed": 47,
+        "baseInstinct": 41,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 38,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "CF": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

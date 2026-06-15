@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14545",
+  "name": "에르난데스 그랜트",
+  "nameEn": "Hernandez Grant",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 85,
+  "popularity": 16,
+  "militaryStatus": "군필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 18,
+      "primaryPosition": "2B",
+      "developmentRate": 53,
+      "potentialHidden": 71,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 67,
+        "velocity": 68,
+        "command": 60,
+        "control": 73,
+        "movement": 63,
+        "mentality": 66,
+        "recovery": 71,
+        "clutch": 64,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 66,
+        "power": 68,
+        "eye": 69,
+        "discipline": 72,
+        "speed": 69,
+        "baseInstinct": 67,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 61,
+        "battingClutch": 69
+      },
+      "positionRatings": {
+        "2B": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

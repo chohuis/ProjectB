@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10449",
+  "name": "베이커 네이선",
+  "nameEn": "Baker Nathan",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 40,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 82,
+      "primaryPosition": "3B",
+      "developmentRate": 54,
+      "potentialHidden": 83,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 80,
+        "stamina": 82,
+        "velocity": 91,
+        "command": 75,
+        "control": 73,
+        "movement": 79,
+        "mentality": 80,
+        "recovery": 70,
+        "clutch": 80,
+        "holdRunners": 79
+      },
+      "batting": {
+        "ovr": 80,
+        "contact": 84,
+        "power": 82,
+        "eye": 83,
+        "discipline": 83,
+        "speed": 82,
+        "baseInstinct": 72,
+        "bunting": 73,
+        "platoon": 50,
+        "fielding": 77,
+        "arm": 83,
+        "battingClutch": 72
+      },
+      "positionRatings": {
+        "3B": 80
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

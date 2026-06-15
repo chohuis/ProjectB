@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05961",
+  "name": "박동진",
+  "nameEn": "Park DongJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 38,
+      "primaryPosition": "SP",
+      "developmentRate": 50,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 57,
+        "velocity": 56,
+        "command": 50,
+        "control": 53,
+        "movement": 55,
+        "mentality": 53,
+        "recovery": 57,
+        "clutch": 45,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 43,
+        "power": 29,
+        "eye": 32,
+        "discipline": 35,
+        "speed": 44,
+        "baseInstinct": 40,
+        "bunting": 20,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 29,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

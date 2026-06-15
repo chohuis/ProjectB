@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12126",
+  "name": "그린 콜",
+  "nameEn": "Green Cole",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 17,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 35,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 86,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 58,
+        "velocity": 61,
+        "command": 51,
+        "control": 54,
+        "movement": 53,
+        "mentality": 56,
+        "recovery": 48,
+        "clutch": 53,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 52,
+        "power": 50,
+        "eye": 54,
+        "discipline": 45,
+        "speed": 61,
+        "baseInstinct": 55,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 50,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

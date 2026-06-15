@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03559",
+  "name": "장기현",
+  "nameEn": "Jang KiHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 78,
+      "primaryPosition": "RF",
+      "developmentRate": 62,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 59,
+        "velocity": 63,
+        "command": 61,
+        "control": 55,
+        "movement": 64,
+        "mentality": 68,
+        "recovery": 62,
+        "clutch": 57,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 46,
+        "power": 48,
+        "eye": 47,
+        "discipline": 51,
+        "speed": 51,
+        "baseInstinct": 44,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 43,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "RF": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

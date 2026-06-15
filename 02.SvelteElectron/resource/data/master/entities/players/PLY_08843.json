@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08843",
+  "name": "권민완",
+  "nameEn": "Kwon MinWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 1,
+      "primaryPosition": "RF",
+      "developmentRate": 53,
+      "potentialHidden": 45,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 54,
+        "velocity": 49,
+        "command": 40,
+        "control": 43,
+        "movement": 46,
+        "mentality": 45,
+        "recovery": 41,
+        "clutch": 48,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 31,
+        "contact": 29,
+        "power": 29,
+        "eye": 29,
+        "discipline": 31,
+        "speed": 34,
+        "baseInstinct": 29,
+        "bunting": 14,
+        "platoon": 50,
+        "fielding": 21,
+        "arm": 22,
+        "battingClutch": 21
+      },
+      "positionRatings": {
+        "RF": 31
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

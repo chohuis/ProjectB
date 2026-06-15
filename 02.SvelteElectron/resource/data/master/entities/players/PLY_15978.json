@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15978",
+  "name": "앤더슨 로건",
+  "nameEn": "Anderson Logan",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 17,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 38,
+      "primaryPosition": "2B",
+      "developmentRate": 50,
+      "potentialHidden": 52,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 58,
+        "velocity": 64,
+        "command": 56,
+        "control": 68,
+        "movement": 60,
+        "mentality": 62,
+        "recovery": 56,
+        "clutch": 66,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 66,
+        "power": 65,
+        "eye": 61,
+        "discipline": 66,
+        "speed": 65,
+        "baseInstinct": 57,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 64,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "2B": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

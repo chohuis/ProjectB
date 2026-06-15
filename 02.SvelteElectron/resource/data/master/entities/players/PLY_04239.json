@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04239",
+  "name": "안동우",
+  "nameEn": "An DongWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 6,
+      "primaryPosition": "RF",
+      "developmentRate": 55,
+      "potentialHidden": 80,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 64,
+        "velocity": 71,
+        "command": 68,
+        "control": 60,
+        "movement": 67,
+        "mentality": 63,
+        "recovery": 58,
+        "clutch": 63,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 41,
+        "power": 46,
+        "eye": 39,
+        "discipline": 44,
+        "speed": 44,
+        "baseInstinct": 39,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 39,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "RF": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

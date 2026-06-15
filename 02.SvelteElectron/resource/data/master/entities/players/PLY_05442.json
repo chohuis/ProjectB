@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05442",
+  "name": "류준환",
+  "nameEn": "Ryu JunHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 47,
+      "primaryPosition": "1B",
+      "developmentRate": 66,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 61,
+        "velocity": 65,
+        "command": 52,
+        "control": 53,
+        "movement": 58,
+        "mentality": 63,
+        "recovery": 53,
+        "clutch": 51,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 46,
+        "power": 43,
+        "eye": 36,
+        "discipline": 37,
+        "speed": 42,
+        "baseInstinct": 33,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 37,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "1B": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

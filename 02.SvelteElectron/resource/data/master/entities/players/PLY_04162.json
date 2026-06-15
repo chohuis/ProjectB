@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04162",
+  "name": "조수완",
+  "nameEn": "Jo SuWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 9,
+      "primaryPosition": "SS",
+      "developmentRate": 58,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 59,
+        "velocity": 65,
+        "command": 55,
+        "control": 59,
+        "movement": 55,
+        "mentality": 55,
+        "recovery": 49,
+        "clutch": 50,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 56,
+        "power": 62,
+        "eye": 60,
+        "discipline": 54,
+        "speed": 63,
+        "baseInstinct": 52,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 61,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "SS": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

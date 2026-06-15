@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06852",
+  "name": "정현원",
+  "nameEn": "Jung HyeonWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 27,
+      "primaryPosition": "SP",
+      "developmentRate": 56,
+      "potentialHidden": 81,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 53,
+        "velocity": 54,
+        "command": 48,
+        "control": 50,
+        "movement": 51,
+        "mentality": 54,
+        "recovery": 39,
+        "clutch": 41,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 42,
+        "power": 47,
+        "eye": 45,
+        "discipline": 47,
+        "speed": 53,
+        "baseInstinct": 43,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 41,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SP": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

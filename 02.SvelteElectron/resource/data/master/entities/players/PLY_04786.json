@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04786",
+  "name": "장세원",
+  "nameEn": "Jang SeWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 25,
+      "primaryPosition": "3B",
+      "developmentRate": 61,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 46,
+        "velocity": 51,
+        "command": 37,
+        "control": 44,
+        "movement": 44,
+        "mentality": 52,
+        "recovery": 43,
+        "clutch": 43,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 41,
+        "power": 31,
+        "eye": 29,
+        "discipline": 29,
+        "speed": 37,
+        "baseInstinct": 31,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 34,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "3B": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

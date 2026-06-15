@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09711",
+  "name": "박성욱",
+  "nameEn": "Park SeongWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 30,
+      "primaryPosition": "SS",
+      "developmentRate": 55,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 33,
+        "stamina": 37,
+        "velocity": 40,
+        "command": 30,
+        "control": 35,
+        "movement": 30,
+        "mentality": 31,
+        "recovery": 31,
+        "clutch": 28,
+        "holdRunners": 20
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 42,
+        "power": 41,
+        "eye": 45,
+        "discipline": 44,
+        "speed": 44,
+        "baseInstinct": 36,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 44,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "SS": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

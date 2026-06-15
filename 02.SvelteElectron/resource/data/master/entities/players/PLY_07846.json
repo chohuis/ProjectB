@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07846",
+  "name": "신기원",
+  "nameEn": "Shin KiWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 53,
+      "primaryPosition": "SP",
+      "developmentRate": 48,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 60,
+        "velocity": 58,
+        "command": 46,
+        "control": 59,
+        "movement": 51,
+        "mentality": 52,
+        "recovery": 50,
+        "clutch": 48,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 51,
+        "power": 40,
+        "eye": 52,
+        "discipline": 43,
+        "speed": 46,
+        "baseInstinct": 44,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 39,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SP": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

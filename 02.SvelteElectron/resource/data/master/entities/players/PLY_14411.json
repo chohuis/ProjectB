@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14411",
+  "name": "미첼 다니엘",
+  "nameEn": "Mitchell Daniel",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 47,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 60,
+      "primaryPosition": "LF",
+      "developmentRate": 43,
+      "potentialHidden": 74,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 54,
+        "velocity": 71,
+        "command": 59,
+        "control": 58,
+        "movement": 54,
+        "mentality": 55,
+        "recovery": 60,
+        "clutch": 62,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 53,
+        "power": 65,
+        "eye": 64,
+        "discipline": 60,
+        "speed": 57,
+        "baseInstinct": 56,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 54,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "LF": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

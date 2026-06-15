@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06047",
+  "name": "최수찬",
+  "nameEn": "Choi SuChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 52,
+      "primaryPosition": "1B",
+      "developmentRate": 55,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 58,
+        "velocity": 64,
+        "command": 50,
+        "control": 52,
+        "movement": 51,
+        "mentality": 64,
+        "recovery": 51,
+        "clutch": 52,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 43,
+        "power": 39,
+        "eye": 37,
+        "discipline": 36,
+        "speed": 45,
+        "baseInstinct": 41,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 37,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "1B": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

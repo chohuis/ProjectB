@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10516",
+  "name": "가르시아 에릭",
+  "nameEn": "Garcia Eric",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 84,
+  "popularity": 14,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 87,
+      "primaryPosition": "1B",
+      "developmentRate": 56,
+      "potentialHidden": 86,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 72,
+        "velocity": 68,
+        "command": 61,
+        "control": 68,
+        "movement": 66,
+        "mentality": 71,
+        "recovery": 70,
+        "clutch": 66,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 63,
+        "power": 62,
+        "eye": 71,
+        "discipline": 68,
+        "speed": 77,
+        "baseInstinct": 73,
+        "bunting": 63,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 68,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "1B": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

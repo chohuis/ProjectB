@@ -1,0 +1,73 @@
+{
+  "id": "PLY_09943",
+  "name": "베이커 제이크",
+  "nameEn": "Baker Jake",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 18,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 24,
+      "primaryPosition": "CF",
+      "developmentRate": 68,
+      "potentialHidden": 67,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 62,
+        "velocity": 72,
+        "command": 65,
+        "control": 58,
+        "movement": 68,
+        "mentality": 71,
+        "recovery": 57,
+        "clutch": 63,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 67,
+        "power": 69,
+        "eye": 62,
+        "discipline": 61,
+        "speed": 65,
+        "baseInstinct": 65,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 61,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "CF": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

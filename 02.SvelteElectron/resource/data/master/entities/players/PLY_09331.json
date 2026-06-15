@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09331",
+  "name": "송영민",
+  "nameEn": "Song YoungMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 64,
+      "primaryPosition": "3B",
+      "developmentRate": 41,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 39,
+        "velocity": 49,
+        "command": 40,
+        "control": 38,
+        "movement": 34,
+        "mentality": 43,
+        "recovery": 36,
+        "clutch": 36,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 34,
+        "contact": 38,
+        "power": 23,
+        "eye": 37,
+        "discipline": 28,
+        "speed": 32,
+        "baseInstinct": 24,
+        "bunting": 15,
+        "platoon": 50,
+        "fielding": 25,
+        "arm": 24,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "3B": 34
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

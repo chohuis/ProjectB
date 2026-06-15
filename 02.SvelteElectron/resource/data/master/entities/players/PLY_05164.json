@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05164",
+  "name": "한준우",
+  "nameEn": "Han JunWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 76,
+      "primaryPosition": "SS",
+      "developmentRate": 60,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 51,
+        "velocity": 57,
+        "command": 59,
+        "control": 57,
+        "movement": 52,
+        "mentality": 63,
+        "recovery": 53,
+        "clutch": 55,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 50,
+        "power": 48,
+        "eye": 49,
+        "discipline": 53,
+        "speed": 53,
+        "baseInstinct": 48,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 52,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "SS": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

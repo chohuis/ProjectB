@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14554",
+  "name": "테일러 크리스",
+  "nameEn": "Taylor Chris",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 41,
+  "militaryStatus": "군필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 85,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 65,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 56,
+        "velocity": 60,
+        "command": 59,
+        "control": 60,
+        "movement": 55,
+        "mentality": 57,
+        "recovery": 51,
+        "clutch": 55,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 51,
+        "power": 47,
+        "eye": 51,
+        "discipline": 59,
+        "speed": 52,
+        "baseInstinct": 55,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 57,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "SP": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

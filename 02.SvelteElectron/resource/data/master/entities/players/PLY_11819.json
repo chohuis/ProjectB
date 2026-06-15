@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11819",
+  "name": "그린 다니엘",
+  "nameEn": "Green Daniel",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 11,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 31,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 52,
+      "primaryPosition": "SP",
+      "developmentRate": 36,
+      "potentialHidden": 72,
+      "proServiceYears": 9,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 54,
+        "velocity": 62,
+        "command": 51,
+        "control": 52,
+        "movement": 61,
+        "mentality": 59,
+        "recovery": 58,
+        "clutch": 60,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 53,
+        "power": 59,
+        "eye": 59,
+        "discipline": 52,
+        "speed": 64,
+        "baseInstinct": 58,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 55,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "SP": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

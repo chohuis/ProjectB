@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04073",
+  "name": "안현수",
+  "nameEn": "An HyeonSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 84,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 63,
+        "velocity": 65,
+        "command": 59,
+        "control": 58,
+        "movement": 62,
+        "mentality": 66,
+        "recovery": 61,
+        "clutch": 57,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 57,
+        "power": 51,
+        "eye": 58,
+        "discipline": 56,
+        "speed": 56,
+        "baseInstinct": 55,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 53,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "SP": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

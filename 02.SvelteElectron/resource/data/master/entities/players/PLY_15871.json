@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15871",
+  "name": "토마스 코디",
+  "nameEn": "Thomas Cody",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 77,
+      "primaryPosition": "SP",
+      "developmentRate": 52,
+      "potentialHidden": 67,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 43,
+        "velocity": 47,
+        "command": 41,
+        "control": 46,
+        "movement": 54,
+        "mentality": 44,
+        "recovery": 52,
+        "clutch": 46,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 47,
+        "power": 46,
+        "eye": 53,
+        "discipline": 52,
+        "speed": 53,
+        "baseInstinct": 51,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 49,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "SP": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05711",
+  "name": "오우환",
+  "nameEn": "Oh WooHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 17,
+      "primaryPosition": "RF",
+      "developmentRate": 67,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 55,
+        "velocity": 62,
+        "command": 46,
+        "control": 54,
+        "movement": 49,
+        "mentality": 56,
+        "recovery": 52,
+        "clutch": 47,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 45,
+        "power": 42,
+        "eye": 42,
+        "discipline": 39,
+        "speed": 44,
+        "baseInstinct": 46,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 43,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "RF": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

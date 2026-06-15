@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15985",
+  "name": "앤더슨 미겔",
+  "nameEn": "Anderson Miguel",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 10,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 54,
+      "primaryPosition": "1B",
+      "developmentRate": 36,
+      "potentialHidden": 47,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 60,
+        "velocity": 62,
+        "command": 56,
+        "control": 56,
+        "movement": 61,
+        "mentality": 59,
+        "recovery": 63,
+        "clutch": 57,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 57,
+        "power": 58,
+        "eye": 64,
+        "discipline": 54,
+        "speed": 65,
+        "baseInstinct": 64,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 63,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "1B": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

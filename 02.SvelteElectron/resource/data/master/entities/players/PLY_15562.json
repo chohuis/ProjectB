@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15562",
+  "name": "데이비스 케빈",
+  "nameEn": "Davis Kevin",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 81,
+  "popularity": 36,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 22,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 68,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 51,
+        "velocity": 60,
+        "command": 58,
+        "control": 58,
+        "movement": 50,
+        "mentality": 60,
+        "recovery": 43,
+        "clutch": 53,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 46,
+        "power": 49,
+        "eye": 54,
+        "discipline": 51,
+        "speed": 61,
+        "baseInstinct": 49,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 55,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

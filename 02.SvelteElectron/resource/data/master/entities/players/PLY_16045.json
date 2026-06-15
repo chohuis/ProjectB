@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16045",
+  "name": "브라운 네이선",
+  "nameEn": "Brown Nathan",
+  "role": "player",
+  "age": 31,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 12,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 31,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 60,
+      "primaryPosition": "3B",
+      "developmentRate": 35,
+      "potentialHidden": 43,
+      "proServiceYears": 9,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 48,
+        "velocity": 65,
+        "command": 49,
+        "control": 57,
+        "movement": 52,
+        "mentality": 59,
+        "recovery": 44,
+        "clutch": 47,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 54,
+        "power": 55,
+        "eye": 55,
+        "discipline": 51,
+        "speed": 57,
+        "baseInstinct": 45,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 45,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "3B": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

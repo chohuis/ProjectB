@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15647",
+  "name": "톰슨 콜",
+  "nameEn": "Thompson Cole",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 30,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 95,
+      "primaryPosition": "2B",
+      "developmentRate": 46,
+      "potentialHidden": 62,
+      "proServiceYears": 8,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 62,
+        "velocity": 73,
+        "command": 57,
+        "control": 61,
+        "movement": 64,
+        "mentality": 58,
+        "recovery": 55,
+        "clutch": 58,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 60,
+        "power": 56,
+        "eye": 64,
+        "discipline": 57,
+        "speed": 64,
+        "baseInstinct": 64,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 63,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "2B": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

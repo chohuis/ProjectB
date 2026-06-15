@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03244",
+  "name": "한재현",
+  "nameEn": "Han JaeHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 22,
+      "primaryPosition": "1B",
+      "developmentRate": 72,
+      "potentialHidden": 85,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 57,
+        "velocity": 64,
+        "command": 50,
+        "control": 59,
+        "movement": 60,
+        "mentality": 53,
+        "recovery": 52,
+        "clutch": 53,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 61,
+        "power": 63,
+        "eye": 64,
+        "discipline": 66,
+        "speed": 61,
+        "baseInstinct": 55,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 59,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "1B": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04700",
+  "name": "임재기",
+  "nameEn": "Lim JaeKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 2,
+      "primaryPosition": "2B",
+      "developmentRate": 53,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 40,
+        "velocity": 53,
+        "command": 35,
+        "control": 43,
+        "movement": 42,
+        "mentality": 45,
+        "recovery": 44,
+        "clutch": 34,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 31,
+        "power": 30,
+        "eye": 37,
+        "discipline": 31,
+        "speed": 41,
+        "baseInstinct": 37,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 29,
+        "arm": 29,
+        "battingClutch": 26
+      },
+      "positionRatings": {
+        "2B": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

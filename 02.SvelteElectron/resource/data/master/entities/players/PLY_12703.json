@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12703",
+  "name": "로빈슨 카일",
+  "nameEn": "Robinson Kyle",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 31,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 3,
+      "primaryPosition": "3B",
+      "developmentRate": 69,
+      "potentialHidden": 87,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 68,
+        "velocity": 67,
+        "command": 63,
+        "control": 73,
+        "movement": 64,
+        "mentality": 65,
+        "recovery": 62,
+        "clutch": 60,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 63,
+        "power": 60,
+        "eye": 69,
+        "discipline": 61,
+        "speed": 73,
+        "baseInstinct": 62,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 67,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "3B": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

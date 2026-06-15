@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03592",
+  "name": "안현재",
+  "nameEn": "An HyeonJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 94,
+      "primaryPosition": "CF",
+      "developmentRate": 71,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 62,
+        "velocity": 67,
+        "command": 58,
+        "control": 60,
+        "movement": 54,
+        "mentality": 63,
+        "recovery": 47,
+        "clutch": 49,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 49,
+        "power": 50,
+        "eye": 48,
+        "discipline": 55,
+        "speed": 52,
+        "baseInstinct": 53,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 47,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "CF": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

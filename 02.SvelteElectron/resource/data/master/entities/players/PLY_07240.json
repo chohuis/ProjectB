@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07240",
+  "name": "최진현",
+  "nameEn": "Choi JinHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 85,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 45,
+        "velocity": 47,
+        "command": 37,
+        "control": 47,
+        "movement": 38,
+        "mentality": 52,
+        "recovery": 34,
+        "clutch": 42,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 52,
+        "power": 55,
+        "eye": 48,
+        "discipline": 46,
+        "speed": 54,
+        "baseInstinct": 48,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 51,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SP": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

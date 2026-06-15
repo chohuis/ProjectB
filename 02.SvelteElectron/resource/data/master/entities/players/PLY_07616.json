@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07616",
+  "name": "송세재",
+  "nameEn": "Song SeJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 5,
+      "primaryPosition": "RF",
+      "developmentRate": 63,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 63,
+        "velocity": 63,
+        "command": 57,
+        "control": 55,
+        "movement": 51,
+        "mentality": 61,
+        "recovery": 48,
+        "clutch": 51,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 54,
+        "power": 56,
+        "eye": 53,
+        "discipline": 59,
+        "speed": 59,
+        "baseInstinct": 52,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 57,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "RF": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10965",
+  "name": "라이트 데릭",
+  "nameEn": "Wright Derek",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 47,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 82,
+      "primaryPosition": "1B",
+      "developmentRate": 79,
+      "potentialHidden": 93,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 68,
+        "velocity": 68,
+        "command": 55,
+        "control": 62,
+        "movement": 62,
+        "mentality": 68,
+        "recovery": 65,
+        "clutch": 65,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 59,
+        "power": 65,
+        "eye": 60,
+        "discipline": 61,
+        "speed": 59,
+        "baseInstinct": 60,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 56,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "1B": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

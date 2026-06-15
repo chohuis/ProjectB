@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05632",
+  "name": "안수현",
+  "nameEn": "An SuHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 66,
+      "primaryPosition": "SP",
+      "developmentRate": 60,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 49,
+        "velocity": 52,
+        "command": 43,
+        "control": 49,
+        "movement": 45,
+        "mentality": 48,
+        "recovery": 48,
+        "clutch": 40,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 57,
+        "power": 49,
+        "eye": 53,
+        "discipline": 56,
+        "speed": 62,
+        "baseInstinct": 55,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 49,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SP": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

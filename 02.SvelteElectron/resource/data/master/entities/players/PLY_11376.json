@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11376",
+  "name": "애덤스 루이스",
+  "nameEn": "Adams Luis",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 25,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 7,
+      "primaryPosition": "C",
+      "developmentRate": 64,
+      "potentialHidden": 76,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 49,
+        "velocity": 53,
+        "command": 51,
+        "control": 53,
+        "movement": 53,
+        "mentality": 43,
+        "recovery": 43,
+        "clutch": 45,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 53,
+        "power": 47,
+        "eye": 54,
+        "discipline": 49,
+        "speed": 50,
+        "baseInstinct": 46,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 42,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "C": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03858",
+  "name": "권준진",
+  "nameEn": "Kwon JunJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 10,
+      "primaryPosition": "1B",
+      "developmentRate": 53,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 64,
+        "velocity": 67,
+        "command": 65,
+        "control": 64,
+        "movement": 63,
+        "mentality": 63,
+        "recovery": 58,
+        "clutch": 58,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 43,
+        "power": 39,
+        "eye": 46,
+        "discipline": 43,
+        "speed": 45,
+        "baseInstinct": 42,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 47,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "1B": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

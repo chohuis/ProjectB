@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08953",
+  "name": "전도성",
+  "nameEn": "Jeon DoSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 21,
+      "primaryPosition": "3B",
+      "developmentRate": 48,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 48,
+        "velocity": 54,
+        "command": 46,
+        "control": 53,
+        "movement": 43,
+        "mentality": 49,
+        "recovery": 47,
+        "clutch": 43,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 42,
+        "power": 38,
+        "eye": 36,
+        "discipline": 32,
+        "speed": 37,
+        "baseInstinct": 40,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 30,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "3B": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

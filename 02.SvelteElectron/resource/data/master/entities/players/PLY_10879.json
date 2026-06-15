@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10879",
+  "name": "데이비스 다니엘",
+  "nameEn": "Davis Daniel",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 81,
+  "popularity": 15,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 15,
+      "primaryPosition": "SP",
+      "developmentRate": 71,
+      "potentialHidden": 88,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 51,
+        "velocity": 65,
+        "command": 61,
+        "control": 63,
+        "movement": 60,
+        "mentality": 53,
+        "recovery": 49,
+        "clutch": 54,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 61,
+        "power": 63,
+        "eye": 63,
+        "discipline": 53,
+        "speed": 54,
+        "baseInstinct": 52,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 59,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "SP": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05573",
+  "name": "전기빈",
+  "nameEn": "Jeon KiBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 79,
+      "primaryPosition": "C",
+      "developmentRate": 55,
+      "potentialHidden": 80,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 45,
+        "velocity": 56,
+        "command": 43,
+        "control": 44,
+        "movement": 45,
+        "mentality": 45,
+        "recovery": 42,
+        "clutch": 38,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 57,
+        "power": 55,
+        "eye": 52,
+        "discipline": 54,
+        "speed": 63,
+        "baseInstinct": 60,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 59,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "C": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

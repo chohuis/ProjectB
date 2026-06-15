@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03340",
+  "name": "신영민",
+  "nameEn": "Shin YoungMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 1,
+      "primaryPosition": "3B",
+      "developmentRate": 61,
+      "potentialHidden": 92,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 66,
+        "velocity": 69,
+        "command": 65,
+        "control": 64,
+        "movement": 59,
+        "mentality": 66,
+        "recovery": 63,
+        "clutch": 52,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 71,
+        "power": 67,
+        "eye": 67,
+        "discipline": 70,
+        "speed": 64,
+        "baseInstinct": 69,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 70,
+        "battingClutch": 68
+      },
+      "positionRatings": {
+        "3B": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

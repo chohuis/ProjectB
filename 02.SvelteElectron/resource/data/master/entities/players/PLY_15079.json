@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15079",
+  "name": "로드리게스 코디",
+  "nameEn": "Rodriguez Cody",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 26,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 7,
+      "primaryPosition": "1B",
+      "developmentRate": 53,
+      "potentialHidden": 58,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 64,
+        "velocity": 81,
+        "command": 66,
+        "control": 75,
+        "movement": 62,
+        "mentality": 72,
+        "recovery": 64,
+        "clutch": 64,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 75,
+        "power": 65,
+        "eye": 62,
+        "discipline": 64,
+        "speed": 66,
+        "baseInstinct": 68,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 66,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "1B": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04946",
+  "name": "박세성",
+  "nameEn": "Park SeSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 22,
+      "primaryPosition": "SP",
+      "developmentRate": 46,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 47,
+        "velocity": 54,
+        "command": 44,
+        "control": 45,
+        "movement": 54,
+        "mentality": 54,
+        "recovery": 51,
+        "clutch": 48,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 50,
+        "power": 48,
+        "eye": 53,
+        "discipline": 45,
+        "speed": 46,
+        "baseInstinct": 44,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 41,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SP": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

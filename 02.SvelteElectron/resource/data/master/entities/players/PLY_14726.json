@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14726",
+  "name": "스미스 콜",
+  "nameEn": "Smith Cole",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 48,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 86,
+      "primaryPosition": "SP",
+      "developmentRate": 54,
+      "potentialHidden": 61,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 63,
+        "velocity": 67,
+        "command": 62,
+        "control": 57,
+        "movement": 68,
+        "mentality": 70,
+        "recovery": 65,
+        "clutch": 65,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 70,
+        "power": 59,
+        "eye": 59,
+        "discipline": 56,
+        "speed": 61,
+        "baseInstinct": 63,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 61,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "SP": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

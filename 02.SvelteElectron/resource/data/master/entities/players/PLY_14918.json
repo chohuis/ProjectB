@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14918",
+  "name": "미첼 브랜던",
+  "nameEn": "Mitchell Brandon",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 19,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 58,
+      "primaryPosition": "SP",
+      "developmentRate": 67,
+      "potentialHidden": 85,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 50,
+        "velocity": 52,
+        "command": 47,
+        "control": 57,
+        "movement": 55,
+        "mentality": 60,
+        "recovery": 47,
+        "clutch": 53,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 51,
+        "power": 46,
+        "eye": 45,
+        "discipline": 53,
+        "speed": 54,
+        "baseInstinct": 49,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 47,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "SP": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

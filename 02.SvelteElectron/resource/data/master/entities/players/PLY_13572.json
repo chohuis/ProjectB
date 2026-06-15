@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13572",
+  "name": "애덤스 다니엘",
+  "nameEn": "Adams Daniel",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 17,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 38,
+      "primaryPosition": "C",
+      "developmentRate": 59,
+      "potentialHidden": 71,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 66,
+        "velocity": 75,
+        "command": 69,
+        "control": 66,
+        "movement": 70,
+        "mentality": 74,
+        "recovery": 69,
+        "clutch": 58,
+        "holdRunners": 68
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 62,
+        "power": 70,
+        "eye": 63,
+        "discipline": 62,
+        "speed": 68,
+        "baseInstinct": 62,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 63,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "C": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09538",
+  "name": "박찬우",
+  "nameEn": "Park ChanWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 68,
+      "primaryPosition": "1B",
+      "developmentRate": 55,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 44,
+        "velocity": 57,
+        "command": 41,
+        "control": 42,
+        "movement": 48,
+        "mentality": 55,
+        "recovery": 40,
+        "clutch": 47,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 32,
+        "contact": 28,
+        "power": 32,
+        "eye": 25,
+        "discipline": 30,
+        "speed": 38,
+        "baseInstinct": 27,
+        "bunting": 19,
+        "platoon": 50,
+        "fielding": 26,
+        "arm": 33,
+        "battingClutch": 19
+      },
+      "positionRatings": {
+        "1B": 32
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

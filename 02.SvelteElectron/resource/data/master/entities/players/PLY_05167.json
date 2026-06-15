@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05167",
+  "name": "신현우",
+  "nameEn": "Shin HyeonWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 92,
+      "primaryPosition": "1B",
+      "developmentRate": 46,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 47,
+        "velocity": 54,
+        "command": 51,
+        "control": 44,
+        "movement": 46,
+        "mentality": 52,
+        "recovery": 47,
+        "clutch": 49,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 45,
+        "power": 47,
+        "eye": 45,
+        "discipline": 46,
+        "speed": 52,
+        "baseInstinct": 37,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 41,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "1B": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14376",
+  "name": "킹 헌터",
+  "nameEn": "King Hunter",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 83,
+  "popularity": 13,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 19,
+      "primaryPosition": "C",
+      "developmentRate": 60,
+      "potentialHidden": 84,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 61,
+        "velocity": 69,
+        "command": 62,
+        "control": 59,
+        "movement": 59,
+        "mentality": 67,
+        "recovery": 53,
+        "clutch": 60,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 56,
+        "power": 54,
+        "eye": 67,
+        "discipline": 57,
+        "speed": 68,
+        "baseInstinct": 58,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 53,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "C": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

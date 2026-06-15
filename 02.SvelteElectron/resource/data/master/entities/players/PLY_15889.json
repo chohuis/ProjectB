@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15889",
+  "name": "루이스 다니엘",
+  "nameEn": "Lewis Daniel",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 36,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 60,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 89,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 62,
+        "velocity": 70,
+        "command": 62,
+        "control": 57,
+        "movement": 60,
+        "mentality": 54,
+        "recovery": 55,
+        "clutch": 58,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 63,
+        "power": 61,
+        "eye": 64,
+        "discipline": 63,
+        "speed": 58,
+        "baseInstinct": 53,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 59,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "SP": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

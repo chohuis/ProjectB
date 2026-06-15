@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03055",
+  "name": "신동성",
+  "nameEn": "Shin DongSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 67,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 97,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 69,
+        "velocity": 74,
+        "command": 55,
+        "control": 63,
+        "movement": 56,
+        "mentality": 61,
+        "recovery": 61,
+        "clutch": 57,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 66,
+        "power": 65,
+        "eye": 68,
+        "discipline": 60,
+        "speed": 71,
+        "baseInstinct": 60,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 64,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "SP": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

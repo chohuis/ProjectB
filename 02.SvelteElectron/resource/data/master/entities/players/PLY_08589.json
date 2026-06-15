@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08589",
+  "name": "최기혁",
+  "nameEn": "Choi KiHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 16,
+      "primaryPosition": "SS",
+      "developmentRate": 53,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 43,
+        "velocity": 50,
+        "command": 46,
+        "control": 42,
+        "movement": 50,
+        "mentality": 49,
+        "recovery": 39,
+        "clutch": 45,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 33,
+        "contact": 30,
+        "power": 24,
+        "eye": 25,
+        "discipline": 30,
+        "speed": 27,
+        "baseInstinct": 25,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 26,
+        "arm": 27,
+        "battingClutch": 23
+      },
+      "positionRatings": {
+        "SS": 33
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

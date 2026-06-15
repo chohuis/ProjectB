@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04645",
+  "name": "류우준",
+  "nameEn": "Ryu WooJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 73,
+      "primaryPosition": "C",
+      "developmentRate": 52,
+      "potentialHidden": 51,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 44,
+        "velocity": 50,
+        "command": 39,
+        "control": 45,
+        "movement": 43,
+        "mentality": 44,
+        "recovery": 43,
+        "clutch": 35,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 43,
+        "power": 39,
+        "eye": 46,
+        "discipline": 46,
+        "speed": 46,
+        "baseInstinct": 46,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 35,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "C": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

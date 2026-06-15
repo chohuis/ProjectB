@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13219",
+  "name": "존스 조던",
+  "nameEn": "Jones Jordan",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 28,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 71,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 76,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 65,
+        "velocity": 73,
+        "command": 74,
+        "control": 72,
+        "movement": 65,
+        "mentality": 74,
+        "recovery": 72,
+        "clutch": 63,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 66,
+        "power": 70,
+        "eye": 68,
+        "discipline": 65,
+        "speed": 71,
+        "baseInstinct": 70,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 72,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "SP": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

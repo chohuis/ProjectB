@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09326",
+  "name": "신진민",
+  "nameEn": "Shin JinMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 41,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 44,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 48,
+        "velocity": 46,
+        "command": 41,
+        "control": 44,
+        "movement": 37,
+        "mentality": 44,
+        "recovery": 38,
+        "clutch": 37,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 43,
+        "power": 42,
+        "eye": 48,
+        "discipline": 37,
+        "speed": 41,
+        "baseInstinct": 45,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 44,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "SP": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

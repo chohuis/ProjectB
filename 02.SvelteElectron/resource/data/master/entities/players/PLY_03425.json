@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03425",
+  "name": "강찬호",
+  "nameEn": "Kang ChanHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 57,
+      "primaryPosition": "RF",
+      "developmentRate": 64,
+      "potentialHidden": 90,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 62,
+        "velocity": 62,
+        "command": 60,
+        "control": 54,
+        "movement": 59,
+        "mentality": 56,
+        "recovery": 56,
+        "clutch": 60,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 51,
+        "power": 47,
+        "eye": 52,
+        "discipline": 50,
+        "speed": 56,
+        "baseInstinct": 57,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 51,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "RF": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

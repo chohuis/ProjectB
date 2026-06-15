@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03660",
+  "name": "오현식",
+  "nameEn": "Oh HyeonSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 34,
+      "primaryPosition": "CF",
+      "developmentRate": 61,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 63,
+        "velocity": 70,
+        "command": 57,
+        "control": 60,
+        "movement": 57,
+        "mentality": 61,
+        "recovery": 55,
+        "clutch": 56,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 56,
+        "power": 56,
+        "eye": 57,
+        "discipline": 51,
+        "speed": 55,
+        "baseInstinct": 48,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 54,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "CF": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

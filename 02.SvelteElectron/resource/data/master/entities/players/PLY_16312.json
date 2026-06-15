@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16312",
+  "name": "앤더슨 제이크",
+  "nameEn": "Anderson Jake",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 25,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 51,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 56,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 52,
+        "velocity": 69,
+        "command": 51,
+        "control": 61,
+        "movement": 49,
+        "mentality": 53,
+        "recovery": 52,
+        "clutch": 48,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 51,
+        "power": 58,
+        "eye": 54,
+        "discipline": 61,
+        "speed": 59,
+        "baseInstinct": 59,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 55,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "SP": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

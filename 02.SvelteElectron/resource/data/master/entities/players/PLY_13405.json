@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13405",
+  "name": "에르난데스 라이언",
+  "nameEn": "Hernandez Ryan",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 25,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 73,
+      "primaryPosition": "SP",
+      "developmentRate": 61,
+      "potentialHidden": 64,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 76,
+        "velocity": 82,
+        "command": 77,
+        "control": 74,
+        "movement": 77,
+        "mentality": 81,
+        "recovery": 74,
+        "clutch": 67,
+        "holdRunners": 72
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 72,
+        "power": 74,
+        "eye": 79,
+        "discipline": 79,
+        "speed": 78,
+        "baseInstinct": 68,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 78,
+        "arm": 77,
+        "battingClutch": 76
+      },
+      "positionRatings": {
+        "SP": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

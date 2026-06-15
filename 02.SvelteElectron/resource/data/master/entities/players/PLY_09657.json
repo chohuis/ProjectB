@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09657",
+  "name": "신준진",
+  "nameEn": "Shin JunJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 14,
+      "primaryPosition": "3B",
+      "developmentRate": 44,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 34,
+        "stamina": 29,
+        "velocity": 38,
+        "command": 26,
+        "control": 36,
+        "movement": 26,
+        "mentality": 32,
+        "recovery": 24,
+        "clutch": 28,
+        "holdRunners": 23
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 35,
+        "power": 29,
+        "eye": 38,
+        "discipline": 28,
+        "speed": 35,
+        "baseInstinct": 36,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 31,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "3B": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

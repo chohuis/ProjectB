@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16553",
+  "name": "가르시아 루이스",
+  "nameEn": "Garcia Luis",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 30,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 55,
+      "primaryPosition": "2B",
+      "developmentRate": 48,
+      "potentialHidden": 56,
+      "proServiceYears": 8,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 64,
+        "velocity": 77,
+        "command": 59,
+        "control": 69,
+        "movement": 73,
+        "mentality": 73,
+        "recovery": 66,
+        "clutch": 57,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 68,
+        "power": 62,
+        "eye": 61,
+        "discipline": 70,
+        "speed": 75,
+        "baseInstinct": 69,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 67,
+        "battingClutch": 67
+      },
+      "positionRatings": {
+        "2B": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09301",
+  "name": "임민혁",
+  "nameEn": "Lim MinHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 11,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 48,
+        "velocity": 56,
+        "command": 44,
+        "control": 45,
+        "movement": 42,
+        "mentality": 46,
+        "recovery": 38,
+        "clutch": 39,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 44,
+        "power": 49,
+        "eye": 42,
+        "discipline": 42,
+        "speed": 49,
+        "baseInstinct": 49,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 42,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "SP": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

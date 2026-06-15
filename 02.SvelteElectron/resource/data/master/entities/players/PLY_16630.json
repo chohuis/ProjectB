@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16630",
+  "name": "스콧 블레이크",
+  "nameEn": "Scott Blake",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 27,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 95,
+      "primaryPosition": "RF",
+      "developmentRate": 42,
+      "potentialHidden": 84,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 63,
+        "velocity": 71,
+        "command": 63,
+        "control": 66,
+        "movement": 62,
+        "mentality": 67,
+        "recovery": 60,
+        "clutch": 53,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 56,
+        "power": 66,
+        "eye": 59,
+        "discipline": 67,
+        "speed": 63,
+        "baseInstinct": 55,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 58,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "RF": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

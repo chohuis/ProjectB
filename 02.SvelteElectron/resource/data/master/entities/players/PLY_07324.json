@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07324",
+  "name": "류태기",
+  "nameEn": "Ryu TaeKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 28,
+      "primaryPosition": "3B",
+      "developmentRate": 55,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 57,
+        "velocity": 59,
+        "command": 50,
+        "control": 55,
+        "movement": 51,
+        "mentality": 59,
+        "recovery": 54,
+        "clutch": 48,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 47,
+        "power": 46,
+        "eye": 45,
+        "discipline": 40,
+        "speed": 49,
+        "baseInstinct": 46,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 40,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "3B": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

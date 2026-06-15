@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04594",
+  "name": "서도욱",
+  "nameEn": "Seo DoWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 1,
+      "primaryPosition": "2B",
+      "developmentRate": 51,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 60,
+        "velocity": 64,
+        "command": 59,
+        "control": 61,
+        "movement": 55,
+        "mentality": 62,
+        "recovery": 50,
+        "clutch": 51,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 46,
+        "power": 40,
+        "eye": 44,
+        "discipline": 47,
+        "speed": 57,
+        "baseInstinct": 44,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 51,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "2B": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

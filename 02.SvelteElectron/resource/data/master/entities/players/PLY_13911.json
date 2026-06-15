@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13911",
+  "name": "베이커 숀",
+  "nameEn": "Baker Sean",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 35,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 26,
+      "primaryPosition": "SP",
+      "developmentRate": 66,
+      "potentialHidden": 72,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 69,
+        "velocity": 86,
+        "command": 73,
+        "control": 80,
+        "movement": 75,
+        "mentality": 85,
+        "recovery": 76,
+        "clutch": 74,
+        "holdRunners": 72
+      },
+      "batting": {
+        "ovr": 78,
+        "contact": 75,
+        "power": 68,
+        "eye": 82,
+        "discipline": 77,
+        "speed": 77,
+        "baseInstinct": 81,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 80,
+        "arm": 80,
+        "battingClutch": 71
+      },
+      "positionRatings": {
+        "SP": 78
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09361",
+  "name": "최성기",
+  "nameEn": "Choi SeongKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 68,
+      "primaryPosition": "SS",
+      "developmentRate": 41,
+      "potentialHidden": 38,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 41,
+        "velocity": 48,
+        "command": 33,
+        "control": 43,
+        "movement": 40,
+        "mentality": 40,
+        "recovery": 31,
+        "clutch": 36,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 39,
+        "power": 34,
+        "eye": 30,
+        "discipline": 36,
+        "speed": 41,
+        "baseInstinct": 38,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 35,
+        "battingClutch": 28
+      },
+      "positionRatings": {
+        "SS": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15452",
+  "name": "그린 코너",
+  "nameEn": "Green Connor",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 82,
+  "popularity": 19,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 4,
+      "primaryPosition": "C",
+      "developmentRate": 44,
+      "potentialHidden": 69,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 74,
+        "velocity": 80,
+        "command": 67,
+        "control": 64,
+        "movement": 70,
+        "mentality": 67,
+        "recovery": 64,
+        "clutch": 57,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 73,
+        "power": 63,
+        "eye": 66,
+        "discipline": 72,
+        "speed": 75,
+        "baseInstinct": 67,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 72,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "C": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

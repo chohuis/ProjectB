@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05489",
+  "name": "서지수",
+  "nameEn": "Seo JiSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 5,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 36,
+      "primaryPosition": "3B",
+      "developmentRate": 67,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 48,
+        "velocity": 52,
+        "command": 49,
+        "control": 44,
+        "movement": 42,
+        "mentality": 49,
+        "recovery": 40,
+        "clutch": 40,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 49,
+        "power": 46,
+        "eye": 58,
+        "discipline": 58,
+        "speed": 52,
+        "baseInstinct": 52,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 56,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "3B": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

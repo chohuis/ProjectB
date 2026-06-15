@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04421",
+  "name": "안도식",
+  "nameEn": "An DoSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 5,
+      "primaryPosition": "SS",
+      "developmentRate": 52,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 51,
+        "velocity": 61,
+        "command": 48,
+        "control": 46,
+        "movement": 48,
+        "mentality": 47,
+        "recovery": 48,
+        "clutch": 49,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 61,
+        "power": 54,
+        "eye": 57,
+        "discipline": 52,
+        "speed": 60,
+        "baseInstinct": 60,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 56,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "SS": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

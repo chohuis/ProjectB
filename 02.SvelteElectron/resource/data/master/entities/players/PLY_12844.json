@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12844",
+  "name": "스미스 코디",
+  "nameEn": "Smith Cody",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 31,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 98,
+      "primaryPosition": "SP",
+      "developmentRate": 60,
+      "potentialHidden": 86,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 67,
+        "velocity": 75,
+        "command": 68,
+        "control": 77,
+        "movement": 75,
+        "mentality": 70,
+        "recovery": 74,
+        "clutch": 71,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 64,
+        "power": 62,
+        "eye": 65,
+        "discipline": 64,
+        "speed": 66,
+        "baseInstinct": 69,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 71,
+        "battingClutch": 69
+      },
+      "positionRatings": {
+        "SP": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

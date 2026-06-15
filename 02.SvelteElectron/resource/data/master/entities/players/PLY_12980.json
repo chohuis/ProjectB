@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12980",
+  "name": "해리스 미겔",
+  "nameEn": "Harris Miguel",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 19,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 6,
+      "primaryPosition": "SS",
+      "developmentRate": 76,
+      "potentialHidden": 61,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 60,
+        "velocity": 62,
+        "command": 61,
+        "control": 51,
+        "movement": 60,
+        "mentality": 55,
+        "recovery": 56,
+        "clutch": 50,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 56,
+        "power": 53,
+        "eye": 54,
+        "discipline": 61,
+        "speed": 54,
+        "baseInstinct": 59,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 55,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "SS": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

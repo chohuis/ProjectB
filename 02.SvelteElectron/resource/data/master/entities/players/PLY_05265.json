@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05265",
+  "name": "최동기",
+  "nameEn": "Choi DongKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 62,
+      "primaryPosition": "SP",
+      "developmentRate": 57,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 55,
+        "velocity": 62,
+        "command": 42,
+        "control": 52,
+        "movement": 46,
+        "mentality": 51,
+        "recovery": 49,
+        "clutch": 44,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 45,
+        "power": 45,
+        "eye": 47,
+        "discipline": 41,
+        "speed": 50,
+        "baseInstinct": 38,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 43,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

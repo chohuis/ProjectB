@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03072",
+  "name": "최수빈",
+  "nameEn": "Choi SuBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 66,
+      "primaryPosition": "SP",
+      "developmentRate": 64,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 66,
+        "velocity": 80,
+        "command": 69,
+        "control": 66,
+        "movement": 71,
+        "mentality": 70,
+        "recovery": 66,
+        "clutch": 57,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 56,
+        "power": 53,
+        "eye": 54,
+        "discipline": 50,
+        "speed": 63,
+        "baseInstinct": 50,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 51,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "SP": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

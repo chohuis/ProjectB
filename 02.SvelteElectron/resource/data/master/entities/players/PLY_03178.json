@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03178",
+  "name": "조찬윤",
+  "nameEn": "Jo ChanYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 49,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 88,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 63,
+        "velocity": 58,
+        "command": 59,
+        "control": 53,
+        "movement": 61,
+        "mentality": 61,
+        "recovery": 51,
+        "clutch": 58,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 52,
+        "power": 54,
+        "eye": 51,
+        "discipline": 50,
+        "speed": 52,
+        "baseInstinct": 56,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 46,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SP": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

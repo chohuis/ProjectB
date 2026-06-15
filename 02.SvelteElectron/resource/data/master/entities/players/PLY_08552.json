@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08552",
+  "name": "윤세욱",
+  "nameEn": "Yoon SeWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 38,
+      "primaryPosition": "SP",
+      "developmentRate": 54,
+      "potentialHidden": 64,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 38,
+        "velocity": 45,
+        "command": 34,
+        "control": 35,
+        "movement": 42,
+        "mentality": 45,
+        "recovery": 32,
+        "clutch": 34,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 31,
+        "power": 27,
+        "eye": 34,
+        "discipline": 36,
+        "speed": 31,
+        "baseInstinct": 30,
+        "bunting": 17,
+        "platoon": 50,
+        "fielding": 35,
+        "arm": 37,
+        "battingClutch": 23
+      },
+      "positionRatings": {
+        "SP": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

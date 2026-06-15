@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11168",
+  "name": "영 트레버",
+  "nameEn": "Young Trevor",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 39,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 51,
+      "primaryPosition": "SS",
+      "developmentRate": 65,
+      "potentialHidden": 86,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 45,
+        "velocity": 63,
+        "command": 50,
+        "control": 50,
+        "movement": 53,
+        "mentality": 49,
+        "recovery": 42,
+        "clutch": 40,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 46,
+        "power": 48,
+        "eye": 51,
+        "discipline": 54,
+        "speed": 56,
+        "baseInstinct": 55,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 55,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SS": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

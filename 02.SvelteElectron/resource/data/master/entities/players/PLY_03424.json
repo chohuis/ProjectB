@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03424",
+  "name": "최태수",
+  "nameEn": "Choi TaeSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 81,
+      "primaryPosition": "1B",
+      "developmentRate": 73,
+      "potentialHidden": 96,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 59,
+        "velocity": 59,
+        "command": 52,
+        "control": 60,
+        "movement": 60,
+        "mentality": 55,
+        "recovery": 56,
+        "clutch": 54,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 64,
+        "power": 67,
+        "eye": 71,
+        "discipline": 69,
+        "speed": 74,
+        "baseInstinct": 60,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 65,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "1B": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

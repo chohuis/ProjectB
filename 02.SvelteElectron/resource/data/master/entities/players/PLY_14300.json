@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14300",
+  "name": "애덤스 그랜트",
+  "nameEn": "Adams Grant",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 19,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 77,
+      "primaryPosition": "C",
+      "developmentRate": 64,
+      "potentialHidden": 77,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 50,
+        "velocity": 63,
+        "command": 55,
+        "control": 45,
+        "movement": 50,
+        "mentality": 51,
+        "recovery": 43,
+        "clutch": 41,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 55,
+        "power": 50,
+        "eye": 50,
+        "discipline": 53,
+        "speed": 54,
+        "baseInstinct": 42,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 47,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "C": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

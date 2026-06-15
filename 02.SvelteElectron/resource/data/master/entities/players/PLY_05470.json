@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05470",
+  "name": "전도찬",
+  "nameEn": "Jeon DoChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 79,
+      "primaryPosition": "RF",
+      "developmentRate": 66,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 62,
+        "velocity": 69,
+        "command": 63,
+        "control": 63,
+        "movement": 65,
+        "mentality": 66,
+        "recovery": 54,
+        "clutch": 62,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 56,
+        "power": 46,
+        "eye": 49,
+        "discipline": 55,
+        "speed": 51,
+        "baseInstinct": 50,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 53,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "RF": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

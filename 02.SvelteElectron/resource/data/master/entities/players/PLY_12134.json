@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12134",
+  "name": "앤더슨 알렉스",
+  "nameEn": "Anderson Alex",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 84,
+      "primaryPosition": "1B",
+      "developmentRate": 62,
+      "potentialHidden": 57,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 71,
+        "velocity": 75,
+        "command": 66,
+        "control": 62,
+        "movement": 65,
+        "mentality": 68,
+        "recovery": 70,
+        "clutch": 62,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 65,
+        "power": 66,
+        "eye": 64,
+        "discipline": 66,
+        "speed": 76,
+        "baseInstinct": 66,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 61,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "1B": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

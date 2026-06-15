@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05601",
+  "name": "강도수",
+  "nameEn": "Kang DoSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 8,
+      "primaryPosition": "SS",
+      "developmentRate": 60,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 46,
+        "velocity": 51,
+        "command": 38,
+        "control": 42,
+        "movement": 38,
+        "mentality": 49,
+        "recovery": 43,
+        "clutch": 43,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 49,
+        "power": 43,
+        "eye": 51,
+        "discipline": 46,
+        "speed": 45,
+        "baseInstinct": 38,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 46,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "SS": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

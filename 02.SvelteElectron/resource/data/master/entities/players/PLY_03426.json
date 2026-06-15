@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03426",
+  "name": "이준기",
+  "nameEn": "Lee JunKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 56,
+      "primaryPosition": "2B",
+      "developmentRate": 66,
+      "potentialHidden": 92,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 65,
+        "velocity": 72,
+        "command": 67,
+        "control": 68,
+        "movement": 65,
+        "mentality": 76,
+        "recovery": 62,
+        "clutch": 62,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 59,
+        "power": 56,
+        "eye": 60,
+        "discipline": 59,
+        "speed": 68,
+        "baseInstinct": 63,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 59,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "2B": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

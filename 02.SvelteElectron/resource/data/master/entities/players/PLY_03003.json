@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03003",
+  "name": "오혁수",
+  "nameEn": "Oh HyeokSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 47,
+      "primaryPosition": "2B",
+      "developmentRate": 64,
+      "potentialHidden": 94,
+      "pitching": {
+        "ovr": 76,
+        "stamina": 78,
+        "velocity": 79,
+        "command": 70,
+        "control": 77,
+        "movement": 73,
+        "mentality": 75,
+        "recovery": 71,
+        "clutch": 68,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 71,
+        "power": 67,
+        "eye": 64,
+        "discipline": 62,
+        "speed": 73,
+        "baseInstinct": 64,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 71,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "2B": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

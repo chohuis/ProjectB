@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13755",
+  "name": "존슨 트레버",
+  "nameEn": "Johnson Trevor",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 15,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 45,
+      "primaryPosition": "LF",
+      "developmentRate": 74,
+      "potentialHidden": 78,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 55,
+        "velocity": 58,
+        "command": 48,
+        "control": 54,
+        "movement": 49,
+        "mentality": 60,
+        "recovery": 54,
+        "clutch": 51,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 51,
+        "power": 55,
+        "eye": 52,
+        "discipline": 53,
+        "speed": 49,
+        "baseInstinct": 51,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 47,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "LF": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

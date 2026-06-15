@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04280",
+  "name": "오수완",
+  "nameEn": "Oh SuWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 97,
+      "primaryPosition": "SP",
+      "developmentRate": 69,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 72,
+        "velocity": 67,
+        "command": 60,
+        "control": 61,
+        "movement": 60,
+        "mentality": 69,
+        "recovery": 66,
+        "clutch": 64,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 50,
+        "power": 46,
+        "eye": 45,
+        "discipline": 52,
+        "speed": 47,
+        "baseInstinct": 51,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 52,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "SP": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

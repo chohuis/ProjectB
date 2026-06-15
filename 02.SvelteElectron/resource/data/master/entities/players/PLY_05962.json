@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05962",
+  "name": "류우환",
+  "nameEn": "Ryu WooHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 86,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 50,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 56,
+        "velocity": 62,
+        "command": 56,
+        "control": 53,
+        "movement": 53,
+        "mentality": 59,
+        "recovery": 51,
+        "clutch": 49,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 48,
+        "power": 47,
+        "eye": 41,
+        "discipline": 38,
+        "speed": 47,
+        "baseInstinct": 40,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 44,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

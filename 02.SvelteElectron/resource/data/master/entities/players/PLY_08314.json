@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08314",
+  "name": "정훈호",
+  "nameEn": "Jung HunHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 93,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 46,
+        "velocity": 44,
+        "command": 37,
+        "control": 36,
+        "movement": 44,
+        "mentality": 40,
+        "recovery": 38,
+        "clutch": 40,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 52,
+        "power": 49,
+        "eye": 49,
+        "discipline": 45,
+        "speed": 50,
+        "baseInstinct": 41,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 39,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "SP": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

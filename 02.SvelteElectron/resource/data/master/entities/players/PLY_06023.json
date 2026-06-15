@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06023",
+  "name": "안영욱",
+  "nameEn": "An YoungWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 22,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 47,
+        "velocity": 45,
+        "command": 33,
+        "control": 41,
+        "movement": 37,
+        "mentality": 40,
+        "recovery": 35,
+        "clutch": 39,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 37,
+        "power": 31,
+        "eye": 40,
+        "discipline": 35,
+        "speed": 41,
+        "baseInstinct": 35,
+        "bunting": 19,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 31,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "SP": 44
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

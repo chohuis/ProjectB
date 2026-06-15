@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07696",
+  "name": "이상민",
+  "nameEn": "Lee SangMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 68,
+      "primaryPosition": "SS",
+      "developmentRate": 56,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 52,
+        "velocity": 57,
+        "command": 48,
+        "control": 51,
+        "movement": 48,
+        "mentality": 46,
+        "recovery": 45,
+        "clutch": 37,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 48,
+        "power": 46,
+        "eye": 53,
+        "discipline": 56,
+        "speed": 54,
+        "baseInstinct": 47,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 47,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "SS": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

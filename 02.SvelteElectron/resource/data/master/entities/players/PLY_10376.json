@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10376",
+  "name": "애덤스 조던",
+  "nameEn": "Adams Jordan",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 13,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 9,
+      "primaryPosition": "3B",
+      "developmentRate": 75,
+      "potentialHidden": 65,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 51,
+        "velocity": 67,
+        "command": 48,
+        "control": 49,
+        "movement": 57,
+        "mentality": 60,
+        "recovery": 59,
+        "clutch": 58,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 63,
+        "power": 53,
+        "eye": 50,
+        "discipline": 53,
+        "speed": 55,
+        "baseInstinct": 53,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 50,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "3B": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08945",
+  "name": "오지혁",
+  "nameEn": "Oh JiHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 46,
+      "primaryPosition": "C",
+      "developmentRate": 41,
+      "potentialHidden": 47,
+      "pitching": {
+        "ovr": 38,
+        "stamina": 30,
+        "velocity": 47,
+        "command": 34,
+        "control": 37,
+        "movement": 37,
+        "mentality": 32,
+        "recovery": 35,
+        "clutch": 31,
+        "holdRunners": 25
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 44,
+        "power": 38,
+        "eye": 42,
+        "discipline": 48,
+        "speed": 42,
+        "baseInstinct": 45,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 47,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "C": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

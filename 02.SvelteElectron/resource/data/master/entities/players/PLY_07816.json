@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07816",
+  "name": "최상욱",
+  "nameEn": "Choi SangWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 36,
+      "primaryPosition": "1B",
+      "developmentRate": 61,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 35,
+        "velocity": 48,
+        "command": 42,
+        "control": 35,
+        "movement": 38,
+        "mentality": 37,
+        "recovery": 32,
+        "clutch": 31,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 53,
+        "power": 51,
+        "eye": 60,
+        "discipline": 57,
+        "speed": 63,
+        "baseInstinct": 55,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 50,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "1B": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

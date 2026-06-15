@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14249",
+  "name": "존슨 숀",
+  "nameEn": "Johnson Sean",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 20,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 32,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 45,
+      "primaryPosition": "SS",
+      "developmentRate": 41,
+      "potentialHidden": 55,
+      "proServiceYears": 10,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 46,
+        "velocity": 60,
+        "command": 45,
+        "control": 52,
+        "movement": 57,
+        "mentality": 55,
+        "recovery": 47,
+        "clutch": 52,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 51,
+        "power": 54,
+        "eye": 44,
+        "discipline": 50,
+        "speed": 48,
+        "baseInstinct": 54,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 50,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "SS": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

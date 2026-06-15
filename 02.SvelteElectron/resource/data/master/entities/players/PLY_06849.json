@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06849",
+  "name": "조세완",
+  "nameEn": "Jo SeWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 17,
+      "primaryPosition": "LF",
+      "developmentRate": 63,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 63,
+        "velocity": 75,
+        "command": 60,
+        "control": 64,
+        "movement": 60,
+        "mentality": 65,
+        "recovery": 68,
+        "clutch": 56,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 47,
+        "power": 52,
+        "eye": 47,
+        "discipline": 48,
+        "speed": 57,
+        "baseInstinct": 53,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 49,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "LF": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

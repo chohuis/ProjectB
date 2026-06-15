@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09820",
+  "name": "윤찬완",
+  "nameEn": "Yoon ChanWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 61,
+      "primaryPosition": "SS",
+      "developmentRate": 42,
+      "potentialHidden": 42,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 37,
+        "velocity": 46,
+        "command": 36,
+        "control": 47,
+        "movement": 43,
+        "mentality": 45,
+        "recovery": 35,
+        "clutch": 36,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 48,
+        "power": 41,
+        "eye": 47,
+        "discipline": 39,
+        "speed": 53,
+        "baseInstinct": 41,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 39,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "SS": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

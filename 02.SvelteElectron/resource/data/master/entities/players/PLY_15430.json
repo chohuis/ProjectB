@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15430",
+  "name": "영 에릭",
+  "nameEn": "Young Eric",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 83,
+  "popularity": 42,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 7,
+      "primaryPosition": "2B",
+      "developmentRate": 48,
+      "potentialHidden": 57,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 67,
+        "velocity": 70,
+        "command": 63,
+        "control": 55,
+        "movement": 56,
+        "mentality": 58,
+        "recovery": 55,
+        "clutch": 62,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 62,
+        "power": 58,
+        "eye": 57,
+        "discipline": 56,
+        "speed": 63,
+        "baseInstinct": 66,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 61,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "2B": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

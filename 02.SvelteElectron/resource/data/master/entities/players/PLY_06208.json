@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06208",
+  "name": "강수식",
+  "nameEn": "Kang SuSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 14,
+      "primaryPosition": "C",
+      "developmentRate": 47,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 36,
+        "stamina": 29,
+        "velocity": 43,
+        "command": 32,
+        "control": 31,
+        "movement": 35,
+        "mentality": 34,
+        "recovery": 24,
+        "clutch": 26,
+        "holdRunners": 29
+      },
+      "batting": {
+        "ovr": 30,
+        "contact": 28,
+        "power": 28,
+        "eye": 33,
+        "discipline": 21,
+        "speed": 30,
+        "baseInstinct": 26,
+        "bunting": 18,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 25,
+        "battingClutch": 25
+      },
+      "positionRatings": {
+        "C": 30
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

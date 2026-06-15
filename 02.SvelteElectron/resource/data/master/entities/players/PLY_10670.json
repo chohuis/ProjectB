@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10670",
+  "name": "킹 카를로스",
+  "nameEn": "King Carlos",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 96,
+      "primaryPosition": "C",
+      "developmentRate": 47,
+      "potentialHidden": 72,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 58,
+        "velocity": 57,
+        "command": 51,
+        "control": 65,
+        "movement": 59,
+        "mentality": 62,
+        "recovery": 55,
+        "clutch": 61,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 52,
+        "power": 52,
+        "eye": 58,
+        "discipline": 51,
+        "speed": 64,
+        "baseInstinct": 62,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 59,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "C": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

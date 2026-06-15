@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16208",
+  "name": "잭슨 제이슨",
+  "nameEn": "Jackson Jason",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 42,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 33,
+      "primaryPosition": "2B",
+      "developmentRate": 48,
+      "potentialHidden": 63,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 66,
+        "velocity": 73,
+        "command": 66,
+        "control": 68,
+        "movement": 55,
+        "mentality": 66,
+        "recovery": 53,
+        "clutch": 63,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 60,
+        "power": 55,
+        "eye": 66,
+        "discipline": 65,
+        "speed": 61,
+        "baseInstinct": 57,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 66,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "2B": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

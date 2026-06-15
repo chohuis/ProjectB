@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06408",
+  "name": "임정훈",
+  "nameEn": "Lim JungHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 82,
+      "primaryPosition": "1B",
+      "developmentRate": 53,
+      "potentialHidden": 48,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 46,
+        "velocity": 53,
+        "command": 40,
+        "control": 44,
+        "movement": 44,
+        "mentality": 47,
+        "recovery": 46,
+        "clutch": 38,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 33,
+        "contact": 33,
+        "power": 32,
+        "eye": 33,
+        "discipline": 34,
+        "speed": 35,
+        "baseInstinct": 32,
+        "bunting": 17,
+        "platoon": 50,
+        "fielding": 24,
+        "arm": 26,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "1B": 33
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

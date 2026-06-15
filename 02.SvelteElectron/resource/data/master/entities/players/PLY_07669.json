@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07669",
+  "name": "김동윤",
+  "nameEn": "Kim DongYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 76,
+      "primaryPosition": "SS",
+      "developmentRate": 57,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 58,
+        "velocity": 61,
+        "command": 54,
+        "control": 54,
+        "movement": 49,
+        "mentality": 55,
+        "recovery": 54,
+        "clutch": 41,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 45,
+        "power": 45,
+        "eye": 46,
+        "discipline": 47,
+        "speed": 46,
+        "baseInstinct": 46,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 47,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "SS": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

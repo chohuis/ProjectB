@@ -1,0 +1,19 @@
+{
+  "id": "SCHOOL_HS_MASAN_HARBOR",
+  "name": "마산 하버 고등학교",
+  "shortName": "마산 하버",
+  "region": "마산",
+  "tier": "C",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "gradeLevels": 3,
+  "annualRosterSize": 15,
+  "namedNpcPerYear": 0,
+  "template": {
+    "pitching": { "ovrMin": 33, "ovrMax": 53 },
+    "batting": { "ovrMin": 30, "ovrMax": 50 },
+    "developmentRate": { "min": 40, "max": 60 },
+    "potentialHidden": { "min": 40, "max": 70 }
+  },
+  "color": "#1565C0",
+  "notes": "항구 도시 소재 학교. 공격적 타격 스타일이 특색."
+}

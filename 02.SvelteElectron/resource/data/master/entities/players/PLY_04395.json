@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04395",
+  "name": "전도환",
+  "nameEn": "Jeon DoHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 67,
+      "primaryPosition": "2B",
+      "developmentRate": 62,
+      "potentialHidden": 81,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 64,
+        "velocity": 64,
+        "command": 58,
+        "control": 66,
+        "movement": 65,
+        "mentality": 63,
+        "recovery": 56,
+        "clutch": 53,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 57,
+        "power": 55,
+        "eye": 50,
+        "discipline": 49,
+        "speed": 53,
+        "baseInstinct": 49,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 54,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "2B": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14817",
+  "name": "잭슨 다니엘",
+  "nameEn": "Jackson Daniel",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 15,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 39,
+      "primaryPosition": "SP",
+      "developmentRate": 45,
+      "potentialHidden": 62,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 64,
+        "velocity": 75,
+        "command": 61,
+        "control": 65,
+        "movement": 67,
+        "mentality": 69,
+        "recovery": 68,
+        "clutch": 68,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 74,
+        "power": 63,
+        "eye": 73,
+        "discipline": 64,
+        "speed": 73,
+        "baseInstinct": 60,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 70,
+        "battingClutch": 69
+      },
+      "positionRatings": {
+        "SP": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

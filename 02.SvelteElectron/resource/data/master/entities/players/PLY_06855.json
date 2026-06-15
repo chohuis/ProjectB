@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06855",
+  "name": "한준민",
+  "nameEn": "Han JunMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 70,
+      "primaryPosition": "2B",
+      "developmentRate": 52,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 48,
+        "velocity": 57,
+        "command": 51,
+        "control": 52,
+        "movement": 54,
+        "mentality": 58,
+        "recovery": 52,
+        "clutch": 52,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 66,
+        "power": 56,
+        "eye": 65,
+        "discipline": 59,
+        "speed": 65,
+        "baseInstinct": 53,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 55,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "2B": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

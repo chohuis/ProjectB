@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14455",
+  "name": "워커 카를로스",
+  "nameEn": "Walker Carlos",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 36,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 32,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 78,
+      "primaryPosition": "1B",
+      "developmentRate": 34,
+      "potentialHidden": 57,
+      "proServiceYears": 10,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 56,
+        "velocity": 54,
+        "command": 47,
+        "control": 55,
+        "movement": 48,
+        "mentality": 48,
+        "recovery": 55,
+        "clutch": 53,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 48,
+        "power": 50,
+        "eye": 56,
+        "discipline": 46,
+        "speed": 58,
+        "baseInstinct": 49,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 57,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "1B": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

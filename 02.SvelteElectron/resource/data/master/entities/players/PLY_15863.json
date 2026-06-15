@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15863",
+  "name": "영 네이선",
+  "nameEn": "Young Nathan",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 27,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 95,
+      "primaryPosition": "SP",
+      "developmentRate": 70,
+      "potentialHidden": 75,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 42,
+        "velocity": 51,
+        "command": 43,
+        "control": 40,
+        "movement": 49,
+        "mentality": 41,
+        "recovery": 48,
+        "clutch": 43,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 40,
+        "power": 49,
+        "eye": 50,
+        "discipline": 43,
+        "speed": 42,
+        "baseInstinct": 44,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 44,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SP": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

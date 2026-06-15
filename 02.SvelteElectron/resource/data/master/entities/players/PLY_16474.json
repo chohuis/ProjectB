@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16474",
+  "name": "해리스 제이크",
+  "nameEn": "Harris Jake",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 67,
+      "primaryPosition": "2B",
+      "developmentRate": 33,
+      "potentialHidden": 53,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 58,
+        "velocity": 59,
+        "command": 50,
+        "control": 64,
+        "movement": 61,
+        "mentality": 62,
+        "recovery": 49,
+        "clutch": 54,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 51,
+        "power": 54,
+        "eye": 60,
+        "discipline": 55,
+        "speed": 61,
+        "baseInstinct": 57,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 53,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "2B": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

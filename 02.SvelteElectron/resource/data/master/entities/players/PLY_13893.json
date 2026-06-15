@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13893",
+  "name": "윌리엄스 미겔",
+  "nameEn": "Williams Miguel",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 41,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 84,
+      "primaryPosition": "3B",
+      "developmentRate": 52,
+      "potentialHidden": 49,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 67,
+        "velocity": 79,
+        "command": 69,
+        "control": 69,
+        "movement": 73,
+        "mentality": 76,
+        "recovery": 62,
+        "clutch": 60,
+        "holdRunners": 63
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 75,
+        "power": 73,
+        "eye": 66,
+        "discipline": 71,
+        "speed": 75,
+        "baseInstinct": 68,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 68,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "3B": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

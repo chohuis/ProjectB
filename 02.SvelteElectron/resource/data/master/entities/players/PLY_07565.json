@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07565",
+  "name": "안세훈",
+  "nameEn": "An SeHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 2,
+      "primaryPosition": "SP",
+      "developmentRate": 57,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 57,
+        "velocity": 67,
+        "command": 57,
+        "control": 54,
+        "movement": 54,
+        "mentality": 63,
+        "recovery": 53,
+        "clutch": 52,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 45,
+        "power": 40,
+        "eye": 48,
+        "discipline": 47,
+        "speed": 47,
+        "baseInstinct": 47,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 48,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SP": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

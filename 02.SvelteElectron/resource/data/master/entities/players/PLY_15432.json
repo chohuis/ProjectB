@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15432",
+  "name": "브라운 라이언",
+  "nameEn": "Brown Ryan",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 41,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 60,
+      "primaryPosition": "C",
+      "developmentRate": 61,
+      "potentialHidden": 79,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 50,
+        "velocity": 52,
+        "command": 43,
+        "control": 50,
+        "movement": 49,
+        "mentality": 53,
+        "recovery": 38,
+        "clutch": 47,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 47,
+        "power": 45,
+        "eye": 43,
+        "discipline": 40,
+        "speed": 46,
+        "baseInstinct": 45,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 50,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "C": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

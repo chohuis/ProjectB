@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14112",
+  "name": "그린 에반",
+  "nameEn": "Green Evan",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 33,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 60,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 72,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 46,
+        "velocity": 45,
+        "command": 46,
+        "control": 45,
+        "movement": 42,
+        "mentality": 49,
+        "recovery": 43,
+        "clutch": 34,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 40,
+        "power": 43,
+        "eye": 41,
+        "discipline": 42,
+        "speed": 47,
+        "baseInstinct": 36,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 38,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "SP": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

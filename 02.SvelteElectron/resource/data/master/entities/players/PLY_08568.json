@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08568",
+  "name": "류진윤",
+  "nameEn": "Ryu JinYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 29,
+      "primaryPosition": "C",
+      "developmentRate": 52,
+      "potentialHidden": 41,
+      "pitching": {
+        "ovr": 42,
+        "stamina": 42,
+        "velocity": 49,
+        "command": 39,
+        "control": 41,
+        "movement": 35,
+        "mentality": 37,
+        "recovery": 32,
+        "clutch": 32,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 43,
+        "power": 41,
+        "eye": 47,
+        "discipline": 42,
+        "speed": 45,
+        "baseInstinct": 49,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 43,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "C": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

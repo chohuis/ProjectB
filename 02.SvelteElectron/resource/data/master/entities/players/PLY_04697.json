@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04697",
+  "name": "최현진",
+  "nameEn": "Choi HyeonJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 84,
+      "primaryPosition": "C",
+      "developmentRate": 46,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 42,
+        "velocity": 49,
+        "command": 41,
+        "control": 47,
+        "movement": 41,
+        "mentality": 47,
+        "recovery": 34,
+        "clutch": 38,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 42,
+        "power": 47,
+        "eye": 46,
+        "discipline": 42,
+        "speed": 53,
+        "baseInstinct": 41,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 38,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "C": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

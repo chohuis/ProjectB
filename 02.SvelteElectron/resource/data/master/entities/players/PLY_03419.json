@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03419",
+  "name": "송진식",
+  "nameEn": "Song JinSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 12,
+      "primaryPosition": "SS",
+      "developmentRate": 64,
+      "potentialHidden": 82,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 61,
+        "velocity": 70,
+        "command": 59,
+        "control": 68,
+        "movement": 57,
+        "mentality": 66,
+        "recovery": 61,
+        "clutch": 63,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 63,
+        "power": 69,
+        "eye": 67,
+        "discipline": 65,
+        "speed": 70,
+        "baseInstinct": 63,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 58,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "SS": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

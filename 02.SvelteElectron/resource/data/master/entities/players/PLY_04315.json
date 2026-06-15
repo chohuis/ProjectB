@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04315",
+  "name": "조동우",
+  "nameEn": "Jo DongWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 34,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 83,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 65,
+        "velocity": 69,
+        "command": 56,
+        "control": 63,
+        "movement": 67,
+        "mentality": 69,
+        "recovery": 59,
+        "clutch": 55,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 49,
+        "power": 49,
+        "eye": 46,
+        "discipline": 48,
+        "speed": 55,
+        "baseInstinct": 49,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 47,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "SP": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

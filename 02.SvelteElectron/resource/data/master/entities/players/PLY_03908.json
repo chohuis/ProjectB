@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03908",
+  "name": "서상욱",
+  "nameEn": "Seo SangWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 39,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 88,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 57,
+        "velocity": 60,
+        "command": 57,
+        "control": 58,
+        "movement": 55,
+        "mentality": 60,
+        "recovery": 49,
+        "clutch": 45,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 67,
+        "power": 60,
+        "eye": 65,
+        "discipline": 63,
+        "speed": 63,
+        "baseInstinct": 59,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 63,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "SP": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

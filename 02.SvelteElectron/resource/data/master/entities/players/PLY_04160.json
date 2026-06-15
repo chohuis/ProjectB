@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04160",
+  "name": "안태재",
+  "nameEn": "An TaeJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 61,
+      "primaryPosition": "SS",
+      "developmentRate": 64,
+      "potentialHidden": 89,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 52,
+        "velocity": 61,
+        "command": 46,
+        "control": 52,
+        "movement": 50,
+        "mentality": 56,
+        "recovery": 53,
+        "clutch": 41,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 50,
+        "power": 49,
+        "eye": 48,
+        "discipline": 41,
+        "speed": 51,
+        "baseInstinct": 40,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 49,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SS": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

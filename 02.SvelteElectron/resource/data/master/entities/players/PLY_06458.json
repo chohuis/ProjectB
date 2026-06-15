@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06458",
+  "name": "오우민",
+  "nameEn": "Oh WooMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 69,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 63,
+        "velocity": 72,
+        "command": 62,
+        "control": 61,
+        "movement": 60,
+        "mentality": 63,
+        "recovery": 55,
+        "clutch": 59,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 58,
+        "power": 50,
+        "eye": 46,
+        "discipline": 46,
+        "speed": 53,
+        "baseInstinct": 48,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 53,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "SP": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

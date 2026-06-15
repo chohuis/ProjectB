@@ -1,0 +1,73 @@
+{
+  "id": "PLY_09932",
+  "name": "워커 블레이크",
+  "nameEn": "Walker Blake",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 39,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 61,
+      "primaryPosition": "LF",
+      "developmentRate": 78,
+      "potentialHidden": 77,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 52,
+        "velocity": 59,
+        "command": 53,
+        "control": 53,
+        "movement": 55,
+        "mentality": 57,
+        "recovery": 53,
+        "clutch": 60,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 59,
+        "power": 62,
+        "eye": 56,
+        "discipline": 55,
+        "speed": 54,
+        "baseInstinct": 50,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 55,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "LF": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

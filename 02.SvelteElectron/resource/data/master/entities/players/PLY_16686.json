@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16686",
+  "name": "데이비스 미겔",
+  "nameEn": "Davis Miguel",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 49,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 49,
+      "primaryPosition": "3B",
+      "developmentRate": 71,
+      "potentialHidden": 57,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 58,
+        "velocity": 58,
+        "command": 47,
+        "control": 61,
+        "movement": 59,
+        "mentality": 51,
+        "recovery": 54,
+        "clutch": 48,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 53,
+        "power": 54,
+        "eye": 60,
+        "discipline": 53,
+        "speed": 51,
+        "baseInstinct": 54,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 52,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "3B": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

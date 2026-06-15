@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06971",
+  "name": "안진준",
+  "nameEn": "An JinJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 84,
+      "primaryPosition": "SP",
+      "developmentRate": 56,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 51,
+        "velocity": 53,
+        "command": 50,
+        "control": 49,
+        "movement": 54,
+        "mentality": 48,
+        "recovery": 47,
+        "clutch": 52,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 50,
+        "power": 41,
+        "eye": 50,
+        "discipline": 42,
+        "speed": 54,
+        "baseInstinct": 45,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 49,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "SP": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

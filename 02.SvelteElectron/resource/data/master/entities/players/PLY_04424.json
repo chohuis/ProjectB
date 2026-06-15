@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04424",
+  "name": "오태수",
+  "nameEn": "Oh TaeSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 19,
+      "primaryPosition": "SS",
+      "developmentRate": 70,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 50,
+        "velocity": 65,
+        "command": 57,
+        "control": 48,
+        "movement": 52,
+        "mentality": 59,
+        "recovery": 56,
+        "clutch": 49,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 57,
+        "power": 57,
+        "eye": 52,
+        "discipline": 56,
+        "speed": 60,
+        "baseInstinct": 49,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 58,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "SS": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

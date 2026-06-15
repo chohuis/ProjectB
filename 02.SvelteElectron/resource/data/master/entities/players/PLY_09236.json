@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09236",
+  "name": "한영훈",
+  "nameEn": "Han YoungHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 62,
+      "primaryPosition": "CF",
+      "developmentRate": 51,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 38,
+        "stamina": 35,
+        "velocity": 46,
+        "command": 36,
+        "control": 38,
+        "movement": 36,
+        "mentality": 40,
+        "recovery": 33,
+        "clutch": 24,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 42,
+        "power": 43,
+        "eye": 46,
+        "discipline": 39,
+        "speed": 54,
+        "baseInstinct": 47,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 43,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "CF": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

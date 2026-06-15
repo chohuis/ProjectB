@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10982",
+  "name": "테일러 숀",
+  "nameEn": "Taylor Sean",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 47,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 64,
+      "primaryPosition": "SS",
+      "developmentRate": 54,
+      "potentialHidden": 85,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 75,
+        "velocity": 81,
+        "command": 71,
+        "control": 71,
+        "movement": 72,
+        "mentality": 74,
+        "recovery": 80,
+        "clutch": 68,
+        "holdRunners": 77
+      },
+      "batting": {
+        "ovr": 78,
+        "contact": 81,
+        "power": 80,
+        "eye": 79,
+        "discipline": 74,
+        "speed": 81,
+        "baseInstinct": 75,
+        "bunting": 67,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 72,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "SS": 78
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

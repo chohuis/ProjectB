@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15862",
+  "name": "브라운 미겔",
+  "nameEn": "Brown Miguel",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 24,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 5,
+      "primaryPosition": "LF",
+      "developmentRate": 48,
+      "potentialHidden": 70,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 69,
+        "velocity": 77,
+        "command": 64,
+        "control": 66,
+        "movement": 67,
+        "mentality": 70,
+        "recovery": 58,
+        "clutch": 57,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 66,
+        "power": 67,
+        "eye": 69,
+        "discipline": 71,
+        "speed": 68,
+        "baseInstinct": 62,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 69,
+        "battingClutch": 62
+      },
+      "positionRatings": {
+        "LF": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

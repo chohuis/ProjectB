@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07020",
+  "name": "황기원",
+  "nameEn": "Hwang KiWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 71,
+      "primaryPosition": "SP",
+      "developmentRate": 47,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 52,
+        "velocity": 52,
+        "command": 48,
+        "control": 43,
+        "movement": 48,
+        "mentality": 53,
+        "recovery": 49,
+        "clutch": 39,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 45,
+        "power": 48,
+        "eye": 44,
+        "discipline": 44,
+        "speed": 55,
+        "baseInstinct": 44,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 41,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "SP": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

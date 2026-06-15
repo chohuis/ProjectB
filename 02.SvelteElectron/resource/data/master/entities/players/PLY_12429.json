@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12429",
+  "name": "로드리게스 재크",
+  "nameEn": "Rodriguez Zach",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 31,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 47,
+      "primaryPosition": "LF",
+      "developmentRate": 73,
+      "potentialHidden": 65,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 65,
+        "velocity": 63,
+        "command": 68,
+        "control": 57,
+        "movement": 56,
+        "mentality": 68,
+        "recovery": 65,
+        "clutch": 63,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 61,
+        "power": 63,
+        "eye": 62,
+        "discipline": 64,
+        "speed": 59,
+        "baseInstinct": 67,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 58,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "LF": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

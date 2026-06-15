@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16351",
+  "name": "톰슨 제이크",
+  "nameEn": "Thompson Jake",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 20,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 29,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 45,
+      "primaryPosition": "SP",
+      "developmentRate": 33,
+      "potentialHidden": 61,
+      "proServiceYears": 7,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 57,
+        "velocity": 60,
+        "command": 55,
+        "control": 56,
+        "movement": 48,
+        "mentality": 53,
+        "recovery": 51,
+        "clutch": 50,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 51,
+        "power": 46,
+        "eye": 48,
+        "discipline": 59,
+        "speed": 57,
+        "baseInstinct": 51,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 47,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "SP": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

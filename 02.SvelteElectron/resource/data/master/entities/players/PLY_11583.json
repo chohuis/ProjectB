@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11583",
+  "name": "앤더슨 데릭",
+  "nameEn": "Anderson Derek",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 49,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 93,
+      "primaryPosition": "SP",
+      "developmentRate": 69,
+      "potentialHidden": 89,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 65,
+        "stamina": 64,
+        "velocity": 70,
+        "command": 57,
+        "control": 68,
+        "movement": 68,
+        "mentality": 60,
+        "recovery": 61,
+        "clutch": 59,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 69,
+        "power": 67,
+        "eye": 68,
+        "discipline": 69,
+        "speed": 71,
+        "baseInstinct": 57,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 65,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "SP": 65
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

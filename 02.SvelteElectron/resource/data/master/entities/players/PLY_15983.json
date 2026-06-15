@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15983",
+  "name": "애덤스 조던",
+  "nameEn": "Adams Jordan",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 26,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 45,
+      "primaryPosition": "LF",
+      "developmentRate": 43,
+      "potentialHidden": 67,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 73,
+        "velocity": 73,
+        "command": 72,
+        "control": 64,
+        "movement": 69,
+        "mentality": 65,
+        "recovery": 60,
+        "clutch": 59,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 66,
+        "power": 61,
+        "eye": 74,
+        "discipline": 63,
+        "speed": 66,
+        "baseInstinct": 61,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 65,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "LF": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

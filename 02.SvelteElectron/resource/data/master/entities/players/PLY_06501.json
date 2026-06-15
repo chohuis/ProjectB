@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06501",
+  "name": "송지호",
+  "nameEn": "Song JiHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 52,
+      "primaryPosition": "3B",
+      "developmentRate": 54,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 52,
+        "velocity": 65,
+        "command": 57,
+        "control": 60,
+        "movement": 56,
+        "mentality": 56,
+        "recovery": 55,
+        "clutch": 45,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 59,
+        "power": 50,
+        "eye": 51,
+        "discipline": 55,
+        "speed": 60,
+        "baseInstinct": 51,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 54,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "3B": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09084",
+  "name": "강수우",
+  "nameEn": "Kang SuWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 82,
+      "primaryPosition": "SP",
+      "developmentRate": 57,
+      "potentialHidden": 64,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 51,
+        "velocity": 56,
+        "command": 43,
+        "control": 45,
+        "movement": 45,
+        "mentality": 48,
+        "recovery": 45,
+        "clutch": 41,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 53,
+        "power": 47,
+        "eye": 49,
+        "discipline": 48,
+        "speed": 54,
+        "baseInstinct": 40,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 44,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

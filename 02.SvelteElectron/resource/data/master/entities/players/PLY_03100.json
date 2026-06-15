@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03100",
+  "name": "강진환",
+  "nameEn": "Kang JinHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 72,
+      "primaryPosition": "SP",
+      "developmentRate": 71,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 56,
+        "velocity": 67,
+        "command": 55,
+        "control": 51,
+        "movement": 49,
+        "mentality": 64,
+        "recovery": 58,
+        "clutch": 45,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 74,
+        "power": 61,
+        "eye": 67,
+        "discipline": 64,
+        "speed": 67,
+        "baseInstinct": 69,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 72,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "SP": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

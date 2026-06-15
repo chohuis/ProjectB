@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11060",
+  "name": "앤더슨 에반",
+  "nameEn": "Anderson Evan",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 83,
+  "popularity": 40,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 38,
+      "primaryPosition": "2B",
+      "developmentRate": 62,
+      "potentialHidden": 75,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 56,
+        "velocity": 54,
+        "command": 53,
+        "control": 54,
+        "movement": 57,
+        "mentality": 58,
+        "recovery": 48,
+        "clutch": 52,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 58,
+        "power": 58,
+        "eye": 59,
+        "discipline": 56,
+        "speed": 61,
+        "baseInstinct": 46,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 51,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "2B": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

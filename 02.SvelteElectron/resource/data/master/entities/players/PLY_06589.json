@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06589",
+  "name": "윤수준",
+  "nameEn": "Yoon SuJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 12,
+      "primaryPosition": "RF",
+      "developmentRate": 65,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 57,
+        "velocity": 58,
+        "command": 49,
+        "control": 56,
+        "movement": 52,
+        "mentality": 58,
+        "recovery": 58,
+        "clutch": 49,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 47,
+        "power": 49,
+        "eye": 48,
+        "discipline": 41,
+        "speed": 53,
+        "baseInstinct": 41,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 41,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "RF": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03705",
+  "name": "최세빈",
+  "nameEn": "Choi SeBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 45,
+      "primaryPosition": "3B",
+      "developmentRate": 58,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 57,
+        "velocity": 68,
+        "command": 59,
+        "control": 64,
+        "movement": 58,
+        "mentality": 57,
+        "recovery": 58,
+        "clutch": 49,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 66,
+        "power": 62,
+        "eye": 54,
+        "discipline": 61,
+        "speed": 66,
+        "baseInstinct": 63,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 61,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "3B": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

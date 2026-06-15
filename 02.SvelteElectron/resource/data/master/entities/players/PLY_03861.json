@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03861",
+  "name": "정훈윤",
+  "nameEn": "Jung HunYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 11,
+      "primaryPosition": "1B",
+      "developmentRate": 72,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 53,
+        "velocity": 51,
+        "command": 48,
+        "control": 51,
+        "movement": 43,
+        "mentality": 57,
+        "recovery": 45,
+        "clutch": 49,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 59,
+        "power": 57,
+        "eye": 52,
+        "discipline": 51,
+        "speed": 61,
+        "baseInstinct": 56,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 60,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "1B": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

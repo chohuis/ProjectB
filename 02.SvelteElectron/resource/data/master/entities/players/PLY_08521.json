@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08521",
+  "name": "장수호",
+  "nameEn": "Jang SuHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 4,
+      "primaryPosition": "SP",
+      "developmentRate": 52,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 46,
+        "velocity": 59,
+        "command": 49,
+        "control": 45,
+        "movement": 47,
+        "mentality": 48,
+        "recovery": 39,
+        "clutch": 43,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 49,
+        "power": 38,
+        "eye": 46,
+        "discipline": 42,
+        "speed": 46,
+        "baseInstinct": 42,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 43,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "SP": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

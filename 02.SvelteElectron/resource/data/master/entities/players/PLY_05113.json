@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05113",
+  "name": "안영수",
+  "nameEn": "An YoungSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 8,
+      "primaryPosition": "2B",
+      "developmentRate": 52,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 51,
+        "velocity": 54,
+        "command": 45,
+        "control": 46,
+        "movement": 54,
+        "mentality": 58,
+        "recovery": 52,
+        "clutch": 46,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 54,
+        "power": 45,
+        "eye": 53,
+        "discipline": 48,
+        "speed": 47,
+        "baseInstinct": 51,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 42,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "2B": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

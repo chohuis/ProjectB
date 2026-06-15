@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16426",
+  "name": "킹 코너",
+  "nameEn": "King Connor",
+  "role": "player",
+  "age": 30,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 11,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 30,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 86,
+      "primaryPosition": "1B",
+      "developmentRate": 32,
+      "potentialHidden": 70,
+      "proServiceYears": 8,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 68,
+        "velocity": 80,
+        "command": 63,
+        "control": 62,
+        "movement": 70,
+        "mentality": 66,
+        "recovery": 68,
+        "clutch": 66,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 63,
+        "power": 67,
+        "eye": 73,
+        "discipline": 61,
+        "speed": 72,
+        "baseInstinct": 61,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 59,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "1B": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15462",
+  "name": "스콧 그랜트",
+  "nameEn": "Scott Grant",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 49,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 73,
+      "primaryPosition": "C",
+      "developmentRate": 47,
+      "potentialHidden": 75,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 61,
+        "velocity": 68,
+        "command": 61,
+        "control": 67,
+        "movement": 71,
+        "mentality": 64,
+        "recovery": 58,
+        "clutch": 65,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 60,
+        "power": 61,
+        "eye": 68,
+        "discipline": 62,
+        "speed": 72,
+        "baseInstinct": 60,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 68,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "C": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

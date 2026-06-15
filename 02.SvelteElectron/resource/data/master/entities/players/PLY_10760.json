@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10760",
+  "name": "윌리엄스 데릭",
+  "nameEn": "Williams Derek",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 24,
+  "militaryStatus": "군필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 32,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 86,
+      "primaryPosition": "RF",
+      "developmentRate": 41,
+      "potentialHidden": 66,
+      "proServiceYears": 10,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 62,
+        "velocity": 73,
+        "command": 61,
+        "control": 63,
+        "movement": 65,
+        "mentality": 72,
+        "recovery": 64,
+        "clutch": 68,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 66,
+        "power": 68,
+        "eye": 70,
+        "discipline": 70,
+        "speed": 75,
+        "baseInstinct": 71,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 73,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "RF": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

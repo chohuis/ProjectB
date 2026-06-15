@@ -1,0 +1,19 @@
+{
+  "id": "SCHOOL_HS_JECHEON_RIDGE",
+  "name": "제천 릿지 고등학교",
+  "shortName": "제천 릿지",
+  "region": "제천",
+  "tier": "C",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "gradeLevels": 3,
+  "annualRosterSize": 15,
+  "namedNpcPerYear": 0,
+  "template": {
+    "pitching": { "ovrMin": 33, "ovrMax": 53 },
+    "batting": { "ovrMin": 30, "ovrMax": 50 },
+    "developmentRate": { "min": 40, "max": 58 },
+    "potentialHidden": { "min": 38, "max": 70 }
+  },
+  "color": "#5D4037",
+  "notes": "내륙 산지 소재 C급 학교. 외야 수비에 강점을 가진 선수들이 종종 나옴."
+}

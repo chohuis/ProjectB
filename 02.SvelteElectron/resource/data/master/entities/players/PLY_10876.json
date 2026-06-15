@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10876",
+  "name": "애덤스 미겔",
+  "nameEn": "Adams Miguel",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 21,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 26,
+      "primaryPosition": "3B",
+      "developmentRate": 61,
+      "potentialHidden": 66,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 75,
+        "velocity": 75,
+        "command": 77,
+        "control": 70,
+        "movement": 68,
+        "mentality": 79,
+        "recovery": 78,
+        "clutch": 71,
+        "holdRunners": 71
+      },
+      "batting": {
+        "ovr": 77,
+        "contact": 76,
+        "power": 69,
+        "eye": 81,
+        "discipline": 69,
+        "speed": 83,
+        "baseInstinct": 76,
+        "bunting": 63,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 78,
+        "battingClutch": 75
+      },
+      "positionRatings": {
+        "3B": 77
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

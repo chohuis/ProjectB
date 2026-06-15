@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09024",
+  "name": "강우윤",
+  "nameEn": "Kang WooYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 5,
+      "primaryPosition": "1B",
+      "developmentRate": 46,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 37,
+        "stamina": 32,
+        "velocity": 40,
+        "command": 29,
+        "control": 30,
+        "movement": 32,
+        "mentality": 40,
+        "recovery": 29,
+        "clutch": 34,
+        "holdRunners": 27
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 39,
+        "power": 39,
+        "eye": 48,
+        "discipline": 39,
+        "speed": 48,
+        "baseInstinct": 36,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 34,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "1B": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

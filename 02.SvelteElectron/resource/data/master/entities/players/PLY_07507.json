@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07507",
+  "name": "강훈우",
+  "nameEn": "Kang HunWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 38,
+      "primaryPosition": "SP",
+      "developmentRate": 54,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 50,
+        "velocity": 49,
+        "command": 41,
+        "control": 42,
+        "movement": 42,
+        "mentality": 46,
+        "recovery": 45,
+        "clutch": 38,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 44,
+        "power": 40,
+        "eye": 41,
+        "discipline": 42,
+        "speed": 50,
+        "baseInstinct": 37,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 34,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "SP": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

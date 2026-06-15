@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03299",
+  "name": "권훈준",
+  "nameEn": "Kwon HunJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 65,
+      "primaryPosition": "3B",
+      "developmentRate": 67,
+      "potentialHidden": 88,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 72,
+        "velocity": 73,
+        "command": 66,
+        "control": 67,
+        "movement": 71,
+        "mentality": 66,
+        "recovery": 61,
+        "clutch": 61,
+        "holdRunners": 63
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 64,
+        "power": 57,
+        "eye": 63,
+        "discipline": 63,
+        "speed": 60,
+        "baseInstinct": 55,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 55,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "3B": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

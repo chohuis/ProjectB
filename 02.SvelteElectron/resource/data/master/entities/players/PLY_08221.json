@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08221",
+  "name": "권현기",
+  "nameEn": "Kwon HyeonKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 18,
+      "primaryPosition": "RF",
+      "developmentRate": 59,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 41,
+        "velocity": 51,
+        "command": 48,
+        "control": 49,
+        "movement": 51,
+        "mentality": 52,
+        "recovery": 39,
+        "clutch": 42,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 41,
+        "power": 38,
+        "eye": 46,
+        "discipline": 40,
+        "speed": 53,
+        "baseInstinct": 44,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 47,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "RF": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

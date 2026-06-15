@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16013",
+  "name": "마르티네스 오스틴",
+  "nameEn": "Martinez Austin",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 98,
+      "primaryPosition": "C",
+      "developmentRate": 60,
+      "potentialHidden": 66,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 54,
+        "velocity": 56,
+        "command": 56,
+        "control": 58,
+        "movement": 49,
+        "mentality": 47,
+        "recovery": 54,
+        "clutch": 43,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 49,
+        "power": 49,
+        "eye": 49,
+        "discipline": 54,
+        "speed": 48,
+        "baseInstinct": 51,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 50,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "C": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

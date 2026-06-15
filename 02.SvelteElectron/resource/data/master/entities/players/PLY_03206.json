@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03206",
+  "name": "윤기원",
+  "nameEn": "Yoon KiWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 4,
+      "primaryPosition": "SP",
+      "developmentRate": 66,
+      "potentialHidden": 82,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 63,
+        "velocity": 74,
+        "command": 53,
+        "control": 60,
+        "movement": 58,
+        "mentality": 64,
+        "recovery": 53,
+        "clutch": 56,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 74,
+        "power": 68,
+        "eye": 68,
+        "discipline": 72,
+        "speed": 67,
+        "baseInstinct": 66,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 65,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "SP": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

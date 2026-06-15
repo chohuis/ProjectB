@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09645",
+  "name": "장찬준",
+  "nameEn": "Jang ChanJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 35,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 61,
+      "primaryPosition": "SP",
+      "developmentRate": 50,
+      "potentialHidden": 45,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 40,
+        "velocity": 44,
+        "command": 40,
+        "control": 39,
+        "movement": 33,
+        "mentality": 44,
+        "recovery": 31,
+        "clutch": 33,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 47,
+        "power": 41,
+        "eye": 40,
+        "discipline": 43,
+        "speed": 45,
+        "baseInstinct": 45,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 35,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "SP": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

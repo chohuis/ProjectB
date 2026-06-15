@@ -790,7 +790,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             return n;
         }
 
-        // 4. 에이징: 월간 감퇴(calc_monthly_npc_growth)로 이관, 오프시즌 중복 처리 제거
+        // 4. 에이징: 주간 감퇴(calc_weekly_npc_growth)로 이관, 오프시즌 중복 처리 제거
 
         // 5. 프로 연차 + FA
         if n.current_league == "LEAGUE_KBL"
@@ -1074,6 +1074,7 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
             pitching:       Some(make_pitching(ovr_p.round(), &mut rng)),
             batting:        Some(make_batting(ovr_b.round(),  &mut rng)),
             development_rate: dev_r.round() as i32,
+            potential_hidden: params.pitching_ovr_max.max(params.batting_ovr_max) * 1.15,
             career_history:  vec![],
             achievements:    vec![],
             military_enlist_year:    None,
@@ -1615,11 +1616,11 @@ fn apply_monthly_aging_pitch(p: &mut NpcPitchingAttrs, age: i32, perf: Option<&N
         _       => (4.00, 3.50, 0.80, 5.00, 4.50),
     };
 
-    p.velocity = clamp_stat(p.velocity - vel_y  / 12.0 * mgmt);
-    p.stamina  = clamp_stat(p.stamina  - sta_y  / 12.0 * mgmt);
-    p.recovery = clamp_stat(p.recovery - rec_y  / 12.0 * mgmt);
-    p.command  = clamp_stat(p.command  - cmd_y  / 12.0 * mgmt);
-    p.control  = clamp_stat(p.control  - ctrl_y / 12.0 * mgmt);
+    p.velocity = clamp_stat(p.velocity - vel_y  / 52.0 * mgmt);
+    p.stamina  = clamp_stat(p.stamina  - sta_y  / 52.0 * mgmt);
+    p.recovery = clamp_stat(p.recovery - rec_y  / 52.0 * mgmt);
+    p.command  = clamp_stat(p.command  - cmd_y  / 52.0 * mgmt);
+    p.control  = clamp_stat(p.control  - ctrl_y / 52.0 * mgmt);
     p.ovr = calc_npc_pitching_ovr(p);
 }
 
@@ -1639,12 +1640,12 @@ fn apply_monthly_aging_bat(b: &mut NpcBattingAttrs, age: i32, perf: Option<&NpcM
         _       => (3.50, 2.80),
     };
 
-    b.speed = clamp_stat(b.speed - spd_y / 12.0 * mgmt);
-    b.power = clamp_stat(b.power - pow_y / 12.0 * mgmt);
+    b.speed = clamp_stat(b.speed - spd_y / 52.0 * mgmt);
+    b.power = clamp_stat(b.power - pow_y / 52.0 * mgmt);
     b.ovr   = calc_npc_batting_ovr(b);
 }
 
-pub fn calc_monthly_npc_growth(params: MonthlyNpcGrowthParams) -> MonthlyNpcGrowthResult {
+pub fn calc_weekly_npc_growth(params: MonthlyNpcGrowthParams) -> MonthlyNpcGrowthResult {
     let mut rng = rand::thread_rng();
     let phase = params.current_phase.as_str();
 
@@ -1672,9 +1673,9 @@ pub fn calc_monthly_npc_growth(params: MonthlyNpcGrowthParams) -> MonthlyNpcGrow
         // A: 잠재력 속도 배율
         let speed_f   = 0.80 + (potential - 60.0) / 39.0 * 0.40;
 
-        // 월간 기본 XP (성장이 있는 나이대만)
+        // 주간 기본 XP (월간 2.5를 4.3주로 나눠 주간 단위로 전환)
         let base_xp = if age_f > 0.0 {
-            2.5 * dev_f * age_f * trn_f * prf_f * rand_f * speed_f
+            (2.5 / 4.3) * dev_f * age_f * trn_f * prf_f * rand_f * speed_f
         } else {
             0.0
         };

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10652",
+  "name": "마틴 블레이크",
+  "nameEn": "Martin Blake",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 83,
+  "popularity": 28,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 98,
+      "primaryPosition": "3B",
+      "developmentRate": 70,
+      "potentialHidden": 94,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 62,
+        "velocity": 59,
+        "command": 64,
+        "control": 54,
+        "movement": 57,
+        "mentality": 68,
+        "recovery": 57,
+        "clutch": 57,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 53,
+        "power": 52,
+        "eye": 55,
+        "discipline": 55,
+        "speed": 65,
+        "baseInstinct": 55,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 61,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "3B": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10417",
+  "name": "윌리엄스 제이슨",
+  "nameEn": "Williams Jason",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 15,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 94,
+      "primaryPosition": "SS",
+      "developmentRate": 58,
+      "potentialHidden": 69,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 69,
+        "velocity": 80,
+        "command": 67,
+        "control": 70,
+        "movement": 73,
+        "mentality": 81,
+        "recovery": 73,
+        "clutch": 67,
+        "holdRunners": 70
+      },
+      "batting": {
+        "ovr": 77,
+        "contact": 70,
+        "power": 73,
+        "eye": 80,
+        "discipline": 79,
+        "speed": 72,
+        "baseInstinct": 73,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 69,
+        "battingClutch": 70
+      },
+      "positionRatings": {
+        "SS": 77
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

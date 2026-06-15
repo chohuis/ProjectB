@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07056",
+  "name": "임정우",
+  "nameEn": "Lim JungWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 38,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 52,
+        "velocity": 56,
+        "command": 43,
+        "control": 43,
+        "movement": 45,
+        "mentality": 54,
+        "recovery": 45,
+        "clutch": 44,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 40,
+        "power": 41,
+        "eye": 48,
+        "discipline": 46,
+        "speed": 51,
+        "baseInstinct": 45,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 39,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "SP": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

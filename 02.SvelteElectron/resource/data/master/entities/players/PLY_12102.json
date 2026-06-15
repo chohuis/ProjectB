@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12102",
+  "name": "영 루이스",
+  "nameEn": "Young Luis",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 59,
+      "primaryPosition": "2B",
+      "developmentRate": 50,
+      "potentialHidden": 60,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 53,
+        "velocity": 60,
+        "command": 52,
+        "control": 65,
+        "movement": 60,
+        "mentality": 59,
+        "recovery": 59,
+        "clutch": 52,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 60,
+        "power": 55,
+        "eye": 56,
+        "discipline": 64,
+        "speed": 66,
+        "baseInstinct": 57,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 64,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "2B": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04533",
+  "name": "송영찬",
+  "nameEn": "Song YoungChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 2,
+      "primaryPosition": "SP",
+      "developmentRate": 52,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 47,
+        "velocity": 54,
+        "command": 42,
+        "control": 44,
+        "movement": 39,
+        "mentality": 51,
+        "recovery": 44,
+        "clutch": 37,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 38,
+        "power": 32,
+        "eye": 31,
+        "discipline": 32,
+        "speed": 37,
+        "baseInstinct": 30,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 34,
+        "battingClutch": 25
+      },
+      "positionRatings": {
+        "SP": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

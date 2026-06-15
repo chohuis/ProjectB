@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08956",
+  "name": "조영환",
+  "nameEn": "Jo YoungHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 64,
+      "primaryPosition": "SP",
+      "developmentRate": 45,
+      "potentialHidden": 45,
+      "pitching": {
+        "ovr": 37,
+        "stamina": 30,
+        "velocity": 36,
+        "command": 32,
+        "control": 39,
+        "movement": 31,
+        "mentality": 33,
+        "recovery": 32,
+        "clutch": 33,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 35,
+        "power": 27,
+        "eye": 28,
+        "discipline": 32,
+        "speed": 42,
+        "baseInstinct": 36,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 27,
+        "battingClutch": 24
+      },
+      "positionRatings": {
+        "SP": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

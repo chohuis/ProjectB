@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08073",
+  "name": "정우완",
+  "nameEn": "Jung WooWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 28,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 3,
+      "primaryPosition": "1B",
+      "developmentRate": 47,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 42,
+        "velocity": 44,
+        "command": 38,
+        "control": 44,
+        "movement": 34,
+        "mentality": 43,
+        "recovery": 34,
+        "clutch": 39,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 34,
+        "power": 38,
+        "eye": 31,
+        "discipline": 33,
+        "speed": 36,
+        "baseInstinct": 30,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 39,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "1B": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

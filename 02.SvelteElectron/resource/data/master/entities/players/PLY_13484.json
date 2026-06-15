@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13484",
+  "name": "클라크 에반",
+  "nameEn": "Clark Evan",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 82,
+  "popularity": 32,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 59,
+      "primaryPosition": "CF",
+      "developmentRate": 58,
+      "potentialHidden": 62,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 81,
+        "stamina": 84,
+        "velocity": 85,
+        "command": 78,
+        "control": 76,
+        "movement": 81,
+        "mentality": 75,
+        "recovery": 69,
+        "clutch": 73,
+        "holdRunners": 79
+      },
+      "batting": {
+        "ovr": 81,
+        "contact": 81,
+        "power": 72,
+        "eye": 80,
+        "discipline": 73,
+        "speed": 88,
+        "baseInstinct": 74,
+        "bunting": 67,
+        "platoon": 50,
+        "fielding": 82,
+        "arm": 83,
+        "battingClutch": 78
+      },
+      "positionRatings": {
+        "CF": 81
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

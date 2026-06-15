@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16478",
+  "name": "그린 브랜던",
+  "nameEn": "Green Brandon",
+  "role": "player",
+  "age": 21,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 33,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 21,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 71,
+      "primaryPosition": "CF",
+      "developmentRate": 64,
+      "potentialHidden": 64,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 56,
+        "velocity": 54,
+        "command": 48,
+        "control": 46,
+        "movement": 57,
+        "mentality": 51,
+        "recovery": 50,
+        "clutch": 47,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 51,
+        "power": 54,
+        "eye": 50,
+        "discipline": 51,
+        "speed": 53,
+        "baseInstinct": 45,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 57,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "CF": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07777",
+  "name": "오동완",
+  "nameEn": "Oh DongWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 51,
+      "primaryPosition": "2B",
+      "developmentRate": 54,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 46,
+        "velocity": 55,
+        "command": 44,
+        "control": 55,
+        "movement": 49,
+        "mentality": 57,
+        "recovery": 52,
+        "clutch": 46,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 53,
+        "power": 53,
+        "eye": 57,
+        "discipline": 57,
+        "speed": 60,
+        "baseInstinct": 51,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 51,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "2B": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

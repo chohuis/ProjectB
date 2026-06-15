@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09380",
+  "name": "정혁우",
+  "nameEn": "Jung HyeokWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 2,
+      "primaryPosition": "1B",
+      "developmentRate": 53,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 41,
+        "stamina": 35,
+        "velocity": 42,
+        "command": 37,
+        "control": 42,
+        "movement": 31,
+        "mentality": 40,
+        "recovery": 30,
+        "clutch": 35,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 33,
+        "contact": 30,
+        "power": 25,
+        "eye": 26,
+        "discipline": 25,
+        "speed": 36,
+        "baseInstinct": 28,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 24,
+        "arm": 31,
+        "battingClutch": 26
+      },
+      "positionRatings": {
+        "1B": 33
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

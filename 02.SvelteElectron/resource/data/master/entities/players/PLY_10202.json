@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10202",
+  "name": "마르티네스 브랜던",
+  "nameEn": "Martinez Brandon",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 39,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 95,
+      "primaryPosition": "SP",
+      "developmentRate": 63,
+      "potentialHidden": 70,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 69,
+        "velocity": 69,
+        "command": 61,
+        "control": 68,
+        "movement": 67,
+        "mentality": 59,
+        "recovery": 67,
+        "clutch": 57,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 62,
+        "power": 55,
+        "eye": 68,
+        "discipline": 63,
+        "speed": 61,
+        "baseInstinct": 62,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 61,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "SP": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

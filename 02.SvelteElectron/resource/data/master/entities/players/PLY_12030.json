@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12030",
+  "name": "킹 크리스",
+  "nameEn": "King Chris",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 26,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 50,
+      "primaryPosition": "2B",
+      "developmentRate": 43,
+      "potentialHidden": 78,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 55,
+        "velocity": 56,
+        "command": 56,
+        "control": 52,
+        "movement": 48,
+        "mentality": 56,
+        "recovery": 58,
+        "clutch": 45,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 50,
+        "power": 48,
+        "eye": 48,
+        "discipline": 58,
+        "speed": 51,
+        "baseInstinct": 47,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 53,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "2B": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

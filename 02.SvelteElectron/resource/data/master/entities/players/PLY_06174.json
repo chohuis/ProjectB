@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06174",
+  "name": "조세윤",
+  "nameEn": "Jo SeYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 32,
+      "primaryPosition": "SP",
+      "developmentRate": 42,
+      "potentialHidden": 42,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 37,
+        "velocity": 44,
+        "command": 29,
+        "control": 37,
+        "movement": 34,
+        "mentality": 40,
+        "recovery": 34,
+        "clutch": 36,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 35,
+        "power": 35,
+        "eye": 36,
+        "discipline": 33,
+        "speed": 39,
+        "baseInstinct": 41,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 41,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "SP": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

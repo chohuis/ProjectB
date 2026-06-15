@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05612",
+  "name": "한기욱",
+  "nameEn": "Han KiWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 5,
+      "primaryPosition": "3B",
+      "developmentRate": 63,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 50,
+        "velocity": 57,
+        "command": 51,
+        "control": 49,
+        "movement": 49,
+        "mentality": 54,
+        "recovery": 45,
+        "clutch": 50,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 37,
+        "power": 43,
+        "eye": 37,
+        "discipline": 37,
+        "speed": 42,
+        "baseInstinct": 36,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 44,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "3B": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

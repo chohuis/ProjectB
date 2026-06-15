@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03709",
+  "name": "박도기",
+  "nameEn": "Park DoKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 16,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 18,
+      "primaryPosition": "LF",
+      "developmentRate": 56,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 64,
+        "velocity": 66,
+        "command": 63,
+        "control": 68,
+        "movement": 66,
+        "mentality": 62,
+        "recovery": 61,
+        "clutch": 60,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 55,
+        "power": 61,
+        "eye": 60,
+        "discipline": 63,
+        "speed": 61,
+        "baseInstinct": 52,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 60,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "LF": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

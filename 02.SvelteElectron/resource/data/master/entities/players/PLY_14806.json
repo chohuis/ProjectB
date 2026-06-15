@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14806",
+  "name": "화이트 트레버",
+  "nameEn": "White Trevor",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 35,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 13,
+      "primaryPosition": "SP",
+      "developmentRate": 46,
+      "potentialHidden": 50,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 71,
+        "velocity": 72,
+        "command": 74,
+        "control": 72,
+        "movement": 66,
+        "mentality": 65,
+        "recovery": 62,
+        "clutch": 66,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 76,
+        "power": 68,
+        "eye": 76,
+        "discipline": 64,
+        "speed": 67,
+        "baseInstinct": 61,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 61,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "SP": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

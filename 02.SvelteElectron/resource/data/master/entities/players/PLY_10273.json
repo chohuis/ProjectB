@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10273",
+  "name": "테일러 그랜트",
+  "nameEn": "Taylor Grant",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 19,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 23,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 69,
+      "primaryPosition": "CF",
+      "developmentRate": 60,
+      "potentialHidden": 80,
+      "proServiceYears": 1,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 78,
+        "velocity": 85,
+        "command": 69,
+        "control": 76,
+        "movement": 77,
+        "mentality": 80,
+        "recovery": 65,
+        "clutch": 70,
+        "holdRunners": 70
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 73,
+        "power": 72,
+        "eye": 76,
+        "discipline": 77,
+        "speed": 70,
+        "baseInstinct": 76,
+        "bunting": 65,
+        "platoon": 50,
+        "fielding": 75,
+        "arm": 74,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "CF": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

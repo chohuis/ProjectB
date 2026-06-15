@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14463",
+  "name": "토마스 네이선",
+  "nameEn": "Thomas Nathan",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 12,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 12,
+      "primaryPosition": "3B",
+      "developmentRate": 43,
+      "potentialHidden": 57,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 53,
+        "velocity": 68,
+        "command": 52,
+        "control": 59,
+        "movement": 64,
+        "mentality": 56,
+        "recovery": 61,
+        "clutch": 56,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 67,
+        "power": 55,
+        "eye": 64,
+        "discipline": 64,
+        "speed": 63,
+        "baseInstinct": 52,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 51,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "3B": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

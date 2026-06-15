@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06572",
+  "name": "신재환",
+  "nameEn": "Shin JaeHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 22,
+      "primaryPosition": "SP",
+      "developmentRate": 50,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 52,
+        "velocity": 62,
+        "command": 53,
+        "control": 49,
+        "movement": 45,
+        "mentality": 50,
+        "recovery": 46,
+        "clutch": 41,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 57,
+        "power": 58,
+        "eye": 58,
+        "discipline": 57,
+        "speed": 59,
+        "baseInstinct": 56,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 53,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

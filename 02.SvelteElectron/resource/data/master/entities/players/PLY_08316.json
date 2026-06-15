@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08316",
+  "name": "김정환",
+  "nameEn": "Kim JungHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 2,
+      "primaryPosition": "3B",
+      "developmentRate": 55,
+      "potentialHidden": 80,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 43,
+        "velocity": 47,
+        "command": 38,
+        "control": 47,
+        "movement": 45,
+        "mentality": 41,
+        "recovery": 44,
+        "clutch": 44,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 46,
+        "power": 51,
+        "eye": 50,
+        "discipline": 45,
+        "speed": 46,
+        "baseInstinct": 51,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 45,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "3B": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

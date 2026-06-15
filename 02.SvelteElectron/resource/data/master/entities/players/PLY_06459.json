@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06459",
+  "name": "김수성",
+  "nameEn": "Kim SuSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 1,
+      "primaryPosition": "RF",
+      "developmentRate": 50,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 54,
+        "velocity": 65,
+        "command": 52,
+        "control": 54,
+        "movement": 57,
+        "mentality": 64,
+        "recovery": 59,
+        "clutch": 58,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 47,
+        "power": 53,
+        "eye": 48,
+        "discipline": 54,
+        "speed": 53,
+        "baseInstinct": 44,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 47,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "RF": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

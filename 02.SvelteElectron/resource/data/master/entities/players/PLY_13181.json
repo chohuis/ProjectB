@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13181",
+  "name": "마르티네스 칼렙",
+  "nameEn": "Martinez Caleb",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 39,
+      "primaryPosition": "1B",
+      "developmentRate": 69,
+      "potentialHidden": 64,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 78,
+        "stamina": 74,
+        "velocity": 81,
+        "command": 79,
+        "control": 70,
+        "movement": 75,
+        "mentality": 85,
+        "recovery": 67,
+        "clutch": 67,
+        "holdRunners": 74
+      },
+      "batting": {
+        "ovr": 78,
+        "contact": 78,
+        "power": 70,
+        "eye": 71,
+        "discipline": 72,
+        "speed": 82,
+        "baseInstinct": 72,
+        "bunting": 69,
+        "platoon": 50,
+        "fielding": 76,
+        "arm": 70,
+        "battingClutch": 78
+      },
+      "positionRatings": {
+        "1B": 78
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

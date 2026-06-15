@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07985",
+  "name": "임민현",
+  "nameEn": "Lim MinHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 81,
+      "primaryPosition": "3B",
+      "developmentRate": 63,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 43,
+        "velocity": 52,
+        "command": 42,
+        "control": 38,
+        "movement": 42,
+        "mentality": 44,
+        "recovery": 40,
+        "clutch": 37,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 48,
+        "power": 45,
+        "eye": 50,
+        "discipline": 41,
+        "speed": 47,
+        "baseInstinct": 38,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 46,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "3B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

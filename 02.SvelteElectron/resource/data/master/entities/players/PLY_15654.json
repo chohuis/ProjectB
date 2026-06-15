@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15654",
+  "name": "토마스 그랜트",
+  "nameEn": "Thomas Grant",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 28,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 61,
+      "primaryPosition": "3B",
+      "developmentRate": 59,
+      "potentialHidden": 73,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 50,
+        "velocity": 54,
+        "command": 36,
+        "control": 47,
+        "movement": 43,
+        "mentality": 39,
+        "recovery": 42,
+        "clutch": 37,
+        "holdRunners": 40
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 41,
+        "power": 45,
+        "eye": 50,
+        "discipline": 40,
+        "speed": 49,
+        "baseInstinct": 45,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 44,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "3B": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

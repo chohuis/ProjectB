@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14038",
+  "name": "로빈슨 타일러",
+  "nameEn": "Robinson Tyler",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 27,
+      "primaryPosition": "CF",
+      "developmentRate": 70,
+      "potentialHidden": 82,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 50,
+        "velocity": 61,
+        "command": 53,
+        "control": 56,
+        "movement": 48,
+        "mentality": 44,
+        "recovery": 45,
+        "clutch": 47,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 54,
+        "power": 46,
+        "eye": 46,
+        "discipline": 50,
+        "speed": 54,
+        "baseInstinct": 49,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 47,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "CF": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

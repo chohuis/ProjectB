@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09209",
+  "name": "안훈수",
+  "nameEn": "An HunSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 94,
+      "primaryPosition": "1B",
+      "developmentRate": 58,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 37,
+        "stamina": 41,
+        "velocity": 46,
+        "command": 26,
+        "control": 29,
+        "movement": 35,
+        "mentality": 39,
+        "recovery": 36,
+        "clutch": 28,
+        "holdRunners": 29
+      },
+      "batting": {
+        "ovr": 32,
+        "contact": 30,
+        "power": 21,
+        "eye": 31,
+        "discipline": 31,
+        "speed": 33,
+        "baseInstinct": 28,
+        "bunting": 21,
+        "platoon": 50,
+        "fielding": 29,
+        "arm": 24,
+        "battingClutch": 20
+      },
+      "positionRatings": {
+        "1B": 32
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07159",
+  "name": "안상수",
+  "nameEn": "An SangSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 23,
+      "primaryPosition": "SP",
+      "developmentRate": 48,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 51,
+        "velocity": 57,
+        "command": 41,
+        "control": 43,
+        "movement": 49,
+        "mentality": 56,
+        "recovery": 44,
+        "clutch": 46,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 46,
+        "power": 43,
+        "eye": 41,
+        "discipline": 37,
+        "speed": 40,
+        "baseInstinct": 38,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 40,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "SP": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10370",
+  "name": "홀 미겔",
+  "nameEn": "Hall Miguel",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 25,
+  "militaryStatus": "군필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 20,
+      "primaryPosition": "SS",
+      "developmentRate": 69,
+      "potentialHidden": 62,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 71,
+        "velocity": 66,
+        "command": 66,
+        "control": 72,
+        "movement": 60,
+        "mentality": 67,
+        "recovery": 60,
+        "clutch": 65,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 68,
+        "power": 70,
+        "eye": 61,
+        "discipline": 70,
+        "speed": 72,
+        "baseInstinct": 69,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 60,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "SS": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

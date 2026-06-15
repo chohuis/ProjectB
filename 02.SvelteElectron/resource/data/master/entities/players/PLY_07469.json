@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07469",
+  "name": "서훈원",
+  "nameEn": "Seo HunWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 91,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 48,
+        "velocity": 55,
+        "command": 43,
+        "control": 47,
+        "movement": 46,
+        "mentality": 55,
+        "recovery": 51,
+        "clutch": 46,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 58,
+        "power": 51,
+        "eye": 50,
+        "discipline": 45,
+        "speed": 55,
+        "baseInstinct": 47,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 50,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SP": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03120",
+  "name": "황준빈",
+  "nameEn": "Hwang JunBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 4,
+      "primaryPosition": "1B",
+      "developmentRate": 58,
+      "potentialHidden": 96,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 77,
+        "velocity": 83,
+        "command": 68,
+        "control": 70,
+        "movement": 69,
+        "mentality": 82,
+        "recovery": 67,
+        "clutch": 66,
+        "holdRunners": 71
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 62,
+        "power": 58,
+        "eye": 66,
+        "discipline": 59,
+        "speed": 64,
+        "baseInstinct": 64,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 65,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "1B": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11038",
+  "name": "미첼 에릭",
+  "nameEn": "Mitchell Eric",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 33,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 91,
+      "primaryPosition": "2B",
+      "developmentRate": 63,
+      "potentialHidden": 83,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 55,
+        "velocity": 61,
+        "command": 51,
+        "control": 43,
+        "movement": 45,
+        "mentality": 48,
+        "recovery": 43,
+        "clutch": 41,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 50,
+        "power": 52,
+        "eye": 49,
+        "discipline": 44,
+        "speed": 48,
+        "baseInstinct": 41,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 46,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "2B": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

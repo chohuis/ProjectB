@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06148",
+  "name": "송준환",
+  "nameEn": "Song JunHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 71,
+      "primaryPosition": "SP",
+      "developmentRate": 56,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 54,
+        "velocity": 52,
+        "command": 44,
+        "control": 46,
+        "movement": 43,
+        "mentality": 47,
+        "recovery": 43,
+        "clutch": 43,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 50,
+        "power": 42,
+        "eye": 48,
+        "discipline": 44,
+        "speed": 49,
+        "baseInstinct": 39,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 45,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

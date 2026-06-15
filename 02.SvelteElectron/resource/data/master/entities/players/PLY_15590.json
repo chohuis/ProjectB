@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15590",
+  "name": "앤더슨 크리스",
+  "nameEn": "Anderson Chris",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 24,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 32,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 77,
+      "primaryPosition": "SP",
+      "developmentRate": 35,
+      "potentialHidden": 63,
+      "proServiceYears": 10,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 53,
+        "velocity": 68,
+        "command": 57,
+        "control": 58,
+        "movement": 57,
+        "mentality": 54,
+        "recovery": 54,
+        "clutch": 57,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 56,
+        "power": 60,
+        "eye": 56,
+        "discipline": 50,
+        "speed": 54,
+        "baseInstinct": 57,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 61,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "SP": 60
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

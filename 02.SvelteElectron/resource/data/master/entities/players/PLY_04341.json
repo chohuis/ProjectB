@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04341",
+  "name": "강성현",
+  "nameEn": "Kang SeongHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 55,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 56,
+        "velocity": 55,
+        "command": 56,
+        "control": 50,
+        "movement": 50,
+        "mentality": 56,
+        "recovery": 51,
+        "clutch": 47,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 51,
+        "power": 54,
+        "eye": 50,
+        "discipline": 55,
+        "speed": 54,
+        "baseInstinct": 48,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 57,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "SP": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

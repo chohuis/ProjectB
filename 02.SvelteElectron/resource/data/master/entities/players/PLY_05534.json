@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05534",
+  "name": "정우완",
+  "nameEn": "Jung WooWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 16,
+      "primaryPosition": "SP",
+      "developmentRate": 57,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 48,
+        "velocity": 52,
+        "command": 42,
+        "control": 46,
+        "movement": 49,
+        "mentality": 46,
+        "recovery": 39,
+        "clutch": 47,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 48,
+        "power": 38,
+        "eye": 46,
+        "discipline": 47,
+        "speed": 50,
+        "baseInstinct": 39,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 36,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SP": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

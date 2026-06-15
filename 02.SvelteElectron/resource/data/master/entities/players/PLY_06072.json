@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06072",
+  "name": "한민빈",
+  "nameEn": "Han MinBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 78,
+      "primaryPosition": "SP",
+      "developmentRate": 56,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 40,
+        "velocity": 57,
+        "command": 45,
+        "control": 39,
+        "movement": 48,
+        "mentality": 43,
+        "recovery": 47,
+        "clutch": 36,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 47,
+        "power": 45,
+        "eye": 52,
+        "discipline": 52,
+        "speed": 48,
+        "baseInstinct": 43,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 46,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "SP": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

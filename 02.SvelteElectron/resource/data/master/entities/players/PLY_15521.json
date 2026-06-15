@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15521",
+  "name": "가르시아 헌터",
+  "nameEn": "Garcia Hunter",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 61,
+      "primaryPosition": "2B",
+      "developmentRate": 42,
+      "potentialHidden": 58,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 64,
+        "velocity": 78,
+        "command": 64,
+        "control": 65,
+        "movement": 65,
+        "mentality": 72,
+        "recovery": 61,
+        "clutch": 71,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 72,
+        "contact": 73,
+        "power": 63,
+        "eye": 64,
+        "discipline": 69,
+        "speed": 71,
+        "baseInstinct": 70,
+        "bunting": 67,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 67,
+        "battingClutch": 72
+      },
+      "positionRatings": {
+        "2B": 72
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

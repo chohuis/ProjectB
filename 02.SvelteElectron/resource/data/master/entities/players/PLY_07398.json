@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07398",
+  "name": "이지빈",
+  "nameEn": "Lee JiBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 62,
+      "primaryPosition": "RF",
+      "developmentRate": 52,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 66,
+        "velocity": 69,
+        "command": 52,
+        "control": 61,
+        "movement": 53,
+        "mentality": 65,
+        "recovery": 57,
+        "clutch": 56,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 46,
+        "power": 43,
+        "eye": 39,
+        "discipline": 46,
+        "speed": 48,
+        "baseInstinct": 41,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 42,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "RF": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

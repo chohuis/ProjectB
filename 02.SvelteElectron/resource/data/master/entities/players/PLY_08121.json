@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08121",
+  "name": "전혁재",
+  "nameEn": "Jeon HyeokJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 70,
+      "primaryPosition": "2B",
+      "developmentRate": 50,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 55,
+        "velocity": 53,
+        "command": 49,
+        "control": 54,
+        "movement": 54,
+        "mentality": 59,
+        "recovery": 45,
+        "clutch": 44,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 45,
+        "power": 38,
+        "eye": 40,
+        "discipline": 41,
+        "speed": 40,
+        "baseInstinct": 36,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 41,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "2B": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

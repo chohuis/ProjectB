@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16300",
+  "name": "베이커 트레버",
+  "nameEn": "Baker Trevor",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 30,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 34,
+      "primaryPosition": "2B",
+      "developmentRate": 65,
+      "potentialHidden": 71,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 67,
+        "velocity": 71,
+        "command": 68,
+        "control": 64,
+        "movement": 64,
+        "mentality": 65,
+        "recovery": 69,
+        "clutch": 61,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 68,
+        "power": 61,
+        "eye": 65,
+        "discipline": 62,
+        "speed": 75,
+        "baseInstinct": 66,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 67,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "2B": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

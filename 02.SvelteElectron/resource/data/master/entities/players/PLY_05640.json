@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05640",
+  "name": "박진혁",
+  "nameEn": "Park JinHyeok",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 63,
+      "primaryPosition": "SS",
+      "developmentRate": 58,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 54,
+        "velocity": 59,
+        "command": 49,
+        "control": 49,
+        "movement": 54,
+        "mentality": 53,
+        "recovery": 57,
+        "clutch": 45,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 49,
+        "power": 45,
+        "eye": 49,
+        "discipline": 50,
+        "speed": 45,
+        "baseInstinct": 43,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 39,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "SS": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

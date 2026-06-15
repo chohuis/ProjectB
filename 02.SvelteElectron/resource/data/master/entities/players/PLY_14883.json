@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14883",
+  "name": "애덤스 케빈",
+  "nameEn": "Adams Kevin",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 29,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 35,
+      "primaryPosition": "SP",
+      "developmentRate": 46,
+      "potentialHidden": 50,
+      "proServiceYears": 7,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 55,
+        "velocity": 63,
+        "command": 57,
+        "control": 49,
+        "movement": 50,
+        "mentality": 57,
+        "recovery": 50,
+        "clutch": 49,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 46,
+        "power": 49,
+        "eye": 57,
+        "discipline": 53,
+        "speed": 59,
+        "baseInstinct": 54,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 57,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

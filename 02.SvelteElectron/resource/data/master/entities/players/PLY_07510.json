@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07510",
+  "name": "안훈윤",
+  "nameEn": "An HunYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 4,
+      "primaryPosition": "1B",
+      "developmentRate": 45,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 53,
+        "velocity": 60,
+        "command": 53,
+        "control": 51,
+        "movement": 55,
+        "mentality": 53,
+        "recovery": 55,
+        "clutch": 50,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 52,
+        "power": 50,
+        "eye": 48,
+        "discipline": 49,
+        "speed": 48,
+        "baseInstinct": 52,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 48,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "1B": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

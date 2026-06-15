@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12548",
+  "name": "베이커 케빈",
+  "nameEn": "Baker Kevin",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 76,
+  "popularity": 37,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 60,
+      "primaryPosition": "2B",
+      "developmentRate": 65,
+      "potentialHidden": 90,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 65,
+        "velocity": 69,
+        "command": 64,
+        "control": 67,
+        "movement": 60,
+        "mentality": 75,
+        "recovery": 65,
+        "clutch": 65,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 64,
+        "power": 67,
+        "eye": 71,
+        "discipline": 72,
+        "speed": 72,
+        "baseInstinct": 68,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 59,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "2B": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

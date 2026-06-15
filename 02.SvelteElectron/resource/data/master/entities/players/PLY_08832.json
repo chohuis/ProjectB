@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08832",
+  "name": "오기호",
+  "nameEn": "Oh KiHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 57,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 39,
+      "primaryPosition": "SS",
+      "developmentRate": 44,
+      "potentialHidden": 50,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 37,
+        "velocity": 53,
+        "command": 32,
+        "control": 41,
+        "movement": 34,
+        "mentality": 38,
+        "recovery": 39,
+        "clutch": 31,
+        "holdRunners": 27
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 39,
+        "power": 33,
+        "eye": 38,
+        "discipline": 42,
+        "speed": 40,
+        "baseInstinct": 39,
+        "bunting": 19,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 30,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "SS": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

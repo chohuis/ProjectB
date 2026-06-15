@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07031",
+  "name": "최영완",
+  "nameEn": "Choi YoungWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 41,
+      "primaryPosition": "3B",
+      "developmentRate": 58,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 57,
+        "velocity": 61,
+        "command": 58,
+        "control": 53,
+        "movement": 50,
+        "mentality": 57,
+        "recovery": 56,
+        "clutch": 46,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 50,
+        "power": 41,
+        "eye": 41,
+        "discipline": 50,
+        "speed": 53,
+        "baseInstinct": 48,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 45,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "3B": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

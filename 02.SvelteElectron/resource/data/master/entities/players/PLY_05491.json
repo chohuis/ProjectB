@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05491",
+  "name": "한훈우",
+  "nameEn": "Han HunWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 16,
+      "primaryPosition": "SP",
+      "developmentRate": 64,
+      "potentialHidden": 80,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 49,
+        "velocity": 51,
+        "command": 48,
+        "control": 44,
+        "movement": 51,
+        "mentality": 48,
+        "recovery": 43,
+        "clutch": 37,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 45,
+        "power": 39,
+        "eye": 39,
+        "discipline": 44,
+        "speed": 44,
+        "baseInstinct": 39,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 38,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "SP": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

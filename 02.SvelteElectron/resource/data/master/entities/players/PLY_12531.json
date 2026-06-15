@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12531",
+  "name": "존스 크리스",
+  "nameEn": "Jones Chris",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 39,
+  "militaryStatus": "군필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 16,
+      "primaryPosition": "C",
+      "developmentRate": 50,
+      "potentialHidden": 64,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 75,
+        "velocity": 77,
+        "command": 65,
+        "control": 67,
+        "movement": 62,
+        "mentality": 68,
+        "recovery": 59,
+        "clutch": 67,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 65,
+        "power": 61,
+        "eye": 71,
+        "discipline": 71,
+        "speed": 69,
+        "baseInstinct": 65,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 68,
+        "battingClutch": 68
+      },
+      "positionRatings": {
+        "C": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

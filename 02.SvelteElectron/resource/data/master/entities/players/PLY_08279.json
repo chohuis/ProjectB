@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08279",
+  "name": "최세재",
+  "nameEn": "Choi SeJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 79,
+      "primaryPosition": "C",
+      "developmentRate": 61,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 58,
+        "velocity": 59,
+        "command": 57,
+        "control": 57,
+        "movement": 51,
+        "mentality": 55,
+        "recovery": 51,
+        "clutch": 51,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 48,
+        "power": 47,
+        "eye": 46,
+        "discipline": 48,
+        "speed": 47,
+        "baseInstinct": 49,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 39,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "C": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

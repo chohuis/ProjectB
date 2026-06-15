@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08114",
+  "name": "류기호",
+  "nameEn": "Ryu KiHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 88,
+      "primaryPosition": "SP",
+      "developmentRate": 47,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 41,
+        "velocity": 53,
+        "command": 37,
+        "control": 39,
+        "movement": 48,
+        "mentality": 43,
+        "recovery": 43,
+        "clutch": 44,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 51,
+        "power": 52,
+        "eye": 47,
+        "discipline": 49,
+        "speed": 51,
+        "baseInstinct": 44,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 43,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "SP": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

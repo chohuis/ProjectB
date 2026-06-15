@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09394",
+  "name": "최영윤",
+  "nameEn": "Choi YoungYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 92,
+      "primaryPosition": "2B",
+      "developmentRate": 57,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 41,
+        "velocity": 52,
+        "command": 40,
+        "control": 39,
+        "movement": 40,
+        "mentality": 47,
+        "recovery": 36,
+        "clutch": 33,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 31,
+        "power": 32,
+        "eye": 39,
+        "discipline": 33,
+        "speed": 40,
+        "baseInstinct": 26,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 34,
+        "battingClutch": 27
+      },
+      "positionRatings": {
+        "2B": 36
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

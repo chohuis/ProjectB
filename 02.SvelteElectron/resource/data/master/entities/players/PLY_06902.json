@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06902",
+  "name": "윤준기",
+  "nameEn": "Yoon JunKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 43,
+      "primaryPosition": "SP",
+      "developmentRate": 61,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 71,
+        "velocity": 66,
+        "command": 63,
+        "control": 70,
+        "movement": 61,
+        "mentality": 65,
+        "recovery": 57,
+        "clutch": 66,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 62,
+        "power": 54,
+        "eye": 60,
+        "discipline": 64,
+        "speed": 59,
+        "baseInstinct": 63,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 57,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "SP": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

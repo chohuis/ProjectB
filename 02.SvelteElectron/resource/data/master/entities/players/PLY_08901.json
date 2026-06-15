@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08901",
+  "name": "임진민",
+  "nameEn": "Lim JinMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 40,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 8,
+      "primaryPosition": "LF",
+      "developmentRate": 50,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 42,
+        "velocity": 54,
+        "command": 36,
+        "control": 45,
+        "movement": 48,
+        "mentality": 48,
+        "recovery": 45,
+        "clutch": 40,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 31,
+        "contact": 29,
+        "power": 28,
+        "eye": 28,
+        "discipline": 23,
+        "speed": 32,
+        "baseInstinct": 30,
+        "bunting": 20,
+        "platoon": 50,
+        "fielding": 20,
+        "arm": 21,
+        "battingClutch": 18
+      },
+      "positionRatings": {
+        "LF": 31
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

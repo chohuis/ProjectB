@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16246",
+  "name": "톰슨 카일",
+  "nameEn": "Thompson Kyle",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 17,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 86,
+      "primaryPosition": "SP",
+      "developmentRate": 65,
+      "potentialHidden": 65,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 71,
+        "velocity": 75,
+        "command": 69,
+        "control": 65,
+        "movement": 62,
+        "mentality": 70,
+        "recovery": 64,
+        "clutch": 59,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 65,
+        "power": 67,
+        "eye": 71,
+        "discipline": 71,
+        "speed": 71,
+        "baseInstinct": 68,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 70,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "SP": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

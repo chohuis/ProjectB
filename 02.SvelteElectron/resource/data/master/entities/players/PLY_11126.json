@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11126",
+  "name": "해리스 코디",
+  "nameEn": "Harris Cody",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 46,
+      "primaryPosition": "1B",
+      "developmentRate": 56,
+      "potentialHidden": 82,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 62,
+        "velocity": 63,
+        "command": 63,
+        "control": 57,
+        "movement": 55,
+        "mentality": 58,
+        "recovery": 58,
+        "clutch": 58,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 57,
+        "power": 56,
+        "eye": 56,
+        "discipline": 57,
+        "speed": 65,
+        "baseInstinct": 61,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 58,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "1B": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

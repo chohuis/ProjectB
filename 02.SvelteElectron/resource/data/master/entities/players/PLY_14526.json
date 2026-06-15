@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14526",
+  "name": "톰슨 데릭",
+  "nameEn": "Thompson Derek",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 46,
+  "militaryStatus": "군필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 43,
+      "primaryPosition": "3B",
+      "developmentRate": 50,
+      "potentialHidden": 50,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 46,
+        "velocity": 53,
+        "command": 52,
+        "control": 51,
+        "movement": 54,
+        "mentality": 58,
+        "recovery": 42,
+        "clutch": 42,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 43,
+        "power": 47,
+        "eye": 53,
+        "discipline": 53,
+        "speed": 52,
+        "baseInstinct": 44,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 53,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "3B": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

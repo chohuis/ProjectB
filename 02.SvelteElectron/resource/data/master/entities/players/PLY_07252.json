@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07252",
+  "name": "송지민",
+  "nameEn": "Song JiMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 15,
+      "primaryPosition": "3B",
+      "developmentRate": 46,
+      "potentialHidden": 51,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 44,
+        "velocity": 55,
+        "command": 40,
+        "control": 43,
+        "movement": 39,
+        "mentality": 46,
+        "recovery": 42,
+        "clutch": 38,
+        "holdRunners": 32
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 51,
+        "power": 53,
+        "eye": 56,
+        "discipline": 49,
+        "speed": 51,
+        "baseInstinct": 50,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 48,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "3B": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

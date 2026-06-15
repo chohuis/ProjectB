@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14454",
+  "name": "그린 케빈",
+  "nameEn": "Green Kevin",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 34,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 67,
+      "primaryPosition": "2B",
+      "developmentRate": 48,
+      "potentialHidden": 78,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 70,
+        "velocity": 64,
+        "command": 60,
+        "control": 65,
+        "movement": 63,
+        "mentality": 68,
+        "recovery": 64,
+        "clutch": 54,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 66,
+        "power": 59,
+        "eye": 62,
+        "discipline": 62,
+        "speed": 61,
+        "baseInstinct": 59,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 56,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "2B": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15304",
+  "name": "화이트 타일러",
+  "nameEn": "White Tyler",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 32,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 48,
+      "primaryPosition": "LF",
+      "developmentRate": 46,
+      "potentialHidden": 67,
+      "proServiceYears": 10,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 51,
+        "velocity": 53,
+        "command": 51,
+        "control": 46,
+        "movement": 47,
+        "mentality": 54,
+        "recovery": 46,
+        "clutch": 45,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 58,
+        "power": 43,
+        "eye": 50,
+        "discipline": 48,
+        "speed": 48,
+        "baseInstinct": 49,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 44,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "LF": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

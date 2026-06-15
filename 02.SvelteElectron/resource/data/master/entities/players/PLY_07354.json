@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07354",
+  "name": "박혁진",
+  "nameEn": "Park HyeokJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 40,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 94,
+      "primaryPosition": "LF",
+      "developmentRate": 46,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 58,
+        "velocity": 65,
+        "command": 54,
+        "control": 61,
+        "movement": 53,
+        "mentality": 62,
+        "recovery": 59,
+        "clutch": 54,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 34,
+        "power": 29,
+        "eye": 41,
+        "discipline": 33,
+        "speed": 34,
+        "baseInstinct": 35,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 30,
+        "battingClutch": 26
+      },
+      "positionRatings": {
+        "LF": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

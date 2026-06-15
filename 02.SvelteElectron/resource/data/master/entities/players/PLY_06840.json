@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06840",
+  "name": "송준호",
+  "nameEn": "Song JunHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 5,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 48,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 59,
+        "velocity": 64,
+        "command": 52,
+        "control": 58,
+        "movement": 57,
+        "mentality": 55,
+        "recovery": 49,
+        "clutch": 44,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 46,
+        "power": 46,
+        "eye": 43,
+        "discipline": 48,
+        "speed": 43,
+        "baseInstinct": 36,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 40,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

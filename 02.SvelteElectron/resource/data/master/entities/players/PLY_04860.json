@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04860",
+  "name": "황상수",
+  "nameEn": "Hwang SangSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 63,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 65,
+      "primaryPosition": "SP",
+      "developmentRate": 45,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 43,
+        "velocity": 45,
+        "command": 40,
+        "control": 48,
+        "movement": 37,
+        "mentality": 44,
+        "recovery": 39,
+        "clutch": 35,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 48,
+        "power": 47,
+        "eye": 55,
+        "discipline": 54,
+        "speed": 59,
+        "baseInstinct": 51,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 48,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "SP": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

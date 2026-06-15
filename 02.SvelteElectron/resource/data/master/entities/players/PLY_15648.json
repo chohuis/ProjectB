@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15648",
+  "name": "윌리엄스 로건",
+  "nameEn": "Williams Logan",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 42,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 39,
+      "primaryPosition": "SP",
+      "developmentRate": 66,
+      "potentialHidden": 68,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 52,
+        "velocity": 61,
+        "command": 56,
+        "control": 51,
+        "movement": 54,
+        "mentality": 49,
+        "recovery": 46,
+        "clutch": 51,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 54,
+        "power": 50,
+        "eye": 54,
+        "discipline": 54,
+        "speed": 60,
+        "baseInstinct": 56,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 55,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SP": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

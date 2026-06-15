@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06764",
+  "name": "송태준",
+  "nameEn": "Song TaeJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 35,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 4,
+      "primaryPosition": "SS",
+      "developmentRate": 61,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 58,
+        "velocity": 72,
+        "command": 64,
+        "control": 64,
+        "movement": 57,
+        "mentality": 65,
+        "recovery": 61,
+        "clutch": 58,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 55,
+        "power": 52,
+        "eye": 44,
+        "discipline": 48,
+        "speed": 50,
+        "baseInstinct": 50,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 51,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "SS": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

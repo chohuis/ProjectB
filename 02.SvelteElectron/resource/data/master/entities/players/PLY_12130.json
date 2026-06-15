@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12130",
+  "name": "스콧 코너",
+  "nameEn": "Scott Connor",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 73,
+      "primaryPosition": "3B",
+      "developmentRate": 67,
+      "potentialHidden": 81,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 59,
+        "velocity": 62,
+        "command": 64,
+        "control": 63,
+        "movement": 67,
+        "mentality": 68,
+        "recovery": 63,
+        "clutch": 61,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 60,
+        "power": 63,
+        "eye": 60,
+        "discipline": 63,
+        "speed": 62,
+        "baseInstinct": 57,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 55,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "3B": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

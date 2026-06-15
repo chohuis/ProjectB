@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04559",
+  "name": "오세욱",
+  "nameEn": "Oh SeWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 11,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 89,
+      "primaryPosition": "SS",
+      "developmentRate": 49,
+      "potentialHidden": 58,
+      "pitching": {
+        "ovr": 41,
+        "stamina": 42,
+        "velocity": 41,
+        "command": 35,
+        "control": 40,
+        "movement": 34,
+        "mentality": 41,
+        "recovery": 29,
+        "clutch": 35,
+        "holdRunners": 29
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 48,
+        "power": 37,
+        "eye": 39,
+        "discipline": 43,
+        "speed": 45,
+        "baseInstinct": 36,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 40,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SS": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

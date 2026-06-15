@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07900",
+  "name": "류민욱",
+  "nameEn": "Ryu MinWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 32,
+      "primaryPosition": "1B",
+      "developmentRate": 55,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 58,
+        "velocity": 65,
+        "command": 58,
+        "control": 59,
+        "movement": 55,
+        "mentality": 61,
+        "recovery": 55,
+        "clutch": 53,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 39,
+        "power": 43,
+        "eye": 47,
+        "discipline": 43,
+        "speed": 52,
+        "baseInstinct": 36,
+        "bunting": 28,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 42,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "1B": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

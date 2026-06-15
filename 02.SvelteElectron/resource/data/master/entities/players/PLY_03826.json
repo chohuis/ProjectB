@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03826",
+  "name": "이재준",
+  "nameEn": "Lee JaeJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 97,
+      "primaryPosition": "3B",
+      "developmentRate": 69,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 48,
+        "velocity": 52,
+        "command": 50,
+        "control": 46,
+        "movement": 49,
+        "mentality": 50,
+        "recovery": 45,
+        "clutch": 42,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 61,
+        "power": 55,
+        "eye": 58,
+        "discipline": 56,
+        "speed": 64,
+        "baseInstinct": 54,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 54,
+        "battingClutch": 54
+      },
+      "positionRatings": {
+        "3B": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

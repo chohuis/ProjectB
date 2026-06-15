@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06157",
+  "name": "이찬훈",
+  "nameEn": "Lee ChanHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 11,
+      "primaryPosition": "SP",
+      "developmentRate": 43,
+      "potentialHidden": 45,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 53,
+        "velocity": 63,
+        "command": 51,
+        "control": 56,
+        "movement": 44,
+        "mentality": 49,
+        "recovery": 47,
+        "clutch": 45,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 39,
+        "power": 44,
+        "eye": 40,
+        "discipline": 40,
+        "speed": 44,
+        "baseInstinct": 45,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 39,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "SP": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

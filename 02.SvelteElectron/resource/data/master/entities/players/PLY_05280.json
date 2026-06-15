@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05280",
+  "name": "강정욱",
+  "nameEn": "Kang JungWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 36,
+      "primaryPosition": "C",
+      "developmentRate": 45,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 42,
+        "velocity": 51,
+        "command": 41,
+        "control": 47,
+        "movement": 40,
+        "mentality": 47,
+        "recovery": 42,
+        "clutch": 40,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 51,
+        "power": 45,
+        "eye": 46,
+        "discipline": 49,
+        "speed": 54,
+        "baseInstinct": 45,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 47,
+        "battingClutch": 39
+      },
+      "positionRatings": {
+        "C": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

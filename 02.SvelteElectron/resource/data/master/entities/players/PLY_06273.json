@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06273",
+  "name": "안동우",
+  "nameEn": "An DongWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 6,
+      "primaryPosition": "RF",
+      "developmentRate": 43,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 49,
+        "velocity": 56,
+        "command": 53,
+        "control": 45,
+        "movement": 52,
+        "mentality": 48,
+        "recovery": 43,
+        "clutch": 48,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 31,
+        "contact": 26,
+        "power": 31,
+        "eye": 24,
+        "discipline": 29,
+        "speed": 29,
+        "baseInstinct": 24,
+        "bunting": 15,
+        "platoon": 50,
+        "fielding": 27,
+        "arm": 24,
+        "battingClutch": 19
+      },
+      "positionRatings": {
+        "RF": 31
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

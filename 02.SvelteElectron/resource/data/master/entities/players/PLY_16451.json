@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16451",
+  "name": "라이트 알렉스",
+  "nameEn": "Wright Alex",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 42,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 26,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 29,
+      "primaryPosition": "2B",
+      "developmentRate": 51,
+      "potentialHidden": 51,
+      "proServiceYears": 4,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 78,
+        "velocity": 77,
+        "command": 72,
+        "control": 77,
+        "movement": 77,
+        "mentality": 77,
+        "recovery": 71,
+        "clutch": 71,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 66,
+        "power": 75,
+        "eye": 70,
+        "discipline": 67,
+        "speed": 77,
+        "baseInstinct": 67,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 69,
+        "battingClutch": 63
+      },
+      "positionRatings": {
+        "2B": 73
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

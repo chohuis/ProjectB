@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05350",
+  "name": "한도진",
+  "nameEn": "Han DoJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 69,
+      "primaryPosition": "SS",
+      "developmentRate": 63,
+      "potentialHidden": 82,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 55,
+        "velocity": 58,
+        "command": 47,
+        "control": 59,
+        "movement": 49,
+        "mentality": 62,
+        "recovery": 53,
+        "clutch": 52,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 50,
+        "power": 44,
+        "eye": 50,
+        "discipline": 45,
+        "speed": 46,
+        "baseInstinct": 43,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 40,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "SS": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

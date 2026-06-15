@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03411",
+  "name": "장도훈",
+  "nameEn": "Jang DoHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 98,
+      "primaryPosition": "SP",
+      "developmentRate": 66,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 66,
+        "velocity": 75,
+        "command": 63,
+        "control": 63,
+        "movement": 63,
+        "mentality": 71,
+        "recovery": 58,
+        "clutch": 54,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 66,
+        "power": 64,
+        "eye": 62,
+        "discipline": 58,
+        "speed": 65,
+        "baseInstinct": 57,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 56,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "SP": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

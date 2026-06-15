@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15265",
+  "name": "브라운 로건",
+  "nameEn": "Brown Logan",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 38,
+  "militaryStatus": "군필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 79,
+      "primaryPosition": "SP",
+      "developmentRate": 74,
+      "potentialHidden": 69,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 41,
+        "velocity": 47,
+        "command": 40,
+        "control": 43,
+        "movement": 47,
+        "mentality": 51,
+        "recovery": 50,
+        "clutch": 49,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 51,
+        "power": 49,
+        "eye": 45,
+        "discipline": 50,
+        "speed": 44,
+        "baseInstinct": 44,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 42,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "SP": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

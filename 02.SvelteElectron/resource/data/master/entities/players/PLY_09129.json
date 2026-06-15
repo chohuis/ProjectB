@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09129",
+  "name": "임정준",
+  "nameEn": "Lim JungJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 60,
+      "primaryPosition": "3B",
+      "developmentRate": 52,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 36,
+        "stamina": 35,
+        "velocity": 44,
+        "command": 29,
+        "control": 35,
+        "movement": 36,
+        "mentality": 36,
+        "recovery": 28,
+        "clutch": 32,
+        "holdRunners": 23
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 29,
+        "power": 28,
+        "eye": 28,
+        "discipline": 27,
+        "speed": 32,
+        "baseInstinct": 34,
+        "bunting": 15,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 35,
+        "battingClutch": 25
+      },
+      "positionRatings": {
+        "3B": 36
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

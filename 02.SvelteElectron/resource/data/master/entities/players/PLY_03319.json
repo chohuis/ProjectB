@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03319",
+  "name": "오수호",
+  "nameEn": "Oh SuHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 69,
+      "primaryPosition": "SP",
+      "developmentRate": 68,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 70,
+        "velocity": 73,
+        "command": 72,
+        "control": 66,
+        "movement": 67,
+        "mentality": 74,
+        "recovery": 63,
+        "clutch": 61,
+        "holdRunners": 68
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 52,
+        "power": 46,
+        "eye": 52,
+        "discipline": 47,
+        "speed": 58,
+        "baseInstinct": 54,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 53,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "SP": 73
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

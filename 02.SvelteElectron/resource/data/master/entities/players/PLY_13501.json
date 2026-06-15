@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13501",
+  "name": "토마스 케빈",
+  "nameEn": "Thomas Kevin",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 10,
+      "primaryPosition": "CF",
+      "developmentRate": 54,
+      "potentialHidden": 63,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 71,
+        "velocity": 80,
+        "command": 70,
+        "control": 69,
+        "movement": 74,
+        "mentality": 78,
+        "recovery": 66,
+        "clutch": 75,
+        "holdRunners": 70
+      },
+      "batting": {
+        "ovr": 74,
+        "contact": 70,
+        "power": 65,
+        "eye": 78,
+        "discipline": 75,
+        "speed": 72,
+        "baseInstinct": 75,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 75,
+        "arm": 69,
+        "battingClutch": 65
+      },
+      "positionRatings": {
+        "CF": 74
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11573",
+  "name": "에르난데스 제이크",
+  "nameEn": "Hernandez Jake",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 17,
+      "primaryPosition": "2B",
+      "developmentRate": 60,
+      "potentialHidden": 81,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 68,
+        "velocity": 73,
+        "command": 62,
+        "control": 68,
+        "movement": 65,
+        "mentality": 76,
+        "recovery": 67,
+        "clutch": 63,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 75,
+        "power": 63,
+        "eye": 72,
+        "discipline": 73,
+        "speed": 74,
+        "baseInstinct": 61,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 73,
+        "battingClutch": 71
+      },
+      "positionRatings": {
+        "2B": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

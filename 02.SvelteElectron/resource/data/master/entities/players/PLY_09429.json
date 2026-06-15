@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09429",
+  "name": "신도현",
+  "nameEn": "Shin DoHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 27,
+      "primaryPosition": "1B",
+      "developmentRate": 57,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 48,
+        "velocity": 54,
+        "command": 44,
+        "control": 45,
+        "movement": 38,
+        "mentality": 50,
+        "recovery": 35,
+        "clutch": 42,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 36,
+        "contact": 38,
+        "power": 37,
+        "eye": 38,
+        "discipline": 36,
+        "speed": 37,
+        "baseInstinct": 30,
+        "bunting": 23,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 31,
+        "battingClutch": 23
+      },
+      "positionRatings": {
+        "1B": 36
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

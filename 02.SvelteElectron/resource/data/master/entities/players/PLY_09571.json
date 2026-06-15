@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09571",
+  "name": "이기욱",
+  "nameEn": "Lee KiWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 62,
+      "primaryPosition": "CF",
+      "developmentRate": 46,
+      "potentialHidden": 43,
+      "pitching": {
+        "ovr": 33,
+        "stamina": 30,
+        "velocity": 34,
+        "command": 31,
+        "control": 36,
+        "movement": 35,
+        "mentality": 29,
+        "recovery": 22,
+        "clutch": 31,
+        "holdRunners": 21
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 41,
+        "power": 39,
+        "eye": 40,
+        "discipline": 30,
+        "speed": 35,
+        "baseInstinct": 35,
+        "bunting": 19,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 31,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "CF": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

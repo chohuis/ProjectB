@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05524",
+  "name": "윤재식",
+  "nameEn": "Yoon JaeSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 89,
+      "primaryPosition": "SP",
+      "developmentRate": 66,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 52,
+        "velocity": 48,
+        "command": 42,
+        "control": 49,
+        "movement": 43,
+        "mentality": 47,
+        "recovery": 41,
+        "clutch": 43,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 60,
+        "contact": 59,
+        "power": 57,
+        "eye": 54,
+        "discipline": 55,
+        "speed": 63,
+        "baseInstinct": 52,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 57,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "SP": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

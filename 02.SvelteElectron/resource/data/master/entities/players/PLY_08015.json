@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08015",
+  "name": "장준진",
+  "nameEn": "Jang JunJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 33,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 17,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 54,
+        "velocity": 62,
+        "command": 48,
+        "control": 54,
+        "movement": 55,
+        "mentality": 53,
+        "recovery": 45,
+        "clutch": 45,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 40,
+        "power": 39,
+        "eye": 46,
+        "discipline": 42,
+        "speed": 48,
+        "baseInstinct": 41,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 47,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

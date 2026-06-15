@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05312",
+  "name": "강혁민",
+  "nameEn": "Kang HyeokMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 97,
+      "primaryPosition": "CF",
+      "developmentRate": 53,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 46,
+        "velocity": 54,
+        "command": 45,
+        "control": 47,
+        "movement": 49,
+        "mentality": 55,
+        "recovery": 45,
+        "clutch": 46,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 50,
+        "power": 48,
+        "eye": 53,
+        "discipline": 54,
+        "speed": 55,
+        "baseInstinct": 53,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 50,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "CF": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05658",
+  "name": "강기훈",
+  "nameEn": "Kang KiHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 40,
+      "primaryPosition": "SS",
+      "developmentRate": 60,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 59,
+        "velocity": 65,
+        "command": 58,
+        "control": 62,
+        "movement": 59,
+        "mentality": 58,
+        "recovery": 60,
+        "clutch": 51,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 44,
+        "power": 40,
+        "eye": 48,
+        "discipline": 48,
+        "speed": 44,
+        "baseInstinct": 48,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 46,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SS": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

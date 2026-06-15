@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14718",
+  "name": "로드리게스 트레버",
+  "nameEn": "Rodriguez Trevor",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 19,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 37,
+      "primaryPosition": "SP",
+      "developmentRate": 63,
+      "potentialHidden": 59,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 60,
+        "velocity": 64,
+        "command": 52,
+        "control": 59,
+        "movement": 55,
+        "mentality": 62,
+        "recovery": 50,
+        "clutch": 49,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 52,
+        "power": 61,
+        "eye": 63,
+        "discipline": 62,
+        "speed": 60,
+        "baseInstinct": 57,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 49,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "SP": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

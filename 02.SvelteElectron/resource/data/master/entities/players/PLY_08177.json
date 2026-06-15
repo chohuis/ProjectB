@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08177",
+  "name": "장민성",
+  "nameEn": "Jang MinSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 61,
+      "primaryPosition": "1B",
+      "developmentRate": 60,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 46,
+        "velocity": 46,
+        "command": 35,
+        "control": 45,
+        "movement": 36,
+        "mentality": 41,
+        "recovery": 42,
+        "clutch": 33,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 40,
+        "power": 38,
+        "eye": 43,
+        "discipline": 43,
+        "speed": 47,
+        "baseInstinct": 49,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 41,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "1B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

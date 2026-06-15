@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08722",
+  "name": "한정준",
+  "nameEn": "Han JungJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 94,
+      "primaryPosition": "SP",
+      "developmentRate": 59,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 38,
+        "stamina": 30,
+        "velocity": 42,
+        "command": 32,
+        "control": 39,
+        "movement": 34,
+        "mentality": 43,
+        "recovery": 28,
+        "clutch": 34,
+        "holdRunners": 27
+      },
+      "batting": {
+        "ovr": 41,
+        "contact": 42,
+        "power": 36,
+        "eye": 43,
+        "discipline": 36,
+        "speed": 41,
+        "baseInstinct": 39,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 40,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "SP": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

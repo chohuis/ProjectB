@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07247",
+  "name": "최도현",
+  "nameEn": "Choi DoHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 1,
+      "primaryPosition": "2B",
+      "developmentRate": 64,
+      "potentialHidden": 62,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 51,
+        "velocity": 54,
+        "command": 46,
+        "control": 47,
+        "movement": 54,
+        "mentality": 51,
+        "recovery": 43,
+        "clutch": 48,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 44,
+        "power": 48,
+        "eye": 51,
+        "discipline": 46,
+        "speed": 45,
+        "baseInstinct": 47,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 46,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "2B": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

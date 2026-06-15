@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04497",
+  "name": "임동욱",
+  "nameEn": "Lim DongWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2053,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2051,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 15,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 66,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 50,
+        "velocity": 63,
+        "command": 51,
+        "control": 47,
+        "movement": 48,
+        "mentality": 59,
+        "recovery": 42,
+        "clutch": 47,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 56,
+        "power": 53,
+        "eye": 54,
+        "discipline": 49,
+        "speed": 53,
+        "baseInstinct": 50,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 57,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "SP": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

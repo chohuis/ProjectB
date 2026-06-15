@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08102",
+  "name": "권재진",
+  "nameEn": "Kwon JaeJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 10,
+      "primaryPosition": "LF",
+      "developmentRate": 63,
+      "potentialHidden": 72,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 52,
+        "velocity": 66,
+        "command": 50,
+        "control": 55,
+        "movement": 53,
+        "mentality": 64,
+        "recovery": 50,
+        "clutch": 52,
+        "holdRunners": 49
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 46,
+        "power": 40,
+        "eye": 44,
+        "discipline": 46,
+        "speed": 51,
+        "baseInstinct": 35,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 36,
+        "arm": 47,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "LF": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

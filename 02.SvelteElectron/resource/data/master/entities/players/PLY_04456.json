@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04456",
+  "name": "황현현",
+  "nameEn": "Hwang HyeonHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 52,
+      "primaryPosition": "2B",
+      "developmentRate": 53,
+      "potentialHidden": 61,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 69,
+        "velocity": 69,
+        "command": 63,
+        "control": 67,
+        "movement": 66,
+        "mentality": 67,
+        "recovery": 60,
+        "clutch": 53,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 55,
+        "power": 55,
+        "eye": 61,
+        "discipline": 64,
+        "speed": 62,
+        "baseInstinct": 61,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 60,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "2B": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

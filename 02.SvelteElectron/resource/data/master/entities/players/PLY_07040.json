@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07040",
+  "name": "김지기",
+  "nameEn": "Kim JiKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 37,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 51,
+        "velocity": 58,
+        "command": 50,
+        "control": 52,
+        "movement": 55,
+        "mentality": 58,
+        "recovery": 48,
+        "clutch": 50,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 48,
+        "power": 54,
+        "eye": 47,
+        "discipline": 50,
+        "speed": 57,
+        "baseInstinct": 52,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 46,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "SP": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

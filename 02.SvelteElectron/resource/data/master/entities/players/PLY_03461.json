@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03461",
+  "name": "안진성",
+  "nameEn": "An JinSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2049,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 18,
+      "primaryPosition": "3B",
+      "developmentRate": 71,
+      "potentialHidden": 90,
+      "pitching": {
+        "ovr": 77,
+        "stamina": 77,
+        "velocity": 82,
+        "command": 76,
+        "control": 72,
+        "movement": 69,
+        "mentality": 78,
+        "recovery": 69,
+        "clutch": 72,
+        "holdRunners": 69
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 70,
+        "power": 63,
+        "eye": 69,
+        "discipline": 65,
+        "speed": 68,
+        "baseInstinct": 62,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 59,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "3B": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

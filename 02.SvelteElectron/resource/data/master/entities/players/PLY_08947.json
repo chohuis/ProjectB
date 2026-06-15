@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08947",
+  "name": "박동진",
+  "nameEn": "Park DongJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 38,
+      "primaryPosition": "SP",
+      "developmentRate": 46,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 50,
+        "velocity": 49,
+        "command": 43,
+        "control": 46,
+        "movement": 48,
+        "mentality": 46,
+        "recovery": 50,
+        "clutch": 38,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 34,
+        "contact": 37,
+        "power": 23,
+        "eye": 26,
+        "discipline": 29,
+        "speed": 38,
+        "baseInstinct": 34,
+        "bunting": 14,
+        "platoon": 50,
+        "fielding": 24,
+        "arm": 23,
+        "battingClutch": 23
+      },
+      "positionRatings": {
+        "SP": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

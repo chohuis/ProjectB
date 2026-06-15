@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06238",
+  "name": "류세재",
+  "nameEn": "Ryu SeJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 50,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 48,
+      "primaryPosition": "LF",
+      "developmentRate": 53,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 36,
+        "stamina": 39,
+        "velocity": 41,
+        "command": 29,
+        "control": 32,
+        "movement": 31,
+        "mentality": 35,
+        "recovery": 26,
+        "clutch": 31,
+        "holdRunners": 27
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 37,
+        "power": 31,
+        "eye": 34,
+        "discipline": 33,
+        "speed": 43,
+        "baseInstinct": 39,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 30,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "LF": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

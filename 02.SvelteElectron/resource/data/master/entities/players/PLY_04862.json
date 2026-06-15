@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04862",
+  "name": "한재빈",
+  "nameEn": "Han JaeBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 22,
+      "primaryPosition": "1B",
+      "developmentRate": 49,
+      "potentialHidden": 56,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 40,
+        "velocity": 51,
+        "command": 48,
+        "control": 45,
+        "movement": 49,
+        "mentality": 42,
+        "recovery": 37,
+        "clutch": 41,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 55,
+        "power": 52,
+        "eye": 47,
+        "discipline": 50,
+        "speed": 53,
+        "baseInstinct": 55,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 49,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "1B": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

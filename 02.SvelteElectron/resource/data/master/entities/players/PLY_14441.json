@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14441",
+  "name": "미첼 조던",
+  "nameEn": "Mitchell Jordan",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 41,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 1,
+      "primaryPosition": "LF",
+      "developmentRate": 43,
+      "potentialHidden": 83,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 55,
+        "velocity": 66,
+        "command": 56,
+        "control": 59,
+        "movement": 52,
+        "mentality": 66,
+        "recovery": 61,
+        "clutch": 54,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 54,
+        "power": 52,
+        "eye": 60,
+        "discipline": 53,
+        "speed": 61,
+        "baseInstinct": 54,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 54,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "LF": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

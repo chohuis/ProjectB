@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07751",
+  "name": "안민성",
+  "nameEn": "An MinSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 45,
+      "primaryPosition": "RF",
+      "developmentRate": 50,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 57,
+        "velocity": 58,
+        "command": 46,
+        "control": 52,
+        "movement": 53,
+        "mentality": 49,
+        "recovery": 47,
+        "clutch": 48,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 32,
+        "power": 39,
+        "eye": 36,
+        "discipline": 33,
+        "speed": 39,
+        "baseInstinct": 30,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 31,
+        "arm": 31,
+        "battingClutch": 29
+      },
+      "positionRatings": {
+        "RF": 38
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

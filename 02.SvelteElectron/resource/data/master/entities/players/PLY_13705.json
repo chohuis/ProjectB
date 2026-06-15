@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13705",
+  "name": "영 크리스",
+  "nameEn": "Young Chris",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 26,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 56,
+      "primaryPosition": "CF",
+      "developmentRate": 47,
+      "potentialHidden": 73,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 71,
+        "velocity": 79,
+        "command": 75,
+        "control": 79,
+        "movement": 77,
+        "mentality": 68,
+        "recovery": 73,
+        "clutch": 63,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 79,
+        "power": 67,
+        "eye": 71,
+        "discipline": 65,
+        "speed": 81,
+        "baseInstinct": 77,
+        "bunting": 68,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 72,
+        "battingClutch": 73
+      },
+      "positionRatings": {
+        "CF": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

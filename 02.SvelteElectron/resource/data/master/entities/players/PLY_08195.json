@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08195",
+  "name": "서현욱",
+  "nameEn": "Seo HyeonWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 29,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 24,
+      "primaryPosition": "CF",
+      "developmentRate": 50,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 42,
+        "velocity": 48,
+        "command": 47,
+        "control": 40,
+        "movement": 42,
+        "mentality": 48,
+        "recovery": 40,
+        "clutch": 45,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 50,
+        "power": 51,
+        "eye": 52,
+        "discipline": 55,
+        "speed": 58,
+        "baseInstinct": 55,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 48,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "CF": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

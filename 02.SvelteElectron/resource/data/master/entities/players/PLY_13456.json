@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13456",
+  "name": "톰슨 재크",
+  "nameEn": "Thompson Zach",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 37,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 46,
+      "primaryPosition": "SP",
+      "developmentRate": 50,
+      "potentialHidden": 79,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 60,
+        "velocity": 76,
+        "command": 64,
+        "control": 59,
+        "movement": 69,
+        "mentality": 62,
+        "recovery": 61,
+        "clutch": 55,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 66,
+        "power": 62,
+        "eye": 57,
+        "discipline": 70,
+        "speed": 69,
+        "baseInstinct": 64,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 64,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "SP": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

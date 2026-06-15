@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09623",
+  "name": "송세훈",
+  "nameEn": "Song SeHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUNCHEON_BAY",
+  "teamId": "TEAM_HS_SUNCHEON_BAY",
+  "schoolId": "SCHOOL_HS_SUNCHEON_BAY",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUNCHEON_BAY",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 98,
+      "primaryPosition": "3B",
+      "developmentRate": 56,
+      "potentialHidden": 53,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 50,
+        "velocity": 49,
+        "command": 38,
+        "control": 50,
+        "movement": 41,
+        "mentality": 45,
+        "recovery": 38,
+        "clutch": 39,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 45,
+        "power": 40,
+        "eye": 48,
+        "discipline": 42,
+        "speed": 46,
+        "baseInstinct": 47,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 41,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "3B": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15485",
+  "name": "클라크 브랜던",
+  "nameEn": "Clark Brandon",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 28,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 59,
+      "primaryPosition": "CF",
+      "developmentRate": 44,
+      "potentialHidden": 61,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 65,
+        "velocity": 68,
+        "command": 58,
+        "control": 58,
+        "movement": 52,
+        "mentality": 58,
+        "recovery": 61,
+        "clutch": 50,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 61,
+        "power": 60,
+        "eye": 61,
+        "discipline": 53,
+        "speed": 59,
+        "baseInstinct": 62,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 52,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "CF": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

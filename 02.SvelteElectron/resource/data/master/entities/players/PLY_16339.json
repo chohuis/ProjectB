@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16339",
+  "name": "존스 크리스",
+  "nameEn": "Jones Chris",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 39,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 34,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 15,
+      "primaryPosition": "LF",
+      "developmentRate": 48,
+      "potentialHidden": 49,
+      "proServiceYears": 12,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 62,
+        "velocity": 70,
+        "command": 60,
+        "control": 69,
+        "movement": 70,
+        "mentality": 64,
+        "recovery": 57,
+        "clutch": 59,
+        "holdRunners": 53
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 65,
+        "power": 68,
+        "eye": 59,
+        "discipline": 59,
+        "speed": 63,
+        "baseInstinct": 57,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 70,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "LF": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

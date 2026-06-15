@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04224",
+  "name": "신도민",
+  "nameEn": "Shin DoMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 46,
+      "primaryPosition": "SP",
+      "developmentRate": 62,
+      "potentialHidden": 73,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 58,
+        "velocity": 57,
+        "command": 57,
+        "control": 60,
+        "movement": 57,
+        "mentality": 61,
+        "recovery": 49,
+        "clutch": 47,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 56,
+        "power": 50,
+        "eye": 49,
+        "discipline": 48,
+        "speed": 58,
+        "baseInstinct": 48,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 51,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "SP": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

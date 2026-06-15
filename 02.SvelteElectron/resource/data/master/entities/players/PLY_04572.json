@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04572",
+  "name": "안재기",
+  "nameEn": "An JaeKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 43,
+      "primaryPosition": "SS",
+      "developmentRate": 58,
+      "potentialHidden": 80,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 51,
+        "velocity": 57,
+        "command": 47,
+        "control": 47,
+        "movement": 41,
+        "mentality": 53,
+        "recovery": 39,
+        "clutch": 42,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 57,
+        "power": 52,
+        "eye": 50,
+        "discipline": 47,
+        "speed": 60,
+        "baseInstinct": 47,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 47,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SS": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03602",
+  "name": "안지현",
+  "nameEn": "An JiHyeon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 56,
+      "primaryPosition": "RF",
+      "developmentRate": 53,
+      "potentialHidden": 90,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 57,
+        "velocity": 66,
+        "command": 50,
+        "control": 58,
+        "movement": 57,
+        "mentality": 58,
+        "recovery": 54,
+        "clutch": 54,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 56,
+        "power": 60,
+        "eye": 56,
+        "discipline": 57,
+        "speed": 58,
+        "baseInstinct": 55,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 51,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "RF": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

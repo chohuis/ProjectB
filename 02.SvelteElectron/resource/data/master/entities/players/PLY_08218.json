@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08218",
+  "name": "한영찬",
+  "nameEn": "Han YoungChan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 27,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 6,
+      "primaryPosition": "1B",
+      "developmentRate": 49,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 49,
+        "velocity": 62,
+        "command": 54,
+        "control": 56,
+        "movement": 47,
+        "mentality": 56,
+        "recovery": 55,
+        "clutch": 54,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 55,
+        "power": 49,
+        "eye": 51,
+        "discipline": 45,
+        "speed": 59,
+        "baseInstinct": 52,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 47,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "1B": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04252",
+  "name": "안찬빈",
+  "nameEn": "An ChanBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 80,
+      "primaryPosition": "SP",
+      "developmentRate": 68,
+      "potentialHidden": 82,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 63,
+        "velocity": 72,
+        "command": 67,
+        "control": 66,
+        "movement": 68,
+        "mentality": 69,
+        "recovery": 63,
+        "clutch": 63,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 52,
+        "contact": 51,
+        "power": 53,
+        "eye": 45,
+        "discipline": 53,
+        "speed": 47,
+        "baseInstinct": 42,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 49,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SP": 66
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

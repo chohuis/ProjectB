@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06213",
+  "name": "박기성",
+  "nameEn": "Park KiSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 24,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 55,
+        "velocity": 58,
+        "command": 43,
+        "control": 49,
+        "movement": 49,
+        "mentality": 52,
+        "recovery": 44,
+        "clutch": 47,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 37,
+        "contact": 35,
+        "power": 35,
+        "eye": 34,
+        "discipline": 37,
+        "speed": 32,
+        "baseInstinct": 30,
+        "bunting": 25,
+        "platoon": 50,
+        "fielding": 32,
+        "arm": 30,
+        "battingClutch": 26
+      },
+      "positionRatings": {
+        "SP": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

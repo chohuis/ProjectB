@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05664",
+  "name": "박정준",
+  "nameEn": "Park JungJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 30,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 30,
+      "primaryPosition": "RF",
+      "developmentRate": 67,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 62,
+        "velocity": 73,
+        "command": 55,
+        "control": 57,
+        "movement": 63,
+        "mentality": 66,
+        "recovery": 63,
+        "clutch": 53,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 56,
+        "power": 49,
+        "eye": 53,
+        "discipline": 51,
+        "speed": 60,
+        "baseInstinct": 56,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 48,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "RF": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

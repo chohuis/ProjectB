@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14012",
+  "name": "베이커 딜런",
+  "nameEn": "Baker Dylan",
+  "role": "player",
+  "age": 19,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 34,
+  "militaryStatus": "군필",
+  "entryYear": 2026,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 19,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 10,
+      "primaryPosition": "RF",
+      "developmentRate": 54,
+      "potentialHidden": 84,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 55,
+        "velocity": 63,
+        "command": 63,
+        "control": 55,
+        "movement": 57,
+        "mentality": 59,
+        "recovery": 59,
+        "clutch": 57,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 67,
+        "power": 63,
+        "eye": 56,
+        "discipline": 64,
+        "speed": 64,
+        "baseInstinct": 55,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 60,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "RF": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08418",
+  "name": "이성민",
+  "nameEn": "Lee SeongMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2033,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 78,
+      "primaryPosition": "SP",
+      "developmentRate": 52,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 37,
+        "stamina": 32,
+        "velocity": 36,
+        "command": 34,
+        "control": 36,
+        "movement": 33,
+        "mentality": 39,
+        "recovery": 27,
+        "clutch": 26,
+        "holdRunners": 25
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 46,
+        "power": 37,
+        "eye": 40,
+        "discipline": 46,
+        "speed": 51,
+        "baseInstinct": 44,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 37,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "SP": 37
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

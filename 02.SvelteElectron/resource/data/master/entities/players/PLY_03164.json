@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03164",
+  "name": "김재기",
+  "nameEn": "Kim JaeKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 33,
+      "primaryPosition": "C",
+      "developmentRate": 59,
+      "potentialHidden": 77,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 63,
+        "velocity": 75,
+        "command": 70,
+        "control": 68,
+        "movement": 64,
+        "mentality": 70,
+        "recovery": 62,
+        "clutch": 67,
+        "holdRunners": 62
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 52,
+        "power": 53,
+        "eye": 54,
+        "discipline": 50,
+        "speed": 57,
+        "baseInstinct": 51,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 44,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "C": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15502",
+  "name": "존스 그랜트",
+  "nameEn": "Jones Grant",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 60,
+  "popularity": 22,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 30,
+      "primaryPosition": "C",
+      "developmentRate": 74,
+      "potentialHidden": 56,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 61,
+        "velocity": 56,
+        "command": 52,
+        "control": 55,
+        "movement": 48,
+        "mentality": 51,
+        "recovery": 53,
+        "clutch": 54,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 58,
+        "power": 59,
+        "eye": 53,
+        "discipline": 59,
+        "speed": 58,
+        "baseInstinct": 59,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 53,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "C": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

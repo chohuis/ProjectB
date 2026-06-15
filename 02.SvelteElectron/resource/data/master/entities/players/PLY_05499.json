@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05499",
+  "name": "장기욱",
+  "nameEn": "Jang KiWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 17,
+      "primaryPosition": "SS",
+      "developmentRate": 59,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 53,
+        "velocity": 54,
+        "command": 51,
+        "control": 45,
+        "movement": 51,
+        "mentality": 54,
+        "recovery": 43,
+        "clutch": 42,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 56,
+        "power": 50,
+        "eye": 59,
+        "discipline": 52,
+        "speed": 55,
+        "baseInstinct": 48,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 48,
+        "battingClutch": 43
+      },
+      "positionRatings": {
+        "SS": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04861",
+  "name": "이세원",
+  "nameEn": "Lee SeWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2051,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 77,
+      "primaryPosition": "SP",
+      "developmentRate": 46,
+      "potentialHidden": 68,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 48,
+        "velocity": 56,
+        "command": 45,
+        "control": 40,
+        "movement": 45,
+        "mentality": 47,
+        "recovery": 38,
+        "clutch": 40,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 43,
+        "power": 45,
+        "eye": 47,
+        "discipline": 39,
+        "speed": 47,
+        "baseInstinct": 44,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 40,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "SP": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

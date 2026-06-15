@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04948",
+  "name": "박기재",
+  "nameEn": "Park KiJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2032,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 63,
+      "primaryPosition": "SP",
+      "developmentRate": 61,
+      "potentialHidden": 51,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 51,
+        "velocity": 57,
+        "command": 45,
+        "control": 41,
+        "movement": 49,
+        "mentality": 45,
+        "recovery": 41,
+        "clutch": 38,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 41,
+        "power": 32,
+        "eye": 44,
+        "discipline": 43,
+        "speed": 39,
+        "baseInstinct": 35,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 41,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "SP": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

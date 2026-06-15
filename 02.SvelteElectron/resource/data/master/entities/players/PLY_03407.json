@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03407",
+  "name": "안훈욱",
+  "nameEn": "An HunWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 48,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 57,
+      "primaryPosition": "SS",
+      "developmentRate": 62,
+      "potentialHidden": 85,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 60,
+        "velocity": 68,
+        "command": 52,
+        "control": 54,
+        "movement": 64,
+        "mentality": 58,
+        "recovery": 52,
+        "clutch": 49,
+        "holdRunners": 47
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 56,
+        "power": 54,
+        "eye": 52,
+        "discipline": 51,
+        "speed": 57,
+        "baseInstinct": 54,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 57,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "SS": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

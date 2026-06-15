@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08533",
+  "name": "조상식",
+  "nameEn": "Jo SangSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 19,
+      "primaryPosition": "SP",
+      "developmentRate": 49,
+      "potentialHidden": 46,
+      "pitching": {
+        "ovr": 33,
+        "stamina": 32,
+        "velocity": 38,
+        "command": 25,
+        "control": 32,
+        "movement": 33,
+        "mentality": 34,
+        "recovery": 23,
+        "clutch": 31,
+        "holdRunners": 19
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 35,
+        "power": 33,
+        "eye": 29,
+        "discipline": 29,
+        "speed": 35,
+        "baseInstinct": 28,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 38,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "SP": 33
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04347",
+  "name": "윤찬원",
+  "nameEn": "Yoon ChanWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 54,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 33,
+      "primaryPosition": "CF",
+      "developmentRate": 59,
+      "potentialHidden": 64,
+      "pitching": {
+        "ovr": 64,
+        "stamina": 64,
+        "velocity": 68,
+        "command": 59,
+        "control": 59,
+        "movement": 55,
+        "mentality": 68,
+        "recovery": 53,
+        "clutch": 51,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 48,
+        "power": 44,
+        "eye": 50,
+        "discipline": 43,
+        "speed": 47,
+        "baseInstinct": 48,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 49,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "CF": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

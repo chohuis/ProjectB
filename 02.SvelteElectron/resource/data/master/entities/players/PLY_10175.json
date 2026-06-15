@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10175",
+  "name": "앤더슨 조던",
+  "nameEn": "Anderson Jordan",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 25,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 97,
+      "primaryPosition": "1B",
+      "developmentRate": 48,
+      "potentialHidden": 73,
+      "proServiceYears": 3,
+      "pitching": {
+        "ovr": 81,
+        "stamina": 78,
+        "velocity": 90,
+        "command": 79,
+        "control": 78,
+        "movement": 84,
+        "mentality": 84,
+        "recovery": 70,
+        "clutch": 70,
+        "holdRunners": 80
+      },
+      "batting": {
+        "ovr": 81,
+        "contact": 83,
+        "power": 77,
+        "eye": 84,
+        "discipline": 83,
+        "speed": 87,
+        "baseInstinct": 79,
+        "bunting": 67,
+        "platoon": 50,
+        "fielding": 77,
+        "arm": 78,
+        "battingClutch": 69
+      },
+      "positionRatings": {
+        "1B": 81
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

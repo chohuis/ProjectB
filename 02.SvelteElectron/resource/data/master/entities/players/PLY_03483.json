@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03483",
+  "name": "서재준",
+  "nameEn": "Seo JaeJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2050,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 3,
+      "primaryPosition": "3B",
+      "developmentRate": 72,
+      "potentialHidden": 94,
+      "pitching": {
+        "ovr": 66,
+        "stamina": 63,
+        "velocity": 66,
+        "command": 58,
+        "control": 58,
+        "movement": 63,
+        "mentality": 70,
+        "recovery": 63,
+        "clutch": 62,
+        "holdRunners": 60
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 71,
+        "power": 69,
+        "eye": 67,
+        "discipline": 66,
+        "speed": 78,
+        "baseInstinct": 71,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 65,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "3B": 73
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06004",
+  "name": "조수호",
+  "nameEn": "Jo SuHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 56,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 59,
+      "primaryPosition": "RF",
+      "developmentRate": 46,
+      "potentialHidden": 78,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 43,
+        "velocity": 59,
+        "command": 46,
+        "control": 49,
+        "movement": 45,
+        "mentality": 52,
+        "recovery": 43,
+        "clutch": 45,
+        "holdRunners": 37
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 48,
+        "power": 46,
+        "eye": 41,
+        "discipline": 50,
+        "speed": 44,
+        "baseInstinct": 44,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 43,
+        "battingClutch": 46
+      },
+      "positionRatings": {
+        "RF": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

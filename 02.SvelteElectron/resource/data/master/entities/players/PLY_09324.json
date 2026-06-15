@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09324",
+  "name": "강찬윤",
+  "nameEn": "Kang ChanYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 13,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 81,
+      "primaryPosition": "SP",
+      "developmentRate": 42,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 49,
+        "velocity": 50,
+        "command": 37,
+        "control": 36,
+        "movement": 37,
+        "mentality": 39,
+        "recovery": 35,
+        "clutch": 37,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 35,
+        "contact": 33,
+        "power": 26,
+        "eye": 27,
+        "discipline": 32,
+        "speed": 32,
+        "baseInstinct": 29,
+        "bunting": 19,
+        "platoon": 50,
+        "fielding": 29,
+        "arm": 33,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "SP": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

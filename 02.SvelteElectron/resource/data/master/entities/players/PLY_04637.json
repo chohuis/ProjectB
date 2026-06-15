@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04637",
+  "name": "서기훈",
+  "nameEn": "Seo KiHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2037,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 62,
+      "primaryPosition": "CF",
+      "developmentRate": 63,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 43,
+        "velocity": 53,
+        "command": 49,
+        "control": 45,
+        "movement": 44,
+        "mentality": 54,
+        "recovery": 42,
+        "clutch": 46,
+        "holdRunners": 36
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 41,
+        "power": 37,
+        "eye": 48,
+        "discipline": 46,
+        "speed": 47,
+        "baseInstinct": 48,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 44,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "CF": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

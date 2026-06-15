@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03389",
+  "name": "최성훈",
+  "nameEn": "Choi SeongHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 12,
+      "primaryPosition": "SP",
+      "developmentRate": 60,
+      "potentialHidden": 79,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 73,
+        "velocity": 78,
+        "command": 74,
+        "control": 71,
+        "movement": 67,
+        "mentality": 80,
+        "recovery": 70,
+        "clutch": 69,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 67,
+        "power": 55,
+        "eye": 58,
+        "discipline": 66,
+        "speed": 65,
+        "baseInstinct": 60,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 60,
+        "battingClutch": 50
+      },
+      "positionRatings": {
+        "SP": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

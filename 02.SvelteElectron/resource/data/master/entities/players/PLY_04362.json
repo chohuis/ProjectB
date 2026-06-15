@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04362",
+  "name": "김영우",
+  "nameEn": "Kim YoungWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 15,
+      "primaryPosition": "C",
+      "developmentRate": 71,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 49,
+        "velocity": 64,
+        "command": 48,
+        "control": 50,
+        "movement": 55,
+        "mentality": 56,
+        "recovery": 55,
+        "clutch": 48,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 66,
+        "power": 57,
+        "eye": 64,
+        "discipline": 54,
+        "speed": 68,
+        "baseInstinct": 53,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 60,
+        "battingClutch": 53
+      },
+      "positionRatings": {
+        "C": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12456",
+  "name": "에르난데스 다니엘",
+  "nameEn": "Hernandez Daniel",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 55,
+  "popularity": 34,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 33,
+      "primaryPosition": "SP",
+      "developmentRate": 69,
+      "potentialHidden": 80,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 73,
+        "stamina": 65,
+        "velocity": 77,
+        "command": 68,
+        "control": 73,
+        "movement": 76,
+        "mentality": 67,
+        "recovery": 67,
+        "clutch": 71,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 68,
+        "power": 74,
+        "eye": 67,
+        "discipline": 69,
+        "speed": 67,
+        "baseInstinct": 63,
+        "bunting": 67,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 69,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "SP": 73
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

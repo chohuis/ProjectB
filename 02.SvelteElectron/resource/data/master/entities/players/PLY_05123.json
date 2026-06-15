@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05123",
+  "name": "전현준",
+  "nameEn": "Jeon HyeonJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2042,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 9,
+  "militaryStatus": "미필",
+  "entryYear": 2040,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 17,
+      "primaryPosition": "SP",
+      "developmentRate": 48,
+      "potentialHidden": 54,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 38,
+        "velocity": 52,
+        "command": 38,
+        "control": 39,
+        "movement": 42,
+        "mentality": 42,
+        "recovery": 45,
+        "clutch": 39,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 44,
+        "contact": 47,
+        "power": 35,
+        "eye": 43,
+        "discipline": 42,
+        "speed": 45,
+        "baseInstinct": 42,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 41,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "SP": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

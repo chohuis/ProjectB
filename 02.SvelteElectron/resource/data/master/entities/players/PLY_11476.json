@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11476",
+  "name": "스미스 카를로스",
+  "nameEn": "Smith Carlos",
+  "role": "player",
+  "age": 32,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 27,
+  "militaryStatus": "군필",
+  "entryYear": 2035,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 32,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 8,
+      "primaryPosition": "SP",
+      "developmentRate": 45,
+      "potentialHidden": 47,
+      "proServiceYears": 10,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 59,
+        "velocity": 56,
+        "command": 59,
+        "control": 48,
+        "movement": 60,
+        "mentality": 54,
+        "recovery": 58,
+        "clutch": 52,
+        "holdRunners": 51
+      },
+      "batting": {
+        "ovr": 56,
+        "contact": 59,
+        "power": 59,
+        "eye": 48,
+        "discipline": 54,
+        "speed": 51,
+        "baseInstinct": 48,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 52,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "SP": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

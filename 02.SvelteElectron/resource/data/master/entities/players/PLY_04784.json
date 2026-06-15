@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04784",
+  "name": "강도수",
+  "nameEn": "Kang DoSu",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 8,
+      "primaryPosition": "SS",
+      "developmentRate": 56,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 40,
+        "velocity": 45,
+        "command": 32,
+        "control": 36,
+        "movement": 32,
+        "mentality": 43,
+        "recovery": 37,
+        "clutch": 37,
+        "holdRunners": 28
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 43,
+        "power": 37,
+        "eye": 45,
+        "discipline": 40,
+        "speed": 39,
+        "baseInstinct": 32,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 40,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "SS": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

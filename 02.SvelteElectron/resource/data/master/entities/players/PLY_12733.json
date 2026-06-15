@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12733",
+  "name": "카터 크리스",
+  "nameEn": "Carter Chris",
+  "role": "player",
+  "age": 29,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 47,
+  "popularity": 21,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 29,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 42,
+      "primaryPosition": "CF",
+      "developmentRate": 47,
+      "potentialHidden": 77,
+      "proServiceYears": 7,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 73,
+        "velocity": 78,
+        "command": 70,
+        "control": 67,
+        "movement": 67,
+        "mentality": 73,
+        "recovery": 69,
+        "clutch": 62,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 74,
+        "contact": 73,
+        "power": 64,
+        "eye": 76,
+        "discipline": 74,
+        "speed": 74,
+        "baseInstinct": 75,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 70,
+        "battingClutch": 72
+      },
+      "positionRatings": {
+        "CF": 74
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

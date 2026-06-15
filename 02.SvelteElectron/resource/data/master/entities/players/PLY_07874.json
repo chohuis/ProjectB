@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07874",
+  "name": "안태성",
+  "nameEn": "An TaeSeong",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 67,
+  "popularity": 17,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 77,
+      "primaryPosition": "SP",
+      "developmentRate": 50,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 52,
+        "stamina": 50,
+        "velocity": 52,
+        "command": 46,
+        "control": 45,
+        "movement": 51,
+        "mentality": 55,
+        "recovery": 49,
+        "clutch": 47,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 57,
+        "power": 50,
+        "eye": 47,
+        "discipline": 54,
+        "speed": 48,
+        "baseInstinct": 45,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 51,
+        "battingClutch": 41
+      },
+      "positionRatings": {
+        "SP": 52
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

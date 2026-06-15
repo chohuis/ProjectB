@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16613",
+  "name": "해리스 카를로스",
+  "nameEn": "Harris Carlos",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 36,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 48,
+      "primaryPosition": "SS",
+      "developmentRate": 59,
+      "potentialHidden": 86,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 53,
+        "velocity": 51,
+        "command": 50,
+        "control": 41,
+        "movement": 40,
+        "mentality": 50,
+        "recovery": 41,
+        "clutch": 39,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 48,
+        "contact": 40,
+        "power": 42,
+        "eye": 44,
+        "discipline": 42,
+        "speed": 51,
+        "baseInstinct": 50,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 39,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "SS": 48
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

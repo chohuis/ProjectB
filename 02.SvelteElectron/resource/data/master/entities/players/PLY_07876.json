@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07876",
+  "name": "송세진",
+  "nameEn": "Song SeJin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 14,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 72,
+      "primaryPosition": "SP",
+      "developmentRate": 57,
+      "potentialHidden": 74,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 49,
+        "velocity": 59,
+        "command": 45,
+        "control": 54,
+        "movement": 47,
+        "mentality": 57,
+        "recovery": 44,
+        "clutch": 44,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 50,
+        "power": 47,
+        "eye": 43,
+        "discipline": 49,
+        "speed": 52,
+        "baseInstinct": 40,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 41,
+        "battingClutch": 36
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

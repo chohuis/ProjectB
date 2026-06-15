@@ -272,12 +272,14 @@ app.whenReady().then(() => {
     }
   });
 
-  ipcMain.handle("master:loadEntities", (_event, leagueId) => {
+  ipcMain.handle("master:loadEntities", (_event, leagueId, seasonYear) => {
     try {
+      const sy = typeof seasonYear === "number" ? seasonYear : 9999;
+      const entryFilter = "AND (entry_year IS NULL OR entry_year <= ?)";
       const baseRows = masterDb
         ? (typeof leagueId === "string" && leagueId
-            ? masterDb.prepare("SELECT * FROM npc_master WHERE league_id = ?").all(leagueId)
-            : masterDb.prepare("SELECT * FROM npc_master").all())
+            ? masterDb.prepare(`SELECT * FROM npc_master WHERE league_id = ? ${entryFilter}`).all(leagueId, sy)
+            : masterDb.prepare(`SELECT * FROM npc_master WHERE entry_year IS NULL OR entry_year <= ?`).all(sy))
         : [];
       const deletedRows = typeof leagueId === "string" && leagueId
         ? masterOverlayDb.prepare("SELECT id FROM entity_overlay_deleted WHERE league_id = ? OR league_id IS NULL").all(leagueId)

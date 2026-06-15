@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03898",
+  "name": "임민준",
+  "nameEn": "Lim MinJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "grade": 1,
+  "graduationYear": 2047,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 6,
+  "militaryStatus": "미필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_BUSAN_WAVE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 78,
+      "primaryPosition": "3B",
+      "developmentRate": 53,
+      "potentialHidden": 80,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 45,
+        "velocity": 61,
+        "command": 46,
+        "control": 47,
+        "movement": 50,
+        "mentality": 53,
+        "recovery": 50,
+        "clutch": 41,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 59,
+        "power": 57,
+        "eye": 62,
+        "discipline": 63,
+        "speed": 60,
+        "baseInstinct": 58,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 55,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "3B": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

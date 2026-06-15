@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03199",
+  "name": "황도윤",
+  "nameEn": "Hwang DoYoon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 97,
+      "primaryPosition": "LF",
+      "developmentRate": 74,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 65,
+        "velocity": 64,
+        "command": 63,
+        "control": 63,
+        "movement": 62,
+        "mentality": 68,
+        "recovery": 55,
+        "clutch": 60,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 64,
+        "contact": 58,
+        "power": 55,
+        "eye": 59,
+        "discipline": 61,
+        "speed": 67,
+        "baseInstinct": 58,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 55,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "LF": 64
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

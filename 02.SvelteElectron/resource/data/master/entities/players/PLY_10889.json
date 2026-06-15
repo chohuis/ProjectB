@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10889",
+  "name": "넬슨 블레이크",
+  "nameEn": "Nelson Blake",
+  "role": "player",
+  "age": 33,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 73,
+  "popularity": 37,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 33,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 34,
+      "primaryPosition": "3B",
+      "developmentRate": 39,
+      "potentialHidden": 75,
+      "proServiceYears": 11,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 49,
+        "velocity": 62,
+        "command": 57,
+        "control": 49,
+        "movement": 61,
+        "mentality": 58,
+        "recovery": 46,
+        "clutch": 50,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 57,
+        "contact": 61,
+        "power": 59,
+        "eye": 49,
+        "discipline": 47,
+        "speed": 58,
+        "baseInstinct": 53,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 60,
+        "battingClutch": 57
+      },
+      "positionRatings": {
+        "3B": 57
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

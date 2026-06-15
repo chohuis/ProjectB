@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07754",
+  "name": "권지호",
+  "nameEn": "Kwon JiHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "schoolId": "SCHOOL_HS_CHUNCHEON_HIGHLAND",
+  "grade": 1,
+  "graduationYear": 2045,
+  "notes": "",
+  "diligence": 43,
+  "popularity": 20,
+  "militaryStatus": "미필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 12,
+      "primaryPosition": "SP",
+      "developmentRate": 47,
+      "potentialHidden": 67,
+      "pitching": {
+        "ovr": 56,
+        "stamina": 49,
+        "velocity": 64,
+        "command": 52,
+        "control": 50,
+        "movement": 48,
+        "mentality": 52,
+        "recovery": 52,
+        "clutch": 47,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 46,
+        "power": 35,
+        "eye": 44,
+        "discipline": 42,
+        "speed": 41,
+        "baseInstinct": 44,
+        "bunting": 31,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 37,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "SP": 56
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

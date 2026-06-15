@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05276",
+  "name": "송영완",
+  "nameEn": "Song YoungWan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEJEON_RISE",
+  "teamId": "TEAM_HS_DAEJEON_RISE",
+  "schoolId": "SCHOOL_HS_DAEJEON_RISE",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEJEON_RISE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 71,
+      "primaryPosition": "LF",
+      "developmentRate": 63,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 40,
+        "velocity": 48,
+        "command": 47,
+        "control": 42,
+        "movement": 38,
+        "mentality": 51,
+        "recovery": 37,
+        "clutch": 40,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 42,
+        "contact": 36,
+        "power": 33,
+        "eye": 36,
+        "discipline": 33,
+        "speed": 39,
+        "baseInstinct": 39,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 37,
+        "arm": 35,
+        "battingClutch": 33
+      },
+      "positionRatings": {
+        "LF": 42
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -246,7 +246,7 @@ export function updateNpcEmotion(
   ctx: WeeklyEmotionContext,
   newMemoriesThisWeek: NpcMemory[] = [],
 ): EmotionUpdateResult {
-  if (!npc.isNamed || npc.emotionStatus === "archived") {
+  if (npc.emotionStatus === "archived") {
     return { npc, prevEmotion: npc.emotion ?? defaultEmotion(), newMemories: [] };
   }
 
@@ -294,13 +294,12 @@ export function reactivateNpc(npc: NpcSaveState, currentStage: CareerStage): Npc
 
 // ── 라이프사이클: active → dormant (이별) ────────────────────
 export function deactivateNpc(npc: NpcSaveState): NpcSaveState {
-  if (!npc.isNamed || npc.emotionStatus === "archived") return npc;
+  if (npc.emotionStatus === "archived") return npc;
   return { ...npc, emotionStatus: "dormant" as EmotionStatus };
 }
 
 // ── 라이프사이클: → archived (은퇴) ─────────────────────────
 export function archiveNpc(npc: NpcSaveState): NpcSaveState {
-  if (!npc.isNamed) return npc;
   return {
     ...npc,
     emotion:       undefined,
@@ -312,7 +311,7 @@ export function checkTeamMoodWarning(
   npcs: NpcSaveState[],
   week: number,
 ): MessageItem | null {
-  const activeNamed = npcs.filter((npc) => npc.isNamed && npc.emotionStatus !== "archived");
+  const activeNamed = npcs.filter((npc) => npc.emotionStatus !== "archived");
   if (activeNamed.length === 0) return null;
 
   let lowTrustCount = 0;

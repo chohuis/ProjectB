@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05596",
+  "name": "송성민",
+  "nameEn": "Song SeongMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 45,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 32,
+      "primaryPosition": "1B",
+      "developmentRate": 58,
+      "potentialHidden": 60,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 61,
+        "velocity": 62,
+        "command": 57,
+        "control": 60,
+        "movement": 50,
+        "mentality": 52,
+        "recovery": 56,
+        "clutch": 45,
+        "holdRunners": 42
+      },
+      "batting": {
+        "ovr": 54,
+        "contact": 51,
+        "power": 48,
+        "eye": 54,
+        "discipline": 55,
+        "speed": 49,
+        "baseInstinct": 51,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 46,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "1B": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

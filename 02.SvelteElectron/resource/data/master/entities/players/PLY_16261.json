@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16261",
+  "name": "워커 코디",
+  "nameEn": "Walker Cody",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 50,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 14,
+      "primaryPosition": "SP",
+      "developmentRate": 47,
+      "potentialHidden": 72,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 67,
+        "velocity": 80,
+        "command": 68,
+        "control": 64,
+        "movement": 69,
+        "mentality": 74,
+        "recovery": 69,
+        "clutch": 67,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 73,
+        "power": 63,
+        "eye": 64,
+        "discipline": 68,
+        "speed": 77,
+        "baseInstinct": 61,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 73,
+        "battingClutch": 60
+      },
+      "positionRatings": {
+        "SP": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

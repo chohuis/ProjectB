@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05908",
+  "name": "서재빈",
+  "nameEn": "Seo JaeBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_ULSAN_CHARGE",
+  "teamId": "TEAM_HS_ULSAN_CHARGE",
+  "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
+  "grade": 1,
+  "graduationYear": 2040,
+  "notes": "",
+  "diligence": 49,
+  "popularity": 5,
+  "militaryStatus": "미필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_ULSAN_CHARGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 50,
+      "primaryPosition": "SP",
+      "developmentRate": 56,
+      "potentialHidden": 51,
+      "pitching": {
+        "ovr": 54,
+        "stamina": 49,
+        "velocity": 62,
+        "command": 44,
+        "control": 52,
+        "movement": 51,
+        "mentality": 56,
+        "recovery": 49,
+        "clutch": 45,
+        "holdRunners": 44
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 44,
+        "power": 39,
+        "eye": 51,
+        "discipline": 41,
+        "speed": 53,
+        "baseInstinct": 42,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 49,
+        "battingClutch": 40
+      },
+      "positionRatings": {
+        "SP": 54
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_09239",
+  "name": "윤세기",
+  "nameEn": "Yoon SeKi",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JECHEON_RIDGE",
+  "teamId": "TEAM_HS_JECHEON_RIDGE",
+  "schoolId": "SCHOOL_HS_JECHEON_RIDGE",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 46,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JECHEON_RIDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 84,
+      "primaryPosition": "1B",
+      "developmentRate": 55,
+      "potentialHidden": 65,
+      "pitching": {
+        "ovr": 38,
+        "stamina": 37,
+        "velocity": 44,
+        "command": 38,
+        "control": 32,
+        "movement": 30,
+        "mentality": 34,
+        "recovery": 32,
+        "clutch": 27,
+        "holdRunners": 29
+      },
+      "batting": {
+        "ovr": 32,
+        "contact": 36,
+        "power": 24,
+        "eye": 27,
+        "discipline": 24,
+        "speed": 34,
+        "baseInstinct": 26,
+        "bunting": 12,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 31,
+        "battingClutch": 22
+      },
+      "positionRatings": {
+        "1B": 32
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14107",
+  "name": "앨런 칼렙",
+  "nameEn": "Allen Caleb",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 34,
+  "militaryStatus": "군필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 38,
+      "primaryPosition": "3B",
+      "developmentRate": 54,
+      "potentialHidden": 67,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 69,
+        "stamina": 67,
+        "velocity": 71,
+        "command": 59,
+        "control": 73,
+        "movement": 68,
+        "mentality": 70,
+        "recovery": 64,
+        "clutch": 66,
+        "holdRunners": 66
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 62,
+        "power": 65,
+        "eye": 64,
+        "discipline": 71,
+        "speed": 67,
+        "baseInstinct": 65,
+        "bunting": 63,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 69,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "3B": 69
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

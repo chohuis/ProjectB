@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08034",
+  "name": "조세민",
+  "nameEn": "Jo SeMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2036,
+  "notes": "",
+  "diligence": 44,
+  "popularity": 32,
+  "militaryStatus": "미필",
+  "entryYear": 2034,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 77,
+      "primaryPosition": "3B",
+      "developmentRate": 58,
+      "potentialHidden": 52,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 51,
+        "velocity": 59,
+        "command": 43,
+        "control": 42,
+        "movement": 51,
+        "mentality": 44,
+        "recovery": 45,
+        "clutch": 39,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 40,
+        "contact": 43,
+        "power": 30,
+        "eye": 42,
+        "discipline": 31,
+        "speed": 34,
+        "baseInstinct": 35,
+        "bunting": 19,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 32,
+        "battingClutch": 30
+      },
+      "positionRatings": {
+        "3B": 40
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

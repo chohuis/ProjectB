@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12043",
+  "name": "로빈슨 로건",
+  "nameEn": "Robinson Logan",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 27,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 78,
+      "primaryPosition": "RF",
+      "developmentRate": 60,
+      "potentialHidden": 72,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 67,
+        "velocity": 82,
+        "command": 61,
+        "control": 65,
+        "movement": 71,
+        "mentality": 78,
+        "recovery": 65,
+        "clutch": 67,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 75,
+        "power": 71,
+        "eye": 66,
+        "discipline": 61,
+        "speed": 66,
+        "baseInstinct": 66,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 66,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "RF": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

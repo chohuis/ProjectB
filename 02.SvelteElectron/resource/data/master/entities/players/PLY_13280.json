@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13280",
+  "name": "화이트 카를로스",
+  "nameEn": "White Carlos",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 14,
+  "militaryStatus": "군필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 68,
+      "primaryPosition": "C",
+      "developmentRate": 79,
+      "potentialHidden": 92,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 53,
+        "velocity": 65,
+        "command": 62,
+        "control": 60,
+        "movement": 57,
+        "mentality": 62,
+        "recovery": 48,
+        "clutch": 55,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 54,
+        "power": 51,
+        "eye": 57,
+        "discipline": 59,
+        "speed": 61,
+        "baseInstinct": 50,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 55,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "C": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

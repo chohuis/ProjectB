@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16483",
+  "name": "무어 네이선",
+  "nameEn": "Moore Nathan",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 78,
+  "popularity": 16,
+  "militaryStatus": "군필",
+  "entryYear": 2048,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 92,
+      "primaryPosition": "LF",
+      "developmentRate": 72,
+      "potentialHidden": 76,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 47,
+        "velocity": 51,
+        "command": 42,
+        "control": 49,
+        "movement": 47,
+        "mentality": 43,
+        "recovery": 45,
+        "clutch": 32,
+        "holdRunners": 39
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 50,
+        "power": 43,
+        "eye": 37,
+        "discipline": 40,
+        "speed": 43,
+        "baseInstinct": 36,
+        "bunting": 26,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 34,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "LF": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

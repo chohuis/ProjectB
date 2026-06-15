@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03388",
+  "name": "강정우",
+  "nameEn": "Kang JungWoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 4,
+      "primaryPosition": "LF",
+      "developmentRate": 68,
+      "potentialHidden": 94,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 76,
+        "velocity": 79,
+        "command": 70,
+        "control": 75,
+        "movement": 74,
+        "mentality": 74,
+        "recovery": 67,
+        "clutch": 69,
+        "holdRunners": 70
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 56,
+        "power": 51,
+        "eye": 48,
+        "discipline": 50,
+        "speed": 58,
+        "baseInstinct": 53,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 47,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "LF": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10658",
+  "name": "킹 다니엘",
+  "nameEn": "King Daniel",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 53,
+  "popularity": 43,
+  "militaryStatus": "군필",
+  "entryYear": 2030,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 76,
+      "primaryPosition": "C",
+      "developmentRate": 61,
+      "potentialHidden": 86,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 68,
+        "velocity": 78,
+        "command": 71,
+        "control": 67,
+        "movement": 74,
+        "mentality": 77,
+        "recovery": 70,
+        "clutch": 69,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 69,
+        "power": 67,
+        "eye": 73,
+        "discipline": 71,
+        "speed": 75,
+        "baseInstinct": 64,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 74,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "C": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

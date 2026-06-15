@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12328",
+  "name": "카터 카일",
+  "nameEn": "Carter Kyle",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 58,
+  "popularity": 47,
+  "militaryStatus": "군필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 30,
+      "primaryPosition": "SS",
+      "developmentRate": 56,
+      "potentialHidden": 80,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 67,
+        "stamina": 62,
+        "velocity": 70,
+        "command": 60,
+        "control": 62,
+        "movement": 62,
+        "mentality": 70,
+        "recovery": 60,
+        "clutch": 58,
+        "holdRunners": 54
+      },
+      "batting": {
+        "ovr": 67,
+        "contact": 70,
+        "power": 65,
+        "eye": 60,
+        "discipline": 65,
+        "speed": 73,
+        "baseInstinct": 65,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 69,
+        "battingClutch": 64
+      },
+      "positionRatings": {
+        "SS": 67
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

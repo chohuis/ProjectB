@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12792",
+  "name": "리 다니엘",
+  "nameEn": "Lee Daniel",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 77,
+  "popularity": 23,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 73,
+      "primaryPosition": "SP",
+      "developmentRate": 45,
+      "potentialHidden": 55,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 58,
+        "stamina": 61,
+        "velocity": 66,
+        "command": 56,
+        "control": 60,
+        "movement": 61,
+        "mentality": 58,
+        "recovery": 52,
+        "clutch": 56,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 58,
+        "contact": 60,
+        "power": 55,
+        "eye": 59,
+        "discipline": 60,
+        "speed": 52,
+        "baseInstinct": 55,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 56,
+        "battingClutch": 52
+      },
+      "positionRatings": {
+        "SP": 58
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

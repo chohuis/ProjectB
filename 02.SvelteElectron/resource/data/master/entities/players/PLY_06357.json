@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06357",
+  "name": "윤기욱",
+  "nameEn": "Yoon KiWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 80,
+  "popularity": 19,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 46,
+      "primaryPosition": "C",
+      "developmentRate": 45,
+      "potentialHidden": 43,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 38,
+        "velocity": 42,
+        "command": 31,
+        "control": 38,
+        "movement": 38,
+        "mentality": 40,
+        "recovery": 34,
+        "clutch": 29,
+        "holdRunners": 30
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 47,
+        "power": 44,
+        "eye": 43,
+        "discipline": 45,
+        "speed": 40,
+        "baseInstinct": 37,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 36,
+        "battingClutch": 38
+      },
+      "positionRatings": {
+        "C": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

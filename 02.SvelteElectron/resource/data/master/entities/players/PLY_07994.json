@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07994",
+  "name": "이정빈",
+  "nameEn": "Lee JungBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "schoolId": "SCHOOL_HS_JEJU_WIND",
+  "grade": 1,
+  "graduationYear": 2034,
+  "notes": "",
+  "diligence": 68,
+  "popularity": 15,
+  "militaryStatus": "미필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_JEJU_WIND",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 94,
+      "primaryPosition": "LF",
+      "developmentRate": 63,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 51,
+        "velocity": 59,
+        "command": 53,
+        "control": 49,
+        "movement": 56,
+        "mentality": 57,
+        "recovery": 45,
+        "clutch": 47,
+        "holdRunners": 45
+      },
+      "batting": {
+        "ovr": 55,
+        "contact": 54,
+        "power": 47,
+        "eye": 53,
+        "discipline": 57,
+        "speed": 49,
+        "baseInstinct": 48,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 54,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "LF": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

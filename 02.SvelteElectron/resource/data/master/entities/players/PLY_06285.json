@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06285",
+  "name": "권태빈",
+  "nameEn": "Kwon TaeBin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 25,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 78,
+      "primaryPosition": "SP",
+      "developmentRate": 55,
+      "potentialHidden": 43,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 37,
+        "velocity": 43,
+        "command": 37,
+        "control": 39,
+        "movement": 36,
+        "mentality": 48,
+        "recovery": 31,
+        "clutch": 31,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 37,
+        "power": 28,
+        "eye": 40,
+        "discipline": 37,
+        "speed": 36,
+        "baseInstinct": 28,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 34,
+        "battingClutch": 25
+      },
+      "positionRatings": {
+        "SP": 43
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

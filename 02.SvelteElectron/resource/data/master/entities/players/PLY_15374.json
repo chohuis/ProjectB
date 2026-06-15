@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15374",
+  "name": "토마스 미겔",
+  "nameEn": "Thomas Miguel",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 31,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 84,
+      "primaryPosition": "CF",
+      "developmentRate": 45,
+      "potentialHidden": 53,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 71,
+        "stamina": 67,
+        "velocity": 68,
+        "command": 67,
+        "control": 67,
+        "movement": 66,
+        "mentality": 71,
+        "recovery": 69,
+        "clutch": 59,
+        "holdRunners": 64
+      },
+      "batting": {
+        "ovr": 71,
+        "contact": 70,
+        "power": 68,
+        "eye": 69,
+        "discipline": 71,
+        "speed": 71,
+        "baseInstinct": 63,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 63,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "CF": 71
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

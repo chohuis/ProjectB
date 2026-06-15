@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13146",
+  "name": "마틴 제이크",
+  "nameEn": "Martin Jake",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 64,
+  "popularity": 32,
+  "militaryStatus": "군필",
+  "entryYear": 2045,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 2,
+      "primaryPosition": "C",
+      "developmentRate": 66,
+      "potentialHidden": 86,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 51,
+        "stamina": 43,
+        "velocity": 52,
+        "command": 52,
+        "control": 43,
+        "movement": 43,
+        "mentality": 51,
+        "recovery": 43,
+        "clutch": 45,
+        "holdRunners": 43
+      },
+      "batting": {
+        "ovr": 51,
+        "contact": 44,
+        "power": 49,
+        "eye": 45,
+        "discipline": 46,
+        "speed": 56,
+        "baseInstinct": 43,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 41,
+        "battingClutch": 45
+      },
+      "positionRatings": {
+        "C": 51
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16030",
+  "name": "해리스 오스틴",
+  "nameEn": "Harris Austin",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 84,
+  "popularity": 31,
+  "militaryStatus": "군필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 46,
+      "primaryPosition": "2B",
+      "developmentRate": 71,
+      "potentialHidden": 75,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 52,
+        "velocity": 52,
+        "command": 40,
+        "control": 51,
+        "movement": 52,
+        "mentality": 50,
+        "recovery": 39,
+        "clutch": 38,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 43,
+        "power": 44,
+        "eye": 54,
+        "discipline": 48,
+        "speed": 48,
+        "baseInstinct": 47,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 40,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "2B": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

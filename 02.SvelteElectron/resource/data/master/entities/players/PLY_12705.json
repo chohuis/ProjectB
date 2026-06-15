@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12705",
+  "name": "스콧 카를로스",
+  "nameEn": "Scott Carlos",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 34,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 18,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 9,
+      "primaryPosition": "1B",
+      "developmentRate": 75,
+      "potentialHidden": 68,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 65,
+        "velocity": 70,
+        "command": 52,
+        "control": 54,
+        "movement": 52,
+        "mentality": 58,
+        "recovery": 49,
+        "clutch": 48,
+        "holdRunners": 57
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 56,
+        "power": 59,
+        "eye": 62,
+        "discipline": 57,
+        "speed": 55,
+        "baseInstinct": 52,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 60,
+        "battingClutch": 61
+      },
+      "positionRatings": {
+        "1B": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

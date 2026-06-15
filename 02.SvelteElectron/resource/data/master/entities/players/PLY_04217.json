@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04217",
+  "name": "강훈환",
+  "nameEn": "Kang HunHwan",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_DAEGU_HEAT",
+  "teamId": "TEAM_HS_DAEGU_HEAT",
+  "schoolId": "SCHOOL_HS_DAEGU_HEAT",
+  "grade": 1,
+  "graduationYear": 2039,
+  "notes": "",
+  "diligence": 66,
+  "popularity": 7,
+  "militaryStatus": "미필",
+  "entryYear": 2037,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_DAEGU_HEAT",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 27,
+      "primaryPosition": "3B",
+      "developmentRate": 52,
+      "potentialHidden": 81,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 62,
+        "velocity": 62,
+        "command": 61,
+        "control": 59,
+        "movement": 55,
+        "mentality": 67,
+        "recovery": 55,
+        "clutch": 54,
+        "holdRunners": 46
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 43,
+        "power": 44,
+        "eye": 41,
+        "discipline": 45,
+        "speed": 48,
+        "baseInstinct": 43,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 47,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "3B": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_03510",
+  "name": "이정준",
+  "nameEn": "Lee JungJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SEOUL_INNOVATION",
+  "teamId": "TEAM_HS_SEOUL_INNOVATION",
+  "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 26,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SEOUL_INNOVATION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 98,
+      "primaryPosition": "SP",
+      "developmentRate": 58,
+      "potentialHidden": 70,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 68,
+        "velocity": 76,
+        "command": 70,
+        "control": 66,
+        "movement": 69,
+        "mentality": 76,
+        "recovery": 58,
+        "clutch": 67,
+        "holdRunners": 65
+      },
+      "batting": {
+        "ovr": 65,
+        "contact": 63,
+        "power": 59,
+        "eye": 67,
+        "discipline": 65,
+        "speed": 70,
+        "baseInstinct": 59,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 60,
+        "battingClutch": 55
+      },
+      "positionRatings": {
+        "SP": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

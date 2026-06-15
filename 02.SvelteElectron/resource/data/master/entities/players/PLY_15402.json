@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15402",
+  "name": "리 크리스",
+  "nameEn": "Lee Chris",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 41,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 24,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 59,
+      "primaryPosition": "1B",
+      "developmentRate": 54,
+      "potentialHidden": 57,
+      "proServiceYears": 2,
+      "pitching": {
+        "ovr": 70,
+        "stamina": 74,
+        "velocity": 75,
+        "command": 59,
+        "control": 61,
+        "movement": 71,
+        "mentality": 75,
+        "recovery": 60,
+        "clutch": 57,
+        "holdRunners": 56
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 63,
+        "power": 63,
+        "eye": 68,
+        "discipline": 67,
+        "speed": 67,
+        "baseInstinct": 61,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 60,
+        "battingClutch": 66
+      },
+      "positionRatings": {
+        "1B": 70
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_04733",
+  "name": "서찬호",
+  "nameEn": "Seo ChanHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GWANGJU_VISION",
+  "teamId": "TEAM_HS_GWANGJU_VISION",
+  "schoolId": "SCHOOL_HS_GWANGJU_VISION",
+  "grade": 1,
+  "graduationYear": 2043,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 12,
+  "militaryStatus": "미필",
+  "entryYear": 2041,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GWANGJU_VISION",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 18,
+      "primaryPosition": "SP",
+      "developmentRate": 63,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 55,
+        "stamina": 47,
+        "velocity": 58,
+        "command": 47,
+        "control": 55,
+        "movement": 55,
+        "mentality": 49,
+        "recovery": 55,
+        "clutch": 43,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 39,
+        "power": 48,
+        "eye": 49,
+        "discipline": 47,
+        "speed": 47,
+        "baseInstinct": 45,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 41,
+        "battingClutch": 35
+      },
+      "positionRatings": {
+        "SP": 55
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

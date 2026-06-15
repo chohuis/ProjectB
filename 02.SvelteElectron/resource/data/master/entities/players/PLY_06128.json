@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06128",
+  "name": "박찬준",
+  "nameEn": "Park ChanJun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2029,
+  "notes": "",
+  "diligence": 61,
+  "popularity": 18,
+  "militaryStatus": "미필",
+  "entryYear": 2027,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 41,
+      "primaryPosition": "3B",
+      "developmentRate": 45,
+      "potentialHidden": 59,
+      "pitching": {
+        "ovr": 39,
+        "stamina": 39,
+        "velocity": 37,
+        "command": 39,
+        "control": 37,
+        "movement": 37,
+        "mentality": 39,
+        "recovery": 28,
+        "clutch": 31,
+        "holdRunners": 31
+      },
+      "batting": {
+        "ovr": 35,
+        "contact": 33,
+        "power": 33,
+        "eye": 32,
+        "discipline": 33,
+        "speed": 32,
+        "baseInstinct": 26,
+        "bunting": 19,
+        "platoon": 50,
+        "fielding": 28,
+        "arm": 28,
+        "battingClutch": 25
+      },
+      "positionRatings": {
+        "3B": 35
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

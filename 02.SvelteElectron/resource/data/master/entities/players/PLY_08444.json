@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08444",
+  "name": "김혁원",
+  "nameEn": "Kim HyeokWon",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GANGWON_PEAK",
+  "teamId": "TEAM_HS_GANGWON_PEAK",
+  "schoolId": "SCHOOL_HS_GANGWON_PEAK",
+  "grade": 1,
+  "graduationYear": 2035,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2033,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GANGWON_PEAK",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 83,
+      "primaryPosition": "1B",
+      "developmentRate": 57,
+      "potentialHidden": 63,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 47,
+        "velocity": 48,
+        "command": 48,
+        "control": 45,
+        "movement": 50,
+        "mentality": 46,
+        "recovery": 38,
+        "clutch": 39,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 45,
+        "contact": 39,
+        "power": 43,
+        "eye": 47,
+        "discipline": 40,
+        "speed": 41,
+        "baseInstinct": 39,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 37,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "1B": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

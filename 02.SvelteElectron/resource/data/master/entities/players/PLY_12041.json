@@ -1,0 +1,73 @@
+{
+  "id": "PLY_12041",
+  "name": "미첼 숀",
+  "nameEn": "Mitchell Sean",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 70,
+  "popularity": 38,
+  "militaryStatus": "군필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 34,
+      "primaryPosition": "SP",
+      "developmentRate": 78,
+      "potentialHidden": 78,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 53,
+        "stamina": 51,
+        "velocity": 60,
+        "command": 44,
+        "control": 48,
+        "movement": 54,
+        "mentality": 54,
+        "recovery": 48,
+        "clutch": 47,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 48,
+        "power": 49,
+        "eye": 53,
+        "discipline": 57,
+        "speed": 49,
+        "baseInstinct": 48,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 44,
+        "battingClutch": 48
+      },
+      "positionRatings": {
+        "SP": 53
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

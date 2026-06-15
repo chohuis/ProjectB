@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10753",
+  "name": "루이스 헌터",
+  "nameEn": "Lewis Hunter",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 51,
+  "popularity": 45,
+  "militaryStatus": "군필",
+  "entryYear": 2031,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 88,
+      "primaryPosition": "LF",
+      "developmentRate": 55,
+      "potentialHidden": 64,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 61,
+        "velocity": 66,
+        "command": 53,
+        "control": 54,
+        "movement": 52,
+        "mentality": 54,
+        "recovery": 52,
+        "clutch": 52,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 61,
+        "power": 52,
+        "eye": 54,
+        "discipline": 61,
+        "speed": 57,
+        "baseInstinct": 58,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 60,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "LF": 61
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

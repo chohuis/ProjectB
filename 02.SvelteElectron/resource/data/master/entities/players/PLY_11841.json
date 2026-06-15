@@ -1,0 +1,73 @@
+{
+  "id": "PLY_11841",
+  "name": "화이트 그랜트",
+  "nameEn": "White Grant",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 59,
+  "popularity": 13,
+  "militaryStatus": "군필",
+  "entryYear": 2038,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 55,
+      "primaryPosition": "LF",
+      "developmentRate": 79,
+      "potentialHidden": 73,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 55,
+        "velocity": 70,
+        "command": 53,
+        "control": 63,
+        "movement": 64,
+        "mentality": 65,
+        "recovery": 56,
+        "clutch": 50,
+        "holdRunners": 59
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 57,
+        "power": 60,
+        "eye": 55,
+        "discipline": 53,
+        "speed": 66,
+        "baseInstinct": 62,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 59,
+        "battingClutch": 59
+      },
+      "positionRatings": {
+        "LF": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

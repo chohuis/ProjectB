@@ -1,0 +1,73 @@
+{
+  "id": "PLY_15854",
+  "name": "킹 오스틴",
+  "nameEn": "King Austin",
+  "role": "player",
+  "age": 28,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 62,
+  "popularity": 44,
+  "militaryStatus": "군필",
+  "entryYear": 2043,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 28,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 48,
+      "primaryPosition": "SP",
+      "developmentRate": 53,
+      "potentialHidden": 69,
+      "proServiceYears": 6,
+      "pitching": {
+        "ovr": 63,
+        "stamina": 60,
+        "velocity": 69,
+        "command": 56,
+        "control": 55,
+        "movement": 61,
+        "mentality": 60,
+        "recovery": 63,
+        "clutch": 59,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 63,
+        "contact": 60,
+        "power": 52,
+        "eye": 65,
+        "discipline": 59,
+        "speed": 62,
+        "baseInstinct": 56,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 53,
+        "battingClutch": 51
+      },
+      "positionRatings": {
+        "SP": 63
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

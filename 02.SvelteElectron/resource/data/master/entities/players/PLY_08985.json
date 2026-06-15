@@ -1,0 +1,72 @@
+{
+  "id": "PLY_08985",
+  "name": "권기훈",
+  "nameEn": "Kwon KiHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "schoolId": "SCHOOL_HS_MASAN_HARBOR",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_MASAN_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 90,
+      "primaryPosition": "C",
+      "developmentRate": 54,
+      "potentialHidden": 69,
+      "pitching": {
+        "ovr": 48,
+        "stamina": 51,
+        "velocity": 57,
+        "command": 42,
+        "control": 42,
+        "movement": 42,
+        "mentality": 46,
+        "recovery": 46,
+        "clutch": 42,
+        "holdRunners": 33
+      },
+      "batting": {
+        "ovr": 35,
+        "contact": 38,
+        "power": 30,
+        "eye": 35,
+        "discipline": 25,
+        "speed": 30,
+        "baseInstinct": 31,
+        "bunting": 22,
+        "platoon": 50,
+        "fielding": 34,
+        "arm": 26,
+        "battingClutch": 32
+      },
+      "positionRatings": {
+        "C": 35
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

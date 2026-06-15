@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07323",
+  "name": "김태민",
+  "nameEn": "Kim TaeMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2046,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 24,
+  "militaryStatus": "미필",
+  "entryYear": 2044,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 73,
+      "primaryPosition": "SP",
+      "developmentRate": 63,
+      "potentialHidden": 76,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 50,
+        "velocity": 49,
+        "command": 36,
+        "control": 38,
+        "movement": 37,
+        "mentality": 44,
+        "recovery": 35,
+        "clutch": 42,
+        "holdRunners": 41
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 40,
+        "power": 42,
+        "eye": 40,
+        "discipline": 42,
+        "speed": 48,
+        "baseInstinct": 47,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 38,
+        "arm": 42,
+        "battingClutch": 42
+      },
+      "positionRatings": {
+        "SP": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

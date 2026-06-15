@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07346",
+  "name": "최우식",
+  "nameEn": "Choi WooSik",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2048,
+  "notes": "",
+  "diligence": 41,
+  "popularity": 22,
+  "militaryStatus": "미필",
+  "entryYear": 2046,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 26,
+      "primaryPosition": "LF",
+      "developmentRate": 55,
+      "potentialHidden": 57,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 61,
+        "velocity": 64,
+        "command": 56,
+        "control": 54,
+        "movement": 59,
+        "mentality": 60,
+        "recovery": 57,
+        "clutch": 57,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 47,
+        "power": 47,
+        "eye": 48,
+        "discipline": 40,
+        "speed": 48,
+        "baseInstinct": 44,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 41,
+        "arm": 43,
+        "battingClutch": 47
+      },
+      "positionRatings": {
+        "LF": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "PLY_10861",
+  "name": "미첼 그랜트",
+  "nameEn": "Mitchell Grant",
+  "role": "player",
+  "age": 34,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 40,
+  "militaryStatus": "군필",
+  "entryYear": 2032,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 34,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 54,
+      "primaryPosition": "RF",
+      "developmentRate": 53,
+      "potentialHidden": 57,
+      "proServiceYears": 12,
+      "pitching": {
+        "ovr": 75,
+        "stamina": 79,
+        "velocity": 75,
+        "command": 75,
+        "control": 76,
+        "movement": 71,
+        "mentality": 79,
+        "recovery": 70,
+        "clutch": 67,
+        "holdRunners": 68
+      },
+      "batting": {
+        "ovr": 75,
+        "contact": 72,
+        "power": 68,
+        "eye": 66,
+        "discipline": 67,
+        "speed": 80,
+        "baseInstinct": 75,
+        "bunting": 67,
+        "platoon": 50,
+        "fielding": 77,
+        "arm": 66,
+        "battingClutch": 73
+      },
+      "positionRatings": {
+        "RF": 75
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

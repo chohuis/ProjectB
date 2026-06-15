@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07034",
+  "name": "강영호",
+  "nameEn": "Kang YoungHo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2030,
+  "notes": "",
+  "diligence": 42,
+  "popularity": 34,
+  "militaryStatus": "미필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 86,
+      "primaryPosition": "SP",
+      "developmentRate": 51,
+      "potentialHidden": 71,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 46,
+        "velocity": 48,
+        "command": 40,
+        "control": 46,
+        "movement": 40,
+        "mentality": 47,
+        "recovery": 42,
+        "clutch": 32,
+        "holdRunners": 35
+      },
+      "batting": {
+        "ovr": 43,
+        "contact": 46,
+        "power": 40,
+        "eye": 37,
+        "discipline": 40,
+        "speed": 45,
+        "baseInstinct": 39,
+        "bunting": 24,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 43,
+        "battingClutch": 31
+      },
+      "positionRatings": {
+        "SP": 45
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

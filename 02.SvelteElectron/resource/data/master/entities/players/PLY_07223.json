@@ -1,0 +1,72 @@
+{
+  "id": "PLY_07223",
+  "name": "신동훈",
+  "nameEn": "Shin DongHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_YEOSU_SHORE",
+  "teamId": "TEAM_HS_YEOSU_SHORE",
+  "schoolId": "SCHOOL_HS_YEOSU_SHORE",
+  "grade": 1,
+  "graduationYear": 2041,
+  "notes": "",
+  "diligence": 74,
+  "popularity": 31,
+  "militaryStatus": "미필",
+  "entryYear": 2039,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_YEOSU_SHORE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 50,
+      "primaryPosition": "1B",
+      "developmentRate": 55,
+      "potentialHidden": 75,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 55,
+        "velocity": 67,
+        "command": 54,
+        "control": 54,
+        "movement": 52,
+        "mentality": 63,
+        "recovery": 48,
+        "clutch": 49,
+        "holdRunners": 52
+      },
+      "batting": {
+        "ovr": 39,
+        "contact": 41,
+        "power": 38,
+        "eye": 40,
+        "discipline": 37,
+        "speed": 38,
+        "baseInstinct": 34,
+        "bunting": 27,
+        "platoon": 50,
+        "fielding": 30,
+        "arm": 35,
+        "battingClutch": 37
+      },
+      "positionRatings": {
+        "1B": 39
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

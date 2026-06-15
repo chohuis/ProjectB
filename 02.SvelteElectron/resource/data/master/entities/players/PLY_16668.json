@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16668",
+  "name": "앨런 코너",
+  "nameEn": "Allen Connor",
+  "role": "player",
+  "age": 35,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 72,
+  "popularity": 28,
+  "militaryStatus": "군필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 35,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 92,
+      "primaryPosition": "C",
+      "developmentRate": 48,
+      "potentialHidden": 56,
+      "proServiceYears": 13,
+      "pitching": {
+        "ovr": 68,
+        "stamina": 67,
+        "velocity": 71,
+        "command": 69,
+        "control": 70,
+        "movement": 63,
+        "mentality": 69,
+        "recovery": 68,
+        "clutch": 60,
+        "holdRunners": 67
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 72,
+        "power": 67,
+        "eye": 72,
+        "discipline": 67,
+        "speed": 63,
+        "baseInstinct": 62,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 62,
+        "battingClutch": 58
+      },
+      "positionRatings": {
+        "C": 68
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

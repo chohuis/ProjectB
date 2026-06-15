@@ -1,0 +1,72 @@
+{
+  "id": "PLY_05698",
+  "name": "서혁욱",
+  "nameEn": "Seo HyeokWook",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_INCHEON_HARBOR",
+  "teamId": "TEAM_HS_INCHEON_HARBOR",
+  "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
+  "grade": 1,
+  "graduationYear": 2052,
+  "notes": "",
+  "diligence": 79,
+  "popularity": 21,
+  "militaryStatus": "미필",
+  "entryYear": 2050,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_INCHEON_HARBOR",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 31,
+      "primaryPosition": "CF",
+      "developmentRate": 49,
+      "potentialHidden": 80,
+      "pitching": {
+        "ovr": 60,
+        "stamina": 59,
+        "velocity": 69,
+        "command": 59,
+        "control": 58,
+        "movement": 50,
+        "mentality": 60,
+        "recovery": 52,
+        "clutch": 56,
+        "holdRunners": 55
+      },
+      "batting": {
+        "ovr": 46,
+        "contact": 48,
+        "power": 40,
+        "eye": 41,
+        "discipline": 45,
+        "speed": 42,
+        "baseInstinct": 40,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 39,
+        "arm": 39,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "CF": 46
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

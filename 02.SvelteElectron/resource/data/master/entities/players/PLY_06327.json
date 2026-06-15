@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06327",
+  "name": "서재훈",
+  "nameEn": "Seo JaeHun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2044,
+  "notes": "",
+  "diligence": 69,
+  "popularity": 8,
+  "militaryStatus": "미필",
+  "entryYear": 2042,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 19,
+      "primaryPosition": "2B",
+      "developmentRate": 51,
+      "potentialHidden": 43,
+      "pitching": {
+        "ovr": 40,
+        "stamina": 42,
+        "velocity": 41,
+        "command": 41,
+        "control": 41,
+        "movement": 34,
+        "mentality": 39,
+        "recovery": 34,
+        "clutch": 28,
+        "holdRunners": 29
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 50,
+        "power": 49,
+        "eye": 46,
+        "discipline": 43,
+        "speed": 52,
+        "baseInstinct": 41,
+        "bunting": 30,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 46,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "2B": 50
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

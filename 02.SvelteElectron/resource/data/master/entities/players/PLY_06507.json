@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06507",
+  "name": "서성민",
+  "nameEn": "Seo SeongMin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_GOYANG_ARROW",
+  "teamId": "TEAM_HS_GOYANG_ARROW",
+  "schoolId": "SCHOOL_HS_GOYANG_ARROW",
+  "grade": 1,
+  "graduationYear": 2031,
+  "notes": "",
+  "diligence": 75,
+  "popularity": 10,
+  "militaryStatus": "미필",
+  "entryYear": 2029,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_GOYANG_ARROW",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 74,
+      "primaryPosition": "LF",
+      "developmentRate": 67,
+      "potentialHidden": 85,
+      "pitching": {
+        "ovr": 62,
+        "stamina": 62,
+        "velocity": 64,
+        "command": 62,
+        "control": 56,
+        "movement": 60,
+        "mentality": 66,
+        "recovery": 55,
+        "clutch": 58,
+        "holdRunners": 58
+      },
+      "batting": {
+        "ovr": 62,
+        "contact": 64,
+        "power": 61,
+        "eye": 65,
+        "discipline": 56,
+        "speed": 63,
+        "baseInstinct": 52,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 59,
+        "battingClutch": 56
+      },
+      "positionRatings": {
+        "LF": 62
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "PLY_06252",
+  "name": "류민재",
+  "nameEn": "Ryu MinJae",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_SUWON_EDGE",
+  "teamId": "TEAM_HS_SUWON_EDGE",
+  "schoolId": "SCHOOL_HS_SUWON_EDGE",
+  "grade": 1,
+  "graduationYear": 2038,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 23,
+  "militaryStatus": "미필",
+  "entryYear": 2036,
+  "entryLeague": "LEAGUE_HIGHSCHOOL",
+  "entryTeam": "TEAM_HS_SUWON_EDGE",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 7,
+      "primaryPosition": "RF",
+      "developmentRate": 47,
+      "potentialHidden": 55,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 43,
+        "velocity": 50,
+        "command": 38,
+        "control": 47,
+        "movement": 41,
+        "mentality": 45,
+        "recovery": 40,
+        "clutch": 32,
+        "holdRunners": 34
+      },
+      "batting": {
+        "ovr": 47,
+        "contact": 40,
+        "power": 46,
+        "eye": 41,
+        "discipline": 47,
+        "speed": 50,
+        "baseInstinct": 41,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 46,
+        "battingClutch": 34
+      },
+      "positionRatings": {
+        "RF": 47
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

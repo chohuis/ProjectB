@@ -1,0 +1,73 @@
+{
+  "id": "PLY_13321",
+  "name": "넬슨 오스틴",
+  "nameEn": "Nelson Austin",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_ABL",
+  "leagueId": "LEAGUE_ABL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 71,
+  "popularity": 19,
+  "militaryStatus": "군필",
+  "entryYear": 2047,
+  "entryLeague": "LEAGUE_ABL",
+  "entryTeam": null,
+  "entryAge": 22,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 51,
+      "primaryPosition": "SP",
+      "developmentRate": 75,
+      "potentialHidden": 67,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 59,
+        "stamina": 63,
+        "velocity": 57,
+        "command": 60,
+        "control": 51,
+        "movement": 55,
+        "mentality": 58,
+        "recovery": 59,
+        "clutch": 57,
+        "holdRunners": 48
+      },
+      "batting": {
+        "ovr": 59,
+        "contact": 63,
+        "power": 59,
+        "eye": 54,
+        "discipline": 54,
+        "speed": 56,
+        "baseInstinct": 55,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 59,
+        "battingClutch": 49
+      },
+      "positionRatings": {
+        "SP": 59
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

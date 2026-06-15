@@ -1,0 +1,73 @@
+{
+  "id": "PLY_14244",
+  "name": "잭슨 알렉스",
+  "nameEn": "Jackson Alex",
+  "role": "player",
+  "age": 20,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 65,
+  "popularity": 31,
+  "militaryStatus": "군필",
+  "entryYear": 2028,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 20,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 50,
+      "primaryPosition": "SS",
+      "developmentRate": 75,
+      "potentialHidden": 85,
+      "proServiceYears": 0,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 44,
+        "velocity": 52,
+        "command": 52,
+        "control": 54,
+        "movement": 44,
+        "mentality": 45,
+        "recovery": 41,
+        "clutch": 42,
+        "holdRunners": 38
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 52,
+        "power": 52,
+        "eye": 49,
+        "discipline": 48,
+        "speed": 49,
+        "baseInstinct": 51,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 40,
+        "battingClutch": 44
+      },
+      "positionRatings": {
+        "SS": 49
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}

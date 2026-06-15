@@ -1,0 +1,73 @@
+{
+  "id": "PLY_16598",
+  "name": "윌리엄스 알렉스",
+  "nameEn": "Williams Alex",
+  "role": "player",
+  "age": 27,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "",
+  "teamId": "",
+  "schoolId": "",
+  "grade": null,
+  "notes": "",
+  "diligence": 52,
+  "popularity": 41,
+  "militaryStatus": "군필",
+  "entryYear": 2049,
+  "entryLeague": "LEAGUE_JBL",
+  "entryTeam": null,
+  "entryAge": 27,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 94,
+      "primaryPosition": "CF",
+      "developmentRate": 48,
+      "potentialHidden": 72,
+      "proServiceYears": 5,
+      "pitching": {
+        "ovr": 74,
+        "stamina": 76,
+        "velocity": 83,
+        "command": 68,
+        "control": 76,
+        "movement": 77,
+        "mentality": 77,
+        "recovery": 70,
+        "clutch": 68,
+        "holdRunners": 61
+      },
+      "batting": {
+        "ovr": 74,
+        "contact": 79,
+        "power": 73,
+        "eye": 78,
+        "discipline": 65,
+        "speed": 72,
+        "baseInstinct": 69,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 74,
+        "arm": 67,
+        "battingClutch": 74
+      },
+      "positionRatings": {
+        "CF": 74
+      }
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  }
+}
