@@ -98,11 +98,12 @@ function createSeasonStore() {
     },
 
     // entity 목록 기준으로 npcLiveStats 초기화 (W1 또는 신규 엔티티 대응)
-    initNpcLiveStats(entities: import("../stores/master").EntityRow[]) {
+    initNpcLiveStats(entities: import("../stores/master").EntityRow[], seasonYear?: number) {
       update((s) => {
         const stats = { ...s.npcLiveStats };
         for (const e of entities) {
           if (e.role !== "player") continue;
+          if (seasonYear && (e as any).entryYear && (e as any).entryYear > seasonYear) continue;
           if (stats[e.id]) continue;
           const p = (e.details as import("../stores/master").EntityDetails)?.player;
           if (!p) continue;

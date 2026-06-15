@@ -198,6 +198,10 @@ export interface EntityRow {
   notes: string;
   militaryStatus?: "미필" | "군필" | "현역" | "면제";
   personality?: import("../types/save").NpcPersonality;
+  entryYear?:   number;
+  entryLeague?: string;
+  entryTeam?:   string;
+  entryAge?:    number;
   details: EntityDetails;
 }
 
@@ -692,12 +696,11 @@ function createMasterStore() {
     update((s) => ({ ...s, achievements }));
   }
 
-  async function reloadEntities() {
+  async function reloadEntities(seasonYear?: number) {
     try {
       let rows: EntityRow[];
       if (window.projectB?.masterLoadEntities) {
-        // SQLite 단일 쿼리 — leagueId 없으면 전체 로드
-        rows = (await window.projectB.masterLoadEntities("")) as EntityRow[];
+        rows = (await window.projectB.masterLoadEntities("", seasonYear)) as EntityRow[];
       } else {
         const index = await fetchMaster<EntityIndex>("entities/players/_index.json");
         if (!index?.byLeague) return;
@@ -710,10 +713,10 @@ function createMasterStore() {
     }
   }
 
-  async function loadEntities(leagueId: string) {
+  async function loadEntities(leagueId: string, seasonYear?: number) {
     let rows: EntityRow[];
     if (window.projectB?.masterLoadEntities) {
-      rows = (await window.projectB.masterLoadEntities(leagueId)) as EntityRow[];
+      rows = (await window.projectB.masterLoadEntities(leagueId, seasonYear)) as EntityRow[];
     } else {
       const index = await fetchMaster<EntityIndex>("entities/players/_index.json");
       if (!index?.byLeague) return;
@@ -780,7 +783,7 @@ function createMasterStore() {
   }
 
   return {
-    subscribe, load, loadEntities,
+    subscribe, load, loadEntities, reloadEntities,
     reloadEvents, reloadAchievements,
     setupContentWatcher,
     applyNpcLiveStats,

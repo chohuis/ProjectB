@@ -89,6 +89,7 @@ export function generateTop10(
   allEntities: EntityRow[],
   seasonWeek: number,
   grade: number,
+  seasonYear?: number,
 ): Top10Snapshot {
   const type = protagonist.playerType === "pitcher" ? "pitcher" : "batter";
   const teamName = HS_TEAM_NAMES[protagonist.teamId] ?? protagonist.teamId;
@@ -107,7 +108,8 @@ export function generateTop10(
       (n) =>
         n.role === "player" &&
         n.leagueId === "LEAGUE_HIGHSCHOOL" &&
-        n.details?.player?.playerType === type,
+        n.details?.player?.playerType === type &&
+        (!n.entryYear || !seasonYear || n.entryYear <= seasonYear),
     )
     .map((n) => ({
       id:       n.id,
@@ -154,6 +156,7 @@ function heroRankInAll(
   allEntities: EntityRow[],
   seasonWeek: number,
   grade: number,
+  seasonYear?: number,
 ): number {
   const type = protagonist.playerType === "pitcher" ? "pitcher" : "batter";
   const heroScore = calcProspectScore(protagonist, stats);
@@ -162,7 +165,8 @@ function heroRankInAll(
       (n) =>
         n.role === "player" &&
         n.leagueId === "LEAGUE_HIGHSCHOOL" &&
-        n.details?.player?.playerType === type,
+        n.details?.player?.playerType === type &&
+        (!n.entryYear || !seasonYear || n.entryYear <= seasonYear),
     )
     .filter((n) => calcNpcScore(n, seasonWeek, grade) > heroScore)
     .length;
@@ -177,6 +181,7 @@ export function buildTop10Message(
   curr: Top10Snapshot,
   last: Top10Snapshot | null,
   weekNum: number,
+  seasonYear?: number,
 ): MessageItem {
   const typeKr  = curr.type === "pitcher" ? "투수" : "타자";
   const monthKr = weekToMonthLabel(weekNum);
@@ -184,7 +189,7 @@ export function buildTop10Message(
   const { ins, outs, moves } = calcChanges(curr, last);
 
   const heroEntry = curr.entries.find((e) => e.id === "PLY_HERO");
-  const heroRank  = heroEntry?.rank ?? heroRankInAll(protagonist, stats, allEntities, curr.week, curr.grade);
+  const heroRank  = heroEntry?.rank ?? heroRankInAll(protagonist, stats, allEntities, curr.week, curr.grade, seasonYear);
   const inTop10   = !!heroEntry;
 
   // 순위표 행 생성

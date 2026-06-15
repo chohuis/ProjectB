@@ -525,40 +525,38 @@ function aggregateMonthlyPerf(
   return result;
 }
 
-// 모든 선수 NPC 월간 성장 처리
-async function processMonthlyNpcGrowth(weekNum: number, weekInYear: number): Promise<void> {
+// 모든 선수 NPC 주간 성장 처리 (매주 실행)
+async function processWeeklyNpcGrowth(weekNum: number): Promise<void> {
   const g = get(gameStore);
   const s = get(seasonStore);
   const m = get(masterStore);
 
-  // 현재 페이즈
   const currentPhase = s.schedule.find((e) => e.week === weekNum)?.phase ?? "offseason";
 
-  // 팀 컨텍스트 조립
+  // 팀 컨텍스트 — 코치/감독 능력치 반영
   const teamContexts = m.teams.map((t) => {
     const mgr   = m.entities.find((e) => e.role === "manager" && e.teamId === t.id);
-    const coach = m.entities.find((e) => e.role === "coach" && e.teamId === t.id);
+    const coach = m.entities.find((e) => e.role === "coach"   && e.teamId === t.id);
     return {
       teamId: t.id,
       facilityTier: t.tier ?? "독립",
       managerDevelopment: (mgr?.details as any)?.manager?.stats?.development ?? 50,
-      coachTeaching: (coach?.details as any)?.coach?.stats?.teaching ?? 50,
+      coachTeaching:      (coach?.details as any)?.coach?.stats?.teaching    ?? 50,
     };
   });
 
-  // 이전 달 성적 집계
-  const { start, end } = getPrevMonthRange(weekInYear);
+  // 이전 주 성적 집계
+  const prevWeek = weekNum - 1;
   const allSchedule = [
     ...s.schedule,
     ...Object.values(s.leagueSchedules).flat(),
   ];
-  const perfRaw = aggregateMonthlyPerf(allSchedule, start, end);
-  const perfData: Record<string, { gamesPlayed: number; era?: number; battingAvg?: number }> = perfRaw;
+  const perfData = aggregateMonthlyPerf(allSchedule, prevWeek, prevWeek);
 
-  // 전체 선수 엔티티 → NpcLiveInput 변환
-  const namedFameMap = new Map(get(gameStore).npcs.map(n => [n.npcId, n.fame ?? 0]));
+  // npcLiveStats에 있는 모든 NPC (master entity 기반)
+  const namedFameMap = new Map(g.npcs.map(n => [n.npcId, n.fame ?? 0]));
   const npcs = m.entities
-    .filter((e) => e.role === "player")
+    .filter((e) => e.role === "player" && s.npcLiveStats[e.id])
     .map((e) => {
       const live = s.npcLiveStats[e.id];
       const p    = (e.details as import("../stores/master").EntityDetails)?.player;
@@ -580,14 +578,13 @@ async function processMonthlyNpcGrowth(weekNum: number, weekInYear: number): Pro
 
   if (npcs.length === 0) return;
 
-  // Rust 호출
   const result = JSON.parse(
-    await window.projectB!.npcCalcMonthlyGrowth(JSON.stringify({
+    await window.projectB!.npcCalcWeeklyGrowth(JSON.stringify({
       npcs,
       teamContexts,
       perfData,
       currentPhase,
-      monthIndex: MONTH_STARTS_1.indexOf(weekInYear),
+      monthIndex: 0,  // 주간 모드에서는 사용 안 함
     }))
   ) as { updated: Array<{
     npcId: string;
@@ -599,10 +596,9 @@ async function processMonthlyNpcGrowth(weekNum: number, weekInYear: number): Pro
     fameDelta: number;
   }> };
 
-  // seasonStore 업데이트
   seasonStore.applyNpcLiveGrowth(result.updated);
 
-  // Named NPC fame 업데이트
+  // fame 업데이트
   const fameDeltas = result.updated.filter(u => u.fameDelta !== 0 && namedFameMap.has(u.npcId));
   if (fameDeltas.length > 0) {
     const updatedNpcs = get(gameStore).npcs.map(n => {
@@ -610,7 +606,7 @@ async function processMonthlyNpcGrowth(weekNum: number, weekInYear: number): Pro
       if (delta === 0) return n;
       return { ...n, fame: Math.max(0, Math.min(100, (n.fame ?? 0) + delta)) };
     });
-    gameStore.updateNamedNpcs(updatedNpcs);
+    gameStore.updateNpcs(updatedNpcs);
   }
 }
 
@@ -742,7 +738,7 @@ async function processTradeWindow(weekInYear: number): Promise<void> {
   const buildNpcAsset = (n: typeof npcRows[number]) => {
     const named = namedMap.get(n.npcId);
     const inj = s.npcInjuries[n.npcId];
-    // Named NPC는 injuryStatus 필드 존재, 배경 NPC는 0으로 처리
+    // gameStore NPC는 injuryStatus 필드 존재, entity 기반 NPC는 0으로 처리
     const careerInjuryCount = named?.injuryStatus ? 1 : 0;
     const hasSteroidHistory = false; // NPC 스테로이드 이력 미추적
     return {
@@ -849,7 +845,7 @@ async function processTradeWindow(weekInYear: number): Promise<void> {
     // STEP C: 선수 거부 (noTrade 또는 personality 있는 선수)
     if (offeredAsset.personality) {
       const named = namedMap.get(offeredId);
-      // Named NPC noTrade: 현재 NpcSaveState에 contract 필드 없으므로 personality만으로 판단
+      // noTrade: 현재 NpcSaveState에 contract 필드 없으므로 personality만으로 판단
       const hasNoTrade = false;
       if (hasNoTrade) {
         const recvStanding = sortedStandings.findIndex((st) => st.teamId === proposal.receivingTeamId) + 1;
@@ -1139,8 +1135,8 @@ function getLeagueStandings(leagueId: string, s: import("../types/season").SaveS
 }
 
 // W43 오프시즌 — 전체 프로 NPC 은퇴/FA 결정
-// Named NPC: save state 업데이트 (영구 반영)
-// 배경 NPC: masterStore entities 인메모리 업데이트 (세션 내 반영)
+// 프로 NPC: save state 업데이트 (영구 반영)
+// 배경 entity NPC: masterStore entities 인메모리 업데이트 (세션 내 반영)
 async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> {
   const g = get(gameStore);
   const s = get(seasonStore);
@@ -1150,9 +1146,9 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
   const proLeagues = new Set(["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]);
   const namedIdSet = new Set(g.npcs.map(n => n.npcId));
 
-  // ── Named NPC 처리 (save state 업데이트) ─────────────────────
+  // ── 프로 NPC 처리 (save state 업데이트) ──────────────────────
   const namedNpcs = g.npcs.filter(n =>
-    n.isNamed && n.careerStatus === "active" && n.currentLeague &&
+    n.careerStatus === "active" && n.currentLeague &&
     proLeagues.has(n.currentLeague)
   );
 
@@ -1177,10 +1173,15 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
       }))
     ) as { suggest: boolean; urgency: number };
 
-    if (retSuggest.suggest && npc.personality) {
+    const npcPersonality = npc.personality ?? {
+      loyalty: 50, ambition: 50, greed: 40, competitiveDrive: 50,
+      stabilityPreference: 50, professionalism: 60, overseasAmbition: 30,
+      marketPreference: 50, homeTeamId: null,
+    };
+    if (retSuggest.suggest) {
       const retResp = JSON.parse(
         await window.projectB!.playerEvalRetirementResponseNative(JSON.stringify({
-          personality: npc.personality,
+          personality: npcPersonality,
           age: npc.age, ovr: liveOvr,
           ovrTrend: (s.npcLiveStats[npc.npcId]?.peakOvr ?? liveOvr) - liveOvr,
           proServiceYears: npc.proServiceYears ?? 0,
@@ -1196,7 +1197,6 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
     }
 
     // FA 자격 판단
-    if (!npc.personality) continue;
     const league = npc.currentLeague ?? "";
     const faThreshold = league === "LEAGUE_KBL" ? 5 : league === "LEAGUE_JBL" ? 4 : 6;
     if ((npc.proServiceYears ?? 0) < faThreshold) continue;
@@ -1207,7 +1207,7 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
 
     const faRes = JSON.parse(
       await window.projectB!.playerEvalFaDecisionNative(JSON.stringify({
-        personality: npc.personality,
+        personality: npcPersonality,
         age: npc.age, ovr: liveOvr,
         proServiceYears: npc.proServiceYears ?? 0,
         currentSalary:   (npc as any).currentSalary ?? 2000,
@@ -1224,42 +1224,46 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
       const idx = updatedNpcs.findIndex(n => n.npcId === npc.npcId);
       if (idx >= 0) updatedNpcs[idx] = { ...updatedNpcs[idx], careerStatus: "free_agent" as any };
       logs.push(`[W${weekNum}] ${npc.name} FA 신청`);
-    } else if (npc.personality) {
+    } else {
       // FA 미신청 = 팀에 재계약 의사 → loyalty 증가
       const newLoyalty = JSON.parse(
         await window.projectB!.updatePlayerLoyaltyNative(JSON.stringify({
-          currentLoyalty:      npc.personality.loyalty,
+          currentLoyalty:      npcPersonality.loyalty,
           eventType:           "contract_honor",
           eventMagnitude:      1.0,
-          stabilityPreference: npc.personality.stabilityPreference,
+          stabilityPreference: npcPersonality.stabilityPreference,
         }))
       ) as number;
       const idx = updatedNpcs.findIndex(n => n.npcId === npc.npcId);
       if (idx >= 0) {
         updatedNpcs[idx] = {
           ...updatedNpcs[idx],
-          personality: { ...updatedNpcs[idx].personality!, loyalty: newLoyalty },
+          personality: { ...npcPersonality, loyalty: newLoyalty },
         };
       }
     }
   }
 
-  gameStore.updateNamedNpcs(updatedNpcs);
+  gameStore.updateNpcs(updatedNpcs);
 
-  // ── 배경 NPC 처리 (masterStore entities 인메모리 업데이트) ─────
+  // ── 배경 프로 NPC 처리 (masterStore entities 기반, gameStore에 없는 선수) ─
   const backgroundProEntities = m.entities.filter(e =>
     e.role === "player" &&
     e.leagueId && proLeagues.has(e.leagueId) &&
     e.teamId && e.teamId !== "" &&
-    !namedIdSet.has(e.id)
+    !namedIdSet.has(e.id) &&
+    e.age >= 35
   );
 
   const entityMoves: Array<{ id: string; teamId: string }> = [];
+  const defaultPersonality = () => ({
+    loyalty: 50, ambition: 50, greed: 40, competitiveDrive: 50,
+    stabilityPreference: 50, professionalism: 60, overseasAmbition: 30,
+    marketPreference: 50, homeTeamId: null,
+  });
 
   for (const entity of backgroundProEntities) {
-    if (!entity.personality) continue;
-    if (entity.age < 35) continue;
-
+    const personality = entity.personality ?? defaultPersonality();
     const liveOvr   = npcOvr(entity, s.npcLiveStats);
     const profile   = getTeamProfile(entity.teamId, g, m);
     if (!profile) continue;
@@ -1279,7 +1283,7 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
 
     const retResp = JSON.parse(
       await window.projectB!.playerEvalRetirementResponseNative(JSON.stringify({
-        personality: entity.personality,
+        personality,
         age: entity.age,
         ovr: liveOvr,
         ovrTrend: (s.npcLiveStats[entity.id]?.peakOvr ?? liveOvr) - liveOvr,
@@ -1294,6 +1298,11 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
   }
 
   if (entityMoves.length > 0) masterStore.patchEntityTeams(entityMoves);
+
+  // ── ABL/JBL 신규 입장자(entry_year) FA 처리 ────────────────────
+  // W1에서 npcLiveStats에 초기화된 pro entrant를 FA 풀에 추가
+  // (entry_team=null인 경우, FA 시장을 통해 팀 배정됨 — run_fa_engine에서 자동 처리)
+
   return logs;
 }
 
@@ -1371,10 +1380,40 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     }
   }
 
-  // W1: 주인공 스냅샷 저장 + NPC 라이브 스탯 초기화
+  // W1: 주인공 스냅샷 저장 + NPC 라이브 스탯 초기화 + 신규 입장 NPC 활성화
   if (weekNum === 1) {
     gameStore.saveSeasonStartSnapshot();
-    seasonStore.initNpcLiveStats(m.entities);
+
+    // entry_year == currentSeasonYear인 신규 NPC 활성화
+    const currentSeasonYear = s.seasonYear;
+    await masterStore.loadEntities("", currentSeasonYear);
+    const updatedEntities = get(masterStore).entities;
+
+    const newEntrants = updatedEntities.filter(
+      (e) => (e as import("../stores/master").EntityRow & { entryYear?: number }).entryYear === currentSeasonYear,
+    );
+
+    if (newEntrants.length > 0) {
+      // HS 신입생 → gameStore.npcs에 Grade 1으로 추가
+      const { entityToNpcState } = await import("../utils/gradeAdvance");
+      const hsEntrants = newEntrants.filter(
+        (e) => (e as any).entryLeague === "LEAGUE_HIGHSCHOOL",
+      );
+      if (hsEntrants.length > 0) {
+        const newNpcs = hsEntrants.map((e) => entityToNpcState(e as any, currentSeasonYear));
+        gameStore.addNpcs(newNpcs);
+      }
+
+      // Pro 즉전감 (ABL/JBL) → npcLiveStats 초기화 (팀 배정은 오프시즌 FA 처리)
+      const proEntrants = newEntrants.filter(
+        (e) => ["LEAGUE_ABL", "LEAGUE_JBL"].includes((e as any).entryLeague ?? ""),
+      );
+      if (proEntrants.length > 0) {
+        seasonStore.initNpcLiveStats(proEntrants);
+      }
+    }
+
+    seasonStore.initNpcLiveStats(updatedEntities, currentSeasonYear);
     seasonStore.snapNpcSeasonStart();
   }
 
@@ -1635,6 +1674,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       m.entities,
       weekNum,
       gTop10.protagonist.grade ?? 1,
+      sTop10.seasonYear,
     );
 
     const msg = buildTop10Message(
@@ -1644,6 +1684,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       snap,
       last,
       weekNum,
+      sTop10.seasonYear,
     );
 
     gameStore.addMessage(msg);
@@ -1658,13 +1699,13 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     }
   }
 
-  // NPC 월간 성장/하락 처리 (매월 첫 주)
-  if (isMonthStart(weekInYear)) {
-    await processMonthlyNpcGrowth(weekNum, weekInYear);
-    // 성장 결과를 masterStore.entities에 반영 (게임 시뮬레이션에 즉시 적용)
-    masterStore.applyNpcLiveStats(get(seasonStore).npcLiveStats);
+  // NPC 주간 성장/하락 처리 (매주 실행)
+  await processWeeklyNpcGrowth(weekNum);
+  // 성장 결과를 masterStore.entities에 반영 (게임 시뮬레이션에 즉시 적용)
+  masterStore.applyNpcLiveStats(get(seasonStore).npcLiveStats);
 
-    // 프로 스테이지: 콜업/콜다운 처리
+  // 프로 스테이지: 콜업/콜다운 처리 (월간 첫 주에만)
+  if (isMonthStart(weekInYear)) {
     const callupLogs = await processProTeamCallupCalldown(weekNum);
     logs.push(...callupLogs);
   }
@@ -1857,7 +1898,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       });
     }
 
-    // W43: Named NPC 은퇴/FA 결정
+    // W43: NPC 은퇴/FA 결정
     if (isProStage && weekInYear === 43) {
       const offseasonLogs = await processOffseasonNpcDecisions(weekNum);
       logs.push(...offseasonLogs);
@@ -1959,7 +2000,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     const gEmo = get(gameStore);
     const sEmo = get(seasonStore);
     const isHs = gEmo.protagonist.careerStage === "highschool";
-    const namedNpcs = gEmo.npcs.filter(n => n.isNamed && n.emotionStatus !== "archived");
+    const namedNpcs = gEmo.npcs.filter(n => n.emotionStatus !== "archived");
 
     if (isHs && namedNpcs.length > 0) {
       // 이번 주 주인공 경기 결과 (schedule에서 조회)
@@ -2019,7 +2060,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       const moodMsg = checkTeamMoodWarning(updatedNpcs, weekNum);
       if (moodMsg) gameStore.addMessage(moodMsg);
 
-      gameStore.updateNamedNpcs(updatedNpcs);
+      gameStore.updateNpcs(updatedNpcs);
     }
   }
 
@@ -2670,13 +2711,13 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         return { processedWeek: s.currentWeek, logs: ["체육부대 탈락"], newMessages: [], matchResults: [], stoppedBy: action };
       }
 
-      // W52: 스카우트 능력치 향상 + Named NPC loyalty 연간 감쇠
+      // W52: 스카우트 능력치 향상 + NPC loyalty 연간 감쇠
       if (weekInYear === 52 && ["pro_kbl", "pro_abl", "pro_jbl"].includes(p.careerStage)) {
         processScoutingImprovement().catch(console.warn);
 
         // season_end_normal loyalty 감쇠
         const namedActive = get(gameStore).npcs.filter(n =>
-          n.isNamed && n.careerStatus === "active" && n.personality
+          n.careerStatus === "active" && n.personality
         );
         if (namedActive.length > 0) {
           const loyaltyUpdates = await Promise.all(
@@ -2693,7 +2734,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
             })
           );
           const loyaltyMap = new Map(loyaltyUpdates.map(u => [u.npcId, u.loyalty]));
-          gameStore.updateNamedNpcs(
+          gameStore.updateNpcs(
             get(gameStore).npcs.map(n => {
               const newLoy = loyaltyMap.get(n.npcId);
               if (newLoy === undefined || !n.personality) return n;

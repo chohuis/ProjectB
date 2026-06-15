@@ -44,6 +44,8 @@
           seasonStore.hydrateFromSlot(envelope.season);
           // npcLiveStats → masterStore.entities 동기화 (월간 성장 반영)
           masterStore.applyNpcLiveStats(envelope.season.npcLiveStats ?? {});
+          // 미래 선수 제외: 저장 시점 seasonYear 기준으로 entities 재필터
+          await masterStore.reloadEntities(envelope.season.seasonYear);
         }
         phase = "playing";
       } catch (e) {
