@@ -5,6 +5,8 @@
   import { masterStore } from "../../shared/stores/master";
   import HsGroupDrawModal from "../../features/hs-group-draw/ui/HsGroupDrawModal.svelte";
   import TrainingStatBars from "../../features/messages/ui/TrainingStatBars.svelte";
+  import ProspectTop10Panel from "../../features/messages/ui/ProspectTop10Panel.svelte";
+  import type { Top10Metadata } from "../../shared/types/main";
 
   type FilterId = "all" | "unread" | MessageCategory;
 
@@ -231,6 +233,8 @@
             morale={tm.morale}
             extraLogs={tm.extraLogs}
           />
+        {:else if selected.metadata?.type === "top10"}
+          <ProspectTop10Panel metadata={selected.metadata as Top10Metadata} />
         {:else}
           {#each selected.body.replace(/\\n/g, "\n").split("\n") as line}
             <p>{line || " "}</p>
@@ -258,7 +262,9 @@
                 </button>
               {/each}
             </div>
-          {:else}
+          {:else if selected.metadata?.type === "top10"}
+          <ProspectTop10Panel metadata={selected.metadata as Top10Metadata} />
+        {:else}
             {@const chosen = dec.options.find((o) => o.id === dec.selectedOptionId)}
             <div class="dec-result">
               <span class="result-check">✓</span>

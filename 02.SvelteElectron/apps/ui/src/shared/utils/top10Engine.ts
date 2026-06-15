@@ -1,6 +1,6 @@
 import type { ProtagonistSave, Top10Entry, Top10Snapshot, PitcherSeasonStats, BatterSeasonStats } from "../types/save";
 import type { EntityRow } from "../stores/master";
-import type { MessageItem } from "../types/main";
+import type { MessageItem, Top10Column, Top10Metadata } from "../types/main";
 
 // ── 월 레이블 (게임 내 주차 → 한국어 월) ─────────────────────
 const MONTH_STARTS = [0, 5, 9, 13, 18, 22, 26, 31, 35, 39, 44, 48];
@@ -115,7 +115,7 @@ export function generateTop10(
       id:       n.id,
       name:     n.name,
       teamName: npcTeamName(n),
-      score:    calcNpcScore(n, seasonWeek, grade),
+      score:    calcNpcScore(n, seasonWeek, n.grade ?? 3),
       rank:     0,
     }));
 
@@ -125,6 +125,91 @@ export function generateTop10(
     .map((e, i) => ({ ...e, rank: i + 1 }));
 
   return { type, grade, week: seasonWeek, entries: all };
+}
+
+// ── 학년 필터 Top 10 (통합·학년별 공용) ──────────────────────
+function generateTop10ForGrade(
+  protagonist: ProtagonistSave,
+  stats: PitcherSeasonStats | BatterSeasonStats | null,
+  allEntities: EntityRow[],
+  seasonWeek: number,
+  grade: number,
+  seasonYear: number,
+  gradeFilter: 1 | 2 | 3 | null,
+): { entries: Top10Entry[]; heroRank: number | null } {
+  const type = protagonist.playerType === "pitcher" ? "pitcher" : "batter";
+  const heroScore = calcProspectScore(protagonist, stats);
+  const heroGrade = protagonist.grade ?? 1;
+
+  const npcPool = allEntities
+    .filter(
+      (n) =>
+        n.role === "player" &&
+        n.leagueId === "LEAGUE_HIGHSCHOOL" &&
+        n.details?.player?.playerType === type &&
+        (!n.entryYear || !seasonYear || n.entryYear <= seasonYear) &&
+        (gradeFilter === null || (n.grade ?? 3) === gradeFilter),
+    )
+    .map((n) => ({
+      id:       n.id,
+      name:     n.name,
+      teamName: npcTeamName(n),
+      score:    calcNpcScore(n, seasonWeek, n.grade ?? 3),
+      rank:     0,
+    }));
+
+  const heroIncluded = gradeFilter === null || heroGrade === gradeFilter;
+  const heroEntry = heroIncluded
+    ? { id: "PLY_HERO", name: protagonist.name, teamName: HS_TEAM_NAMES[protagonist.teamId] ?? protagonist.teamId, score: heroScore, rank: 0 }
+    : null;
+
+  const pool = heroEntry ? [...npcPool, heroEntry] : npcPool;
+  const sorted = pool.sort((a, b) => b.score - a.score);
+  const top10 = sorted.slice(0, 10).map((e, i) => ({ ...e, rank: i + 1 }));
+
+  let heroRank: number | null = null;
+  if (heroIncluded) {
+    const heroInTop10 = top10.some((e) => e.id === "PLY_HERO");
+    if (!heroInTop10) {
+      heroRank = sorted.findIndex((e) => e.id === "PLY_HERO") + 1;
+    }
+  }
+
+  return { entries: top10, heroRank };
+}
+
+// ── 4컬럼 Top10Metadata 빌드 ──────────────────────────────────
+export function buildTop10Metadata(
+  protagonist: ProtagonistSave,
+  stats: PitcherSeasonStats | BatterSeasonStats | null,
+  allEntities: EntityRow[],
+  weekNum: number,
+  seasonYear: number,
+): Top10Metadata {
+  const makeCol = (
+    label: Top10Column["label"],
+    gradeFilter: 1 | 2 | 3 | null,
+    includeHeroRank: boolean,
+  ): Top10Column => {
+    const { entries, heroRank } = generateTop10ForGrade(
+      protagonist, stats, allEntities, weekNum,
+      protagonist.grade ?? 1, seasonYear, gradeFilter,
+    );
+    return { label, entries, heroRank: includeHeroRank ? heroRank : null };
+  };
+
+  return {
+    type: "top10",
+    playerType: protagonist.playerType === "pitcher" ? "pitcher" : "batter",
+    week: weekNum,
+    seasonYear,
+    columns: [
+      makeCol("통합",   null, true),
+      makeCol("3학년",  3,    (protagonist.grade ?? 1) === 3),
+      makeCol("2학년",  2,    (protagonist.grade ?? 1) === 2),
+      makeCol("1학년",  1,    (protagonist.grade ?? 1) === 1),
+    ],
+  };
 }
 
 // ── IN/OUT/이동 계산 ─────────────────────────────────────────
@@ -168,7 +253,7 @@ function heroRankInAll(
         n.details?.player?.playerType === type &&
         (!n.entryYear || !seasonYear || n.entryYear <= seasonYear),
     )
-    .filter((n) => calcNpcScore(n, seasonWeek, grade) > heroScore)
+    .filter((n) => calcNpcScore(n, seasonWeek, n.grade ?? 3) > heroScore)
     .length;
   return beaten + 1;
 }
@@ -186,68 +271,27 @@ export function buildTop10Message(
   const typeKr  = curr.type === "pitcher" ? "투수" : "타자";
   const monthKr = weekToMonthLabel(weekNum);
   const gradeKr = `고${curr.grade}`;
-  const { ins, outs, moves } = calcChanges(curr, last);
 
   const heroEntry = curr.entries.find((e) => e.id === "PLY_HERO");
-  const heroRank  = heroEntry?.rank ?? heroRankInAll(protagonist, stats, allEntities, curr.week, curr.grade, seasonYear);
-  const inTop10   = !!heroEntry;
-
-  // 순위표 행 생성
-  const rows = curr.entries.map((e) => {
-    const isHero   = e.id === "PLY_HERO";
-    const isNew    = ins.some((i) => i.id === e.id);
-    const delta    = moves[e.id];
-    const changeStr = isNew        ? "★ NEW"
-                    : delta > 0    ? `▲ ${delta}`
-                    : delta < 0    ? `▼ ${Math.abs(delta)}`
-                    :                "─";
-    const heroMark = isHero ? "  ◀" : "";
-    const rankStr  = `${e.rank}위`.padStart(4);
-    const nameStr  = e.name.padEnd(5);
-    return `${rankStr}  ${nameStr}  ${e.teamName}  ${changeStr}${heroMark}`;
-  });
-
-  // 변동 섹션
-  const insStr  = ins.length  ? `\nIN  : ${ins.map((e)  => `${e.name} (${e.teamName})`).join(", ")}` : "";
-  const outsStr = outs.length ? `\nOUT : ${outs.map((e) => `${e.name} (${e.teamName})`).join(", ")}` : "";
-
-  // 주인공 밖일 때 추가 표시
-  const heroFooter = inTop10
-    ? ""
-    : `\n─────────────────────────\n※ 내 순위: TOP 10 외 (추정 ${heroRank}위)\n다음 평가까지 4주 남았습니다.`;
-
-  // 효과 힌트
-  const effectHint = inTop10
-    ? `인기도 +${rankEffect(heroRank).popularity} / 스카우트평가 +${rankEffect(heroRank).scoutScore} / 사기 +${rankEffect(heroRank).morale}`
-    : "";
-  const effectLine = effectHint ? `\n[${effectHint}]` : "";
+  const overallHeroRank = heroEntry?.rank ?? heroRankInAll(protagonist, stats, allEntities, curr.week, curr.grade, seasonYear);
+  const inTop10 = !!heroEntry;
 
   const subject = inTop10
-    ? `[${gradeKr} ${monthKr}] 고교 ${typeKr} 유망주 ${heroRank}위`
+    ? `[${gradeKr} ${monthKr}] 고교 ${typeKr} 유망주 ${overallHeroRank}위`
     : `[${gradeKr} ${monthKr}] 고교 ${typeKr} 유망주 월간 랭킹`;
 
-  const body = [
-    `[${gradeKr} ${monthKr} — 고교 ${typeKr} 유망주 월간 랭킹]`,
-    "",
-    "─────────────────────────",
-    ...rows,
-    "─────────────────────────",
-    insStr + outsStr,
-    "",
-    `평가 기준: 구위·제구·스카우트 관심도 종합`,
-    effectLine,
-    heroFooter,
-  ].join("\n").replace(/\n{3,}/g, "\n\n").trim();
+  const metadata = buildTop10Metadata(protagonist, stats, allEntities, weekNum, seasonYear ?? 0);
 
   return {
     id:        `msg-top10-${curr.type}-w${weekNum}-${Date.now()}`,
     category:  "news",
     sender:    "스포츠 매체",
     subject,
-    preview:   subject,
-    body,
+    preview:   inTop10 ? `통합 ${overallHeroRank}위 진입` : `통합 순위 ${overallHeroRank}위권`,
+    body:      subject,
     createdAt: `W${weekNum}`,
     readAt:    null,
+    metadata,
   };
 }
 

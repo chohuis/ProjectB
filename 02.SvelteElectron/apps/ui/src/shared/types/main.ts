@@ -63,6 +63,27 @@ export interface TrainingMetadata {
   extraLogs: string[];
 }
 
+export interface Top10ColumnEntry {
+  id: string;       // "PLY_HERO" or NPC id
+  name: string;
+  teamName: string;
+  rank: number;
+}
+
+export interface Top10Column {
+  label: "통합" | "3학년" | "2학년" | "1학년";
+  entries: Top10ColumnEntry[];
+  heroRank: number | null;  // 통합 컬럼에서만 top10 밖 순위, 나머지 null
+}
+
+export interface Top10Metadata {
+  type: "top10";
+  playerType: "pitcher" | "batter";
+  week: number;
+  seasonYear: number;
+  columns: [Top10Column, Top10Column, Top10Column, Top10Column];
+}
+
 export interface MessageItem {
   id: string;
   category: MessageCategory;
@@ -73,5 +94,5 @@ export interface MessageItem {
   createdAt: string;
   readAt: string | null;
   decision?: MessageDecision;
-  metadata?: TrainingMetadata | { type: string };
+  metadata?: TrainingMetadata | Top10Metadata | { type: string };
 }

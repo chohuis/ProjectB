@@ -371,13 +371,20 @@ function parseDecisionTemplate(raw: Record<string, any>): DecisionTemplate {
   const options: DecisionTemplateOption[] = (raw.options ?? []).map(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (o: Record<string, any>): DecisionTemplateOption => {
-      const effectsRaw = Array.isArray(o.effects) ? (o.effects as string[]) : [];
-      const parsed = parseEffectsArray(effectsRaw);
+      let effects: DecisionEffect | undefined;
+      if (Array.isArray(o.effects)) {
+        // 구 포맷: ["fatigue:+10", "xp.velocity:+3"]
+        const parsed = parseEffectsArray(o.effects as string[]);
+        effects = Object.keys(parsed).length > 0 ? parsed : undefined;
+      } else if (o.effects && typeof o.effects === "object") {
+        // 신 포맷: { fatigueDelta: 10, xp: { velocity: 3 } }
+        effects = o.effects as DecisionEffect;
+      }
       return {
         id: String(o.id ?? ""),
         label: String(o.label ?? ""),
         effectHint: typeof o.effectHint === "string" ? o.effectHint : undefined,
-        effects: Object.keys(parsed).length > 0 ? parsed : undefined,
+        effects,
       };
     }
   );
