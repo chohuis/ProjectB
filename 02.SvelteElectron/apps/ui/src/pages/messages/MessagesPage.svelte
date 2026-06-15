@@ -68,6 +68,15 @@
 
   $: selected = selectedId ? msgs.find((m) => m.id === selectedId) ?? null : null;
 
+  $: unreadNonDecisionCount = msgs.filter(
+    (m) => m.readAt === null && !(m.decision?.selectedOptionId === null)
+  ).length;
+
+  async function markAllRead() {
+    gameStore.markAllMessagesRead();
+    await gameStore.save();
+  }
+
   function open(msg: MessageItem) {
     selectedId = msg.id;
     if (msg.readAt === null && !(msg.decision && msg.decision.selectedOptionId === null)) {
@@ -149,19 +158,29 @@
 
   <div class="inbox">
     <div class="filter-row">
-      {#each FILTERS as f}
-        <button
-          class="filter-btn"
-          class:active={activeFilter === f.id}
-          on:click={() => (activeFilter = f.id)}
-          type="button"
-        >
-          {f.label}
-          {#if counts[f.id] > 0}
-            <span class="cnt">{counts[f.id]}</span>
-          {/if}
-        </button>
-      {/each}
+      <div class="filter-btns">
+        {#each FILTERS as f}
+          <button
+            class="filter-btn"
+            class:active={activeFilter === f.id}
+            on:click={() => (activeFilter = f.id)}
+            type="button"
+          >
+            {f.label}
+            {#if counts[f.id] > 0}
+              <span class="cnt">{counts[f.id]}</span>
+            {/if}
+          </button>
+        {/each}
+      </div>
+      <button
+        class="read-all-btn"
+        type="button"
+        disabled={unreadNonDecisionCount === 0}
+        on:click={markAllRead}
+      >
+        모두 읽음
+      </button>
     </div>
 
     <ul class="mail-list">
@@ -348,8 +367,39 @@
   /* ── 필터 행 ─────────────────────────────────────────────────── */
   .filter-row {
     display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+  }
+
+  .filter-btns {
+    display: flex;
     gap: 6px;
     flex-wrap: wrap;
+  }
+
+  .read-all-btn {
+    flex-shrink: 0;
+    border: 1px solid #2d4268;
+    background: #14213a;
+    color: #7a96c0;
+    border-radius: 6px;
+    font-size: 12px;
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: background 0.1s, color 0.1s;
+    white-space: nowrap;
+  }
+
+  .read-all-btn:hover:not(:disabled) {
+    background: #1e3254;
+    color: #c0d8f8;
+    border-color: #4a6898;
+  }
+
+  .read-all-btn:disabled {
+    opacity: 0.35;
+    cursor: default;
   }
 
   .filter-btn {

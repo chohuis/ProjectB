@@ -673,6 +673,17 @@ function createGameStore() {
       }));
     },
 
+    markAllMessagesRead() {
+      update((s) => ({
+        ...s,
+        mailbox: s.mailbox.map((m) => {
+          if (m.readAt !== null) return m;
+          if (m.decision?.selectedOptionId === null) return m;
+          return { ...m, readAt: "방금" };
+        }),
+      }));
+    },
+
     resolveDecision(messageId: string, optionId: string) {
       update((s) => {
         const msg    = s.mailbox.find((m) => m.id === messageId);
