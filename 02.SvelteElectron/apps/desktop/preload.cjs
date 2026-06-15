@@ -51,6 +51,10 @@ contextBridge.exposeInMainWorld("projectB", {
   npcGetRecentGames:            (p) => ipcRenderer.invoke("npc:getRecentGames",            p),
   npcFlushSeasonStats:          (p) => ipcRenderer.invoke("npc:flushSeasonStats",          p),
   npcGetCareerStats:            (p) => ipcRenderer.invoke("npc:getCareerStats",            p),
+  npcGetByLeague:               (p) => ipcRenderer.invoke("npc:getByLeague",               p),
+  npcSwapTeams:                 (p) => ipcRenderer.invoke("npc:swapTeams",                 p),
+  leagueAddTransactions:        (p) => ipcRenderer.invoke("league:addTransactions",        p),
+  leagueGetTransactions:        (p) => ipcRenderer.invoke("league:getTransactions",        p),
 
   // ── 성장 엔진 (Phase 4) ──────────────────────────────────────────────────
   growthCalcTraining:                    (p) => ipcRenderer.invoke("growth:calcTraining",                         p),

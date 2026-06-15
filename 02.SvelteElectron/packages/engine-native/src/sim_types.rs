@@ -633,6 +633,15 @@ pub struct TradeAsset {
     pub remaining_years: i32,
     pub is_prospect: bool,
     pub personality: Option<NpcPersonality>,
+    // 의료 정보 (메디컬 테스트용)
+    #[serde(default)]
+    pub injury_severity: Option<String>,  // null/"light"/"moderate"/"severe"/"surgery"
+    #[serde(default)]
+    pub injury_weeks_left: i32,
+    #[serde(default)]
+    pub career_injury_count: i32,
+    #[serde(default)]
+    pub has_steroid_history: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -672,4 +681,11 @@ pub struct TeamWithRoster {
     pub farm_roster: Vec<String>,
     pub salary_cap: i64,
     pub current_payroll: i64,
+    // 트레이드 컨텍스트
+    #[serde(default)]
+    pub win_pct: f64,                        // 현재 승률 → buyer/seller 모드 판단
+    #[serde(default)]
+    pub injured_positions: Vec<String>,      // 부상 중인 포지션 → 긴급 보강 필요
+    #[serde(default)]
+    pub expiring_contract_ids: Vec<String>,  // 잔여 1년 이하 선수 ID → 선점 트레이드
 }

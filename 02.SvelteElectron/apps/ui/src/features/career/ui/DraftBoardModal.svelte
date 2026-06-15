@@ -317,6 +317,23 @@
 
   async function complete() {
     const userPick = $gameStore.schoolState.careerDraftPickLog.find((r) => r.isUser) ?? null;
+    const slotId = $gameStore.currentSlotId;
+    const seasonYear = $seasonStore.seasonYear;
+
+    // 드래프트 전체 픽 리그 거래 기록
+    if (slotId && $gameStore.schoolState.careerDraftPickLog.length > 0) {
+      const draftRows = $gameStore.schoolState.careerDraftPickLog.map((pick) => ({
+        seasonYear, category: "draft",
+        playerId: pick.playerId ?? "",
+        playerName: pick.playerName ?? "",
+        fromTeamId: null, fromLeagueId: null,
+        toTeamId: pick.teamId, toLeagueId: "LEAGUE_KBL",
+        detail: `${pick.round}라운드 ${pick.pickNo}순위`,
+        groupId: null,
+      }));
+      await window.projectB?.leagueAddTransactions(JSON.stringify({ slotId, rows: draftRows }));
+    }
+
     await gameStore.save();
     await seasonStore.save();
     dispatch("completed", {

@@ -649,6 +649,365 @@ function getTeamProfile(teamId: string, g: import("../stores/game").GameStoreSta
   return g.proTeamProfiles[teamId] ?? m.teams.find(t => t.id === teamId)?.proTeamProfile ?? null;
 }
 
+const DEFAULT_TEAM_PROFILE: ProTeamProfile = {
+  ownerSpendingWillingness: 50, stability: 50, developmentFocus: 50,
+  discipline: 50, ownerPatience: 50, winNowPressure: 50, scoutingQuality: 50,
+  prestige: 50, marketAppeal: 50, clubhouseCulture: 50, medicalQuality: 50, farmInvestment: 50,
+};
+
+const TRADE_REASON_LABEL: Record<string, string> = {
+  position_surplus:   "포지션 보강",
+  injury_cover:       "부상 대체",
+  seller_mode:        "전력 재편",
+  buyer_mode:         "즉시전력 강화",
+  expiring_contract:  "계약 만료 선점",
+  player_ambition:    "선수 이적 요청",
+};
+
+const MEDICAL_SEVERITY_LABEL: Record<string, string> = {
+  active_surgery:   "수술 부상",
+  active_severe:    "중증 부상",
+  active_moderate:  "중상 중",
+  injury_history:   "부상 이력 다수",
+  age_risk:         "고령 + 부상 이력",
+  steroid_history:  "스테로이드 사용 이력",
+};
+
+async function processTradeWindow(weekInYear: number): Promise<void> {
+  const g = get(gameStore);
+  const s = get(seasonStore);
+  const m = get(masterStore);
+
+  const proLeagues = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"] as const;
+  const protagonistLeague = g.protagonist.leagueId as string;
+  if (!proLeagues.includes(protagonistLeague as typeof proLeagues[number])) return;
+  if (s.pendingActions.some((a) => a.type === "trade")) return;
+
+  const slotId = g.currentSlotId;
+  if (!slotId) return;
+
+  // ① 리그 전체 NPC 수집
+  const npcRows = JSON.parse(
+    await window.projectB!.npcGetByLeague(JSON.stringify({ slotId, leagueId: protagonistLeague }))
+  ) as Array<{
+    npcId: string; position: string; currentTeam: string; currentLeague: string;
+    currentSalary: number; contractYears: number; proServiceYears: number;
+    pitchOvr: number | null; batOvr: number | null; age: number;
+  }>;
+
+  const proTeams = m.teams.filter(
+    (t) => t.leagueId === protagonistLeague && t.id.endsWith("_1")
+  );
+  const standings = s.standings;
+  const sortedStandings = [...standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
+  const namedMap = new Map(g.npcs.map((n) => [n.npcId, n]));
+
+  // ② TeamWithRoster 빌드
+  const teamWithRosters = proTeams.map((team) => {
+    const roster = npcRows.filter((n) => n.currentTeam === team.id);
+    const st = standings.find((st) => st.teamId === team.id);
+    const winPct = st ? (st.wins / Math.max(1, st.wins + st.losses)) : 0.5;
+
+    const injuredPositions = roster
+      .filter((n) => {
+        const inj = s.npcInjuries[n.npcId];
+        return inj && (inj.severity === "severe" || inj.severity === "surgery" || inj.weeksLeft > 6);
+      })
+      .map((n) => n.position);
+
+    const expiringContractIds = roster
+      .filter((n) => n.contractYears <= 1)
+      .map((n) => n.npcId);
+
+    const profile = getTeamProfile(team.id, g, m) ?? DEFAULT_TEAM_PROFILE;
+    const currentPayroll = roster.reduce((sum, n) => sum + n.currentSalary, 0);
+
+    return {
+      teamId: team.id,
+      leagueId: protagonistLeague,
+      profile,
+      activeRoster: roster.map((n) => n.npcId),
+      farmRoster: [] as string[],
+      salaryCap: 300000,
+      currentPayroll,
+      winPct,
+      injuredPositions,
+      expiringContractIds,
+    };
+  });
+
+  if (teamWithRosters.length < 2) return;
+
+  // ③ TradeAsset 빌드 (NPC 전체 + 주인공)
+  const buildNpcAsset = (n: typeof npcRows[number]) => {
+    const named = namedMap.get(n.npcId);
+    const inj = s.npcInjuries[n.npcId];
+    // Named NPC는 injuryStatus 필드 존재, 배경 NPC는 0으로 처리
+    const careerInjuryCount = named?.injuryStatus ? 1 : 0;
+    const hasSteroidHistory = false; // NPC 스테로이드 이력 미추적
+    return {
+      playerId: n.npcId,
+      teamId: n.currentTeam,
+      position: n.position,
+      age: n.age,
+      ovr: n.pitchOvr ?? n.batOvr ?? 50,
+      trueOvr: n.pitchOvr ?? n.batOvr ?? 50,
+      salary: n.currentSalary,
+      remainingYears: n.contractYears,
+      isProspect: n.proServiceYears <= 2,
+      personality: named?.personality ?? null,
+      injurySeverity: inj ? inj.severity : null,
+      injuryWeeksLeft: inj?.weeksLeft ?? 0,
+      careerInjuryCount,
+      hasSteroidHistory,
+    };
+  };
+
+  const allNpcAssets = npcRows.map(buildNpcAsset);
+
+  const proInjury = g.protagonist.injury;
+  const proHistory = g.protagonist.injuryHistory ?? [];
+  const protagonistAsset = {
+    playerId: g.protagonist.id,
+    teamId: g.protagonist.teamId,
+    position: g.protagonist.primaryPosition ?? "SP",
+    age: g.protagonist.age,
+    ovr: g.protagonist.pitching?.ovr ?? g.protagonist.batting?.ovr ?? 60,
+    trueOvr: g.protagonist.pitching?.ovr ?? g.protagonist.batting?.ovr ?? 60,
+    salary: g.protagonist.contract?.salary ?? 0,
+    remainingYears: g.protagonist.contract?.remainingYears ?? 0,
+    isProspect: (g.protagonist.proServiceYears ?? 0) <= 2,
+    personality: null,
+    injurySeverity: proInjury?.severity ?? null,
+    injuryWeeksLeft: proInjury?.recoveryWeeksLeft ?? 0,
+    careerInjuryCount: proHistory.length,
+    hasSteroidHistory: proInjury?.steroidUsed === true ||
+      proHistory.some((h) => h.treatmentChoice === "steroid"),
+  };
+
+  const allAssets = [...allNpcAssets, protagonistAsset];
+
+  // ④ generateTradeProposals 호출
+  const seasonStanding: Record<string, number> = {};
+  sortedStandings.forEach((st, idx) => { seasonStanding[st.teamId] = idx + 1; });
+
+  const genResult = JSON.parse(
+    await window.projectB!.generateTradeProposalsNative(JSON.stringify({
+      teams: teamWithRosters,
+      allPlayers: allAssets,
+      seasonStanding,
+      totalTeams: proTeams.length,
+      maxProposals: 8,
+    }))
+  ) as { proposals: Array<{
+    proposingTeamId: string; receivingTeamId: string;
+    offeringIds: string[]; requestingIds: string[];
+    cash: number; mutualBenefitScore: number; reason: string;
+  }> };
+
+  // ⑤ 각 proposal 처리
+  for (const proposal of genResult.proposals) {
+    const offeredId   = proposal.offeringIds[0];
+    const requestedId = proposal.requestingIds[0];
+    if (!offeredId || !requestedId) continue;
+
+    const offeredAsset  = allAssets.find((a) => a.playerId === offeredId);
+    const requestedAsset = allAssets.find((a) => a.playerId === requestedId);
+    if (!offeredAsset || !requestedAsset) continue;
+
+    const receivingProfile = getTeamProfile(proposal.receivingTeamId, g, m) ?? DEFAULT_TEAM_PROFILE;
+
+    // STEP A: 수신 팀 가치 평가
+    const tradeEval = JSON.parse(
+      await window.projectB!.evalTradeValueNative(JSON.stringify({
+        teamProfile: receivingProfile,
+        giving: [requestedAsset],
+        receiving: [offeredAsset],
+        cashAmount: proposal.cash,
+        rosterNeeds: [],
+        salaryCap: 300000,
+        currentPayroll: teamWithRosters.find((t) => t.teamId === proposal.receivingTeamId)?.currentPayroll ?? 150000,
+      }))
+    ) as { netValue: number; acceptProbability: number };
+    if (tradeEval.acceptProbability < 0.35) continue;
+
+    // STEP B: 메디컬 테스트 (제공 선수를 수신 팀이 검사)
+    const medicalOffer = JSON.parse(
+      await window.projectB!.evalMedicalTestNative(JSON.stringify({
+        playerPosition: offeredAsset.position,
+        playerAge: offeredAsset.age,
+        injurySeverity: offeredAsset.injurySeverity,
+        injuryWeeksLeft: offeredAsset.injuryWeeksLeft,
+        careerInjuryCount: offeredAsset.careerInjuryCount,
+        hasSteroidHistory: offeredAsset.hasSteroidHistory,
+        receivingTeamMedicalQuality: receivingProfile.medicalQuality,
+      }))
+    ) as { pass: boolean; concernLevel: number; rejectionProbability: number; rejectionReason: string | null };
+
+    if (!medicalOffer.pass) continue;
+
+    // STEP C: 선수 거부 (noTrade 또는 personality 있는 선수)
+    if (offeredAsset.personality) {
+      const named = namedMap.get(offeredId);
+      // Named NPC noTrade: 현재 NpcSaveState에 contract 필드 없으므로 personality만으로 판단
+      const hasNoTrade = false;
+      if (hasNoTrade) {
+        const recvStanding = sortedStandings.findIndex((st) => st.teamId === proposal.receivingTeamId) + 1;
+        const playerResp = JSON.parse(
+          await window.projectB!.playerEvalTradeResponseNative(JSON.stringify({
+            personality: offeredAsset.personality,
+            currentTeamId: offeredAsset.teamId,
+            destinationTeamProfile: receivingProfile,
+            destinationTeamId: proposal.receivingTeamId,
+            destinationStanding: recvStanding,
+            totalTeams: proTeams.length,
+            expectedPlayingTime: 0.7,
+            hasNoTradeClause: true,
+            currentSalary: offeredAsset.salary,
+            newSalary: offeredAsset.salary,
+            age: offeredAsset.age,
+          }))
+        ) as { accept: boolean; blockProbability: number };
+        if (!playerResp.accept) continue;
+      }
+    }
+
+    // STEP D: 주인공 포함 여부 분기
+    const protagonistIsOffered  = offeredId   === g.protagonist.id;
+    const protagonistIsReceived = requestedId === g.protagonist.id;
+
+    if (protagonistIsOffered || protagonistIsReceived) {
+      // 주인공이 제공되는 경우: 수신 팀이 주인공 메디컬 검사
+      if (protagonistIsOffered) {
+        const proMedical = JSON.parse(
+          await window.projectB!.evalMedicalTestNative(JSON.stringify({
+            playerPosition: protagonistAsset.position,
+            playerAge: protagonistAsset.age,
+            injurySeverity: protagonistAsset.injurySeverity,
+            injuryWeeksLeft: protagonistAsset.injuryWeeksLeft,
+            careerInjuryCount: protagonistAsset.careerInjuryCount,
+            hasSteroidHistory: protagonistAsset.hasSteroidHistory,
+            receivingTeamMedicalQuality: receivingProfile.medicalQuality,
+          }))
+        ) as { pass: boolean; rejectionReason: string | null };
+
+        if (!proMedical.pass) {
+          const teamName = m.teams.find((t) => t.id === proposal.receivingTeamId)?.name ?? proposal.receivingTeamId;
+          const reasonText = proMedical.rejectionReason ? MEDICAL_SEVERITY_LABEL[proMedical.rejectionReason] ?? proMedical.rejectionReason : "이상 소견";
+          gameStore.addMessage({
+            id: `msg-trade-medical-fail-${s.seasonYear}-${weekInYear}`,
+            category: "system",
+            sender: `${teamName} 구단`,
+            subject: "트레이드 협상 결렬",
+            preview: "메디컬 테스트 통과 실패로 트레이드가 무산되었습니다.",
+            body: `${teamName}과의 트레이드가 메디컬 테스트 통과 실패로 무산되었습니다.\n사유: ${reasonText}`,
+            createdAt: `W${weekInYear}`,
+            readAt: null,
+          });
+          continue;
+        }
+      }
+
+      // 받는 선수(NPC) 메디컬 정보 수집 → TradeModal에 전달
+      const receivedAsset = protagonistIsOffered ? requestedAsset : offeredAsset;
+      const receivedInj = s.npcInjuries[receivedAsset.playerId];
+      const receivedMedical = JSON.parse(
+        await window.projectB!.evalMedicalTestNative(JSON.stringify({
+          playerPosition: receivedAsset.position,
+          playerAge: receivedAsset.age,
+          injurySeverity: receivedAsset.injurySeverity,
+          injuryWeeksLeft: receivedAsset.injuryWeeksLeft,
+          careerInjuryCount: receivedAsset.careerInjuryCount,
+          hasSteroidHistory: receivedAsset.hasSteroidHistory,
+          receivingTeamMedicalQuality:
+            getTeamProfile(g.protagonist.teamId, g, m)?.medicalQuality ?? 50,
+        }))
+      ) as { concernLevel: number; rejectionReason: string | null };
+
+      const receivedName = namedMap.get(receivedAsset.playerId)?.name
+        ?? m.entities.find((e) => e.id === receivedAsset.playerId)?.name
+        ?? receivedAsset.playerId;
+
+      let receivedMedicalNote: string | undefined;
+      if (receivedMedical.concernLevel > 0.3 && receivedMedical.rejectionReason) {
+        const weeksNote = receivedInj ? ` (회복 ${receivedInj.weeksLeft}주 남음)` : "";
+        receivedMedicalNote = (MEDICAL_SEVERITY_LABEL[receivedMedical.rejectionReason] ?? "부상 이력") + weeksNote;
+      }
+
+      const fromTeamId = protagonistIsOffered ? g.protagonist.teamId : proposal.proposingTeamId;
+      const toTeamId   = protagonistIsOffered ? proposal.receivingTeamId : proposal.proposingTeamId;
+
+      seasonStore.pushPendingAction({
+        type: "event",
+        eventId: "EVT_TRADE_RUMOR",
+        title: "트레이드 통보",
+        description: `${TRADE_REASON_LABEL[proposal.reason] ?? proposal.reason} — 이적 제안이 들어왔습니다.`,
+        choices: [{ id: "ok", label: "확인" }],
+      });
+      seasonStore.pushPendingAction({
+        type: "trade",
+        fromTeamId,
+        toTeamId,
+        receivedNpcId:         receivedAsset.playerId,
+        receivedNpcName:       receivedName,
+        receivedOvr:           Math.round(receivedAsset.ovr),
+        receivedPosition:      receivedAsset.position,
+        receivedSalary:        receivedAsset.salary,
+        tradeReason:           proposal.reason,
+        receivedMedicalConcern: receivedMedical.concernLevel,
+        receivedMedicalNote,
+      });
+      break; // 주인공 관련 트레이드는 한 번만
+    }
+
+    // STEP E: NPC-NPC 자동 실행
+    await window.projectB!.npcSwapTeams(JSON.stringify({
+      slotId,
+      npcId1: offeredId,   teamId1: proposal.receivingTeamId,
+      npcId2: requestedId, teamId2: proposal.proposingTeamId,
+    }));
+
+    // 트레이드 결과 메시지 (뉴스 형식)
+    const team1Name = m.teams.find((t) => t.id === proposal.proposingTeamId)?.name ?? proposal.proposingTeamId;
+    const team2Name = m.teams.find((t) => t.id === proposal.receivingTeamId)?.name ?? proposal.receivingTeamId;
+    const p1Name = namedMap.get(offeredId)?.name ?? m.entities.find((e) => e.id === offeredId)?.name ?? offeredId;
+    const p2Name = namedMap.get(requestedId)?.name ?? m.entities.find((e) => e.id === requestedId)?.name ?? requestedId;
+    gameStore.addMessage({
+      id: `msg-npc-trade-${offeredId}-${requestedId}-${weekInYear}`,
+      category: "system",
+      sender: "리그 사무국",
+      subject: `트레이드 성사: ${team1Name} ↔ ${team2Name}`,
+      preview: `${p1Name} ↔ ${p2Name}`,
+      body: `[${team1Name}] ${p1Name} → [${team2Name}]\n[${team2Name}] ${p2Name} → [${team1Name}]\n사유: ${TRADE_REASON_LABEL[proposal.reason] ?? proposal.reason}`,
+      createdAt: `W${weekInYear}`,
+      readAt: null,
+    });
+
+    // 리그 거래 기록
+    const tradeGroupId = `trade-${offeredId}-${requestedId}-${s.seasonYear}-${weekInYear}`;
+    const reasonDetail = TRADE_REASON_LABEL[proposal.reason] ?? proposal.reason;
+    await window.projectB!.leagueAddTransactions(JSON.stringify({
+      slotId,
+      rows: [
+        {
+          seasonYear: s.seasonYear, week: weekInYear, category: "trade",
+          playerId: offeredId, playerName: p1Name,
+          fromTeamId: proposal.proposingTeamId, fromLeagueId: protagonistLeague,
+          toTeamId: proposal.receivingTeamId,   toLeagueId: protagonistLeague,
+          detail: reasonDetail, groupId: tradeGroupId,
+        },
+        {
+          seasonYear: s.seasonYear, week: weekInYear, category: "trade",
+          playerId: requestedId, playerName: p2Name,
+          fromTeamId: proposal.receivingTeamId, fromLeagueId: protagonistLeague,
+          toTeamId: proposal.proposingTeamId,   toLeagueId: protagonistLeague,
+          detail: reasonDetail, groupId: tradeGroupId,
+        },
+      ],
+    }));
+  }
+}
+
 // 팀의 1군/2군 선수 목록 반환 (팀 ID 기준)
 function getTeamEntityRefs(
   teamId1: string,
@@ -1448,34 +1807,9 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     seasonStore.pushPendingAction({ type: "careerResults" });
   }
 
-  // 프로 트레이드 판정
-  const gTrade = get(gameStore);
-  if (
-    (gTrade.protagonist.careerStage === "pro_kbl" || gTrade.protagonist.careerStage === "pro_abl") &&
-    gTrade.protagonist.contract && !get(seasonStore).pendingActions.some((a) => a.type === "trade")
-  ) {
-    const myStats = (get(seasonStore).stats[gTrade.protagonist.id] ?? null) as import("../types/save").PitcherSeasonStats | null;
-    const myEra = myStats?.era ?? 4.2;
-    const standings = get(seasonStore).standings;
-    const myRank = [...standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins)
-      .findIndex((sRow) => sRow.teamId === gTrade.protagonist.teamId) + 1;
-    const sameLeagueTeams = m.teams
-      .filter((t) => t.leagueId === gTrade.protagonist.leagueId && t.id !== gTrade.protagonist.teamId)
-      .map((t) => t.id);
-    if (sameLeagueTeams.length > 0) {
-      const tradeCalc = JSON.parse(await window.projectB!.weekCalcTradeRumor(JSON.stringify({
-        era: myEra, myRank, totalTeams: standings.length, weekInYear, sameLeagueTeams,
-      }))) as { shouldTrigger: boolean; toTeamId: string | null };
-      if (tradeCalc.shouldTrigger && tradeCalc.toTeamId) {
-        seasonStore.pushPendingAction({
-          type: "event", eventId: "EVT_TRADE_RUMOR",
-          title: "트레이드 루머",
-          description: "타 구단에서 관심을 보이고 있다는 소문이 돌고 있습니다.",
-          choices: [{ id: "ok", label: "확인" }],
-        });
-        seasonStore.pushPendingAction({ type: "trade", fromTeamId: gTrade.protagonist.teamId, toTeamId: tradeCalc.toTeamId });
-      }
-    }
+  // 프로 트레이드 윈도우 (W12~W38, 4주마다)
+  if (weekInYear >= 12 && weekInYear <= 38 && weekInYear % 4 === 0) {
+    await processTradeWindow(weekInYear);
   }
 
   // ── 오프시즌 이벤트 ─────────────────────────────────────────────

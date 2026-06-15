@@ -696,6 +696,25 @@ export interface CareerSeasonRecord {
   stats?: PlayerSeasonStats;  // 연도별 상세 성적 (최근 5년 표시용)
 }
 
+// ── 리그 거래 기록 ──────────────────────────────────────────────
+
+export type LeagueTransactionCategory = "trade" | "fa" | "draft" | "military";
+
+export interface LeagueTransactionRow {
+  id?: number;
+  seasonYear: number;
+  week?: number;
+  category: LeagueTransactionCategory;
+  playerId: string;
+  playerName: string;
+  fromTeamId?: string | null;
+  fromLeagueId?: string | null;
+  toTeamId?: string | null;
+  toLeagueId?: string | null;
+  detail?: string | null;
+  groupId?: string | null;  // 트레이드 양쪽 레코드 묶음용
+}
+
 export interface SaveGame {
   version: number;  // 저장 포맷 버전 (마이그레이션용)
   savedAt: string;          // ISO 8601 timestamp

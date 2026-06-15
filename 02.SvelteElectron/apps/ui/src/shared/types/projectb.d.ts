@@ -124,6 +124,10 @@ declare global {
       npcGetRecentGames:            (p: string) => Promise<string>;
       npcFlushSeasonStats:          (p: string) => Promise<string>;
       npcGetCareerStats:            (p: string) => Promise<string>;
+      npcGetByLeague:               (p: string) => Promise<string>;
+      npcSwapTeams:                 (p: string) => Promise<string>;
+      leagueAddTransactions:        (p: string) => Promise<string>;
+      leagueGetTransactions:        (p: string) => Promise<string>;
       // ── 성장 엔진 ───────────────────────────────────────────
       growthCalcTraining:          (p: string) => Promise<string>;
       growthCalcGame:              (p: string) => Promise<string>;
@@ -188,6 +192,7 @@ declare global {
       evalRetirementSuggestionNative(p: string): Promise<string>;
       generateTradeProposalsNative(p: string): Promise<string>;
       evalTradeValueNative(p: string): Promise<string>;
+      evalMedicalTestNative(p: string): Promise<string>;
       calcWinNowPressureUpdateNative(p: string): Promise<string>;
       calcScoutingImprovementNative(p: string): Promise<string>;
       // ── player_agent ───────────────────────────────────────

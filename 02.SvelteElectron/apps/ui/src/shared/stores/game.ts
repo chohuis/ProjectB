@@ -1541,6 +1541,15 @@ function createGameStore() {
     // L6: 전체 리그 NPC 오프시즌 처리 (에이징·감퇴·UNIV졸업·군입대·전역·FA·은퇴·로스터 정리)
     async processAllLeaguesSeasonEnd(seasonYear: number) {
       const s = get({ subscribe });
+
+      // FA 재배치 추적: before 스냅샷 (프로 FA 자격 NPC만)
+      const proLeagues = new Set(["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]);
+      const beforeTeam = new Map<string, string>(
+        s.npcs
+          .filter(n => proLeagues.has(n.currentLeague) && (n.proServiceYears ?? 0) >= 9)
+          .map(n => [n.npcId, n.currentTeam])
+      );
+
       const result = await runOffseasonProcessing(s.npcs, s.pendingDraft, seasonYear);
       const { decayDormantEmotion, archiveNpc } = await import("../utils/emotionEngine");
       const decayedNpcs = result.npcs.map(n => {
@@ -1553,6 +1562,32 @@ function createGameStore() {
         }
         return n;
       });
+
+      // FA 재배치 기록: 오프시즌 처리 후 팀이 바뀐 FA 자격 선수
+      const slotId = s.currentSlotId;
+      if (slotId) {
+        const faRows: import("../types/save").LeagueTransactionRow[] = [];
+        for (const n of result.npcs) {
+          const prev = beforeTeam.get(n.npcId);
+          if (prev && prev !== n.currentTeam && proLeagues.has(n.currentLeague) && n.careerStatus === "active") {
+            faRows.push({
+              seasonYear,
+              category: "fa",
+              playerId: n.npcId,
+              playerName: n.name,
+              fromTeamId: prev,
+              fromLeagueId: n.currentLeague,
+              toTeamId: n.currentTeam,
+              toLeagueId: n.currentLeague,
+              detail: "FA 계약",
+            });
+          }
+        }
+        if (faRows.length > 0) {
+          window.projectB?.leagueAddTransactions(JSON.stringify({ slotId, rows: faRows }));
+        }
+      }
+
       // 병역 현황 메시지용 임시 저장
       (window as any).__lastOffseasonSummary = {
         militaryEnlistedSports:   (result.summary as any).militaryEnlistedSports ?? [],

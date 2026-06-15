@@ -402,6 +402,7 @@ pub struct TradeProposal {
     pub requesting_ids: Vec<String>,
     pub cash: i64,
     pub mutual_benefit_score: f64,
+    pub reason: String,  // "position_surplus"|"injury_cover"|"seller_mode"|"buyer_mode"|"expiring_contract"|"player_ambition"
 }
 
 #[derive(Debug, Serialize)]
@@ -414,6 +415,13 @@ pub fn generate_trade_proposals(p: GenerateTradeProposalsParams) -> GenerateTrad
     let mut proposals = Vec::new();
     let n = p.teams.len();
     let positions = ["SP","RP","CP","C","1B","2B","3B","SS","LF","CF","RF","DH"];
+
+    // 팀 모드 판단: seller(<0.35) / buyer(>0.65 + win_now_pressure>70) / neutral
+    let team_mode = |team: &TeamWithRoster| -> &str {
+        if team.win_pct < 0.35 { "seller" }
+        else if team.win_pct > 0.65 && team.profile.win_now_pressure > 70.0 { "buyer" }
+        else { "neutral" }
+    };
 
     for i in 0..n {
         for j in (i + 1)..n {
@@ -434,13 +442,170 @@ pub fn generate_trade_proposals(p: GenerateTradeProposalsParams) -> GenerateTrad
                 players.iter().filter(|pl| pl.position == pos && !pl.is_prospect).count()
             };
 
+            let mode_a = team_mode(ta);
+            let mode_b = team_mode(tb);
+
+            // ── 1. 계약 만료 선점 트레이드 (잔여 1년 이하) ─────────────────
+            for expiring_id in &ta.expiring_contract_ids {
+                if let Some(exp_player) = a_players.iter().find(|pl| &pl.player_id == expiring_id) {
+                    // FA로 잃기 전에 유망주 교환
+                    let mut return_candidates: Vec<&&TradeAsset> = b_players.iter()
+                        .filter(|pl| pl.is_prospect && pl.ovr >= 55.0)
+                        .collect();
+                    return_candidates.sort_by(|a, b| b.ovr.partial_cmp(&a.ovr).unwrap());
+                    if let Some(prospect) = return_candidates.first() {
+                        let score = exp_player.ovr * 0.8 + prospect.ovr * 0.6;
+                        if score > 100.0 {
+                            proposals.push(TradeProposal {
+                                proposing_team_id: ta.team_id.clone(),
+                                receiving_team_id: tb.team_id.clone(),
+                                offering_ids: vec![exp_player.player_id.clone()],
+                                requesting_ids: vec![prospect.player_id.clone()],
+                                cash: 0,
+                                mutual_benefit_score: score,
+                                reason: "expiring_contract".into(),
+                            });
+                        }
+                    }
+                }
+            }
+            for expiring_id in &tb.expiring_contract_ids {
+                if let Some(exp_player) = b_players.iter().find(|pl| &pl.player_id == expiring_id) {
+                    let mut return_candidates: Vec<&&TradeAsset> = a_players.iter()
+                        .filter(|pl| pl.is_prospect && pl.ovr >= 55.0)
+                        .collect();
+                    return_candidates.sort_by(|a, b| b.ovr.partial_cmp(&a.ovr).unwrap());
+                    if let Some(prospect) = return_candidates.first() {
+                        let score = exp_player.ovr * 0.8 + prospect.ovr * 0.6;
+                        if score > 100.0 {
+                            proposals.push(TradeProposal {
+                                proposing_team_id: tb.team_id.clone(),
+                                receiving_team_id: ta.team_id.clone(),
+                                offering_ids: vec![exp_player.player_id.clone()],
+                                requesting_ids: vec![prospect.player_id.clone()],
+                                cash: 0,
+                                mutual_benefit_score: score,
+                                reason: "expiring_contract".into(),
+                            });
+                        }
+                    }
+                }
+            }
+
+            // ── 2. 부상 긴급 보강 (injured_positions 포지션 요청) ───────────
+            for inj_pos in &ta.injured_positions {
+                let mut fillers: Vec<&&TradeAsset> = b_players.iter()
+                    .filter(|pl| &pl.position == inj_pos && !pl.is_prospect && pl.ovr >= 58.0)
+                    .collect();
+                fillers.sort_by(|a, b| b.ovr.partial_cmp(&a.ovr).unwrap());
+                if let Some(filler) = fillers.first() {
+                    let mut give_cands: Vec<&&TradeAsset> = a_players.iter()
+                        .filter(|pl| !pl.is_prospect && pl.ovr >= 55.0 && &pl.position != inj_pos)
+                        .collect();
+                    give_cands.sort_by(|a, b| a.ovr.partial_cmp(&b.ovr).unwrap()); // 가장 약한 선수 제공
+                    if let Some(give) = give_cands.first() {
+                        let score = filler.ovr * 1.2 + give.ovr * 0.5 + 15.0; // 긴급도 가중
+                        proposals.push(TradeProposal {
+                            proposing_team_id: ta.team_id.clone(),
+                            receiving_team_id: tb.team_id.clone(),
+                            offering_ids: vec![give.player_id.clone()],
+                            requesting_ids: vec![filler.player_id.clone()],
+                            cash: 0,
+                            mutual_benefit_score: score,
+                            reason: "injury_cover".into(),
+                        });
+                    }
+                }
+            }
+            for inj_pos in &tb.injured_positions {
+                let mut fillers: Vec<&&TradeAsset> = a_players.iter()
+                    .filter(|pl| &pl.position == inj_pos && !pl.is_prospect && pl.ovr >= 58.0)
+                    .collect();
+                fillers.sort_by(|a, b| b.ovr.partial_cmp(&a.ovr).unwrap());
+                if let Some(filler) = fillers.first() {
+                    let mut give_cands: Vec<&&TradeAsset> = b_players.iter()
+                        .filter(|pl| !pl.is_prospect && pl.ovr >= 55.0 && &pl.position != inj_pos)
+                        .collect();
+                    give_cands.sort_by(|a, b| a.ovr.partial_cmp(&b.ovr).unwrap());
+                    if let Some(give) = give_cands.first() {
+                        let score = filler.ovr * 1.2 + give.ovr * 0.5 + 15.0;
+                        proposals.push(TradeProposal {
+                            proposing_team_id: tb.team_id.clone(),
+                            receiving_team_id: ta.team_id.clone(),
+                            offering_ids: vec![give.player_id.clone()],
+                            requesting_ids: vec![filler.player_id.clone()],
+                            cash: 0,
+                            mutual_benefit_score: score,
+                            reason: "injury_cover".into(),
+                        });
+                    }
+                }
+            }
+
+            // ── 3. 선수 야망 트레이드 (ambition 높음 + 팀 하위권) ───────────
+            let standing_a = p.season_standing.get(&ta.team_id).copied().unwrap_or(1);
+            let standing_b = p.season_standing.get(&tb.team_id).copied().unwrap_or(1);
+            let bottom_pct_a = standing_a as f64 / p.total_teams as f64;
+            let bottom_pct_b = standing_b as f64 / p.total_teams as f64;
+
+            for pl in &a_players {
+                if bottom_pct_a > 0.75 {
+                    if let Some(pers) = &pl.personality {
+                        if pers.ambition > 70.0 && pl.ovr >= 62.0 {
+                            // 이 선수가 이적 요청 → 상대팀에 제안
+                            let mut recv: Vec<&&TradeAsset> = b_players.iter()
+                                .filter(|rp| rp.position == pl.position && rp.ovr >= pl.ovr - 8.0)
+                                .collect();
+                            recv.sort_by(|a, b| b.ovr.partial_cmp(&a.ovr).unwrap());
+                            if let Some(rp) = recv.first() {
+                                let score = pl.ovr + rp.ovr * 0.7;
+                                proposals.push(TradeProposal {
+                                    proposing_team_id: ta.team_id.clone(),
+                                    receiving_team_id: tb.team_id.clone(),
+                                    offering_ids: vec![pl.player_id.clone()],
+                                    requesting_ids: vec![rp.player_id.clone()],
+                                    cash: 0,
+                                    mutual_benefit_score: score,
+                                    reason: "player_ambition".into(),
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            for pl in &b_players {
+                if bottom_pct_b > 0.75 {
+                    if let Some(pers) = &pl.personality {
+                        if pers.ambition > 70.0 && pl.ovr >= 62.0 {
+                            let mut recv: Vec<&&TradeAsset> = a_players.iter()
+                                .filter(|rp| rp.position == pl.position && rp.ovr >= pl.ovr - 8.0)
+                                .collect();
+                            recv.sort_by(|a, b| b.ovr.partial_cmp(&a.ovr).unwrap());
+                            if let Some(rp) = recv.first() {
+                                let score = pl.ovr + rp.ovr * 0.7;
+                                proposals.push(TradeProposal {
+                                    proposing_team_id: tb.team_id.clone(),
+                                    receiving_team_id: ta.team_id.clone(),
+                                    offering_ids: vec![pl.player_id.clone()],
+                                    requesting_ids: vec![rp.player_id.clone()],
+                                    cash: 0,
+                                    mutual_benefit_score: score,
+                                    reason: "player_ambition".into(),
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+
+            // ── 4. 포지션 surplus/deficit 교환 (기존 로직 + 모드 적용) ──────
             for pos in &positions {
                 let a_cnt = count_pos(&a_players, pos);
                 let b_cnt = count_pos(&b_players, pos);
 
-                let (surplus_team, deficit_team, surplus_players, deficit_players) =
-                    if a_cnt >= 3 && b_cnt <= 1 { (ta, tb, &a_players, &b_players) }
-                    else if b_cnt >= 3 && a_cnt <= 1 { (tb, ta, &b_players, &a_players) }
+                let (surplus_team, deficit_team, surplus_players, deficit_players, s_mode) =
+                    if a_cnt >= 3 && b_cnt <= 1 { (ta, tb, &a_players, &b_players, mode_a) }
+                    else if b_cnt >= 3 && a_cnt <= 1 { (tb, ta, &b_players, &a_players, mode_b) }
                     else { continue; };
 
                 let mut candidates: Vec<&&TradeAsset> = surplus_players.iter()
@@ -449,6 +614,56 @@ pub fn generate_trade_proposals(p: GenerateTradeProposalsParams) -> GenerateTrad
                 candidates.sort_by(|a, b| a.ovr.partial_cmp(&b.ovr).unwrap());
 
                 if let Some(offer_player) = candidates.first() {
+                    // seller 모드: 베테랑 → 유망주 교환 우선
+                    if s_mode == "seller" {
+                        let mut prospects: Vec<&&TradeAsset> = deficit_players.iter()
+                            .filter(|pl| pl.is_prospect && pl.ovr >= 52.0)
+                            .collect();
+                        prospects.sort_by(|a, b| b.ovr.partial_cmp(&a.ovr).unwrap());
+                        let bundle: Vec<String> = prospects.iter().take(2)
+                            .map(|pl| pl.player_id.clone()).collect();
+
+                        if !bundle.is_empty() {
+                            let bundle_val: f64 = prospects.iter().take(2)
+                                .map(|pl| pl.ovr).sum::<f64>() * 0.55;
+                            let veteran_val = offer_player.ovr;
+                            if (veteran_val - bundle_val).abs() < 18.0 {
+                                proposals.push(TradeProposal {
+                                    proposing_team_id: surplus_team.team_id.clone(),
+                                    receiving_team_id: deficit_team.team_id.clone(),
+                                    offering_ids: vec![offer_player.player_id.clone()],
+                                    requesting_ids: bundle,
+                                    cash: 0,
+                                    mutual_benefit_score: (veteran_val + bundle_val) / 2.0,
+                                    reason: "seller_mode".into(),
+                                });
+                            }
+                        }
+                    }
+
+                    // buyer 모드: 즉시전력 요구 (surplus 팀이 buyer이면 상대 베테랑 요청)
+                    if s_mode == "buyer" {
+                        let mut recv_cands: Vec<&&TradeAsset> = deficit_players.iter()
+                            .filter(|pl| !pl.is_prospect && pl.ovr >= 65.0 && pl.age <= 33)
+                            .collect();
+                        recv_cands.sort_by(|a, b| b.ovr.partial_cmp(&a.ovr).unwrap());
+                        if let Some(recv) = recv_cands.first() {
+                            let score = offer_player.ovr * 0.6 + recv.ovr;
+                            if score > 110.0 {
+                                proposals.push(TradeProposal {
+                                    proposing_team_id: surplus_team.team_id.clone(),
+                                    receiving_team_id: deficit_team.team_id.clone(),
+                                    offering_ids: vec![offer_player.player_id.clone()],
+                                    requesting_ids: vec![recv.player_id.clone()],
+                                    cash: 0,
+                                    mutual_benefit_score: score,
+                                    reason: "buyer_mode".into(),
+                                });
+                            }
+                        }
+                    }
+
+                    // neutral: 기존 포지션 surplus/deficit 상호 교환
                     let surplus_deficit_pos = positions.iter().find(|&&p2| {
                         count_pos(surplus_players, p2) <= 1
                             && count_pos(deficit_players, p2) >= 3
@@ -473,12 +688,14 @@ pub fn generate_trade_proposals(p: GenerateTradeProposalsParams) -> GenerateTrad
                                     requesting_ids: vec![req_player.player_id.clone()],
                                     cash: 0,
                                     mutual_benefit_score: mutual,
+                                    reason: "position_surplus".into(),
                                 });
                             }
                         }
                     }
 
-                    if surplus_team.profile.win_now_pressure < 40.0 {
+                    // 기존 유망주 번들 교환 (win_now_pressure 낮은 팀)
+                    if surplus_team.profile.win_now_pressure < 40.0 && s_mode != "buyer" {
                         let mut prospects: Vec<&&TradeAsset> = deficit_players.iter()
                             .filter(|pl| pl.is_prospect && pl.ovr >= 55.0)
                             .collect();
@@ -498,6 +715,7 @@ pub fn generate_trade_proposals(p: GenerateTradeProposalsParams) -> GenerateTrad
                                     requesting_ids: bundle,
                                     cash: 0,
                                     mutual_benefit_score: (veteran_val + bundle_val) / 2.0,
+                                    reason: "position_surplus".into(),
                                 });
                             }
                         }
@@ -564,4 +782,81 @@ pub fn eval_trade_value(p: EvalTradeValueParams) -> TradeEvalResult {
     let net_value = recv_val - give_val;
     let accept_probability = (0.5 + net_value / 100.0).clamp(0.05, 0.95);
     TradeEvalResult { net_value, accept_probability }
+}
+
+// ── eval_medical_test ─────────────────────────────────────────────────────────
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MedicalTestParams {
+    pub player_position: String,
+    pub player_age: i32,
+    pub injury_severity: Option<String>,  // null/"light"/"moderate"/"severe"/"surgery"
+    pub injury_weeks_left: i32,
+    pub career_injury_count: i32,
+    pub has_steroid_history: bool,
+    pub receiving_team_medical_quality: f64,  // 0~100
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MedicalTestResult {
+    pub pass: bool,
+    pub concern_level: f64,           // 0~1
+    pub rejection_probability: f64,
+    pub rejection_reason: Option<String>,
+    // "active_surgery"|"active_severe"|"active_moderate"|"injury_history"|"age_risk"|"steroid_history"
+}
+
+pub fn eval_medical_test(p: MedicalTestParams) -> MedicalTestResult {
+    let mut concern = 0.0_f64;
+    let mut reason: Option<String> = None;
+
+    // 현재 부상 심각도
+    match p.injury_severity.as_deref() {
+        Some("surgery")  => { concern += 0.85; reason = Some("active_surgery".into()); }
+        Some("severe")   => { concern += 0.60; reason = Some("active_severe".into()); }
+        Some("moderate") => { concern += 0.30; reason = Some("active_moderate".into()); }
+        Some("light")    => { concern += 0.08; }
+        _                => {}
+    }
+
+    // 회복 기간 가중 (장기 이탈일수록 우려 상승)
+    if p.injury_weeks_left > 20 { concern += 0.15; }
+    else if p.injury_weeks_left > 8 { concern += 0.08; }
+
+    // 부상 이력
+    if p.career_injury_count >= 4 {
+        concern += (p.career_injury_count - 3) as f64 * 0.08;
+        if reason.is_none() { reason = Some("injury_history".into()); }
+    } else if p.career_injury_count >= 2 {
+        concern += p.career_injury_count as f64 * 0.04;
+    }
+
+    // 나이 + 이력 복합 위험
+    if p.player_age >= 30 && p.career_injury_count >= 2 {
+        concern += 0.08;
+        if reason.is_none() { reason = Some("age_risk".into()); }
+    }
+
+    // 스테로이드 이력 (우선 덮어씀)
+    if p.has_steroid_history {
+        concern += 0.25;
+        reason = Some("steroid_history".into());
+    }
+
+    // 팀 메디컬 품질 보정
+    // medical_quality 100 → 1.3배 (엄격), 50 → 1.0배, 20 → 0.7배
+    let quality_factor = 0.7 + p.receiving_team_medical_quality * 0.006;
+    let rejection_prob = (concern * quality_factor).clamp(0.0, 1.0);
+
+    let mut rng = rand::thread_rng();
+    let pass = rng.gen::<f64>() >= rejection_prob;
+
+    MedicalTestResult {
+        pass,
+        concern_level: concern.clamp(0.0, 1.0),
+        rejection_probability: rejection_prob,
+        rejection_reason: if !pass { reason } else { None },
+    }
 }

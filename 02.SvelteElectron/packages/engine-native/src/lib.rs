@@ -806,6 +806,7 @@ napi_team!(eval_new_contract_native,             team_engine::eval_new_contract)
 napi_team!(eval_retirement_suggestion_native,    team_engine::eval_retirement_suggestion);
 napi_team!(generate_trade_proposals_native,      team_engine::generate_trade_proposals);
 napi_team!(eval_trade_value_native,              team_engine::eval_trade_value);
+napi_team!(eval_medical_test_native,             team_engine::eval_medical_test);
 napi_team!(calc_win_now_pressure_update_native,  team_engine::calc_win_now_pressure_update);
 napi_team!(calc_scouting_improvement_native,     team_engine::calc_scouting_improvement);
 

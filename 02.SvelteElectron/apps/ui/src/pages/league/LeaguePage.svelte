@@ -5,9 +5,12 @@
   import { masterStore, teamMap } from "../../shared/stores/master";
   import type { PitcherSeasonStats, BatterSeasonStats, PlayerSeasonStats } from "../../shared/types/save";
 
-  type LeagueTab  = "standings" | "leaderboard";
+  import type { LeagueTransactionRow } from "../../shared/types/save";
+
+  type LeagueTab  = "standings" | "leaderboard" | "transactions";
   type LbTab      = "pitcher" | "batter";
   type HsLbGroup  = "all" | "A" | "B";
+  type TxCategory = "all" | "trade" | "fa" | "draft" | "military";
 
   let tab:        LeagueTab  = "standings";
   let lbTab:      LbTab      = "pitcher";
@@ -35,6 +38,88 @@
 
   $: if (!selectedLeagueId && myLeagueId) selectedLeagueId = myLeagueId;
   $: if (selectedLeagueId && isLocked(selectedLeagueId)) selectedLeagueId = myLeagueId;
+
+  // ── 리그 기록 탭 ─────────────────────────────────────────────
+  const TX_LEAGUES = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"] as const;
+  const TX_CAT_LABEL: Record<TxCategory, string> = {
+    all: "전체", trade: "트레이드", fa: "FA", draft: "드래프트", military: "병역",
+  };
+  const TX_ICON: Record<string, string> = {
+    trade: "TR", fa: "FA", draft: "DR", military: "MIL",
+  };
+
+  let txLeagueId: string = "";
+  let txCategory: TxCategory = "all";
+  let txYear: number = 0;  // 0 = 전체
+  let txRows: LeagueTransactionRow[] = [];
+  let txLoading = false;
+
+  $: if (!txLeagueId && myLeagueId && TX_LEAGUES.includes(myLeagueId as typeof TX_LEAGUES[number])) {
+    txLeagueId = myLeagueId;
+  }
+  $: if (!txLeagueId && TX_LEAGUES.length) txLeagueId = TX_LEAGUES[0];
+
+  $: if (tab === "transactions") loadTransactions();
+
+  async function loadTransactions() {
+    const slotId = $gameStore.currentSlotId;
+    if (!slotId || txLoading) return;
+    txLoading = true;
+    try {
+      const res = JSON.parse(
+        await window.projectB!.leagueGetTransactions(JSON.stringify({
+          slotId,
+          seasonYear: txYear > 0 ? txYear : undefined,
+          category:   txCategory !== "all" ? txCategory : undefined,
+          leagueId:   txLeagueId || undefined,
+          limit: 200,
+        }))
+      ) as LeagueTransactionRow[];
+      txRows = res;
+    } finally {
+      txLoading = false;
+    }
+  }
+
+  // 카테고리/리그/연도 변경 시 재로드
+  $: txCategory, txLeagueId, txYear, tab === "transactions" && loadTransactions();
+
+  // 연도별 그룹핑
+  $: txByYear = (() => {
+    const map = new Map<number, LeagueTransactionRow[]>();
+    for (const r of txRows) {
+      const yr = r.seasonYear;
+      if (!map.has(yr)) map.set(yr, []);
+      map.get(yr)!.push(r);
+    }
+    // 내림차순 정렬
+    return [...map.entries()].sort((a, b) => b[0] - a[0]);
+  })();
+
+  // 트레이드 양쪽 레코드를 groupId 기준으로 묶음
+  $: txGroupedRows = (rows: LeagueTransactionRow[]) => {
+    const used = new Set<string>();
+    const result: Array<{ rows: LeagueTransactionRow[]; category: string }> = [];
+    for (const r of rows) {
+      if (r.groupId && used.has(r.groupId)) continue;
+      if (r.groupId) {
+        used.add(r.groupId);
+        const group = rows.filter((x) => x.groupId === r.groupId);
+        result.push({ rows: group, category: r.category });
+      } else {
+        result.push({ rows: [r], category: r.category });
+      }
+    }
+    return result;
+  };
+
+  // 사용 가능한 연도 목록
+  $: txAvailableYears = [...new Set(txRows.map((r) => r.seasonYear))].sort((a, b) => b - a);
+
+  function txTeamName(id?: string | null): string {
+    if (!id) return "";
+    return $teamMap.get(id)?.name ?? id;
+  }
 
   function tName(id: string): string {
     return $teamMap.get(id)?.name ?? id;
@@ -79,17 +164,20 @@
     .sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
 
   // ── 멀티리그 순위표 ─────────────────────────────────────────
-  // farm 리그는 1군 뒤에 표시, 내 리그가 맨 앞
+  // KBL → KBL2군 → ABL → ABL2군 → JBL → JBL2군 고정 순서
+  const LEAGUE_ORDER = [
+    "LEAGUE_KBL",     "LEAGUE_KBL_FARM",
+    "LEAGUE_ABL",     "LEAGUE_ABL_FARM",
+    "LEAGUE_JBL",     "LEAGUE_JBL_FARM",
+    "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT", "LEAGUE_HIGHSCHOOL",
+  ];
+
   $: allLeagueIds = (() => {
-    const keys = Object.keys($seasonStore.leagueState).filter(Boolean);
-    const main = [myLeagueId, ...keys.filter((lid) => lid !== myLeagueId && !isFarmLeague(lid))];
-    const farm = keys.filter(isFarmLeague);
-    const all  = [...main, ...farm];
-    if (lockedLeagueSet.size === 0) return all;
-    return [
-      ...all.filter((lid) => !lockedLeagueSet.has(lid)),
-      ...all.filter((lid) =>  lockedLeagueSet.has(lid)),
-    ];
+    const keys = new Set([...Object.keys($seasonStore.leagueState).filter(Boolean), myLeagueId]);
+    const ordered  = LEAGUE_ORDER.filter((lid) => keys.has(lid) && !lockedLeagueSet.has(lid));
+    const extra    = [...keys].filter((lid) => !LEAGUE_ORDER.includes(lid) && !lockedLeagueSet.has(lid));
+    const locked   = [...keys].filter((lid) => lockedLeagueSet.has(lid));
+    return [...ordered, ...extra, ...locked];
   })();
 
   function getLeagueStandings(lid: string) {
@@ -189,8 +277,9 @@
   <article class="card board">
     <header class="top-row">
       <div class="tabs">
-        <button class:active={tab === "standings"}   on:click={() => (tab = "standings")}>리그 순위</button>
-        <button class:active={tab === "leaderboard"} on:click={() => (tab = "leaderboard")}>스탯 순위</button>
+        <button class:active={tab === "standings"}    on:click={() => (tab = "standings")}>리그 순위</button>
+        <button class:active={tab === "leaderboard"}  on:click={() => (tab = "leaderboard")}>스탯 순위</button>
+        <button class:active={tab === "transactions"} on:click={() => (tab = "transactions")}>리그 기록</button>
       </div>
     </header>
 
@@ -204,7 +293,6 @@
             <button
               class:active={!locked && selectedLeagueId === lid}
               class:locked={locked}
-              class:farm-btn={farm}
               on:click={() => { if (!locked) selectedLeagueId = lid; }}
               title={locked ? "3학년 진급 후 열람 가능" : undefined}
             >
@@ -401,6 +489,99 @@
         </div>
       </section>
     {/if}
+
+    <!-- ── 거래 내역 ── -->
+    {#if tab === "transactions"}
+      <section class="tx-layout">
+        <!-- 필터 바 -->
+        <div class="tx-filters">
+          <!-- 리그 선택 -->
+          <div class="tx-filter-group">
+            {#each TX_LEAGUES as lid}
+              <button
+                class="tx-filter-btn"
+                class:tx-active={txLeagueId === lid}
+                on:click={() => { txLeagueId = lid; }}
+              >{leagueName(lid)}</button>
+            {/each}
+          </div>
+
+          <!-- 카테고리 -->
+          <div class="tx-filter-group">
+            {#each (["all", "trade", "fa", "draft", "military"] as TxCategory[]) as cat}
+              <button
+                class="tx-filter-btn"
+                class:tx-active={txCategory === cat}
+                on:click={() => { txCategory = cat; }}
+              >{TX_CAT_LABEL[cat]}</button>
+            {/each}
+          </div>
+        </div>
+
+        <!-- 거래 목록 -->
+        <div class="tx-feed">
+          {#if txLoading}
+            <p class="tx-empty">불러오는 중…</p>
+          {:else if txByYear.length === 0}
+            <p class="tx-empty">거래 기록이 없습니다. 시즌이 진행되면 트레이드, FA, 드래프트 결과가 여기 표시됩니다.</p>
+          {:else}
+            {#each txByYear as [year, rows]}
+              <div class="tx-year-group">
+                <h3 class="tx-year-heading">{year}년</h3>
+                {#each txGroupedRows(rows) as group}
+                  <div class="tx-entry tx-cat-{group.category}">
+                    <span class="tx-icon">{TX_ICON[group.category] ?? "·"}</span>
+                    <div class="tx-body">
+                      {#if group.category === "trade"}
+                        <!-- 트레이드: 두 선수 한 줄 -->
+                        {@const [r1, r2] = group.rows}
+                        <span class="tx-tag tag-trade">트레이드</span>
+                        <span class="tx-detail">
+                          <strong>{r1.playerName}</strong>
+                          <span class="tx-arrow">{txTeamName(r1.fromTeamId)} → {txTeamName(r1.toTeamId)}</span>
+                          {#if r2}
+                            &nbsp;/&nbsp;
+                            <strong>{r2.playerName}</strong>
+                            <span class="tx-arrow">{txTeamName(r2.fromTeamId)} → {txTeamName(r2.toTeamId)}</span>
+                          {/if}
+                        </span>
+                        {#if group.rows[0].detail}
+                          <span class="tx-reason">{group.rows[0].detail}</span>
+                        {/if}
+                      {:else if group.category === "fa"}
+                        {@const r = group.rows[0]}
+                        <span class="tx-tag tag-fa">FA</span>
+                        <span class="tx-detail">
+                          <strong>{r.playerName}</strong>
+                          {#if r.toTeamId}<span class="tx-arrow">→ {txTeamName(r.toTeamId)}</span>{/if}
+                        </span>
+                        {#if r.detail}<span class="tx-reason">{r.detail}</span>{/if}
+                      {:else if group.category === "draft"}
+                        {@const r = group.rows[0]}
+                        <span class="tx-tag tag-draft">드래프트</span>
+                        <span class="tx-detail">
+                          <strong>{r.playerName}</strong>
+                          {#if r.toTeamId}<span class="tx-arrow">→ {txTeamName(r.toTeamId)}</span>{/if}
+                        </span>
+                        {#if r.detail}<span class="tx-reason">{r.detail}</span>{/if}
+                      {:else if group.category === "military"}
+                        {@const r = group.rows[0]}
+                        <span class="tx-tag tag-military">병역</span>
+                        <span class="tx-detail"><strong>{r.playerName}</strong></span>
+                        {#if r.detail}<span class="tx-reason">{r.detail}</span>{/if}
+                      {/if}
+                    </div>
+                    {#if group.rows[0].week}
+                      <span class="tx-week">W{group.rows[0].week}</span>
+                    {/if}
+                  </div>
+                {/each}
+              </div>
+            {/each}
+          {/if}
+        </div>
+      </section>
+    {/if}
   </article>
 </section>
 
@@ -514,17 +695,10 @@
     display: block;
   }
 
-  .league-nav button.farm-btn {
-    border-color: #1e3a2e;
-    background: #0f1e18;
-    color: #80b898;
-  }
-  .league-nav button.farm-btn.active { background: #1a3828; border-color: #3a7a58; color: #a8e8c0; }
-
   .farm-badge {
     font-size: 9px;
-    color: #60c080;
-    background: rgba(96,192,128,0.15);
+    color: #8aabda;
+    background: rgba(138,171,218,0.12);
     border-radius: 3px;
     padding: 1px 4px;
     display: block;
@@ -640,6 +814,135 @@
 
   .streak-w { color: #79e0a2; font-weight: 700; }
   .streak-l { color: #ffb68a; font-weight: 700; }
+
+  /* 거래 내역 */
+  .tx-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .tx-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .tx-filter-group {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+
+  .tx-filter-btn {
+    border: 1px solid #2a4070;
+    background: #132038;
+    color: #8ab0e0;
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 11px;
+    cursor: pointer;
+  }
+  .tx-filter-btn.tx-active {
+    background: #1e4080;
+    border-color: #5080c0;
+    color: #ddeeff;
+  }
+
+  .tx-feed {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 0;
+  }
+
+  .tx-empty {
+    color: #6a90c0;
+    font-size: 12px;
+    padding: 16px 0;
+    text-align: center;
+  }
+
+  .tx-year-group { display: flex; flex-direction: column; gap: 3px; margin-bottom: 8px; }
+
+  .tx-year-heading {
+    font-size: 11px;
+    color: #5a80b0;
+    margin: 0 0 4px 0;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #1e3058;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .tx-entry {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    background: #0d1c32;
+    border-radius: 7px;
+    padding: 7px 10px;
+    border-left: 3px solid #2a4070;
+    font-size: 12px;
+  }
+  .tx-cat-trade   { border-left-color: #4a80e8; }
+  .tx-cat-fa      { border-left-color: #50c878; }
+  .tx-cat-draft   { border-left-color: #f0c040; }
+  .tx-cat-military { border-left-color: #a060e0; }
+
+  .tx-icon {
+    font-size: 9px;
+    font-weight: 700;
+    color: #7090b8;
+    flex-shrink: 0;
+    width: 26px;
+    text-align: center;
+    letter-spacing: 0.3px;
+    padding-top: 2px;
+  }
+
+  .tx-body {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
+  }
+
+  .tx-tag {
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .tag-trade    { background: #1a3878; color: #80b0ff; }
+  .tag-fa       { background: #0e3820; color: #60d890; }
+  .tag-draft    { background: #3a3010; color: #f0c840; }
+  .tag-military { background: #2a1060; color: #c080ff; }
+
+  .tx-detail { color: #c8dcf6; }
+  .tx-detail strong { color: #eef6ff; }
+  .tx-arrow { color: #7090b8; font-size: 11px; }
+  .tx-reason {
+    font-size: 11px;
+    color: #6a90b8;
+    background: #0a1628;
+    border-radius: 4px;
+    padding: 1px 6px;
+  }
+  .tx-week {
+    font-size: 10px;
+    color: #4a6a98;
+    flex-shrink: 0;
+    margin-left: auto;
+    align-self: center;
+  }
 
   @media (max-width: 1180px) {
     .standings-layout { grid-template-columns: 80px 1fr; }

@@ -114,7 +114,19 @@ export type PendingAction =
       signingBonus: number;
     }
   | { type: "faMarket" }
-  | { type: "trade"; fromTeamId: string; toTeamId: string }
+  | {
+      type: "trade";
+      fromTeamId: string;
+      toTeamId: string;
+      receivedNpcId: string;
+      receivedNpcName: string;
+      receivedOvr: number;
+      receivedPosition: string;
+      receivedSalary: number;
+      tradeReason: string;           // "position_surplus"|"injury_cover"|"seller_mode"|"buyer_mode"|"expiring_contract"|"player_ambition"
+      receivedMedicalConcern: number; // 0~1 (받는 선수 우려도)
+      receivedMedicalNote?: string;  // "현재 부상 중 (회복 4주)" 등 표시용
+    }
   | { type: "sportsUnitApplication" }
   | { type: "militaryEnlistAsk"; reason: "rejected" | "overdue" }
   | {

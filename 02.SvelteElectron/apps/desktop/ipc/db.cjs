@@ -308,6 +308,23 @@ function openDatabase(dbPath) {
     );
     CREATE INDEX IF NOT EXISTS idx_ngl_lookup ON npc_game_log(slot_id, npc_id, season DESC, week DESC);
 
+    CREATE TABLE IF NOT EXISTS league_transactions (
+      id              INTEGER PRIMARY KEY AUTOINCREMENT,
+      slot_id         TEXT    NOT NULL REFERENCES save_slots(slot_id) ON DELETE CASCADE,
+      season_year     INTEGER NOT NULL,
+      week            INTEGER,
+      category        TEXT    NOT NULL,
+      player_id       TEXT    NOT NULL DEFAULT '',
+      player_name     TEXT    NOT NULL DEFAULT '',
+      from_team_id    TEXT,
+      from_league_id  TEXT,
+      to_team_id      TEXT,
+      to_league_id    TEXT,
+      detail          TEXT,
+      group_id        TEXT
+    );
+    CREATE INDEX IF NOT EXISTS idx_lt_lookup ON league_transactions(slot_id, season_year DESC, id DESC);
+
     CREATE TABLE IF NOT EXISTS npc_season_stats (
       slot_id        TEXT    NOT NULL,
       npc_id         TEXT    NOT NULL,

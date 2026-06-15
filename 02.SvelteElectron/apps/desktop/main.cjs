@@ -538,6 +538,104 @@ app.whenReady().then(() => {
     } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
 
+  // ── 트레이드 전용 NPC 쿼리 ──────────────────────────────────────────────────
+  ipcMain.handle("npc:getByLeague", (_event, p) => {
+    try {
+      const { slotId, leagueId } = JSON.parse(p);
+      const rows = db.prepare(`
+        SELECT npc_id, position, current_team, current_league,
+               current_salary, contract_years, pro_service_years,
+               pitch_ovr, bat_ovr, age, career_status
+        FROM npc_runtime
+        WHERE slot_id = ? AND current_league = ? AND career_status = 'active'
+      `).all(slotId, leagueId);
+      return JSON.stringify(rows.map((r) => ({
+        npcId:          r.npc_id,
+        position:       r.position,
+        currentTeam:    r.current_team,
+        currentLeague:  r.current_league,
+        currentSalary:  r.current_salary,
+        contractYears:  r.contract_years,
+        proServiceYears: r.pro_service_years ?? 0,
+        pitchOvr:       r.pitch_ovr ?? null,
+        batOvr:         r.bat_ovr ?? null,
+        age:            r.age,
+      })));
+    } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  ipcMain.handle("npc:swapTeams", (_event, p) => {
+    try {
+      const { slotId, npcId1, teamId1, npcId2, teamId2 } = JSON.parse(p);
+      const stmt = db.prepare(
+        "UPDATE npc_runtime SET current_team = ? WHERE slot_id = ? AND npc_id = ?"
+      );
+      db.transaction(() => {
+        stmt.run(teamId1, slotId, npcId1);
+        stmt.run(teamId2, slotId, npcId2);
+      })();
+      return JSON.stringify({ ok: true });
+    } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  // ── 리그 거래 기록 ───────────────────────────────────────────────────────────
+  ipcMain.handle("league:addTransactions", (_event, p) => {
+    try {
+      const { slotId, rows } = JSON.parse(p);
+      const stmt = db.prepare(`
+        INSERT INTO league_transactions
+          (slot_id, season_year, week, category, player_id, player_name,
+           from_team_id, from_league_id, to_team_id, to_league_id, detail, group_id)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
+      `);
+      db.transaction(() => {
+        for (const r of rows) {
+          stmt.run(
+            slotId, r.seasonYear, r.week ?? null, r.category,
+            r.playerId ?? '', r.playerName ?? '',
+            r.fromTeamId ?? null, r.fromLeagueId ?? null,
+            r.toTeamId ?? null, r.toLeagueId ?? null,
+            r.detail ?? null, r.groupId ?? null,
+          );
+        }
+      })();
+      return JSON.stringify({ ok: true });
+    } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  ipcMain.handle("league:getTransactions", (_event, p) => {
+    try {
+      const { slotId, seasonYear, category, leagueId, limit = 200 } = JSON.parse(p);
+      let sql = `
+        SELECT id, season_year, week, category, player_id, player_name,
+               from_team_id, from_league_id, to_team_id, to_league_id, detail, group_id
+        FROM league_transactions
+        WHERE slot_id = ?
+      `;
+      const params = [slotId];
+      if (seasonYear != null) { sql += " AND season_year = ?"; params.push(seasonYear); }
+      if (category)           { sql += " AND category = ?";    params.push(category); }
+      if (leagueId)           { sql += " AND (from_league_id = ? OR to_league_id = ?)"; params.push(leagueId, leagueId); }
+      sql += " ORDER BY id DESC LIMIT ?";
+      params.push(Math.min(500, Math.max(1, Number(limit))));
+      const rows = db.prepare(sql).all(...params);
+      return JSON.stringify(rows.map(r => ({
+        id:           r.id,
+        seasonYear:   r.season_year,
+        week:         r.week,
+        category:     r.category,
+        playerId:     r.player_id,
+        playerName:   r.player_name,
+        fromTeamId:   r.from_team_id,
+        fromLeagueId: r.from_league_id,
+        toTeamId:     r.to_team_id,
+        toLeagueId:   r.to_league_id,
+        detail:       r.detail,
+        groupId:      r.group_id,
+      })));
+    } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
   // ── 성장 엔진 ─────────────────────────────────────────────────────────────────
   ipcMain.handle("growth:calcTraining", (_event, paramsJson) => {
     try { return engineNative.calcTrainingGrowthNative(paramsJson); }
@@ -756,6 +854,7 @@ app.whenReady().then(() => {
     ["team:evalRetirement",      "evalRetirementSuggestionNative"],
     ["team:generateTrade",       "generateTradeProposalsNative"],
     ["team:evalTradeValue",      "evalTradeValueNative"],
+    ["team:evalMedical",         "evalMedicalTestNative"],
     ["team:winNowUpdate",        "calcWinNowPressureUpdateNative"],
     ["team:scoutingImprovement", "calcScoutingImprovementNative"],
   ];

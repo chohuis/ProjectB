@@ -127,6 +127,7 @@ export declare function evalNewContractNative(paramsJson: string): string
 export declare function evalRetirementSuggestionNative(paramsJson: string): string
 export declare function generateTradeProposalsNative(paramsJson: string): string
 export declare function evalTradeValueNative(paramsJson: string): string
+export declare function evalMedicalTestNative(paramsJson: string): string
 export declare function calcWinNowPressureUpdateNative(paramsJson: string): string
 export declare function calcScoutingImprovementNative(paramsJson: string): string
 export declare function playerEvalFaDecisionNative(paramsJson: string): string
