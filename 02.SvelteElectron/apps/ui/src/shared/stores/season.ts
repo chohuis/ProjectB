@@ -115,6 +115,7 @@ function createSeasonStore() {
             seasonStartPitching: p.pitching ? { ...p.pitching } : undefined,
             seasonStartBatting:  p.batting  ? { ...p.batting  } : undefined,
             peakOvr: p.pitching?.ovr ?? p.batting?.ovr,
+            pitches: p.pitches ? [...p.pitches] : [],
           };
         }
         return { ...s, npcLiveStats: stats };
@@ -130,6 +131,8 @@ function createSeasonStore() {
         pitchingXp: Record<string, number>;
         battingXp: Record<string, number>;
         peakOvr: number;
+        pitches: import("../types/save").PitchEntry[];
+        pitchInTraining?: { id: string; progress: number; isNew: boolean };
       }>
     ) {
       update((s) => {
@@ -137,11 +140,13 @@ function createSeasonStore() {
         for (const u of updated) {
           stats[u.npcId] = {
             ...(stats[u.npcId] ?? { pitchingXp: {}, battingXp: {} }),
-            pitching:   u.pitching,
-            batting:    u.batting,
-            pitchingXp: u.pitchingXp,
-            battingXp:  u.battingXp,
-            peakOvr:    u.peakOvr,
+            pitching:        u.pitching,
+            batting:         u.batting,
+            pitchingXp:      u.pitchingXp,
+            battingXp:       u.battingXp,
+            peakOvr:         u.peakOvr,
+            pitches:         u.pitches,
+            pitchInTraining: u.pitchInTraining,
           };
         }
         return { ...s, npcLiveStats: stats };

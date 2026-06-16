@@ -573,6 +573,9 @@ async function processWeeklyNpcGrowth(weekNum: number): Promise<void> {
         battingXp:       live?.battingXp  ?? {},
         peakOvr:         live?.peakOvr,
         currentFame:     namedFameMap.get(e.id) ?? 0,
+        pitches:         live?.pitches ?? p?.pitches ?? [],
+        pitcherRole:     p?.position ?? "",
+        pitchInTraining: live?.pitchInTraining,
       };
     });
 
@@ -585,6 +588,7 @@ async function processWeeklyNpcGrowth(weekNum: number): Promise<void> {
       perfData,
       currentPhase,
       monthIndex: 0,  // 주간 모드에서는 사용 안 함
+      pitchCatalogIds: m.pitchCatalog.map((p) => p.id),
     }))
   ) as { updated: Array<{
     npcId: string;
@@ -594,6 +598,8 @@ async function processWeeklyNpcGrowth(weekNum: number): Promise<void> {
     battingXp: Record<string, number>;
     peakOvr: number;
     fameDelta: number;
+    pitches: Array<{ id: string; grade: number }>;
+    pitchInTraining?: { id: string; progress: number; isNew: boolean };
   }> };
 
   seasonStore.applyNpcLiveGrowth(result.updated);

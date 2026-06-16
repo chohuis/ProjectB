@@ -511,35 +511,6 @@ fn npc_core_ovr(npc: &NpcSaveState) -> f64 {
     }
 }
 
-#[allow(dead_code)]
-fn apply_aging_decay(mut npc: NpcSaveState) -> NpcSaveState {
-    let age = npc.age;
-    if age < 30 { return npc; }
-    let factor = if age >= 33 { 2.0 } else { 1.0 };
-
-    if npc.player_type == "pitcher" {
-        if let Some(p) = npc.pitching.take() {
-            npc.pitching = Some(NpcPitchingAttrs {
-                velocity: clamp_stat(p.velocity - 0.4 * factor),
-                stamina:  clamp_stat(p.stamina  - 0.3 * factor),
-                recovery: clamp_stat(p.recovery - 0.2 * factor),
-                ovr:      clamp_stat(p.ovr      - 0.3 * factor),
-                ..p
-            });
-        }
-    } else if npc.player_type == "batter" {
-        if let Some(b) = npc.batting.take() {
-            npc.batting = Some(NpcBattingAttrs {
-                speed:    clamp_stat(b.speed    - 0.4 * factor),
-                power:    clamp_stat(b.power    - 0.2 * factor),
-                fielding: clamp_stat(b.fielding - 0.2 * factor),
-                ovr:      clamp_stat(b.ovr      - 0.3 * factor),
-                ..b
-            });
-        }
-    }
-    npc
-}
 
 fn kbl_farm_team(team_id: &str) -> Option<&'static str> {
     match team_id {
@@ -1519,6 +1490,75 @@ fn batting_xp_weights(age: i32) -> &'static [(&'static str, f64)] {
 
 fn xp_threshold(v: f64) -> f64 { 7.5 + v * 0.35 }
 
+// ── NPC 구종 시스템 ───────────────────────────────────────────────────────────
+
+fn npc_pitch_target(role: &str, velocity: f64) -> usize {
+    match role {
+        "SP" => if velocity >= 70.0 { 4 } else { 5 },
+        "CP" => if velocity >= 70.0 { 2 } else if velocity >= 60.0 { 3 } else { 4 },
+        _    => if velocity >= 65.0 { 3 } else { 4 },  // RP 기본
+    }
+}
+
+// grade 0 = 발견 중, 1~4 = 해당 grade → 다음 grade로 올리는 주당 progress
+fn pitch_progress_per_week(current_grade: u8) -> f64 {
+    match current_grade {
+        0 => 100.0 / 8.0,   // 발견 → grade 1: 8주
+        1 => 100.0 / 8.0,   // grade 1 → grade 2: 8주
+        2 => 100.0 / 12.0,  // grade 2 → grade 3: 12주
+        3 => 100.0 / 24.0,  // grade 3 → grade 4: 24주
+        4 => 100.0 / 36.0,  // grade 4 → grade 5: 36주
+        _ => 0.0,
+    }
+}
+
+fn decide_pitch_training(
+    age: i32,
+    pitches: &[crate::sim_types::NpcPitchEntry],
+    role: &str,
+    velocity: f64,
+    ovr: f64,
+    potential: f64,
+    catalog_ids: &[String],
+    npc_id: &str,
+) -> Option<crate::sim_types::NpcPitchTraining> {
+    if age >= 33 { return None; }
+    if potential > 0.0 && ovr / potential < 0.70 { return None; }
+
+    let target = npc_pitch_target(role, velocity);
+
+    // 목표 미달 + 29세 미만 → 새 구종 발견
+    if pitches.len() < target && age < 29 && !catalog_ids.is_empty() {
+        let known: HashSet<&str> = pitches.iter().map(|p| p.id.as_str()).collect();
+        let candidates: Vec<&str> = catalog_ids.iter()
+            .map(String::as_str)
+            .filter(|id| !known.contains(id))
+            .collect();
+        if !candidates.is_empty() {
+            let seed = npc_id.bytes().fold(0u32, |a, b| a.wrapping_mul(31).wrapping_add(b as u32));
+            let mut lcg = LcgRand::new(seed.wrapping_add(pitches.len() as u32));
+            let idx = ((lcg.next() * candidates.len() as f64) as usize).min(candidates.len() - 1);
+            return Some(crate::sim_types::NpcPitchTraining {
+                pitch_id: candidates[idx].to_string(),
+                progress: 0.0,
+                is_new:   true,
+            });
+        }
+    }
+
+    // 업그레이드 대상 → 가장 낮은 grade 구종 (grade 5 미만)
+    let lowest = pitches.iter().filter(|p| p.grade < 5).min_by_key(|p| p.grade);
+    if let Some(p) = lowest {
+        return Some(crate::sim_types::NpcPitchTraining {
+            pitch_id: p.id.clone(),
+            progress: 0.0,
+            is_new:   false,
+        });
+    }
+
+    None
+}
+
 fn get_npc_pitching_stat(p: &NpcPitchingAttrs, stat: &str) -> f64 {
     match stat {
         "velocity"    => p.velocity,
@@ -1708,6 +1748,51 @@ pub fn calc_weekly_npc_growth(params: MonthlyNpcGrowthParams) -> MonthlyNpcGrowt
                 // 월간 에이징 감퇴
                 apply_monthly_aging_pitch(pit, npc.age, perf, phase);
             }
+
+            // ── 구종 훈련 진행 ──────────────────────────────────────────────
+            // 1) 진행 중인 훈련 advance
+            let training_done = if let Some(ref mut tr) = npc.pitch_in_training {
+                let cur_grade = if tr.is_new {
+                    0u8
+                } else {
+                    npc.pitches.iter().find(|p| p.id == tr.pitch_id).map(|p| p.grade).unwrap_or(0)
+                };
+                tr.progress += pitch_progress_per_week(cur_grade);
+                tr.progress >= 100.0
+            } else {
+                false
+            };
+
+            // 2) 완료 처리
+            if training_done {
+                if let Some(tr) = npc.pitch_in_training.take() {
+                    if tr.is_new {
+                        if npc.pitches.len() < 5 {
+                            npc.pitches.push(crate::sim_types::NpcPitchEntry {
+                                id: tr.pitch_id, grade: 1,
+                            });
+                        }
+                    } else if let Some(p) = npc.pitches.iter_mut().find(|p| p.id == tr.pitch_id) {
+                        p.grade = (p.grade + 1).min(5);
+                    }
+                }
+            }
+
+            // 3) 오프시즌 + 훈련 없음 → 다음 훈련 결정
+            if npc.pitch_in_training.is_none() && phase == "offseason" {
+                let velocity  = npc.pitching.as_ref().map(|p| p.velocity).unwrap_or(50.0);
+                let ovr       = npc.pitching.as_ref().map(|p| p.ovr).unwrap_or(50.0);
+                npc.pitch_in_training = decide_pitch_training(
+                    npc.age,
+                    &npc.pitches,
+                    &npc.pitcher_role,
+                    velocity,
+                    ovr,
+                    potential,
+                    &params.pitch_catalog_ids,
+                    &npc.npc_id,
+                );
+            }
         } else {
             if let Some(ref mut bat) = npc.batting {
                 if base_xp > 0.0 {
@@ -1758,13 +1843,15 @@ pub fn calc_weekly_npc_growth(params: MonthlyNpcGrowthParams) -> MonthlyNpcGrowt
         };
 
         NpcLiveOutput {
-            npc_id:      npc.npc_id,
-            pitching:    npc.pitching,
-            batting:     npc.batting,
-            pitching_xp: npc.pitching_xp,
-            batting_xp:  npc.batting_xp,
-            peak_ovr:    peak,
+            npc_id:           npc.npc_id,
+            pitching:         npc.pitching,
+            batting:          npc.batting,
+            pitching_xp:      npc.pitching_xp,
+            batting_xp:       npc.batting_xp,
+            peak_ovr:         peak,
             fame_delta,
+            pitches:          npc.pitches,
+            pitch_in_training: npc.pitch_in_training,
         }
     }).collect();
 

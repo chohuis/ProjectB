@@ -262,6 +262,8 @@ export interface NpcLiveStat {
   seasonStartPitching?: import("../types/save").NpcPitchingAttrs;
   seasonStartBatting?: import("../types/save").NpcBattingAttrs;
   peakOvr?: number;
+  pitches?: import("../types/save").PitchEntry[];
+  pitchInTraining?: { id: string; progress: number; isNew: boolean };
 }
 
 // ── save_season.json 전체 구조 ─────────────────────────────────

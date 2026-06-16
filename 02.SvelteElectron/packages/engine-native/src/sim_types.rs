@@ -35,6 +35,21 @@ pub struct NpcBattingAttrs {
     pub batting_clutch: f64,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NpcPitchEntry {
+    pub id: String,
+    pub grade: u8,   // 1~5
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NpcPitchTraining {
+    pub pitch_id: String,
+    pub progress: f64,   // 0.0 ~ 100.0
+    pub is_new: bool,    // true: 발견(새 구종), false: 등급 업
+}
+
 // ── NPC 커리어 기록 ────────────────────────────────────────────────────────────
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -494,6 +509,12 @@ pub struct NpcLiveInput {
     pub peak_ovr: Option<f64>,
     #[serde(default)]
     pub current_fame: f64,
+    #[serde(default)]
+    pub pitches: Vec<NpcPitchEntry>,
+    #[serde(default)]
+    pub pitcher_role: String,   // "SP" | "RP" | "CP"
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pitch_in_training: Option<NpcPitchTraining>,
 }
 
 /// 월간 성장 계산 출력 단위
@@ -508,6 +529,10 @@ pub struct NpcLiveOutput {
     pub peak_ovr: f64,
     #[serde(default)]
     pub fame_delta: f64,
+    #[serde(default)]
+    pub pitches: Vec<NpcPitchEntry>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pitch_in_training: Option<NpcPitchTraining>,
 }
 
 /// 월간 성장 전체 파라미터
@@ -520,6 +545,8 @@ pub struct MonthlyNpcGrowthParams {
     pub perf_data: HashMap<String, NpcMonthlyPerf>,
     pub current_phase: String,   // "preseason"|"season"|"postseason"|"offseason"
     pub month_index: i32,        // 0~11
+    #[serde(default)]
+    pub pitch_catalog_ids: Vec<String>,
 }
 
 /// 월간 성장 결과
