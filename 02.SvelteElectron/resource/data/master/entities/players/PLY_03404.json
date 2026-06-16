@@ -56,7 +56,21 @@
       },
       "positionRatings": {
         "SP": 71
-      }
+      },
+      "pitches": [
+        {
+          "id": "PITCH_FASTBALL",
+          "grade": 4
+        },
+        {
+          "id": "PITCH_SPLITTER",
+          "grade": 3
+        },
+        {
+          "id": "PITCH_SLIDER",
+          "grade": 2
+        }
+      ]
     },
     "coach": null,
     "manager": null,

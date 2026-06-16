@@ -56,7 +56,17 @@
         "playerOptionYears": 0,
         "noTrade": false,
         "status": "active"
-      }
+      },
+      "pitches": [
+        {
+          "id": "PITCH_FASTBALL",
+          "grade": 4
+        },
+        {
+          "id": "PITCH_SLIDER",
+          "grade": 3
+        }
+      ]
     },
     "coach": {
       "specialty": "-",

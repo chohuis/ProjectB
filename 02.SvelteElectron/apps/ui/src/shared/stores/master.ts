@@ -171,6 +171,7 @@ export interface EntityPlayerDetails {
   potentialHidden: number;
   proServiceYears?: number;
   contract?: NpcContract;
+  pitches?: import("../types/save").PitchEntry[];
 }
 
 export interface EntityDetails {

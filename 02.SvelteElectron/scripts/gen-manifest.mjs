@@ -81,9 +81,12 @@ const totalEvents =
   randomMedia.length + randomSocial.length + randomTeamLife.length;
 const totalAch = achBaseball.length + achGrowth.length + achSocial.length + achHidden.length;
 
-// entities/players/_index.json — 선수 집계 + contacts[] 자동 갱신
+// entities/players/_index.json — 선수 집계 + contacts[] 갱신
+// contacts 스캔은 --force 플래그 또는 contacts가 없을 때만 실행
+// (17,000+ 파일 개별 읽기로 인한 dev 기동 지연 방지)
 const entityIndexPath = join(MASTER, "entities/players/_index.json");
 const plyDir = join(MASTER, "entities/players");
+const forceContacts = process.argv.includes("--force");
 let totalEntities = 0;
 let entityLeagueStats = "";
 let totalContacts = 0;
@@ -97,22 +100,27 @@ if (existsSync(entityIndexPath)) {
       .map(([k, v]) => `${k.replace("LEAGUE_", "")} ${v.length}`)
       .join(" / ");
 
-    // contact.arcs 또는 chat 내용이 있는 파일을 contacts[]에 자동 등록
-    const contactIds = [];
-    for (const id of allIds) {
-      const filePath = join(plyDir, `${id}.json`);
-      if (!existsSync(filePath)) continue;
-      try {
-        const { contact } = JSON.parse(readFileSync(filePath, "utf8"));
-        if (!contact) continue;
-        const hasArcs = Array.isArray(contact.arcs) && contact.arcs.length > 0;
-        const hasChat = contact.chat && Object.keys(contact.chat).some(
-          (k) => Array.isArray(contact.chat[k]) && contact.chat[k].length > 0
-        );
-        if (hasArcs || hasChat) contactIds.push(id);
-      } catch { /* JSON 오류 파일 스킵 */ }
+    const needsScan = forceContacts || !Array.isArray(idx.contacts);
+    let contactIds = needsScan ? [] : idx.contacts;
+
+    if (needsScan) {
+      if (forceContacts) console.log("  contacts[] 강제 재스캔 중...");
+      for (const id of allIds) {
+        const filePath = join(plyDir, `${id}.json`);
+        if (!existsSync(filePath)) continue;
+        try {
+          const { contact } = JSON.parse(readFileSync(filePath, "utf8"));
+          if (!contact) continue;
+          const hasArcs = Array.isArray(contact.arcs) && contact.arcs.length > 0;
+          const hasChat = contact.chat && Object.keys(contact.chat).some(
+            (k) => Array.isArray(contact.chat[k]) && contact.chat[k].length > 0
+          );
+          if (hasArcs || hasChat) contactIds.push(id);
+        } catch { /* JSON 오류 파일 스킵 */ }
+      }
+      contactIds.sort();
     }
-    contactIds.sort();
+
     idx.contacts = contactIds;
     idx.generated = new Date().toISOString();
     writeFileSync(entityIndexPath, JSON.stringify(idx, null, 2) + "\n", "utf8");

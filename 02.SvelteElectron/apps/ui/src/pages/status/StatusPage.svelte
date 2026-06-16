@@ -6,6 +6,7 @@
   import type { PitcherGameLine } from "../../shared/types/season";
   import type { CareerSeasonRecord } from "../../shared/types/save";
   import { INJURY_LABEL } from "../../shared/types/save";
+  import { getFaThreshold } from "../../shared/utils/faEngine";
 
   type StatusTab = "stats" | "record" | "career";
   let activeTab: StatusTab = "stats";
@@ -144,7 +145,7 @@
     p.careerStage === "pro_kbl" || p.careerStage === "pro_abl" || p.careerStage === "independent";
   $: showMilitarySection = p.careerStage !== "highschool";
   $: contractExpireYear  = contract ? ($seasonStore.seasonYear + contract.remainingYears) : null;
-  $: faYearsLeft         = Math.max(0, 9 - (p.proServiceYears ?? 0));
+  $: faYearsLeft         = Math.max(0, getFaThreshold(p.leagueId) - (p.proServiceYears ?? 0));
 
   const LEAGUE_SHORT: Record<string, string> = {
     LEAGUE_KBL: "KBL", LEAGUE_ABL: "ABL", LEAGUE_INDEPENDENT: "독립리그",

@@ -4,7 +4,7 @@
   import { seasonStore } from "../../../shared/stores/season";
   import { generateKblSchedule, generateAblSchedule, generateJblSchedule } from "../../../shared/utils/scheduleGen";
   import { shuffleAblConferences } from "../../../shared/utils/postseasonEngine";
-  import { generateFaOffers, isFaEligible, toContract, type FaOffer } from "../../../shared/utils/faEngine";
+  import { generateFaOffers, isFaEligible, toContract, getFaThreshold, type FaOffer } from "../../../shared/utils/faEngine";
 
   let resolving = false;
   let selectedTeamId: string | null = null;
@@ -88,7 +88,7 @@
     <h2>FA 시장</h2>
     <p>미계약 경과: {unsignedWeeks}주 (경과 시 제시 조건 하락)</p>
     {#if !faEligible}
-      <p class="warn">FA 자격 미충족(고졸 9년/대졸 8년 기준)</p>
+      <p class="warn">FA 자격 미충족 (프로 입단 후 {getFaThreshold($gameStore.protagonist.leagueId)}년 기준)</p>
     {/if}
     <div class="offers">
       {#each offers as offer}

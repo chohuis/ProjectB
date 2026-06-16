@@ -1,7 +1,7 @@
 ﻿const net = require("node:net");
 
 const port = Number(process.argv[2] || 5173);
-const timeoutMs = Number(process.argv[3] || 90_000);
+const timeoutMs = Number(process.argv[3] || 180_000);
 const startedAt = Date.now();
 const hosts = ["127.0.0.1", "localhost", "::1"];
 

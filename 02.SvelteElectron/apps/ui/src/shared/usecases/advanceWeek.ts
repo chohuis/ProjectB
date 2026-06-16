@@ -19,7 +19,7 @@ import { checkAchievements, computeMetrics } from "../utils/achievementEngine";
 import { generateTop10, buildTop10Message, rankEffect } from "../utils/top10Engine";
 import { isMonthStart, planMonthlyFriendlies, buildMonthlyNoticeMessage } from "../utils/friendlyMatchEngine";
 import { calcOfferedSalaryForProtagonist, calcSeasonRating } from "../utils/salaryEngine";
-import { isFaEligible } from "../utils/faEngine";
+import { isFaEligible, getFaThreshold } from "../utils/faEngine";
 import type { LeagueSeasonState, MatchResult, PendingAction, PlayerCondition, ScheduleEntry, WeekAdvanceResult } from "../types/season";
 import type { EventContext } from "../types/event";
 import type { MessageItem } from "../types/main";
@@ -1198,7 +1198,7 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
 
     // FA 자격 판단
     const league = npc.currentLeague ?? "";
-    const faThreshold = league === "LEAGUE_KBL" ? 5 : league === "LEAGUE_JBL" ? 4 : 6;
+    const faThreshold = getFaThreshold(league);
     if ((npc.proServiceYears ?? 0) < faThreshold) continue;
 
     const leagueStd  = getLeagueStandings(league, s);

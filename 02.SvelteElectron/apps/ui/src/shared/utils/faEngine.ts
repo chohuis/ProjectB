@@ -1,6 +1,16 @@
 import type { ProtagonistSave, ProContract } from "../types/save";
 import type { TeamRef } from "../stores/master";
 
+// 리그별 FA 자격 기준 연수 (고졸/대졸 구분 없음, 프로 입단 후 연수)
+export const FA_THRESHOLD: Record<string, number> = {
+  LEAGUE_KBL: 5,
+  LEAGUE_ABL: 6,
+  LEAGUE_JBL: 4,
+};
+export function getFaThreshold(leagueId: string): number {
+  return FA_THRESHOLD[leagueId] ?? 5;
+}
+
 export interface FaOffer {
   teamId: string;
   leagueId: string;
@@ -31,8 +41,8 @@ export async function generateFaOffers(
 
 // ── TS 유지 ───────────────────────────────────────────────────
 
-export function isFaEligible(protagonist: ProtagonistSave, attendsUniversity: boolean): boolean {
-  const requiredYears = attendsUniversity ? 8 : 9;
+export function isFaEligible(protagonist: ProtagonistSave, _attendsUniversity: boolean): boolean {
+  const requiredYears = getFaThreshold(protagonist.leagueId);
   return protagonist.proServiceYears >= requiredYears || protagonist.contract?.remainingYears === 0;
 }
 
