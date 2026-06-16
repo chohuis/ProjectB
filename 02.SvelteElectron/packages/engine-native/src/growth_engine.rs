@@ -154,7 +154,7 @@ fn get_program(id: &str) -> Option<ProgramConfig> {
         "TRN_DEFENSE"   => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[("fielding", 1.0), ("arm", 0.3)],                               base_xp: 3.0, fatigue_cost: 3.5, condition_cost: 3.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
         "TRN_MENTAL_B"  => Some(ProgramConfig { gains_pitching: &[("mentality", 1.0)],  gains_batting: &[("battingClutch", 0.6)],                     base_xp: 2.8, fatigue_cost: 2.5, condition_cost: 2.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
         // ── 공용 ───────────────────────────────────────────────────
-        "TRN_PITCH_DEV" => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[], base_xp: 0.0, fatigue_cost: 4.0,  condition_cost: 2.0,  is_recovery: false, is_pitch_dev: true,  progress_per_week: 10.0 }),
+        "TRN_PITCH_DEV" => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[], base_xp: 0.0, fatigue_cost: 4.0,  condition_cost: 2.0,  is_recovery: false, is_pitch_dev: true,  progress_per_week: 24.0 }),
         "TRN_RECOVERY"  => Some(ProgramConfig { gains_pitching: &[], gains_batting: &[], base_xp: 0.0, fatigue_cost: -10.0, condition_cost: -16.0, is_recovery: true,  is_pitch_dev: false, progress_per_week: 0.0  }),
         // ── 구버전 호환 ────────────────────────────────────────────
         "TRN_CMD_BASE"  => Some(ProgramConfig { gains_pitching: &[("command", 1.0), ("control", 0.3)],    gains_batting: &[], base_xp: 3.0, fatigue_cost: 3.0, condition_cost: 3.0,  is_recovery: false, is_pitch_dev: false, progress_per_week: 0.0 }),
@@ -448,7 +448,7 @@ pub fn calc_training_growth(params: TrainingGrowthParams) -> GrowthResult {
         if cfg.is_pitch_dev {
             let cond_factor = p.condition / 100.0;
             let fat_factor = (1.0 - p.fatigue / 120.0).max(0.3);
-            // grade가 높을수록 진행 속도 감소 (grade 1→2: ×1.00, 2→3: ×0.50, 3→4: ×0.25, 4→5: ×0.15)
+            // grade가 높을수록 진행 속도 감소 (×1.00 / ×0.667 / ×0.333 / ×0.222)
             let grade_factor = if let Some(ref ts) = p.training_pitch_state {
                 let current_grade = p.pitches.iter()
                     .find(|e| e.id == ts.id)
@@ -456,9 +456,9 @@ pub fn calc_training_growth(params: TrainingGrowthParams) -> GrowthResult {
                     .unwrap_or(0);
                 match current_grade {
                     0 | 1 => 1.00,
-                    2     => 0.50,
-                    3     => 0.25,
-                    _     => 0.15,
+                    2     => 2.0 / 3.0,
+                    3     => 1.0 / 3.0,
+                    _     => 2.0 / 9.0,
                 }
             } else { 1.00 };
             pitch_dev_gain += cfg.progress_per_week * xp_mult * cond_factor * fat_factor * eff * grade_factor;

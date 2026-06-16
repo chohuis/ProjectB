@@ -56,7 +56,7 @@
     { id: "TRN_MOVEMENT",  title: "변화구 훈련",      focus: "무브먼트/구종 궤적",       gains: "무브먼트, 제구",            fatigue: 9,  risk: 3 },
     { id: "TRN_MENTAL_P",  title: "정신 훈련",        focus: "압박 대응/집중/견제",      gains: "멘탈, 위기집중력, 견제력",  fatigue: 6,  risk: 0 },
     { id: "TRN_STAMINA",   title: "체력 훈련",        focus: "스태미나/지구력",          gains: "스태미나, 회복력",          fatigue: 12, risk: 4 },
-    { id: "TRN_PITCH_DEV", title: "구종 개발",        focus: "구종 숙련도/신규 습득",    gains: "진행중 구종 +17%",          fatigue: 10, risk: 0 },
+    { id: "TRN_PITCH_DEV", title: "구종 개발",        focus: "구종 숙련도/신규 습득",    gains: "구종 숙련도 향상",           fatigue: 10, risk: 0 },
   ];
 
   const batterPrograms: ProgramCard[] = [
@@ -105,8 +105,9 @@
   $: realMorale     = protagonist.morale;
 
   $: isBatter = protagonist.playerType === "batter";
-  $: mainPrograms = isBatter ? batterPrograms : pitcherPrograms;
-  $: allPrograms  = [...mainPrograms, ...recoveryPrograms];
+  $: mainPrograms   = isBatter ? batterPrograms : pitcherPrograms;
+  $: allPrograms    = [...mainPrograms, ...recoveryPrograms];
+  $: slot12Programs = allPrograms.filter((p) => p.id !== "TRN_PITCH_DEV");
 
   $: pitchCoach = $masterStore.entities.find(
     (e) => e.role === "coach" && e.teamId === protagonist.teamId &&
@@ -241,20 +242,20 @@
 
   $: recentLogs = $gameStore.logs.slice(0, 5);
 
-  $: pitchDevSelected = selectedMain === "TRN_PITCH_DEV" || selectedSub1 === "TRN_PITCH_DEV" || selectedSub2 === "TRN_PITCH_DEV";
+  $: pitchDevSelected = selectedSub2 === "TRN_PITCH_DEV";
 
   // grade에 따른 진행 속도 배율 (grade 높을수록 느려짐)
   $: pitchGradeFactor = (() => {
     if (!trainingPitch) return 1;
     const grade = learnedPitches.find((p) => p.id === trainingPitch!.id)?.grade ?? 0;
     if (grade <= 1) return 1.00;
-    if (grade === 2) return 0.50;
-    if (grade === 3) return 0.25;
-    return 0.15;
+    if (grade === 2) return 2 / 3;
+    if (grade === 3) return 1 / 3;
+    return 2 / 9;
   })();
 
   $: pitchDevWeeksLeft = trainingPitch
-    ? Math.ceil((100 - trainingPitch.progress) / (10 * pitchGradeFactor))
+    ? Math.ceil((100 - trainingPitch.progress) / (12 * pitchGradeFactor))
     : 0;
 
   $: fatigueGaugePct = Math.min(100, Math.abs(finalFatigueDelta) / 35 * 100);
@@ -508,7 +509,7 @@
               value={selectedMain}
               on:change={(e) => { gameStore.setTrainingPlan({ primaryProgramId: e.currentTarget.value }); gameStore.save(); }}
             >
-              {#each allPrograms as p}
+              {#each slot12Programs as p}
                 <option value={p.id} disabled={p.id === selectedSub1 || p.id === selectedSub2}>{p.title}</option>
               {/each}
             </select>
@@ -520,7 +521,7 @@
               value={selectedSub1}
               on:change={(e) => { gameStore.setTrainingPlan({ secondaryProgramId: e.currentTarget.value }); gameStore.save(); }}
             >
-              {#each allPrograms as p}
+              {#each slot12Programs as p}
                 <option value={p.id} disabled={p.id === selectedMain || p.id === selectedSub2}>{p.title}</option>
               {/each}
             </select>
