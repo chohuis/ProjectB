@@ -1492,10 +1492,15 @@ function createGameStore() {
 
     // 구종 습득 시작
     startPitchTraining(pitchId: string) {
-      update((s) => ({
-        ...s,
-        protagonist: { ...s.protagonist, trainingPitchState: { id: pitchId, progress: 5 } },
-      }));
+      update((s) => {
+        const currentPitches = s.protagonist.pitches ?? [];
+        const isNew = !currentPitches.find((p) => p.id === pitchId);
+        if (isNew && currentPitches.length >= 5) return s;
+        return {
+          ...s,
+          protagonist: { ...s.protagonist, trainingPitchState: { id: pitchId, progress: 5 } },
+        };
+      });
     },
 
     // 구종 습득 완료 (progress >= 100)

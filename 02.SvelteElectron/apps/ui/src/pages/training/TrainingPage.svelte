@@ -243,7 +243,19 @@
 
   $: pitchDevSelected = selectedMain === "TRN_PITCH_DEV" || selectedSub1 === "TRN_PITCH_DEV" || selectedSub2 === "TRN_PITCH_DEV";
 
-  $: pitchDevWeeksLeft = trainingPitch ? Math.ceil((100 - trainingPitch.progress) / 17) : 0;
+  // grade에 따른 진행 속도 배율 (grade 높을수록 느려짐)
+  $: pitchGradeFactor = (() => {
+    if (!trainingPitch) return 1;
+    const grade = learnedPitches.find((p) => p.id === trainingPitch!.id)?.grade ?? 0;
+    if (grade <= 1) return 1.00;
+    if (grade === 2) return 0.50;
+    if (grade === 3) return 0.25;
+    return 0.15;
+  })();
+
+  $: pitchDevWeeksLeft = trainingPitch
+    ? Math.ceil((100 - trainingPitch.progress) / (10 * pitchGradeFactor))
+    : 0;
 
   $: fatigueGaugePct = Math.min(100, Math.abs(finalFatigueDelta) / 35 * 100);
   $: fatigueGaugeDir = finalFatigueDelta >= 0 ? "up" : "down";
@@ -293,9 +305,14 @@
     return unmet.map((req) => `${req.label} ${req.required} 필요 (현재 ${req.current})`).join(" · ");
   }
 
+  const MAX_PITCHES = 5;
+
   function canStart(pitch: PitchCandidate): boolean {
-    return !trainingPitch && !isInjured && projectedFatigue < 80 &&
-      (pitch.status === "discovered" || (pitch.status === "learned" && pitch.grade < 5));
+    const baseOk = !trainingPitch && !isInjured && projectedFatigue < 80;
+    // 숙련도 향상은 구종 수 제한 없음
+    if (pitch.status === "learned" && pitch.grade < 5) return baseOk;
+    // 신규 습득은 5개 미만일 때만 가능
+    return baseOk && pitch.status === "discovered" && learnedPitches.length < MAX_PITCHES;
   }
 
   function startTraining(pitchId: string) {
@@ -536,6 +553,7 @@
                   <div class="progress-bar pdw-bar" style="width:{trainingPitch.progress}%"></div>
                 </div>
                 <p class="pdw-eta">예상 완료: 약 {pitchDevWeeksLeft}주 후</p>
+                <p class="pdw-pause-notice">변화구 훈련의 경우 슬롯에서 해제하면 진행이 멈추고, 다시 등록하면 현재 진행도에서 이어집니다.</p>
               </div>
             {:else}
               <div class="pitch-dev-notice">
@@ -668,6 +686,11 @@
           {/if}
 
           <h3 style="margin-top:12px">해금 가능 <span class="count">{eligiblePitches.length}</span></h3>
+          {#if learnedPitches.length >= MAX_PITCHES}
+            <div class="pitch-limit-notice">
+              보유 구종이 최대 5개에 도달했습니다. 새 구종을 더 이상 습득할 수 없습니다.
+            </div>
+          {/if}
           {#if eligiblePitches.length === 0}
             <p class="empty-text">조건을 충족한 신규 구종이 없습니다.</p>
           {:else}
@@ -677,12 +700,14 @@
                   <div class="row-head">
                     <strong>{pitch.name}</strong>
                     <button
-                      disabled={!!trainingPitch || projectedFatigue >= 80}
+                      disabled={!canStart(pitch)}
                       on:click={() => startTraining(pitch.id)}
                     >습득 시작</button>
                   </div>
                   {#if trainingPitch}
                     <p class="hint">다른 구종 훈련이 진행중입니다.</p>
+                  {:else if learnedPitches.length >= MAX_PITCHES}
+                    <p class="hint">보유 구종 5개 한도 초과</p>
                   {/if}
                 </article>
               {/each}
