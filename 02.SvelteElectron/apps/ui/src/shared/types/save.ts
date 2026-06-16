@@ -617,6 +617,8 @@ export interface NpcSaveState {
   batting?: BattingAttributes;
   developmentRate: number;
   proServiceYears?: number;  // 프로 입단 후 연수 (KBL/ABL FA 자격 기준: 9년)
+  currentSalary?: number;   // 오프시즌 OVR 기반 계산 연봉 (Rust estimate_salary_and_contract)
+  contractYears?: number;   // 오프시즌 OVR 기반 계산 계약 기간 (Rust estimate_salary_and_contract)
   injuryStatus?: {
     severity: InjurySeverity;
     recoveryWeeksLeft: number;

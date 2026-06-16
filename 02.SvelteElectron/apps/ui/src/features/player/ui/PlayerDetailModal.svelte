@@ -236,22 +236,27 @@
   $: contractSummary = (() => {
     if (!modalEntity) return null;
     const curYear = $seasonStore.seasonYear ?? 2026;
-    let teamId: string, dur: number, rem: number;
+    let teamId: string, dur: number;
     if (isProtagonistModal) {
       const c = $gameStore.protagonist.contract;
       if (!c) return null;
       teamId = $gameStore.protagonist.teamId;
-      dur = c.durationYears; rem = c.remainingYears;
+      // 주인공은 실제 계약 잔여년수 사용
+      const rem = c.remainingYears;
+      const endYear   = curYear + rem - 1;
+      const startYear = endYear - c.durationYears + 1;
+      const yearsIn   = c.durationYears - rem + 1;
+      return { teamName: teamById.get(teamId) ?? teamId, startYear, endYear, yearsIn };
     } else {
       const mp2 = (modalEntity.details as EntityDetails)?.player;
-      if (!mp2?.contract) return null;
       teamId = modalEntity.teamId;
-      dur = mp2.contract.durationYears; rem = mp2.contract.remainingYears;
+      // NPC: Rust가 매 오프시즌 계산한 contractYears 우선, 없으면 master 폴백
+      dur = modalNpcSave?.contractYears ?? mp2?.contract?.durationYears ?? 1;
+      const endYear   = curYear + dur - 1;
+      const startYear = curYear;
+      const yearsIn   = modalNpcSave?.proServiceYears ?? mp2?.proServiceYears ?? 1;
+      return { teamName: teamById.get(teamId) ?? teamId, startYear, endYear, yearsIn };
     }
-    const endYear   = curYear + rem - 1;
-    const startYear = endYear - dur + 1;
-    const yearsIn   = dur - rem + 1;
-    return { teamName: teamById.get(teamId) ?? teamId, startYear, endYear, yearsIn };
   })();
 
   // ── FA 정보 ──────────────────────────────────────────────
@@ -264,7 +269,8 @@
       return { eligible: years >= threshold, years, yearsLeft: Math.max(0, threshold - years), threshold };
     }
     const mp2 = (modalEntity?.details as EntityDetails)?.player;
-    const proYears = mp2?.proServiceYears ?? 0;
+    // NpcSaveState 우선 (Rust가 매 시즌 업데이트), 없으면 master entity 폴백
+    const proYears = modalNpcSave?.proServiceYears ?? mp2?.proServiceYears ?? 0;
     if (!proYears) return null;
     const threshold = getFaThreshold(modalEntity?.leagueId ?? "");
     return { eligible: proYears >= threshold, years: proYears, yearsLeft: Math.max(0, threshold - proYears), threshold };
@@ -753,15 +759,21 @@
                       <p class="modal-pending">계약 정보 없음</p>
                     {/if}
                   {:else}
-                    {@const npcContract = mp?.contract}
-                    {#if npcContract}
+                    {@const npcSalary   = modalNpcSave?.currentSalary ?? mp?.contract?.salary}
+                    {@const npcDuration = modalNpcSave?.contractYears  ?? mp?.contract?.durationYears}
+                    {@const npcService  = modalNpcSave?.proServiceYears ?? mp?.proServiceYears}
+                    {#if npcSalary != null || npcDuration != null}
                       <div class="ci-grid">
-                        <div class="ci"><span>연봉</span><strong>{formatSalary(npcContract.salary)}</strong></div>
-                        <div class="ci"><span>기간</span><strong>{npcContract.durationYears}년 · {npcContract.remainingYears}년 잔여</strong></div>
-                        {#if mp?.proServiceYears != null}
-                          <div class="ci"><span>프로 경력</span><strong>{mp.proServiceYears}년차</strong></div>
+                        {#if npcSalary != null}
+                          <div class="ci"><span>연봉</span><strong>{formatSalary(npcSalary)}</strong></div>
                         {/if}
-                        {#if npcContract.noTrade}
+                        {#if npcDuration != null}
+                          <div class="ci"><span>계약 기간</span><strong>{npcDuration}년</strong></div>
+                        {/if}
+                        {#if npcService != null}
+                          <div class="ci"><span>프로 경력</span><strong>{npcService}년차</strong></div>
+                        {/if}
+                        {#if mp?.contract?.noTrade}
                           <div class="ci"><span>노트레이드</span><strong>있음</strong></div>
                         {/if}
                       </div>
