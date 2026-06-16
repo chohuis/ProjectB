@@ -1157,6 +1157,7 @@ function masterRowToEntityRow(r) {
     jerseyNumber:    r.jersey_number  ?? 18,
     primaryPosition: r.primary_position ?? undefined,
     positionRatings: r.position_ratings_json ? JSON.parse(r.position_ratings_json) : undefined,
+    pitches:         r.pitches_json ? JSON.parse(r.pitches_json) : undefined,
     diligence:       r.diligence      ?? undefined,
     popularity:      r.popularity     ?? undefined,
     developmentRate: r.development_rate ?? 60,
