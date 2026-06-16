@@ -57,15 +57,7 @@
         },
         {
           "id": "PITCH_SPLITTER",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 2
+          "grade": 1
         }
       ],
       "proServiceYears": 9,

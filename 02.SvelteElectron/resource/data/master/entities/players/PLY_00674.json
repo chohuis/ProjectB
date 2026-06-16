@@ -53,11 +53,11 @@
       "pitches": [
         {
           "id": "PITCH_FASTBALL",
-          "grade": 3
+          "grade": 2
         },
         {
           "id": "PITCH_CUTTER",
-          "grade": 3
+          "grade": 1
         }
       ],
       "proServiceYears": 0,

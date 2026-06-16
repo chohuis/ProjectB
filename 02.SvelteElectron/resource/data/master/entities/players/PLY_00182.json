@@ -57,19 +57,7 @@
         },
         {
           "id": "PITCH_CUTTER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
+          "grade": 1
         }
       ]
     },

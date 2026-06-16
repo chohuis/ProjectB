@@ -57,18 +57,10 @@
         },
         {
           "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
           "grade": 3
         },
         {
-          "id": "PITCH_SPLITTER",
+          "id": "PITCH_CURVE",
           "grade": 2
         }
       ],

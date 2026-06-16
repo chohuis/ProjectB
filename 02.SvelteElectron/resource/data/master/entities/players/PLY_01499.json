@@ -57,19 +57,11 @@
         },
         {
           "id": "PITCH_SCREWBALL",
-          "grade": 5
+          "grade": 4
         },
         {
           "id": "PITCH_SINKER",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_KNUCKLEBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 5
+          "grade": 3
         }
       ],
       "proServiceYears": 18,

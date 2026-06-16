@@ -54,18 +54,6 @@
         {
           "id": "PITCH_FASTBALL",
           "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
         }
       ]
     },

@@ -53,7 +53,7 @@
       "pitches": [
         {
           "id": "PITCH_FASTBALL",
-          "grade": 3
+          "grade": 5
         },
         {
           "id": "PITCH_SCREWBALL",
@@ -61,11 +61,7 @@
         },
         {
           "id": "PITCH_CURVE",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
+          "grade": 3
         }
       ],
       "proServiceYears": 5,

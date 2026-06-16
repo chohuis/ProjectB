@@ -61,15 +61,7 @@
         },
         {
           "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 2
+          "grade": 1
         }
       ],
       "proServiceYears": 0,

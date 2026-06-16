@@ -61,15 +61,7 @@
         },
         {
           "id": "PITCH_CUTTER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
+          "grade": 2
         }
       ],
       "proServiceYears": 4,

@@ -61,11 +61,7 @@
         },
         {
           "id": "PITCH_CUTTER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
+          "grade": 2
         }
       ],
       "proServiceYears": 3,

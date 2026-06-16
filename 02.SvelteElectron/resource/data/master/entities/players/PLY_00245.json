@@ -53,11 +53,11 @@
       "pitches": [
         {
           "id": "PITCH_FASTBALL",
-          "grade": 5
+          "grade": 3
         },
         {
           "id": "PITCH_SINKER",
-          "grade": 5
+          "grade": 1
         }
       ]
     },

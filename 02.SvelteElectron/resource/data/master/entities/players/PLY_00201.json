@@ -53,15 +53,7 @@
       "pitches": [
         {
           "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 2
+          "grade": 1
         }
       ]
     },

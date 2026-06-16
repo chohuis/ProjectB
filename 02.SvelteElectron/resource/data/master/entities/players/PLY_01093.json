@@ -53,23 +53,15 @@
       "pitches": [
         {
           "id": "PITCH_FASTBALL",
-          "grade": 5
+          "grade": 4
         },
         {
           "id": "PITCH_SLIDER",
-          "grade": 5
+          "grade": 3
         },
         {
           "id": "PITCH_SCREWBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 5
+          "grade": 2
         }
       ],
       "proServiceYears": 18,

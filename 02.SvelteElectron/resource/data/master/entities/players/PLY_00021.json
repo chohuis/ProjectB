@@ -57,15 +57,7 @@
         },
         {
           "id": "PITCH_CHANGEUP",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
+          "grade": 1
         }
       ]
     },

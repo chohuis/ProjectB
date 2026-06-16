@@ -61,14 +61,6 @@
         },
         {
           "id": "PITCH_SINKER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SPLITTER",
           "grade": 2
         }
       ],

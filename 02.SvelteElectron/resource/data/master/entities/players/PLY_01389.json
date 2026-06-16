@@ -57,15 +57,11 @@
         },
         {
           "id": "PITCH_FORKBALL",
-          "grade": 4
+          "grade": 2
         },
         {
           "id": "PITCH_KNUCKLEBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
+          "grade": 1
         }
       ],
       "proServiceYears": 12,

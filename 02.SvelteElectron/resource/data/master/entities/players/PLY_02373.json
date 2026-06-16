@@ -64,11 +64,11 @@
         },
         {
           "id": "PITCH_SLIDER",
-          "grade": 3
+          "grade": 2
         },
         {
           "id": "PITCH_CHANGEUP",
-          "grade": 3
+          "grade": 1
         }
       ]
     },

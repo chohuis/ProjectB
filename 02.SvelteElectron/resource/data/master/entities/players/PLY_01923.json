@@ -57,15 +57,11 @@
         },
         {
           "id": "PITCH_SLIDER",
-          "grade": 2
+          "grade": 3
         },
         {
           "id": "PITCH_CURVE",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
+          "grade": 2
         }
       ],
       "proServiceYears": 0,

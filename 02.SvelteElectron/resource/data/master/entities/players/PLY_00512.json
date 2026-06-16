@@ -53,15 +53,15 @@
       "pitches": [
         {
           "id": "PITCH_FASTBALL",
-          "grade": 5
+          "grade": 4
         },
         {
           "id": "PITCH_CHANGEUP",
-          "grade": 5
+          "grade": 3
         },
         {
           "id": "PITCH_SINKER",
-          "grade": 5
+          "grade": 2
         }
       ],
       "proServiceYears": 16,

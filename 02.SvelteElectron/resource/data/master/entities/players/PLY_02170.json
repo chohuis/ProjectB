@@ -61,15 +61,11 @@
         },
         {
           "id": "PITCH_SINKER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
           "grade": 3
         },
         {
-          "id": "PITCH_SCREWBALL",
-          "grade": 2
+          "id": "PITCH_SLIDER",
+          "grade": 1
         }
       ],
       "proServiceYears": 8,

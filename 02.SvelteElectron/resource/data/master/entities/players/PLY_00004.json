@@ -57,15 +57,7 @@
         },
         {
           "id": "PITCH_SINKER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
+          "grade": 1
         }
       ]
     },
