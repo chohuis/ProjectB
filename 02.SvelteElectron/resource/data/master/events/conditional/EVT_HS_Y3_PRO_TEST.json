@@ -1,0 +1,23 @@
+{
+  "id": "EVT_HS_Y3_PRO_TEST",
+  "type": "conditional",
+  "category": "hs_life",
+  "priority": 90,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "grade",
+      "value": 3
+    },
+    {
+      "type": "week_gte",
+      "value": 20
+    },
+    {
+      "type": "pitching_ovr_gte",
+      "value": 62
+    }
+  ],
+  "messageTemplateId": "MSG_HS_Y3_PRO_TEST",
+  "decisionTemplateId": "DEC_HS_Y3_PRO_TEST"
+}

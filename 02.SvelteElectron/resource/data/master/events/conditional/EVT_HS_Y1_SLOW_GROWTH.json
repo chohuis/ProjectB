@@ -1,0 +1,23 @@
+{
+  "id": "EVT_HS_Y1_SLOW_GROWTH",
+  "type": "conditional",
+  "category": "hs_life",
+  "priority": 55,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "grade",
+      "value": 1
+    },
+    {
+      "type": "week_gte",
+      "value": 10
+    },
+    {
+      "type": "pitching_ovr_lte",
+      "value": 52
+    }
+  ],
+  "messageTemplateId": "MSG_HS_Y1_SLOW_GROWTH",
+  "decisionTemplateId": "DEC_HS_Y1_SLOW_GROWTH"
+}

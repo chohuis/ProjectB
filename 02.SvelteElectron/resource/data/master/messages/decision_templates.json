@@ -8,19 +8,29 @@
           "id": "intensive",
           "label": "강도 높게 훈련한다",
           "effectHint": "피로 +12, 커맨드·스태미나 경험치 +2",
-          "effects": { "fatigueDelta": 12, "xp": { "command": 2, "stamina": 2 } }
+          "effects": [
+            "fatigue:+12",
+            "xp.command:+2",
+            "xp.stamina:+2"
+          ]
         },
         {
           "id": "normal",
           "label": "보통 강도로 훈련한다",
           "effectHint": "피로 +6, 커맨드 경험치 +1",
-          "effects": { "fatigueDelta": 6, "xp": { "command": 1 } }
+          "effects": [
+            "fatigue:+6",
+            "xp.command:+1"
+          ]
         },
         {
           "id": "recovery",
           "label": "컨디션 회복에 집중한다",
           "effectHint": "피로 -5, 컨디션 +8",
-          "effects": { "fatigueDelta": -5, "conditionDelta": 8 }
+          "effects": [
+            "fatigue:-5",
+            "condition:+8"
+          ]
         }
       ]
     },
@@ -32,19 +42,28 @@
           "id": "rest",
           "label": "훈련을 줄이고 쉰다",
           "effectHint": "피로 -15, 컨디션 +10",
-          "effects": { "fatigueDelta": -15, "conditionDelta": 10 }
+          "effects": [
+            "fatigue:-15",
+            "condition:+10"
+          ]
         },
         {
           "id": "moderate",
           "label": "가벼운 훈련만 한다",
           "effectHint": "피로 -7, 컨디션 +4",
-          "effects": { "fatigueDelta": -7, "conditionDelta": 4 }
+          "effects": [
+            "fatigue:-7",
+            "condition:+4"
+          ]
         },
         {
           "id": "push",
           "label": "계획대로 밀어붙인다",
           "effectHint": "피로 +5, 커맨드 경험치 +1",
-          "effects": { "fatigueDelta": 5, "xp": { "command": 1 } }
+          "effects": [
+            "fatigue:+5",
+            "xp.command:+1"
+          ]
         }
       ]
     },
@@ -56,19 +75,28 @@
           "id": "coach_talk",
           "label": "코치에게 솔직하게 털어놓는다",
           "effectHint": "사기 +15, 커맨드 경험치 +1",
-          "effects": { "moraleDelta": 15, "xp": { "command": 1 } }
+          "effects": [
+            "morale:+15",
+            "xp.command:+1"
+          ]
         },
         {
           "id": "self_train",
           "label": "혼자 기본기 훈련에 집중한다",
           "effectHint": "사기 +8, 피로 +5",
-          "effects": { "moraleDelta": 8, "fatigueDelta": 5 }
+          "effects": [
+            "morale:+8",
+            "fatigue:+5"
+          ]
         },
         {
           "id": "rest_mind",
           "label": "완전히 쉬면서 마음을 정리한다",
           "effectHint": "사기 +12, 컨디션 +5",
-          "effects": { "moraleDelta": 12, "conditionDelta": 5 }
+          "effects": [
+            "morale:+12",
+            "condition:+5"
+          ]
         }
       ]
     },
@@ -79,14 +107,21 @@
         {
           "id": "intensive_train",
           "label": "집중 훈련에 돌입한다",
-          "effectHint": "피로 +10, 구위·커맨드 경험치 +3",
-          "effects": { "fatigueDelta": 10, "xp": { "velocity": 3, "command": 3 } }
+          "effectHint": "피로 +10, 스피드·커맨드 경험치 +3",
+          "effects": [
+            "fatigue:+10",
+            "xp.velocity:+3",
+            "xp.command:+3"
+          ]
         },
         {
           "id": "steady",
           "label": "이 컨디션을 유지하며 훈련한다",
-          "effectHint": "컨디션 +5, 커맨드 경험치 +1",
-          "effects": { "conditionDelta": 5, "xp": { "command": 1 } }
+          "effectHint": "컨디션 +5, 경험치 +1",
+          "effects": [
+            "condition:+5",
+            "xp.command:+1"
+          ]
         }
       ]
     },
@@ -98,13 +133,16 @@
           "id": "accept",
           "label": "인터뷰에 응한다",
           "effectHint": "사기 +8, 피로 +3",
-          "effects": { "moraleDelta": 8, "fatigueDelta": 3 }
+          "effects": [
+            "morale:+8",
+            "fatigue:+3"
+          ]
         },
         {
           "id": "decline",
           "label": "정중히 거절한다",
           "effectHint": "변화 없음",
-          "effects": {}
+          "effects": []
         }
       ]
     },
@@ -116,19 +154,24 @@
           "id": "ask_more",
           "label": "더 자세히 여쭤본다",
           "effectHint": "커맨드 경험치 +2, 사기 +5",
-          "effects": { "moraleDelta": 5, "xp": { "command": 2 } }
+          "effects": [
+            "xp.command:+2",
+            "morale:+5"
+          ]
         },
         {
           "id": "appreciate",
           "label": "감사하게 받아들인다",
           "effectHint": "사기 +8",
-          "effects": { "moraleDelta": 8 }
+          "effects": [
+            "morale:+8"
+          ]
         },
         {
           "id": "nod",
           "label": "듣기만 한다",
           "effectHint": "변화 없음",
-          "effects": {}
+          "effects": []
         }
       ]
     },
@@ -140,19 +183,27 @@
           "id": "active",
           "label": "적극적으로 분위기를 끌어올린다",
           "effectHint": "사기 +12, 피로 +5",
-          "effects": { "moraleDelta": 12, "fatigueDelta": 5 }
+          "effects": [
+            "morale:+12",
+            "fatigue:+5"
+          ]
         },
         {
           "id": "join",
           "label": "함께 참여하며 즐긴다",
           "effectHint": "사기 +8, 피로 +3",
-          "effects": { "moraleDelta": 8, "fatigueDelta": 3 }
+          "effects": [
+            "morale:+8",
+            "fatigue:+3"
+          ]
         },
         {
           "id": "skip",
           "label": "피로해서 일찍 귀가한다",
           "effectHint": "피로 -5",
-          "effects": { "fatigueDelta": -5 }
+          "effects": [
+            "fatigue:-5"
+          ]
         }
       ]
     },
@@ -164,13 +215,2117 @@
           "id": "do_train",
           "label": "훈련한다",
           "effectHint": "컨디션 -4, 커맨드 경험치 +1",
-          "effects": { "conditionDelta": -4, "xp": { "command": 1 } }
+          "effects": [
+            "condition:-4",
+            "xp.command:+1"
+          ]
         },
         {
           "id": "skip_train",
           "label": "오늘은 쉰다",
           "effectHint": "컨디션 +2",
-          "effects": { "conditionDelta": 2 }
+          "effects": [
+            "condition:+2"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y1_FIRST_TRAINING",
+      "prompt": "선배들의 강도를 어떻게 소화하겠습니까?",
+      "options": [
+        {
+          "id": "follow",
+          "label": "죽어도 따라간다",
+          "effectHint": "스태미나 XP +3, 피로 +12",
+          "effects": {
+            "xp": {
+              "stamina": 3
+            },
+            "fatigueDelta": 12
+          }
+        },
+        {
+          "id": "pace",
+          "label": "내 페이스를 유지한다",
+          "effectHint": "회복력 XP +2, 컨디션 +4",
+          "effects": {
+            "xp": {
+              "recovery": 2
+            },
+            "conditionDelta": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y1_SENIOR_SCOLD",
+      "prompt": "선배의 지적에 어떻게 반응하겠습니까?",
+      "options": [
+        {
+          "id": "accept",
+          "label": "감사히 받아들인다",
+          "effectHint": "멘탈리티 XP +2, 사기 +5",
+          "effects": {
+            "xp": {
+              "mentality": 2
+            },
+            "moraleDelta": 5
+          }
+        },
+        {
+          "id": "resist",
+          "label": "속으론 반발하며 넘긴다",
+          "effectHint": "사기 -5",
+          "effects": {
+            "moraleDelta": -5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y1_INTRASQUAD",
+      "prompt": "청백전 첫 등판, 어떻게 던지겠습니까?",
+      "options": [
+        {
+          "id": "velocity",
+          "label": "전력 투구한다",
+          "effectHint": "구속 XP +3, 피로 +10",
+          "effects": {
+            "xp": {
+              "velocity": 3
+            },
+            "fatigueDelta": 10
+          }
+        },
+        {
+          "id": "command",
+          "label": "커맨드에 집중한다",
+          "effectHint": "커맨드 XP +3, 피로 +6",
+          "effects": {
+            "xp": {
+              "command": 3
+            },
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "clutch",
+          "label": "경험을 쌓는 데 집중",
+          "effectHint": "위기집중력 XP +2, 피로 +4",
+          "effects": {
+            "xp": {
+              "clutch": 2
+            },
+            "fatigueDelta": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y1_SENIOR_TECH",
+      "prompt": "선배가 알려주는 기술, 어느 쪽을 배우겠습니까?",
+      "options": [
+        {
+          "id": "holders",
+          "label": "견제폼을 배운다",
+          "effectHint": "견제력 XP +3",
+          "effects": {
+            "xp": {
+              "holdRunners": 3
+            }
+          }
+        },
+        {
+          "id": "movement",
+          "label": "무브먼트를 익힌다",
+          "effectHint": "무브먼트 XP +3",
+          "effects": {
+            "xp": {
+              "movement": 3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y1_MID_EVAL",
+      "prompt": "코치의 지적, 어떻게 대응하겠습니까?",
+      "options": [
+        {
+          "id": "fix_now",
+          "label": "즉시 반복 교정에 집중",
+          "effectHint": "제구 즉시 +1, 피로 +8",
+          "effects": {
+            "statDelta": {
+              "control": 1
+            },
+            "fatigueDelta": 8
+          }
+        },
+        {
+          "id": "later",
+          "label": "시즌 끝나고 집중하겠다",
+          "effectHint": "제구 XP +2",
+          "effects": {
+            "xp": {
+              "control": 2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y1_DORM_NIGHT",
+      "prompt": "기숙사 첫날 밤, 잠이 오지 않는다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "stretch",
+          "label": "스트레칭으로 몸을 푼다",
+          "effectHint": "회복력 XP +2, 컨디션 +4",
+          "effects": {
+            "xp": {
+              "recovery": 2
+            },
+            "conditionDelta": 4
+          }
+        },
+        {
+          "id": "sleep",
+          "label": "억지로 잠을 청한다",
+          "effectHint": "피로 -4",
+          "effects": {
+            "fatigueDelta": -4
+          }
+        },
+        {
+          "id": "video",
+          "label": "경기 영상을 본다",
+          "effectHint": "커맨드 XP +1, 피로 +3",
+          "effects": {
+            "xp": {
+              "command": 1
+            },
+            "fatigueDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y1_FESTIVAL",
+      "prompt": "축제냐 훈련이냐, 선택하겠습니까?",
+      "options": [
+        {
+          "id": "train",
+          "label": "팀원들과 불펜에 간다",
+          "effectHint": "스태미나 XP +2, 피로 +8",
+          "effects": {
+            "xp": {
+              "stamina": 2
+            },
+            "fatigueDelta": 8
+          }
+        },
+        {
+          "id": "festival",
+          "label": "축제를 즐긴다",
+          "effectHint": "사기 +12, 컨디션 +5",
+          "effects": {
+            "moraleDelta": 12,
+            "conditionDelta": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y1_CLASS_SLEEP",
+      "prompt": "수업 중 졸다 담임에게 걸렸다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "honest",
+          "label": "솔직하게 야구 때문이라고 말한다",
+          "effectHint": "성실도 +2, 사기 +5",
+          "effects": {
+            "diligenceDelta": 2,
+            "moraleDelta": 5
+          }
+        },
+        {
+          "id": "sorry",
+          "label": "죄송합니다 하고 넘긴다",
+          "effectHint": "사기 -3",
+          "effects": {
+            "moraleDelta": -3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y1_POSITION",
+      "prompt": "원하지 않던 포지션 배정에 어떻게 반응하겠습니까?",
+      "options": [
+        {
+          "id": "accept",
+          "label": "받아들이고 최선을 다한다",
+          "effectHint": "멘탈리티 XP +3, 사기 -5",
+          "effects": {
+            "xp": {
+              "mentality": 3
+            },
+            "moraleDelta": -5
+          }
+        },
+        {
+          "id": "speak",
+          "label": "코치에게 의사를 전달한다",
+          "effectHint": "사기 +5",
+          "effects": {
+            "moraleDelta": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y1_AFTER_ERROR",
+      "prompt": "실책 후 다음 등판을 어떻게 준비하겠습니까?",
+      "options": [
+        {
+          "id": "intense",
+          "label": "더 독하게 준비한다",
+          "effectHint": "위기집중력 XP +2, 피로 +8",
+          "effects": {
+            "xp": {
+              "clutch": 2
+            },
+            "fatigueDelta": 8
+          }
+        },
+        {
+          "id": "reset",
+          "label": "마음 비우고 루틴대로 간다",
+          "effectHint": "멘탈 즉시 +1, 컨디션 +3",
+          "effects": {
+            "statDelta": {
+              "mentality": 1
+            },
+            "conditionDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y1_HOMESICK",
+      "prompt": "집이 그리운 밤, 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "call",
+          "label": "부모님께 전화한다",
+          "effectHint": "사기 +12, 컨디션 +3",
+          "effects": {
+            "moraleDelta": 12,
+            "conditionDelta": 3
+          }
+        },
+        {
+          "id": "endure",
+          "label": "혼자 이겨낸다",
+          "effectHint": "멘탈리티 XP +3",
+          "effects": {
+            "xp": {
+              "mentality": 3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y1_GEAR_BREAK",
+      "prompt": "선배 장비를 망가뜨렸다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "admit",
+          "label": "바로 사과하고 처리한다",
+          "effectHint": "성실도 +3, 사기 +5",
+          "effects": {
+            "diligenceDelta": 3,
+            "moraleDelta": 5
+          }
+        },
+        {
+          "id": "hide",
+          "label": "몰래 수리해서 돌려놓는다",
+          "effectHint": "변화 없음",
+          "effects": {}
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y1_WELCOME_DINNER",
+      "prompt": "환영 회식 자리에서 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "active",
+          "label": "적극적으로 참여한다",
+          "effectHint": "사기 +10, 피로 +5",
+          "effects": {
+            "moraleDelta": 10,
+            "fatigueDelta": 5
+          }
+        },
+        {
+          "id": "quiet",
+          "label": "조용히 먹고 일찍 간다",
+          "effectHint": "회복력 XP +1, 컨디션 +5",
+          "effects": {
+            "xp": {
+              "recovery": 1
+            },
+            "conditionDelta": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y1_RUMOR",
+      "prompt": "자신에 대한 소문, 어떻게 받아들이겠습니까?",
+      "options": [
+        {
+          "id": "push",
+          "label": "더 독하게 한다",
+          "effectHint": "구속 XP +2, 피로 +10",
+          "effects": {
+            "xp": {
+              "velocity": 2
+            },
+            "fatigueDelta": 10
+          }
+        },
+        {
+          "id": "calm",
+          "label": "평정심을 유지한다",
+          "effectHint": "사기 +5, 멘탈리티 XP +1",
+          "effects": {
+            "moraleDelta": 5,
+            "xp": {
+              "mentality": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y1_AWAY_BUS",
+      "prompt": "첫 원정 버스 안, 옆에 선배가 앉았다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "talk",
+          "label": "말을 걸어 친해진다",
+          "effectHint": "사기 +8, 인기도 +3",
+          "effects": {
+            "moraleDelta": 8,
+            "popularityDelta": 3
+          }
+        },
+        {
+          "id": "sleep",
+          "label": "이어폰 끼고 잠을 청한다",
+          "effectHint": "피로 -6",
+          "effects": {
+            "fatigueDelta": -6
+          }
+        },
+        {
+          "id": "video",
+          "label": "영상 분석을 한다",
+          "effectHint": "커맨드 XP +2, 피로 +2",
+          "effects": {
+            "xp": {
+              "command": 2
+            },
+            "fatigueDelta": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y1_NIGHT_COACH",
+      "prompt": "숙직 코치와 마주쳤다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "talk",
+          "label": "고민을 털어놓는다",
+          "effectHint": "멘탈리티 XP +2, 사기 +8",
+          "effects": {
+            "xp": {
+              "mentality": 2
+            },
+            "moraleDelta": 8
+          }
+        },
+        {
+          "id": "sleep",
+          "label": "일찍 자러 간다",
+          "effectHint": "컨디션 +5",
+          "effects": {
+            "conditionDelta": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y1_SIGN_BALL",
+      "prompt": "사인볼을 요청하는 팬이 있다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "sign",
+          "label": "흔쾌히 해준다",
+          "effectHint": "인기도 +5, 사기 +8, 피로 +2",
+          "effects": {
+            "popularityDelta": 5,
+            "moraleDelta": 8,
+            "fatigueDelta": 2
+          }
+        },
+        {
+          "id": "later",
+          "label": "다음에 해주겠다고 한다",
+          "effectHint": "사기 +3",
+          "effects": {
+            "moraleDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y1_COACH_EYE",
+      "prompt": "감독의 특별 훈련 대상이 됐다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "full",
+          "label": "전부 소화한다",
+          "effectHint": "구속 XP +3, 스태미나 XP +2, 피로 +12",
+          "effects": {
+            "xp": {
+              "velocity": 3,
+              "stamina": 2
+            },
+            "fatigueDelta": 12
+          }
+        },
+        {
+          "id": "partial",
+          "label": "70%만 한다",
+          "effectHint": "구속 XP +2, 피로 +6",
+          "effects": {
+            "xp": {
+              "velocity": 2
+            },
+            "fatigueDelta": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y1_SLOW_GROWTH",
+      "prompt": "동기보다 성장이 느린 것 같다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "push",
+          "label": "자극받아 훈련을 늘린다",
+          "effectHint": "스태미나 XP +2, 피로 +8",
+          "effects": {
+            "xp": {
+              "stamina": 2
+            },
+            "fatigueDelta": 8
+          }
+        },
+        {
+          "id": "trust",
+          "label": "내 속도를 믿는다",
+          "effectHint": "멘탈리티 XP +3, 사기 +5",
+          "effects": {
+            "xp": {
+              "mentality": 3
+            },
+            "moraleDelta": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_RAIN_INDOOR",
+      "prompt": "우천으로 실내 훈련으로 전환됐다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "lower",
+          "label": "하체 집중 훈련",
+          "effectHint": "스태미나 XP +2, 피로 +5",
+          "effects": {
+            "xp": {
+              "stamina": 2
+            },
+            "fatigueDelta": 5
+          }
+        },
+        {
+          "id": "drill",
+          "label": "제구 드릴",
+          "effectHint": "제구 XP +2, 피로 +5",
+          "effects": {
+            "xp": {
+              "control": 2
+            },
+            "fatigueDelta": 5
+          }
+        },
+        {
+          "id": "rest",
+          "label": "완전히 쉰다",
+          "effectHint": "컨디션 +10",
+          "effects": {
+            "conditionDelta": 10
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y2_ROOKIE_RIVAL",
+      "prompt": "신입생이 내 구속에 근접하고 있다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "velocity",
+          "label": "구속 집중 훈련",
+          "effectHint": "구속 XP +4, 피로 +12",
+          "effects": {
+            "xp": {
+              "velocity": 4
+            },
+            "fatigueDelta": 12
+          }
+        },
+        {
+          "id": "command",
+          "label": "커맨드·제구로 차별화",
+          "effectHint": "커맨드 XP +3, 제구 XP +2",
+          "effects": {
+            "xp": {
+              "command": 3,
+              "control": 2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y2_INNING_EATER",
+      "prompt": "감독이 더 긴 이닝 소화를 요구한다. 어떻게 준비하겠습니까?",
+      "options": [
+        {
+          "id": "stamina",
+          "label": "스태미나 체력 훈련",
+          "effectHint": "스태미나 XP +4, 피로 +10",
+          "effects": {
+            "xp": {
+              "stamina": 4
+            },
+            "fatigueDelta": 10
+          }
+        },
+        {
+          "id": "efficiency",
+          "label": "효율적 투구 연구",
+          "effectHint": "커맨드 XP +3, 제구 XP +2",
+          "effects": {
+            "xp": {
+              "command": 3,
+              "control": 2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y2_NEW_COACH",
+      "prompt": "새 코치가 투구폼 변경을 지시한다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "follow",
+          "label": "시키는 대로 따른다",
+          "effectHint": "무브먼트 XP +4, 피로 +8",
+          "effects": {
+            "xp": {
+              "movement": 4
+            },
+            "fatigueDelta": 8
+          }
+        },
+        {
+          "id": "speak",
+          "label": "기존 폼 유지 의사를 전달",
+          "effectHint": "커맨드 즉시 +1",
+          "effects": {
+            "statDelta": {
+              "command": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y2_ACE_OUT",
+      "prompt": "팀 에이스가 부상, 1선발 요청이 왔다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "accept",
+          "label": "받아들인다",
+          "effectHint": "위기집중력 XP +3, 사기 +10, 피로 +10, 명성 +2",
+          "effects": {
+            "xp": {
+              "clutch": 3
+            },
+            "moraleDelta": 10,
+            "fatigueDelta": 10,
+            "fameDelta": 2
+          }
+        },
+        {
+          "id": "decline",
+          "label": "거절한다",
+          "effectHint": "사기 -8",
+          "effects": {
+            "moraleDelta": -8
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y2_SCOUT_RUMOR",
+      "prompt": "스카우트가 경기를 관전한다는 소문이 돌고 있다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "steady",
+          "label": "평소대로 던진다",
+          "effectHint": "멘탈리티 XP +2, 사기 +5",
+          "effects": {
+            "xp": {
+              "mentality": 2
+            },
+            "moraleDelta": 5
+          }
+        },
+        {
+          "id": "show",
+          "label": "각별히 준비해서 보여준다",
+          "effectHint": "구속 XP +3, 피로 +8, 인기도 +3",
+          "effects": {
+            "xp": {
+              "velocity": 3
+            },
+            "fatigueDelta": 8,
+            "popularityDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y2_SLUMP",
+      "prompt": "4경기 연속 부진, 슬럼프다. 어떻게 극복하겠습니까?",
+      "options": [
+        {
+          "id": "basics",
+          "label": "기초로 돌아간다",
+          "effectHint": "커맨드 XP +3, 제구 XP +2",
+          "effects": {
+            "xp": {
+              "command": 3,
+              "control": 2
+            }
+          }
+        },
+        {
+          "id": "mental",
+          "label": "멘탈 관리에 집중",
+          "effectHint": "멘탈리티 XP +3, 사기 +8",
+          "effects": {
+            "xp": {
+              "mentality": 3
+            },
+            "moraleDelta": 8
+          }
+        },
+        {
+          "id": "push",
+          "label": "강도 높여 극복한다",
+          "effectHint": "구속 XP +3, 피로 +12",
+          "effects": {
+            "xp": {
+              "velocity": 3
+            },
+            "fatigueDelta": 12
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y2_NEW_PITCH",
+      "prompt": "코치가 새 구종 연습을 제안한다. 언제 시작하겠습니까?",
+      "options": [
+        {
+          "id": "now",
+          "label": "지금 당장 시작한다",
+          "effectHint": "무브먼트 XP +5, 피로 +10",
+          "effects": {
+            "xp": {
+              "movement": 5
+            },
+            "fatigueDelta": 10
+          }
+        },
+        {
+          "id": "later",
+          "label": "다음 시즌에 하겠다",
+          "effectHint": "무브먼트 XP +2",
+          "effects": {
+            "xp": {
+              "movement": 2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y2_INTERVIEW",
+      "prompt": "지역 신문 기자가 인터뷰를 요청한다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "accept",
+          "label": "응한다",
+          "effectHint": "인기도 +8, 명성 +3, 피로 +4",
+          "effects": {
+            "popularityDelta": 8,
+            "fameDelta": 3,
+            "fatigueDelta": 4
+          }
+        },
+        {
+          "id": "decline",
+          "label": "거절한다",
+          "effectHint": "멘탈리티 XP +1",
+          "effects": {
+            "xp": {
+              "mentality": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y2_WEEKEND_TRAIN",
+      "prompt": "아무도 없는 주말, 어떻게 보내겠습니까?",
+      "options": [
+        {
+          "id": "bullpen",
+          "label": "불펜을 던진다",
+          "effectHint": "구속 XP +2, 피로 +8",
+          "effects": {
+            "xp": {
+              "velocity": 2
+            },
+            "fatigueDelta": 8
+          }
+        },
+        {
+          "id": "drill",
+          "label": "제구 드릴을 한다",
+          "effectHint": "제구 XP +2, 피로 +5",
+          "effects": {
+            "xp": {
+              "control": 2
+            },
+            "fatigueDelta": 5
+          }
+        },
+        {
+          "id": "rest",
+          "label": "완전히 회복한다",
+          "effectHint": "컨디션 +10, 사기 +5",
+          "effects": {
+            "conditionDelta": 10,
+            "moraleDelta": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y2_ACE_RETIRE",
+      "prompt": "3학년 에이스의 마지막 경기. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "close",
+          "label": "불펜 마무리를 자처한다",
+          "effectHint": "위기집중력 XP +3, 사기 +8, 피로 +6",
+          "effects": {
+            "xp": {
+              "clutch": 3
+            },
+            "moraleDelta": 8,
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "watch",
+          "label": "조용히 응원한다",
+          "effectHint": "사기 +5, 성실도 +1",
+          "effects": {
+            "moraleDelta": 5,
+            "diligenceDelta": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y2_PEER_CONFLICT",
+      "prompt": "동기들 사이에 갈등이 생겼다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "mediate",
+          "label": "먼저 화해를 시도한다",
+          "effectHint": "사기 +8, 성실도 +2",
+          "effects": {
+            "moraleDelta": 8,
+            "diligenceDelta": 2
+          }
+        },
+        {
+          "id": "compete",
+          "label": "경쟁이니 신경 끈다",
+          "effectHint": "위기집중력 XP +2",
+          "effects": {
+            "xp": {
+              "clutch": 2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y2_COACH_TRAIN",
+      "prompt": "코치가 방과 후 개인 훈련을 제안한다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "now",
+          "label": "흔쾌히 수락한다",
+          "effectHint": "구속 즉시 +1, 피로 +12",
+          "effects": {
+            "statDelta": {
+              "velocity": 1
+            },
+            "fatigueDelta": 12
+          }
+        },
+        {
+          "id": "tomorrow",
+          "label": "내일부터 하겠다",
+          "effectHint": "구속 XP +3, 피로 +6",
+          "effects": {
+            "xp": {
+              "velocity": 3
+            },
+            "fatigueDelta": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y2_POSITION_CHANGE",
+      "prompt": "마무리 역할 한 경기 제안이 왔다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "try",
+          "label": "해본다",
+          "effectHint": "위기집중력 XP +3, 견제력 XP +2, 피로 +8",
+          "effects": {
+            "xp": {
+              "clutch": 3,
+              "holdRunners": 2
+            },
+            "fatigueDelta": 8
+          }
+        },
+        {
+          "id": "refuse",
+          "label": "선발 루틴을 유지한다",
+          "effectHint": "커맨드 XP +2",
+          "effects": {
+            "xp": {
+              "command": 2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y2_TEAM_SLUMP",
+      "prompt": "팀 성적이 하위권이다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "solo",
+          "label": "책임감 갖고 혼자 판다",
+          "effectHint": "스태미나 XP +2, 피로 +10",
+          "effects": {
+            "xp": {
+              "stamina": 2
+            },
+            "fatigueDelta": 10
+          }
+        },
+        {
+          "id": "team",
+          "label": "팀원과 함께 원인 분석",
+          "effectHint": "멘탈리티 XP +2, 사기 +6",
+          "effects": {
+            "xp": {
+              "mentality": 2
+            },
+            "moraleDelta": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y2_AWAY_TRIP",
+      "prompt": "장거리 원정 버스 안, 어떻게 시간을 보내겠습니까?",
+      "options": [
+        {
+          "id": "video",
+          "label": "경기 영상을 분석한다",
+          "effectHint": "커맨드 XP +2, 피로 +3",
+          "effects": {
+            "xp": {
+              "command": 2
+            },
+            "fatigueDelta": 3
+          }
+        },
+        {
+          "id": "chat",
+          "label": "팀원들과 수다를 떤다",
+          "effectHint": "사기 +8, 피로 +3",
+          "effects": {
+            "moraleDelta": 8,
+            "fatigueDelta": 3
+          }
+        },
+        {
+          "id": "sleep",
+          "label": "이어폰 끼고 잠을 청한다",
+          "effectHint": "피로 -6",
+          "effects": {
+            "fatigueDelta": -6
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y2_SCRIMMAGE",
+      "prompt": "다른 학교에서 비공식 연습경기를 제안했다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "go",
+          "label": "나간다",
+          "effectHint": "위기집중력 XP +3, 피로 +8",
+          "effects": {
+            "xp": {
+              "clutch": 3
+            },
+            "fatigueDelta": 8
+          }
+        },
+        {
+          "id": "ask",
+          "label": "코치에게 먼저 확인한다",
+          "effectHint": "사기 +5, 성실도 +2",
+          "effects": {
+            "moraleDelta": 5,
+            "diligenceDelta": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y2_CAREER_CONSULT",
+      "prompt": "진로 상담 주간이다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "baseball",
+          "label": "야구 진로 상담을 받는다",
+          "effectHint": "명성 +2, 사기 +8",
+          "effects": {
+            "fameDelta": 2,
+            "moraleDelta": 8
+          }
+        },
+        {
+          "id": "skip",
+          "label": "상담을 안 간다",
+          "effectHint": "멘탈리티 XP +1",
+          "effects": {
+            "xp": {
+              "mentality": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y2_PEER_QUIT",
+      "prompt": "동기가 야구를 그만두겠다고 한다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "convince",
+          "label": "진지하게 설득한다",
+          "effectHint": "사기 +5, 성실도 +2, 피로 +3",
+          "effects": {
+            "moraleDelta": 5,
+            "diligenceDelta": 2,
+            "fatigueDelta": 3
+          }
+        },
+        {
+          "id": "respect",
+          "label": "각자의 선택을 존중한다",
+          "effectHint": "사기 +5",
+          "effects": {
+            "moraleDelta": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y3_CAPTAIN_FIRST",
+      "prompt": "주장으로서 첫 훈련을 어떻게 이끌겠습니까?",
+      "options": [
+        {
+          "id": "strong",
+          "label": "강하게 끌고 간다",
+          "effectHint": "사기 +5, 피로 +8",
+          "effects": {
+            "moraleDelta": 5,
+            "fatigueDelta": 8
+          }
+        },
+        {
+          "id": "demo",
+          "label": "민주적으로 의견을 수렴한다",
+          "effectHint": "사기 +10, 성실도 +2",
+          "effects": {
+            "moraleDelta": 10,
+            "diligenceDelta": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y3_AGENT_CONTACT",
+      "prompt": "드래프트 에이전트로부터 비공식 연락이 왔다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "meet",
+          "label": "일단 만나본다",
+          "effectHint": "명성 +5, 인기도 +5",
+          "effects": {
+            "fameDelta": 5,
+            "popularityDelta": 5
+          }
+        },
+        {
+          "id": "coach",
+          "label": "코치에게 먼저 알린다",
+          "effectHint": "사기 +5, 성실도 +3",
+          "effects": {
+            "moraleDelta": 5,
+            "diligenceDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y3_TEACH_PITCH",
+      "prompt": "후배가 구종을 가르쳐 달라고 한다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "full",
+          "label": "제대로 가르쳐준다",
+          "effectHint": "견제력 XP +2, 사기 +8, 피로 +5",
+          "effects": {
+            "xp": {
+              "holdRunners": 2
+            },
+            "moraleDelta": 8,
+            "fatigueDelta": 5
+          }
+        },
+        {
+          "id": "brief",
+          "label": "핵심만 짧게 알려준다",
+          "effectHint": "사기 +5",
+          "effects": {
+            "moraleDelta": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y3_FAN_LETTER",
+      "prompt": "처음으로 팬레터가 왔다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "reply",
+          "label": "답장을 쓴다",
+          "effectHint": "인기도 +10, 사기 +10, 피로 +3",
+          "effects": {
+            "popularityDelta": 10,
+            "moraleDelta": 10,
+            "fatigueDelta": 3
+          }
+        },
+        {
+          "id": "feel",
+          "label": "마음속으로만 고마워한다",
+          "effectHint": "사기 +6, 인기도 +3",
+          "effects": {
+            "moraleDelta": 6,
+            "popularityDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y3_LAST_CAMP",
+      "prompt": "고교 마지막 여름 캠프. 어떻게 임하겠습니까?",
+      "options": [
+        {
+          "id": "all",
+          "label": "모든 것을 쏟아붓는다",
+          "effectHint": "구속 XP +3, 스태미나 XP +3, 피로 +15",
+          "effects": {
+            "xp": {
+              "velocity": 3,
+              "stamina": 3
+            },
+            "fatigueDelta": 15
+          }
+        },
+        {
+          "id": "safe",
+          "label": "부상 없이 마무리가 목표",
+          "effectHint": "커맨드 XP +2, 회복력 XP +2, 피로 +8",
+          "effects": {
+            "xp": {
+              "command": 2,
+              "recovery": 2
+            },
+            "fatigueDelta": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y3_SHOULDER",
+      "prompt": "시즌 막바지, 어깨에 통증이 있다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "honest",
+          "label": "코치에게 솔직히 말한다",
+          "effectHint": "회복력 즉시 +1, 사기 -5, 컨디션 +5",
+          "effects": {
+            "statDelta": {
+              "recovery": 1
+            },
+            "moraleDelta": -5,
+            "conditionDelta": 5
+          }
+        },
+        {
+          "id": "hide",
+          "label": "감추고 끝까지 던진다",
+          "effectHint": "위기집중력 XP +3, 피로 +15",
+          "effects": {
+            "xp": {
+              "clutch": 3
+            },
+            "fatigueDelta": 15
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y3_UNIV_COACH",
+      "prompt": "대학 코치가 직접 찾아왔다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "listen",
+          "label": "진지하게 얘기를 나눈다",
+          "effectHint": "명성 +3, 인기도 +3",
+          "effects": {
+            "fameDelta": 3,
+            "popularityDelta": 3
+          }
+        },
+        {
+          "id": "draft",
+          "label": "드래프트를 노리겠다 확실히 한다",
+          "effectHint": "사기 +12, 멘탈리티 XP +2",
+          "effects": {
+            "moraleDelta": 12,
+            "xp": {
+              "mentality": 2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y3_PEER_RETIRE",
+      "prompt": "3년 함께한 동기가 야구를 포기한다고 한다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "convince",
+          "label": "진지하게 설득한다",
+          "effectHint": "사기 +6, 성실도 +2, 피로 +4",
+          "effects": {
+            "moraleDelta": 6,
+            "diligenceDelta": 2,
+            "fatigueDelta": 4
+          }
+        },
+        {
+          "id": "respect",
+          "label": "각자의 선택을 존중한다",
+          "effectHint": "멘탈리티 XP +2, 사기 +5",
+          "effects": {
+            "xp": {
+              "mentality": 2
+            },
+            "moraleDelta": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y3_RIVAL_FINAL",
+      "prompt": "포스트시즌 라이벌과의 마지막 맞대결. 어떻게 임하겠습니까?",
+      "options": [
+        {
+          "id": "completegame",
+          "label": "완투를 목표로 한다",
+          "effectHint": "위기집중력 XP +4, 구속 XP +2, 피로 +15, 명성 +3",
+          "effects": {
+            "xp": {
+              "clutch": 4,
+              "velocity": 2
+            },
+            "fatigueDelta": 15,
+            "fameDelta": 3
+          }
+        },
+        {
+          "id": "team",
+          "label": "팀이 이기는 게 먼저",
+          "effectHint": "커맨드 XP +2, 사기 +8, 컨디션 +3",
+          "effects": {
+            "xp": {
+              "command": 2
+            },
+            "moraleDelta": 8,
+            "conditionDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y3_YEARBOOK",
+      "prompt": "졸업 앨범에 한마디를 써야 한다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "declaration",
+          "label": "야구에 대한 각오를 쓴다",
+          "effectHint": "명성 +3, 인기도 +5, 성실도 +1",
+          "effects": {
+            "fameDelta": 3,
+            "popularityDelta": 5,
+            "diligenceDelta": 1
+          }
+        },
+        {
+          "id": "gratitude",
+          "label": "팀에 대한 감사를 쓴다",
+          "effectHint": "사기 +8",
+          "effects": {
+            "moraleDelta": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y3_PARENTS",
+      "prompt": "부모님이 처음으로 경기를 보러 왔다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "show",
+          "label": "보여주겠다는 각오로 임한다",
+          "effectHint": "위기집중력 XP +2, 사기 +10, 컨디션 +3",
+          "effects": {
+            "xp": {
+              "clutch": 2
+            },
+            "moraleDelta": 10,
+            "conditionDelta": 3
+          }
+        },
+        {
+          "id": "nervous",
+          "label": "너무 의식돼서 부담이 된다",
+          "effectHint": "피로 +8, 사기 -3",
+          "effects": {
+            "fatigueDelta": 8,
+            "moraleDelta": -3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y3_OLD_VIDEO",
+      "prompt": "1학년 때 훈련 영상을 우연히 발견했다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "analyze",
+          "label": "성장을 비교 분석한다",
+          "effectHint": "멘탈리티 XP +3, 멘탈 즉시 +1",
+          "effects": {
+            "xp": {
+              "mentality": 3
+            },
+            "statDelta": {
+              "mentality": 1
+            }
+          }
+        },
+        {
+          "id": "laugh",
+          "label": "부끄러워서 끈다",
+          "effectHint": "사기 +8",
+          "effects": {
+            "moraleDelta": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y3_LAST_NIGHT",
+      "prompt": "마지막이 될 수도 있는 경기 전야. 어떻게 보내겠습니까?",
+      "options": [
+        {
+          "id": "routine",
+          "label": "평소 루틴대로 일찍 잔다",
+          "effectHint": "컨디션 +8",
+          "effects": {
+            "conditionDelta": 8
+          }
+        },
+        {
+          "id": "focus",
+          "label": "공을 손에 쥐고 각오를 다진다",
+          "effectHint": "멘탈리티 XP +3, 위기집중력 XP +2, 사기 +10",
+          "effects": {
+            "xp": {
+              "mentality": 3,
+              "clutch": 2
+            },
+            "moraleDelta": 10
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y3_ELIMINATED",
+      "prompt": "포스트시즌 탈락 직후. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "remember",
+          "label": "이 감정을 기억해두겠다",
+          "effectHint": "멘탈리티 XP +4, 사기 +5",
+          "effects": {
+            "xp": {
+              "mentality": 4
+            },
+            "moraleDelta": 5
+          }
+        },
+        {
+          "id": "prepare",
+          "label": "바로 다음 준비를 시작한다",
+          "effectHint": "커맨드 XP +2, 피로 +6",
+          "effects": {
+            "xp": {
+              "command": 2
+            },
+            "fatigueDelta": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y3_PRO_TEST",
+      "prompt": "프로팀 비공식 테스트 제안이 왔다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "go",
+          "label": "참가한다",
+          "effectHint": "명성 +8, 인기도 +5, 피로 +12",
+          "effects": {
+            "fameDelta": 8,
+            "popularityDelta": 5,
+            "fatigueDelta": 12
+          }
+        },
+        {
+          "id": "draft",
+          "label": "공식 드래프트로 승부하겠다",
+          "effectHint": "사기 +12, 멘탈리티 XP +2",
+          "effects": {
+            "moraleDelta": 12,
+            "xp": {
+              "mentality": 2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y3_CAPTAIN_SPEECH",
+      "prompt": "마지막 시즌을 마치고 팀원 앞에서 연설한다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "sincere",
+          "label": "진심을 털어놓는다",
+          "effectHint": "인기도 +8, 사기 +12, 성실도 +2",
+          "effects": {
+            "popularityDelta": 8,
+            "moraleDelta": 12,
+            "diligenceDelta": 2
+          }
+        },
+        {
+          "id": "short",
+          "label": "짧고 간결하게 마친다",
+          "effectHint": "사기 +6",
+          "effects": {
+            "moraleDelta": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y3_LAST_SCRIMMAGE",
+      "prompt": "졸업 전 마지막 연습경기 선발. 어떻게 임하겠습니까?",
+      "options": [
+        {
+          "id": "power",
+          "label": "전력 투구한다",
+          "effectHint": "구속 XP +3, 위기집중력 XP +3, 피로 +12",
+          "effects": {
+            "xp": {
+              "velocity": 3,
+              "clutch": 3
+            },
+            "fatigueDelta": 12
+          }
+        },
+        {
+          "id": "experiment",
+          "label": "커맨드·제구 실험에 집중",
+          "effectHint": "커맨드 XP +2, 제구 XP +2, 피로 +6",
+          "effects": {
+            "xp": {
+              "command": 2,
+              "control": 2
+            },
+            "fatigueDelta": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y3_3YEAR_REVIEW",
+      "prompt": "야구부 3년을 돌아볼 시간이 생겼다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "deep",
+          "label": "긴 회고 일지를 쓴다",
+          "effectHint": "멘탈리티 XP +4, 사기 +10, 명성 +2",
+          "effects": {
+            "xp": {
+              "mentality": 4
+            },
+            "moraleDelta": 10,
+            "fameDelta": 2
+          }
+        },
+        {
+          "id": "routine",
+          "label": "평소 루틴을 유지한다",
+          "effectHint": "컨디션 +6, 회복력 XP +1",
+          "effects": {
+            "conditionDelta": 6,
+            "xp": {
+              "recovery": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y3_CAPTAIN_HAND",
+      "prompt": "후배에게 주장 완장을 넘겨야 한다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "choose",
+          "label": "직접 골라서 전달한다",
+          "effectHint": "인기도 +5, 사기 +8, 성실도 +2",
+          "effects": {
+            "popularityDelta": 5,
+            "moraleDelta": 8,
+            "diligenceDelta": 2
+          }
+        },
+        {
+          "id": "coach",
+          "label": "코치에게 맡긴다",
+          "effectHint": "사기 +5",
+          "effects": {
+            "moraleDelta": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_COMMON_RAIN",
+      "prompt": "우천으로 실내 훈련으로 전환됐다. 어떻게 할까요?",
+      "options": [
+        {
+          "id": "lower",
+          "label": "하체 실내 훈련",
+          "effectHint": "스태미나 XP +2, 피로 +5",
+          "effects": {
+            "xp": {
+              "stamina": 2
+            },
+            "fatigueDelta": 5
+          }
+        },
+        {
+          "id": "drill",
+          "label": "제구 드릴",
+          "effectHint": "제구 XP +2, 피로 +5",
+          "effects": {
+            "xp": {
+              "control": 2
+            },
+            "fatigueDelta": 5
+          }
+        },
+        {
+          "id": "rest",
+          "label": "완전히 쉰다",
+          "effectHint": "컨디션 +10",
+          "effects": {
+            "conditionDelta": 10
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_COMMON_FITNESS",
+      "prompt": "체력 측정 수치가 기대에 못 미쳤다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "fix",
+          "label": "스태미나·회복력 집중 보강",
+          "effectHint": "스태미나 XP +3, 회복력 XP +2, 피로 +8",
+          "effects": {
+            "xp": {
+              "stamina": 3,
+              "recovery": 2
+            },
+            "fatigueDelta": 8
+          }
+        },
+        {
+          "id": "ignore",
+          "label": "숫자에 연연하지 않는다",
+          "effectHint": "사기 +5, 멘탈리티 XP +1",
+          "effects": {
+            "moraleDelta": 5,
+            "xp": {
+              "mentality": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_COMMON_PRO_WATCH",
+      "prompt": "프로 경기 관람 기회가 생겼다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "inspire",
+          "label": "직접 관람하고 영감을 받는다",
+          "effectHint": "사기 +10, 멘탈리티 XP +2, 피로 +4",
+          "effects": {
+            "moraleDelta": 10,
+            "xp": {
+              "mentality": 2
+            },
+            "fatigueDelta": 4
+          }
+        },
+        {
+          "id": "video",
+          "label": "그 시간에 영상 분석을 한다",
+          "effectHint": "커맨드 XP +2, 구속 XP +1",
+          "effects": {
+            "xp": {
+              "command": 2,
+              "velocity": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_COMMON_GEAR_OLD",
+      "prompt": "장비가 노후화됐다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "buy",
+          "label": "새 것으로 교체한다",
+          "effectHint": "컨디션 +5",
+          "effects": {
+            "conditionDelta": 5
+          }
+        },
+        {
+          "id": "repair",
+          "label": "직접 수리해서 쓴다",
+          "effectHint": "성실도 +3, 사기 +5",
+          "effects": {
+            "diligenceDelta": 3,
+            "moraleDelta": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_COMMON_CHEER",
+      "prompt": "응원단이 훈련을 관람한다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "show",
+          "label": "더 열심히 보여준다",
+          "effectHint": "구속 XP +2, 인기도 +5, 피로 +6",
+          "effects": {
+            "xp": {
+              "velocity": 2
+            },
+            "popularityDelta": 5,
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "steady",
+          "label": "평소대로 한다",
+          "effectHint": "멘탈리티 XP +1, 사기 +3",
+          "effects": {
+            "xp": {
+              "mentality": 1
+            },
+            "moraleDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_COMMON_SLEEP_LACK",
+      "prompt": "수면 부족 상태로 훈련에 나섰다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "endure",
+          "label": "버티며 훈련한다",
+          "effectHint": "멘탈리티 XP +2, 피로 +10",
+          "effects": {
+            "xp": {
+              "mentality": 2
+            },
+            "fatigueDelta": 10
+          }
+        },
+        {
+          "id": "reduce",
+          "label": "강도를 스스로 줄인다",
+          "effectHint": "컨디션 +5",
+          "effects": {
+            "conditionDelta": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_COMMON_MINOR_INJURY",
+      "prompt": "훈련 중 발목을 살짝 접질렸다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "continue",
+          "label": "그냥 계속한다",
+          "effectHint": "위기집중력 XP +2, 피로 +10",
+          "effects": {
+            "xp": {
+              "clutch": 2
+            },
+            "fatigueDelta": 10
+          }
+        },
+        {
+          "id": "stop",
+          "label": "멈추고 회복한다",
+          "effectHint": "회복력 즉시 +1, 컨디션 +6",
+          "effects": {
+            "statDelta": {
+              "recovery": 1
+            },
+            "conditionDelta": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_COMMON_ASK_COACH",
+      "prompt": "훈련의 이유가 궁금하다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "ask",
+          "label": "용기 내서 코치에게 질문한다",
+          "effectHint": "커맨드 XP +2, 멘탈리티 XP +1, 사기 +5",
+          "effects": {
+            "xp": {
+              "command": 2,
+              "mentality": 1
+            },
+            "moraleDelta": 5
+          }
+        },
+        {
+          "id": "follow",
+          "label": "시키는 대로 한다",
+          "effectHint": "변화 없음",
+          "effects": {}
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_COMMON_ROUTINE_DISTURB",
+      "prompt": "경기 전 루틴이 방해받았다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "move",
+          "label": "자리를 옮겨 집중한다",
+          "effectHint": "컨디션 +4",
+          "effects": {
+            "conditionDelta": 4
+          }
+        },
+        {
+          "id": "adapt",
+          "label": "그냥 적응한다",
+          "effectHint": "멘탈리티 XP +2",
+          "effects": {
+            "xp": {
+              "mentality": 2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_COMMON_DIET",
+      "prompt": "코치가 식단 조절을 권고했다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "adjust",
+          "label": "즉시 조절을 시작한다",
+          "effectHint": "컨디션 +6, 회복력 XP +1",
+          "effects": {
+            "conditionDelta": 6,
+            "xp": {
+              "recovery": 1
+            }
+          }
+        },
+        {
+          "id": "ignore",
+          "label": "대충 맞추는 척한다",
+          "effectHint": "변화 없음",
+          "effects": {}
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_COMMON_PRAISE",
+      "prompt": "코치가 오늘 공 좋다고 지나가며 칭찬했다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "focus",
+          "label": "더 집중해서 마무리한다",
+          "effectHint": "구속 XP +2, 커맨드 XP +1",
+          "effects": {
+            "xp": {
+              "velocity": 2,
+              "command": 1
+            }
+          }
+        },
+        {
+          "id": "enjoy",
+          "label": "기분 좋게 루틴대로 간다",
+          "effectHint": "사기 +10",
+          "effects": {
+            "moraleDelta": 10
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_COMMON_REPLACE",
+      "prompt": "팀원 부상으로 갑작스러운 대체 등판 요청. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "full",
+          "label": "전력 투구로 받아들인다",
+          "effectHint": "위기집중력 XP +3, 스태미나 XP +2, 피로 +12",
+          "effects": {
+            "xp": {
+              "clutch": 3,
+              "stamina": 2
+            },
+            "fatigueDelta": 12
+          }
+        },
+        {
+          "id": "partial",
+          "label": "불펜으로 일부만 소화",
+          "effectHint": "위기집중력 XP +2, 피로 +6",
+          "effects": {
+            "xp": {
+              "clutch": 2
+            },
+            "fatigueDelta": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_COMMON_VIDEO",
+      "prompt": "코치가 영상 분석 세션을 제안했다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "deep",
+          "label": "집중해서 분석한다",
+          "effectHint": "제구 XP +2, 무브먼트 XP +2, 피로 +4",
+          "effects": {
+            "xp": {
+              "control": 2,
+              "movement": 2
+            },
+            "fatigueDelta": 4
+          }
+        },
+        {
+          "id": "light",
+          "label": "요점만 듣고 마무리한다",
+          "effectHint": "커맨드 XP +1, 컨디션 +3",
+          "effects": {
+            "xp": {
+              "command": 1
+            },
+            "conditionDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_COMMON_OVEREATING",
+      "prompt": "경기 전날 팀 회식에서 과식했다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "run",
+          "label": "소화시키려 가볍게 뛴다",
+          "effectHint": "컨디션 +4, 피로 +3",
+          "effects": {
+            "conditionDelta": 4,
+            "fatigueDelta": 3
+          }
+        },
+        {
+          "id": "sleep",
+          "label": "일찍 자서 회복한다",
+          "effectHint": "컨디션 +8, 피로 -3",
+          "effects": {
+            "conditionDelta": 8,
+            "fatigueDelta": -3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_COMMON_PARENT_CALL",
+      "prompt": "경기 전날 밤, 부모님의 응원 전화가 왔다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "long",
+          "label": "길게 이야기한다",
+          "effectHint": "사기 +12, 피로 +4",
+          "effects": {
+            "moraleDelta": 12,
+            "fatigueDelta": 4
+          }
+        },
+        {
+          "id": "short",
+          "label": "짧게 끊고 일찍 잔다",
+          "effectHint": "컨디션 +6",
+          "effects": {
+            "conditionDelta": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_COMMON_STADIUM_VOL",
+      "prompt": "경기장 봉사 활동에 참여한다. 어떻게 임하겠습니까?",
+      "options": [
+        {
+          "id": "active",
+          "label": "적극적으로 참여한다",
+          "effectHint": "인기도 +5, 사기 +5, 피로 +6",
+          "effects": {
+            "popularityDelta": 5,
+            "moraleDelta": 5,
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "min",
+          "label": "최소한만 한다",
+          "effectHint": "변화 없음",
+          "effects": {}
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_COMMON_TEAM_PHOTO",
+      "prompt": "시즌 팀 단체 사진 촬영, 어디에 서겠습니까?",
+      "options": [
+        {
+          "id": "front",
+          "label": "앞에 서서 분위기를 주도한다",
+          "effectHint": "인기도 +5, 사기 +5, 성실도 +1",
+          "effects": {
+            "popularityDelta": 5,
+            "moraleDelta": 5,
+            "diligenceDelta": 1
+          }
+        },
+        {
+          "id": "back",
+          "label": "뒤에서 조용히 선다",
+          "effectHint": "변화 없음",
+          "effects": {}
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_COMMON_FORM_FIX",
+      "prompt": "코치가 투구 자세 교정을 제안한다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "now",
+          "label": "즉시 교정 반복",
+          "effectHint": "제구 즉시 +1, 피로 +8",
+          "effects": {
+            "statDelta": {
+              "control": 1
+            },
+            "fatigueDelta": 8
+          }
+        },
+        {
+          "id": "gradual",
+          "label": "점진적으로 교정한다",
+          "effectHint": "제구 XP +3, 피로 +5",
+          "effects": {
+            "xp": {
+              "control": 3
+            },
+            "fatigueDelta": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_COMMON_SIGN",
+      "prompt": "팬이 사인볼을 요청한다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "sign",
+          "label": "흔쾌히 해준다",
+          "effectHint": "인기도 +6, 사기 +8, 피로 +2",
+          "effects": {
+            "popularityDelta": 6,
+            "moraleDelta": 8,
+            "fatigueDelta": 2
+          }
+        },
+        {
+          "id": "later",
+          "label": "다음에 해주겠다",
+          "effectHint": "사기 +4",
+          "effects": {
+            "moraleDelta": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_COMMON_RETIRE_GIFT",
+      "prompt": "은퇴하는 선배/후배에게 선물을 준비한다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "personal",
+          "label": "마음 써서 직접 고른다",
+          "effectHint": "사기 +5, 성실도 +2",
+          "effects": {
+            "moraleDelta": 5,
+            "diligenceDelta": 2
+          }
+        },
+        {
+          "id": "group",
+          "label": "단체로 같이 한다",
+          "effectHint": "사기 +3",
+          "effects": {
+            "moraleDelta": 3
+          }
         }
       ]
     }

@@ -1,0 +1,22 @@
+{
+  "id": "EVT_HS_COMMON_ASK_COACH",
+  "type": "random",
+  "category": "hs_life",
+  "priority": 45,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 10,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "weight": 5,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "value": "highschool"
+    },
+    {
+      "type": "week_gte",
+      "value": 5
+    }
+  ],
+  "messageTemplateId": "MSG_HS_COMMON_ASK_COACH",
+  "decisionTemplateId": "DEC_HS_COMMON_ASK_COACH"
+}

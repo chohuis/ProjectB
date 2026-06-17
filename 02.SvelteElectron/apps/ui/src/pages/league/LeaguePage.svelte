@@ -204,7 +204,7 @@
   $: if (!lbLeagueId && lbLeagueIds.length > 0) lbLeagueId = lbLeagueIds[0];
 
   $: {
-    if (lbLeagueId) masterStore.loadEntities(lbLeagueId);
+    if (lbLeagueId) masterStore.loadEntities(lbLeagueId, $seasonStore.seasonYear);
   }
 
   $: lbStats = (() => {

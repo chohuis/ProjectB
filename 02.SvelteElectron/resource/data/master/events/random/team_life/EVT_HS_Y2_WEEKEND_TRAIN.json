@@ -1,0 +1,22 @@
+{
+  "id": "EVT_HS_Y2_WEEKEND_TRAIN",
+  "type": "random",
+  "category": "hs_training",
+  "priority": 60,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "weight": 6,
+  "conditions": [
+    {
+      "type": "grade",
+      "value": 2
+    },
+    {
+      "type": "week_gte",
+      "value": 5
+    }
+  ],
+  "messageTemplateId": "MSG_HS_Y2_WEEKEND_TRAIN",
+  "decisionTemplateId": "DEC_HS_Y2_WEEKEND_TRAIN"
+}

@@ -1,0 +1,23 @@
+{
+  "id": "EVT_HS_Y1_AFTER_ERROR",
+  "type": "conditional",
+  "category": "hs_game",
+  "priority": 60,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "grade",
+      "value": 1
+    },
+    {
+      "type": "week_gte",
+      "value": 6
+    },
+    {
+      "type": "morale_lte",
+      "value": 50
+    }
+  ],
+  "messageTemplateId": "MSG_HS_Y1_AFTER_ERROR",
+  "decisionTemplateId": "DEC_HS_Y1_AFTER_ERROR"
+}

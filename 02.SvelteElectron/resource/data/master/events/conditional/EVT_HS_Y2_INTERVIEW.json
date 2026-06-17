@@ -1,0 +1,23 @@
+{
+  "id": "EVT_HS_Y2_INTERVIEW",
+  "type": "conditional",
+  "category": "hs_life",
+  "priority": 70,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "grade",
+      "value": 2
+    },
+    {
+      "type": "week_gte",
+      "value": 10
+    },
+    {
+      "type": "pitching_ovr_gte",
+      "value": 57
+    }
+  ],
+  "messageTemplateId": "MSG_HS_Y2_INTERVIEW",
+  "decisionTemplateId": "DEC_HS_Y2_INTERVIEW"
+}

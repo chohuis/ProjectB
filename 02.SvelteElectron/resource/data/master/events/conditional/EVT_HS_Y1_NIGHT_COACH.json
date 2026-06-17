@@ -1,0 +1,19 @@
+{
+  "id": "EVT_HS_Y1_NIGHT_COACH",
+  "type": "conditional",
+  "category": "hs_life",
+  "priority": 50,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "grade",
+      "value": 1
+    },
+    {
+      "type": "week_gte",
+      "value": 6
+    }
+  ],
+  "messageTemplateId": "MSG_HS_Y1_NIGHT_COACH",
+  "decisionTemplateId": "DEC_HS_Y1_NIGHT_COACH"
+}

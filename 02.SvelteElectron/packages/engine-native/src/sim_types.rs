@@ -225,6 +225,10 @@ pub struct DraftSimParams {
 pub struct ApplyDraftParams {
     pub npcs: Vec<NpcSaveState>,
     pub result: DraftSimResult,
+    #[serde(default)]
+    pub university_team_ids: Vec<String>,
+    #[serde(default)]
+    pub independent_team_ids: Vec<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

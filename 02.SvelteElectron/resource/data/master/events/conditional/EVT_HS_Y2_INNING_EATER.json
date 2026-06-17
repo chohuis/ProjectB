@@ -1,0 +1,23 @@
+{
+  "id": "EVT_HS_Y2_INNING_EATER",
+  "type": "conditional",
+  "category": "hs_training",
+  "priority": 75,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "grade",
+      "value": 2
+    },
+    {
+      "type": "week_gte",
+      "value": 5
+    },
+    {
+      "type": "season_phase",
+      "value": "season"
+    }
+  ],
+  "messageTemplateId": "MSG_HS_Y2_INNING_EATER",
+  "decisionTemplateId": "DEC_HS_Y2_INNING_EATER"
+}

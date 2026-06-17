@@ -6,7 +6,23 @@
   export let dayLabel: string;
   export let teamName: string;
   export let playerName: string;
+  export let playerYear: string = "";
+  export let playerPosition: string = "";
+  export let playerRole: string = "";
+  export let playerThrows: string = "";
+  export let playerBats: string = "";
+  export let playerBirthday: string = "";
+  export let playerTags: string[] = [];
+  export let playerOverall: number = 0;
+  export let playerCondition: number = 0;
+  export let playerFatigue: number = 0;
+  export let playerMorale: number = 0;
   export let onOpenPending: () => void = () => {};
+
+  function formatBirthday(bd: string): string {
+    const [y, m, d] = bd.split("-");
+    return `${y}.${m.padStart(2, "0")}.${d.padStart(2, "0")}생`;
+  }
 
   let advancing = false;
 
@@ -44,9 +60,22 @@
 
 <svelte:window on:keydown={handleKeydown} />
 <header class="header">
-  <div>
-    <h1>ProjectB</h1>
-    <p>{$t("header.playerLine", { team: teamName, player: playerName })}</p>
+  <div class="left">
+    <h1>{playerName}</h1>
+    <p class="meta-line">{teamName} · {playerYear} · {playerPosition} · {playerRole} · {playerThrows}/{playerBats}{playerBirthday ? ` · ${formatBirthday(playerBirthday)}` : ""}</p>
+    {#if playerTags.length > 0}
+      <div class="tag-row">
+        {#each playerTags as tag}
+          <span class="tag">{tag}</span>
+        {/each}
+      </div>
+    {/if}
+    <div class="stat-chips">
+      <span class="chip"><em>OVR</em><strong>{playerOverall}</strong></span>
+      <span class="chip"><em>컨디션</em><strong>{playerCondition}</strong></span>
+      <span class="chip"><em>피로도</em><strong>{playerFatigue}</strong></span>
+      <span class="chip"><em>사기</em><strong>{playerMorale}</strong></span>
+    </div>
   </div>
   <div class="right">
     <strong>{dayLabel}</strong>
@@ -68,27 +97,82 @@
   .header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     background: #121a2b;
     border: 1px solid #2d3852;
     border-radius: 10px;
-    padding: 14px 16px;
+    padding: 12px 16px;
+  }
+
+  .left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
   }
 
   h1 {
     margin: 0;
     font-size: 20px;
+    font-weight: 700;
+    color: #f1f6ff;
   }
 
-  p {
-    margin: 4px 0 0;
+  .meta-line {
+    margin: 0;
     color: #aebad7;
+    font-size: 13px;
+  }
+
+  .tag-row {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-size: 11px;
+    color: #c8d8f8;
+    border: 1px solid #3a5074;
+    background: #1e3050;
+    border-radius: 999px;
+    padding: 2px 8px;
+  }
+
+  .stat-chips {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .chip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #0f1830;
+    border: 1px solid #2e4262;
+    border-radius: 7px;
+    padding: 4px 10px;
+    min-width: 52px;
+  }
+
+  .chip em {
+    font-style: normal;
+    font-size: 10px;
+    color: #7a9ac8;
+  }
+
+  .chip strong {
+    font-size: 16px;
+    color: #f1f6ff;
+    line-height: 1.2;
   }
 
   .right {
     display: grid;
     gap: 8px;
     justify-items: end;
+    flex-shrink: 0;
+    padding-left: 16px;
   }
 
   .controls {

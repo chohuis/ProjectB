@@ -1,0 +1,19 @@
+{
+  "id": "EVT_HS_Y1_GEAR_BREAK",
+  "type": "conditional",
+  "category": "hs_life",
+  "priority": 45,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "grade",
+      "value": 1
+    },
+    {
+      "type": "week_gte",
+      "value": 3
+    }
+  ],
+  "messageTemplateId": "MSG_HS_Y1_GEAR_BREAK",
+  "decisionTemplateId": "DEC_HS_Y1_GEAR_BREAK"
+}

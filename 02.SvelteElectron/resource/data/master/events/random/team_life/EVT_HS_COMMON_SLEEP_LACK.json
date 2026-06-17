@@ -1,0 +1,22 @@
+{
+  "id": "EVT_HS_COMMON_SLEEP_LACK",
+  "type": "random",
+  "category": "hs_life",
+  "priority": 55,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 4,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "weight": 7,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "value": "highschool"
+    },
+    {
+      "type": "fatigue_gte",
+      "value": 55
+    }
+  ],
+  "messageTemplateId": "MSG_HS_COMMON_SLEEP_LACK",
+  "decisionTemplateId": "DEC_HS_COMMON_SLEEP_LACK"
+}

@@ -295,21 +295,27 @@ function stageToCareerStage(stage: string): CareerStage | null {
 }
 
 // effects 문자열 배열 → DecisionEffect 변환
-// 형식 예: ["condition:-4", "xp.command:+1", "fatigue:+5"]
+// 형식 예: ["condition:-4", "xp.command:+1", "fatigue:+5", "fame:+3", "addTag.급성장"]
 function parseEffectsArray(effects: string[]): DecisionEffect {
   const result: DecisionEffect = {};
   for (const e of effects) {
     const colonIdx = e.indexOf(":");
     if (colonIdx === -1) continue;
     const key = e.slice(0, colonIdx).trim();
-    const val = parseInt(e.slice(colonIdx + 1).trim(), 10);
-    if (isNaN(val)) continue;
-    if (key === "condition")      result.conditionDelta = val;
-    else if (key === "fatigue")   result.fatigueDelta = val;
-    else if (key === "morale")    result.moraleDelta = val;
+    const rawVal = e.slice(colonIdx + 1).trim();
+    const val = parseInt(rawVal, 10);
+    if (key === "condition")        result.conditionDelta  = val;
+    else if (key === "fatigue")     result.fatigueDelta    = val;
+    else if (key === "morale")      result.moraleDelta     = val;
+    else if (key === "fame")        { if (!isNaN(val)) result.fameDelta       = val; }
+    else if (key === "popularity")  { if (!isNaN(val)) result.popularityDelta = val; }
+    else if (key === "diligence")   { if (!isNaN(val)) result.diligenceDelta  = val; }
+    else if (key === "addTag")      result.addTag = [...(result.addTag ?? []), rawVal];
     else if (key.startsWith("xp.")) {
-      const stat = key.slice(3);
-      result.xp = { ...(result.xp ?? {}), [stat]: val };
+      if (!isNaN(val)) result.xp = { ...(result.xp ?? {}), [key.slice(3)]: val };
+    }
+    else if (key.startsWith("stat.")) {
+      if (!isNaN(val)) result.statDelta = { ...(result.statDelta ?? {}), [key.slice(5)]: val };
     }
   }
   return result;
@@ -732,9 +738,13 @@ function createMasterStore() {
       rows = await batchFetch<EntityRow>(ids, (id) => `entities/players/${id}.json`);
     }
     update((s) => {
-      const existingIds = new Set(s.entities.map((e) => e.id));
+      // seasonYear가 주어지면, 이미 스토어에 있는 미래 선수(entryYear > seasonYear) 제거
+      const base = seasonYear !== undefined
+        ? s.entities.filter((e) => !e.entryYear || e.entryYear <= seasonYear)
+        : s.entities;
+      const existingIds = new Set(base.map((e) => e.id));
       const fresh = rows.filter((r) => !existingIds.has(r.id));
-      return { ...s, entities: [...s.entities, ...fresh] };
+      return { ...s, entities: [...base, ...fresh] };
     });
   }
 

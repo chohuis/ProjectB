@@ -1,0 +1,23 @@
+{
+  "id": "EVT_HS_Y3_RIVAL_FINAL",
+  "type": "conditional",
+  "category": "hs_game",
+  "priority": 90,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "grade",
+      "value": 3
+    },
+    {
+      "type": "week_gte",
+      "value": 30
+    },
+    {
+      "type": "season_phase",
+      "value": "postseason"
+    }
+  ],
+  "messageTemplateId": "MSG_HS_Y3_RIVAL_FINAL",
+  "decisionTemplateId": "DEC_HS_Y3_RIVAL_FINAL"
+}

@@ -1,0 +1,23 @@
+{
+  "id": "EVT_HS_Y1_SENIOR_SCOLD",
+  "type": "conditional",
+  "category": "hs_life",
+  "priority": 70,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "grade",
+      "value": 1
+    },
+    {
+      "type": "week_gte",
+      "value": 2
+    },
+    {
+      "type": "week_lte",
+      "value": 8
+    }
+  ],
+  "messageTemplateId": "MSG_HS_Y1_SENIOR_SCOLD",
+  "decisionTemplateId": "DEC_HS_Y1_SENIOR_SCOLD"
+}

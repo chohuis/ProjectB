@@ -1,0 +1,23 @@
+{
+  "id": "EVT_HS_Y2_POSITION_CHANGE",
+  "type": "conditional",
+  "category": "hs_game",
+  "priority": 65,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "grade",
+      "value": 2
+    },
+    {
+      "type": "week_gte",
+      "value": 15
+    },
+    {
+      "type": "season_phase",
+      "value": "season"
+    }
+  ],
+  "messageTemplateId": "MSG_HS_Y2_POSITION_CHANGE",
+  "decisionTemplateId": "DEC_HS_Y2_POSITION_CHANGE"
+}

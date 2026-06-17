@@ -25,12 +25,16 @@ export type MessageCategory = "system" | "news" | "coach" | "manager";
 
 // 선택지 실제 효과 (타입 기반 적용)
 export interface DecisionEffect {
-  conditionDelta?: number;
-  fatigueDelta?: number;
-  moraleDelta?: number;
-  moneyDelta?: number;
-  xp?: Record<string, number>;      // PitchingStatKey → XP 적립량
-  statDelta?: Record<string, number>; // PitchingStatKey → 즉시 스탯 증가량
+  conditionDelta?:  number;
+  fatigueDelta?:    number;
+  moraleDelta?:     number;
+  moneyDelta?:      number;
+  xp?:              Record<string, number>;  // PitchingStatKey → XP 적립량
+  statDelta?:       Record<string, number>;  // PitchingStatKey → 즉시 스탯 증가량
+  fameDelta?:       number;                  // 명성 ± (0~200 clamp)
+  popularityDelta?: number;                  // 인기도 ± (0~100 clamp)
+  diligenceDelta?:  number;                  // 성실도 ± (1~99 clamp)
+  addTag?:          string[];                // 태그 추가 (중복 무시)
 }
 
 export interface MessageDecisionOption {

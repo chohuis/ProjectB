@@ -1,0 +1,23 @@
+{
+  "id": "EVT_HS_Y2_ACE_RETIRE",
+  "type": "conditional",
+  "category": "hs_life",
+  "priority": 80,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "grade",
+      "value": 2
+    },
+    {
+      "type": "week_gte",
+      "value": 40
+    },
+    {
+      "type": "season_phase",
+      "value": "postseason"
+    }
+  ],
+  "messageTemplateId": "MSG_HS_Y2_ACE_RETIRE",
+  "decisionTemplateId": "DEC_HS_Y2_ACE_RETIRE"
+}

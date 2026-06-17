@@ -1,0 +1,23 @@
+{
+  "id": "EVT_HS_Y3_LAST_CAMP",
+  "type": "conditional",
+  "category": "hs_training",
+  "priority": 85,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "grade",
+      "value": 3
+    },
+    {
+      "type": "week_gte",
+      "value": 20
+    },
+    {
+      "type": "week_lte",
+      "value": 26
+    }
+  ],
+  "messageTemplateId": "MSG_HS_Y3_LAST_CAMP",
+  "decisionTemplateId": "DEC_HS_Y3_LAST_CAMP"
+}

@@ -1,0 +1,30 @@
+{
+  "id": "EVT_HS_COMMON_REPLACE",
+  "type": "random",
+  "category": "hs_game",
+  "priority": 65,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 8,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "weight": 5,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "value": "highschool"
+    },
+    {
+      "type": "week_gte",
+      "value": 8
+    },
+    {
+      "type": "season_phase",
+      "value": "season"
+    },
+    {
+      "type": "condition_gte",
+      "value": 50
+    }
+  ],
+  "messageTemplateId": "MSG_HS_COMMON_REPLACE",
+  "decisionTemplateId": "DEC_HS_COMMON_REPLACE"
+}

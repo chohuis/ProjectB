@@ -1,0 +1,26 @@
+{
+  "id": "EVT_HS_Y2_AWAY_TRIP",
+  "type": "random",
+  "category": "hs_life",
+  "priority": 55,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 8,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "weight": 5,
+  "conditions": [
+    {
+      "type": "grade",
+      "value": 2
+    },
+    {
+      "type": "week_gte",
+      "value": 8
+    },
+    {
+      "type": "season_phase",
+      "value": "season"
+    }
+  ],
+  "messageTemplateId": "MSG_HS_Y2_AWAY_TRIP",
+  "decisionTemplateId": "DEC_HS_Y2_AWAY_TRIP"
+}

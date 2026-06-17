@@ -51,7 +51,7 @@
 
   async function loadLeagueEntities() {
     const leagueId = toLeagueId($gameStore.protagonist.careerStage);
-    await masterStore.loadEntities(leagueId);
+    await masterStore.loadEntities(leagueId, $seasonStore.seasonYear);
   }
 
   onMount(async () => {

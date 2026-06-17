@@ -1,0 +1,22 @@
+{
+  "id": "EVT_HS_COMMON_VIDEO",
+  "type": "random",
+  "category": "hs_training",
+  "priority": 50,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "weight": 6,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "value": "highschool"
+    },
+    {
+      "type": "week_gte",
+      "value": 8
+    }
+  ],
+  "messageTemplateId": "MSG_HS_COMMON_VIDEO",
+  "decisionTemplateId": "DEC_HS_COMMON_VIDEO"
+}

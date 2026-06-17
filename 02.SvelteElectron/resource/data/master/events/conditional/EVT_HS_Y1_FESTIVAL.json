@@ -1,0 +1,23 @@
+{
+  "id": "EVT_HS_Y1_FESTIVAL",
+  "type": "conditional",
+  "category": "hs_life",
+  "priority": 55,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "grade",
+      "value": 1
+    },
+    {
+      "type": "week_gte",
+      "value": 15
+    },
+    {
+      "type": "week_lte",
+      "value": 25
+    }
+  ],
+  "messageTemplateId": "MSG_HS_Y1_FESTIVAL",
+  "decisionTemplateId": "DEC_HS_Y1_FESTIVAL"
+}

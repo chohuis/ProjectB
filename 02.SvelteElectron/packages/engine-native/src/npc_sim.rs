@@ -1185,13 +1185,64 @@ pub fn run_draft(params: DraftSimParams) -> DraftSimResult {
     DraftSimResult { year, picks, undrafted_ids: remaining_ids }
 }
 
+// 팀별 빈 슬롯 탐색: 포지션 수요 우선(strict=true), 없으면 슬롯만 확인.
+// 배정 성공 시 roster를 즉시 업데이트하고 팀 ID 반환.
+fn find_slot(
+    roster: &mut HashMap<String, (usize, usize)>,
+    want_pitcher: bool,
+    team_ids: &[String],
+    max: usize,
+) -> Option<String> {
+    for strict in [true, false] {
+        let mut best: Option<(String, usize)> = None;
+        for tid in team_ids {
+            let (p, b) = roster.get(tid).copied().unwrap_or((0, 0));
+            let total = p + b;
+            if total >= max { continue; }
+            if strict {
+                let ratio = if total > 0 { p as f64 / total as f64 } else { 0.5 };
+                // 투수 비율 >0.65면 투수 추가 사양, <0.55면 타자 추가 사양
+                if  want_pitcher && ratio > 0.65 { continue; }
+                if !want_pitcher && ratio < 0.55 { continue; }
+            }
+            let slots = max - total;
+            if best.as_ref().map_or(true, |(_, s)| slots > *s) {
+                best = Some((tid.clone(), slots));
+            }
+        }
+        if let Some((tid, _)) = best {
+            let e = roster.entry(tid.clone()).or_insert((0, 0));
+            if want_pitcher { e.0 += 1; } else { e.1 += 1; }
+            return Some(tid);
+        }
+    }
+    None
+}
+
 pub fn apply_draft(params: ApplyDraftParams) -> Vec<NpcSaveState> {
     let pick_map: HashMap<String, &DraftPick> = params.result.picks.iter()
         .map(|p| (p.npc_id.clone(), p)).collect();
     let undrafted: HashSet<String> = params.result.undrafted_ids.iter().cloned().collect();
 
-    params.npcs.into_iter().map(|mut npc| {
-        if npc.current_league != "LEAGUE_DRAFT_POOL" { return npc; }
+    // Step 1: 대학/독립 팀의 현재 로스터 집계 (run_offseason 이후 상태 기준)
+    let mut roster: HashMap<String, (usize, usize)> = HashMap::new(); // team -> (pitchers, batters)
+    let univ_set: HashSet<&str> = params.university_team_ids.iter().map(|s| s.as_str()).collect();
+    let ind_set:  HashSet<&str> = params.independent_team_ids.iter().map(|s| s.as_str()).collect();
+
+    for npc in &params.npcs {
+        if npc.current_league == "LEAGUE_DRAFT_POOL"
+            || npc.current_league == "LEAGUE_RETIRED"
+            || npc.career_status == "retired" { continue; }
+        let t = &npc.current_team;
+        if !univ_set.contains(t.as_str()) && !ind_set.contains(t.as_str()) { continue; }
+        let e = roster.entry(t.clone()).or_insert((0, 0));
+        if npc.player_type == "pitcher" { e.0 += 1; } else { e.1 += 1; }
+    }
+
+    // Step 2: KBL 지명자 먼저 처리
+    let mut result_npcs = params.npcs;
+    for npc in result_npcs.iter_mut() {
+        if npc.current_league != "LEAGUE_DRAFT_POOL" { continue; }
         if let Some(pick) = pick_map.get(&npc.npc_id) {
             npc.career_history.push(NpcCareerEntry {
                 year: params.result.year,
@@ -1202,28 +1253,62 @@ pub fn apply_draft(params: ApplyDraftParams) -> Vec<NpcSaveState> {
             });
             npc.current_league = "LEAGUE_KBL".into();
             npc.current_team   = pick.team_id.clone();
-        } else if undrafted.contains(&npc.npc_id) {
-            let ovr = npc_core_ovr(&npc);
-            let go_independent = ovr >= 45.0;
-            let stat_line = if go_independent { "미지명 → 독립리그" } else { "미지명 → 은퇴" };
-            npc.career_history.push(NpcCareerEntry {
-                year: params.result.year,
-                league_id: "LEAGUE_DRAFT".into(),
-                team_id: "".into(),
-                stat_line: stat_line.into(),
-                highlights: vec![],
-            });
-            if go_independent {
-                npc.current_league = "LEAGUE_INDEPENDENT".into();
-                npc.current_team   = "".into();
-            } else {
+        }
+    }
+
+    // Step 3: 미지명자를 OVR 내림차순 정렬 후 대학 → 독립 → 은퇴 배정
+    let mut undrafted_idx: Vec<(usize, f64)> = result_npcs.iter().enumerate()
+        .filter(|(_, n)| n.current_league == "LEAGUE_DRAFT_POOL" && undrafted.contains(&n.npc_id))
+        .map(|(i, n)| (i, npc_core_ovr(n)))
+        .collect();
+    undrafted_idx.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
+
+    for (idx, _) in undrafted_idx {
+        let is_pitcher = result_npcs[idx].player_type == "pitcher";
+
+        let univ_tid = find_slot(&mut roster, is_pitcher, &params.university_team_ids, 40);
+        let assigned: Option<(String, bool)> = if let Some(tid) = univ_tid {
+            Some((tid, true))
+        } else {
+            find_slot(&mut roster, is_pitcher, &params.independent_team_ids, 45)
+                .map(|tid| (tid, false))
+        };
+
+        let npc = &mut result_npcs[idx];
+        match assigned {
+            Some((tid, is_univ)) => {
+                let (league, stat) = if is_univ {
+                    ("LEAGUE_UNIVERSITY", "미지명 → 대학리그")
+                } else {
+                    ("LEAGUE_INDEPENDENT", "미지명 → 독립리그")
+                };
+                npc.career_history.push(NpcCareerEntry {
+                    year: params.result.year,
+                    league_id: "LEAGUE_DRAFT".into(),
+                    team_id: tid.clone(),
+                    stat_line: stat.into(),
+                    highlights: vec![],
+                });
+                npc.current_league = league.into();
+                npc.current_team   = tid;
+                if is_univ { npc.grade = Some(1); }
+            }
+            None => {
+                npc.career_history.push(NpcCareerEntry {
+                    year: params.result.year,
+                    league_id: "LEAGUE_DRAFT".into(),
+                    team_id: "".into(),
+                    stat_line: "미지명 → 은퇴".into(),
+                    highlights: vec![],
+                });
                 npc.career_status  = "retired".into();
                 npc.current_league = "LEAGUE_RETIRED".into();
                 npc.current_team   = "".into();
             }
         }
-        npc
-    }).collect()
+    }
+
+    result_npcs
 }
 
 pub fn determine_protagonist_draft(params: ProtagonistDraftParams) -> ProtagonistDraftOutcome {

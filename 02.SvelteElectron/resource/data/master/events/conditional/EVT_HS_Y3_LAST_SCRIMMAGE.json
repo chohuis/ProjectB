@@ -1,0 +1,23 @@
+{
+  "id": "EVT_HS_Y3_LAST_SCRIMMAGE",
+  "type": "conditional",
+  "category": "hs_game",
+  "priority": 70,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "grade",
+      "value": 3
+    },
+    {
+      "type": "week_gte",
+      "value": 30
+    },
+    {
+      "type": "week_lte",
+      "value": 40
+    }
+  ],
+  "messageTemplateId": "MSG_HS_Y3_LAST_SCRIMMAGE",
+  "decisionTemplateId": "DEC_HS_Y3_LAST_SCRIMMAGE"
+}

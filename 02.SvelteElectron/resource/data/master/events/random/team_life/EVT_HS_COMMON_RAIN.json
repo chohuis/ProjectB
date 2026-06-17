@@ -1,0 +1,22 @@
+{
+  "id": "EVT_HS_COMMON_RAIN",
+  "type": "random",
+  "category": "hs_life",
+  "priority": 60,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "weight": 9,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "value": "highschool"
+    },
+    {
+      "type": "season_phase",
+      "value": "season"
+    }
+  ],
+  "messageTemplateId": "MSG_HS_COMMON_RAIN",
+  "decisionTemplateId": "DEC_HS_COMMON_RAIN"
+}

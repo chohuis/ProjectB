@@ -1,0 +1,19 @@
+{
+  "id": "EVT_HS_Y3_YEARBOOK",
+  "type": "conditional",
+  "category": "hs_life",
+  "priority": 60,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "grade",
+      "value": 3
+    },
+    {
+      "type": "week_gte",
+      "value": 45
+    }
+  ],
+  "messageTemplateId": "MSG_HS_Y3_YEARBOOK",
+  "decisionTemplateId": "DEC_HS_Y3_YEARBOOK"
+}

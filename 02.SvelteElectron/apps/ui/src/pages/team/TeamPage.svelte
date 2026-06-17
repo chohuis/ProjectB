@@ -4,6 +4,7 @@
   import { masterStore } from "../../shared/stores/master";
   import type { EntityDetails } from "../../shared/stores/master";
   import { gameStore } from "../../shared/stores/game";
+  import { seasonStore } from "../../shared/stores/season";
   import TeamDetailModal from "../../features/team/ui/TeamDetailModal.svelte";
 
   type LeagueTab = "all" | "hs" | "univ" | "ind" | "kbl" | "abl" | "jbl";
@@ -90,7 +91,7 @@
 
   async function ensureLeagueEntities(leagueId: string) {
     if (!leagueId) return;
-    await masterStore.loadEntities(leagueId);
+    await masterStore.loadEntities(leagueId, $seasonStore.seasonYear);
   }
 
   onMount(async () => {

@@ -1,0 +1,23 @@
+{
+  "id": "EVT_HS_Y3_AGENT_CONTACT",
+  "type": "conditional",
+  "category": "hs_life",
+  "priority": 85,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "grade",
+      "value": 3
+    },
+    {
+      "type": "week_gte",
+      "value": 10
+    },
+    {
+      "type": "pitching_ovr_gte",
+      "value": 60
+    }
+  ],
+  "messageTemplateId": "MSG_HS_Y3_AGENT_CONTACT",
+  "decisionTemplateId": "DEC_HS_Y3_AGENT_CONTACT"
+}

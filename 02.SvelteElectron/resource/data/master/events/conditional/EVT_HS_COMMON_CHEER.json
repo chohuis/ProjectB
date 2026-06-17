@@ -1,0 +1,23 @@
+{
+  "id": "EVT_HS_COMMON_CHEER",
+  "type": "conditional",
+  "category": "hs_life",
+  "priority": 55,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "value": "highschool"
+    },
+    {
+      "type": "week_gte",
+      "value": 8
+    },
+    {
+      "type": "season_phase",
+      "value": "season"
+    }
+  ],
+  "messageTemplateId": "MSG_HS_COMMON_CHEER",
+  "decisionTemplateId": "DEC_HS_COMMON_CHEER"
+}

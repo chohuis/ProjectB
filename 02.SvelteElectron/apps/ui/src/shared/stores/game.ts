@@ -699,10 +699,14 @@ function createGameStore() {
 
         const p = s.protagonist;
         const clamp = (v: number) => Math.max(0, Math.min(100, v));
-        const condition = clamp(p.condition + (fx.conditionDelta ?? 0));
-        const fatigue   = clamp(p.fatigue   + (fx.fatigueDelta   ?? 0));
-        const morale    = clamp(p.morale    + (fx.moraleDelta    ?? 0));
-        const money     = Math.max(0, p.money + (fx.moneyDelta ?? 0));
+        const condition    = clamp(p.condition + (fx.conditionDelta ?? 0));
+        const fatigue      = clamp(p.fatigue   + (fx.fatigueDelta   ?? 0));
+        const morale       = clamp(p.morale    + (fx.moraleDelta    ?? 0));
+        const money        = Math.max(0, p.money + (fx.moneyDelta ?? 0));
+        const fame         = Math.max(0, Math.min(200, p.fame       + (fx.fameDelta       ?? 0)));
+        const popularity   = Math.max(0, Math.min(100, p.popularity + (fx.popularityDelta ?? 0)));
+        const diligence    = Math.max(1, Math.min(99,  p.diligence  + (fx.diligenceDelta  ?? 0)));
+        const tags         = fx.addTag ? [...new Set([...p.tags, ...fx.addTag])] : p.tags;
 
         const pitchingXP = { ...p.pitchingXP };
         if (fx.xp) {
@@ -721,7 +725,7 @@ function createGameStore() {
           }
         }
 
-        const updated: ProtagonistSave = { ...p, condition, fatigue, morale, money, pitchingXP, pitching };
+        const updated: ProtagonistSave = { ...p, condition, fatigue, morale, money, fame, popularity, diligence, tags, pitchingXP, pitching };
         const nextMetrics: AchievementMetrics = {
           ...s.achievementMetrics,
         };
@@ -1848,6 +1852,20 @@ function createGameStore() {
       }));
 
       return { simResult, protagonistOutcome };
+    },
+
+    async processNpcDraft(
+      year: number,
+      universityTeamIds: string[],
+      independentTeamIds: string[],
+    ): Promise<void> {
+      const s = get({ subscribe });
+      if (s.pendingDraft.length === 0) return;
+      const simResult = await runDraftSimulation(s.pendingDraft, [], year);
+      const updatedNpcs = await applyDraftToNpcs(
+        s.npcs, simResult, universityTeamIds, independentTeamIds,
+      );
+      update(st => ({ ...st, npcs: updatedNpcs, pendingDraft: [] }));
     },
 
     // 하위 호환: App.svelte의 hydrate 호출 유지

@@ -225,6 +225,11 @@
       await seasonStore.flushAllLeagueStatsToDb(now);
       await gameStore.processAllLeaguesSeasonEnd(now);
       await gameStore.applyAgingDecay();
+      if ($gameStore.pendingDraft.length > 0) {
+        const univIds = $masterStore.teams.filter(t => t.leagueId === "LEAGUE_UNIVERSITY" && t.id !== "TEAM_SPORTS_UNIT").map(t => t.id);
+        const indIds  = $masterStore.teams.filter(t => t.leagueId === "LEAGUE_INDEPENDENT").map(t => t.id);
+        await gameStore.processNpcDraft(now, univIds, indIds);
+      }
       gameStore.advanceSeasonYear($seasonStore.seasonYear);
 
       // ── 2군 리그 우승팀 발표 메시지 ────────────────────────────
@@ -359,6 +364,11 @@
     await seasonStore.flushAllLeagueStatsToDb(now);
     await gameStore.processAllLeaguesSeasonEnd(now);
     await gameStore.applyAgingDecay();
+    if ($gameStore.pendingDraft.length > 0) {
+      const univIds = $masterStore.teams.filter(t => t.leagueId === "LEAGUE_UNIVERSITY" && t.id !== "TEAM_SPORTS_UNIT").map(t => t.id);
+      const indIds  = $masterStore.teams.filter(t => t.leagueId === "LEAGUE_INDEPENDENT").map(t => t.id);
+      await gameStore.processNpcDraft(now, univIds, indIds);
+    }
     if (!progressedByHighschoolSync) gameStore.advanceSeasonYear($seasonStore.seasonYear);
     seasonStore.startNewSeason();
 

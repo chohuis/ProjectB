@@ -407,6 +407,17 @@
       dayLabel={$seasonStore.currentDate ? toDateKo($seasonStore.currentDate) : $gameStore.dayLabel}
       teamName={tName($gameStore.protagonist.teamId)}
       playerName={$gameStore.player.name}
+      playerYear={$gameStore.player.year}
+      playerPosition={$gameStore.player.position}
+      playerRole={$gameStore.player.role}
+      playerThrows={$gameStore.player.throws}
+      playerBats={$gameStore.player.bats}
+      playerBirthday={$gameStore.protagonist.birthday ?? ""}
+      playerTags={$gameStore.player.tags}
+      playerOverall={$gameStore.player.overall}
+      playerCondition={$gameStore.player.condition}
+      playerFatigue={$gameStore.player.fatigue}
+      playerMorale={$gameStore.player.morale}
       onOpenPending={openPendingFromNext}
     />
 

@@ -114,10 +114,7 @@
     if (s >= 10000) return `${(s / 10000).toFixed(1)}억 원`;
     return `${s.toLocaleString()}만 원`;
   }
-  function formatBirthday(bd: string): string {
-    const [y, m, d] = bd.split("-");
-    return `${y}년 ${parseInt(m)}월 ${parseInt(d)}일`;
-  }
+
   $: milStatusDisplay = (() => {
     if (p.militaryStatus === "군필") return { text: "병역 완료", cls: "mil-done" };
     if (p.militaryStatus === "면제") return { text: "병역 면제", cls: "mil-exempt" };
@@ -150,7 +147,7 @@
       const myTid = $gameStore.protagonist.teamId;
       return $seasonStore.schedule
         .filter(e => e.result && e.result.playerLines.some(l => l.playerId === pid))
-        .sort((a, b) => a.week - b.week)
+        .sort((a, b) => b.week - a.week)
         .map(e => {
           const line   = e.result!.playerLines.find(l => l.playerId === pid) as PitcherGameLine;
           const isHome = e.homeTeamId === myTid;
@@ -164,8 +161,17 @@
           };
         });
     }
-    return selectedRecord?.gameLog ?? [];
+    return [...(selectedRecord?.gameLog ?? [])].sort((a, b) => b.week - a.week);
   })();
+
+  const GAME_LOG_PAGE_SIZE = 5;
+  let gameLogPage = 0;
+  $: if (selectedYearStr) gameLogPage = 0;
+  $: totalGamePages = Math.ceil(selectedSeasonGames.length / GAME_LOG_PAGE_SIZE);
+  $: pagedGames = selectedSeasonGames.slice(
+    gameLogPage * GAME_LOG_PAGE_SIZE,
+    (gameLogPage + 1) * GAME_LOG_PAGE_SIZE,
+  );
 
   // ── 기록 탭 ───────────────────────────────────────────────────
   $: careerRecords = ($gameStore.protagonist.careerRecords ?? []).slice().reverse();
@@ -197,32 +203,6 @@
 </script>
 
 <section class="page">
-  <h2>{$t("page.status")}</h2>
-
-  <!-- ── 프로필 카드 ── -->
-  <article class="card profile-card">
-    <div class="identity">
-      <p class="name">{$gameStore.player.name}</p>
-      {#if $gameStore.protagonist.birthday}
-        <p class="meta birthday">{formatBirthday($gameStore.protagonist.birthday)}</p>
-      {/if}
-      <p class="meta">
-        {$teamMap.get($gameStore.protagonist.teamId)?.name ?? $gameStore.player.team} · {$gameStore.player.year} · {$gameStore.player.position} · {$gameStore.player.role}
-      </p>
-      <p class="meta">{$gameStore.player.throws} / {$gameStore.player.bats}</p>
-      <div class="tags">
-        {#each $gameStore.player.tags as tag}
-          <span>{tag}</span>
-        {/each}
-      </div>
-    </div>
-    <div class="summary-grid">
-      <div class="summary-item"><span>OVR</span><strong>{$gameStore.player.overall}</strong></div>
-      <div class="summary-item"><span>컨디션</span><strong>{$gameStore.player.condition}</strong></div>
-      <div class="summary-item"><span>피로도</span><strong>{$gameStore.player.fatigue}</strong></div>
-      <div class="summary-item"><span>사기</span><strong>{$gameStore.player.morale}</strong></div>
-    </div>
-  </article>
 
   <!-- ── 신체 상태 카드 ── -->
   <article class="card body-card">
@@ -437,7 +417,16 @@
       </article>
 
       <article class="card recent-card">
-        <h3>경기 기록{selectedSeasonGames.length > 0 ? ` (${selectedSeasonGames.length}경기)` : ""}</h3>
+        <div class="recent-header">
+          <h3>경기 기록{selectedSeasonGames.length > 0 ? ` (${selectedSeasonGames.length}경기)` : ""}</h3>
+          {#if totalGamePages > 1}
+            <div class="page-nav">
+              <button class="page-btn" disabled={gameLogPage === 0} on:click={() => gameLogPage--}>◀</button>
+              <span class="page-label">{gameLogPage + 1} / {totalGamePages}</span>
+              <button class="page-btn" disabled={gameLogPage >= totalGamePages - 1} on:click={() => gameLogPage++}>▶</button>
+            </div>
+          {/if}
+        </div>
         {#if selectedSeasonGames.length === 0}
           <p class="pending">
             {selectedYearStr === "current" ? "아직 출전 기록이 없습니다." : "경기 기록이 저장되지 않은 시즌입니다."}
@@ -452,7 +441,7 @@
                 </tr>
               </thead>
               <tbody>
-                {#each selectedSeasonGames as g}
+                {#each pagedGames as g}
                   <tr>
                     <td>W{g.week}</td>
                     <td class="opp-name">{$teamMap.get(g.opponentId)?.name ?? g.opponentId}</td>
@@ -571,8 +560,7 @@
     overflow: hidden;
   }
 
-  h2, h3, p { margin: 0; }
-  h2 { font-size: 22px; }
+  h3, p { margin: 0; }
 
   .card {
     background: #161f33;
@@ -580,34 +568,6 @@
     border-radius: 10px;
     padding: 12px;
   }
-
-  /* ── 프로필 카드 ── */
-  .profile-card {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 16px;
-    align-items: center;
-  }
-  .name { font-size: 22px; font-weight: 700; color: #f1f6ff; }
-  .meta { margin-top: 4px; color: #aebddd; font-size: 14px; }
-  .meta.birthday { color: #7a9ac8; font-size: 13px; }
-  .tags { margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
-  .tags span {
-    font-size: 12px; color: #d5e2fd;
-    border: 1px solid #3c4f74; background: #233250;
-    border-radius: 999px; padding: 4px 8px;
-  }
-  .summary-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(70px, 1fr));
-    gap: 8px;
-  }
-  .summary-item {
-    background: #0f1830; border: 1px solid #314362;
-    border-radius: 8px; padding: 8px; text-align: center;
-  }
-  .summary-item span { font-size: 12px; color: #92a8ce; }
-  .summary-item strong { display: block; margin-top: 4px; font-size: 20px; color: #f1f6ff; }
 
   /* ── 탭 바 ── */
   .tab-bar {
@@ -721,7 +681,31 @@
   .stat-line-text { color: #d8e8ff; font-size: 14px; }
   .pending { color: #9db2d8; font-size: 13px; }
 
-  .recent-card h3 { font-size: 16px; margin-bottom: 12px; color: #ebf2ff; }
+  .recent-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .recent-header h3 { font-size: 16px; color: #ebf2ff; }
+  .page-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .page-btn {
+    background: #1a2d4a;
+    border: 1px solid #2e4a70;
+    color: #a0b8d8;
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    line-height: 1.4;
+  }
+  .page-btn:hover:not(:disabled) { background: #233a5e; color: #d0e4ff; }
+  .page-btn:disabled { opacity: 0.35; cursor: default; }
+  .page-label { font-size: 12px; color: #7a9ac8; min-width: 36px; text-align: center; }
   .recent-table-wrap { overflow-x: auto; }
   .recent-table {
     width: 100%;

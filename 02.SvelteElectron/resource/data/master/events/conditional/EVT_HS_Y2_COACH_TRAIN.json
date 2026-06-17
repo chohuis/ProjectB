@@ -1,0 +1,19 @@
+{
+  "id": "EVT_HS_Y2_COACH_TRAIN",
+  "type": "conditional",
+  "category": "hs_training",
+  "priority": 70,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "grade",
+      "value": 2
+    },
+    {
+      "type": "week_gte",
+      "value": 10
+    }
+  ],
+  "messageTemplateId": "MSG_HS_Y2_COACH_TRAIN",
+  "decisionTemplateId": "DEC_HS_Y2_COACH_TRAIN"
+}

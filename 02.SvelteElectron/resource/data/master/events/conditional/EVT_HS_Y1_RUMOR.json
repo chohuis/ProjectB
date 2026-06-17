@@ -1,0 +1,23 @@
+{
+  "id": "EVT_HS_Y1_RUMOR",
+  "type": "conditional",
+  "category": "hs_life",
+  "priority": 60,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "grade",
+      "value": 1
+    },
+    {
+      "type": "week_gte",
+      "value": 8
+    },
+    {
+      "type": "pitching_ovr_gte",
+      "value": 55
+    }
+  ],
+  "messageTemplateId": "MSG_HS_Y1_RUMOR",
+  "decisionTemplateId": "DEC_HS_Y1_RUMOR"
+}

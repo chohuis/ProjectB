@@ -1,0 +1,19 @@
+{
+  "id": "EVT_HS_Y1_SENIOR_TECH",
+  "type": "conditional",
+  "category": "hs_training",
+  "priority": 75,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "grade",
+      "value": 1
+    },
+    {
+      "type": "week_gte",
+      "value": 5
+    }
+  ],
+  "messageTemplateId": "MSG_HS_Y1_SENIOR_TECH",
+  "decisionTemplateId": "DEC_HS_Y1_SENIOR_TECH"
+}

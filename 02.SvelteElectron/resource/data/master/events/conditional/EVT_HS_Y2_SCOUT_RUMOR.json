@@ -1,28 +1,23 @@
 {
   "id": "EVT_HS_Y2_SCOUT_RUMOR",
   "type": "conditional",
-  "category": "career",
-  "priority": 780,
-  "oncePolicy": "repeatable",
-  "cooldownWeeks": 4,
+  "category": "hs_life",
+  "priority": 70,
+  "oncePolicy": "once_per_stage_year",
   "conditions": [
     {
-      "type": "career_stage",
-      "stage": "highschool"
+      "type": "grade",
+      "value": 2
     },
     {
       "type": "week_gte",
-      "value": 67
-    },
-    {
-      "type": "week_lte",
-      "value": 76
+      "value": 10
     },
     {
       "type": "pitching_ovr_gte",
-      "value": 50
+      "value": 55
     }
   ],
-  "messageTemplateId": "MSG_COND_STAT_MILESTONE",
-  "decisionTemplateId": null
+  "messageTemplateId": "MSG_HS_Y2_SCOUT_RUMOR",
+  "decisionTemplateId": "DEC_HS_Y2_SCOUT_RUMOR"
 }

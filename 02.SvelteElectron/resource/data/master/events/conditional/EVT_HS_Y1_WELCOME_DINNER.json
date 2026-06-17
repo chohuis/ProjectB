@@ -1,0 +1,19 @@
+{
+  "id": "EVT_HS_Y1_WELCOME_DINNER",
+  "type": "conditional",
+  "category": "hs_life",
+  "priority": 70,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "grade",
+      "value": 1
+    },
+    {
+      "type": "week_lte",
+      "value": 4
+    }
+  ],
+  "messageTemplateId": "MSG_HS_Y1_WELCOME_DINNER",
+  "decisionTemplateId": "DEC_HS_Y1_WELCOME_DINNER"
+}

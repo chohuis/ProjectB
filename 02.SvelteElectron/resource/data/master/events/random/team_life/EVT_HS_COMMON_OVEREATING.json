@@ -1,0 +1,22 @@
+{
+  "id": "EVT_HS_COMMON_OVEREATING",
+  "type": "random",
+  "category": "hs_life",
+  "priority": 45,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "weight": 6,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "value": "highschool"
+    },
+    {
+      "type": "season_phase",
+      "value": "season"
+    }
+  ],
+  "messageTemplateId": "MSG_HS_COMMON_OVEREATING",
+  "decisionTemplateId": "DEC_HS_COMMON_OVEREATING"
+}
