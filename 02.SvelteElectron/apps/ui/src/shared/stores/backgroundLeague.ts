@@ -38,6 +38,7 @@ export function runSimBatch(
     // 엔티티 없어서 시뮬 실패(winner_id="") 시 폴백으로 랜덤 결과 생성
     let result = sim.result;
     if (!result.winnerId) {
+      console.warn(`[DEV] FALLBACK SIM: ${g.id} | ${g.homeTeamId} vs ${g.awayTeamId} | leagueId=${g.leagueId}`);
       const api = (window as unknown as { projectB: Record<string, (p: string) => Promise<string>> }).projectB;
       const fb = JSON.parse(
         await api.weekCalcNpcFallback(JSON.stringify({ homeTeamId: g.homeTeamId, awayTeamId: g.awayTeamId }))
@@ -68,8 +69,15 @@ export async function simulateBackgroundLeagues(
   entities: EntityRow[],
 ): Promise<SimBatchResult | null> {
   const batch: SimWorkerRequest["games"] = [];
+  if (Object.keys(s.leagueSchedules).length === 0) {
+    console.warn("[DEV] leagueSchedules 비어있음 — 배경 리그 시뮬 스킵");
+  }
   for (const [lid, schedule] of Object.entries(s.leagueSchedules)) {
     if (lid === protagonistLeagueId) continue;
+    if (!Array.isArray(schedule)) {
+      console.error("[DEV] leagueSchedules 오염 — 배열 아님:", lid, schedule);
+      continue;
+    }
     const lState = migrateLeagueState(s.leagueState[lid] ?? {});
     for (const e of schedule) {
       if (e.week <= week && !e.result) {

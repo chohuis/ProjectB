@@ -39,6 +39,7 @@ contextBridge.exposeInMainWorld("projectB", {
 
   // ── NPC 시뮬 (Phase 3) ──────────────────────────────────────────────────────
   npcSimGame:                   (p) => ipcRenderer.invoke("npc:simGame",                   p),
+  npcCalcWeeklyGrowth:          (p) => ipcRenderer.invoke("npc:calcWeeklyGrowth",          p),
   npcRunOffseason:              (p) => ipcRenderer.invoke("npc:runOffseason",              p),
   npcAdvanceGrades:             (p) => ipcRenderer.invoke("npc:advanceGrades",             p),
   npcGenerateFreshmen:          (p) => ipcRenderer.invoke("npc:generateFreshmen",          p),

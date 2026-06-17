@@ -683,6 +683,20 @@ export interface CareerAward {
   value?: string;
 }
 
+export interface CareerGameLogEntry {
+  week: number;
+  opponentId: string;
+  myScore: number;
+  oppScore: number;
+  ip: number;
+  er: number;
+  h: number;
+  k: number;
+  bb: number;
+  decision: "W" | "L" | "SV" | "HD" | "ND";
+  pitchCount?: number;
+}
+
 export interface CareerSeasonRecord {
   year: number;
   leagueId: string;
@@ -697,6 +711,7 @@ export interface CareerSeasonRecord {
   awards: CareerAward[];
   psResult?: "champion" | "runnerUp" | "semiFinal" | "notQualified";
   stats?: PlayerSeasonStats;  // 연도별 상세 성적 (최근 5년 표시용)
+  gameLog?: CareerGameLogEntry[];  // 시즌 전체 등판 기록 (경기별)
 }
 
 // ── 리그 거래 기록 ──────────────────────────────────────────────

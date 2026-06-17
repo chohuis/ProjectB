@@ -57,7 +57,12 @@ export async function generateAllLeagueSchedules(
   const raw = await window.projectB!.scheduleAllLeagues(
     JSON.stringify({ configs, protagonistTeamId, seasonYear })
   );
-  return JSON.parse(raw);
+  const parsed = JSON.parse(raw);
+  if (parsed && typeof parsed === "object" && "error" in parsed) {
+    console.error("[leagueScheduler] generateAllLeagueSchedules Rust 오류:", parsed.error);
+    return {};
+  }
+  return parsed;
 }
 
 export async function shuffleHsGroups(

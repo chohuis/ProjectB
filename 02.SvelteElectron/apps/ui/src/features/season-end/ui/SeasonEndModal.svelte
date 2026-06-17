@@ -2,7 +2,7 @@
   import { gameStore } from "../../../shared/stores/game";
   import { seasonStore, currentStandings } from "../../../shared/stores/season";
   import { masterStore, teamMap } from "../../../shared/stores/master";
-  import type { PitcherSeasonStats, BatterSeasonStats, CareerAward } from "../../../shared/types/save";
+  import type { PitcherSeasonStats, BatterSeasonStats, CareerAward, CareerGameLogEntry } from "../../../shared/types/save";
   import type { PitcherGameLine } from "../../../shared/types/season";
 
   export let onExit: () => void;
@@ -184,6 +184,22 @@
       statLine = `타율 ${pct(bs.avg)} ${bs.hr}홈런 ${bs.rbi}타점`;
     }
 
+    const gameLog: CareerGameLogEntry[] = protagonistGames
+      .filter(g => g.line != null)
+      .map(g => ({
+        week:       g.entry.week,
+        opponentId: g.oppTeamId,
+        myScore:    g.myScore,
+        oppScore:   g.oppScore,
+        ip:         g.line!.ip,
+        er:         g.line!.er,
+        h:          g.line!.h,
+        k:          g.line!.k,
+        bb:         g.line!.bb,
+        decision:   g.line!.decision,
+        pitchCount: g.line!.pitchCount,
+      }));
+
     gameStore.appendCareerRecord({
       year: now,
       leagueId: p.leagueId,
@@ -197,6 +213,7 @@
       ovr:    p.pitching.ovr,
       awards: protagonistAwards,
       psResult: postseasonResult?.myResult,
+      gameLog,
     }, mySeasonSt ?? undefined);
 
     // ── 프로(KBL/ABL/JBL): pendingNextContract 적용 후 새 시즌 초기화 ──

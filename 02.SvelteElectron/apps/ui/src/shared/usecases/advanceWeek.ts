@@ -256,6 +256,7 @@ async function simulateNpcGame(homeTeamId: string, awayTeamId: string): Promise<
   if (entities.length > 0) {
     return (await simulateGame(homeTeamId, awayTeamId, entities)).result;
   }
+  console.warn(`[DEV] FALLBACK SIM (protagonist league): ${homeTeamId} vs ${awayTeamId}`);
   const fb = JSON.parse(await window.projectB!.weekCalcNpcFallback(
     JSON.stringify({ homeTeamId, awayTeamId })
   )) as { homeScore: number; awayScore: number; winnerId: string; loserId: string };
@@ -545,13 +546,14 @@ async function processWeeklyNpcGrowth(weekNum: number): Promise<void> {
     };
   });
 
-  // 이전 주 성적 집계
+  // 최근 4주 성적 집계 (1주 창은 미등판 선수를 누락시켜 성장 방향 왜곡)
   const prevWeek = weekNum - 1;
+  const perfStartWeek = Math.max(1, prevWeek - 3);
   const allSchedule = [
     ...s.schedule,
     ...Object.values(s.leagueSchedules).flat(),
   ];
-  const perfData = aggregateMonthlyPerf(allSchedule, prevWeek, prevWeek);
+  const perfData = aggregateMonthlyPerf(allSchedule, perfStartWeek, prevWeek);
 
   // npcLiveStats에 있는 모든 NPC (master entity 기반)
   const namedFameMap = new Map(g.npcs.map(n => [n.npcId, n.fame ?? 0]));
@@ -598,7 +600,7 @@ async function processWeeklyNpcGrowth(weekNum: number): Promise<void> {
     battingXp: Record<string, number>;
     peakOvr: number;
     fameDelta: number;
-    pitches: Array<{ id: string; grade: number }>;
+    pitches: Array<{ id: string; grade: 1 | 2 | 3 | 4 | 5 }>;
     pitchInTraining?: { id: string; progress: number; isNew: boolean };
   }> };
 

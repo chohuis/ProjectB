@@ -350,6 +350,10 @@ app.whenReady().then(() => {
     try { return engineNative.simGameNative(paramsJson); }
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
+  ipcMain.handle("npc:calcWeeklyGrowth", (_event, p) => {
+    try { return engineNative.npcCalcWeeklyGrowth(p); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
   ipcMain.handle("npc:runOffseason", (_event, paramsJson) => {
     try { return engineNative.runOffseasonNative(paramsJson); }
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
