@@ -11,7 +11,7 @@ import { buildBatterLineup, buildStarterStats } from "../utils/matchLineupBuilde
 
 // ── 정지 조건 ──────────────────────────────────────────────────
 const STOP_PENDING = new Set<PendingAction["type"]>(["careerChoiceHub", "careerResults", "careerChoice"]);
-const STOP_WEEK = 40;
+const STOP_WEEKS = [40, 51] as const;
 
 // ── 이벤트/메시지 선택지 피로도 기반 키워드 ───────────────────
 const REST_KW   = ["휴식", "거절", "패스", "쉬", "무시"];
@@ -348,13 +348,14 @@ export async function runAutoAdvance(): Promise<void> {
 
       const pa = get(nextPendingAction);
 
-      // 2. pending 없음 → W40 체크 후 주 진행
+      // 2. pending 없음 → 정지 주차 체크 후 주 진행
       if (!pa) {
         const w = get(seasonStore).currentWeek;
-        if (w >= STOP_WEEK && startWeek < STOP_WEEK) {
+        const stopAt = STOP_WEEKS.find(sw => w >= sw && startWeek < sw);
+        if (stopAt !== undefined) {
           autoAdvanceStore.stop(`W${w} 도달 — 자동 진행 종료`);
-          autoAdvanceStore.addLog(`[정지] W${STOP_WEEK} 도달`);
-          autoLog(`[정지] W${STOP_WEEK} 도달로 자동 진행 종료`);
+          autoAdvanceStore.addLog(`[정지] W${stopAt} 도달`);
+          autoLog(`[정지] W${stopAt} 도달로 자동 진행 종료`);
           return;
         }
         applyRecommendedTraining();
