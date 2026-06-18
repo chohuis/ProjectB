@@ -30,16 +30,16 @@
       "potentialHidden": 88,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 56,
-        "stamina": 54,
-        "velocity": 57,
-        "command": 51,
-        "control": 57,
-        "movement": 59,
-        "mentality": 55,
-        "recovery": 55,
-        "clutch": 51,
-        "holdRunners": 47
+        "ovr": 53,
+        "stamina": 51,
+        "velocity": 54,
+        "command": 48,
+        "control": 54,
+        "movement": 56,
+        "mentality": 52,
+        "recovery": 52,
+        "clutch": 48,
+        "holdRunners": 44
       },
       "batting": {
         "ovr": 56,

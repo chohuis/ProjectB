@@ -19,16 +19,16 @@
       "position": "CP",
       "jerseyNumber": 4,
       "pitching": {
-        "ovr": 70,
-        "stamina": 66,
-        "velocity": 69,
-        "command": 75,
-        "control": 73,
-        "movement": 61,
-        "mentality": 65,
-        "recovery": 78,
-        "clutch": 56,
-        "holdRunners": 72
+        "ovr": 62,
+        "stamina": 58,
+        "velocity": 61,
+        "command": 66,
+        "control": 65,
+        "movement": 54,
+        "mentality": 58,
+        "recovery": 69,
+        "clutch": 50,
+        "holdRunners": 64
       },
       "batting": {
         "ovr": 46,

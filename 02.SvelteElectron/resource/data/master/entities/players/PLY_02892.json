@@ -19,16 +19,16 @@
       "position": "RP",
       "jerseyNumber": 11,
       "pitching": {
-        "ovr": 52,
-        "stamina": 51,
-        "velocity": 52,
-        "command": 45,
-        "control": 47,
-        "movement": 48,
-        "mentality": 54,
-        "recovery": 53,
-        "clutch": 37,
-        "holdRunners": 43
+        "ovr": 50,
+        "stamina": 49,
+        "velocity": 50,
+        "command": 43,
+        "control": 45,
+        "movement": 46,
+        "mentality": 52,
+        "recovery": 51,
+        "clutch": 36,
+        "holdRunners": 41
       },
       "batting": {
         "ovr": 34,

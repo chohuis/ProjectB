@@ -19,16 +19,16 @@
       "position": "SP",
       "jerseyNumber": 23,
       "pitching": {
-        "ovr": 56,
-        "stamina": 55,
-        "velocity": 63,
-        "command": 54,
-        "control": 51,
-        "movement": 50,
-        "mentality": 50,
-        "recovery": 54,
-        "clutch": 44,
-        "holdRunners": 45
+        "ovr": 52,
+        "stamina": 51,
+        "velocity": 59,
+        "command": 50,
+        "control": 47,
+        "movement": 46,
+        "mentality": 46,
+        "recovery": 50,
+        "clutch": 41,
+        "holdRunners": 42
       },
       "batting": {
         "ovr": 36,
