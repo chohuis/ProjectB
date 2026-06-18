@@ -139,6 +139,7 @@
 
   async function initBoard() {
     loading = true;
+    try {
 
     await masterStore.loadEntities("LEAGUE_UNIVERSITY");
     await masterStore.loadEntities("LEAGUE_INDEPENDENT");
@@ -257,7 +258,9 @@
       ROUND_COUNT,
     )).picks;
 
-    loading = false;
+    } finally {
+      loading = false;
+    }
   }
 
   async function startDraft() {

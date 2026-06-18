@@ -165,6 +165,10 @@
     if (isProcessing) return;
     isProcessing = true;
 
+    // grade는 processSeasonEnd 호출 전 값을 기준으로 reinit 여부 판단
+    const gradeBeforeAdvance = p.grade;
+
+    try {
     const now = $seasonStore.seasonYear;
     const pid = p.id;
     const mySeasonSt = $seasonStore.stats[pid];
@@ -215,6 +219,10 @@
       psResult: postseasonResult?.myResult,
       gameLog,
     }, mySeasonSt ?? undefined);
+
+    // 고교 NPC 학년 승급 + 졸업 처리는 매 시즌 종료마다 실행 (careerStage 무관)
+    // processSeasonEnd 내부에서 protagonist.careerStage === "highschool"일 때만 주인공 학년도 올림
+    await gameStore.processSeasonEnd(now);
 
     // ── 프로(KBL/ABL/JBL): pendingNextContract 적용 후 새 시즌 초기화 ──
     const isProStage = ["pro_kbl", "pro_abl", "pro_jbl"].includes(p.careerStage);
@@ -288,7 +296,6 @@
 
       await gameStore.save();
       await seasonStore.save();
-      isProcessing = false;
       return;
     }
 
@@ -297,7 +304,6 @@
 
     let progressedByHighschoolSync = false;
     if (p.careerStage === "highschool" && p.schoolId) {
-      await gameStore.processSeasonEnd(now);
       progressedByHighschoolSync = true;
       gameStore.addMessage({
         id: `msg-season-hs-sync-${Date.now()}`,
@@ -372,14 +378,18 @@
     if (!progressedByHighschoolSync) gameStore.advanceSeasonYear($seasonStore.seasonYear);
     seasonStore.startNewSeason();
 
-    if (p.careerStage === "highschool" && p.grade != null && p.grade < 3) {
+    // gradeBeforeAdvance 기준으로 판단: processSeasonEnd 후 p.grade는 이미 증가해 있으므로
+    // grade 1→2 또는 2→3 진급 시에만 다음 HS 시즌 재초기화 (grade 3→졸업은 제외)
+    if (p.careerStage === "highschool" && gradeBeforeAdvance != null && gradeBeforeAdvance < 3) {
       const allHsIds = $masterStore.teams.filter((t) => t.leagueId === "LEAGUE_HIGHSCHOOL").map((t) => t.id);
       await seasonStore.reinitHighschoolSeason(p.teamId, allHsIds);
     }
 
     await gameStore.save();
     await seasonStore.save();
-    isProcessing = false;
+    } finally {
+      isProcessing = false;
+    }
   }
 </script>
 
