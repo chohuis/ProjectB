@@ -716,7 +716,7 @@ export interface CareerSeasonRecord {
 
 // ── 리그 거래 기록 ──────────────────────────────────────────────
 
-export type LeagueTransactionCategory = "trade" | "fa" | "draft" | "military";
+export type LeagueTransactionCategory = "trade" | "fa" | "draft" | "military" | "retirement";
 
 export interface LeagueTransactionRow {
   id?: number;

@@ -2,7 +2,7 @@ import { get } from "svelte/store";
 import { gameStore } from "../stores/game";
 import { seasonStore, nextPendingAction, seasonEnded } from "../stores/season";
 import { masterStore } from "../stores/master";
-import { autoAdvanceStore } from "../stores/autoAdvance";
+import { autoAdvanceStore, autoLog, setAutoLogFile } from "../stores/autoAdvance";
 import { advanceWeek } from "./advanceWeek";
 import { applyGameOutcome } from "./applyGameOutcome";
 import type { UnifiedGameOutcome, PlayerGameLine, PendingAction } from "../types/season";
@@ -12,16 +12,6 @@ import { buildBatterLineup, buildStarterStats } from "../utils/matchLineupBuilde
 // ── 정지 조건 ──────────────────────────────────────────────────
 const STOP_PENDING = new Set<PendingAction["type"]>(["careerChoiceHub", "careerResults", "careerChoice"]);
 const STOP_WEEK = 40;
-
-// ── 파일 로그 헬퍼 ──────────────────────────────────────────────
-let _autoLogFile: string | null = null;
-
-function fileLog(msg: string): void {
-  if (!_autoLogFile || !window.projectB?.logWrite) return;
-  const ts = new Date().toISOString().replace("T", " ").slice(0, 19);
-  window.projectB.logWrite(JSON.stringify({ filename: _autoLogFile, content: `[${ts}] ${msg}` }))
-    .catch(() => {});
-}
 
 // ── 이벤트/메시지 선택지 피로도 기반 키워드 ───────────────────
 const REST_KW   = ["휴식", "거절", "패스", "쉬", "무시"];
@@ -330,10 +320,10 @@ export async function runAutoAdvance(): Promise<void> {
   {
     const now = new Date();
     const p2 = (n: number) => String(n).padStart(2, "0");
-    _autoLogFile = `auto-advance-${now.getFullYear()}${p2(now.getMonth()+1)}${p2(now.getDate())}-${p2(now.getHours())}${p2(now.getMinutes())}${p2(now.getSeconds())}.log`;
+    setAutoLogFile(`auto-advance-${now.getFullYear()}${p2(now.getMonth()+1)}${p2(now.getDate())}-${p2(now.getHours())}${p2(now.getMinutes())}${p2(now.getSeconds())}.log`);
   }
   const startSeason = get(seasonStore).seasonYear;
-  fileLog(`=== 자동 진행 세션 시작 | ${startSeason}시즌 W${get(seasonStore).currentWeek} ===`);
+  autoLog(`=== 자동 진행 세션 시작 | ${startSeason}시즌 W${get(seasonStore).currentWeek} ===`);
 
   const startWeek = get(seasonStore).currentWeek;
   const MAX_ITER = 1000;
@@ -349,10 +339,10 @@ export async function runAutoAdvance(): Promise<void> {
       if (get(seasonEnded)) {
         const yr = get(seasonStore).seasonYear;
         autoAdvanceStore.addLog(`${yr} 시즌 종료 처리`);
-        fileLog(`[시즌종료] ${yr}시즌 종료 처리 시작`);
+        autoLog(`[시즌종료] ${yr}시즌 종료 처리 시작`);
         await handleSeasonEnd();
         autoAdvanceStore.addLog("새 시즌 시작");
-        fileLog(`[시즌종료] ${yr}시즌 처리 완료 → ${get(seasonStore).seasonYear}시즌 시작`);
+        autoLog(`[시즌종료] ${yr}시즌 처리 완료 → ${get(seasonStore).seasonYear}시즌 시작`);
         continue;
       }
 
@@ -364,15 +354,15 @@ export async function runAutoAdvance(): Promise<void> {
         if (w >= STOP_WEEK && startWeek < STOP_WEEK) {
           autoAdvanceStore.stop(`W${w} 도달 — 자동 진행 종료`);
           autoAdvanceStore.addLog(`[정지] W${STOP_WEEK} 도달`);
-          fileLog(`[정지] W${STOP_WEEK} 도달로 자동 진행 종료`);
+          autoLog(`[정지] W${STOP_WEEK} 도달로 자동 진행 종료`);
           return;
         }
         applyRecommendedTraining();
-        fileLog(`[주진행] W${w} 시작`);
+        autoLog(`[주진행] W${w} 시작`);
         await advanceWeek();
         const wAfter = get(seasonStore).currentWeek;
         autoAdvanceStore.addLog(`W${w} → W${wAfter}`);
-        fileLog(`[주진행] W${w} → W${wAfter} 완료`);
+        autoLog(`[주진행] W${w} → W${wAfter} 완료`);
         continue;
       }
 
@@ -384,13 +374,13 @@ export async function runAutoAdvance(): Promise<void> {
                                           "진로 최종 선택";
         autoAdvanceStore.stop(`정지: ${label}`);
         autoAdvanceStore.addLog(`[정지] ${label}`);
-        fileLog(`[정지] ${label} (type=${pa.type})`);
+        autoLog(`[정지] ${label} (type=${pa.type})`);
         return;
       }
 
       // 4. pending 처리
       autoAdvanceStore.addLog(`처리: ${pa.type}`);
-      fileLog(`[pending] type=${pa.type}`);
+      autoLog(`[pending] type=${pa.type}`);
 
       switch (pa.type) {
         case "game":
@@ -450,15 +440,15 @@ export async function runAutoAdvance(): Promise<void> {
       const stack = err instanceof Error ? (err.stack ?? "") : "";
       autoAdvanceStore.addLog(`오류: ${msg}`);
       autoAdvanceStore.stop(`오류: ${msg}`);
-      fileLog(`[오류] ${msg}`);
-      if (stack) fileLog(`[스택] ${stack.split("\n").slice(0, 4).join(" | ")}`);
+      autoLog(`[오류] ${msg}`);
+      if (stack) autoLog(`[스택] ${stack.split("\n").slice(0, 4).join(" | ")}`);
       return;
     }
   }
 
   if (iter >= MAX_ITER) {
     autoAdvanceStore.stop("최대 반복 횟수 초과");
-    fileLog("[정지] 최대 반복 횟수 초과");
+    autoLog("[정지] 최대 반복 횟수 초과");
   }
-  fileLog(`=== 자동 진행 세션 종료 | iter=${iter} ===`);
+  autoLog(`=== 자동 진행 세션 종료 | iter=${iter} ===`);
 }

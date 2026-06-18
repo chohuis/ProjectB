@@ -2,6 +2,7 @@ import { get } from "svelte/store";
 import { seasonStore } from "../stores/season";
 import { gameStore } from "../stores/game";
 import { masterStore } from "../stores/master";
+import { autoLog } from "../stores/autoAdvance";
 import {
   updateNpcEmotion,
   makeMemory,
@@ -433,6 +434,23 @@ async function processNpcInjuries(weekNum: number): Promise<void> {
       if (roll < retireChance) {
         seasonStore.retireNpc(occ.playerId);
         gameStore.updateNpcCareerStatus(occ.playerId, "retired");
+        const retLeague = entity?.leagueId ?? "";
+        autoLog(`[부상은퇴] ${entityName} (${retLeague}, ${age}세, ${injuryLabel})`);
+        if (g.currentSlotId) {
+          window.projectB?.leagueAddTransactions(JSON.stringify({
+            slotId: g.currentSlotId,
+            rows: [{
+              seasonYear: s.seasonYear,
+              week: weekNum,
+              category: "retirement",
+              playerId: occ.playerId,
+              playerName: entityName,
+              fromTeamId: entity?.teamId ?? "",
+              fromLeagueId: retLeague,
+              detail: `${injuryLabel}로 인한 은퇴`,
+            }],
+          }));
+        }
         gameStore.addMessage({
           id:        `msg-npc-retire-${occ.playerId}-w${weekNum}-${Date.now()}`,
           category:  "system",
@@ -688,13 +706,17 @@ async function processTradeWindow(weekInYear: number, leagueId: string): Promise
   if (!slotId) return;
 
   // ① 리그 전체 NPC 수집
+  autoLog(`[트레이드윈도우] ${leagueId} W${weekInYear} 시작`);
   const _npcRaw = JSON.parse(
     await window.projectB!.npcGetByLeague(JSON.stringify({ slotId, leagueId }))
   );
   if (!Array.isArray(_npcRaw)) {
+    const errDetail = JSON.stringify(_npcRaw).slice(0, 120);
     console.warn("[processTradeWindow] npcGetByLeague 응답이 배열이 아님:", _npcRaw);
+    autoLog(`[트레이드오류] ${leagueId}: npcGetByLeague 배열 아님 → ${errDetail}`);
     return;
   }
+  autoLog(`[트레이드윈도우] ${leagueId} npcRows=${_npcRaw.length}`);
   const npcRows = _npcRaw as Array<{
     npcId: string; position: string; currentTeam: string; currentLeague: string;
     currentSalary: number; contractYears: number; proServiceYears: number;
@@ -973,6 +995,7 @@ async function processTradeWindow(weekInYear: number, leagueId: string): Promise
       npcId1: offeredId,   teamId1: proposal.receivingTeamId,
       npcId2: requestedId, teamId2: proposal.proposingTeamId,
     }));
+    autoLog(`[트레이드성사] ${leagueId} W${weekInYear}: ${namedMap.get(offeredId)?.name ?? offeredId} ↔ ${namedMap.get(requestedId)?.name ?? requestedId}`);
 
     // 트레이드 결과 메시지 (뉴스 형식)
     const team1Name = m.teams.find((t) => t.id === proposal.proposingTeamId)?.name ?? proposal.proposingTeamId;
@@ -1153,9 +1176,11 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
   const s = get(seasonStore);
   const m = get(masterStore);
   const logs: string[] = [];
+  const slotId = g.currentSlotId;
 
   const proLeagues = new Set(["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]);
   const namedIdSet = new Set(g.npcs.map(n => n.npcId));
+  autoLog(`[W43오프시즌] 은퇴/FA 결정 시작 (프로NPC ${g.npcs.filter(n => n.careerStatus === "active" && n.currentLeague && proLeagues.has(n.currentLeague)).length}명)`);
 
   // ── 프로 NPC 처리 (save state 업데이트) ──────────────────────
   const namedNpcs = g.npcs.filter(n =>
@@ -1204,6 +1229,17 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
         const idx = updatedNpcs.findIndex(n => n.npcId === npc.npcId);
         if (idx >= 0) updatedNpcs[idx] = { ...updatedNpcs[idx], careerStatus: "retired" };
         logs.push(`[W${weekNum}] ${npc.name} 은퇴`);
+        autoLog(`[은퇴] ${npc.name} (${npc.currentLeague}, ${npc.proServiceYears}년)`);
+        if (slotId) {
+          window.projectB?.leagueAddTransactions(JSON.stringify({
+            slotId, rows: [{
+              seasonYear: s.seasonYear, week: weekNum, category: "retirement",
+              playerId: npc.npcId, playerName: npc.name,
+              fromTeamId: npc.currentTeam, fromLeagueId: npc.currentLeague,
+              detail: "오프시즌 은퇴",
+            }],
+          }));
+        }
       }
     }
 
@@ -1235,6 +1271,7 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
       const idx = updatedNpcs.findIndex(n => n.npcId === npc.npcId);
       if (idx >= 0) updatedNpcs[idx] = { ...updatedNpcs[idx], careerStatus: "free_agent" as any };
       logs.push(`[W${weekNum}] ${npc.name} FA 신청`);
+      autoLog(`[FA신청] ${npc.name} (${league}, ${npc.proServiceYears}년)`);
     } else {
       // FA 미신청 = 팀에 재계약 의사 → loyalty 증가
       const newLoyalty = JSON.parse(
@@ -1305,6 +1342,22 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
 
     if (retResp.accept) {
       entityMoves.push({ id: entity.id, teamId: "" });
+      autoLog(`[배경은퇴] ${entity.name ?? entity.id} (${entity.leagueId})`);
+      if (slotId) {
+        window.projectB?.leagueAddTransactions(JSON.stringify({
+          slotId,
+          rows: [{
+            seasonYear: s.seasonYear,
+            week: weekNum,
+            category: "retirement",
+            playerId: entity.id,
+            playerName: entity.name ?? entity.id,
+            fromTeamId: entity.teamId,
+            fromLeagueId: entity.leagueId,
+            detail: "오프시즌 은퇴",
+          }],
+        }));
+      }
     }
   }
 

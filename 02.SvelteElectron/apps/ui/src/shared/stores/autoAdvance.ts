@@ -31,3 +31,18 @@ function createAutoAdvanceStore() {
 }
 
 export const autoAdvanceStore = createAutoAdvanceStore();
+
+// ── 파일 로그 공유 유틸 (자동진행 중에만 기록) ─────────────────────
+let _autoLogFile: string | null = null;
+
+export function setAutoLogFile(filename: string | null): void {
+  _autoLogFile = filename;
+}
+
+export function autoLog(msg: string): void {
+  if (!_autoLogFile) return;
+  const api = (window as Window & { projectB?: { logWrite?: (p: string) => Promise<string> } }).projectB;
+  if (!api?.logWrite) return;
+  const ts = new Date().toISOString().replace("T", " ").slice(0, 19);
+  api.logWrite(JSON.stringify({ filename: _autoLogFile, content: `[${ts}] ${msg}` })).catch(() => {});
+}

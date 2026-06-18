@@ -46,6 +46,7 @@ import {
   KBL_FARM_MAP,
   runOffseasonProcessing,
 } from "../utils/npcEngine";
+import { getFaThreshold } from "../utils/faEngine";
 import type { SeasonEndSummary } from "../utils/npcEngine";
 export type { SeasonEndSummary } from "../utils/npcEngine";
 
@@ -1587,7 +1588,7 @@ function createGameStore() {
       const proLeagues = new Set(["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]);
       const beforeTeam = new Map<string, string>(
         s.npcs
-          .filter(n => proLeagues.has(n.currentLeague) && (n.proServiceYears ?? 0) >= 9)
+          .filter(n => proLeagues.has(n.currentLeague) && (n.proServiceYears ?? 0) >= getFaThreshold(n.currentLeague))
           .map(n => [n.npcId, n.currentTeam])
       );
       const beforeMilitary = new Map(
