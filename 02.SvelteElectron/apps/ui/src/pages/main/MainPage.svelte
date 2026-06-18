@@ -36,6 +36,8 @@
   import SportsUnitApplicationModal from "../../features/military/ui/SportsUnitApplicationModal.svelte";
   import MilitaryEnlistAskModal from "../../features/military/ui/MilitaryEnlistAskModal.svelte";
   import DevToolsHubModal from "../../features/devtools/ui/DevToolsHubModal.svelte";
+  import AutoAdvancePanel from "../../features/devtools/ui/AutoAdvancePanel.svelte";
+  import { runAutoAdvance } from "../../shared/usecases/runAutoAdvance";
   import MatchEngineLabModal from "../../features/match-engine-lab/ui/MatchEngineLabModal.svelte";
   import EntityManagerModal from "../../features/entity-manager/ui/EntityManagerModal.svelte";
   import AchievementManagerModal from "../../features/achievements/ui/AchievementManagerModal.svelte";
@@ -492,8 +494,13 @@
     devToolsHubOpen = false;
     matchLabOpen = true;
   }}
+  on:openAutoAdvance={() => {
+    devToolsHubOpen = false;
+    runAutoAdvance();
+  }}
 />
 
+<AutoAdvancePanel />
 <EventManagerModal open={eventManagerOpen} on:close={() => (eventManagerOpen = false)} />
 <EntityManagerModal open={entityManagerOpen} on:close={() => (entityManagerOpen = false)} />
 <AchievementManagerModal open={achievementManagerOpen} on:close={() => (achievementManagerOpen = false)} />

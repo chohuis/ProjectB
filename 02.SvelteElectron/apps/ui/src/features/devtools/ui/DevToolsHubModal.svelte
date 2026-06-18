@@ -10,6 +10,7 @@
     openAchievement: void;
     openMessenger: void;
     openMatchLab: void;
+    openAutoAdvance: void;
   }>();
 
   function close() {
@@ -34,6 +35,10 @@
 
   function openMatchLab() {
     dispatch("openMatchLab");
+  }
+
+  function openAutoAdvance() {
+    dispatch("openAutoAdvance");
   }
 
 </script>
@@ -70,6 +75,11 @@
         <button type="button" class="tool-btn" on:click={openMatchLab}>
           <strong>매치 엔진 시뮬레이터</strong>
           <span>밸런스 수치 조정, 즉시 반영, 영구 저장, 배치 시뮬레이션</span>
+        </button>
+
+        <button type="button" class="tool-btn tool-btn-auto" on:click={openAutoAdvance}>
+          <strong>자동 진행</strong>
+          <span>W40 또는 진로 선택 전까지 훈련·경기·이벤트 자동 처리</span>
         </button>
 
       </div>
@@ -137,6 +147,15 @@
   .tool-btn span {
     font-size: 12px;
     color: #9eb6d9;
+  }
+
+  .tool-btn-auto {
+    border-color: #2a6040;
+    background: #0f2218;
+  }
+
+  .tool-btn-auto strong {
+    color: #60e090;
   }
 
   .ghost {
