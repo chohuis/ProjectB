@@ -224,15 +224,6 @@ async function handleSeasonEnd(): Promise<void> {
         body: lines.join("\n\n"),
         createdAt: `Y${now}`, readAt: null,
       });
-      const slotId = get(gameStore).currentSlotId;
-      if (slotId) {
-        const militaryRows = [
-          ...sports.map((name: string) => ({ seasonYear: now, category: "military" as const, playerId: "", playerName: name, detail: "체육부대 입대" })),
-          ...general.map((name: string) => ({ seasonYear: now, category: "military" as const, playerId: "", playerName: name, detail: "현역 입대" })),
-          ...discharged.map((name: string) => ({ seasonYear: now, category: "military" as const, playerId: "", playerName: name, detail: "전역" })),
-        ];
-        window.projectB?.leagueAddTransactions(JSON.stringify({ slotId, rows: militaryRows }));
-      }
     }
     (window as Window & { __lastOffseasonSummary?: unknown }).__lastOffseasonSummary = null;
   }
@@ -240,6 +231,7 @@ async function handleSeasonEnd(): Promise<void> {
   await gameStore.applyAgingDecay();
 
   const gNow = get(gameStore);
+  autoLog(`[드래프트] pendingDraft=${gNow.pendingDraft.length}명`);
   if (gNow.pendingDraft.length > 0) {
     const univIds = m.teams.filter((t) => t.leagueId === "LEAGUE_UNIVERSITY" && t.id !== "TEAM_SPORTS_UNIT").map((t) => t.id);
     const indIds  = m.teams.filter((t) => t.leagueId === "LEAGUE_INDEPENDENT").map((t) => t.id);

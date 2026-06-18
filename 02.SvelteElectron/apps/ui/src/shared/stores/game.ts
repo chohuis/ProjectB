@@ -1628,26 +1628,56 @@ function createGameStore() {
           }
         }
         if (faRows.length > 0) {
-          window.projectB?.leagueAddTransactions(JSON.stringify({ slotId, rows: faRows }));
+          const faRes = JSON.parse(
+            await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: faRows }))
+          );
+          if (faRes.error) console.error("[processAllLeaguesSeasonEnd] FA 기록 오류:", faRes.error);
+          else console.log(`[processAllLeaguesSeasonEnd] FA 기록 ${faRows.length}건 저장`);
         }
       }
 
-      // before/after 비교로 실제 입대·전역 이름 추출
+      // before/after 비교로 실제 입대·전역 추출 + 리그 기록 작성
       const militaryEnlistedSports: string[] = [];
       const militaryEnlistedGeneral: string[] = [];
       const militaryDischargedNames: string[] = [];
+      const militaryRows: import("../types/save").LeagueTransactionRow[] = [];
       for (const n of result.npcs) {
         const before = beforeMilitary.get(n.npcId);
         if (!before) continue;
         if (before.status !== "현역" && n.militaryStatus === "현역") {
+          const detail = n.militaryUnit === "sports" ? "체육부대 입대" : "현역 입대";
           if (n.militaryUnit === "sports") {
             militaryEnlistedSports.push(n.name);
           } else {
             militaryEnlistedGeneral.push(n.name);
           }
+          militaryRows.push({
+            seasonYear,
+            category: "military",
+            playerId: n.npcId,
+            playerName: n.name,
+            fromTeamId: n.currentTeam,
+            fromLeagueId: n.currentLeague,
+            detail,
+          });
         } else if (before.status === "현역" && n.militaryStatus !== "현역") {
           militaryDischargedNames.push(before.name);
+          militaryRows.push({
+            seasonYear,
+            category: "military",
+            playerId: n.npcId,
+            playerName: n.name,
+            fromLeagueId: n.currentLeague,
+            detail: "전역",
+          });
         }
+      }
+      if (slotId && militaryRows.length > 0) {
+        const milRes = JSON.parse(
+          await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: militaryRows }))
+        );
+        if (milRes.error) console.error("[processAllLeaguesSeasonEnd] 병역 기록 오류:", milRes.error);
+        else console.log(`[processAllLeaguesSeasonEnd] 병역 기록 ${militaryRows.length}건 저장`);
       }
       (window as any).__lastOffseasonSummary = {
         militaryEnlistedSports,
@@ -1904,7 +1934,11 @@ function createGameStore() {
           detail: `${pick.round}라운드 ${pick.pick}순위`,
           groupId: null,
         }));
-        window.projectB?.leagueAddTransactions(JSON.stringify({ slotId, rows }));
+        const draftRes = JSON.parse(
+          await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows }))
+        );
+        if (draftRes.error) console.error("[processNpcDraft] 드래프트 기록 오류:", draftRes.error);
+        else console.log(`[processNpcDraft] 드래프트 기록 ${rows.length}건 저장`);
       }
     },
 

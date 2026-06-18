@@ -344,29 +344,6 @@
           body: lines.join("\n\n"),
           createdAt: `Y${now}`, readAt: null,
         });
-
-        // 리그 거래 기록 — 병역
-        const slotId = $gameStore.currentSlotId;
-        if (slotId) {
-          const militaryRows = [
-            ...sports.map((name: string) => ({
-              seasonYear: now, category: "military" as const,
-              playerId: "", playerName: name,
-              detail: "체육부대 입대",
-            })),
-            ...general.map((name: string) => ({
-              seasonYear: now, category: "military" as const,
-              playerId: "", playerName: name,
-              detail: "현역 입대",
-            })),
-            ...discharged.map((name: string) => ({
-              seasonYear: now, category: "military" as const,
-              playerId: "", playerName: name,
-              detail: "전역",
-            })),
-          ];
-          window.projectB?.leagueAddTransactions(JSON.stringify({ slotId, rows: militaryRows }));
-        }
       }
       (window as Window & { __lastOffseasonSummary?: unknown }).__lastOffseasonSummary = null;
     }
