@@ -547,6 +547,33 @@ function applySchemaPatches(db) {
       console.log("[db-patch] v2: npc_career_arc table + index");
     })();
   }
+
+  if (currentVersion < 3) {
+    db.transaction(() => {
+      const hasSalaryCol = db.prepare(
+        "SELECT name FROM pragma_table_info('npc_runtime') WHERE name='current_salary'"
+      ).get();
+      if (!hasSalaryCol) {
+        db.exec("ALTER TABLE npc_runtime ADD COLUMN current_salary INTEGER NOT NULL DEFAULT 0");
+        console.log("[db-patch] v3: npc_runtime.current_salary 컬럼 추가");
+      }
+      const hasContractCol = db.prepare(
+        "SELECT name FROM pragma_table_info('npc_runtime') WHERE name='contract_years'"
+      ).get();
+      if (!hasContractCol) {
+        db.exec("ALTER TABLE npc_runtime ADD COLUMN contract_years INTEGER NOT NULL DEFAULT 1");
+        console.log("[db-patch] v3: npc_runtime.contract_years 컬럼 추가");
+      }
+      const hasProServiceCol = db.prepare(
+        "SELECT name FROM pragma_table_info('npc_runtime') WHERE name='pro_service_years'"
+      ).get();
+      if (!hasProServiceCol) {
+        db.exec("ALTER TABLE npc_runtime ADD COLUMN pro_service_years INTEGER NOT NULL DEFAULT 0");
+        console.log("[db-patch] v3: npc_runtime.pro_service_years 컬럼 추가");
+      }
+      db.pragma("user_version = 3");
+    })();
+  }
 }
 
 function dbListSlots(db) {

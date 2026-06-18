@@ -52,6 +52,7 @@
   let txCategory: TxCategory = "all";
   let txYear: number = 0;  // 0 = 전체
   let txRows: LeagueTransactionRow[] = [];
+  let txAllYears: number[] = [];  // 카테고리 필터와 무관한 전체 연도 목록
   let txLoading = false;
 
   $: if (!txLeagueId && myLeagueId && TX_LEAGUES.includes(myLeagueId as typeof TX_LEAGUES[number])) {
@@ -66,6 +67,7 @@
     if (!slotId || txLoading) return;
     txLoading = true;
     try {
+      // 필터 적용된 결과
       const res = JSON.parse(
         await window.projectB!.leagueGetTransactions(JSON.stringify({
           slotId,
@@ -76,6 +78,16 @@
         }))
       ) as LeagueTransactionRow[];
       txRows = res;
+
+      // 연도 목록은 카테고리/연도 필터 없이 별도 조회 (리그만 적용)
+      const allRes = JSON.parse(
+        await window.projectB!.leagueGetTransactions(JSON.stringify({
+          slotId,
+          leagueId: txLeagueId || undefined,
+          limit: 1000,
+        }))
+      ) as LeagueTransactionRow[];
+      txAllYears = [...new Set(allRes.map((r) => r.seasonYear))].sort((a, b) => b - a);
     } finally {
       txLoading = false;
     }
@@ -92,7 +104,6 @@
       if (!map.has(yr)) map.set(yr, []);
       map.get(yr)!.push(r);
     }
-    // 내림차순 정렬
     return [...map.entries()].sort((a, b) => b[0] - a[0]);
   })();
 
@@ -112,9 +123,6 @@
     }
     return result;
   };
-
-  // 사용 가능한 연도 목록
-  $: txAvailableYears = [...new Set(txRows.map((r) => r.seasonYear))].sort((a, b) => b - a);
 
   function txTeamName(id?: string | null): string {
     if (!id) return "";
@@ -518,10 +526,10 @@
           </div>
 
           <!-- 연도 -->
-          {#if txAvailableYears.length > 0}
+          {#if txAllYears.length > 0}
             <div class="tx-filter-group">
               <button class="tx-filter-btn" class:tx-active={txYear === 0} on:click={() => { txYear = 0; }}>전체</button>
-              {#each txAvailableYears as yr}
+              {#each txAllYears as yr}
                 <button class="tx-filter-btn" class:tx-active={txYear === yr} on:click={() => { txYear = yr; }}>{yr}년</button>
               {/each}
             </div>
