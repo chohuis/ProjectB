@@ -316,6 +316,7 @@ export async function runAutoAdvance(): Promise<void> {
   autoAdvanceStore.start();
   autoAdvanceStore.addLog("자동 진행 시작");
 
+  const startWeek = get(seasonStore).currentWeek;
   const MAX_ITER = 1000;
   let iter = 0;
 
@@ -339,7 +340,7 @@ export async function runAutoAdvance(): Promise<void> {
       // 2. pending 없음 → W40 체크 후 주 진행
       if (!pa) {
         const w = get(seasonStore).currentWeek;
-        if (w >= STOP_WEEK) {
+        if (w >= STOP_WEEK && startWeek < STOP_WEEK) {
           autoAdvanceStore.stop(`W${w} 도달 — 자동 진행 종료`);
           autoAdvanceStore.addLog(`[정지] W${STOP_WEEK} 도달`);
           return;
