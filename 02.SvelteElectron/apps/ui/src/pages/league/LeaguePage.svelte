@@ -10,7 +10,7 @@
   type LeagueTab  = "standings" | "leaderboard" | "transactions";
   type LbTab      = "pitcher" | "batter";
   type HsLbGroup  = "all" | "A" | "B";
-  type TxCategory = "all" | "trade" | "fa" | "draft" | "military";
+  type TxCategory = "all" | "trade" | "fa" | "draft" | "military" | "retirement";
 
   let tab:        LeagueTab  = "standings";
   let lbTab:      LbTab      = "pitcher";
@@ -42,10 +42,10 @@
   // ── 리그 기록 탭 ─────────────────────────────────────────────
   const TX_LEAGUES = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"] as const;
   const TX_CAT_LABEL: Record<TxCategory, string> = {
-    all: "전체", trade: "트레이드", fa: "FA", draft: "드래프트", military: "병역",
+    all: "전체", trade: "트레이드", fa: "FA", draft: "드래프트", military: "병역", retirement: "은퇴",
   };
   const TX_ICON: Record<string, string> = {
-    trade: "TR", fa: "FA", draft: "DR", military: "MIL",
+    trade: "TR", fa: "FA", draft: "DR", military: "MIL", retirement: "RT",
   };
 
   let txLeagueId: string = "";
@@ -508,7 +508,7 @@
 
           <!-- 카테고리 -->
           <div class="tx-filter-group">
-            {#each (["all", "trade", "fa", "draft", "military"] as TxCategory[]) as cat}
+            {#each (["all", "trade", "fa", "draft", "military", "retirement"] as TxCategory[]) as cat}
               <button
                 class="tx-filter-btn"
                 class:tx-active={txCategory === cat}
@@ -578,6 +578,14 @@
                         {@const r = group.rows[0]}
                         <span class="tx-tag tag-military">병역</span>
                         <span class="tx-detail"><strong>{r.playerName}</strong></span>
+                        {#if r.detail}<span class="tx-reason">{r.detail}</span>{/if}
+                      {:else if group.category === "retirement"}
+                        {@const r = group.rows[0]}
+                        <span class="tx-tag tag-retirement">은퇴</span>
+                        <span class="tx-detail">
+                          <strong>{r.playerName}</strong>
+                          {#if r.fromTeamId}<span class="tx-arrow">{txTeamName(r.fromTeamId)}</span>{/if}
+                        </span>
                         {#if r.detail}<span class="tx-reason">{r.detail}</span>{/if}
                       {/if}
                     </div>
@@ -890,10 +898,11 @@
     border-left: 3px solid #2a4070;
     font-size: 12px;
   }
-  .tx-cat-trade   { border-left-color: #4a80e8; }
-  .tx-cat-fa      { border-left-color: #50c878; }
-  .tx-cat-draft   { border-left-color: #f0c040; }
-  .tx-cat-military { border-left-color: #a060e0; }
+  .tx-cat-trade      { border-left-color: #4a80e8; }
+  .tx-cat-fa         { border-left-color: #50c878; }
+  .tx-cat-draft      { border-left-color: #f0c040; }
+  .tx-cat-military   { border-left-color: #a060e0; }
+  .tx-cat-retirement { border-left-color: #e06040; }
 
   .tx-icon {
     font-size: 9px;
@@ -922,10 +931,11 @@
     font-weight: 600;
     flex-shrink: 0;
   }
-  .tag-trade    { background: #1a3878; color: #80b0ff; }
-  .tag-fa       { background: #0e3820; color: #60d890; }
-  .tag-draft    { background: #3a3010; color: #f0c840; }
-  .tag-military { background: #2a1060; color: #c080ff; }
+  .tag-trade      { background: #1a3878; color: #80b0ff; }
+  .tag-fa         { background: #0e3820; color: #60d890; }
+  .tag-draft      { background: #3a3010; color: #f0c840; }
+  .tag-military   { background: #2a1060; color: #c080ff; }
+  .tag-retirement { background: #3a1008; color: #ff9070; }
 
   .tx-detail { color: #c8dcf6; }
   .tx-detail strong { color: #eef6ff; }
