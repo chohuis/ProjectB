@@ -49,7 +49,7 @@
   function onClickDraftApply() {
     draftChecked = !draftChecked;
     if (draftChecked) {
-      alert("드래프트 참가 신청이 완료되었습니다. W47주차에 참가 여부 메시지가 도착합니다.");
+      alert("드래프트 참가 신청이 완료되었습니다. W47주차 결과 확인 화면에서 드래프트 보드를 볼 수 있습니다.");
     }
   }
 

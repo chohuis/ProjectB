@@ -677,14 +677,11 @@ const MEDICAL_SEVERITY_LABEL: Record<string, string> = {
   steroid_history:  "스테로이드 사용 이력",
 };
 
-async function processTradeWindow(weekInYear: number): Promise<void> {
+async function processTradeWindow(weekInYear: number, leagueId: string): Promise<void> {
   const g = get(gameStore);
   const s = get(seasonStore);
   const m = get(masterStore);
 
-  const proLeagues = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"] as const;
-  const protagonistLeague = g.protagonist.leagueId as string;
-  if (!proLeagues.includes(protagonistLeague as typeof proLeagues[number])) return;
   if (s.pendingActions.some((a) => a.type === "trade")) return;
 
   const slotId = g.currentSlotId;
@@ -692,7 +689,7 @@ async function processTradeWindow(weekInYear: number): Promise<void> {
 
   // ① 리그 전체 NPC 수집
   const npcRows = JSON.parse(
-    await window.projectB!.npcGetByLeague(JSON.stringify({ slotId, leagueId: protagonistLeague }))
+    await window.projectB!.npcGetByLeague(JSON.stringify({ slotId, leagueId }))
   ) as Array<{
     npcId: string; position: string; currentTeam: string; currentLeague: string;
     currentSalary: number; contractYears: number; proServiceYears: number;
@@ -700,9 +697,10 @@ async function processTradeWindow(weekInYear: number): Promise<void> {
   }>;
 
   const proTeams = m.teams.filter(
-    (t) => t.leagueId === protagonistLeague && t.id.endsWith("_1")
+    (t) => t.leagueId === leagueId && t.id.endsWith("_1")
   );
-  const standings = s.standings;
+  const isMyLeague = g.protagonist.leagueId === leagueId;
+  const standings = isMyLeague ? s.standings : (s.leagueState[leagueId]?.standings ?? []);
   const sortedStandings = [...standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
   const namedMap = new Map(g.npcs.map((n) => [n.npcId, n]));
 
@@ -728,7 +726,7 @@ async function processTradeWindow(weekInYear: number): Promise<void> {
 
     return {
       teamId: team.id,
-      leagueId: protagonistLeague,
+      leagueId,
       profile,
       activeRoster: roster.map((n) => n.npcId),
       farmRoster: [] as string[],
@@ -789,7 +787,7 @@ async function processTradeWindow(weekInYear: number): Promise<void> {
       proHistory.some((h) => h.treatmentChoice === "steroid"),
   };
 
-  const allAssets = [...allNpcAssets, protagonistAsset];
+  const allAssets = isMyLeague ? [...allNpcAssets, protagonistAsset] : allNpcAssets;
 
   // ④ generateTradeProposals 호출
   const seasonStanding: Record<string, number> = {};
@@ -996,15 +994,15 @@ async function processTradeWindow(weekInYear: number): Promise<void> {
         {
           seasonYear: s.seasonYear, week: weekInYear, category: "trade",
           playerId: offeredId, playerName: p1Name,
-          fromTeamId: proposal.proposingTeamId, fromLeagueId: protagonistLeague,
-          toTeamId: proposal.receivingTeamId,   toLeagueId: protagonistLeague,
+          fromTeamId: proposal.proposingTeamId, fromLeagueId: leagueId,
+          toTeamId: proposal.receivingTeamId,   toLeagueId: leagueId,
           detail: reasonDetail, groupId: tradeGroupId,
         },
         {
           seasonYear: s.seasonYear, week: weekInYear, category: "trade",
           playerId: requestedId, playerName: p2Name,
-          fromTeamId: proposal.receivingTeamId, fromLeagueId: protagonistLeague,
-          toTeamId: proposal.proposingTeamId,   toLeagueId: protagonistLeague,
+          fromTeamId: proposal.receivingTeamId, fromLeagueId: leagueId,
+          toTeamId: proposal.proposingTeamId,   toLeagueId: leagueId,
           detail: reasonDetail, groupId: tradeGroupId,
         },
       ],
@@ -1857,8 +1855,18 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   }
 
   // 프로 트레이드 윈도우 (W12~W38, 4주마다)
+  // 비프로 스테이지에서도 프로 3리그를 각각 시뮬해 거래 기록 유지
   if (weekInYear >= 12 && weekInYear <= 38 && weekInYear % 4 === 0) {
-    await processTradeWindow(weekInYear);
+    const proLeagueIds = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"];
+    const myLeague = get(gameStore).protagonist.leagueId;
+    const isProStage = proLeagueIds.includes(myLeague);
+    if (isProStage) {
+      await processTradeWindow(weekInYear, myLeague);
+    } else {
+      for (const lid of proLeagueIds) {
+        await processTradeWindow(weekInYear, lid);
+      }
+    }
   }
 
   // ── 오프시즌 이벤트 ─────────────────────────────────────────────

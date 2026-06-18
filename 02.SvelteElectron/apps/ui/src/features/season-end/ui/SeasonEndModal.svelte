@@ -321,17 +321,20 @@
     for (const [lid, ls] of Object.entries($seasonStore.leagueState)) leagueStats[lid] = ls.stats;
     gameStore.applySeasonHistory($seasonStore.stats, leagueStats, now);
 
-    // ── 연간 병역 현황 메시지 (매년 발송) ─────────────────────
+    await seasonStore.flushAllLeagueStatsToDb(now);
+    await gameStore.processAllLeaguesSeasonEnd(now);  // ← 여기서 __lastOffseasonSummary 세팅
+
+    // ── 연간 병역 현황 메시지 (processAllLeaguesSeasonEnd 이후 읽어야 정확한 데이터)
     type OffseasonSummary = { militaryEnlistedSports?: string[]; militaryEnlistedGeneral?: string[]; militaryDischargedNames?: string[] };
     const offseasonSummary = (window as Window & { __lastOffseasonSummary?: OffseasonSummary | null }).__lastOffseasonSummary ?? null;
     if (offseasonSummary) {
-      const sports   = offseasonSummary.militaryEnlistedSports ?? [];
-      const general  = offseasonSummary.militaryEnlistedGeneral ?? [];
+      const sports     = offseasonSummary.militaryEnlistedSports ?? [];
+      const general    = offseasonSummary.militaryEnlistedGeneral ?? [];
       const discharged = offseasonSummary.militaryDischargedNames ?? [];
       if (sports.length + general.length + discharged.length > 0) {
         const lines: string[] = [];
-        if (sports.length)    lines.push(`◆ 체육부대 입대 (${sports.length}명)\n  ${sports.slice(0, 5).join(", ")}${sports.length > 5 ? ` 외 ${sports.length - 5}명` : ""}`);
-        if (general.length)   lines.push(`◆ 일반부대 입대 (${general.length}명)\n  ${general.slice(0, 3).join(", ")}${general.length > 3 ? ` 외 ${general.length - 3}명` : ""}`);
+        if (sports.length)     lines.push(`◆ 체육부대 입대 (${sports.length}명)\n  ${sports.slice(0, 5).join(", ")}${sports.length > 5 ? ` 외 ${sports.length - 5}명` : ""}`);
+        if (general.length)    lines.push(`◆ 일반부대 입대 (${general.length}명)\n  ${general.slice(0, 3).join(", ")}${general.length > 3 ? ` 외 ${general.length - 3}명` : ""}`);
         if (discharged.length) lines.push(`◆ 전역 (${discharged.length}명)\n  ${discharged.slice(0, 3).join(", ")}${discharged.length > 3 ? ` 외 ${discharged.length - 3}명` : ""}`);
         gameStore.addMessage({
           id: `msg-military-annual-${now}`,
@@ -367,8 +370,6 @@
       }
       (window as Window & { __lastOffseasonSummary?: unknown }).__lastOffseasonSummary = null;
     }
-    await seasonStore.flushAllLeagueStatsToDb(now);
-    await gameStore.processAllLeaguesSeasonEnd(now);
     await gameStore.applyAgingDecay();
     if ($gameStore.pendingDraft.length > 0) {
       const univIds = $masterStore.teams.filter(t => t.leagueId === "LEAGUE_UNIVERSITY" && t.id !== "TEAM_SPORTS_UNIT").map(t => t.id);

@@ -30,7 +30,7 @@
   $: hsBaseballScore = calcHsBaseballScore($gameStore.protagonist.careerRecords ?? []);
   $: avgGrade = pctToGrade(avgPct);
 
-  $: teams = $masterStore.teams.filter((t) => t.leagueId === "LEAGUE_UNIVERSITY");
+  $: teams = $masterStore.teams.filter((t) => t.leagueId === "LEAGUE_UNIVERSITY" && t.id !== "TEAM_SPORTS_UNIT");
   $: sortedTeams = [...teams].sort((a, b) => {
     const ra = UNIVERSITY_REQUIREMENTS[a.id];
     const rb = UNIVERSITY_REQUIREMENTS[b.id];

@@ -516,6 +516,16 @@
               >{TX_CAT_LABEL[cat]}</button>
             {/each}
           </div>
+
+          <!-- 연도 -->
+          {#if txAvailableYears.length > 0}
+            <div class="tx-filter-group">
+              <button class="tx-filter-btn" class:tx-active={txYear === 0} on:click={() => { txYear = 0; }}>전체</button>
+              {#each txAvailableYears as yr}
+                <button class="tx-filter-btn" class:tx-active={txYear === yr} on:click={() => { txYear = yr; }}>{yr}년</button>
+              {/each}
+            </div>
+          {/if}
         </div>
 
         <!-- 거래 목록 -->

@@ -7,18 +7,35 @@
 
   const dispatch = createEventDispatcher<{ close: void }>();
 
-  type Phase = "draft-board" | "results";
+  type Phase = "results" | "draft-board";
+  let phase: Phase = "results";
+  let resolving = false;
 
   $: apps = $gameStore.schoolState.careerApplications;
   $: results = $gameStore.schoolState.careerResults;
   $: draftApplied = apps?.draftApplied ?? false;
+  $: hasUniv = (apps?.universityChoices?.length ?? 0) > 0;
+  $: hasIndie = (apps?.independentChoices?.length ?? 0) > 0;
+  $: hasSports = apps?.sportsMilitaryApplied ?? false;
 
-  let phase: Phase = draftApplied ? "draft-board" : "results";
-  let resolving = false;
+  let draftRevealed = false;
+  let universityRevealed = false;
+  let indieRevealed = false;
+  let sportsRevealed = false;
+
+  $: canProceed =
+    (!draftApplied || draftRevealed) &&
+    (!hasUniv     || universityRevealed) &&
+    (!hasIndie    || indieRevealed) &&
+    (!hasSports   || sportsRevealed);
 
   function teamName(teamId: string | null): string {
     if (!teamId) return "-";
     return $masterStore.teams.find((t) => t.id === teamId)?.name ?? teamId;
+  }
+
+  function revealDraft() {
+    phase = "draft-board";
   }
 
   async function onDraftCompleted(e: CustomEvent<{
@@ -37,10 +54,12 @@
       draftPick: pick,
       draftSigningBonus: signingBonus,
     });
+    draftRevealed = true;
     phase = "results";
   }
 
   function onDraftClose() {
+    draftRevealed = true;
     phase = "results";
   }
 
@@ -74,9 +93,16 @@
       <div class="results-grid">
 
         {#if draftApplied}
-          <div class="result-block" class:pass={results?.draftDrafted} class:fail={!results?.draftDrafted}>
+          <div
+            class="result-block"
+            class:pass={draftRevealed && (results?.draftDrafted ?? false)}
+            class:fail={draftRevealed && !(results?.draftDrafted ?? false)}
+            class:pending={!draftRevealed}
+          >
             <p class="block-label">드래프트</p>
-            {#if results?.draftDrafted}
+            {#if !draftRevealed}
+              <button class="reveal-btn" on:click={revealDraft}>드래프트 보드 확인 →</button>
+            {:else if results?.draftDrafted}
               <p class="block-main">{teamName(results.draftTeamId)} / {results.draftRound}R {results.draftPick}P</p>
               <p class="block-sub">계약금 {(results.draftSigningBonus ?? 0).toLocaleString()}만원</p>
             {:else}
@@ -85,10 +111,17 @@
           </div>
         {/if}
 
-        {#if apps?.universityChoices?.length}
-          <div class="result-block" class:pass={(results?.universityPassed?.length ?? 0) > 0} class:fail={(results?.universityPassed?.length ?? 0) === 0}>
+        {#if hasUniv}
+          <div
+            class="result-block"
+            class:pass={universityRevealed && (results?.universityPassed?.length ?? 0) > 0}
+            class:fail={universityRevealed && (results?.universityPassed?.length ?? 0) === 0}
+            class:pending={!universityRevealed}
+          >
             <p class="block-label">대학 지원</p>
-            {#if results?.universityPassed?.length}
+            {#if !universityRevealed}
+              <button class="reveal-btn" on:click={() => (universityRevealed = true)}>결과 확인 →</button>
+            {:else if results?.universityPassed?.length}
               {#each results.universityPassed as teamId}
                 <p class="block-main">{teamName(teamId)} 합격</p>
               {/each}
@@ -98,10 +131,17 @@
           </div>
         {/if}
 
-        {#if apps?.independentChoices?.length}
-          <div class="result-block" class:pass={(results?.independentPassed?.length ?? 0) > 0} class:fail={(results?.independentPassed?.length ?? 0) === 0}>
+        {#if hasIndie}
+          <div
+            class="result-block"
+            class:pass={indieRevealed && (results?.independentPassed?.length ?? 0) > 0}
+            class:fail={indieRevealed && (results?.independentPassed?.length ?? 0) === 0}
+            class:pending={!indieRevealed}
+          >
             <p class="block-label">독립리그 지원</p>
-            {#if results?.independentPassed?.length}
+            {#if !indieRevealed}
+              <button class="reveal-btn" on:click={() => (indieRevealed = true)}>결과 확인 →</button>
+            {:else if results?.independentPassed?.length}
               {#each results.independentPassed as teamId}
                 <p class="block-main">{teamName(teamId)} 합격</p>
               {/each}
@@ -111,21 +151,32 @@
           </div>
         {/if}
 
-        {#if apps?.sportsMilitaryApplied}
-          <div class="result-block" class:pass={results?.sportsMilitaryPassed} class:fail={!results?.sportsMilitaryPassed}>
+        {#if hasSports}
+          <div
+            class="result-block"
+            class:pass={sportsRevealed && (results?.sportsMilitaryPassed ?? false)}
+            class:fail={sportsRevealed && !(results?.sportsMilitaryPassed ?? false)}
+            class:pending={!sportsRevealed}
+          >
             <p class="block-label">체육부대</p>
-            <p class="block-main" class:fail-text={!results?.sportsMilitaryPassed}>
-              {results?.sportsMilitaryPassed ? "합격" : "불합격"}
-            </p>
+            {#if !sportsRevealed}
+              <button class="reveal-btn" on:click={() => (sportsRevealed = true)}>결과 확인 →</button>
+            {:else}
+              <p class="block-main" class:fail-text={!results?.sportsMilitaryPassed}>
+                {results?.sportsMilitaryPassed ? "합격" : "불합격"}
+              </p>
+            {/if}
           </div>
         {/if}
 
       </div>
 
-      <p class="guide">다음 화면에서 최종 진로를 선택합니다.</p>
+      <p class="guide">
+        {canProceed ? "다음 화면에서 최종 진로를 선택합니다." : "모든 결과를 확인한 후 진행할 수 있습니다."}
+      </p>
 
       <div class="actions">
-        <button disabled={resolving} on:click={confirm}>진로 선택으로 →</button>
+        <button disabled={resolving || !canProceed} on:click={confirm}>진로 선택으로 →</button>
       </div>
     </section>
   </div>
@@ -156,25 +207,40 @@
     border-radius: 10px;
     padding: 14px 16px;
     display: grid;
-    gap: 4px;
+    gap: 8px;
     border: 1px solid #2a4060;
     background: #0e1e38;
   }
-  .result-block.pass { background: #0e2818; border-color: #2a6040; }
-  .result-block.fail { background: #1e1010; border-color: #503030; }
+  .result-block.pass    { background: #0e2818; border-color: #2a6040; }
+  .result-block.fail    { background: #1e1010; border-color: #503030; }
+  .result-block.pending { background: #101828; border-color: #2a3a58; }
 
   .block-label { margin: 0; font-size: 11px; color: #6888b0; }
-  .block-main { margin: 0; font-size: 15px; font-weight: 700; color: #c8e8ff; }
-  .block-sub { margin: 0; font-size: 12px; color: #6888b0; }
-  .fail-text { color: #c06060; }
+  .block-main  { margin: 0; font-size: 15px; font-weight: 700; color: #c8e8ff; }
+  .block-sub   { margin: 0; font-size: 12px; color: #6888b0; }
+  .fail-text   { color: #c06060; }
+
+  .reveal-btn {
+    background: #1a2e50;
+    border: 1px solid #3a5a90;
+    color: #a0c8f0;
+    border-radius: 8px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    width: fit-content;
+  }
+  .reveal-btn:hover { background: #1e3860; }
 
   .guide { margin: 0; font-size: 13px; color: #7090b0; }
 
   .actions { display: flex; justify-content: flex-end; }
-  button {
+  button:not(.reveal-btn) {
     background: #1a3a6a; border: 1px solid #3a6ab0;
     color: #d8f0ff; border-radius: 8px;
     padding: 9px 18px; cursor: pointer; font-size: 14px;
   }
-  button:disabled { opacity: 0.5; cursor: default; }
+  button:not(.reveal-btn):disabled { opacity: 0.5; cursor: default; }
 </style>

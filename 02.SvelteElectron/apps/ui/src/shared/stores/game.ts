@@ -1583,12 +1583,15 @@ function createGameStore() {
     async processAllLeaguesSeasonEnd(seasonYear: number) {
       const s = get({ subscribe });
 
-      // FA 재배치 추적: before 스냅샷 (프로 FA 자격 NPC만)
+      // before 스냅샷: FA 추적 (프로 FA 자격 NPC) + 병역 상태 추적 (전체)
       const proLeagues = new Set(["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]);
       const beforeTeam = new Map<string, string>(
         s.npcs
           .filter(n => proLeagues.has(n.currentLeague) && (n.proServiceYears ?? 0) >= 9)
           .map(n => [n.npcId, n.currentTeam])
+      );
+      const beforeMilitary = new Map(
+        s.npcs.map(n => [n.npcId, { name: n.name, status: n.militaryStatus, unit: n.militaryUnit }])
       );
 
       const result = await runOffseasonProcessing(s.npcs, s.pendingDraft, seasonYear);
@@ -1603,9 +1606,9 @@ function createGameStore() {
         return n;
       });
 
-      // FA 재배치 기록: 오프시즌 처리 후 팀이 바뀐 FA 자격 선수
       const slotId = s.currentSlotId;
       if (slotId) {
+        // FA 재배치 기록: 오프시즌 처리 후 팀이 바뀐 FA 자격 선수
         const faRows: import("../types/save").LeagueTransactionRow[] = [];
         for (const n of result.npcs) {
           const prev = beforeTeam.get(n.npcId);
@@ -1628,12 +1631,29 @@ function createGameStore() {
         }
       }
 
-      // 병역 현황 메시지용 임시 저장
+      // before/after 비교로 실제 입대·전역 이름 추출
+      const militaryEnlistedSports: string[] = [];
+      const militaryEnlistedGeneral: string[] = [];
+      const militaryDischargedNames: string[] = [];
+      for (const n of result.npcs) {
+        const before = beforeMilitary.get(n.npcId);
+        if (!before) continue;
+        if (before.status !== "현역" && n.militaryStatus === "현역") {
+          if (n.militaryUnit === "sports") {
+            militaryEnlistedSports.push(n.name);
+          } else {
+            militaryEnlistedGeneral.push(n.name);
+          }
+        } else if (before.status === "현역" && n.militaryStatus !== "현역") {
+          militaryDischargedNames.push(before.name);
+        }
+      }
       (window as any).__lastOffseasonSummary = {
-        militaryEnlistedSports:   (result.summary as any).militaryEnlistedSports ?? [],
-        militaryEnlistedGeneral:  (result.summary as any).militaryEnlistedGeneral ?? [],
-        militaryDischargedNames:  (result.summary as any).militaryDischargedNames ?? [],
+        militaryEnlistedSports,
+        militaryEnlistedGeneral,
+        militaryDischargedNames,
       };
+
       update((st) => ({
         ...st,
         npcs: decayedNpcs,
@@ -1866,6 +1886,25 @@ function createGameStore() {
         s.npcs, simResult, universityTeamIds, independentTeamIds,
       );
       update(st => ({ ...st, npcs: updatedNpcs, pendingDraft: [] }));
+
+      // NPC 드래프트 픽 거래 기록
+      const slotId = s.currentSlotId;
+      if (slotId && simResult.picks.length > 0) {
+        const nameMap = new Map(s.pendingDraft.map((n) => [n.npcId, n.name]));
+        const rows = simResult.picks.map((pick) => ({
+          seasonYear: year,
+          category: "draft" as const,
+          playerId: pick.npcId,
+          playerName: nameMap.get(pick.npcId) ?? pick.npcId,
+          fromTeamId: null,
+          fromLeagueId: null,
+          toTeamId: pick.teamId,
+          toLeagueId: "LEAGUE_KBL",
+          detail: `${pick.round}라운드 ${pick.pick}순위`,
+          groupId: null,
+        }));
+        window.projectB?.leagueAddTransactions(JSON.stringify({ slotId, rows }));
+      }
     },
 
     // 하위 호환: App.svelte의 hydrate 호출 유지
