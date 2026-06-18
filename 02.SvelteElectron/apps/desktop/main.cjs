@@ -843,6 +843,21 @@ app.whenReady().then(() => {
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
 
+  // ── dev: 자동 진행 로그 파일 기록 ────────────────────────────────────────────
+  const logsDir = isDev
+    ? path.join(rootDir, "resource", "logs")
+    : path.join(userDataDir, "logs");
+  ipcMain.handle("log:write", (_event, p) => {
+    try {
+      const { filename, content } = JSON.parse(p);
+      if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir, { recursive: true });
+      fs.appendFileSync(path.join(logsDir, filename), content + "\n", "utf-8");
+      return JSON.stringify({ ok: true });
+    } catch (e) {
+      return JSON.stringify({ error: String(e?.message ?? e) });
+    }
+  });
+
   // ── scouting_engine ──────────────────────────────────────────────────────────
   ipcMain.handle("scouting:applyNoise", (_e, p) => {
     try { return engineNative.applyScoutingNoiseNative(p); }

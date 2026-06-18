@@ -276,4 +276,9 @@ function main() {
   console.log(`[generate_master_db] → ${OUT_DB}`);
 }
 
-main();
+if (process.versions.electron) {
+  const { app } = require("electron");
+  app.whenReady().then(() => { main(); app.quit(); });
+} else {
+  main();
+}

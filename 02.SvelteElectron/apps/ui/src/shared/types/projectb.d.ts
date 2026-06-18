@@ -247,6 +247,7 @@ declare global {
         thresholds?: MatchEngineSmokeThresholds;
       }>;
       onContentChanged?: (cb: (data: unknown) => void) => void;
+      logWrite?: (payload: string) => Promise<string>;
     };
   }
 }

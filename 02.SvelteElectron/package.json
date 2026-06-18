@@ -20,9 +20,7 @@
     "predev": "npm run build:native || echo [engine-native] Rust 빌드 실패 - match engine stubs 사용 (dev 전용)",
     "dev": "concurrently -k \"npm:dev:ui\" \"npm:dev:desktop\"",
     "build:ui": "npm run gen:manifest && vite build --config vite.config.ts",
-    "prebuild:masterdb": "npm rebuild better-sqlite3",
-    "build:masterdb": "node scripts/generate_master_db.cjs",
-    "postbuild:masterdb": "electron-rebuild -f -w better-sqlite3",
+    "build:masterdb": "electron scripts/generate_master_db.cjs",
     "prebuild": "npm run build:native",
     "build": "npm run build:masterdb && npm run build:packages && npm run build:ui",
     "predeploy": "npm run build",
@@ -59,6 +57,7 @@
       "resource/**",
       "!resource/data/staging/**",
       "!resource/data/balance/**",
+      "!resource/data/master/entities/players/**",
       "!scripts/**",
       "!docs/**"
     ],

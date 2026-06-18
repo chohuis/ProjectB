@@ -688,9 +688,14 @@ async function processTradeWindow(weekInYear: number, leagueId: string): Promise
   if (!slotId) return;
 
   // ① 리그 전체 NPC 수집
-  const npcRows = JSON.parse(
+  const _npcRaw = JSON.parse(
     await window.projectB!.npcGetByLeague(JSON.stringify({ slotId, leagueId }))
-  ) as Array<{
+  );
+  if (!Array.isArray(_npcRaw)) {
+    console.warn("[processTradeWindow] npcGetByLeague 응답이 배열이 아님:", _npcRaw);
+    return;
+  }
+  const npcRows = _npcRaw as Array<{
     npcId: string; position: string; currentTeam: string; currentLeague: string;
     currentSalary: number; contractYears: number; proServiceYears: number;
     pitchOvr: number | null; batOvr: number | null; age: number;
