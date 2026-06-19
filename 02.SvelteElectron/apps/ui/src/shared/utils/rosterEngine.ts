@@ -96,7 +96,8 @@ function applyNpcInjuries(entities: EntityRow[], npcInjuries: Record<string, Npc
 function getTeamPlayers(teamId: string, entities: EntityRow[], npcInjuries?: Record<string, NpcInjuryEntry>, npcRetired?: string[]): EntityRow[] {
   const retiredSet = new Set(npcRetired ?? []);
   const active = entities.filter(
-    (e) => e.role === "player" && e.teamId === teamId && e.status === "active" && !retiredSet.has(e.id),
+    (e) => e.role === "player" && e.teamId === teamId && !retiredSet.has(e.id)
+      && (e.status === "active" || (e.status === "military" && teamId === "TEAM_SPORTS_UNIT")),
   );
   return npcInjuries ? applyNpcInjuries(active, npcInjuries) : active;
 }

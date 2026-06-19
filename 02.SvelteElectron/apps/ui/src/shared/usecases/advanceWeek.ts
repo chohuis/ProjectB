@@ -794,6 +794,40 @@ async function processTradeWindow(weekInYear: number, leagueId: string): Promise
 
   const allNpcAssets = npcRows.map(buildNpcAsset);
 
+  // ── Phase 5: 배경 엔티티 트레이드 자산 ──────────────────────────────────────
+  const bgTradeEntities = m.entities.filter(e =>
+    e.role === "player" &&
+    e.leagueId === leagueId &&
+    e.teamId && e.teamId !== "" &&
+    e.status !== "retired" &&
+    !namedMap.has(e.id) &&
+    !e.details?.player?.militaryEnlistYear
+  );
+  const bgEntityAssets = bgTradeEntities.map(e => {
+    const liveOvr = npcOvr(e, s.npcLiveStats);
+    const inj = s.npcInjuries[e.id];
+    return {
+      playerId: e.id,
+      teamId: e.teamId!,
+      position: e.details?.player?.position ?? "SP",
+      age: e.age,
+      ovr: liveOvr,
+      trueOvr: liveOvr,
+      salary: 2000,
+      remainingYears: 1,
+      isProspect: (e.details?.player?.proServiceYears ?? 0) <= 2,
+      personality: e.personality ?? null,
+      injurySeverity: inj?.severity ?? null,
+      injuryWeeksLeft: inj?.weeksLeft ?? 0,
+      careerInjuryCount: 0,
+      hasSteroidHistory: false,
+    };
+  });
+  for (const teamRoster of teamWithRosters) {
+    const bgIds = bgEntityAssets.filter(a => a.teamId === teamRoster.teamId).map(a => a.playerId);
+    teamRoster.activeRoster.push(...bgIds);
+  }
+
   const proInjury = g.protagonist.injury;
   const proHistory = g.protagonist.injuryHistory ?? [];
   const protagonistAsset = {
@@ -814,7 +848,9 @@ async function processTradeWindow(weekInYear: number, leagueId: string): Promise
       proHistory.some((h) => h.treatmentChoice === "steroid"),
   };
 
-  const allAssets = isMyLeague ? [...allNpcAssets, protagonistAsset] : allNpcAssets;
+  const allAssets = isMyLeague
+    ? [...allNpcAssets, ...bgEntityAssets, protagonistAsset]
+    : [...allNpcAssets, ...bgEntityAssets];
 
   // ④ generateTradeProposals 호출
   const seasonStanding: Record<string, number> = {};
@@ -995,7 +1031,30 @@ async function processTradeWindow(weekInYear: number, leagueId: string): Promise
       npcId1: offeredId,   teamId1: proposal.receivingTeamId,
       npcId2: requestedId, teamId2: proposal.proposingTeamId,
     }));
-    autoLog(`[트레이드성사] ${leagueId} W${weekInYear}: ${namedMap.get(offeredId)?.name ?? offeredId} ↔ ${namedMap.get(requestedId)?.name ?? requestedId}`);
+    // 배경 엔티티 팀 이동 overlay 저장
+    {
+      const bgMoves: Array<{ id: string; teamId: string }> = [];
+      const bgOff = bgEntityAssets.find(a => a.playerId === offeredId);
+      const bgReq = bgEntityAssets.find(a => a.playerId === requestedId);
+      if (bgOff) bgMoves.push({ id: bgOff.playerId, teamId: proposal.receivingTeamId });
+      if (bgReq) bgMoves.push({ id: bgReq.playerId, teamId: proposal.proposingTeamId });
+      if (bgMoves.length > 0) {
+        masterStore.patchEntityTeams(bgMoves);
+        const moveMap = new Map(bgMoves.map(mv => [mv.id, mv.teamId]));
+        const toUpsert = m.entities
+          .filter(e => moveMap.has(e.id))
+          .map(e => ({ ...e, teamId: moveMap.get(e.id)!, slotId }));
+        if (toUpsert.length > 0) {
+          const res = JSON.parse(
+            await window.projectB!.masterBulkUpsertEntities(
+              JSON.stringify({ slotId, entities: toUpsert })
+            )
+          ) as { ok: boolean; error?: string };
+          if (res.error) autoLog(`[트레이드overlay오류] ${res.error}`);
+        }
+      }
+    }
+    autoLog(`[트레이드성사] ${leagueId} W${weekInYear}: ${namedMap.get(offeredId)?.name ?? m.entities.find(e => e.id === offeredId)?.name ?? offeredId} ↔ ${namedMap.get(requestedId)?.name ?? m.entities.find(e => e.id === requestedId)?.name ?? requestedId}`);
 
     // 트레이드 결과 메시지 (뉴스 형식)
     const team1Name = m.teams.find((t) => t.id === proposal.proposingTeamId)?.name ?? proposal.proposingTeamId;
@@ -1363,7 +1422,23 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
     }
   }
 
-  if (entityMoves.length > 0) masterStore.patchEntityTeams(entityMoves);
+  if (entityMoves.length > 0) {
+    masterStore.patchEntityTeams(entityMoves);
+    if (slotId) {
+      const moveMap = new Map(entityMoves.map(mv => [mv.id, mv.teamId]));
+      const toUpsert = m.entities
+        .filter(e => moveMap.has(e.id))
+        .map(e => ({ ...e, teamId: moveMap.get(e.id)!, status: "retired" as const, slotId }));
+      if (toUpsert.length > 0) {
+        const res = JSON.parse(
+          await window.projectB!.masterBulkUpsertEntities(
+            JSON.stringify({ slotId, entities: toUpsert })
+          )
+        ) as { ok: boolean; error?: string };
+        if (res.error) autoLog(`[은퇴overlay오류] ${res.error}`);
+      }
+    }
+  }
 
   if (slotId && bgRetirementRows.length > 0) {
     autoLog(`[은퇴기록] 배경 NPC 은퇴 ${bgRetirementRows.length}명 DB 저장`);
@@ -1373,9 +1448,90 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
     if (res.error) autoLog(`[은퇴기록오류] ${res.error}`);
   }
 
-  // ── ABL/JBL 신규 입장자(entry_year) FA 처리 ────────────────────
-  // W1에서 npcLiveStats에 초기화된 pro entrant를 FA 풀에 추가
-  // (entry_team=null인 경우, FA 시장을 통해 팀 배정됨 — run_fa_engine에서 자동 처리)
+  // ── Phase 3: 배경 엔티티 FA 처리 ─────────────────────────────────────────
+  {
+    const retiredEntityIds = new Set(entityMoves.map(mv => mv.id));
+    const bgFaEntities = m.entities.filter(e =>
+      e.role === "player" &&
+      e.leagueId && proLeagues.has(e.leagueId) &&
+      e.teamId && e.teamId !== "" &&
+      e.status !== "retired" &&
+      !namedIdSet.has(e.id) &&
+      !retiredEntityIds.has(e.id) &&
+      !e.details?.player?.militaryEnlistYear &&
+      e.age < 36 &&
+      (e.details?.player?.proServiceYears ?? 0) >= getFaThreshold(e.leagueId)
+    );
+
+    const bgFaMoves: Array<{ id: string; teamId: string }> = [];
+    const bgFaRows: object[] = [];
+
+    for (const entity of bgFaEntities) {
+      const leagueId = entity.leagueId!;
+      const proSY = entity.details?.player?.proServiceYears ?? 0;
+      const liveOvr = npcOvr(entity, s.npcLiveStats);
+      const leagueStd = getLeagueStandings(leagueId, s);
+      const teamStandings = [...leagueStd].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
+      const teamRank = teamStandings.findIndex(r => r.teamId === entity.teamId) + 1;
+
+      const faRes = JSON.parse(
+        await window.projectB!.playerEvalFaDecisionNative(JSON.stringify({
+          personality: entity.personality ?? defaultPersonality(),
+          age: entity.age,
+          ovr: liveOvr,
+          proServiceYears: proSY,
+          currentSalary: 2000,
+          marketValue: 2000,
+          teamStanding: teamRank || 4,
+          totalTeams: teamStandings.length || 8,
+          expectedPlayingTime: 0.7,
+          leagueId,
+          fame: 0,
+        }))
+      ) as { applyFa: boolean };
+
+      if (!faRes.applyFa) continue;
+
+      const candidates = m.teams.filter(t => t.leagueId === leagueId && t.id !== entity.teamId);
+      if (candidates.length === 0) continue;
+
+      const cIdx = [...entity.id].reduce((acc, c) => acc + c.charCodeAt(0), s.seasonYear) % candidates.length;
+      const newTeam = candidates[cIdx];
+
+      bgFaMoves.push({ id: entity.id, teamId: newTeam.id });
+      autoLog(`[배경FA] ${entity.name ?? entity.id} ${entity.teamId} → ${newTeam.id}`);
+      bgFaRows.push({
+        seasonYear: s.seasonYear, week: weekNum, category: "fa",
+        playerId: entity.id, playerName: entity.name ?? entity.id,
+        fromTeamId: entity.teamId, toTeamId: newTeam.id,
+        fromLeagueId: leagueId, detail: "오프시즌 FA 이적",
+      });
+    }
+
+    if (bgFaMoves.length > 0) {
+      masterStore.patchEntityTeams(bgFaMoves);
+      if (slotId) {
+        const moveMap = new Map(bgFaMoves.map(mv => [mv.id, mv.teamId]));
+        const toUpsert = m.entities
+          .filter(e => moveMap.has(e.id))
+          .map(e => ({ ...e, teamId: moveMap.get(e.id)!, slotId }));
+        const res = JSON.parse(
+          await window.projectB!.masterBulkUpsertEntities(
+            JSON.stringify({ slotId, entities: toUpsert })
+          )
+        ) as { ok: boolean; error?: string };
+        if (res.error) autoLog(`[배경FA오류] ${res.error}`);
+      }
+    }
+
+    if (slotId && bgFaRows.length > 0) {
+      autoLog(`[FA기록] 배경 NPC FA ${bgFaRows.length}명 DB 저장`);
+      const res = JSON.parse(
+        await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: bgFaRows }))
+      );
+      if (res.error) autoLog(`[FA기록오류] ${res.error}`);
+    }
+  }
 
   return logs;
 }

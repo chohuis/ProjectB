@@ -230,6 +230,78 @@ async function handleSeasonEnd(): Promise<void> {
 
   await gameStore.applyAgingDecay();
 
+  // ── Phase 1: 배경 엔티티 age / proServiceYears 연간 갱신 ─────────────────
+  {
+    const gAge = get(gameStore);
+    const mAge = get(masterStore);
+    const slotIdAge = gAge.currentSlotId;
+    const namedIdsAge = new Set(gAge.npcs.map(n => n.npcId));
+    const proLeagueSetAge = new Set(["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]);
+
+    const toAge = mAge.entities.filter(e =>
+      e.role === "player" &&
+      e.leagueId && proLeagueSetAge.has(e.leagueId) &&
+      !namedIdsAge.has(e.id)
+    );
+
+    if (toAge.length > 0 && slotIdAge) {
+      const aged = toAge.map(e => {
+        const isPro = !!(e.teamId && e.teamId !== "");
+        const curPSY = (e.details?.player?.proServiceYears ?? 0);
+        return {
+          ...e,
+          age: e.age + 1,
+          details: {
+            ...e.details,
+            player: {
+              ...e.details?.player,
+              proServiceYears: isPro ? curPSY + 1 : curPSY,
+            },
+          },
+        };
+      });
+      const ageRes = JSON.parse(
+        await window.projectB!.masterBulkUpsertEntities(
+          JSON.stringify({ slotId: slotIdAge, entities: aged })
+        )
+      ) as { ok: boolean; count?: number; error?: string };
+      if (ageRes.error) autoLog(`[엔티티에이징오류] ${ageRes.error}`);
+      else autoLog(`[엔티티에이징] ${ageRes.count ?? aged.length}명 overlay 저장`);
+      await masterStore.reloadEntities(now, slotIdAge);
+    }
+  }
+
+  // ── Phase 6: 배경 엔티티 드래프트 기록 ─────────────────────────────────────
+  {
+    const gDraft = get(gameStore);
+    const mDraft = get(masterStore);
+    const slotIdDraft = gDraft.currentSlotId;
+    if (slotIdDraft) {
+      const namedIdsDraft = new Set(gDraft.npcs.map(n => n.npcId));
+      const proLeaguesDraft = new Set(["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]);
+      const bgDraftEntries = mDraft.entities.filter(e =>
+        e.role === "player" &&
+        e.leagueId && proLeaguesDraft.has(e.leagueId) &&
+        !namedIdsDraft.has(e.id) &&
+        e.entryYear === now &&
+        e.teamId && e.teamId !== ""
+      );
+      if (bgDraftEntries.length > 0) {
+        const draftRows = bgDraftEntries.map(e => ({
+          seasonYear: now, category: "draft",
+          playerId: e.id, playerName: e.name ?? e.id,
+          toTeamId: e.teamId, toLeagueId: e.leagueId,
+          detail: "드래프트 입단",
+        }));
+        const draftRes = JSON.parse(
+          await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId: slotIdDraft, rows: draftRows }))
+        ) as { ok: boolean; error?: string };
+        if (draftRes.error) autoLog(`[배경드래프트오류] ${draftRes.error}`);
+        else autoLog(`[배경드래프트] ${bgDraftEntries.length}명 기록`);
+      }
+    }
+  }
+
   const gNow = get(gameStore);
   autoLog(`[드래프트] pendingDraft=${gNow.pendingDraft.length}명`);
   if (gNow.pendingDraft.length > 0) {

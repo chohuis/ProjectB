@@ -170,6 +170,7 @@ export interface EntityPlayerDetails {
   developmentRate: number;
   potentialHidden: number;
   proServiceYears?: number;
+  militaryEnlistYear?: number;
   contract?: NpcContract;
   pitches?: import("../types/save").PitchEntry[];
 }
@@ -188,7 +189,7 @@ export interface EntityRow {
   nameEn?: string;
   role: "player" | "coach" | "manager" | "owner";
   age: number;
-  status: "active" | "inactive" | "retired" | "injured";
+  status: "active" | "inactive" | "retired" | "injured" | "military";
   originLeagueId: string;
   leagueId: string;
   clubId: string;
@@ -710,11 +711,11 @@ function createMasterStore() {
     update((s) => ({ ...s, achievements }));
   }
 
-  async function reloadEntities(seasonYear?: number) {
+  async function reloadEntities(seasonYear?: number, slotId?: string) {
     try {
       let rows: EntityRow[];
       if (window.projectB?.masterLoadEntities) {
-        rows = (await window.projectB.masterLoadEntities("", seasonYear)) as EntityRow[];
+        rows = (await window.projectB.masterLoadEntities("", seasonYear, slotId)) as EntityRow[];
       } else {
         const index = await fetchMaster<EntityIndex>("entities/players/_index.json");
         if (!index?.byLeague) return;
@@ -727,10 +728,10 @@ function createMasterStore() {
     }
   }
 
-  async function loadEntities(leagueId: string, seasonYear?: number) {
+  async function loadEntities(leagueId: string, seasonYear?: number, slotId?: string) {
     let rows: EntityRow[];
     if (window.projectB?.masterLoadEntities) {
-      rows = (await window.projectB.masterLoadEntities(leagueId, seasonYear)) as EntityRow[];
+      rows = (await window.projectB.masterLoadEntities(leagueId, seasonYear, slotId)) as EntityRow[];
     } else {
       const index = await fetchMaster<EntityIndex>("entities/players/_index.json");
       if (!index?.byLeague) return;

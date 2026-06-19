@@ -204,9 +204,10 @@ declare global {
       updatePlayerLoyaltyNative(p: string): Promise<string>;
       // ── 마스터 데이터 (Electron 패키징 환경용 fallback) ──────
       masterFetch: (relPath: string) => Promise<unknown>;
-      masterLoadEntities: (leagueId: string, seasonYear?: number) => Promise<unknown[]>;
+      masterLoadEntities: (leagueId: string, seasonYear?: number, slotId?: string) => Promise<unknown[]>;
       masterUpsertEntity: (entity: unknown) => Promise<{ ok: boolean; error?: string }>;
-      masterDeleteEntity: (payload: { id: string; leagueId?: string }) => Promise<{ ok: boolean; error?: string }>;
+      masterDeleteEntity: (payload: { id: string; leagueId?: string; slotId?: string }) => Promise<{ ok: boolean; error?: string }>;
+      masterBulkUpsertEntities: (p: string) => Promise<string>;
       masterSave: (payload: { relPath: string; data: unknown; backup?: boolean }) => Promise<{
         ok: boolean;
         error?: string;

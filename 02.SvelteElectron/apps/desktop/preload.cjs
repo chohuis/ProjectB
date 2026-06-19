@@ -26,9 +26,10 @@ contextBridge.exposeInMainWorld("projectB", {
 
   // ── 마스터 데이터 ────────────────────────────────────────────────────────
   masterFetch: (relPath)       => ipcRenderer.invoke("master:fetch",        relPath),
-  masterLoadEntities: (leagueId, seasonYear) => ipcRenderer.invoke("master:loadEntities", leagueId, seasonYear),
-  masterUpsertEntity: (entity) => ipcRenderer.invoke("master:upsertEntity", entity),
-  masterDeleteEntity: (payload) => ipcRenderer.invoke("master:deleteEntity", payload),
+  masterLoadEntities: (leagueId, seasonYear, slotId) => ipcRenderer.invoke("master:loadEntities", leagueId, seasonYear, slotId),
+  masterUpsertEntity: (entity)  => ipcRenderer.invoke("master:upsertEntity",       entity),
+  masterDeleteEntity: (payload) => ipcRenderer.invoke("master:deleteEntity",        payload),
+  masterBulkUpsertEntities: (p) => ipcRenderer.invoke("master:bulkUpsertEntities", p),
 
   // ── 마운드 방문 ─────────────────────────────────────────────────────────
   matchMoundVisit:        ()    => ipcRenderer.invoke("match:mound-visit"),
