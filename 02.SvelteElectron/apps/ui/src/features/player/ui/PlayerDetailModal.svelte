@@ -289,6 +289,55 @@
       .map((r) => ({ year: r.year, leagueId: r.leagueId, teamId: r.teamId, statLine: r.statLine, rank: undefined as number | undefined, totalTeams: undefined as number | undefined, stats: r.stats }));
   })();
   $: hasRank = historyEntries.some((e) => e.rank != null);
+
+  // ── 팀 이력 (league_transactions DB 조회) ────────────────────
+  type PlayerTransaction = {
+    id: number; seasonYear: number; week: number | null;
+    category: string;
+    fromTeamId: string | null; fromLeagueId: string | null;
+    toTeamId: string | null; toLeagueId: string | null;
+    detail: string | null;
+  };
+
+  let playerTransactions: PlayerTransaction[] = [];
+  let _txFetchVersion = 0;
+
+  $: {
+    const slotId = $gameStore.currentSlotId;
+    const myVersion = ++_txFetchVersion;
+    if (entityId && slotId && !isProtagonistModal) {
+      window.projectB!.leagueGetTransactions(
+        JSON.stringify({ slotId, playerId: entityId, limit: 50 })
+      ).then((raw) => {
+        if (_txFetchVersion !== myVersion) return;
+        try {
+          const parsed = JSON.parse(raw);
+          playerTransactions = Array.isArray(parsed) ? parsed : [];
+        } catch {
+          playerTransactions = [];
+        }
+      });
+    } else {
+      playerTransactions = [];
+    }
+  }
+
+  function txLabel(cat: string) {
+    const m: Record<string, string> = {
+      trade: "트레이드", fa: "FA", retirement: "은퇴",
+      military: "병역", draft: "드래프트",
+    };
+    return m[cat] ?? cat;
+  }
+
+  function txDesc(tx: PlayerTransaction): string {
+    const from = tx.fromTeamId ? (teamById.get(tx.fromTeamId) ?? tx.fromTeamId) : null;
+    const to   = tx.toTeamId   ? (teamById.get(tx.toTeamId)   ?? tx.toTeamId)   : null;
+    if (from && to)  return `${from} → ${to}`;
+    if (to)          return to;
+    if (from)        return `${from} 퇴단`;
+    return tx.detail ?? "-";
+  }
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
@@ -796,6 +845,25 @@
                             <td>{teamById.get(entry.teamId) ?? entry.teamId}</td>
                             <td>{entry.statLine}</td>
                             <td class="hl-cell">{entry.highlights.length > 0 ? entry.highlights.join(", ") : "-"}</td>
+                          </tr>
+                        {/each}
+                      </tbody>
+                    </table>
+                  </section>
+                {/if}
+
+                <!-- 팀 이력 (league_transactions 기반) -->
+                {#if playerTransactions.length > 0}
+                  <section class="msec">
+                    <h4>팀 이력</h4>
+                    <table class="gtable">
+                      <thead><tr><th>연도</th><th>유형</th><th>내용</th></tr></thead>
+                      <tbody>
+                        {#each playerTransactions as tx}
+                          <tr>
+                            <td>{tx.seasonYear}</td>
+                            <td>{txLabel(tx.category)}</td>
+                            <td>{txDesc(tx)}</td>
                           </tr>
                         {/each}
                       </tbody>

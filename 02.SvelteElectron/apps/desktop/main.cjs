@@ -709,7 +709,7 @@ app.whenReady().then(() => {
 
   ipcMain.handle("league:getTransactions", (_event, p) => {
     try {
-      const { slotId, seasonYear, category, leagueId, limit = 200 } = JSON.parse(p);
+      const { slotId, seasonYear, category, leagueId, playerId, limit = 200 } = JSON.parse(p);
       let sql = `
         SELECT id, season_year, week, category, player_id, player_name,
                from_team_id, from_league_id, to_team_id, to_league_id, detail, group_id
@@ -720,6 +720,7 @@ app.whenReady().then(() => {
       if (seasonYear != null) { sql += " AND season_year = ?"; params.push(seasonYear); }
       if (category)           { sql += " AND category = ?";    params.push(category); }
       if (leagueId)           { sql += " AND (from_league_id = ? OR to_league_id = ?)"; params.push(leagueId, leagueId); }
+      if (playerId)           { sql += " AND player_id = ?";   params.push(playerId); }
       sql += " ORDER BY id DESC LIMIT ?";
       params.push(Math.min(500, Math.max(1, Number(limit))));
       const rows = db.prepare(sql).all(...params);

@@ -615,6 +615,13 @@ function applySchemaPatches(db) {
       console.log("[db-patch] v4: protagonist 누락 컬럼 보완 완료");
     })();
   }
+
+  if (currentVersion < 5) {
+    db.exec(`CREATE INDEX IF NOT EXISTS idx_lt_player
+      ON league_transactions(slot_id, player_id, id DESC)`);
+    db.pragma("user_version = 5");
+    console.log("[db-patch] v5: league_transactions player_id 인덱스 추가");
+  }
 }
 
 function dbListSlots(db) {
