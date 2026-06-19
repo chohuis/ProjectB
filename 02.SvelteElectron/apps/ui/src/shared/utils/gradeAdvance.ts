@@ -22,7 +22,7 @@ export function entityToNpcState(
   emotionRole?: NpcEmotionRole,
 ): NpcSaveState {
   const pl   = entity.details.player as EntityPlayerDetails;
-  const grade = entity.grade ?? 3;
+  const grade = (Math.min(entity.grade ?? 3, 3)) as 1 | 2 | 3;
   const isMilitary = entity.militaryStatus === "현역";
   // 체육부대: notes에서 group 파악 ("senior" = 전역 1년 남음, "junior" = 막입대 2년 남음)
   const notes = (entity as unknown as { notes?: string }).notes ?? "";

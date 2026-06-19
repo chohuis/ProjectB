@@ -7,6 +7,7 @@ import { accumulateStats, migrateLeagueState, updateStandings } from "../utils/s
 import { makeStandings, ALL_TEAMS_BY_LEAGUE } from "../utils/leagueScheduler";
 import { simulateGame } from "../utils/gameSimulator";
 import { rotationSizeForLeague } from "../utils/rosterEngine";
+import { autoLog } from "./autoAdvance";
 
 // 팀 소속 감독의 handlePersonnel 능력치 조회
 function getManagerHandlePersonnel(teamId: string, entities: EntityRow[]): number {
@@ -38,7 +39,7 @@ export function runSimBatch(
     // 엔티티 없어서 시뮬 실패(winner_id="") 시 폴백으로 랜덤 결과 생성
     let result = sim.result;
     if (!result.winnerId) {
-      console.warn(`[DEV] FALLBACK SIM: ${g.id} | ${g.homeTeamId} vs ${g.awayTeamId} | leagueId=${g.leagueId}`);
+      autoLog(`[폴백SIM] 배경리그 엔티티없음: ${g.homeTeamId} vs ${g.awayTeamId} (${g.leagueId})`);
       const api = (window as unknown as { projectB: Record<string, (p: string) => Promise<string>> }).projectB;
       const fb = JSON.parse(
         await api.weekCalcNpcFallback(JSON.stringify({ homeTeamId: g.homeTeamId, awayTeamId: g.awayTeamId }))
@@ -70,12 +71,12 @@ export async function simulateBackgroundLeagues(
 ): Promise<SimBatchResult | null> {
   const batch: SimWorkerRequest["games"] = [];
   if (Object.keys(s.leagueSchedules).length === 0) {
-    console.warn("[DEV] leagueSchedules 비어있음 — 배경 리그 시뮬 스킵");
+    autoLog("[배경리그] leagueSchedules 비어있음 — 배경 리그 시뮬 스킵");
   }
   for (const [lid, schedule] of Object.entries(s.leagueSchedules)) {
     if (lid === protagonistLeagueId) continue;
     if (!Array.isArray(schedule)) {
-      console.error("[DEV] leagueSchedules 오염 — 배열 아님:", lid, schedule);
+      autoLog(`[배경리그오류] leagueSchedules 오염 — 배열 아님: ${lid}`);
       continue;
     }
     const lState = migrateLeagueState(s.leagueState[lid] ?? {});

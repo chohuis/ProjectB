@@ -1634,8 +1634,8 @@ function createGameStore() {
           const faRes = JSON.parse(
             await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: faRows }))
           );
-          if (faRes.error) console.error("[processAllLeaguesSeasonEnd] FA 기록 오류:", faRes.error);
-          else console.log(`[processAllLeaguesSeasonEnd] FA 기록 ${faRows.length}건 저장`);
+          if (faRes.error) autoLog(`[NPC FA오류] FA 기록 오류: ${faRes.error}`);
+          else autoLog(`[NPC FA] FA 기록 ${faRows.length}건 저장`);
         }
       }
 
@@ -1746,7 +1746,8 @@ function createGameStore() {
             const ovr = Math.round(
               (typeof rawOvr === "number" && isFinite(rawOvr)) ? rawOvr : 50
             );
-            return { id: e.id, name: e.name || e.id, ovr, teamId: e.teamId!, isProtagonist: false };
+            const pos = (e.details as any)?.player?.position ?? "";
+            return { id: e.id, name: e.name || e.id, ovr, teamId: e.teamId!, position: pos, isProtagonist: false };
           });
 
         autoLog(`[배경병역] 입대 후보 ${bgMilitaryCandidates.length}명`);
@@ -1823,7 +1824,7 @@ function createGameStore() {
         }))
       );
       if (raw.error) {
-        console.warn("[gameStore] applyAgingDecay failed", raw.error);
+        autoLog(`[에이징오류] applyAgingDecay 실패: ${raw.error}`);
         return;
       }
       update((st) => {
@@ -1916,6 +1917,7 @@ function createGameStore() {
 
       // 1. 학년 진급 + 졸업
       const { updated, graduated } = await advanceHighSchoolGrades(s.npcs, seasonYear);
+      autoLog(`[시즌종료] 고교NPC 진급 처리: 재학 ${updated.length}명, 졸업(드래프트대기) ${graduated.length}명`);
 
       // 2. 주인공 학년 진급
       const proto = s.protagonist;
@@ -2045,8 +2047,8 @@ function createGameStore() {
         const draftRes = JSON.parse(
           await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows }))
         );
-        if (draftRes.error) console.error("[processNpcDraft] 드래프트 기록 오류:", draftRes.error);
-        else console.log(`[processNpcDraft] 드래프트 기록 ${rows.length}건 저장`);
+        if (draftRes.error) autoLog(`[NPC드래프트오류] 기록 오류: ${draftRes.error}`);
+        else autoLog(`[NPC드래프트] 기록 ${rows.length}건 저장`);
       }
     },
 

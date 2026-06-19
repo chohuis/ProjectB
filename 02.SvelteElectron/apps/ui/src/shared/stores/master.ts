@@ -196,7 +196,7 @@ export interface EntityRow {
   teamId: string;
   tier?: string;
   schoolId: string;
-  grade?: 1 | 2 | 3;
+  grade?: number;
   notes: string;
   militaryStatus?: "미필" | "군필" | "현역" | "면제";
   personality?: import("../types/save").NpcPersonality;

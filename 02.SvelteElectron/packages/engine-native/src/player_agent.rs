@@ -37,7 +37,7 @@ pub fn player_eval_fa_decision(p: FaDecisionParams) -> FaDecisionResult {
     let mut w = 0.0_f64;
 
     let underpaid = ((p.market_value as f64 / p.current_salary.max(1) as f64) - 1.0).max(0.0);
-    w += underpaid * 40.0 * (pers.greed / 100.0);
+    w += underpaid * 70.0 * (pers.greed / 100.0);
 
     let rank_pct = p.team_standing as f64 / p.total_teams as f64;
     w += rank_pct * 30.0 * (pers.ambition / 100.0);
@@ -48,11 +48,11 @@ pub fn player_eval_fa_decision(p: FaDecisionParams) -> FaDecisionResult {
     if pers.overseas_ambition > 60.0 && p.fame >= 30.0 {
         w += (pers.overseas_ambition - 60.0) * 0.3;
     }
-    w -= pers.loyalty * 0.4;
-    w -= pers.stability_preference * 0.2;
+    w -= pers.loyalty * 0.15;
+    w -= pers.stability_preference * 0.08;
     if p.age >= 33 { w -= (p.age - 32) as f64 * 3.0; }
 
-    FaDecisionResult { apply_fa: w >= 40.0, willingness: w.clamp(0.0, 100.0) }
+    FaDecisionResult { apply_fa: w >= 20.0, willingness: w.clamp(0.0, 100.0) }
 }
 
 // ── player_eval_trade_response ───────────────────────────────────────────────
