@@ -2,7 +2,7 @@
   import { createEventDispatcher } from "svelte";
   import { gameStore } from "../../../shared/stores/game";
   import { seasonStore } from "../../../shared/stores/season";
-  import { runDraftBoardBackground } from "../../../shared/utils/draftSystem";
+  import { runDraftBoardBackground } from "../../../shared/usecases/runDraftBoardBackground";
   import DraftBoardModal from "./DraftBoardModal.svelte";
 
   const dispatch = createEventDispatcher<{ close: void }>();
