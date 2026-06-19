@@ -574,6 +574,47 @@ function applySchemaPatches(db) {
       db.pragma("user_version = 3");
     })();
   }
+
+  if (currentVersion < 4) {
+    db.transaction(() => {
+      const protagonistCols = [
+        ["military_unit",                   "TEXT"],
+        ["military_service_weeks",          "INTEGER NOT NULL DEFAULT 0"],
+        ["military_recovery_weeks",         "INTEGER NOT NULL DEFAULT 0"],
+        ["military_status",                 "TEXT NOT NULL DEFAULT '미필'"],
+        ["military_enlist_year",            "INTEGER"],
+        ["military_discharge_year",         "INTEGER"],
+        ["military_enlist_week",            "INTEGER"],
+        ["sports_unit_selected",            "INTEGER NOT NULL DEFAULT 0"],
+        ["military_hiatus_stage",           "TEXT"],
+        ["military_hiatus_university_week", "INTEGER"],
+        ["military_defer_penalty",          "INTEGER NOT NULL DEFAULT 0"],
+        ["trade_adaptation_weeks",          "INTEGER NOT NULL DEFAULT 0"],
+        ["fa_negotiation_round",            "INTEGER NOT NULL DEFAULT 0"],
+        ["fa_unsigned_weeks",               "INTEGER NOT NULL DEFAULT 0"],
+        ["consecutive_low_morale_weeks",    "INTEGER NOT NULL DEFAULT 0"],
+        ["consecutive_high_fatigue_weeks",  "INTEGER NOT NULL DEFAULT 0"],
+        ["injury_type",                     "TEXT"],
+        ["injury_recovery_weeks",           "INTEGER"],
+        ["primary_position",                "TEXT"],
+        ["position_ratings_json",           "TEXT"],
+        ["scout_score",                     "INTEGER NOT NULL DEFAULT 0"],
+        ["pro_service_years",               "INTEGER NOT NULL DEFAULT 0"],
+        ["growth_points",                   "INTEGER NOT NULL DEFAULT 0"],
+      ];
+      for (const [col, def] of protagonistCols) {
+        const exists = db.prepare(
+          `SELECT name FROM pragma_table_info('protagonist') WHERE name=?`
+        ).get(col);
+        if (!exists) {
+          db.exec(`ALTER TABLE protagonist ADD COLUMN ${col} ${def}`);
+          console.log(`[db-patch] v4: protagonist.${col} 컬럼 추가`);
+        }
+      }
+      db.pragma("user_version = 4");
+      console.log("[db-patch] v4: protagonist 누락 컬럼 보완 완료");
+    })();
+  }
 }
 
 function dbListSlots(db) {
