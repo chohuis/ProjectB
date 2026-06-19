@@ -105,6 +105,7 @@ export type PendingAction =
   | { type: "careerChoiceHub" }
   | { type: "careerResults" }
   | { type: "careerChoice" }
+  | { type: "draftObserve" }
   | {
       type: "salaryNegotiation";
       teamId: string;

@@ -49,6 +49,8 @@ export declare function generateFreshmenNative(paramsJson: string): string
 export declare function runDraftNative(paramsJson: string): string
 /** 드래프트 결과 NPC에 적용 */
 export declare function applyDraftNative(paramsJson: string): string
+/** 배경 고교 졸업생 드래프트 시뮬레이션 */
+export declare function bgHsGraduateDraftNative(paramsJson: string): string
 /** 주인공 드래프트 결과 결정 */
 export declare function determineProtagonistDraftNative(paramsJson: string): string
 /** 드래프트 보드 — 전체 픽 시퀀스 사전 계산 */

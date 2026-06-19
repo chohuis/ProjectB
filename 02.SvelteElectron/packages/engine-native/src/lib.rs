@@ -54,13 +54,7 @@ pub fn verify_save_sig(snapshot: String, sig: String) -> bool {
 // ── 매치 엔진 (Phase 2) ───────────────────────────────────────────────────────
 
 fn parse_err(fn_name: &str, e: serde_json::Error) -> String {
-    // Release 빌드에서는 상세 에러 숨김 (분석 힌트 차단)
-    if cfg!(debug_assertions) {
-        serde_json::json!({ "error": format!("[engine-native] {}: {}", fn_name, e) }).to_string()
-    } else {
-        let _ = (fn_name, e);
-        serde_json::json!({ "error": "internal error" }).to_string()
-    }
+    serde_json::json!({ "error": format!("[engine-native] {}: {}", fn_name, e) }).to_string()
 }
 
 /// 초기 경기 상태 생성
@@ -285,6 +279,17 @@ pub fn apply_draft_native(params_json: String) -> String {
     };
     let result = npc_sim::apply_draft(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("applyDraftNative/serialize", e))
+}
+
+/// 배경 고교 졸업생 드래프트 시뮬레이션
+#[napi]
+pub fn bg_hs_graduate_draft_native(params_json: String) -> String {
+    let params: npc_sim::BgHsGraduateDraftParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("bgHsGraduateDraftNative", e),
+    };
+    let result = npc_sim::bg_hs_graduate_draft(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("bgHsGraduateDraftNative/serialize", e))
 }
 
 /// 주인공 드래프트 결과 결정

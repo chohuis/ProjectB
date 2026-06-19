@@ -1,5 +1,6 @@
 use std::collections::{HashMap, HashSet};
 use rand::Rng;
+use serde::{Deserialize, Serialize};
 
 use crate::sim_types::*;
 use crate::growth_engine::{calc_npc_fame_delta, CalcNpcFameDeltaParams, NpcPerfEntry};
@@ -1941,4 +1942,109 @@ pub fn calc_weekly_npc_growth(params: MonthlyNpcGrowthParams) -> MonthlyNpcGrowt
     }).collect();
 
     MonthlyNpcGrowthResult { updated }
+}
+
+// ── 배경 고교 졸업생 드래프트 ─────────────────────────────────────────────────
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BgHsGraduate {
+    pub id: String,
+    pub player_type: String,
+    pub pitch_ovr: Option<f64>,
+    pub bat_ovr:   Option<f64>,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BgDraftAssignment {
+    pub id:            String,
+    pub new_league_id: String,
+    pub new_team_id:   String,
+    pub round:         Option<i32>,
+    pub detail:        String,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BgHsGraduateDraftParams {
+    pub graduates:      Vec<BgHsGraduate>,
+    pub kbl_teams:      Vec<String>,
+    pub abl_teams:      Vec<String>,
+    pub jbl_teams:      Vec<String>,
+    pub univ_teams:     Vec<String>,
+    pub ind_teams:      Vec<String>,
+    pub picks_per_team: Option<i32>,
+    pub season_year:    i32,
+    pub seed:           u32,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BgHsGraduateDraftResult {
+    pub assignments: Vec<BgDraftAssignment>,
+}
+
+pub fn bg_hs_graduate_draft(params: BgHsGraduateDraftParams) -> BgHsGraduateDraftResult {
+    let picks = params.picks_per_team.unwrap_or(2) as usize;
+
+    // OVR 내림차순 정렬 인덱스
+    let grad_ovr = |g: &BgHsGraduate| -> f64 {
+        if g.player_type == "pitcher" { g.pitch_ovr.unwrap_or(0.0) }
+        else { g.bat_ovr.unwrap_or(0.0) }
+    };
+    let mut sorted: Vec<usize> = (0..params.graduates.len()).collect();
+    sorted.sort_by(|&a, &b| grad_ovr(&params.graduates[b])
+        .partial_cmp(&grad_ovr(&params.graduates[a]))
+        .unwrap_or(std::cmp::Ordering::Equal));
+
+    // 드래프트 슬롯 생성: KBL → ABL → JBL, picks 라운드 반복
+    let mut slots: Vec<(String, String, i32)> = Vec::new();
+    for round in 0..picks {
+        let r = round as i32 + 1;
+        for tid in &params.kbl_teams { slots.push(("LEAGUE_KBL".into(), tid.clone(), r)); }
+        for tid in &params.abl_teams { slots.push(("LEAGUE_ABL".into(), tid.clone(), r)); }
+        for tid in &params.jbl_teams { slots.push(("LEAGUE_JBL".into(), tid.clone(), r)); }
+    }
+
+    let mut assignments = Vec::new();
+    let mut grad_iter = sorted.iter();
+
+    // 프로 드래프트 배정
+    for (league_id, team_id, round_num) in &slots {
+        let Some(&gi) = grad_iter.next() else { break };
+        let g = &params.graduates[gi];
+        assignments.push(BgDraftAssignment {
+            id:            g.id.clone(),
+            new_league_id: league_id.clone(),
+            new_team_id:   team_id.clone(),
+            round:         Some(*round_num),
+            detail:        format!("{} {}라운드 지명", league_id, round_num),
+        });
+    }
+
+    // 미지명자 → 대학 → 독립 → 은퇴
+    let mut roster: HashMap<String, (usize, usize)> = HashMap::new();
+    for &gi in grad_iter {
+        let g = &params.graduates[gi];
+        let is_pitcher = g.player_type == "pitcher";
+        if let Some(tid) = find_slot(&mut roster, is_pitcher, &params.univ_teams, 40) {
+            assignments.push(BgDraftAssignment {
+                id: g.id.clone(), new_league_id: "LEAGUE_UNIVERSITY".into(),
+                new_team_id: tid, round: None, detail: "미지명 → 대학리그".into(),
+            });
+        } else if let Some(tid) = find_slot(&mut roster, is_pitcher, &params.ind_teams, 45) {
+            assignments.push(BgDraftAssignment {
+                id: g.id.clone(), new_league_id: "LEAGUE_INDEPENDENT".into(),
+                new_team_id: tid, round: None, detail: "미지명 → 독립리그".into(),
+            });
+        } else {
+            assignments.push(BgDraftAssignment {
+                id: g.id.clone(), new_league_id: "LEAGUE_RETIRED".into(),
+                new_team_id: "".into(), round: None, detail: "미지명 → 은퇴".into(),
+            });
+        }
+    }
+
+    BgHsGraduateDraftResult { assignments }
 }

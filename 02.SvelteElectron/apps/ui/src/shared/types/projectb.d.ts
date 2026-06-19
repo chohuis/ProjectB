@@ -115,6 +115,7 @@ declare global {
       npcGenerateFreshmen:          (p: string) => Promise<string>;
       npcRunDraft:                  (p: string) => Promise<string>;
       npcApplyDraft:                (p: string) => Promise<string>;
+      npcBgHsGraduateDraft:        (p: string) => Promise<string>;
       npcDetermineProtagonistDraft: (p: string) => Promise<string>;
       npcAdvanceProtagonistGrade:   (p: string) => Promise<string>;
       npcCalcWeeklyGrowth:          (p: string) => Promise<string>;
@@ -128,6 +129,11 @@ declare global {
       npcSwapTeams:                 (p: string) => Promise<string>;
       leagueAddTransactions:        (p: string) => Promise<string>;
       leagueGetTransactions:        (p: string) => Promise<string>;
+      seasonSaveHistoryStandings:   (p: string) => Promise<string>;
+      seasonSaveHistoryLbStats:     (p: string) => Promise<string>;
+      seasonGetHistoryYears:        (p: string) => Promise<string>;
+      seasonGetHistoryStandings:    (p: string) => Promise<string>;
+      seasonGetHistoryLbStats:      (p: string) => Promise<string>;
       // ── 성장 엔진 ───────────────────────────────────────────
       growthCalcTraining:          (p: string) => Promise<string>;
       growthCalcGame:              (p: string) => Promise<string>;

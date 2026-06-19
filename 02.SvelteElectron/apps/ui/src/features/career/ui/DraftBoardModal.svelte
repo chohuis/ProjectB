@@ -11,6 +11,8 @@
     type DraftBoardPick,
   } from "../../../shared/utils/draftSystem";
 
+  export let viewOnly = false;
+
   const dispatch = createEventDispatcher<{
     close: void;
     completed: { drafted: boolean; teamId: string | null; round: number | null; pick: number | null; signingBonus: number };
@@ -179,23 +181,23 @@
       for (const npc of sorted.slice(0, cutoff)) {
         if (seen.has(npc.npcId)) continue;
         seen.add(npc.npcId);
-        rows.push(buildFromNpc(npc, npc.npcId === heroId));
+        rows.push(buildFromNpc(npc, !viewOnly && npc.npcId === heroId));
       }
     } else {
       await masterStore.loadEntities("LEAGUE_HIGHSCHOOL");
       const hsEntities = $masterStore.entities
-        .filter((e) => e.leagueId === "LEAGUE_HIGHSCHOOL" && e.role === "player" && e.grade === 3)
+        .filter((e) => e.leagueId === "LEAGUE_HIGHSCHOOL" && e.role === "player" && e.grade === 3 && (!viewOnly || e.id !== heroId))
         .sort((a, b) => entityOvr(b) - entityOvr(a));
       const cutoff = Math.ceil(hsEntities.length * 0.8);
       for (const e of hsEntities.slice(0, cutoff)) {
         if (seen.has(e.id)) continue;
         seen.add(e.id);
-        rows.push(buildFromEntity(e));
+        rows.push(buildFromEntity(e, !viewOnly && e.id === heroId));
       }
     }
 
     // ── 주인공 (HS 풀에 없으면 별도 추가) ──
-    if (!seen.has(heroId)) {
+    if (!viewOnly && !seen.has(heroId)) {
       seen.add(heroId);
       rows.push({
         id: heroId,
@@ -319,7 +321,9 @@
   }
 
   async function complete() {
-    const userPick = $gameStore.schoolState.careerDraftPickLog.find((r) => r.isUser) ?? null;
+    const userPick = viewOnly
+      ? null
+      : $gameStore.schoolState.careerDraftPickLog.find((r) => r.isUser) ?? null;
     const slotId = $gameStore.currentSlotId;
     const seasonYear = $seasonStore.seasonYear;
 
@@ -340,11 +344,11 @@
     await gameStore.save();
     await seasonStore.save();
     dispatch("completed", {
-      drafted: userDrafted,
+      drafted: !viewOnly && userDrafted,
       teamId: userPick?.teamId ?? null,
       round: userPick?.round ?? null,
       pick: userPick?.pickNo ?? null,
-      signingBonus: userDrafted
+      signingBonus: !viewOnly && userDrafted
         ? Math.max(3000, Math.round(($gameStore.protagonist.pitching.ovr - 45) * 220))
         : 0,
     });
@@ -358,7 +362,7 @@
     <!-- 헤더 -->
     <header class="modal-head">
       <div class="head-left">
-        <p class="chip">드래프트 진행</p>
+        <p class="chip">{viewOnly ? "드래프트 참관" : "드래프트 진행"}</p>
         <h3>KBL 드래프트 보드</h3>
       </div>
       {#if started && !finished}
@@ -385,6 +389,9 @@
           <li>라운드: 10라운드 (스네이크 드래프트)</li>
           <li>총 지명 인원: 80명</li>
           <li>참가 선수: 고교 졸업예정 · 대학 · 독립리그</li>
+          {#if viewOnly}
+            <li>참관 모드: 주인공은 후보에서 제외됩니다</li>
+          {/if}
         </ul>
       </div>
       <div class="actions">
@@ -404,10 +411,10 @@
         </div>
       {:else}
         <div class="current-team-banner done">
-          {#if userDrafted}
+          {#if !viewOnly && userDrafted}
             <span class="banner-team user-picked">지명 완료 — {displayPicks.find(p => p.candidate.isUser)?.teamName}이(가) 지명했습니다</span>
           {:else}
-            <span class="banner-team undrafted">지명되지 않았습니다</span>
+            <span class="banner-team undrafted">{viewOnly ? "드래프트가 종료되었습니다" : "지명되지 않았습니다"}</span>
           {/if}
         </div>
       {/if}
@@ -509,7 +516,7 @@
             <button class="btn-primary" on:click={doNextPick}>다음 픽</button>
           {:else}
             <button class="btn-primary" on:click={complete}>
-              {userDrafted ? "지명 확인" : "미지명 확인"}
+              {viewOnly ? "참관 종료" : userDrafted ? "지명 확인" : "미지명 확인"}
             </button>
           {/if}
         </div>

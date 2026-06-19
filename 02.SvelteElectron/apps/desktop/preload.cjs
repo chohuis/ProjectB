@@ -46,6 +46,7 @@ contextBridge.exposeInMainWorld("projectB", {
   npcGenerateFreshmen:          (p) => ipcRenderer.invoke("npc:generateFreshmen",          p),
   npcRunDraft:                  (p) => ipcRenderer.invoke("npc:runDraft",                  p),
   npcApplyDraft:                (p) => ipcRenderer.invoke("npc:applyDraft",                p),
+  npcBgHsGraduateDraft:        (p) => ipcRenderer.invoke("npc:bgHsGraduateDraft",        p),
   npcDetermineProtagonistDraft: (p) => ipcRenderer.invoke("npc:determineProtagonistDraft", p),
   npcAdvanceProtagonistGrade:   (p) => ipcRenderer.invoke("npc:advanceProtagonistGrade",   p),
   npcBulkInsertGameLogs:        (p) => ipcRenderer.invoke("npc:bulkInsertGameLogs",        p),
@@ -57,6 +58,11 @@ contextBridge.exposeInMainWorld("projectB", {
   npcSwapTeams:                 (p) => ipcRenderer.invoke("npc:swapTeams",                 p),
   leagueAddTransactions:        (p) => ipcRenderer.invoke("league:addTransactions",        p),
   leagueGetTransactions:        (p) => ipcRenderer.invoke("league:getTransactions",        p),
+  seasonSaveHistoryStandings:   (p) => ipcRenderer.invoke("season:saveHistoryStandings",   p),
+  seasonSaveHistoryLbStats:     (p) => ipcRenderer.invoke("season:saveHistoryLbStats",     p),
+  seasonGetHistoryYears:        (p) => ipcRenderer.invoke("season:getHistoryYears",        p),
+  seasonGetHistoryStandings:    (p) => ipcRenderer.invoke("season:getHistoryStandings",    p),
+  seasonGetHistoryLbStats:      (p) => ipcRenderer.invoke("season:getHistoryLbStats",      p),
 
   // ── 성장 엔진 (Phase 4) ──────────────────────────────────────────────────
   growthCalcTraining:                    (p) => ipcRenderer.invoke("growth:calcTraining",                         p),

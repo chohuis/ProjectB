@@ -257,7 +257,7 @@ async function simulateNpcGame(homeTeamId: string, awayTeamId: string): Promise<
   if (entities.length > 0) {
     return (await simulateGame(homeTeamId, awayTeamId, entities)).result;
   }
-  console.warn(`[DEV] FALLBACK SIM (protagonist league): ${homeTeamId} vs ${awayTeamId}`);
+  autoLog(`[폴백SIM] 주인공리그 엔티티없음: ${homeTeamId} vs ${awayTeamId}`);
   const fb = JSON.parse(await window.projectB!.weekCalcNpcFallback(
     JSON.stringify({ homeTeamId, awayTeamId })
   )) as { homeScore: number; awayScore: number; winnerId: string; loserId: string };
@@ -712,7 +712,6 @@ async function processTradeWindow(weekInYear: number, leagueId: string): Promise
   );
   if (!Array.isArray(_npcRaw)) {
     const errDetail = JSON.stringify(_npcRaw).slice(0, 120);
-    console.warn("[processTradeWindow] npcGetByLeague 응답이 배열이 아님:", _npcRaw);
     autoLog(`[트레이드오류] ${leagueId}: npcGetByLeague 배열 아님 → ${errDetail}`);
     return;
   }
@@ -1474,6 +1473,7 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
 
     const bgFaMoves: Array<{ id: string; teamId: string }> = [];
     const bgFaRows: object[] = [];
+    let bgFaDeclinedCount = 0;
 
     for (const entity of bgFaEntities) {
       const leagueId = entity.leagueId!;
@@ -1483,23 +1483,28 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
       const teamStandings = [...leagueStd].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
       const teamRank = teamStandings.findIndex(r => r.teamId === entity.teamId) + 1;
 
+      const leagueSalaryBase: Record<string, number> = {
+        LEAGUE_KBL: 1200, LEAGUE_ABL: 800, LEAGUE_JBL: 500,
+      };
+      const currentSalary = leagueSalaryBase[leagueId] ?? 800;
+      const marketValue = Math.round(800 + liveOvr * 30);
       const faRes = JSON.parse(
         await window.projectB!.playerEvalFaDecisionNative(JSON.stringify({
           personality: entity.personality ?? defaultPersonality(),
           age: entity.age,
           ovr: liveOvr,
           proServiceYears: proSY,
-          currentSalary: 2000,
-          marketValue: 2000,
+          currentSalary,
+          marketValue,
           teamStanding: teamRank || 4,
           totalTeams: teamStandings.length || 8,
-          expectedPlayingTime: 0.7,
+          expectedPlayingTime: 0.5,
           leagueId,
           fame: 0,
         }))
       ) as { applyFa: boolean };
 
-      if (!faRes.applyFa) continue;
+      if (!faRes.applyFa) { bgFaDeclinedCount++; continue; }
 
       const candidates = m.teams.filter(t => t.leagueId === leagueId && t.id !== entity.teamId);
       if (candidates.length === 0) continue;
@@ -1516,6 +1521,8 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
         fromLeagueId: leagueId, detail: "오프시즌 FA 이적",
       });
     }
+
+    autoLog(`[배경FA결과] 신청 ${bgFaMoves.length}명 / 거절 ${bgFaDeclinedCount}명 / 총 후보 ${bgFaEntities.length}명`);
 
     if (bgFaMoves.length > 0) {
       masterStore.patchEntityTeams(bgFaMoves);
@@ -2087,6 +2094,14 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     seasonStore.pushPendingAction({ type: "careerResults" });
   }
 
+  // W47: 배경 고교 졸업생 드래프트 (주인공 드래프트 결과 케이스가 아닐 때 항상 실행)
+  if (weekInYear === 47 && !isHsResultWeek && !isUnivResultWeek && !hasCareerPending) {
+    const alreadyQueued = get(seasonStore).pendingActions.some(a => a.type === "draftObserve");
+    if (!alreadyQueued) {
+      seasonStore.pushPendingAction({ type: "draftObserve" });
+    }
+  }
+
   // 프로 트레이드 윈도우 (W12~W38, 4주마다)
   // 비프로 스테이지에서도 프로 3리그를 각각 시뮬해 거래 기록 유지
   if (weekInYear >= 12 && weekInYear <= 38 && weekInYear % 4 === 0) {
@@ -2122,7 +2137,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
 
     // W40: 팀 Win-Now 압박 업데이트 (오프시즌 시작)
     if (isProStage && weekInYear === 40) {
-      processWinNowPressureUpdate(weekNum).catch(console.warn);
+      processWinNowPressureUpdate(weekNum).catch(e => autoLog(`[WinNow압박오류] ${e}`));
     }
 
     // W40: 프로 시즌 총평 메시지
@@ -2962,7 +2977,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
 
       // W52: 스카우트 능력치 향상 + NPC loyalty 연간 감쇠
       if (weekInYear === 52 && ["pro_kbl", "pro_abl", "pro_jbl"].includes(p.careerStage)) {
-        processScoutingImprovement().catch(console.warn);
+        processScoutingImprovement().catch(e => autoLog(`[스카우트향상오류] ${e}`));
 
         // season_end_normal loyalty 감쇠
         const namedActive = get(gameStore).npcs.filter(n =>

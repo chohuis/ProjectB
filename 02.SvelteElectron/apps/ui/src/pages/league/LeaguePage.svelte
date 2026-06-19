@@ -48,9 +48,81 @@
     trade: "TR", fa: "FA", draft: "DR", military: "MIL", retirement: "RT",
   };
 
+  // ── 공통 년도 선택 ───────────────────────────────────────────
+  let selectedYear: number = 0;   // 0 = 현재 시즌
+  let historyYears: number[] = [];
+
+  // 히스토리 순위
+  type HistStanding = {
+    slot_id: string; season_year: number; league_id: string; team_id: string;
+    wins: number; losses: number; draws: number; win_pct: number;
+    runs_for: number; runs_against: number; streak: string; last10: string;
+  };
+  type HistLbStat = {
+    slot_id: string; season_year: number; league_id: string; player_id: string; stat_type: string;
+    g: number; gs: number|null; w: number|null; l: number|null; sv: number|null; hd: number|null;
+    ip: number|null; er: number|null; h_p: number|null; k_p: number|null; bb_p: number|null;
+    era: number|null; whip: number|null;
+    pa: number|null; ab: number|null; h_b: number|null; hr: number|null; rbi: number|null;
+    sb: number|null; bb_b: number|null; k_b: number|null;
+    avg_v: number|null; obp: number|null; slg: number|null; ops: number|null;
+  };
+  let historyStandings: HistStanding[] = [];
+  let historyLbStats:   HistLbStat[]   = [];
+
+  async function loadHistoryYears() {
+    const slotId = $gameStore.currentSlotId;
+    if (!slotId) return;
+    try {
+      const res = JSON.parse(await window.projectB!.seasonGetHistoryYears(JSON.stringify({ slotId })));
+      historyYears = Array.isArray(res) ? res : [];
+    } catch { historyYears = []; }
+  }
+
+  async function loadHistoryData() {
+    const slotId = $gameStore.currentSlotId;
+    if (!slotId || selectedYear === 0) {
+      historyStandings = [];
+      historyLbStats   = [];
+      return;
+    }
+    try {
+      const [sr, lr] = await Promise.all([
+        window.projectB!.seasonGetHistoryStandings(JSON.stringify({ slotId, seasonYear: selectedYear })),
+        window.projectB!.seasonGetHistoryLbStats(JSON.stringify({ slotId, seasonYear: selectedYear })),
+      ]);
+      historyStandings = JSON.parse(sr) ?? [];
+      historyLbStats   = JSON.parse(lr) ?? [];
+    } catch { historyStandings = []; historyLbStats = []; }
+  }
+
+  $: selectedYear, loadHistoryData();
+  $: tab, loadHistoryYears();
+
+  $: histStandings = (() => {
+    const lid = selectedLeagueId || myLeagueId;
+    return historyStandings
+      .filter(r => r.league_id === lid)
+      .sort((a, b) => b.win_pct - a.win_pct || b.wins - a.wins);
+  })();
+
+  $: histPitcherRows = historyLbStats
+    .filter(r => r.league_id === lbLeagueId && r.stat_type === "pitcher" && (r.ip ?? 0) >= 10)
+    .map(r => ({ id: r.player_id, name: entityName(r.player_id), team: entityTeam(r.player_id),
+      w: r.w ?? 0, l: r.l ?? 0, era: r.era ?? 0, whip: r.whip ?? 0, ip: r.ip ?? 0, k: r.k_p ?? 0, bb: r.bb_p ?? 0 }))
+    .sort((a, b) => a.era - b.era)
+    .slice(0, 20) as PitcherRow[];
+
+  $: histBatterRows = historyLbStats
+    .filter(r => r.league_id === lbLeagueId && r.stat_type === "batter" && (r.ab ?? 0) >= 20)
+    .map(r => ({ id: r.player_id, name: entityName(r.player_id), team: entityTeam(r.player_id),
+      avg: r.avg_v ?? 0, hr: r.hr ?? 0, rbi: r.rbi ?? 0, ops: r.ops ?? 0, ab: r.ab ?? 0, h: r.h_b ?? 0, bb: r.bb_b ?? 0 }))
+    .sort((a, b) => b.avg - a.avg)
+    .slice(0, 20) as BatterRow[];
+
+  // ── 리그 기록 탭 ─────────────────────────────────────────────
   let txLeagueId: string = "";
   let txCategory: TxCategory = "all";
-  let txYear: number = 0;  // 0 = 전체
   let txRows: LeagueTransactionRow[] = [];
   let txAllYears: number[] = [];  // 카테고리 필터와 무관한 전체 연도 목록
   let txLoading = false;
@@ -67,11 +139,10 @@
     if (!slotId || txLoading) return;
     txLoading = true;
     try {
-      // 필터 적용된 결과
       const res = JSON.parse(
         await window.projectB!.leagueGetTransactions(JSON.stringify({
           slotId,
-          seasonYear: txYear > 0 ? txYear : undefined,
+          seasonYear: selectedYear > 0 ? selectedYear : undefined,
           category:   txCategory !== "all" ? txCategory : undefined,
           leagueId:   txLeagueId || undefined,
           limit: 200,
@@ -79,7 +150,6 @@
       ) as LeagueTransactionRow[];
       txRows = res;
 
-      // 연도 목록은 카테고리/연도 필터 없이 별도 조회 (리그만 적용)
       const allRes = JSON.parse(
         await window.projectB!.leagueGetTransactions(JSON.stringify({
           slotId,
@@ -93,8 +163,7 @@
     }
   }
 
-  // 카테고리/리그/연도 변경 시 재로드
-  $: txCategory, txLeagueId, txYear, tab === "transactions" && loadTransactions();
+  $: txCategory, txLeagueId, selectedYear, tab === "transactions" && loadTransactions();
 
   // 연도별 그룹핑
   $: txByYear = (() => {
@@ -291,6 +360,12 @@
         <button class:active={tab === "leaderboard"}  on:click={() => (tab = "leaderboard")}>스탯 순위</button>
         <button class:active={tab === "transactions"} on:click={() => (tab = "transactions")}>리그 기록</button>
       </div>
+      <div class="year-selector">
+        <button class="yr-btn" class:yr-active={selectedYear === 0} on:click={() => { selectedYear = 0; }}>현재</button>
+        {#each historyYears as yr}
+          <button class="yr-btn" class:yr-active={selectedYear === yr} on:click={() => { selectedYear = yr; }}>{yr}</button>
+        {/each}
+      </div>
     </header>
 
     <!-- ── 리그 순위 ── -->
@@ -314,9 +389,33 @@
         </nav>
 
         <div class="panel standings-panel">
-          <h3>{leagueName(selectedLeagueId || myLeagueId)} 순위표</h3>
+          <h3>{leagueName(selectedLeagueId || myLeagueId)} 순위표{selectedYear > 0 ? ` (${selectedYear}시즌)` : ""}</h3>
           <div class="standings-body">
-            {#if (selectedLeagueId || myLeagueId) === "LEAGUE_HIGHSCHOOL"}
+            {#if selectedYear > 0}
+              {#if histStandings.length === 0}
+                <p class="empty">해당 시즌 순위 기록이 없습니다.</p>
+              {:else}
+                <div class="tbl-wrap">
+                  <table class="stbl full">
+                    <thead>
+                      <tr><th>#</th><th>팀</th><th>승</th><th>패</th><th>무</th><th>승률</th><th>득점</th><th>실점</th><th>연속</th><th>최근10</th></tr>
+                    </thead>
+                    <tbody>
+                      {#each histStandings as r, i}
+                        <tr>
+                          <td>{i + 1}</td>
+                          <td class="t-name">{tName(r.team_id)}</td>
+                          <td class="w">{r.wins}</td><td class="l">{r.losses}</td><td>{r.draws}</td>
+                          <td>{r.win_pct.toFixed(2)}</td><td>{r.runs_for}</td><td>{r.runs_against}</td>
+                          <td class:streak-w={r.streak.startsWith("W")} class:streak-l={r.streak.startsWith("L")}>{r.streak || "-"}</td>
+                          <td>{r.last10 || "-"}</td>
+                        </tr>
+                      {/each}
+                    </tbody>
+                  </table>
+                </div>
+              {/if}
+            {:else if (selectedLeagueId || myLeagueId) === "LEAGUE_HIGHSCHOOL"}
               <div class="tbl-wrap">
                 <table class="stbl full hs-fixed">
                   <colgroup>
@@ -429,7 +528,8 @@
           </div>
 
           {#if lbTab === "pitcher"}
-            {#if pitcherRows.length === 0}
+            {@const pRows = selectedYear > 0 ? histPitcherRows : pitcherRows}
+            {#if pRows.length === 0}
               <p class="empty" style="padding:16px">스탯 데이터가 아직 없습니다. (최소 10이닝 필요)</p>
             {:else}
               <div class="lb-table-wrap">
@@ -442,7 +542,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {#each pitcherRows as row, i}
+                    {#each pRows as row, i}
                       <tr class:my-row={row.id === $gameStore.protagonist.id}>
                         <td>{i + 1}</td>
                         <td class="t-name">{row.name}</td>
@@ -462,7 +562,8 @@
             {/if}
 
           {:else}
-            {#if batterRows.length === 0}
+            {@const bRows = selectedYear > 0 ? histBatterRows : batterRows}
+            {#if bRows.length === 0}
               <p class="empty" style="padding:16px">스탯 데이터가 아직 없습니다. (최소 20타수 필요)</p>
             {:else}
               <div class="lb-table-wrap">
@@ -475,7 +576,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {#each batterRows as row, i}
+                    {#each bRows as row, i}
                       <tr class:my-row={row.id === $gameStore.protagonist.id}>
                         <td>{i + 1}</td>
                         <td class="t-name">{row.name}</td>
@@ -525,15 +626,7 @@
             {/each}
           </div>
 
-          <!-- 연도 -->
-          {#if txAllYears.length > 0}
-            <div class="tx-filter-group">
-              <button class="tx-filter-btn" class:tx-active={txYear === 0} on:click={() => { txYear = 0; }}>전체</button>
-              {#each txAllYears as yr}
-                <button class="tx-filter-btn" class:tx-active={txYear === yr} on:click={() => { txYear = yr; }}>{yr}년</button>
-              {/each}
-            </div>
-          {/if}
+          <!-- 연도 (상단 년도 선택기와 연동) -->
         </div>
 
         <!-- 거래 목록 -->
@@ -658,6 +751,18 @@
     cursor: pointer;
   }
   .tabs button.active { background: #3262b0; border-color: #6da1f7; }
+
+  .year-selector { display: flex; gap: 4px; flex-wrap: wrap; }
+  .yr-btn {
+    border: 1px solid #2d4a7a;
+    background: #19263d;
+    color: #a0b8e0;
+    border-radius: 6px;
+    padding: 3px 9px;
+    font-size: 11px;
+    cursor: pointer;
+  }
+  .yr-btn.yr-active { background: #254070; border-color: #4a7ac0; color: #d8eaff; }
 
   .panel {
     border: 1px solid #2f486f;

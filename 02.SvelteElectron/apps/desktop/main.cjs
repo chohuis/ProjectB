@@ -468,6 +468,10 @@ app.whenReady().then(() => {
     try { return engineNative.applyDraftNative(paramsJson); }
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
+  ipcMain.handle("npc:bgHsGraduateDraft", (_event, paramsJson) => {
+    try { return engineNative.bgHsGraduateDraftNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
   ipcMain.handle("npc:determineProtagonistDraft", (_event, paramsJson) => {
     try { return engineNative.determineProtagonistDraftNative(paramsJson); }
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
@@ -738,6 +742,84 @@ app.whenReady().then(() => {
         detail:       r.detail,
         groupId:      r.group_id,
       })));
+    } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  // ── 히스토리 순위/스탯 ────────────────────────────────────────────────────────
+  ipcMain.handle("season:saveHistoryStandings", (_event, p) => {
+    try {
+      const { slotId, seasonYear, rows } = JSON.parse(p);
+      const stmt = db.prepare(`
+        INSERT OR REPLACE INTO history_standings
+          (slot_id, season_year, league_id, team_id, wins, losses, draws, win_pct, runs_for, runs_against, streak, last10)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+      db.transaction(() => {
+        for (const r of rows) {
+          stmt.run(slotId, seasonYear, r.leagueId, r.teamId,
+            r.wins ?? 0, r.losses ?? 0, r.draws ?? 0, r.winPct ?? 0,
+            r.runsFor ?? 0, r.runsAgainst ?? 0, r.streak ?? "", r.last10 ?? "");
+        }
+      })();
+      return JSON.stringify({ ok: true });
+    } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  ipcMain.handle("season:saveHistoryLbStats", (_event, p) => {
+    try {
+      const { slotId, seasonYear, rows } = JSON.parse(p);
+      const stmt = db.prepare(`
+        INSERT OR REPLACE INTO history_lb_stats
+          (slot_id, season_year, league_id, player_id, stat_type,
+           g, gs, w, l, sv, hd, ip, er, h_p, k_p, bb_p, era, whip,
+           pa, ab, h_b, hr, rbi, sb, bb_b, k_b, avg_v, obp, slg, ops)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+      db.transaction(() => {
+        for (const r of rows) {
+          stmt.run(
+            slotId, seasonYear, r.leagueId, r.playerId, r.statType,
+            r.g ?? 0, r.gs ?? null, r.w ?? null, r.l ?? null, r.sv ?? null, r.hd ?? null,
+            r.ip ?? null, r.er ?? null, r.hP ?? null, r.kP ?? null, r.bbP ?? null,
+            r.era ?? null, r.whip ?? null,
+            r.pa ?? null, r.ab ?? null, r.hB ?? null, r.hr ?? null, r.rbi ?? null,
+            r.sb ?? null, r.bbB ?? null, r.kB ?? null,
+            r.avgV ?? null, r.obp ?? null, r.slg ?? null, r.ops ?? null
+          );
+        }
+      })();
+      return JSON.stringify({ ok: true });
+    } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  ipcMain.handle("season:getHistoryYears", (_event, p) => {
+    try {
+      const { slotId } = JSON.parse(p);
+      const rows = db.prepare(
+        `SELECT DISTINCT season_year FROM history_standings WHERE slot_id = ? ORDER BY season_year DESC`
+      ).all(slotId);
+      return JSON.stringify(rows.map(r => r.season_year));
+    } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  ipcMain.handle("season:getHistoryStandings", (_event, p) => {
+    try {
+      const { slotId, seasonYear, leagueId } = JSON.parse(p);
+      let sql = `SELECT * FROM history_standings WHERE slot_id = ? AND season_year = ?`;
+      const params = [slotId, seasonYear];
+      if (leagueId) { sql += ` AND league_id = ?`; params.push(leagueId); }
+      sql += ` ORDER BY win_pct DESC, wins DESC`;
+      return JSON.stringify(db.prepare(sql).all(...params));
+    } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  ipcMain.handle("season:getHistoryLbStats", (_event, p) => {
+    try {
+      const { slotId, seasonYear, leagueId } = JSON.parse(p);
+      let sql = `SELECT * FROM history_lb_stats WHERE slot_id = ? AND season_year = ?`;
+      const params = [slotId, seasonYear];
+      if (leagueId) { sql += ` AND league_id = ?`; params.push(leagueId); }
+      return JSON.stringify(db.prepare(sql).all(...params));
     } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
 

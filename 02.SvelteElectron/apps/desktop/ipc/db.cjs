@@ -622,6 +622,47 @@ function applySchemaPatches(db) {
     db.pragma("user_version = 5");
     console.log("[db-patch] v5: league_transactions player_id 인덱스 추가");
   }
+
+  if (currentVersion < 6) {
+    db.transaction(() => {
+      db.exec(`
+        CREATE TABLE IF NOT EXISTS history_standings (
+          slot_id      TEXT    NOT NULL,
+          season_year  INTEGER NOT NULL,
+          league_id    TEXT    NOT NULL,
+          team_id      TEXT    NOT NULL,
+          wins         INTEGER NOT NULL DEFAULT 0,
+          losses       INTEGER NOT NULL DEFAULT 0,
+          draws        INTEGER NOT NULL DEFAULT 0,
+          win_pct      REAL    NOT NULL DEFAULT 0,
+          runs_for     INTEGER NOT NULL DEFAULT 0,
+          runs_against INTEGER NOT NULL DEFAULT 0,
+          streak       TEXT    NOT NULL DEFAULT '',
+          last10       TEXT    NOT NULL DEFAULT '',
+          PRIMARY KEY (slot_id, season_year, league_id, team_id)
+        );
+        CREATE TABLE IF NOT EXISTS history_lb_stats (
+          slot_id     TEXT    NOT NULL,
+          season_year INTEGER NOT NULL,
+          league_id   TEXT    NOT NULL,
+          player_id   TEXT    NOT NULL,
+          stat_type   TEXT    NOT NULL,
+          g INTEGER NOT NULL DEFAULT 0,
+          gs INTEGER, w INTEGER, l INTEGER, sv INTEGER, hd INTEGER,
+          ip REAL, er INTEGER, h_p INTEGER, k_p INTEGER, bb_p INTEGER,
+          era REAL, whip REAL,
+          pa INTEGER, ab INTEGER, h_b INTEGER, hr INTEGER, rbi INTEGER,
+          sb INTEGER, bb_b INTEGER, k_b INTEGER,
+          avg_v REAL, obp REAL, slg REAL, ops REAL,
+          PRIMARY KEY (slot_id, season_year, league_id, player_id)
+        );
+        CREATE INDEX IF NOT EXISTS idx_hs_lookup  ON history_standings(slot_id, season_year DESC);
+        CREATE INDEX IF NOT EXISTS idx_hls_lookup ON history_lb_stats(slot_id, season_year DESC);
+      `);
+      db.pragma("user_version = 6");
+      console.log("[db-patch] v6: history_standings, history_lb_stats 테이블 추가");
+    })();
+  }
 }
 
 function dbListSlots(db) {
