@@ -1451,6 +1451,14 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
   // ── Phase 3: 배경 엔티티 FA 처리 ─────────────────────────────────────────
   {
     const retiredEntityIds = new Set(entityMoves.map(mv => mv.id));
+    // proServiceYears가 0/미설정인 경우 entryYear 또는 entryAge로 역산
+    const effectivePSY = (e: import("../stores/master").EntityRow): number => {
+      const stored = e.details?.player?.proServiceYears ?? 0;
+      if (stored > 0) return stored;
+      if (e.entryYear) return Math.max(0, s.seasonYear - e.entryYear);
+      if (e.entryAge) return Math.max(0, e.age - e.entryAge);
+      return 0;
+    };
     const bgFaEntities = m.entities.filter(e =>
       e.role === "player" &&
       e.leagueId && proLeagues.has(e.leagueId) &&
@@ -1460,15 +1468,16 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
       !retiredEntityIds.has(e.id) &&
       !e.details?.player?.militaryEnlistYear &&
       e.age < 36 &&
-      (e.details?.player?.proServiceYears ?? 0) >= getFaThreshold(e.leagueId)
+      effectivePSY(e) >= getFaThreshold(e.leagueId)
     );
+    autoLog(`[배경FA] 후보 ${bgFaEntities.length}명 (전체 엔티티 ${m.entities.length}명)`);
 
     const bgFaMoves: Array<{ id: string; teamId: string }> = [];
     const bgFaRows: object[] = [];
 
     for (const entity of bgFaEntities) {
       const leagueId = entity.leagueId!;
-      const proSY = entity.details?.player?.proServiceYears ?? 0;
+      const proSY = effectivePSY(entity);
       const liveOvr = npcOvr(entity, s.npcLiveStats);
       const leagueStd = getLeagueStandings(leagueId, s);
       const teamStandings = [...leagueStd].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);

@@ -286,6 +286,7 @@ async function handleSeasonEnd(): Promise<void> {
         e.entryYear === now &&
         e.teamId && e.teamId !== ""
       );
+      autoLog(`[배경드래프트] entryYear=${now} 검색 → ${bgDraftEntries.length}명 (전체 엔티티 ${mDraft.entities.length}명)`);
       if (bgDraftEntries.length > 0) {
         const draftRows = bgDraftEntries.map(e => ({
           seasonYear: now, category: "draft",

@@ -48,6 +48,7 @@ import {
 } from "../utils/npcEngine";
 import { getFaThreshold } from "../utils/faEngine";
 import { masterStore } from "./master";
+import { autoLog } from "./autoAdvance";
 import type { SeasonEndSummary } from "../utils/npcEngine";
 export type { SeasonEndSummary } from "../utils/npcEngine";
 
@@ -1678,8 +1679,8 @@ function createGameStore() {
         const milRes = JSON.parse(
           await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: militaryRows }))
         );
-        if (milRes.error) console.error("[processAllLeaguesSeasonEnd] 병역 기록 오류:", milRes.error);
-        else console.log(`[processAllLeaguesSeasonEnd] 병역 기록 ${militaryRows.length}건 저장`);
+        if (milRes.error) autoLog(`[NPC병역오류] 병역 기록 오류: ${milRes.error}`);
+        else autoLog(`[NPC병역] 병역 기록 ${militaryRows.length}건 저장`);
       }
       (window as any).__lastOffseasonSummary = {
         militaryEnlistedSports,
@@ -1719,7 +1720,7 @@ function createGameStore() {
               fromLeagueId: e.leagueId, detail: "전역",
             }));
             await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: dischRows }));
-            console.log(`[배경병역] 전역 ${bgDischarging.length}명`);
+            autoLog(`[배경병역] 전역 ${bgDischarging.length}명`);
           }
         }
 
@@ -1748,14 +1749,14 @@ function createGameStore() {
             return { id: e.id, name: e.name || e.id, ovr, teamId: e.teamId!, isProtagonist: false };
           });
 
+        autoLog(`[배경병역] 입대 후보 ${bgMilitaryCandidates.length}명`);
         if (bgMilitaryCandidates.length > 0) {
           const topRaw = JSON.parse(
             await window.projectB!.militaryCalcCandidates(JSON.stringify({ candidates: bgMilitaryCandidates, topN: 50 }))
           ) as { topCandidates?: { id: string; name: string; ovr: number; teamId: string }[]; error?: string };
 
           if (topRaw.error) {
-            console.error("[배경병역] militaryCalcCandidates 실패:", topRaw.error,
-              "샘플:", JSON.stringify(bgMilitaryCandidates.slice(0, 3)));
+            autoLog(`[배경병역오류] militaryCalcCandidates 실패: ${topRaw.error}`);
           } else if ((topRaw.topCandidates?.length ?? 0) > 0) {
             const selRes = JSON.parse(
               await window.projectB!.militaryCalcSelection(JSON.stringify({
@@ -1766,7 +1767,7 @@ function createGameStore() {
             ) as { protagonistSelected: boolean; selectedIds?: string[]; error?: string };
 
             if (selRes.error) {
-              console.error("[배경병역] militaryCalcSelection 실패:", selRes.error);
+              autoLog(`[배경병역오류] militaryCalcSelection 실패: ${selRes.error}`);
             } else if ((selRes.selectedIds?.length ?? 0) > 0) {
               const selectedEntities = mNow.entities.filter(e => selRes.selectedIds!.includes(e.id));
               const enlisted = selectedEntities.map(e => ({
@@ -1785,7 +1786,7 @@ function createGameStore() {
                   detail: "현역 입대",
                 }));
                 await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: enlRows }));
-                console.log(`[배경병역] 입대 ${selRes.selectedIds!.length}명`);
+                autoLog(`[배경병역] 입대 ${selRes.selectedIds!.length}명`);
               }
             }
           }
