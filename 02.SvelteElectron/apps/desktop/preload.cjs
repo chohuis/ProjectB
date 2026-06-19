@@ -126,6 +126,7 @@ contextBridge.exposeInMainWorld("projectB", {
   evalRetirementSuggestionNative:  (p) => ipcRenderer.invoke("team:evalRetirement", p),
   generateTradeProposalsNative:    (p) => ipcRenderer.invoke("team:generateTrade", p),
   evalTradeValueNative:            (p) => ipcRenderer.invoke("team:evalTradeValue", p),
+  evalMedicalTestNative:           (p) => ipcRenderer.invoke("team:evalMedical",    p),
   calcWinNowPressureUpdateNative:  (p) => ipcRenderer.invoke("team:winNowUpdate", p),
   calcScoutingImprovementNative:   (p) => ipcRenderer.invoke("team:scoutingImprovement", p),
 
