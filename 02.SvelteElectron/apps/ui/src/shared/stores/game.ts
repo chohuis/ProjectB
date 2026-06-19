@@ -1736,30 +1736,39 @@ function createGameStore() {
             e.age >= 20 && e.age <= 27 &&
             !e.details?.player?.militaryEnlistYear
           )
-          .map(e => ({
-            id: e.id,
-            name: e.name ?? e.id,
-            ovr: npcLiveStats[e.id]?.pitching?.ovr ?? (e.details as any)?.player?.pitching?.ovr ?? 50,
-            teamId: e.teamId!,
-            isProtagonist: false,
-          }));
+          .map(e => {
+            const live = npcLiveStats[e.id];
+            const dp = (e.details as any)?.player;
+            const rawOvr =
+              live?.pitching?.ovr ?? live?.batting?.ovr ??
+              dp?.pitching?.ovr ?? dp?.batting?.ovr;
+            const ovr = Math.round(
+              (typeof rawOvr === "number" && isFinite(rawOvr)) ? rawOvr : 50
+            );
+            return { id: e.id, name: e.name || e.id, ovr, teamId: e.teamId!, isProtagonist: false };
+          });
 
         if (bgMilitaryCandidates.length > 0) {
           const topRaw = JSON.parse(
             await window.projectB!.militaryCalcCandidates(JSON.stringify({ candidates: bgMilitaryCandidates, topN: 50 }))
-          ) as { topCandidates: { id: string; name: string; ovr: number; teamId: string }[] };
+          ) as { topCandidates?: { id: string; name: string; ovr: number; teamId: string }[]; error?: string };
 
-          if ((topRaw.topCandidates?.length ?? 0) > 0) {
+          if (topRaw.error) {
+            console.error("[배경병역] militaryCalcCandidates 실패:", topRaw.error,
+              "샘플:", JSON.stringify(bgMilitaryCandidates.slice(0, 3)));
+          } else if ((topRaw.topCandidates?.length ?? 0) > 0) {
             const selRes = JSON.parse(
               await window.projectB!.militaryCalcSelection(JSON.stringify({
-                applicants: topRaw.topCandidates.map(c => ({ ...c, isProtagonist: false })),
-                maxTotal: Math.min(20, topRaw.topCandidates.length),
+                applicants: topRaw.topCandidates!.map(c => ({ ...c, isProtagonist: false })),
+                maxTotal: Math.min(20, topRaw.topCandidates!.length),
                 maxPerTeam: 3,
               }))
-            ) as { protagonistSelected: boolean; selectedIds: string[] };
+            ) as { protagonistSelected: boolean; selectedIds?: string[]; error?: string };
 
-            if ((selRes.selectedIds?.length ?? 0) > 0) {
-              const selectedEntities = mNow.entities.filter(e => selRes.selectedIds.includes(e.id));
+            if (selRes.error) {
+              console.error("[배경병역] militaryCalcSelection 실패:", selRes.error);
+            } else if ((selRes.selectedIds?.length ?? 0) > 0) {
+              const selectedEntities = mNow.entities.filter(e => selRes.selectedIds!.includes(e.id));
               const enlisted = selectedEntities.map(e => ({
                 ...e,
                 details: { ...e.details, player: { ...e.details?.player, militaryEnlistYear: seasonYear } },
@@ -1776,7 +1785,7 @@ function createGameStore() {
                   detail: "현역 입대",
                 }));
                 await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: enlRows }));
-                console.log(`[배경병역] 입대 ${selRes.selectedIds.length}명`);
+                console.log(`[배경병역] 입대 ${selRes.selectedIds!.length}명`);
               }
             }
           }
