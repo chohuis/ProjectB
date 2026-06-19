@@ -1749,7 +1749,7 @@ function createGameStore() {
             await window.projectB!.militaryCalcCandidates(JSON.stringify({ candidates: bgMilitaryCandidates, topN: 50 }))
           ) as { topCandidates: { id: string; name: string; ovr: number; teamId: string }[] };
 
-          if (topRaw.topCandidates.length > 0) {
+          if ((topRaw.topCandidates?.length ?? 0) > 0) {
             const selRes = JSON.parse(
               await window.projectB!.militaryCalcSelection(JSON.stringify({
                 applicants: topRaw.topCandidates.map(c => ({ ...c, isProtagonist: false })),
@@ -1758,7 +1758,7 @@ function createGameStore() {
               }))
             ) as { protagonistSelected: boolean; selectedIds: string[] };
 
-            if (selRes.selectedIds.length > 0) {
+            if ((selRes.selectedIds?.length ?? 0) > 0) {
               const selectedEntities = mNow.entities.filter(e => selRes.selectedIds.includes(e.id));
               const enlisted = selectedEntities.map(e => ({
                 ...e,
