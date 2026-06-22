@@ -287,7 +287,7 @@ app.whenReady().then(() => {
 
   // ── domain IPC 등록 ──────────────────────────────────────────────────────────
   matchIpc.register(ipcMain, { loadCoreModule, engineNative });
-  saveIpc.register(ipcMain, { db, dbListSlots, dbLoadSlot, dbSaveSlot, signSlot, verifySlot, DEFAULT_SLOT_ID, loadCoreModule });
+  saveIpc.register(ipcMain, { db, dbListSlots, dbLoadSlot, dbSaveSlot, signSlot, verifySlot, DEFAULT_SLOT_ID, loadCoreModule, masterOverlayDb });
   tuningIpc.register(ipcMain, { isDev, resourceBase, tuningSchema, loadCoreModule, isPathInside });
 
   // ── master:* ─────────────────────────────────────────────────────────────────

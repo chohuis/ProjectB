@@ -1,6 +1,6 @@
 "use strict";
 
-function register(ipcMain, { db, dbListSlots, dbLoadSlot, dbSaveSlot, signSlot, verifySlot, DEFAULT_SLOT_ID, loadCoreModule }) {
+function register(ipcMain, { db, dbListSlots, dbLoadSlot, dbSaveSlot, signSlot, verifySlot, DEFAULT_SLOT_ID, loadCoreModule, masterOverlayDb }) {
   ipcMain.handle("game:load", () => {
     const data = dbLoadSlot(db, DEFAULT_SLOT_ID);
     if (data) {
@@ -77,6 +77,17 @@ function register(ipcMain, { db, dbListSlots, dbLoadSlot, dbSaveSlot, signSlot, 
     try {
       const id = String(slotId ?? "").trim();
       if (!id) throw new Error("slotId is required");
+      // ON DELETE CASCADE 없는 테이블 먼저 명시적 삭제
+      for (const tbl of ["npc_game_log", "npc_season_stats", "npc_career_arc",
+                          "history_standings", "history_lb_stats", "history_postseason"]) {
+        try { db.prepare(`DELETE FROM ${tbl} WHERE slot_id = ?`).run(id); } catch {}
+      }
+      // 별도 overlay DB 정리
+      if (masterOverlayDb) {
+        try { masterOverlayDb.prepare("DELETE FROM entity_overlay WHERE slot_id = ?").run(id); } catch {}
+        try { masterOverlayDb.prepare("DELETE FROM entity_overlay_deleted WHERE slot_id = ?").run(id); } catch {}
+      }
+      // CASCADE 테이블은 save_slots 삭제 시 자동 정리
       db.prepare("DELETE FROM save_slots WHERE slot_id = ?").run(id);
       return { ok: true };
     } catch (e) {
