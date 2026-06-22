@@ -16,45 +16,57 @@ function getManagerHandlePersonnel(teamId: string, entities: EntityRow[]): numbe
 }
 
 const WEEKLY_FATIGUE_RECOVERY = 28;
+const SIM_CHUNK_SIZE = 8;
 
-export function runSimBatch(
+export async function runSimBatch(
   games: SimWorkerRequest["games"],
   entities: EntityRow[],
   npcInjuries?: Record<string, NpcInjuryEntry>,
+  npcLiveStats?: Record<string, import("../types/season").NpcLiveStat>,
 ): Promise<SimWorkerResultItem[]> {
-  return Promise.all(games.map(async (g) => {
-    const rotSize = g.leagueId ? rotationSizeForLeague(g.leagueId) : 5;
-    const sim = await simulateGame(g.homeTeamId, g.awayTeamId, entities, {
-      conditions:           g.conditions,
-      homeRotIdx:           g.homeRotIdx ?? 0,
-      awayRotIdx:           g.awayRotIdx ?? 0,
-      week:                 g.week ?? 0,
-      npcInjuries,
-      rotationSize:         rotSize,
-      leagueId:             g.leagueId ?? "",
-      homeHandlePersonnel:  getManagerHandlePersonnel(g.homeTeamId, entities),
-      awayHandlePersonnel:  getManagerHandlePersonnel(g.awayTeamId, entities),
-    });
+  const results: SimWorkerResultItem[] = [];
+  for (let i = 0; i < games.length; i += SIM_CHUNK_SIZE) {
+    const chunk = games.slice(i, i + SIM_CHUNK_SIZE);
+    const chunkResults = await Promise.all(chunk.map(async (g) => {
+      const rotSize = g.leagueId ? rotationSizeForLeague(g.leagueId) : 5;
+      const sim = await simulateGame(g.homeTeamId, g.awayTeamId, entities, {
+        conditions:           g.conditions,
+        homeRotIdx:           g.homeRotIdx ?? 0,
+        awayRotIdx:           g.awayRotIdx ?? 0,
+        week:                 g.week ?? 0,
+        npcInjuries,
+        npcLiveStats,
+        rotationSize:         rotSize,
+        leagueId:             g.leagueId ?? "",
+        homeHandlePersonnel:  getManagerHandlePersonnel(g.homeTeamId, entities),
+        awayHandlePersonnel:  getManagerHandlePersonnel(g.awayTeamId, entities),
+      });
 
-    // 엔티티 없어서 시뮬 실패(winner_id="") 시 폴백으로 랜덤 결과 생성
-    let result = sim.result;
-    if (!result.winnerId) {
-      autoLog(`[폴백SIM] 배경리그 엔티티없음: ${g.homeTeamId} vs ${g.awayTeamId} (${g.leagueId})`);
-      const api = (window as unknown as { projectB: Record<string, (p: string) => Promise<string>> }).projectB;
-      const fb = JSON.parse(
-        await api.weekCalcNpcFallback(JSON.stringify({ homeTeamId: g.homeTeamId, awayTeamId: g.awayTeamId }))
-      ) as { homeScore: number; awayScore: number; winnerId: string; loserId: string };
-      result = { homeScore: fb.homeScore, awayScore: fb.awayScore, winnerId: fb.winnerId, loserId: fb.loserId, playerLines: [], events: [] };
+      // 엔티티 없어서 시뮬 실패(winner_id="") 시 폴백으로 랜덤 결과 생성
+      let result = sim.result;
+      if (!result.winnerId) {
+        autoLog(`[폴백SIM] 배경리그 엔티티없음: ${g.homeTeamId} vs ${g.awayTeamId} (${g.leagueId})`);
+        const api = (window as unknown as { projectB: Record<string, (p: string) => Promise<string>> }).projectB;
+        const fb = JSON.parse(
+          await api.weekCalcNpcFallback(JSON.stringify({ homeTeamId: g.homeTeamId, awayTeamId: g.awayTeamId }))
+        ) as { homeScore: number; awayScore: number; winnerId: string; loserId: string };
+        result = { homeScore: fb.homeScore, awayScore: fb.awayScore, winnerId: fb.winnerId, loserId: fb.loserId, playerLines: [], events: [] };
+      }
+
+      return {
+        id:                g.id,
+        result,
+        nextHomeRotIdx:    sim.nextHomeRotIdx,
+        nextAwayRotIdx:    sim.nextAwayRotIdx,
+        pitcherConditions: sim.pitcherConditions,
+      };
+    }));
+    results.push(...chunkResults);
+    if (i + SIM_CHUNK_SIZE < games.length) {
+      await new Promise<void>((r) => setTimeout(r, 0));
     }
-
-    return {
-      id:                g.id,
-      result,
-      nextHomeRotIdx:    sim.nextHomeRotIdx,
-      nextAwayRotIdx:    sim.nextAwayRotIdx,
-      pitcherConditions: sim.pitcherConditions,
-    };
-  }));
+  }
+  return results;
 }
 
 export type SimBatchResult = {
@@ -68,6 +80,7 @@ export async function simulateBackgroundLeagues(
   week: number,
   protagonistLeagueId: string,
   entities: EntityRow[],
+  npcLiveStats?: Record<string, import("../types/season").NpcLiveStat>,
 ): Promise<SimBatchResult | null> {
   const batch: SimWorkerRequest["games"] = [];
   if (Object.keys(s.leagueSchedules).length === 0) {
@@ -97,7 +110,7 @@ export async function simulateBackgroundLeagues(
   }
   if (batch.length === 0) return null;
 
-  const simmed = await runSimBatch(batch, entities, s.npcInjuries);
+  const simmed = await runSimBatch(batch, entities, s.npcInjuries, npcLiveStats);
   const simMap = new Map(simmed.map((r) => [r.id, r]));
 
   const gameLogs: { npcId: string; role: string; statJson: string }[] = [];

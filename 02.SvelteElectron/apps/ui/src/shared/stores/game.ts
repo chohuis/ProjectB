@@ -49,6 +49,7 @@ import {
 import { getFaThreshold } from "../utils/faEngine";
 import { masterStore } from "./master";
 import { autoLog } from "./autoAdvance";
+import { npcLiveStatsStore } from "./npcLiveStats";
 import type { SeasonEndSummary } from "../utils/npcEngine";
 export type { SeasonEndSummary } from "../utils/npcEngine";
 
@@ -903,6 +904,62 @@ function createGameStore() {
       update((s) => ({ ...s, mailbox: trimMailbox([msg, ...s.mailbox]) }));
     },
 
+    addMessages(msgs: MessageItem[]) {
+      if (!msgs.length) return;
+      update((s) => ({ ...s, mailbox: trimMailbox([...msgs, ...s.mailbox]) }));
+    },
+
+    applyWeekEndBatch(batch: {
+      protagonistPatch: Partial<ProtagonistSave>;
+      logs: string[];
+      weekNum: number;
+      seasonYear: number;
+      scoutScoreDelta?: number;
+      top10Snapshot?: import("../types/save").Top10Snapshot;
+      popularityDelta?: number;
+      scoutScoreDelta2?: number;
+      moraleDelta?: number;
+      messages?: MessageItem[];
+    }) {
+      update((s) => {
+        const nextMetrics: AchievementMetrics = {
+          ...s.achievementMetrics,
+          trainingWeeksTotal: s.achievementMetrics.trainingWeeksTotal + 1,
+        };
+        let p = { ...s.protagonist, ...batch.protagonistPatch };
+        if (batch.scoutScoreDelta && batch.scoutScoreDelta > 0)
+          p = { ...p, scoutScore: Math.max(0, Math.min(100, p.scoutScore + batch.scoutScoreDelta)) };
+        if (batch.popularityDelta && batch.popularityDelta > 0)
+          p = { ...p, popularity: Math.max(0, Math.min(100, p.popularity + batch.popularityDelta)) };
+        if (batch.scoutScoreDelta2 && batch.scoutScoreDelta2 > 0)
+          p = { ...p, scoutScore: Math.max(0, Math.min(100, p.scoutScore + batch.scoutScoreDelta2)) };
+        if (batch.moraleDelta && batch.moraleDelta > 0)
+          p = { ...p, morale: Math.max(0, Math.min(100, p.morale + batch.moraleDelta)) };
+        let mailbox = s.mailbox;
+        if (batch.messages?.length) mailbox = trimMailbox([...batch.messages, ...s.mailbox]);
+        let lastTop10Pitcher = s.lastTop10Pitcher;
+        let lastTop10Batter  = s.lastTop10Batter;
+        if (batch.top10Snapshot) {
+          if (batch.top10Snapshot.type === "pitcher") lastTop10Pitcher = batch.top10Snapshot;
+          else lastTop10Batter = batch.top10Snapshot;
+        }
+        return {
+          ...s,
+          protagonist:        p,
+          dayLabel:           computeWeekLabel(batch.weekNum, batch.seasonYear),
+          logs:               [...batch.logs, ...s.logs].slice(0, 30),
+          upcoming:           [],
+          player:             toPlayerCompat(p),
+          school:             toSchoolCompat(p.careerStage, s.schoolState),
+          achievementMetrics: nextMetrics,
+          achievements:       updateAchievementProgress(s.achievements, nextMetrics),
+          mailbox,
+          lastTop10Pitcher,
+          lastTop10Batter,
+        };
+      });
+    },
+
     setCurrentRole(role: import("../types/save").PitcherRole) {
       update((s) => ({ ...s, protagonist: { ...s.protagonist, currentRole: role } }));
     },
@@ -1674,7 +1731,7 @@ function createGameStore() {
       if (slotId) {
         const mNow = get(masterStore);
         const npcMap = new Map(decayedNpcs.map(n => [n.npcId, n]));
-        const npcLiveStats = _getSeasonData?.()?.npcLiveStats ?? {};
+        const npcLiveStats = get(npcLiveStatsStore);
 
         // 1. 전역: 2년 경과 모든 현역 선수 (top-level || 하위 호환 nested 체크)
         const discharging = mNow.entities.filter(e =>

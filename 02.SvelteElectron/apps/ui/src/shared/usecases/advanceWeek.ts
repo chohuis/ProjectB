@@ -1,5 +1,5 @@
 import { get } from "svelte/store";
-import { seasonStore } from "../stores/season";
+import { seasonStore, npcLiveStatsStore } from "../stores/season";
 import { gameStore } from "../stores/game";
 import { masterStore } from "../stores/master";
 import { autoLog } from "../stores/autoAdvance";
@@ -321,6 +321,14 @@ function npcRetireChance(age: number, hasPriorSurgery: boolean): number {
   return 0.05;
 }
 
+// 부상 계산용 출전 이력 증분 캐시 — 매 시즌 시작 또는 슬롯 변경 시 자동 리셋
+const _injuryAppCache = {
+  seasonYear:      -1,
+  slotId:          "",
+  lastScannedWeek: -1,
+  playerData:      new Map<string, { role: "pitcher" | "batter"; weeks: Set<number> }>(),
+};
+
 async function processNpcInjuries(weekNum: number): Promise<void> {
   // ── 1. 회복 tick (weeksLeft - 1, 완치된 선수 목록 반환) ──────
   const healed = seasonStore.tickNpcInjuries();
@@ -337,16 +345,30 @@ async function processNpcInjuries(weekNum: number): Promise<void> {
   }
 
   // ── 2. 이번 주 새 부상 발생 계산 ────────────────────────────
-  const playerData = new Map<string, { role: "pitcher" | "batter"; weeks: Set<number> }>();
+  // 시즌 또는 슬롯 변경 시 캐시 리셋
+  const currentSlotId = g.currentSlotId ?? "";
+  if (_injuryAppCache.seasonYear !== s.seasonYear || _injuryAppCache.slotId !== currentSlotId) {
+    _injuryAppCache.seasonYear      = s.seasonYear;
+    _injuryAppCache.slotId          = currentSlotId;
+    _injuryAppCache.lastScannedWeek = -1;
+    _injuryAppCache.playerData.clear();
+  }
+
+  // 캐시에 없는 새 주차 항목만 증분 반영
+  const protagonistId = g.protagonist.id;
   for (const entry of s.schedule) {
     if (!entry.result || entry.week >= weekNum) continue;
+    if (entry.week <= _injuryAppCache.lastScannedWeek) continue;
     for (const line of entry.result.playerLines) {
-      if (line.playerId === g.protagonist.id) continue;
-      const ex = playerData.get(line.playerId);
+      if (line.playerId === protagonistId) continue;
+      const ex = _injuryAppCache.playerData.get(line.playerId);
       if (ex) { ex.weeks.add(entry.week); }
-      else     { playerData.set(line.playerId, { role: line.role, weeks: new Set([entry.week]) }); }
+      else     { _injuryAppCache.playerData.set(line.playerId, { role: line.role as "pitcher" | "batter", weeks: new Set([entry.week]) }); }
     }
   }
+  _injuryAppCache.lastScannedWeek = weekNum - 1;
+
+  const playerData = _injuryAppCache.playerData;
   if (playerData.size === 0) return;
 
   const entityMap = new Map(m.entities.map((e) => [e.id, e]));
@@ -393,14 +415,13 @@ async function processNpcInjuries(weekNum: number): Promise<void> {
   }
   if (players.length === 0) return;
 
-  // 은퇴 확률 판정용 난수 배치 (Rust에서 가져옴 — Math.random() 금지)
-  const retireRolls = JSON.parse(
-    await window.projectB!.weekRollRandomBatch(players.length)
-  ) as number[];
-
-  const result = JSON.parse(
-    await window.projectB!.weekCalcNpcInjuries(JSON.stringify({ players }))
-  ) as { occurred: { playerId: string; injuryType: string; severity: string; recoveryWeeks: number }[] };
+  // 은퇴 확률 판정용 난수 + NPC 부상 계산 병렬 실행
+  const [retireRollsRaw, resultRaw] = await Promise.all([
+    window.projectB!.weekRollRandomBatch(players.length),
+    window.projectB!.weekCalcNpcInjuries(JSON.stringify({ players })),
+  ]);
+  const retireRolls = JSON.parse(retireRollsRaw) as number[];
+  const result = JSON.parse(resultRaw) as { occurred: { playerId: string; injuryType: string; severity: string; recoveryWeeks: number }[] };
 
   let retireRollIdx = 0;
 
@@ -568,17 +589,19 @@ async function processWeeklyNpcGrowth(weekNum: number): Promise<void> {
   const prevWeek = weekNum - 1;
   const perfStartWeek = Math.max(1, prevWeek - 3);
   const allSchedule = [
-    ...s.schedule,
-    ...Object.values(s.leagueSchedules).flat(),
+    ...s.schedule.filter((e) => e.result && e.week >= perfStartWeek && e.week <= prevWeek),
+    ...Object.values(s.leagueSchedules).flatMap((sched) =>
+      sched.filter((e) => e.result && e.week >= perfStartWeek && e.week <= prevWeek)
+    ),
   ];
   const perfData = aggregateMonthlyPerf(allSchedule, perfStartWeek, prevWeek);
 
   // npcLiveStats에 있는 모든 NPC (master entity 기반)
   const namedFameMap = new Map(g.npcs.map(n => [n.npcId, n.fame ?? 0]));
   const npcs = m.entities
-    .filter((e) => e.role === "player" && s.npcLiveStats[e.id])
+    .filter((e) => e.role === "player" && get(npcLiveStatsStore)[e.id])
     .map((e) => {
-      const live = s.npcLiveStats[e.id];
+      const live = get(npcLiveStatsStore)[e.id];
       const p    = (e.details as import("../stores/master").EntityDetails)?.player;
       return {
         npcId:           e.id,
@@ -803,7 +826,7 @@ async function processTradeWindow(weekInYear: number, leagueId: string): Promise
     !e.details?.player?.militaryEnlistYear
   );
   const bgEntityAssets = bgTradeEntities.map(e => {
-    const liveOvr = npcOvr(e, s.npcLiveStats);
+    const liveOvr = npcOvr(e, get(npcLiveStatsStore));
     const inj = s.npcInjuries[e.id];
     return {
       playerId: e.id,
@@ -1141,7 +1164,7 @@ async function processProTeamCallupCalldown(weekNum: number): Promise<string[]> 
     const profile  = getTeamProfile(teamId1, g, m);
     if (!profile) continue;
 
-    const { active, farm } = getTeamEntityRefs(teamId1, teamId2, m.entities, s.npcLiveStats, namedMap);
+    const { active, farm } = getTeamEntityRefs(teamId1, teamId2, m.entities, get(npcLiveStatsStore), namedMap);
 
     // 콜업
     if (farm.length > 0 && active.length > 0) {
@@ -1253,7 +1276,7 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
   for (const npc of namedNpcs) {
     const entity = m.entities.find(e => e.id === npc.npcId);
     if (!entity) continue;
-    const liveOvr = npcOvr(entity, s.npcLiveStats);
+    const liveOvr = npcOvr(entity, get(npcLiveStatsStore));
     const profile  = getTeamProfile(npc.currentTeam, g, m);
     if (!profile) continue;
 
@@ -1261,8 +1284,8 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
     const retSuggest = JSON.parse(
       await window.projectB!.evalRetirementSuggestionNative(JSON.stringify({
         teamProfile: profile,
-        player: buildRosterRef(entity, s.npcLiveStats, npc),
-        ovrTrend: (s.npcLiveStats[npc.npcId]?.peakOvr ?? liveOvr) - liveOvr,
+        player: buildRosterRef(entity, get(npcLiveStatsStore), npc),
+        ovrTrend: (get(npcLiveStatsStore)[npc.npcId]?.peakOvr ?? liveOvr) - liveOvr,
         prospectOvrAtPosition: 65,
         currentSalary: (npc as any).currentSalary ?? 0,
         marketValue:   (npc as any).currentSalary ?? 1000,
@@ -1279,7 +1302,7 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
         await window.projectB!.playerEvalRetirementResponseNative(JSON.stringify({
           personality: npcPersonality,
           age: npc.age, ovr: liveOvr,
-          ovrTrend: (s.npcLiveStats[npc.npcId]?.peakOvr ?? liveOvr) - liveOvr,
+          ovrTrend: (get(npcLiveStatsStore)[npc.npcId]?.peakOvr ?? liveOvr) - liveOvr,
           proServiceYears: npc.proServiceYears ?? 0,
           otherTeamInterest: false,
         }))
@@ -1377,15 +1400,15 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
 
   for (const entity of backgroundProEntities) {
     const personality = entity.personality ?? defaultPersonality();
-    const liveOvr   = npcOvr(entity, s.npcLiveStats);
+    const liveOvr   = npcOvr(entity, get(npcLiveStatsStore));
     const profile   = getTeamProfile(entity.teamId, g, m);
     if (!profile) continue;
 
     const retSuggest = JSON.parse(
       await window.projectB!.evalRetirementSuggestionNative(JSON.stringify({
         teamProfile: profile,
-        player: buildRosterRef(entity, s.npcLiveStats),
-        ovrTrend: (s.npcLiveStats[entity.id]?.peakOvr ?? liveOvr) - liveOvr,
+        player: buildRosterRef(entity, get(npcLiveStatsStore)),
+        ovrTrend: (get(npcLiveStatsStore)[entity.id]?.peakOvr ?? liveOvr) - liveOvr,
         prospectOvrAtPosition: 65,
         currentSalary: 0,
         marketValue:   1000,
@@ -1399,7 +1422,7 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
         personality,
         age: entity.age,
         ovr: liveOvr,
-        ovrTrend: (s.npcLiveStats[entity.id]?.peakOvr ?? liveOvr) - liveOvr,
+        ovrTrend: (get(npcLiveStatsStore)[entity.id]?.peakOvr ?? liveOvr) - liveOvr,
         proServiceYears: 0,
         otherTeamInterest: false,
       }))
@@ -1478,7 +1501,7 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
     for (const entity of bgFaEntities) {
       const leagueId = entity.leagueId!;
       const proSY = effectivePSY(entity);
-      const liveOvr = npcOvr(entity, s.npcLiveStats);
+      const liveOvr = npcOvr(entity, get(npcLiveStatsStore));
       const leagueStd = getLeagueStandings(leagueId, s);
       const teamStandings = [...leagueStd].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
       const teamRank = teamStandings.findIndex(r => r.teamId === entity.teamId) + 1;
@@ -1715,16 +1738,11 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   const coachTeaching  = (pitchCoach?.details as import("../stores/master").EntityDetails)?.coach?.stats?.teaching ?? 50;
   const coachEffBonus  = Math.max(-0.10, Math.min(0.20, (coachTeaching - 50) * 0.004));
   const teamRef        = m.teams.find((t) => t.id === g.protagonist.teamId);
-  const facilityEffMod = JSON.parse(await window.projectB!.weekCalcFacilityEff(
-    JSON.stringify({ careerStage: g.protagonist.careerStage, teamTier: teamRef?.tier ?? null })
-  )) as number;
-
   const prevLowMoraleWeeks = g.protagonist.consecutiveLowMoraleWeeks ?? 0;
   const isLowMorale        = g.protagonist.morale < 35;
   const newLowMoraleWeeks  = isLowMorale ? prevLowMoraleWeeks + 1 : 0;
   const slumpPenalty       = newLowMoraleWeeks >= 3 ? 0.70 : 1.0;
-
-  const alreadyInjured = !!g.protagonist.injury;
+  const alreadyInjured     = !!g.protagonist.injury;
 
   // 훈련 강도 계산: TRN_RECOVERY / TRN_MENTAL_P / TRN_MENTAL_B 제외한 슬롯 비율
   const LOW_INTENSITY_PROGRAMS = new Set(["TRN_RECOVERY", "TRN_MENTAL_P", "TRN_MENTAL_B"]);
@@ -1734,22 +1752,37 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
 
   // 동일 부위 이전 부상 이력 여부 (moderate 이상)
   const hasPriorInjurySameArea = (g.protagonist.injuryHistory ?? []).some(h => h.severity !== "light");
+  const randCount = m.eventPools.length + m.eventPools.reduce((s, p) => s + p.maxPicksPerWeek, 0);
 
-  const injuryCalc = JSON.parse(await window.projectB!.weekCalcInjury(JSON.stringify({
-    fatigue: g.protagonist.fatigue,
-    consecutiveHighFatigueWeeks: g.protagonist.consecutiveHighFatigueWeeks ?? 0,
-    hasInjury: alreadyInjured,
-    currentInjuryType: g.protagonist.injury?.type ?? null,
-    currentSeverity:   g.protagonist.injury?.severity ?? null,
-    recoveryWeeksLeft: g.protagonist.injury?.recoveryWeeksLeft ?? null,
-    playerType:        g.protagonist.playerType,
-    age:               g.protagonist.age,
-    condition:         g.protagonist.condition,
-    trainingIntensity,
-    consecutiveLowMoraleWeeks: g.protagonist.consecutiveLowMoraleWeeks ?? 0,
-    hasPriorInjurySameArea,
-    priorSteroidUsed: g.protagonist.injury?.steroidUsed ?? false,
-  }))) as { injuryUpdate: { type: string; severity: string; recoveryWeeksLeft: number } | null; justOccurred: boolean; justHealed: boolean; effMod: number; newConsecutiveHighFatigueWeeks: number; source: string | null };
+  // ── 4개 독립 IPC 병렬 실행 (Phase 3) ──────────────────────────
+  const [facilityEffModRaw, injuryCalcRaw, weeklyNetRaw, eventRandsRaw] = await Promise.all([
+    window.projectB!.weekCalcFacilityEff(
+      JSON.stringify({ careerStage: g.protagonist.careerStage, teamTier: teamRef?.tier ?? null })
+    ),
+    window.projectB!.weekCalcInjury(JSON.stringify({
+      fatigue: g.protagonist.fatigue,
+      consecutiveHighFatigueWeeks: g.protagonist.consecutiveHighFatigueWeeks ?? 0,
+      hasInjury: alreadyInjured,
+      currentInjuryType: g.protagonist.injury?.type ?? null,
+      currentSeverity:   g.protagonist.injury?.severity ?? null,
+      recoveryWeeksLeft: g.protagonist.injury?.recoveryWeeksLeft ?? null,
+      playerType:        g.protagonist.playerType,
+      age:               g.protagonist.age,
+      condition:         g.protagonist.condition,
+      trainingIntensity,
+      consecutiveLowMoraleWeeks: g.protagonist.consecutiveLowMoraleWeeks ?? 0,
+      hasPriorInjurySameArea,
+      priorSteroidUsed: g.protagonist.injury?.steroidUsed ?? false,
+    })),
+    window.projectB!.weekCalcWeeklyNet(
+      JSON.stringify({ careerStage: g.protagonist.careerStage, salary: g.protagonist.contract?.salary ?? null })
+    ),
+    window.projectB!.weekRollRandomBatch(randCount),
+  ]);
+  const facilityEffMod = JSON.parse(facilityEffModRaw) as number;
+  const injuryCalc = JSON.parse(injuryCalcRaw) as { injuryUpdate: { type: string; severity: string; recoveryWeeksLeft: number } | null; justOccurred: boolean; justHealed: boolean; effMod: number; newConsecutiveHighFatigueWeeks: number; source: string | null };
+  const weeklyNet = JSON.parse(weeklyNetRaw) as number;
+  const eventRands = JSON.parse(eventRandsRaw) as number[];
   const injuryJustOccurred = injuryCalc.justOccurred;
   const injuryJustHealed   = injuryCalc.justHealed;
 
@@ -1858,97 +1891,97 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     totalWeeks:        shPrev.totalWeeks         + 1,
   };
 
-  const weeklyNet = JSON.parse(await window.projectB!.weekCalcWeeklyNet(
-    JSON.stringify({ careerStage: g.protagonist.careerStage, salary: g.protagonist.contract?.salary ?? null })
-  )) as number;
-  gameStore.applyMoneyChange(weeklyNet);
-  gameStore.recordTrainingWeek();
-
-  const ovrBefore = g.protagonist.pitching.ovr;
-  const ovrAfter  = growth.protagonistPatch.pitching?.ovr ?? ovrBefore;
-  if (ovrAfter > ovrBefore) gameStore.updateScoutScore(Math.min(3, Math.max(1, ovrAfter - ovrBefore)));
-
-  gameStore.applyWeekResult(growth.protagonistPatch, growth.logs, [], weekNum, s.seasonYear);
-  {
-    const afterP = get(gameStore).protagonist;
-    const coachName = getPitchCoachName(afterP.teamId, m.entities);
-    gameStore.addMessage(makeTrainingMessage(weekNum, growth.logs, afterP, coachName));
-  }
   logs.push(...growth.logs);
 
-  // 이벤트 엔진
-  const gForEvent = get(gameStore);
-  const sForEvent = get(seasonStore);
-  const careerStageYear = calcCareerStageYear(gForEvent.protagonist, weekNum, gForEvent.schoolState.universityWeek ?? 0);
+  // 훈련 결과 후 주인공 상태 로컬 계산 (store 읽기 없이 이벤트·TOP10 입력 준비)
+  const ovrBefore = g.protagonist.pitching.ovr;
+  const ovrAfter  = growth.protagonistPatch.pitching?.ovr ?? ovrBefore;
+  const trainingScoutDelta = ovrAfter > ovrBefore ? Math.min(3, Math.max(1, ovrAfter - ovrBefore)) : 0;
+  const afterP: ProtagonistSave = { ...g.protagonist, money: Math.max(0, g.protagonist.money + weeklyNet), ...growth.protagonistPatch };
+  const coachName = getPitchCoachName(afterP.teamId, m.entities);
+  const trainingMsg = makeTrainingMessage(weekNum, growth.logs, afterP, coachName);
+
+  // 이벤트 엔진 (미리 계산된 eventRands 사용)
+  const updatedUniversityWeek = isUniversity ? (g.schoolState.universityWeek + 1) : (g.schoolState.universityWeek ?? 0);
+  const careerStageYear = calcCareerStageYear(afterP, weekNum, updatedUniversityWeek);
   const eventCtx: EventContext = {
-    protagonist:     gForEvent.protagonist,
+    protagonist:     afterP,
     currentWeek:     weekNum,
-    seasonPhase:     sForEvent.schedule.find((e) => e.week === weekNum)?.phase ?? "season",
-    standings:       sForEvent.standings,
-    stats:           sForEvent.stats,
-    triggeredEvents: sForEvent.triggeredEvents,
+    seasonPhase:     s.schedule.find((e) => e.week === weekNum)?.phase ?? "season",
+    standings:       s.standings,
+    stats:           s.stats,
+    triggeredEvents: s.triggeredEvents,
   };
-  const randCount = m.eventPools.length + m.eventPools.reduce((s, p) => s + p.maxPicksPerWeek, 0);
-  const eventRands = JSON.parse(await window.projectB!.weekRollRandomBatch(randCount)) as number[];
   const evResult = runEventEngine(
     m.eventRules, m.eventPools,
     new Map(m.messageTmpls.map((t) => [t.id, t])),
     new Map(m.decisionTmpls.map((d) => [d.id, d])),
-    eventCtx, sForEvent.seasonYear, careerStageYear,
+    eventCtx, s.seasonYear, careerStageYear,
     eventRands,
   );
-  for (const msg of evResult.newMessages) gameStore.addMessage(msg);
   seasonStore.recordTriggeredEvents(evResult.updatedTriggers);
   gameStore.recordCareerTriggeredEvents(evResult.careerUpdatedTriggers);
 
   // 고교 월간 유망주 TOP 10 (4주마다)
+  let top10Snap: import("../types/save").Top10Snapshot | undefined;
+  let top10Msg: MessageItem | undefined;
+  let rankPopularityDelta = 0;
+  let rankScoutScoreDelta = 0;
+  let rankMoraleDelta = 0;
   if (
     g.protagonist.careerStage === "highschool" &&
     weekInYear % 4 === 0 &&
     weekInYear >= 4
   ) {
-    const gTop10   = get(gameStore);
-    const sTop10   = get(seasonStore);
-    const heroStats = sTop10.stats[gTop10.protagonist.id] ?? null;
-    const last      = gTop10.protagonist.playerType === "pitcher"
-      ? gTop10.lastTop10Pitcher
-      : gTop10.lastTop10Batter;
+    const heroStats = s.stats[afterP.id] ?? null;
+    const last = afterP.playerType === "pitcher" ? g.lastTop10Pitcher : g.lastTop10Batter;
 
-    const snap = generateTop10(
-      gTop10.protagonist,
+    top10Snap = generateTop10(
+      afterP,
       heroStats as import("../types/save").PitcherSeasonStats | import("../types/save").BatterSeasonStats | null,
       m.entities,
       weekNum,
-      gTop10.protagonist.grade ?? 1,
-      sTop10.seasonYear,
+      afterP.grade ?? 1,
+      s.seasonYear,
     );
-
-    const msg = buildTop10Message(
-      gTop10.protagonist,
+    top10Msg = buildTop10Message(
+      afterP,
       heroStats as import("../types/save").PitcherSeasonStats | import("../types/save").BatterSeasonStats | null,
       m.entities,
-      snap,
+      top10Snap,
       last,
       weekNum,
-      sTop10.seasonYear,
+      s.seasonYear,
     );
-
-    gameStore.addMessage(msg);
-    gameStore.saveTop10Snapshot(snap);
-
-    const heroEntry = snap.entries.find((e) => e.id === "PLY_HERO");
+    const heroEntry = top10Snap.entries.find((e) => e.id === "PLY_HERO");
     if (heroEntry) {
       const ef = rankEffect(heroEntry.rank);
-      if (ef.popularity > 0) gameStore.updatePopularity(ef.popularity);
-      if (ef.scoutScore > 0) gameStore.updateScoutScore(ef.scoutScore);
-      if (ef.morale > 0) gameStore.updateMorale(ef.morale);
+      rankPopularityDelta = ef.popularity;
+      rankScoutScoreDelta = ef.scoutScore;
+      rankMoraleDelta = ef.morale;
     }
   }
 
+  // ── 주차 결과 배치 적용 (store 업데이트 최소화) ────────────────
+  const weekMessages: MessageItem[] = [trainingMsg, ...evResult.newMessages];
+  if (top10Msg) weekMessages.push(top10Msg);
+
+  gameStore.applyMoneyChange(weeklyNet);
+  gameStore.applyWeekEndBatch({
+    protagonistPatch: growth.protagonistPatch,
+    logs: growth.logs,
+    weekNum,
+    seasonYear: s.seasonYear,
+    scoutScoreDelta:  trainingScoutDelta || undefined,
+    top10Snapshot:    top10Snap,
+    popularityDelta:  rankPopularityDelta > 0 ? rankPopularityDelta : undefined,
+    scoutScoreDelta2: rankScoutScoreDelta > 0 ? rankScoutScoreDelta : undefined,
+    moraleDelta:      rankMoraleDelta > 0 ? rankMoraleDelta : undefined,
+    messages:         weekMessages,
+  });
+
   // NPC 주간 성장/하락 처리 (매주 실행)
   await processWeeklyNpcGrowth(weekNum);
-  // 성장 결과를 masterStore.entities에 반영 (게임 시뮬레이션에 즉시 적용)
-  masterStore.applyNpcLiveStats(get(seasonStore).npcLiveStats);
 
   // 프로 스테이지: 콜업/콜다운 처리 (월간 첫 주에만)
   if (isMonthStart(weekInYear)) {
@@ -2290,6 +2323,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         consecutiveTrainingSkips: 0,
       };
 
+      const emotionMsgs: MessageItem[] = [];
       const updatedNpcs = namedNpcs.map(npc => {
         // 재회 감지: dormant → active
         const activated = npc.emotionStatus === "dormant"
@@ -2300,7 +2334,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         if (activated.emotionStatus === "active" && npc.emotionStatus === "dormant") {
           const isSameTeam = activated.currentTeam === gEmo.protagonist.teamId;
           const reunionMsg = makeReunionMessage(activated, isSameTeam, weekNum);
-          if (reunionMsg) gameStore.addMessage(reunionMsg);
+          if (reunionMsg) emotionMsgs.push(reunionMsg);
         }
 
         // 맞대결 memory: 라이벌 NPC가 이번 주 상대팀에 있을 때
@@ -2316,14 +2350,15 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
 
         const { npc: updated, prevEmotion } = updateNpcEmotion(activated, ctx, newMems);
         const msg = checkEmotionTriggers(updated, prevEmotion, weekNum);
-        if (msg) gameStore.addMessage(msg);
+        if (msg) emotionMsgs.push(msg);
 
         return updated;
       });
 
       const moodMsg = checkTeamMoodWarning(updatedNpcs, weekNum);
-      if (moodMsg) gameStore.addMessage(moodMsg);
+      if (moodMsg) emotionMsgs.push(moodMsg);
 
+      if (emotionMsgs.length) gameStore.addMessages(emotionMsgs);
       gameStore.updateNpcs(updatedNpcs);
     }
   }
@@ -2333,6 +2368,8 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   await processNpcInjuries(weekNum);
   seasonStore.applyWeeklyConditionRecovery(bgEntities);
   await seasonStore.simulateBackgroundLeaguesAsync(weekNum, gFinal.protagonist.leagueId, bgEntities);
+  // 성장 결과를 masterStore.entities에 반영 (bg 시뮬은 npcLiveStats 직접 참조로 처리됨)
+  masterStore.applyNpcLiveStats(get(npcLiveStatsStore));
 
   // 주차 → 월 레이블 헬퍼
   function weekToMonthLabel(wk: number): string {
@@ -2882,7 +2919,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
               && e.id !== p.id;
           })
           .map((e) => {
-            const live = s.npcLiveStats[e.id];
+            const live = get(npcLiveStatsStore)[e.id];
             const ep = (e.details as import("../stores/master").EntityDetails)?.player;
             const ovr = live?.pitching?.ovr ?? ep?.pitching?.ovr ?? 50;
             return { id: e.id, name: e.name, ovr, teamId: e.teamId, isProtagonist: false };
@@ -2928,7 +2965,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
             return npcSave?.militaryStatus === "미필" && npcSave.careerStatus === "active" && e.id !== p.id;
           })
           .map((e) => {
-            const live = s.npcLiveStats[e.id];
+            const live = get(npcLiveStatsStore)[e.id];
             const ep = (e.details as import("../stores/master").EntityDetails)?.player;
             const ovr = live?.pitching?.ovr ?? ep?.pitching?.ovr ?? 50;
             return { id: e.id, name: e.name, ovr, teamId: e.teamId, isProtagonist: false };
@@ -3123,7 +3160,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
                 conditions: conditions2, homeRotIdx: homeRotIdx2, awayRotIdx: awayRotIdx2, week: game.week,
                 npcInjuries: get(seasonStore).npcInjuries,
                 rotationSize: rotationSizeForStage(gCurrent.protagonist.careerStage),
-                npcLiveStats: get(seasonStore).npcLiveStats,
+                npcLiveStats: get(npcLiveStatsStore),
               });
               npcResult2 = sim2.result; nextHomeRot2 = sim2.nextHomeRotIdx; nextAwayRot2 = sim2.nextAwayRotIdx; pitcherConds2 = sim2.pitcherConditions;
             } else {
@@ -3171,7 +3208,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
               conditions, homeRotIdx, awayRotIdx, week: game.week,
               npcInjuries: get(seasonStore).npcInjuries,
               rotationSize: rotationSizeForStage(gCurrent.protagonist.careerStage),
-              npcLiveStats: get(seasonStore).npcLiveStats,
+              npcLiveStats: get(npcLiveStatsStore),
             });
             npcResult      = sim.result;
             nextHomeRotIdx = sim.nextHomeRotIdx;
@@ -3378,7 +3415,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
             conditions, homeRotIdx, awayRotIdx, week: game.week,
             npcInjuries: get(seasonStore).npcInjuries,
             rotationSize: rotationSizeForStage(gCurrent.protagonist.careerStage),
-            npcLiveStats: get(seasonStore).npcLiveStats,
+            npcLiveStats: get(npcLiveStatsStore),
           });
           npcResult      = sim.result;
           nextHomeRotIdx = sim.nextHomeRotIdx;

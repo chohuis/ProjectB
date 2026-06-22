@@ -4,6 +4,7 @@ import { masterStore } from "./master";
 import type {
   LeagueSeasonState,
   MatchResult,
+  NpcLiveStat,
   PendingAction,
   PlayerCondition,
   PostseasonSeries,
@@ -33,6 +34,10 @@ export type SeasonStoreState = SaveSeason;
 function buildInitialState(): SeasonStoreState {
   return makeEmptySeason("LEAGUE_HIGHSCHOOL", 2026, 52, []);
 }
+
+// npcLiveStats 전용 스토어 — seasonStore 업데이트와 분리하여 subscriber 범람 방지
+import { npcLiveStatsStore } from "./npcLiveStats";
+export { npcLiveStatsStore } from "./npcLiveStats";
 
 // ── 스토어 생성 ───────────────────────────────────────────────
 function createSeasonStore() {
@@ -74,11 +79,12 @@ function createSeasonStore() {
 
     toSaveSeason(): SaveSeason {
       const s = get({ subscribe });
-      return { ...s, savedAt: new Date().toISOString() };
+      return { ...s, npcLiveStats: get(npcLiveStatsStore), savedAt: new Date().toISOString() };
     },
 
     hydrateFromSlot(season: SaveSeason) {
       const sanitizedStats = sanitizeStatsRecord(season.stats ?? {});
+      npcLiveStatsStore.set(season.npcLiveStats ?? {});
       set({
         ...season,
         stats: sanitizedStats,
@@ -91,7 +97,7 @@ function createSeasonStore() {
         postseasonBrackets: season.postseasonBrackets ?? {},
         ablEastTeams: season.ablEastTeams ?? [], ablWestTeams: season.ablWestTeams ?? [],
         friendlyLog: season.friendlyLog ?? [],
-        npcLiveStats: season.npcLiveStats ?? {},
+        npcLiveStats: {},
         npcRetired: season.npcRetired ?? [],
         schedule: (season.schedule ?? []).map((e) => e.gameDate ? e : { ...e, gameDate: `${season.seasonYear ?? 2026}-03-01` }),
       });
@@ -99,15 +105,15 @@ function createSeasonStore() {
 
     // entity 목록 기준으로 npcLiveStats 초기화 (W1 또는 신규 엔티티 대응)
     initNpcLiveStats(entities: import("../stores/master").EntityRow[], seasonYear?: number) {
-      update((s) => {
-        const stats = { ...s.npcLiveStats };
+      npcLiveStatsStore.update((stats) => {
+        const next = { ...stats };
         for (const e of entities) {
           if (e.role !== "player") continue;
           if (seasonYear && (e as any).entryYear && (e as any).entryYear > seasonYear) continue;
-          if (stats[e.id]) continue;
+          if (next[e.id]) continue;
           const p = (e.details as import("../stores/master").EntityDetails)?.player;
           if (!p) continue;
-          stats[e.id] = {
+          next[e.id] = {
             pitching: p.pitching ? { ...p.pitching } : undefined,
             batting:  p.batting  ? { ...p.batting  } : undefined,
             pitchingXp: {},
@@ -118,7 +124,7 @@ function createSeasonStore() {
             pitches: p.pitches ? [...p.pitches] : [],
           };
         }
-        return { ...s, npcLiveStats: stats };
+        return next;
       });
     },
 
@@ -135,11 +141,11 @@ function createSeasonStore() {
         pitchInTraining?: { id: string; progress: number; isNew: boolean };
       }>
     ) {
-      update((s) => {
-        const stats = { ...s.npcLiveStats };
+      npcLiveStatsStore.update((stats) => {
+        const next = { ...stats };
         for (const u of updated) {
-          stats[u.npcId] = {
-            ...(stats[u.npcId] ?? { pitchingXp: {}, battingXp: {} }),
+          next[u.npcId] = {
+            ...(next[u.npcId] ?? { pitchingXp: {}, battingXp: {} }),
             pitching:        u.pitching,
             batting:         u.batting,
             pitchingXp:      u.pitchingXp,
@@ -149,23 +155,23 @@ function createSeasonStore() {
             pitchInTraining: u.pitchInTraining,
           };
         }
-        return { ...s, npcLiveStats: stats };
+        return next;
       });
     },
 
     // 시즌 시작 스냅샷 갱신 (W1 호출)
     snapNpcSeasonStart() {
-      update((s) => {
-        const stats = { ...s.npcLiveStats };
-        for (const id of Object.keys(stats)) {
-          const live = stats[id];
-          stats[id] = {
+      npcLiveStatsStore.update((stats) => {
+        const next = { ...stats };
+        for (const id of Object.keys(next)) {
+          const live = next[id];
+          next[id] = {
             ...live,
             seasonStartPitching: live.pitching ? { ...live.pitching } : undefined,
             seasonStartBatting:  live.batting  ? { ...live.batting  } : undefined,
           };
         }
-        return { ...s, npcLiveStats: stats };
+        return next;
       });
     },
 
@@ -334,6 +340,11 @@ function createSeasonStore() {
       update((s) => ({ ...s, pendingActions: [...s.pendingActions, action] }));
     },
 
+    pushPendingActions(actions: PendingAction[]) {
+      if (!actions.length) return;
+      update((s) => ({ ...s, pendingActions: [...s.pendingActions, ...actions] }));
+    },
+
     resolvePendingAction(type: PendingAction["type"], id?: string) {
       update((s) => ({
         ...s,
@@ -451,7 +462,7 @@ function createSeasonStore() {
         simEntities = get(masterStore).entities;
       }
 
-      const result = await BackgroundLeague.simulateBackgroundLeagues(s, week, protagonistLeagueId, simEntities);
+      const result = await BackgroundLeague.simulateBackgroundLeagues(s, week, protagonistLeagueId, simEntities, get(npcLiveStatsStore));
       if (!result) return;
 
       update((st) => ({
@@ -463,7 +474,7 @@ function createSeasonStore() {
       if (result.gameLogs.length > 0 && window.projectB?.npcBulkInsertGameLogs) {
         const slotId = get(gameStore).currentSlotId ?? "default";
         await window.projectB.npcBulkInsertGameLogs(JSON.stringify({ slotId, season: s.seasonYear, week, logs: result.gameLogs }));
-        await window.projectB.npcTrimGameLogs(JSON.stringify({ slotId, keep: 40 }));
+        void window.projectB.npcTrimGameLogs(JSON.stringify({ slotId, keep: 40 }));
       }
     },
 
@@ -523,15 +534,17 @@ function createSeasonStore() {
     },
 
     patchNpcLiveOvr(playerId: string, ovrDelta: number) {
-      update((s) => {
-        const live = s.npcLiveStats[playerId];
-        if (!live) return s;
-        const patched = {
-          ...live,
-          pitching: live.pitching ? { ...live.pitching, ovr: Math.max(1, (live.pitching.ovr ?? 50) + ovrDelta) } : live.pitching,
-          batting:  live.batting  ? { ...live.batting,  ovr: Math.max(1, (live.batting.ovr  ?? 50) + ovrDelta) } : live.batting,
+      npcLiveStatsStore.update((stats) => {
+        const live = stats[playerId];
+        if (!live) return stats;
+        return {
+          ...stats,
+          [playerId]: {
+            ...live,
+            pitching: live.pitching ? { ...live.pitching, ovr: Math.max(1, (live.pitching.ovr ?? 50) + ovrDelta) } : live.pitching,
+            batting:  live.batting  ? { ...live.batting,  ovr: Math.max(1, (live.batting.ovr  ?? 50) + ovrDelta) } : live.batting,
+          },
         };
-        return { ...s, npcLiveStats: { ...s.npcLiveStats, [playerId]: patched } };
       });
     },
 

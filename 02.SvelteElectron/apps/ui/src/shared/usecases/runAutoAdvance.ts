@@ -213,11 +213,16 @@ export async function runAutoAdvance(): Promise<void> {
 
   const startWeek = get(seasonStore).currentWeek;
   const MAX_ITER = 1000;
+  const TICK_BUDGET_MS = 8; // 이 시간 초과 시 이벤트 루프에 제어 반환
   let iter = 0;
+  let tickStart = performance.now();
 
   while (get(autoAdvanceStore).running && iter < MAX_ITER) {
     iter++;
-    await new Promise<void>((r) => setTimeout(r, 0)); // UI 응답 yield
+    if (performance.now() - tickStart >= TICK_BUDGET_MS) {
+      await new Promise<void>((r) => setTimeout(r, 0)); // UI 응답 yield
+      tickStart = performance.now();
+    }
     if (!get(autoAdvanceStore).running) break;
 
     try {
