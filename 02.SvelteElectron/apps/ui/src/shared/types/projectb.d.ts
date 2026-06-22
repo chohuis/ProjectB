@@ -154,6 +154,7 @@ declare global {
       draftRunBoard:                         (p: string) => Promise<string>;
       militaryCalcCandidates:                (p: string) => Promise<string>;
       militaryCalcSelection:                 (p: string) => Promise<string>;
+      militaryPickGeneral:                   (p: string) => Promise<string>;
       indieCalcScoutOffer:                   (p: string) => Promise<string>;
       // ── 스케줄 엔진 ────────────────────────────────────────
       scheduleGeneric:           (p: string) => Promise<string>;

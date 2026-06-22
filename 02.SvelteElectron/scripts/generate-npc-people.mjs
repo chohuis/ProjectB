@@ -505,22 +505,22 @@ function generateJbl() {
     const makeName = createJblNameMaker(rng, usedName);
     POS_25.forEach((pos, i) => {
       const id = `PLY_JBL_${pad2(club.no)}_${pad3(i + 1)}`;
-      all.push(makePlayerEntity({ rng, makeName, id, leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", grade: null, conf: LEAGUE_CONF.LEAGUE_JBL_1, position: pos, jerseyNumber: i + 1 }));
+      all.push(makePlayerEntity({ rng, makeName, id, leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", grade: null, conf: LEAGUE_CONF.LEAGUE_JBL_1, position: pos, jerseyNumber: i + 1, notes: "국적:일본" }));
     });
     for (let i = 0; i < 3; i += 1) {
-      all.push(makeStaffEntity({ rng, makeName, id: `COA_JBL_${pad2(club.no)}_${pad3(i + 1)}`, role: "coach", leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [34, 58] }));
+      all.push(makeStaffEntity({ rng, makeName, id: `COA_JBL_${pad2(club.no)}_${pad3(i + 1)}`, role: "coach", leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [34, 58], notes: "국적:일본" }));
     }
-    all.push(makeStaffEntity({ rng, makeName, id: `MNG_JBL_${pad2(club.no)}_001`, role: "manager", leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [42, 66] }));
-    all.push(makeStaffEntity({ rng, makeName, id: `OWN_JBL_${pad2(club.no)}_001`, role: "owner",   leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [48, 74] }));
+    all.push(makeStaffEntity({ rng, makeName, id: `MNG_JBL_${pad2(club.no)}_001`, role: "manager", leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [42, 66], notes: "국적:일본" }));
+    all.push(makeStaffEntity({ rng, makeName, id: `OWN_JBL_${pad2(club.no)}_001`, role: "owner",   leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [48, 74], notes: "국적:일본" }));
 
     POS_20.forEach((pos, i) => {
       const id = `PLY_JBL_${pad2(club.no)}_${pad3(100 + i + 1)}`;
-      all.push(makePlayerEntity({ rng, makeName, id, leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", grade: null, conf: LEAGUE_CONF.LEAGUE_JBL_2, position: pos, jerseyNumber: i + 31 }));
+      all.push(makePlayerEntity({ rng, makeName, id, leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", grade: null, conf: LEAGUE_CONF.LEAGUE_JBL_2, position: pos, jerseyNumber: i + 31, notes: "국적:일본" }));
     });
     for (let i = 0; i < 2; i += 1) {
-      all.push(makeStaffEntity({ rng, makeName, id: `COA_JBL_${pad2(club.no)}_${pad3(100 + i + 1)}`, role: "coach", leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [34, 58] }));
+      all.push(makeStaffEntity({ rng, makeName, id: `COA_JBL_${pad2(club.no)}_${pad3(100 + i + 1)}`, role: "coach", leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [34, 58], notes: "국적:일본" }));
     }
-    all.push(makeStaffEntity({ rng, makeName, id: `MNG_JBL_${pad2(club.no)}_101`, role: "manager", leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [42, 66] }));
+    all.push(makeStaffEntity({ rng, makeName, id: `MNG_JBL_${pad2(club.no)}_101`, role: "manager", leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [42, 66], notes: "국적:일본" }));
   });
   return { version: 1, sourceLeague: "LEAGUE_JBL", entities: all };
 }

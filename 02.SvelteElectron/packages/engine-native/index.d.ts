@@ -87,6 +87,8 @@ export declare function calcDraftRankNative(paramsJson: string): string
 export declare function calcSportsUnitCandidatesNative(paramsJson: string): string
 /** 체육부대 최종 선발 (W52 입대 신청자 기준) */
 export declare function calcSportsUnitSelectionNative(paramsJson: string): string
+/** 일반병 입대 대상 랜덤 선택 (시즌당 max_count명 상한) */
+export declare function pickGeneralEnlisteesNative(paramsJson: string): string
 /** 독립리그 KBL 스카우트 제의 계산 */
 export declare function calcIndieScoutOfferNative(paramsJson: string): string
 export declare function generateScheduleNative(p: string): string

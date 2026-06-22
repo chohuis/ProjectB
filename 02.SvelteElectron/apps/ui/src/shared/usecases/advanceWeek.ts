@@ -2913,6 +2913,9 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         const npcCandidates = m.entities
           .filter((e) => {
             if (e.role !== "player") return false;
+            const isForeign = (e.originLeagueId === "LEAGUE_ABL" || e.originLeagueId === "LEAGUE_JBL")
+              && !e.notes?.includes("국적:한국");
+            if (isForeign) return false;
             const npcSave = g.npcs.find((n) => n.npcId === e.id);
             return npcSave?.militaryStatus === "미필"
               && npcSave.careerStatus === "active"
@@ -2961,6 +2964,9 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         const npcPool = m.entities
           .filter((e) => {
             if (e.role !== "player") return false;
+            const isForeign = (e.originLeagueId === "LEAGUE_ABL" || e.originLeagueId === "LEAGUE_JBL")
+              && !e.notes?.includes("국적:한국");
+            if (isForeign) return false;
             const npcSave = g.npcs.find((n) => n.npcId === e.id);
             return npcSave?.militaryStatus === "미필" && npcSave.careerStatus === "active" && e.id !== p.id;
           })

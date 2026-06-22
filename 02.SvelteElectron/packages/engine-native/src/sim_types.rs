@@ -282,6 +282,20 @@ pub struct SportsUnitSelectionResult {
     pub selected_ids: Vec<String>,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PickGeneralEnlisteesParams {
+    pub ids: Vec<String>,
+    pub max_count: usize,
+    pub seed: u32,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PickGeneralEnlisteesResult {
+    pub selected_ids: Vec<String>,
+}
+
 // ── 드래프트 보드 (커리어 선택 화면) ──────────────────────────────────────────
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

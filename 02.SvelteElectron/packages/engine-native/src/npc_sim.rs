@@ -1305,6 +1305,21 @@ pub fn calc_sports_unit_selection(params: SportsUnitSelectionParams) -> SportsUn
     SportsUnitSelectionResult { protagonist_selected, selected_ids: selected.into_iter().collect() }
 }
 
+// ── 일반병 입대 대상 랜덤 선택 (시즌당 최대 max_count명) ─────────────────────
+
+pub fn pick_general_enlistees(params: PickGeneralEnlisteesParams) -> PickGeneralEnlisteesResult {
+    let mut ids = params.ids.clone();
+    let mut rng = LcgRand::new(params.seed.wrapping_mul(2654435761));
+    // Fisher-Yates 셔플
+    let n = ids.len();
+    for i in (1..n).rev() {
+        let j = (rng.next() * (i + 1) as f64) as usize % (i + 1);
+        ids.swap(i, j);
+    }
+    ids.truncate(params.max_count);
+    PickGeneralEnlisteesResult { selected_ids: ids }
+}
+
 pub fn run_draft_board(params: DraftBoardParams) -> DraftBoardResult {
     let teams = &params.team_ids;
     let n_teams = teams.len() as i32;

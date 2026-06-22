@@ -919,6 +919,10 @@ app.whenReady().then(() => {
     try { return engineNative.calcSportsUnitSelectionNative(paramsJson); }
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
+  ipcMain.handle("military:pickGeneral", (_event, paramsJson) => {
+    try { return engineNative.pickGeneralEnlisteesNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
   ipcMain.handle("indie:calcScoutOffer", (_event, paramsJson) => {
     try { return engineNative.calcIndieScoutOfferNative(paramsJson); }
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }

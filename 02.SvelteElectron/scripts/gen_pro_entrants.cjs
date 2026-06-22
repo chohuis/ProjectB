@@ -106,6 +106,9 @@ function generatePersonality(id, devRate, potHidden, age) {
 
 const POSITIONS = ["C","1B","2B","3B","SS","LF","CF","RF"];
 
+const ABL_NATS = ["미국", "도미니카", "베네수엘라", "쿠바", "파나마", "멕시코", "일본"];
+function pickAblNat(rng) { return ABL_NATS[Math.floor(rng() * ABL_NATS.length)]; }
+
 // ── 리그별 파라미터 ───────────────────────────────────────────
 const LEAGUES = [
   {
@@ -176,7 +179,7 @@ function main() {
           teamId:         "",
           schoolId:       "",
           grade:          null,
-          notes:          "",
+          notes:          league.leagueId === "LEAGUE_JBL" ? "국적:일본" : `국적:${pickAblNat(rng)}`,
           diligence:      clampInt(45 + rng() * 40, 45, 85),
           popularity:     clampInt(10 + rng() * 40, 10, 50),
           militaryStatus: "군필",

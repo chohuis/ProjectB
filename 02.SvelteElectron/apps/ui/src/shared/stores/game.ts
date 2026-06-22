@@ -1733,6 +1733,31 @@ function createGameStore() {
         const npcMap = new Map(decayedNpcs.map(n => [n.npcId, n]));
         const npcLiveStats = get(npcLiveStatsStore);
 
+        // Phase 4-0: ABL/JBL 원출신 외국인 선수 면제 일괄 패치
+        const foreignExempt = mNow.entities.filter(e =>
+          e.role === "player" &&
+          (e.originLeagueId === "LEAGUE_ABL" || e.originLeagueId === "LEAGUE_JBL") &&
+          !e.notes?.includes("국적:한국") &&
+          e.militaryStatus !== "면제" &&
+          e.militaryStatus !== "군필" &&
+          e.militaryStatus !== "현역"
+        );
+        if (foreignExempt.length > 0) {
+          const exemptPatched = foreignExempt.map(e => ({ ...e, militaryStatus: "면제" as const, slotId }));
+          const exemptRes = JSON.parse(
+            await window.projectB!.masterBulkUpsertEntities(JSON.stringify({ slotId, entities: exemptPatched }))
+          ) as { ok: boolean; error?: string };
+          if (!exemptRes.error) {
+            const exemptIdSet = new Set(foreignExempt.map(e => e.id));
+            for (let i = 0; i < decayedNpcs.length; i++) {
+              if (exemptIdSet.has(decayedNpcs[i].npcId) && decayedNpcs[i].militaryStatus === "미필") {
+                decayedNpcs[i] = { ...decayedNpcs[i], militaryStatus: "면제" };
+              }
+            }
+            autoLog(`[외국인면제] ${foreignExempt.length}명 면제 처리`);
+          }
+        }
+
         // 1. 전역: 2년 경과 모든 현역 선수 (top-level || 하위 호환 nested 체크)
         const discharging = mNow.entities.filter(e =>
           e.role === "player" &&
@@ -1819,7 +1844,7 @@ function createGameStore() {
             const selRes = JSON.parse(
               await window.projectB!.militaryCalcSelection(JSON.stringify({
                 applicants: topRaw.topCandidates!.map(c => ({ ...c, isProtagonist: false })),
-                maxTotal: Math.min(30, topRaw.topCandidates!.length),
+                maxTotal: Math.min(20, topRaw.topCandidates!.length),
                 maxPerTeam: 3,
               }))
             ) as { protagonistSelected: boolean; selectedIds?: string[]; error?: string };
@@ -1896,10 +1921,10 @@ function createGameStore() {
           }
         }
 
-        // 3. 일반병 강제 입대: age>=28 또는 age=27 체육부대 탈락
+        // 3. 일반병 강제 입대: age>=28 또는 age=27 체육부대 탈락 → 시즌 30명 랜덤 상한
         const candidateIdSet = new Set(milCandidates.map(c => c.id));
         const mGeneral = get(masterStore);
-        const generalEnlistEntities = mGeneral.entities.filter(e =>
+        const generalPool = mGeneral.entities.filter(e =>
           e.role === "player" &&
           e.status !== "retired" &&
           proLeagues.has(e.leagueId ?? "") &&
@@ -1912,6 +1937,22 @@ function createGameStore() {
             (e.age === 27 && candidateIdSet.has(e.id))
           )
         );
+
+        // Rust LCG로 최대 30명 랜덤 선택
+        const generalEnlistEntities = await (async () => {
+          if (generalPool.length === 0) return [];
+          if (generalPool.length <= 30) return generalPool;
+          const pickRes = JSON.parse(
+            await window.projectB!.militaryPickGeneral(JSON.stringify({
+              ids: generalPool.map(e => e.id),
+              maxCount: 30,
+              seed: seasonYear,
+            }))
+          ) as { selectedIds?: string[]; error?: string };
+          if (pickRes.error || !pickRes.selectedIds) return generalPool.slice(0, 30);
+          const pickedSet = new Set(pickRes.selectedIds);
+          return generalPool.filter(e => pickedSet.has(e.id));
+        })();
 
         if (generalEnlistEntities.length > 0) {
           const genEntities = generalEnlistEntities.map(e => ({
@@ -1959,7 +2000,7 @@ function createGameStore() {
                 currentTeam:           "",
               };
             }
-            autoLog(`[일반병입대] ${generalEnlistEntities.length}명`);
+            autoLog(`[일반병입대] ${generalEnlistEntities.length}명 (후보 ${generalPool.length}명 중)`);
           }
         }
       }

@@ -494,6 +494,17 @@ pub fn calc_sports_unit_selection_native(params_json: String) -> String {
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcSportsUnitSelectionNative/serialize", e))
 }
 
+/// 일반병 입대 대상 랜덤 선택 (시즌당 max_count명 상한)
+#[napi]
+pub fn pick_general_enlistees_native(params_json: String) -> String {
+    let params: PickGeneralEnlisteesParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("pickGeneralEnlisteesNative", e),
+    };
+    let result = npc_sim::pick_general_enlistees(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("pickGeneralEnlisteesNative/serialize", e))
+}
+
 /// 독립리그 KBL 스카우트 제의 계산
 #[napi]
 pub fn calc_indie_scout_offer_native(params_json: String) -> String {

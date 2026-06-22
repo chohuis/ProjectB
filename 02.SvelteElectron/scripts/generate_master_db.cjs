@@ -277,8 +277,14 @@ function main() {
 }
 
 if (process.versions.electron) {
-  const { app } = require("electron");
-  app.whenReady().then(() => { main(); app.quit(); });
+  try {
+    const { app } = require("electron");
+    if (app && typeof app.whenReady === "function") {
+      app.whenReady().then(() => { main(); app.quit(); });
+    } else {
+      main(); process.exit(0);
+    }
+  } catch { main(); process.exit(0); }
 } else {
   main();
 }
