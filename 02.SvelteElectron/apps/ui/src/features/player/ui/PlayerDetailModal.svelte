@@ -246,16 +246,14 @@
       const endYear   = curYear + rem - 1;
       const startYear = endYear - c.durationYears + 1;
       const yearsIn   = c.durationYears - rem + 1;
-      return { teamName: teamById.get(teamId) ?? teamId, startYear, endYear, yearsIn };
+      return { teamName: teamById.get(teamId) ?? teamId, startYear, endYear, durLabel: undefined as string | undefined, yearsIn };
     } else {
       const mp2 = (modalEntity.details as EntityDetails)?.player;
       teamId = modalEntity.teamId;
-      // NPC: Rust가 매 오프시즌 계산한 contractYears 우선, 없으면 master 폴백
+      // NPC: 계약 기간 추정값만 표시 (signingYear 미추적으로 절대 연도 불가)
       dur = modalNpcSave?.contractYears ?? mp2?.contract?.durationYears ?? 1;
-      const endYear   = curYear + dur - 1;
-      const startYear = curYear;
-      const yearsIn   = modalNpcSave?.proServiceYears ?? mp2?.proServiceYears ?? 1;
-      return { teamName: teamById.get(teamId) ?? teamId, startYear, endYear, yearsIn };
+      const yearsIn = modalNpcSave?.proServiceYears ?? mp2?.proServiceYears ?? 1;
+      return { teamName: teamById.get(teamId) ?? teamId, startYear: null, endYear: null, durLabel: `${dur}년 계약`, yearsIn };
     }
   })();
 
@@ -507,7 +505,11 @@
                 <h5 class="lsec-title">소속 · 계약</h5>
                 <div class="contract-pill">
                   <span class="cp-team">{contractSummary.teamName}</span>
-                  <span class="cp-range">({contractSummary.startYear}~{contractSummary.endYear})</span>
+                  {#if contractSummary.startYear != null}
+                    <span class="cp-range">({contractSummary.startYear}~{contractSummary.endYear})</span>
+                  {:else if contractSummary.durLabel}
+                    <span class="cp-range">({contractSummary.durLabel})</span>
+                  {/if}
                   <span class="cp-yrsin">{contractSummary.yearsIn}년차</span>
                 </div>
               </div>

@@ -134,6 +134,8 @@ declare global {
       seasonGetHistoryYears:        (p: string) => Promise<string>;
       seasonGetHistoryStandings:    (p: string) => Promise<string>;
       seasonGetHistoryLbStats:      (p: string) => Promise<string>;
+      seasonSaveHistoryPostseason:  (p: string) => Promise<string>;
+      seasonGetHistoryPostseason:   (p: string) => Promise<string>;
       // ── 성장 엔진 ───────────────────────────────────────────
       growthCalcTraining:          (p: string) => Promise<string>;
       growthCalcGame:              (p: string) => Promise<string>;

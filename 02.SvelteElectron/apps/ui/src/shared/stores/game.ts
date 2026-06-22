@@ -1222,6 +1222,7 @@ function createGameStore() {
           faNegotiationRound: 0,
           faUnsignedWeeks: 0,
           tradeAdaptationWeeks: 0,
+          proServiceYears: 0,
         };
         return {
           ...s,
@@ -1250,6 +1251,7 @@ function createGameStore() {
           money: Math.max(0, s.protagonist.money + contract.signingBonus),
           faNegotiationRound: 0,
           faUnsignedWeeks: 0,
+          proServiceYears: 0,
         };
         return {
           ...s,
@@ -1595,7 +1597,7 @@ function createGameStore() {
           .map(n => [n.npcId, n.currentTeam])
       );
       const beforeMilitary = new Map(
-        s.npcs.map(n => [n.npcId, { name: n.name, status: n.militaryStatus, unit: n.militaryUnit }])
+        s.npcs.map(n => [n.npcId, { name: n.name, status: n.militaryStatus, unit: n.militaryUnit, league: n.currentLeague, team: n.currentTeam }])
       );
 
       const result = await runOffseasonProcessing(s.npcs, s.pendingDraft, seasonYear);
@@ -1639,160 +1641,277 @@ function createGameStore() {
         }
       }
 
-      // before/after 비교로 실제 입대·전역 추출 + 리그 기록 작성
+      // before/after 비교로 전역 추출 (입대는 Phase 4 통합 처리)
       const militaryEnlistedSports: string[] = [];
       const militaryEnlistedGeneral: string[] = [];
       const militaryDischargedNames: string[] = [];
-      const militaryRows: import("../types/save").LeagueTransactionRow[] = [];
+      const dischargeRows: import("../types/save").LeagueTransactionRow[] = [];
       for (const n of result.npcs) {
         const before = beforeMilitary.get(n.npcId);
         if (!before) continue;
-        if (before.status !== "현역" && n.militaryStatus === "현역") {
-          const detail = n.militaryUnit === "sports" ? "체육부대 입대" : "현역 입대";
-          if (n.militaryUnit === "sports") {
-            militaryEnlistedSports.push(n.name);
-          } else {
-            militaryEnlistedGeneral.push(n.name);
-          }
-          militaryRows.push({
-            seasonYear,
-            category: "military",
-            playerId: n.npcId,
-            playerName: n.name,
-            fromTeamId: n.currentTeam,
-            fromLeagueId: n.currentLeague,
-            detail,
-          });
-        } else if (before.status === "현역" && n.militaryStatus !== "현역") {
+        if (before.status === "현역" && n.militaryStatus !== "현역") {
           militaryDischargedNames.push(before.name);
-          militaryRows.push({
+          dischargeRows.push({
             seasonYear,
             category: "military",
             playerId: n.npcId,
             playerName: n.name,
-            fromLeagueId: n.currentLeague,
+            fromLeagueId: before.league,
+            toLeagueId: proLeagues.has(n.currentLeague) ? n.currentLeague : undefined,
             detail: "전역",
           });
         }
       }
-      if (slotId && militaryRows.length > 0) {
+      if (slotId && dischargeRows.length > 0) {
         const milRes = JSON.parse(
-          await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: militaryRows }))
+          await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: dischargeRows }))
         );
-        if (milRes.error) autoLog(`[NPC병역오류] 병역 기록 오류: ${milRes.error}`);
-        else autoLog(`[NPC병역] 병역 기록 ${militaryRows.length}건 저장`);
+        if (milRes.error) autoLog(`[NPC전역오류] 전역 기록 오류: ${milRes.error}`);
+        else autoLog(`[NPC전역] 전역 기록 ${dischargeRows.length}건 저장`);
       }
-      (window as any).__lastOffseasonSummary = {
-        militaryEnlistedSports,
-        militaryEnlistedGeneral,
-        militaryDischargedNames,
-      };
 
-      // ── Phase 4: 배경 엔티티 병역 처리 ────────────────────────────────────
+      // ── Phase 4: 병역 통합 처리 (단일 소스: masterStore.entities) ─────────────
       if (slotId) {
-        const m = get(masterStore);
-        const namedIdSet = new Set(s.npcs.map(n => n.npcId));
+        const mNow = get(masterStore);
+        const npcMap = new Map(decayedNpcs.map(n => [n.npcId, n]));
         const npcLiveStats = _getSeasonData?.()?.npcLiveStats ?? {};
 
-        // 1. 전역: militaryEnlistYear에서 2년 이상 경과
-        const bgDischarging = m.entities.filter(e =>
+        // 1. 전역: 2년 경과 모든 현역 선수 (top-level || 하위 호환 nested 체크)
+        const discharging = mNow.entities.filter(e =>
           e.role === "player" &&
-          e.leagueId && proLeagues.has(e.leagueId) &&
-          !namedIdSet.has(e.id) &&
+          (e.militaryStatus === "현역" || e.details?.player?.militaryStatus === "현역") &&
           e.details?.player?.militaryEnlistYear !== undefined &&
           (seasonYear - (e.details.player.militaryEnlistYear ?? 0)) >= 2
         );
         const dischargedIds = new Set<string>();
-        if (bgDischarging.length > 0) {
-          const dischEntities = bgDischarging.map(e => ({
-            ...e,
-            details: { ...e.details, player: { ...e.details?.player, militaryEnlistYear: undefined } },
-            slotId,
-          }));
+
+        if (discharging.length > 0) {
+          const dischEntities = discharging.map(e => {
+            const op = e.details?.player;
+            const npc = npcMap.get(e.id);
+            const returnLeague = npc ? npc.currentLeague : (op?.originalLeagueId ?? "LEAGUE_INDEPENDENT");
+            const returnTeam   = npc ? npc.currentTeam   : (op?.originalTeamId   ?? "");
+            return {
+              ...e,
+              militaryStatus: "군필" as const,
+              leagueId: returnLeague,
+              teamId:   returnTeam,
+              details: { ...e.details, player: {
+                ...op,
+                militaryEnlistYear:  undefined,
+                militaryStatus:      undefined,
+                militaryUnit:        undefined,
+                originalLeagueId:    undefined,
+                originalTeamId:      undefined,
+              }},
+              slotId,
+            };
+          });
           const disRes = JSON.parse(
             await window.projectB!.masterBulkUpsertEntities(JSON.stringify({ slotId, entities: dischEntities }))
           ) as { ok: boolean; error?: string };
           if (!disRes.error) {
-            bgDischarging.forEach(e => dischargedIds.add(e.id));
-            const dischRows = bgDischarging.map(e => ({
-              seasonYear, category: "military",
-              playerId: e.id, playerName: e.name,
-              fromLeagueId: e.leagueId, detail: "전역",
-            }));
-            await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: dischRows }));
-            autoLog(`[배경병역] 전역 ${bgDischarging.length}명`);
+            discharging.forEach(e => dischargedIds.add(e.id));
+            const txRows = discharging.map(e => {
+              const op = e.details?.player;
+              return {
+                seasonYear, category: "military" as const,
+                playerId: e.id, playerName: e.name,
+                fromLeagueId: op?.originalLeagueId ?? e.leagueId,
+                detail: "전역",
+              };
+            });
+            await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: txRows }));
+            autoLog(`[전역] 엔티티 ${discharging.length}명`);
           }
         }
 
-        // 2. 입대: 미필 배경 선수 중 일부 선발 (age 20–27)
-        const mNow = get(masterStore);
-        const bgMilitaryCandidates = mNow.entities
-          .filter(e =>
-            e.role === "player" &&
-            e.leagueId && proLeagues.has(e.leagueId) &&
-            e.teamId && e.teamId !== "" &&
-            e.status !== "retired" &&
-            !namedIdSet.has(e.id) &&
-            !dischargedIds.has(e.id) &&
-            e.age >= 20 && e.age <= 27 &&
-            !e.details?.player?.militaryEnlistYear
-          )
-          .map(e => {
-            const live = npcLiveStats[e.id];
-            const dp = (e.details as any)?.player;
-            const rawOvr =
-              live?.pitching?.ovr ?? live?.batting?.ovr ??
-              dp?.pitching?.ovr ?? dp?.batting?.ovr;
-            const ovr = Math.round(
-              (typeof rawOvr === "number" && isFinite(rawOvr)) ? rawOvr : 50
-            );
-            const pos = (e.details as any)?.player?.position ?? "";
-            return { id: e.id, name: e.name || e.id, ovr, teamId: e.teamId!, position: pos, isProtagonist: false };
-          });
+        // 2. 체육부대 입대: entities 단일 후보 풀
+        const milCandidates = mNow.entities.filter(e =>
+          e.role === "player" &&
+          e.status !== "retired" &&
+          e.militaryStatus !== "현역" && e.militaryStatus !== "군필" && e.militaryStatus !== "면제" &&
+          e.details?.player?.militaryStatus !== "현역" &&
+          !e.details?.player?.militaryEnlistYear &&
+          proLeagues.has(e.leagueId ?? "") &&
+          e.teamId && e.teamId !== "" &&
+          !dischargedIds.has(e.id) &&
+          e.age >= 18 && e.age <= 27
+        ).map(e => {
+          const live = npcLiveStats[e.id];
+          const dp = e.details?.player;
+          const rawOvr = live?.pitching?.ovr ?? live?.batting?.ovr ?? (dp as any)?.pitching?.ovr ?? (dp as any)?.batting?.ovr;
+          const ovr = Math.round((typeof rawOvr === "number" && isFinite(rawOvr)) ? rawOvr : 50);
+          return { id: e.id, name: e.name || e.id, ovr, teamId: e.teamId!, position: (dp?.position ?? "") as string, isProtagonist: false };
+        });
+        autoLog(`[병역통합] 체육부대 후보 ${milCandidates.length}명`);
 
-        autoLog(`[배경병역] 입대 후보 ${bgMilitaryCandidates.length}명`);
-        if (bgMilitaryCandidates.length > 0) {
+        const selectedSportsIds = new Set<string>();
+
+        if (milCandidates.length > 0) {
           const topRaw = JSON.parse(
-            await window.projectB!.militaryCalcCandidates(JSON.stringify({ candidates: bgMilitaryCandidates, topN: 50 }))
+            await window.projectB!.militaryCalcCandidates(JSON.stringify({
+              candidates: milCandidates,
+              topN: 70,
+            }))
           ) as { topCandidates?: { id: string; name: string; ovr: number; teamId: string }[]; error?: string };
 
           if (topRaw.error) {
-            autoLog(`[배경병역오류] militaryCalcCandidates 실패: ${topRaw.error}`);
+            autoLog(`[병역통합오류] militaryCalcCandidates: ${topRaw.error}`);
           } else if ((topRaw.topCandidates?.length ?? 0) > 0) {
             const selRes = JSON.parse(
               await window.projectB!.militaryCalcSelection(JSON.stringify({
                 applicants: topRaw.topCandidates!.map(c => ({ ...c, isProtagonist: false })),
-                maxTotal: Math.min(20, topRaw.topCandidates!.length),
+                maxTotal: Math.min(30, topRaw.topCandidates!.length),
                 maxPerTeam: 3,
               }))
             ) as { protagonistSelected: boolean; selectedIds?: string[]; error?: string };
 
             if (selRes.error) {
-              autoLog(`[배경병역오류] militaryCalcSelection 실패: ${selRes.error}`);
+              autoLog(`[병역통합오류] militaryCalcSelection: ${selRes.error}`);
             } else if ((selRes.selectedIds?.length ?? 0) > 0) {
-              const selectedEntities = mNow.entities.filter(e => selRes.selectedIds!.includes(e.id));
-              const enlisted = selectedEntities.map(e => ({
-                ...e,
-                details: { ...e.details, player: { ...e.details?.player, militaryEnlistYear: seasonYear } },
-                slotId,
-              }));
-              const enlRes = JSON.parse(
-                await window.projectB!.masterBulkUpsertEntities(JSON.stringify({ slotId, entities: enlisted }))
-              ) as { ok: boolean; error?: string };
-              if (!enlRes.error) {
-                const enlRows = selectedEntities.map(e => ({
-                  seasonYear, category: "military",
-                  playerId: e.id, playerName: e.name,
-                  fromTeamId: e.teamId, fromLeagueId: e.leagueId,
-                  detail: "현역 입대",
+              const selectedSet = new Set(selRes.selectedIds!);
+              const enlTxRows: import("../types/save").LeagueTransactionRow[] = [];
+
+              const sportsEnlistEntities = mNow.entities
+                .filter(e => selectedSet.has(e.id))
+                .map(e => ({
+                  ...e,
+                  militaryStatus: "현역" as const,
+                  leagueId: "LEAGUE_UNIVERSITY",
+                  teamId:   "TEAM_SPORTS_UNIT",
+                  details: { ...e.details, player: {
+                    ...e.details?.player,
+                    militaryStatus:     "현역",
+                    militaryUnit:       "sports",
+                    militaryEnlistYear: seasonYear,
+                    originalLeagueId:   e.leagueId,
+                    originalTeamId:     e.teamId,
+                  }},
+                  slotId,
                 }));
-                await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: enlRows }));
-                autoLog(`[배경병역] 입대 ${selRes.selectedIds!.length}명`);
+
+              if (sportsEnlistEntities.length > 0) {
+                const enlRes = JSON.parse(
+                  await window.projectB!.masterBulkUpsertEntities(JSON.stringify({ slotId, entities: sportsEnlistEntities }))
+                ) as { ok: boolean; error?: string };
+                if (!enlRes.error) {
+                  sportsEnlistEntities.forEach(e => {
+                    selectedSportsIds.add(e.id);
+                    militaryEnlistedSports.push(e.name);
+                    const orig = mNow.entities.find(o => o.id === e.id)!;
+                    enlTxRows.push({
+                      seasonYear, category: "military" as const,
+                      playerId: e.id, playerName: e.name,
+                      fromTeamId: orig.teamId, fromLeagueId: orig.leagueId,
+                      detail: "체육부대 입대",
+                    });
+                  });
+                }
+              }
+
+              // gameStore.npcs 동기화
+              for (let i = 0; i < decayedNpcs.length; i++) {
+                if (!selectedSet.has(decayedNpcs[i].npcId)) continue;
+                const n = decayedNpcs[i];
+                decayedNpcs[i] = {
+                  ...n,
+                  originalLeagueId:      n.currentLeague,
+                  originalTeamId:        n.currentTeam,
+                  careerStatus:          "military",
+                  militaryStatus:        "현역",
+                  militaryUnit:          "sports",
+                  militaryEnlistYear:    seasonYear,
+                  militaryDischargeYear: seasonYear + 2,
+                  currentLeague:         "LEAGUE_UNIVERSITY",
+                  currentTeam:           "TEAM_SPORTS_UNIT",
+                };
+              }
+
+              if (enlTxRows.length > 0) {
+                const enlTxRes = JSON.parse(
+                  await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: enlTxRows }))
+                ) as { ok?: boolean; error?: string };
+                if (enlTxRes.error) autoLog(`[병역입대오류] TX 저장 실패: ${enlTxRes.error}`);
+                else autoLog(`[체육부대입대] ${sportsEnlistEntities.length}명`);
               }
             }
           }
         }
+
+        // 3. 일반병 강제 입대: age>=28 또는 age=27 체육부대 탈락
+        const candidateIdSet = new Set(milCandidates.map(c => c.id));
+        const mGeneral = get(masterStore);
+        const generalEnlistEntities = mGeneral.entities.filter(e =>
+          e.role === "player" &&
+          e.status !== "retired" &&
+          proLeagues.has(e.leagueId ?? "") &&
+          e.militaryStatus !== "현역" && e.militaryStatus !== "군필" && e.militaryStatus !== "면제" &&
+          e.details?.player?.militaryStatus !== "현역" &&
+          !e.details?.player?.militaryEnlistYear &&
+          !dischargedIds.has(e.id) &&
+          !selectedSportsIds.has(e.id) && (
+            e.age >= 28 ||
+            (e.age === 27 && candidateIdSet.has(e.id))
+          )
+        );
+
+        if (generalEnlistEntities.length > 0) {
+          const genEntities = generalEnlistEntities.map(e => ({
+            ...e,
+            militaryStatus: "현역" as const,
+            leagueId: "LEAGUE_MILITARY",
+            teamId:   "",
+            details: { ...e.details, player: {
+              ...e.details?.player,
+              militaryStatus:     "현역",
+              militaryUnit:       "general",
+              militaryEnlistYear: seasonYear,
+              originalLeagueId:   e.leagueId,
+              originalTeamId:     e.teamId,
+            }},
+            slotId,
+          }));
+          const genRes = JSON.parse(
+            await window.projectB!.masterBulkUpsertEntities(JSON.stringify({ slotId, entities: genEntities }))
+          ) as { ok: boolean; error?: string };
+          if (!genRes.error) {
+            const genTxRows = generalEnlistEntities.map(e => ({
+              seasonYear, category: "military" as const,
+              playerId: e.id, playerName: e.name,
+              fromTeamId: e.teamId, fromLeagueId: e.leagueId,
+              detail: "일반병 입대",
+            }));
+            await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: genTxRows }));
+
+            const genIdSet = new Set(generalEnlistEntities.map(e => e.id));
+            generalEnlistEntities.forEach(e => militaryEnlistedGeneral.push(e.name));
+            for (let i = 0; i < decayedNpcs.length; i++) {
+              if (!genIdSet.has(decayedNpcs[i].npcId)) continue;
+              const n = decayedNpcs[i];
+              decayedNpcs[i] = {
+                ...n,
+                originalLeagueId:      n.currentLeague,
+                originalTeamId:        n.currentTeam,
+                careerStatus:          "military",
+                militaryStatus:        "현역",
+                militaryUnit:          "general",
+                militaryEnlistYear:    seasonYear,
+                militaryDischargeYear: seasonYear + 2,
+                currentLeague:         "LEAGUE_MILITARY",
+                currentTeam:           "",
+              };
+            }
+            autoLog(`[일반병입대] ${generalEnlistEntities.length}명`);
+          }
+        }
       }
+
+      (window as any).__lastOffseasonSummary = {
+        militaryEnlistedSports,
+        militaryEnlistedGeneral,
+        militaryDischargedNames,
+      };
 
       update((st) => ({
         ...st,
@@ -2023,8 +2142,14 @@ function createGameStore() {
       const s = get({ subscribe });
       if (s.pendingDraft.length === 0) return;
       const simResult = await runDraftSimulation(s.pendingDraft, [], year);
+      // pendingDraft(졸업생)는 updated에서 제거됐으므로 병합 후 전달
+      const npcIdSet = new Set(s.npcs.map(n => n.npcId));
+      const combined = [
+        ...s.npcs,
+        ...s.pendingDraft.filter(n => !npcIdSet.has(n.npcId)),
+      ];
       const updatedNpcs = await applyDraftToNpcs(
-        s.npcs, simResult, universityTeamIds, independentTeamIds,
+        combined, simResult, universityTeamIds, independentTeamIds,
       );
       update(st => ({ ...st, npcs: updatedNpcs, pendingDraft: [] }));
 

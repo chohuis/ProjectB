@@ -6,7 +6,6 @@ import { autoAdvanceStore, autoLog, setAutoLogFile } from "../stores/autoAdvance
 import { advanceWeek } from "./advanceWeek";
 import { applyGameOutcome } from "./applyGameOutcome";
 import type { UnifiedGameOutcome, PlayerGameLine, PendingAction } from "../types/season";
-import type { PlayerSeasonStats } from "../types/save";
 import { buildBatterLineup, buildStarterStats } from "../utils/matchLineupBuilder";
 
 // ── 정지 조건 ──────────────────────────────────────────────────
@@ -176,159 +175,6 @@ async function handleEvent(pa: Extract<PendingAction, { type: "event" }>): Promi
   await seasonStore.save();
 }
 
-// ── 시즌 종료 자동 처리 ────────────────────────────────────────
-async function handleSeasonEnd(): Promise<void> {
-  const g = get(gameStore);
-  const s = get(seasonStore);
-  const m = get(masterStore);
-  const p = g.protagonist;
-  const now = s.seasonYear;
-  const gradeBeforeAdvance = p.grade;
-  autoLog(`[handleSeasonEnd] ${now}시즌 종료 처리 시작 | careerStage=${p.careerStage} | NPC ${g.npcs.length}명 | 배경엔티티 ${m.entities.length}명`);
-
-  gameStore.appendCareerRecord(
-    {
-      year: now, leagueId: p.leagueId, teamId: p.teamId,
-      statLine: "", ovr: p.pitching.ovr, awards: [],
-    },
-    (s.stats[p.id] as PlayerSeasonStats) ?? undefined,
-  );
-
-  await gameStore.processSeasonEnd(now);
-
-  const isProStage = ["pro_kbl", "pro_abl", "pro_jbl"].includes(p.careerStage);
-
-  const leagueStats: Record<string, Record<string, PlayerSeasonStats>> = {};
-  for (const [lid, ls] of Object.entries(s.leagueState)) leagueStats[lid] = ls.stats as Record<string, PlayerSeasonStats>;
-  gameStore.applySeasonHistory(s.stats, leagueStats, now);
-
-  await seasonStore.flushAllLeagueStatsToDb(now);
-
-  // 시즌 순위/스탯 히스토리 저장
-  {
-    const slotId = g.currentSlotId;
-    if (slotId) {
-      const standingRows: object[] = [];
-      for (const st of s.standings) {
-        standingRows.push({ leagueId: s.leagueId, teamId: st.teamId,
-          wins: st.wins, losses: st.losses, draws: st.draws, winPct: st.winPct,
-          runsFor: st.runsFor, runsAgainst: st.runsAgainst, streak: st.streak, last10: st.last10 });
-      }
-      for (const [lid, ls] of Object.entries(s.leagueState)) {
-        for (const st of (ls.standings ?? [])) {
-          standingRows.push({ leagueId: lid, teamId: st.teamId,
-            wins: st.wins, losses: st.losses, draws: st.draws, winPct: st.winPct,
-            runsFor: st.runsFor, runsAgainst: st.runsAgainst, streak: st.streak, last10: st.last10 });
-        }
-      }
-      if (standingRows.length > 0) {
-        window.projectB!.seasonSaveHistoryStandings(JSON.stringify({ slotId, seasonYear: now, rows: standingRows })).catch(() => {});
-      }
-
-      const lbStatRows: object[] = [];
-      for (const [lid, ls] of Object.entries(s.leagueState)) {
-        for (const [playerId, stat] of Object.entries(ls.stats ?? {})) {
-          const st = stat as import("../types/save").PlayerSeasonStats;
-          if (st.type === "pitcher") {
-            const p2 = stat as import("../types/save").PitcherSeasonStats;
-            lbStatRows.push({ leagueId: lid, playerId, statType: "pitcher",
-              g: p2.g, gs: p2.gs, w: p2.w, l: p2.l, sv: p2.sv ?? 0, hd: p2.hd ?? 0,
-              ip: p2.ip, er: p2.er, hP: p2.h, kP: p2.k, bbP: p2.bb, era: p2.era, whip: p2.whip });
-          } else {
-            const b2 = stat as import("../types/save").BatterSeasonStats;
-            lbStatRows.push({ leagueId: lid, playerId, statType: "batter",
-              g: b2.g, pa: b2.pa, ab: b2.ab, hB: b2.h, hr: b2.hr, rbi: b2.rbi,
-              sb: b2.sb ?? 0, bbB: b2.bb, kB: b2.k, avgV: b2.avg, obp: b2.obp, slg: b2.slg, ops: b2.ops });
-          }
-        }
-      }
-      if (lbStatRows.length > 0) {
-        window.projectB!.seasonSaveHistoryLbStats(JSON.stringify({ slotId, seasonYear: now, rows: lbStatRows })).catch(() => {});
-      }
-    }
-  }
-
-  await gameStore.processAllLeaguesSeasonEnd(now);
-
-  // 연간 병역 현황 메시지
-  type OffseasonSummary = { militaryEnlistedSports?: string[]; militaryEnlistedGeneral?: string[]; militaryDischargedNames?: string[] };
-  const offseasonSummary = (window as Window & { __lastOffseasonSummary?: OffseasonSummary | null }).__lastOffseasonSummary ?? null;
-  if (offseasonSummary) {
-    const sports     = offseasonSummary.militaryEnlistedSports ?? [];
-    const general    = offseasonSummary.militaryEnlistedGeneral ?? [];
-    const discharged = offseasonSummary.militaryDischargedNames ?? [];
-    if (sports.length + general.length + discharged.length > 0) {
-      const lines: string[] = [];
-      if (sports.length)     lines.push(`◆ 체육부대 입대 (${sports.length}명)\n  ${sports.slice(0, 5).join(", ")}${sports.length > 5 ? ` 외 ${sports.length - 5}명` : ""}`);
-      if (general.length)    lines.push(`◆ 일반부대 입대 (${general.length}명)\n  ${general.slice(0, 3).join(", ")}${general.length > 3 ? ` 외 ${general.length - 3}명` : ""}`);
-      if (discharged.length) lines.push(`◆ 전역 (${discharged.length}명)\n  ${discharged.slice(0, 3).join(", ")}${discharged.length > 3 ? ` 외 ${discharged.length - 3}명` : ""}`);
-      gameStore.addMessage({
-        id: `msg-military-annual-${now}`,
-        category: "news", sender: "병무청",
-        subject: `${now} 시즌 병역 현황`,
-        preview: `입대 ${sports.length + general.length}명, 전역 ${discharged.length}명`,
-        body: lines.join("\n\n"),
-        createdAt: `Y${now}`, readAt: null,
-      });
-    }
-    (window as Window & { __lastOffseasonSummary?: unknown }).__lastOffseasonSummary = null;
-  }
-
-  await gameStore.applyAgingDecay();
-
-  await runSeasonEndBgProcessing(now);
-
-  const gNow = get(gameStore);
-  autoLog(`[드래프트] pendingDraft=${gNow.pendingDraft.length}명`);
-  if (gNow.pendingDraft.length > 0) {
-    const univIds = m.teams.filter((t) => t.leagueId === "LEAGUE_UNIVERSITY" && t.id !== "TEAM_SPORTS_UNIT").map((t) => t.id);
-    const indIds  = m.teams.filter((t) => t.leagueId === "LEAGUE_INDEPENDENT").map((t) => t.id);
-    await gameStore.processNpcDraft(now, univIds, indIds);
-  }
-
-  if (isProStage) {
-    const pending = gNow.protagonist.pendingNextContract;
-    gameStore.advanceSeasonYear(get(seasonStore).seasonYear);
-
-    if (pending) {
-      gameStore.applyPendingNextContract();
-      const proTeamIds = m.teams.filter((t) => t.leagueId === pending.leagueId).map((t) => t.id);
-      const nextYear   = (s.seasonYear || 2026) + 1;
-      const { generateKblSchedule, generateAblSchedule, generateJblSchedule } = await import("../utils/scheduleGen");
-      const { shuffleAblConferences } = await import("../utils/postseasonEngine");
-      const isAbl = pending.leagueId === "LEAGUE_ABL";
-      const isJbl = pending.leagueId === "LEAGUE_JBL";
-      seasonStore.initSeason(pending.leagueId, nextYear, 52, proTeamIds);
-      seasonStore.setSchedule(
-        isAbl ? await generateAblSchedule(proTeamIds, pending.teamId) :
-        isJbl ? await generateJblSchedule(proTeamIds, pending.teamId) :
-                await generateKblSchedule(proTeamIds, pending.teamId),
-      );
-      if (isAbl) {
-        const { east, west } = await shuffleAblConferences(proTeamIds);
-        seasonStore.setAblConferences(east, west);
-      }
-    } else {
-      seasonStore.startNewSeason();
-    }
-  } else {
-    // 고교: schoolId 있으면 seasonYear 진행 안 함 (SeasonEndModal과 동일 로직)
-    const isHsWithSchool = p.careerStage === "highschool" && !!p.schoolId;
-    if (!isHsWithSchool) {
-      gameStore.advanceSeasonYear(get(seasonStore).seasonYear);
-    }
-    seasonStore.startNewSeason();
-
-    if (p.careerStage === "highschool" && gradeBeforeAdvance != null && gradeBeforeAdvance < 3) {
-      const allHsIds = m.teams.filter((t) => t.leagueId === "LEAGUE_HIGHSCHOOL").map((t) => t.id);
-      await seasonStore.reinitHighschoolSeason(p.teamId, allHsIds);
-    }
-  }
-
-  await gameStore.save();
-  await seasonStore.save();
-}
-
 // ── 훈련 추천 자동 적용 ────────────────────────────────────────
 function applyRecommendedTraining(): void {
   const p = get(gameStore).protagonist;
@@ -375,15 +221,12 @@ export async function runAutoAdvance(): Promise<void> {
     if (!get(autoAdvanceStore).running) break;
 
     try {
-      // 1. 시즌 종료 처리
+      // 1. 시즌 종료 → SeasonEndModal이 처리하도록 정지
       if (get(seasonEnded)) {
         const yr = get(seasonStore).seasonYear;
-        autoAdvanceStore.addLog(`${yr} 시즌 종료 처리`);
-        autoLog(`[시즌종료] ${yr}시즌 종료 처리 시작`);
-        await handleSeasonEnd();
-        autoAdvanceStore.addLog("새 시즌 시작");
-        autoLog(`[시즌종료] ${yr}시즌 처리 완료 → ${get(seasonStore).seasonYear}시즌 시작`);
-        continue;
+        autoAdvanceStore.stop(`${yr}시즌 종료 — 결산 화면을 확인해주세요`);
+        autoLog(`[시즌종료] ${yr}시즌 종료 — SeasonEndModal 대기`);
+        return;
       }
 
       const pa = get(nextPendingAction);
@@ -495,7 +338,7 @@ export async function runAutoAdvance(): Promise<void> {
 }
 
 // ── 시즌 종료 배경 처리 (자동/수동 공통) ────────────────────────────────────
-// SeasonEndModal + handleSeasonEnd 양쪽에서 호출
+// SeasonEndModal에서 호출 (시즌 종료 배경 처리)
 export async function runSeasonEndBgProcessing(now: number): Promise<void> {
   // Phase 1: 프로 배경 엔티티 age / proServiceYears 연간 갱신
   {
@@ -559,11 +402,17 @@ export async function runSeasonEndBgProcessing(now: number): Promise<void> {
       const univCount = toAgeNonPro.filter(e => e.leagueId === "LEAGUE_UNIVERSITY").length;
       const indCount  = toAgeNonPro.filter(e => e.leagueId === "LEAGUE_INDEPENDENT").length;
 
-      const agedNonPro = toAgeNonPro.map(e => ({
-        ...e,
-        age: e.age + 1,
-        grade: e.grade != null ? e.grade + 1 : e.grade,
-      }));
+      const agedNonPro = toAgeNonPro.map(e => {
+        // grade-3 고교 배경 선수는 졸업 처리 (DRAFT_POOL 이동, grade 제거)
+        if (e.leagueId === "LEAGUE_HIGHSCHOOL" && (e.grade ?? 0) >= 3) {
+          return { ...e, age: e.age + 1, leagueId: "LEAGUE_DRAFT_POOL", grade: null };
+        }
+        return {
+          ...e,
+          age: e.age + 1,
+          grade: e.grade != null ? e.grade + 1 : e.grade,
+        };
+      });
 
       const ageResNonPro = JSON.parse(
         await window.projectB!.masterBulkUpsertEntities(
@@ -572,7 +421,7 @@ export async function runSeasonEndBgProcessing(now: number): Promise<void> {
       ) as { ok: boolean; count?: number; error?: string };
 
       if (ageResNonPro.error) autoLog(`[비프로에이징오류] ${ageResNonPro.error}`);
-      else autoLog(`[비프로에이징] 고교재학 ${hsOther.length}명 / 고교졸업예정 ${hsGrad3.length}명 / 대학 ${univCount}명 / 독립 ${indCount}명 → 나이+학년 증가`);
+      else autoLog(`[비프로에이징] 고교재학 ${hsOther.length}명 / 고교졸업(DRAFT_POOL이동) ${hsGrad3.length}명 / 대학 ${univCount}명 / 독립 ${indCount}명 → 나이+학년 증가`);
 
       await masterStore.reloadEntities(now, slotIdNonPro);
     }

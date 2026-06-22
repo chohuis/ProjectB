@@ -772,9 +772,10 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             n.pro_service_years = Some(n.pro_service_years.unwrap_or(0) + 1);
             let fa_threshold = fa_eligibility_years(&n.current_league);
             if n.pro_service_years.unwrap_or(0) >= fa_threshold && rng.gen::<f64>() < 0.6 {
-                n.current_league = "LEAGUE_FREE_AGENT".into();
-                n.current_team   = "".into();
-                summary.fa_count += 1;
+                n.current_league    = "LEAGUE_FREE_AGENT".into();
+                n.current_team      = "".into();
+                n.pro_service_years = Some(0);
+                summary.fa_count   += 1;
                 return n;
             }
         }
@@ -806,11 +807,19 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
                         .unwrap_or_else(|| "LEAGUE_INDEPENDENT".into());
                     n.current_team   = n.original_team_id.take().unwrap_or_default();
                 } else {
-                    // 일반부대: 독립리그 FA
-                    n.current_league = "LEAGUE_INDEPENDENT".into();
-                    n.current_team   = "".into();
-                    n.original_league_id = None;
-                    n.original_team_id   = None;
+                    // 일반부대: 계약 잔여 있으면 원소속팀 복귀, 없으면 FA
+                    let has_contract = n.contract_years > 0;
+                    if has_contract {
+                        n.current_league = n.original_league_id.take()
+                            .filter(|l| !l.is_empty())
+                            .unwrap_or_else(|| "LEAGUE_INDEPENDENT".into());
+                        n.current_team   = n.original_team_id.take().unwrap_or_default();
+                    } else {
+                        n.current_league     = "LEAGUE_FREE_AGENT".into();
+                        n.current_team       = "".into();
+                        n.original_league_id = None;
+                        n.original_team_id   = None;
+                    }
                 }
                 n.military_unit = None;
                 summary.military_discharged_count += 1;
@@ -819,76 +828,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         }
     }
 
-    // 7.5 올해 전역자 포지션 수집 (Step 9 포지션 우선 선발용)
-    let vacating_positions: Vec<String> = processed.iter()
-        .filter(|n| n.current_team == "TEAM_SPORTS_UNIT"
-                 && n.military_discharge_year.map_or(false, |dy| dy <= season_year))
-        .map(|n| n.position.clone())
-        .collect();
-
-    // 8. 군입대 판정 (OVR/연봉 기반 지연 성향)
-    let enlist_candidates: Vec<(usize, f64, String, String)> = processed.iter().enumerate()
-        .filter_map(|(i, n)| {
-            if n.military_status != "미필" { return None; }
-            if n.current_league == "LEAGUE_HIGHSCHOOL" { return None; }
-            if n.career_status == "military" { return None; }
-            let ovr = npc_core_ovr(n);
-            let base_prob: f64 = match n.age {
-                i32::MIN..=22 => 0.05,
-                23 => 0.12,
-                24 => 0.22,
-                25 => 0.60,
-                26 => 0.80,
-                27 => 0.95,
-                _  => 1.0,
-            };
-            let ovr_delay    = if ovr >= 75.0 { 0.10 } else if ovr >= 68.0 { 0.05 } else { 0.0 };
-            let salary_delay = if n.current_salary >= 8000 { 0.10 }
-                               else if n.current_salary >= 4000 { 0.05 }
-                               else { 0.0 };
-            let final_prob = (base_prob - ovr_delay - salary_delay).max(0.05);
-            if rng.gen::<f64>() < final_prob {
-                Some((i, ovr, n.current_team.clone(), n.position.clone()))
-            } else {
-                None
-            }
-        })
-        .collect();
-
-    // 9. 체육부대 선발 (포지션 우선, 이후 OVR 순 / 팀당 최대 3명)
-    let sports_candidates: Vec<(String, f64, String, String)> = enlist_candidates.iter()
-        .map(|(i, ovr, team, pos)| (processed[*i].npc_id.clone(), *ovr, team.clone(), pos.clone()))
-        .collect();
-    let sports_selected = select_sports_unit_ids(&sports_candidates, &vacating_positions, 10, 3);
-
-    // 10. 입대 처리
-    for (i, _, _, _) in &enlist_candidates {
-        let n = &mut processed[*i];
-        let is_sports = sports_selected.contains(&n.npc_id);
-        // 원소속 저장 (전역 시 복귀용)
-        n.original_league_id     = Some(n.current_league.clone());
-        n.original_team_id       = Some(n.current_team.clone());
-        n.career_status          = "military".into();
-        n.military_status        = "현역".into();
-        n.military_unit          = Some(if is_sports { "sports" } else { "general" }.to_string());
-        n.military_enlist_year   = Some(season_year);
-        n.military_discharge_year = Some(season_year + 2);
-        // 체육부대: 대학리그 상무야구단 소속 / 일반부대: LEAGUE_MILITARY 보관
-        if is_sports {
-            n.current_league = "LEAGUE_UNIVERSITY".into();
-            n.current_team   = "TEAM_SPORTS_UNIT".into();
-        } else {
-            n.current_league = "LEAGUE_MILITARY".into();
-            n.current_team   = "".into();
-        }
-        n.sports_unit_selected   = is_sports;
-        summary.military_enlisted_count += 1;
-        if is_sports {
-            summary.military_enlisted_sports.push(format!("{}(OVR {})", n.name, npc_core_ovr(n).round() as i32));
-        } else {
-            summary.military_enlisted_general.push(n.name.clone());
-        }
-    }
+    // 8-10. 군입대 판정/체육부대 선발/입대 처리 → TypeScript Phase 4 통합 처리로 이전
 
     // 11. 은퇴 판정 + 로스터 캡
     let mut logs: Vec<String> = Vec::new();
@@ -953,8 +893,7 @@ pub fn advance_grades(params: AdvanceGradesParams) -> GradeAdvanceResult {
             g.age           += 1;
             g.current_league = "LEAGUE_DRAFT_POOL".into();
             g.career_history.push(entry);
-            graduated.push(g.clone());
-            updated.push(g);
+            graduated.push(g);
         } else {
             let mut n = npc;
             n.grade = Some(grade + 1);

@@ -5,7 +5,6 @@
   import type { PendingAction } from "../../../shared/types/season";
   import type { PitcherSeasonStats, ProContract } from "../../../shared/types/save";
   import { generateKblSchedule, generateAblSchedule, generateJblSchedule } from "../../../shared/utils/scheduleGen";
-  import { shuffleAblConferences } from "../../../shared/utils/postseasonEngine";
   import { calcMarketSalary, calcSeasonRating } from "../../../shared/utils/salaryEngine";
   import { isFaEligible } from "../../../shared/utils/faEngine";
 
@@ -90,10 +89,6 @@
       isJbl ? await generateJblSchedule(proTeamIds, contract.teamId) :
               await generateKblSchedule(proTeamIds, contract.teamId),
     );
-    if (isAbl) {
-      const { east, west } = await shuffleAblConferences(proTeamIds);
-      seasonStore.setAblConferences(east, west);
-    }
     seasonStore.resolvePendingAction("salaryNegotiation");
     await gameStore.save();
     await seasonStore.save();

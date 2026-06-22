@@ -509,7 +509,9 @@
 
       <!-- 하단 버튼 -->
       <div class="actions">
-        <button class="btn-ghost" on:click={() => dispatch("close")}>닫기</button>
+        {#if !(started && finished)}
+          <button class="btn-ghost" on:click={() => dispatch("close")}>닫기</button>
+        {/if}
         <div class="action-right">
           {#if !finished}
             <button class="btn-auto" on:click={doAutoAll}>전체 자동 진행</button>

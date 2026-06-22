@@ -3,7 +3,6 @@
   import { masterStore } from "../../../shared/stores/master";
   import { seasonStore } from "../../../shared/stores/season";
   import { generateKblSchedule, generateAblSchedule, generateJblSchedule } from "../../../shared/utils/scheduleGen";
-  import { shuffleAblConferences } from "../../../shared/utils/postseasonEngine";
   import { generateFaOffers, isFaEligible, toContract, getFaThreshold, type FaOffer } from "../../../shared/utils/faEngine";
 
   let resolving = false;

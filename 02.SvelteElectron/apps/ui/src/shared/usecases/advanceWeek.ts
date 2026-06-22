@@ -2651,10 +2651,9 @@ async function injectLeaguePostseason(nextWeek: number): Promise<void> {
     else if (leagueId === "LEAGUE_INDEPENDENT") built = await buildIndBracket(s.standings);
     else if (leagueId === "LEAGUE_JBL") built = await buildJblBracket(s.standings);
     else if (leagueId === "LEAGUE_ABL") {
-      const east = s.ablEastTeams ?? [];
-      const west = s.ablWestTeams ?? [];
-      const eastSt = s.standings.filter((st) => east.includes(st.teamId));
-      const westSt = s.standings.filter((st) => west.includes(st.teamId));
+      const { ablConference } = await import("../utils/leagueConferences");
+      const eastSt = s.standings.filter((st) => ablConference(st.teamId) === "East");
+      const westSt = s.standings.filter((st) => ablConference(st.teamId) === "West");
       built = await buildAblBracket(eastSt, westSt);
     } else {
       return;

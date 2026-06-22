@@ -162,6 +162,82 @@
   }
 
   // ── 새 시즌 처리 ────────────────────────────────────────────────
+  async function saveSeasonHistory(seasonYear: number) {
+    const slotId = $gameStore.currentSlotId;
+    if (!slotId) return;
+
+    const groupASet = new Set($seasonStore.hsGroupA ?? []);
+    const groupBSet = new Set($seasonStore.hsGroupB ?? []);
+
+    const standingRows: object[] = [];
+    for (const st of $seasonStore.standings) {
+      let groupLabel = "";
+      if ($seasonStore.leagueId === "LEAGUE_HIGHSCHOOL") {
+        groupLabel = groupASet.has(st.teamId) ? "A" : groupBSet.has(st.teamId) ? "B" : "";
+      }
+      standingRows.push({ leagueId: $seasonStore.leagueId, teamId: st.teamId, groupLabel,
+        wins: st.wins, losses: st.losses, draws: st.draws, winPct: st.winPct,
+        runsFor: st.runsFor, runsAgainst: st.runsAgainst, streak: st.streak, last10: st.last10 });
+    }
+    for (const [lid, ls] of Object.entries($seasonStore.leagueState)) {
+      for (const st of (ls.standings ?? [])) {
+        standingRows.push({ leagueId: lid, teamId: st.teamId, groupLabel: "",
+          wins: st.wins, losses: st.losses, draws: st.draws, winPct: st.winPct,
+          runsFor: st.runsFor, runsAgainst: st.runsAgainst, streak: st.streak, last10: st.last10 });
+      }
+    }
+    if (standingRows.length > 0) {
+      window.projectB!.seasonSaveHistoryStandings(JSON.stringify({ slotId, seasonYear, rows: standingRows })).catch(() => {});
+    }
+    const lbStatRows: object[] = [];
+    for (const [lid, ls] of Object.entries($seasonStore.leagueState)) {
+      for (const [playerId, stat] of Object.entries(ls.stats ?? {})) {
+        if ((stat as { type?: string }).type === "pitcher") {
+          const p2 = stat as PitcherSeasonStats;
+          lbStatRows.push({ leagueId: lid, playerId, statType: "pitcher",
+            g: p2.g, gs: p2.gs, w: p2.w, l: p2.l, sv: p2.sv ?? 0, hd: p2.hd ?? 0,
+            ip: p2.ip, er: p2.er, hP: p2.h, kP: p2.k, bbP: p2.bb, era: p2.era, whip: p2.whip });
+        } else {
+          const b2 = stat as BatterSeasonStats;
+          lbStatRows.push({ leagueId: lid, playerId, statType: "batter",
+            g: b2.g, pa: b2.pa, ab: b2.ab, hB: b2.h, hr: b2.hr, rbi: b2.rbi,
+            sb: b2.sb ?? 0, bbB: b2.bb, kB: b2.k, avgV: b2.avg, obp: b2.obp, slg: b2.slg, ops: b2.ops });
+        }
+      }
+    }
+    if (lbStatRows.length > 0) {
+      window.projectB!.seasonSaveHistoryLbStats(JSON.stringify({ slotId, seasonYear, rows: lbStatRows })).catch(() => {});
+    }
+
+    // 포스트시즌 결과 저장
+    const psRows: object[] = [];
+    const psEntries = $seasonStore.schedule.filter((e) => e.phase === "postseason");
+    const finalEntry = psEntries.find((e) => e.id.startsWith("PS_FINAL_"));
+    if (finalEntry?.result) {
+      const playoffTeams = Array.from(new Set(
+        psEntries
+          .filter((e) => e.id.startsWith("PS_SEMI"))
+          .flatMap((e) => [e.homeTeamId, e.awayTeamId])
+      ));
+      psRows.push({
+        leagueId: $seasonStore.leagueId,
+        championId: finalEntry.result.winnerId,
+        runnerUpId: finalEntry.result.loserId ?? "",
+        playoffTeams,
+      });
+    } else if ($seasonStore.standings.length > 0) {
+      const sorted = [...$seasonStore.standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
+      psRows.push({ leagueId: $seasonStore.leagueId, championId: sorted[0].teamId, runnerUpId: "", playoffTeams: [] });
+    }
+    for (const [lid, ls] of Object.entries($seasonStore.leagueState)) {
+      const sorted = [...(ls.standings ?? [])].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
+      if (sorted.length > 0) psRows.push({ leagueId: lid, championId: sorted[0].teamId, runnerUpId: "", playoffTeams: [] });
+    }
+    if (psRows.length > 0) {
+      window.projectB!.seasonSaveHistoryPostseason(JSON.stringify({ slotId, seasonYear, rows: psRows })).catch(() => {});
+    }
+  }
+
   async function handleNewSeason() {
     if (isProcessing) return;
     isProcessing = true;
@@ -232,6 +308,7 @@
       for (const [lid, ls] of Object.entries($seasonStore.leagueState)) leagueStats2[lid] = ls.stats;
       gameStore.applySeasonHistory($seasonStore.stats, leagueStats2, now);
       await seasonStore.flushAllLeagueStatsToDb(now);
+      await saveSeasonHistory(now);
       await gameStore.processAllLeaguesSeasonEnd(now);
       await gameStore.applyAgingDecay();
       await runSeasonEndBgProcessing(now);
@@ -278,7 +355,6 @@
           .map((t) => t.id);
         const seasonYear = ($seasonStore.seasonYear || 2026) + 1;
         const { generateKblSchedule, generateAblSchedule, generateJblSchedule } = await import("../../../shared/utils/scheduleGen");
-        const { shuffleAblConferences } = await import("../../../shared/utils/postseasonEngine");
         const isAbl = pending.leagueId === "LEAGUE_ABL";
         const isJbl = pending.leagueId === "LEAGUE_JBL";
         seasonStore.initSeason(pending.leagueId, seasonYear, 52, proTeamIds);
@@ -287,10 +363,6 @@
           isJbl ? await generateJblSchedule(proTeamIds, pending.teamId) :
                   await generateKblSchedule(proTeamIds, pending.teamId),
         );
-        if (isAbl) {
-          const { east, west } = await shuffleAblConferences(proTeamIds);
-          seasonStore.setAblConferences(east, west);
-        }
       } else {
         // 미서명 상태 — 최소 계약 강제 (Step 3에서 정상 처리, 여기는 폴백)
         seasonStore.startNewSeason();
@@ -324,6 +396,7 @@
     gameStore.applySeasonHistory($seasonStore.stats, leagueStats, now);
 
     await seasonStore.flushAllLeagueStatsToDb(now);
+    await saveSeasonHistory(now);
     await gameStore.processAllLeaguesSeasonEnd(now);  // ← 여기서 __lastOffseasonSummary 세팅
 
     // ── 연간 병역 현황 메시지 (processAllLeaguesSeasonEnd 이후 읽어야 정확한 데이터)

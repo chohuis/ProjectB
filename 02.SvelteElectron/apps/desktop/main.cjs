@@ -751,14 +751,15 @@ app.whenReady().then(() => {
       const { slotId, seasonYear, rows } = JSON.parse(p);
       const stmt = db.prepare(`
         INSERT OR REPLACE INTO history_standings
-          (slot_id, season_year, league_id, team_id, wins, losses, draws, win_pct, runs_for, runs_against, streak, last10)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          (slot_id, season_year, league_id, team_id, wins, losses, draws, win_pct, runs_for, runs_against, streak, last10, group_label)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `);
       db.transaction(() => {
         for (const r of rows) {
           stmt.run(slotId, seasonYear, r.leagueId, r.teamId,
             r.wins ?? 0, r.losses ?? 0, r.draws ?? 0, r.winPct ?? 0,
-            r.runsFor ?? 0, r.runsAgainst ?? 0, r.streak ?? "", r.last10 ?? "");
+            r.runsFor ?? 0, r.runsAgainst ?? 0, r.streak ?? "", r.last10 ?? "",
+            r.groupLabel ?? "");
         }
       })();
       return JSON.stringify({ ok: true });
@@ -820,6 +821,34 @@ app.whenReady().then(() => {
       const params = [slotId, seasonYear];
       if (leagueId) { sql += ` AND league_id = ?`; params.push(leagueId); }
       return JSON.stringify(db.prepare(sql).all(...params));
+    } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  ipcMain.handle("season:saveHistoryPostseason", (_event, p) => {
+    try {
+      const { slotId, seasonYear, rows } = JSON.parse(p);
+      const stmt = db.prepare(`
+        INSERT OR REPLACE INTO history_postseason
+          (slot_id, season_year, league_id, champion_id, runner_up_id, playoff_teams)
+        VALUES (?, ?, ?, ?, ?, ?)
+      `);
+      db.transaction(() => {
+        for (const r of rows) {
+          stmt.run(slotId, seasonYear, r.leagueId, r.championId ?? "", r.runnerUpId ?? "",
+            JSON.stringify(r.playoffTeams ?? []));
+        }
+      })();
+      return JSON.stringify({ ok: true });
+    } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  ipcMain.handle("season:getHistoryPostseason", (_event, p) => {
+    try {
+      const { slotId, seasonYear } = JSON.parse(p);
+      const rows = db.prepare(
+        `SELECT * FROM history_postseason WHERE slot_id = ? AND season_year = ?`
+      ).all(slotId, seasonYear);
+      return JSON.stringify(rows.map(r => ({ ...r, playoff_teams: JSON.parse(r.playoff_teams ?? "[]") })));
     } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
 

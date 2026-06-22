@@ -11,8 +11,11 @@
 
   $: title = reason === "rejected" ? "체육부대 탈락" : "입영 기간 만료";
   $: bodyText = reason === "rejected"
-    ? "이번 체육부대 선발에서 탈락하였습니다.\n현역으로 입대하시겠습니까?"
+    ? p.age <= 26
+      ? "이번 체육부대 선발에서 탈락하였습니다.\n내년에 다시 도전하거나 현역으로 입대할 수 있습니다."
+      : "이번 체육부대 선발에서 탈락하였습니다.\n현역으로 입대하시겠습니까?"
     : `입영 이행 기간이 만료되었습니다.\n현재 누적 패널티: -${penalty}pt\n현역으로 입대하시겠습니까?`;
+  $: canDefer = reason === "overdue" || (reason === "rejected" && p.age <= 26);
 
   async function enlist() {
     if (resolving) return;
@@ -48,7 +51,7 @@
       </div>
     {/if}
     <div class="actions">
-      <button class="btn-decline" disabled={resolving} on:click={decline}>다음 시즌으로</button>
+      <button class="btn-decline" disabled={resolving || !canDefer} on:click={decline}>다음 시즌으로</button>
       <button class="btn-enlist" disabled={resolving} on:click={enlist}>현역 입대</button>
     </div>
   </section>

@@ -1,9 +1,13 @@
 <script lang="ts">
+  import { get } from "svelte/store";
   import { t } from "../../shared/i18n";
   import { gameStore } from "../../shared/stores/game";
   import { seasonStore } from "../../shared/stores/season";
   import { masterStore, teamMap } from "../../shared/stores/master";
+  import { leagueUiState } from "../../shared/stores/leagueUiStore";
+  import { ablConference, jblConference } from "../../shared/utils/leagueConferences";
   import type { PitcherSeasonStats, BatterSeasonStats, PlayerSeasonStats } from "../../shared/types/save";
+  import PlayerDetailModal from "../../features/player/ui/PlayerDetailModal.svelte";
 
   import type { LeagueTransactionRow } from "../../shared/types/save";
 
@@ -12,11 +16,14 @@
   type HsLbGroup  = "all" | "A" | "B";
   type TxCategory = "all" | "trade" | "fa" | "draft" | "military" | "retirement";
 
-  let tab:        LeagueTab  = "standings";
+  // 탭 이동 후 돌아와도 선택 상태 유지 (leagueUiStore에서 복원)
+  const _saved = get(leagueUiState);
+  let tab:        LeagueTab  = _saved.tab;
   let lbTab:      LbTab      = "pitcher";
   let hsLbGroup:  HsLbGroup  = "all";
   let selectedLeagueId: string = "";
   let lbLeagueId: string = "";
+  let txModalEntityId: string = "";
 
   $: myTeamId   = $gameStore.protagonist.teamId;
   $: myLeagueId = $gameStore.protagonist.leagueId;
@@ -49,7 +56,7 @@
   };
 
   // ── 공통 년도 선택 ───────────────────────────────────────────
-  let selectedYear: number = 0;   // 0 = 현재 시즌
+  let selectedYear: number = _saved.selectedYear;
   let historyYears: number[] = [];
 
   // 히스토리 순위
@@ -57,6 +64,11 @@
     slot_id: string; season_year: number; league_id: string; team_id: string;
     wins: number; losses: number; draws: number; win_pct: number;
     runs_for: number; runs_against: number; streak: string; last10: string;
+    group_label: string;
+  };
+  type HistPostseason = {
+    slot_id: string; season_year: number; league_id: string;
+    champion_id: string; runner_up_id: string; playoff_teams: string[];
   };
   type HistLbStat = {
     slot_id: string; season_year: number; league_id: string; player_id: string; stat_type: string;
@@ -67,8 +79,9 @@
     sb: number|null; bb_b: number|null; k_b: number|null;
     avg_v: number|null; obp: number|null; slg: number|null; ops: number|null;
   };
-  let historyStandings: HistStanding[] = [];
-  let historyLbStats:   HistLbStat[]   = [];
+  let historyStandings:  HistStanding[]  = [];
+  let historyLbStats:    HistLbStat[]    = [];
+  let historyPostseason: HistPostseason[] = [];
 
   async function loadHistoryYears() {
     const slotId = $gameStore.currentSlotId;
@@ -76,25 +89,35 @@
     try {
       const res = JSON.parse(await window.projectB!.seasonGetHistoryYears(JSON.stringify({ slotId })));
       historyYears = Array.isArray(res) ? res : [];
+      // 현재 시즌 순위 없고 과거 기록 있으면 가장 최근 연도 자동 선택
+      if (historyYears.length > 0 && selectedYear === 0 && $seasonStore.standings.length === 0) {
+        selectedYear = historyYears[0];
+      }
     } catch { historyYears = []; }
   }
 
   async function loadHistoryData() {
     const slotId = $gameStore.currentSlotId;
     if (!slotId || selectedYear === 0) {
-      historyStandings = [];
-      historyLbStats   = [];
+      historyStandings  = [];
+      historyLbStats    = [];
+      historyPostseason = [];
       return;
     }
     try {
-      const [sr, lr] = await Promise.all([
+      const [sr, lr, pr] = await Promise.all([
         window.projectB!.seasonGetHistoryStandings(JSON.stringify({ slotId, seasonYear: selectedYear })),
         window.projectB!.seasonGetHistoryLbStats(JSON.stringify({ slotId, seasonYear: selectedYear })),
+        window.projectB!.seasonGetHistoryPostseason(JSON.stringify({ slotId, seasonYear: selectedYear })),
       ]);
-      historyStandings = JSON.parse(sr) ?? [];
-      historyLbStats   = JSON.parse(lr) ?? [];
-    } catch { historyStandings = []; historyLbStats = []; }
+      historyStandings  = JSON.parse(sr) ?? [];
+      historyLbStats    = JSON.parse(lr) ?? [];
+      historyPostseason = JSON.parse(pr) ?? [];
+    } catch { historyStandings = []; historyLbStats = []; historyPostseason = []; }
   }
+
+  // 변경된 상태를 스토어에 동기화 (탭 이동 후 복원용)
+  $: leagueUiState.set({ selectedYear, tab, txCategory, txLeagueId });
 
   $: selectedYear, loadHistoryData();
   $: tab, loadHistoryYears();
@@ -105,6 +128,16 @@
       .filter(r => r.league_id === lid)
       .sort((a, b) => b.win_pct - a.win_pct || b.wins - a.wins);
   })();
+
+  $: histHsGroupAStandings = historyStandings
+    .filter(r => r.league_id === "LEAGUE_HIGHSCHOOL" && r.group_label === "A")
+    .sort((a, b) => b.win_pct - a.win_pct || b.wins - a.wins);
+  $: histHsGroupBStandings = historyStandings
+    .filter(r => r.league_id === "LEAGUE_HIGHSCHOOL" && r.group_label === "B")
+    .sort((a, b) => b.win_pct - a.win_pct || b.wins - a.wins);
+
+  $: histPostseasonForLeague = (lid: string): HistPostseason | undefined =>
+    historyPostseason.find(r => r.league_id === lid);
 
   $: histPitcherRows = historyLbStats
     .filter(r => r.league_id === lbLeagueId && r.stat_type === "pitcher" && (r.ip ?? 0) >= 10)
@@ -121,8 +154,8 @@
     .slice(0, 20) as BatterRow[];
 
   // ── 리그 기록 탭 ─────────────────────────────────────────────
-  let txLeagueId: string = "";
-  let txCategory: TxCategory = "all";
+  let txLeagueId: string = _saved.txLeagueId;
+  let txCategory: TxCategory = _saved.txCategory;
   let txRows: LeagueTransactionRow[] = [];
   let txAllYears: number[] = [];  // 카테고리 필터와 무관한 전체 연도 목록
   let txLoading = false;
@@ -239,6 +272,24 @@
   $: hsGroupBStandings = [...$seasonStore.standings]
     .filter((s) => ($seasonStore.hsGroupB ?? []).includes(s.teamId))
     .sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
+
+  // ── ABL East/West, JBL CL/PL 분리 (현재 시즌) ─────────────────
+  function splitStandings<T extends { teamId: string }>(rows: T[], fn: (id: string) => string | null, val: string) {
+    return rows.filter((r) => fn(r.teamId) === val).sort((a: any, b: any) => b.winPct - a.winPct || b.wins - a.wins);
+  }
+  $: ablEastStandings = splitStandings(selectedStandings, ablConference, "East");
+  $: ablWestStandings = splitStandings(selectedStandings, ablConference, "West");
+  $: jblClStandings   = splitStandings(selectedStandings, jblConference, "CL");
+  $: jblPlStandings   = splitStandings(selectedStandings, jblConference, "PL");
+
+  // ── ABL East/West, JBL CL/PL 분리 (히스토리) ─────────────────
+  function splitHistStandings<T extends { team_id: string }>(rows: T[], fn: (id: string) => string | null, val: string) {
+    return rows.filter((r) => fn(r.team_id) === val).sort((a: any, b: any) => b.win_pct - a.win_pct || b.wins - a.wins);
+  }
+  $: histAblEastStandings = splitHistStandings(histStandings, ablConference, "East");
+  $: histAblWestStandings = splitHistStandings(histStandings, ablConference, "West");
+  $: histJblClStandings   = splitHistStandings(histStandings, jblConference, "CL");
+  $: histJblPlStandings   = splitHistStandings(histStandings, jblConference, "PL");
 
   // ── 멀티리그 순위표 ─────────────────────────────────────────
   // KBL → KBL2군 → ABL → ABL2군 → JBL → JBL2군 고정 순서
@@ -360,12 +411,12 @@
         <button class:active={tab === "leaderboard"}  on:click={() => (tab = "leaderboard")}>스탯 순위</button>
         <button class:active={tab === "transactions"} on:click={() => (tab = "transactions")}>리그 기록</button>
       </div>
-      <div class="year-selector">
-        <button class="yr-btn" class:yr-active={selectedYear === 0} on:click={() => { selectedYear = 0; }}>현재</button>
+      <select class="yr-select" bind:value={selectedYear}>
+        <option value={0}>현재</option>
         {#each historyYears as yr}
-          <button class="yr-btn" class:yr-active={selectedYear === yr} on:click={() => { selectedYear = yr; }}>{yr}</button>
+          <option value={yr}>{yr}시즌</option>
         {/each}
-      </div>
+      </select>
     </header>
 
     <!-- ── 리그 순위 ── -->
@@ -395,25 +446,128 @@
               {#if histStandings.length === 0}
                 <p class="empty">해당 시즌 순위 기록이 없습니다.</p>
               {:else}
-                <div class="tbl-wrap">
-                  <table class="stbl full">
-                    <thead>
-                      <tr><th>#</th><th>팀</th><th>승</th><th>패</th><th>무</th><th>승률</th><th>득점</th><th>실점</th><th>연속</th><th>최근10</th></tr>
-                    </thead>
-                    <tbody>
-                      {#each histStandings as r, i}
-                        <tr>
-                          <td>{i + 1}</td>
-                          <td class="t-name">{tName(r.team_id)}</td>
-                          <td class="w">{r.wins}</td><td class="l">{r.losses}</td><td>{r.draws}</td>
-                          <td>{r.win_pct.toFixed(2)}</td><td>{r.runs_for}</td><td>{r.runs_against}</td>
-                          <td class:streak-w={r.streak.startsWith("W")} class:streak-l={r.streak.startsWith("L")}>{r.streak || "-"}</td>
-                          <td>{r.last10 || "-"}</td>
-                        </tr>
-                      {/each}
-                    </tbody>
-                  </table>
-                </div>
+                {#if (selectedLeagueId || myLeagueId) === "LEAGUE_HIGHSCHOOL"}
+                  <div class="tbl-wrap">
+                    <table class="stbl full hs-fixed">
+                      <colgroup>
+                        <col style="width:28px"><col style="width:110px">
+                        <col style="width:32px"><col style="width:32px"><col style="width:28px">
+                        <col style="width:44px"><col style="width:40px"><col style="width:40px">
+                        <col style="width:46px"><col style="width:56px">
+                      </colgroup>
+                      <thead>
+                        <tr><th>#</th><th class="t-name">팀</th><th>승</th><th>패</th><th>무</th><th>승률</th><th>득점</th><th>실점</th><th>연속</th><th>최근10</th></tr>
+                      </thead>
+                      <tbody>
+                        <tr class="group-row"><td colspan="10">A조</td></tr>
+                        {#each histHsGroupAStandings as r, i}
+                          <tr class:my-row={r.team_id === myTeamId}>
+                            <td>{i + 1}</td><td class="t-name">{tName(r.team_id)}</td>
+                            <td class="w">{r.wins}</td><td class="l">{r.losses}</td><td>{r.draws}</td>
+                            <td>{r.win_pct.toFixed(2)}</td><td>{r.runs_for}</td><td>{r.runs_against}</td>
+                            <td class:streak-w={r.streak.startsWith("W")} class:streak-l={r.streak.startsWith("L")}>{r.streak || "-"}</td>
+                            <td>{r.last10 || "-"}</td>
+                          </tr>
+                        {/each}
+                        <tr class="group-row"><td colspan="10">B조</td></tr>
+                        {#each histHsGroupBStandings as r, i}
+                          <tr class:my-row={r.team_id === myTeamId}>
+                            <td>{i + 1}</td><td class="t-name">{tName(r.team_id)}</td>
+                            <td class="w">{r.wins}</td><td class="l">{r.losses}</td><td>{r.draws}</td>
+                            <td>{r.win_pct.toFixed(2)}</td><td>{r.runs_for}</td><td>{r.runs_against}</td>
+                            <td class:streak-w={r.streak.startsWith("W")} class:streak-l={r.streak.startsWith("L")}>{r.streak || "-"}</td>
+                            <td>{r.last10 || "-"}</td>
+                          </tr>
+                        {/each}
+                      </tbody>
+                    </table>
+                  </div>
+                {:else if (selectedLeagueId || myLeagueId) === "LEAGUE_ABL"}
+                  <div class="tbl-wrap">
+                    <table class="stbl full">
+                      <thead><tr><th>#</th><th>팀</th><th>승</th><th>패</th><th>무</th><th>승률</th><th>득점</th><th>실점</th><th>연속</th><th>최근10</th></tr></thead>
+                      <tbody>
+                        <tr class="group-row"><td colspan="10">East</td></tr>
+                        {#each histAblEastStandings as r, i}
+                          <tr><td>{i+1}</td><td class="t-name">{tName(r.team_id)}</td>
+                            <td class="w">{r.wins}</td><td class="l">{r.losses}</td><td>{r.draws}</td>
+                            <td>{r.win_pct.toFixed(2)}</td><td>{r.runs_for}</td><td>{r.runs_against}</td>
+                            <td class:streak-w={r.streak.startsWith("W")} class:streak-l={r.streak.startsWith("L")}>{r.streak||"-"}</td>
+                            <td>{r.last10||"-"}</td></tr>
+                        {/each}
+                        <tr class="group-row"><td colspan="10">West</td></tr>
+                        {#each histAblWestStandings as r, i}
+                          <tr><td>{i+1}</td><td class="t-name">{tName(r.team_id)}</td>
+                            <td class="w">{r.wins}</td><td class="l">{r.losses}</td><td>{r.draws}</td>
+                            <td>{r.win_pct.toFixed(2)}</td><td>{r.runs_for}</td><td>{r.runs_against}</td>
+                            <td class:streak-w={r.streak.startsWith("W")} class:streak-l={r.streak.startsWith("L")}>{r.streak||"-"}</td>
+                            <td>{r.last10||"-"}</td></tr>
+                        {/each}
+                      </tbody>
+                    </table>
+                  </div>
+                {:else if (selectedLeagueId || myLeagueId) === "LEAGUE_JBL"}
+                  <div class="tbl-wrap">
+                    <table class="stbl full">
+                      <thead><tr><th>#</th><th>팀</th><th>승</th><th>패</th><th>무</th><th>승률</th><th>득점</th><th>실점</th><th>연속</th><th>최근10</th></tr></thead>
+                      <tbody>
+                        <tr class="group-row"><td colspan="10">센트럴 (CL)</td></tr>
+                        {#each histJblClStandings as r, i}
+                          <tr><td>{i+1}</td><td class="t-name">{tName(r.team_id)}</td>
+                            <td class="w">{r.wins}</td><td class="l">{r.losses}</td><td>{r.draws}</td>
+                            <td>{r.win_pct.toFixed(2)}</td><td>{r.runs_for}</td><td>{r.runs_against}</td>
+                            <td class:streak-w={r.streak.startsWith("W")} class:streak-l={r.streak.startsWith("L")}>{r.streak||"-"}</td>
+                            <td>{r.last10||"-"}</td></tr>
+                        {/each}
+                        <tr class="group-row"><td colspan="10">퍼시픽 (PL)</td></tr>
+                        {#each histJblPlStandings as r, i}
+                          <tr><td>{i+1}</td><td class="t-name">{tName(r.team_id)}</td>
+                            <td class="w">{r.wins}</td><td class="l">{r.losses}</td><td>{r.draws}</td>
+                            <td>{r.win_pct.toFixed(2)}</td><td>{r.runs_for}</td><td>{r.runs_against}</td>
+                            <td class:streak-w={r.streak.startsWith("W")} class:streak-l={r.streak.startsWith("L")}>{r.streak||"-"}</td>
+                            <td>{r.last10||"-"}</td></tr>
+                        {/each}
+                      </tbody>
+                    </table>
+                  </div>
+                {:else}
+                  <div class="tbl-wrap">
+                    <table class="stbl full">
+                      <thead>
+                        <tr><th>#</th><th>팀</th><th>승</th><th>패</th><th>무</th><th>승률</th><th>득점</th><th>실점</th><th>연속</th><th>최근10</th></tr>
+                      </thead>
+                      <tbody>
+                        {#each histStandings as r, i}
+                          <tr>
+                            <td>{i + 1}</td>
+                            <td class="t-name">{tName(r.team_id)}</td>
+                            <td class="w">{r.wins}</td><td class="l">{r.losses}</td><td>{r.draws}</td>
+                            <td>{r.win_pct.toFixed(2)}</td><td>{r.runs_for}</td><td>{r.runs_against}</td>
+                            <td class:streak-w={r.streak.startsWith("W")} class:streak-l={r.streak.startsWith("L")}>{r.streak || "-"}</td>
+                            <td>{r.last10 || "-"}</td>
+                          </tr>
+                        {/each}
+                      </tbody>
+                    </table>
+                  </div>
+                {/if}
+                {@const ps = histPostseasonForLeague(selectedLeagueId || myLeagueId)}
+                {#if ps && ps.champion_id}
+                  <div class="ps-history-card">
+                    <span class="ps-hist-label">🏆 우승</span>
+                    <span class="ps-hist-team">{tName(ps.champion_id)}</span>
+                    {#if ps.runner_up_id}
+                      <span class="ps-hist-sep">·</span>
+                      <span class="ps-hist-label">준우승</span>
+                      <span class="ps-hist-team">{tName(ps.runner_up_id)}</span>
+                    {/if}
+                    {#if ps.playoff_teams.length > 0}
+                      <div class="ps-hist-playoff">
+                        플레이오프: {ps.playoff_teams.map(id => tName(id)).join(" · ")}
+                      </div>
+                    {/if}
+                  </div>
+                {/if}
               {/if}
             {:else if (selectedLeagueId || myLeagueId) === "LEAGUE_HIGHSCHOOL"}
               <div class="tbl-wrap">
@@ -461,6 +615,66 @@
                         </tr>
                       {/each}
                     {/if}
+                  </tbody>
+                </table>
+              </div>
+            {:else if (selectedLeagueId || myLeagueId) === "LEAGUE_ABL"}
+              <div class="tbl-wrap">
+                <table class="stbl full">
+                  <thead><tr><th>#</th><th>팀</th><th>승</th><th>패</th><th>무</th><th>승률</th><th>득점</th><th>실점</th><th>연속</th><th>최근10</th></tr></thead>
+                  <tbody>
+                    <tr class="group-row"><td colspan="10">East</td></tr>
+                    {#if ablEastStandings.length === 0}<tr><td colspan="10" class="empty-cell">아직 경기 데이터가 없습니다.</td></tr>
+                    {:else}{#each ablEastStandings as s, i}
+                      <tr class:my-row={s.teamId === myTeamId}>
+                        <td>{i+1}</td><td class="t-name">{tName(s.teamId)}</td>
+                        <td class="w">{s.wins}</td><td class="l">{s.losses}</td><td>{s.draws}</td>
+                        <td>{s.winPct.toFixed(2)}</td><td>{s.runsFor}</td><td>{s.runsAgainst}</td>
+                        <td class:streak-w={s.streak.startsWith("W")} class:streak-l={s.streak.startsWith("L")}>{s.streak||"-"}</td>
+                        <td>{s.last10||"-"}</td>
+                      </tr>
+                    {/each}{/if}
+                    <tr class="group-row"><td colspan="10">West</td></tr>
+                    {#if ablWestStandings.length === 0}<tr><td colspan="10" class="empty-cell">아직 경기 데이터가 없습니다.</td></tr>
+                    {:else}{#each ablWestStandings as s, i}
+                      <tr class:my-row={s.teamId === myTeamId}>
+                        <td>{i+1}</td><td class="t-name">{tName(s.teamId)}</td>
+                        <td class="w">{s.wins}</td><td class="l">{s.losses}</td><td>{s.draws}</td>
+                        <td>{s.winPct.toFixed(2)}</td><td>{s.runsFor}</td><td>{s.runsAgainst}</td>
+                        <td class:streak-w={s.streak.startsWith("W")} class:streak-l={s.streak.startsWith("L")}>{s.streak||"-"}</td>
+                        <td>{s.last10||"-"}</td>
+                      </tr>
+                    {/each}{/if}
+                  </tbody>
+                </table>
+              </div>
+            {:else if (selectedLeagueId || myLeagueId) === "LEAGUE_JBL"}
+              <div class="tbl-wrap">
+                <table class="stbl full">
+                  <thead><tr><th>#</th><th>팀</th><th>승</th><th>패</th><th>무</th><th>승률</th><th>득점</th><th>실점</th><th>연속</th><th>최근10</th></tr></thead>
+                  <tbody>
+                    <tr class="group-row"><td colspan="10">센트럴 (CL)</td></tr>
+                    {#if jblClStandings.length === 0}<tr><td colspan="10" class="empty-cell">아직 경기 데이터가 없습니다.</td></tr>
+                    {:else}{#each jblClStandings as s, i}
+                      <tr class:my-row={s.teamId === myTeamId}>
+                        <td>{i+1}</td><td class="t-name">{tName(s.teamId)}</td>
+                        <td class="w">{s.wins}</td><td class="l">{s.losses}</td><td>{s.draws}</td>
+                        <td>{s.winPct.toFixed(2)}</td><td>{s.runsFor}</td><td>{s.runsAgainst}</td>
+                        <td class:streak-w={s.streak.startsWith("W")} class:streak-l={s.streak.startsWith("L")}>{s.streak||"-"}</td>
+                        <td>{s.last10||"-"}</td>
+                      </tr>
+                    {/each}{/if}
+                    <tr class="group-row"><td colspan="10">퍼시픽 (PL)</td></tr>
+                    {#if jblPlStandings.length === 0}<tr><td colspan="10" class="empty-cell">아직 경기 데이터가 없습니다.</td></tr>
+                    {:else}{#each jblPlStandings as s, i}
+                      <tr class:my-row={s.teamId === myTeamId}>
+                        <td>{i+1}</td><td class="t-name">{tName(s.teamId)}</td>
+                        <td class="w">{s.wins}</td><td class="l">{s.losses}</td><td>{s.draws}</td>
+                        <td>{s.winPct.toFixed(2)}</td><td>{s.runsFor}</td><td>{s.runsAgainst}</td>
+                        <td class:streak-w={s.streak.startsWith("W")} class:streak-l={s.streak.startsWith("L")}>{s.streak||"-"}</td>
+                        <td>{s.last10||"-"}</td>
+                      </tr>
+                    {/each}{/if}
                   </tbody>
                 </table>
               </div>
@@ -648,11 +862,11 @@
                         {@const [r1, r2] = group.rows}
                         <span class="tx-tag tag-trade">트레이드</span>
                         <span class="tx-detail">
-                          <strong>{r1.playerName}</strong>
+                          <strong class="player-link" on:dblclick|stopPropagation={() => { if (r1.playerId) txModalEntityId = r1.playerId; }} title="더블클릭: 선수 상세">{r1.playerName}</strong>
                           <span class="tx-arrow">{txTeamName(r1.fromTeamId)} → {txTeamName(r1.toTeamId)}</span>
                           {#if r2}
                             &nbsp;/&nbsp;
-                            <strong>{r2.playerName}</strong>
+                            <strong class="player-link" on:dblclick|stopPropagation={() => { if (r2.playerId) txModalEntityId = r2.playerId; }} title="더블클릭: 선수 상세">{r2.playerName}</strong>
                             <span class="tx-arrow">{txTeamName(r2.fromTeamId)} → {txTeamName(r2.toTeamId)}</span>
                           {/if}
                         </span>
@@ -663,7 +877,7 @@
                         {@const r = group.rows[0]}
                         <span class="tx-tag tag-fa">FA</span>
                         <span class="tx-detail">
-                          <strong>{r.playerName}</strong>
+                          <strong class="player-link" on:dblclick|stopPropagation={() => { if (r.playerId) txModalEntityId = r.playerId; }} title="더블클릭: 선수 상세">{r.playerName}</strong>
                           {#if r.toTeamId}<span class="tx-arrow">→ {txTeamName(r.toTeamId)}</span>{/if}
                         </span>
                         {#if r.detail}<span class="tx-reason">{r.detail}</span>{/if}
@@ -671,20 +885,22 @@
                         {@const r = group.rows[0]}
                         <span class="tx-tag tag-draft">드래프트</span>
                         <span class="tx-detail">
-                          <strong>{r.playerName}</strong>
+                          <strong class="player-link" on:dblclick|stopPropagation={() => { if (r.playerId) txModalEntityId = r.playerId; }} title="더블클릭: 선수 상세">{r.playerName}</strong>
                           {#if r.toTeamId}<span class="tx-arrow">→ {txTeamName(r.toTeamId)}</span>{/if}
                         </span>
                         {#if r.detail}<span class="tx-reason">{r.detail}</span>{/if}
                       {:else if group.category === "military"}
                         {@const r = group.rows[0]}
                         <span class="tx-tag tag-military">병역</span>
-                        <span class="tx-detail"><strong>{r.playerName}</strong></span>
+                        <span class="tx-detail">
+                          <strong class="player-link" on:dblclick|stopPropagation={() => { if (r.playerId) txModalEntityId = r.playerId; }} title="더블클릭: 선수 상세">{r.playerName}</strong>
+                        </span>
                         {#if r.detail}<span class="tx-reason">{r.detail}</span>{/if}
                       {:else if group.category === "retirement"}
                         {@const r = group.rows[0]}
                         <span class="tx-tag tag-retirement">은퇴</span>
                         <span class="tx-detail">
-                          <strong>{r.playerName}</strong>
+                          <strong class="player-link" on:dblclick|stopPropagation={() => { if (r.playerId) txModalEntityId = r.playerId; }} title="더블클릭: 선수 상세">{r.playerName}</strong>
                           {#if r.fromTeamId}<span class="tx-arrow">{txTeamName(r.fromTeamId)}</span>{/if}
                         </span>
                         {#if r.detail}<span class="tx-reason">{r.detail}</span>{/if}
@@ -703,6 +919,8 @@
     {/if}
   </article>
 </section>
+
+<PlayerDetailModal entityId={txModalEntityId} on:close={() => (txModalEntityId = "")} />
 
 <style>
   .page {
@@ -752,8 +970,7 @@
   }
   .tabs button.active { background: #3262b0; border-color: #6da1f7; }
 
-  .year-selector { display: flex; gap: 4px; flex-wrap: wrap; }
-  .yr-btn {
+  .yr-select {
     border: 1px solid #2d4a7a;
     background: #19263d;
     color: #a0b8e0;
@@ -762,7 +979,6 @@
     font-size: 11px;
     cursor: pointer;
   }
-  .yr-btn.yr-active { background: #254070; border-color: #4a7ac0; color: #d8eaff; }
 
   .panel {
     border: 1px solid #2f486f;
@@ -1052,6 +1268,8 @@
 
   .tx-detail { color: #c8dcf6; }
   .tx-detail strong { color: #eef6ff; }
+  .player-link { cursor: pointer; }
+  .player-link:hover { text-decoration: underline; color: #a8d4ff; }
   .tx-arrow { color: #7090b8; font-size: 11px; }
   .tx-reason {
     font-size: 11px;
@@ -1066,6 +1284,28 @@
     flex-shrink: 0;
     margin-left: auto;
     align-self: center;
+  }
+
+  .ps-history-card {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 8px;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #0d1e38;
+    border: 1px solid #2a4060;
+    border-radius: 6px;
+    font-size: 13px;
+  }
+  .ps-hist-label { color: #8aabcc; font-size: 11px; }
+  .ps-hist-team  { color: #d4e8ff; font-weight: 600; }
+  .ps-hist-sep   { color: #3a5a80; }
+  .ps-hist-playoff {
+    width: 100%;
+    margin-top: 4px;
+    font-size: 11px;
+    color: #6a90b8;
   }
 
   @media (max-width: 1180px) {

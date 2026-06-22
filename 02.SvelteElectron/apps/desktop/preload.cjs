@@ -63,6 +63,8 @@ contextBridge.exposeInMainWorld("projectB", {
   seasonGetHistoryYears:        (p) => ipcRenderer.invoke("season:getHistoryYears",        p),
   seasonGetHistoryStandings:    (p) => ipcRenderer.invoke("season:getHistoryStandings",    p),
   seasonGetHistoryLbStats:      (p) => ipcRenderer.invoke("season:getHistoryLbStats",      p),
+  seasonSaveHistoryPostseason:  (p) => ipcRenderer.invoke("season:saveHistoryPostseason",  p),
+  seasonGetHistoryPostseason:   (p) => ipcRenderer.invoke("season:getHistoryPostseason",   p),
 
   // ── 성장 엔진 (Phase 4) ──────────────────────────────────────────────────
   growthCalcTraining:                    (p) => ipcRenderer.invoke("growth:calcTraining",                         p),

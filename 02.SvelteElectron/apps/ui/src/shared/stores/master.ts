@@ -171,6 +171,10 @@ export interface EntityPlayerDetails {
   potentialHidden: number;
   proServiceYears?: number;
   militaryEnlistYear?: number;
+  militaryStatus?: "현역" | "군필" | "면제";
+  militaryUnit?: "sports" | "general";
+  originalLeagueId?: string;
+  originalTeamId?: string;
   contract?: NpcContract;
   pitches?: import("../types/save").PitchEntry[];
 }

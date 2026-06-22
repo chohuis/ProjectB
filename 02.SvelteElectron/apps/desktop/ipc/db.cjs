@@ -663,6 +663,26 @@ function applySchemaPatches(db) {
       console.log("[db-patch] v6: history_standings, history_lb_stats 테이블 추가");
     })();
   }
+
+  if (currentVersion < 7) {
+    db.transaction(() => {
+      try { db.exec(`ALTER TABLE history_standings ADD COLUMN group_label TEXT NOT NULL DEFAULT ''`); } catch {}
+      db.exec(`
+        CREATE TABLE IF NOT EXISTS history_postseason (
+          slot_id       TEXT    NOT NULL,
+          season_year   INTEGER NOT NULL,
+          league_id     TEXT    NOT NULL,
+          champion_id   TEXT    NOT NULL DEFAULT '',
+          runner_up_id  TEXT    NOT NULL DEFAULT '',
+          playoff_teams TEXT    NOT NULL DEFAULT '[]',
+          PRIMARY KEY (slot_id, season_year, league_id)
+        );
+        CREATE INDEX IF NOT EXISTS idx_hps_lookup ON history_postseason(slot_id, season_year DESC);
+      `);
+      db.pragma("user_version = 7");
+      console.log("[db-patch] v7: history_standings group_label, history_postseason 추가");
+    })();
+  }
 }
 
 function dbListSlots(db) {
