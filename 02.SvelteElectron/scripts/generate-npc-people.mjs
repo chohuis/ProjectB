@@ -402,27 +402,27 @@ function generateKbl() {
     POS_25.forEach((pos, i) => {
       const id = `PLY_KBL_${pad2(club.no)}_${pad3(i + 1)}`;
       usedId.add(id);
-      all.push(makePlayerEntity({ rng, makeName, id, leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", grade: null, conf: LEAGUE_CONF.LEAGUE_KBL_1, position: pos, jerseyNumber: i + 1 }));
+      all.push(makePlayerEntity({ rng, makeName, id, leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", grade: null, conf: LEAGUE_CONF.LEAGUE_KBL_1, position: pos, jerseyNumber: i + 1, notes: "국적:한국" }));
     });
     for (let i = 0; i < 3; i += 1) {
       const id = `COA_KBL_${pad2(club.no)}_${pad3(i + 1)}`;
       usedId.add(id);
-      all.push(makeStaffEntity({ rng, makeName, id, role: "coach", leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [34, 58] }));
+      all.push(makeStaffEntity({ rng, makeName, id, role: "coach", leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [34, 58], notes: "국적:한국" }));
     }
-    all.push(makeStaffEntity({ rng, makeName, id: `MNG_KBL_${pad2(club.no)}_001`, role: "manager", leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [42, 66] }));
-    all.push(makeStaffEntity({ rng, makeName, id: `OWN_KBL_${pad2(club.no)}_001`, role: "owner", leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [48, 74] }));
+    all.push(makeStaffEntity({ rng, makeName, id: `MNG_KBL_${pad2(club.no)}_001`, role: "manager", leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [42, 66], notes: "국적:한국" }));
+    all.push(makeStaffEntity({ rng, makeName, id: `OWN_KBL_${pad2(club.no)}_001`, role: "owner", leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [48, 74], notes: "국적:한국" }));
 
     POS_20.forEach((pos, i) => {
       const id = `PLY_KBL_${pad2(club.no)}_${pad3(100 + i + 1)}`;
       usedId.add(id);
-      all.push(makePlayerEntity({ rng, makeName, id, leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", grade: null, conf: LEAGUE_CONF.LEAGUE_KBL_2, position: pos, jerseyNumber: i + 31 }));
+      all.push(makePlayerEntity({ rng, makeName, id, leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", grade: null, conf: LEAGUE_CONF.LEAGUE_KBL_2, position: pos, jerseyNumber: i + 31, notes: "국적:한국" }));
     });
     for (let i = 0; i < 2; i += 1) {
       const id = `COA_KBL_${pad2(club.no)}_${pad3(100 + i + 1)}`;
       usedId.add(id);
-      all.push(makeStaffEntity({ rng, makeName, id, role: "coach", leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [34, 58] }));
+      all.push(makeStaffEntity({ rng, makeName, id, role: "coach", leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [34, 58], notes: "국적:한국" }));
     }
-    all.push(makeStaffEntity({ rng, makeName, id: `MNG_KBL_${pad2(club.no)}_101`, role: "manager", leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [42, 66] }));
+    all.push(makeStaffEntity({ rng, makeName, id: `MNG_KBL_${pad2(club.no)}_101`, role: "manager", leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [42, 66], notes: "국적:한국" }));
   });
   return { version: 1, sourceLeague: "LEAGUE_KBL", entities: all };
 }

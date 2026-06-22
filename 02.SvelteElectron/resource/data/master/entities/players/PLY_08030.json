@@ -29,16 +29,16 @@
       "developmentRate": 46,
       "potentialHidden": 74,
       "pitching": {
-        "ovr": 41,
-        "stamina": 38,
-        "velocity": 49,
-        "command": 33,
-        "control": 35,
-        "movement": 40,
-        "mentality": 42,
-        "recovery": 30,
-        "clutch": 35,
-        "holdRunners": 32
+        "ovr": 35,
+        "stamina": 32,
+        "velocity": 42,
+        "command": 28,
+        "control": 30,
+        "movement": 34,
+        "mentality": 36,
+        "recovery": 26,
+        "clutch": 30,
+        "holdRunners": 27
       },
       "batting": {
         "ovr": 42,
